@@ -1,0 +1,19 @@
+{
+  "name": "smartqasa-cards",
+  "version": "1.0.0",
+  "description": "SmartQasa Dashboard Cards",
+  "type": "module",
+  "scripts": {
+    "build": "rollup -c"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.24.0",
+    "@babel/preset-env": "^7.24.0",
+    "@rollup/plugin-babel": "^6.0.4",
+    "@rollup/plugin-node-resolve": "^13.3.0",
+    "rollup": "^2.79.1"
+  },
+  "dependencies": {
+    "lit": "^3.1.2"
+  }
+}
