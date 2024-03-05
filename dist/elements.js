@@ -35,20 +35,21 @@
         border: var(--sq-card-border, 'none');
         border-radius: var(--sq-card-border-radius, 1.0rem);
         box-shadow: var(--sq-card-box-shadow, 0 2px 4px 0 rgba(0, 0, 0, 0.2));
-        grid-template-areas: "i n";
+        grid-template-areas: 'i n';
         grid-template-columns: auto 1fr;
         grid-column-gap: var(--sq-card-gap-column, 0.7rem);
+        grid-row-gap: var(--sq-card-gap-row, 0.3rem);
         background-color: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
         cursor: pointer;
     }
     .icon {
         grid-area: i;
         display: flex;
-        height: var(--sq-icon-size, 1.8rem);
-        width: var(--sq-icon-size, 1.8rem);
+        height: var(--sq-icon-size, 25px);
+        width: var(--sq-icon-size, 25px);
         justify-content: center;
         align-self: center;
-        padding: var(--sq-icon-padding, 1.0rem);
+        padding: var(--sq-icon-padding, 14px);
         border-radius: 50%;
         transition: var(--sq-icon-transition, none);
     }
