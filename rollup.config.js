@@ -6,7 +6,7 @@ export default {
   output: {
     file: 'dist/elements.js',
     format: 'iife', // Using 'iife' for browsers
-    name: 'SmartQasaLightTile',
+    name: 'SmartQasaElements',
   },
   plugins: [
     resolve(),

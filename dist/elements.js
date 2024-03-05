@@ -77,15 +77,8 @@
         color: rgb(var(--sq-secondary-font-rgb, 0, 0, 0));
     }
 `;
-    customElements.define("smartqasa-light-tile", SmartQasaLightTile);
-    window.customCards = window.customCards || [];
-    window.customCards.push({
-      type: "smartqasa-light-tile",
-      name: "SmartQasa Light Tile",
-      description: "A SmartQasa tile for controlling a light entity."
-    });
 
-    class SmartQasaLightTile$1 extends s {
+    class SmartQasaLightTile extends s {
       _hass;
       static get properties() {
         return {
@@ -112,7 +105,7 @@
           this._icon = config.icon || null;
           this._name = config.name || null;
         } else {
-          throw new Error('You need to define an entity..');
+          throw new Error('You need to define an entity...');
         }
       }
       set hass(hass) {
@@ -166,7 +159,7 @@
       }
     }
 
-    customElements.define("smartqasa-light-tile", SmartQasaLightTile$1);
+    customElements.define("smartqasa-light-tile", SmartQasaLightTile);
     window.customCards = window.customCards || [];
     window.customCards.push({
       type: "smartqasa-light-tile",
