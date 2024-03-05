@@ -26,14 +26,6 @@ export default css`
         border-radius: 50%;
         transition: var(--sq-icon-transition, none);
     }
-    @keyframes spin {
-        from {
-          transform: rotate(0deg);
-        }
-        to {
-          transform: rotate(360deg);
-        }
-    }
     .name {
         grid-area: n;
         place-self: end start;

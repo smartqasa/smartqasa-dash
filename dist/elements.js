@@ -53,14 +53,6 @@
         border-radius: 50%;
         transition: var(--sq-icon-transition, none);
     }
-    @keyframes spin {
-        from {
-          transform: rotate(0deg);
-        }
-        to {
-          transform: rotate(360deg);
-        }
-    }
     .name {
         grid-area: n;
         place-self: end start;
@@ -87,6 +79,20 @@
         font-size: var(--sq-secondary-font-size, 1.0rem);
         color: rgb(var(--sq-secondary-font-rgb, 0, 0, 0));
     }
+`;
+
+    var styleTileIconSpin = i$2`
+.icon {
+    transition: var(--sq-icon-transition, none);
+  }
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
 `;
 
     class SmartQasaFanTile extends s {
@@ -123,7 +129,7 @@
         this._hass = hass;
         this._stateObj = this._hass.states[this._entity] || undefined;
       }
-      static styles = [styleTileBase, styleTileState];
+      static styles = [styleTileBase, styleTileState, styleTileIconSpin];
       render() {
         let icon, iconColor, iconAnimation, name, stateFmtd;
         if (this._stateObj) {
