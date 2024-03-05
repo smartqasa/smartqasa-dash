@@ -66,16 +66,6 @@
         font-size: var(--sq-primary-font-size, 16px);
         color: rgb(var(--sq-primary-font-rgb), 128, 128, 128);
     }
-    .state {
-        grid-area: s;
-        align-self: start;
-        text-align: left;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        font-weight: var(--sq-secondary-font-weight, 300);
-        font-size: var(--sq-secondary-font-size, 14px);
-        color: rgb(var(--sq-secondary-font-rgb, 0, 0, 0));
-    }
 `;
 
     var styleTileState = i$2`
