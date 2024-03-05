@@ -199,13 +199,7 @@
       }
       _navigate() {
         if (this._area) {
-          if (this._hass && this._hass.callService) {
-            this._hass.callService('frontend', 'navigate', {
-              path: "/home-dash/kitchen"
-            });
-          } else {
-            window.location.href = this._area;
-          }
+          window.location.href = `/home-dash/${this._area}`;
         } else {
           console.error('Navigation path is not defined.');
         }
