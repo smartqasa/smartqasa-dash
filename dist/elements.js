@@ -68,6 +68,136 @@
     }
 `;
 
+    class SmartQasaAllOffTile extends s {
+      _hass;
+      static get properties() {
+        return {
+          _area: {
+            state: true
+          },
+          _areaObj: {
+            state: true
+          },
+          _icon: {
+            state: true
+          },
+          _name: {
+            state: true
+          }
+        };
+      }
+      setConfig(config) {
+        if (config.area) {
+          this._area = config.area || null;
+          this._icon = config.icon || null;
+          this._name = config.name || null;
+        } else {
+          throw new Error('You need to define an area');
+        }
+      }
+      set hass(hass) {
+        this._hass = hass;
+        this._areaObj = this._hass.areas[this._area] || undefined;
+      }
+      static styles = styleTileBase;
+      render() {
+        let icon, iconColor, name;
+        if (this._areaObj) {
+          icon = this._icon || 'hass:power';
+          iconColor = 'var(--sq-inactive-rgb)';
+          name = this._name || 'All Off';
+        } else {
+          icon = this._icon || 'hass:alert-rhombus';
+          iconColor = 'var(--sq-unavailable-rgb)';
+          name = this._name || 'Unknown';
+        }
+        return x`
+      <div class='container' @click=${this._runRoutine}>
+        <div class='icon' id='icon' style='
+          color: rgb(${iconColor});
+          background-color: rgba(${iconColor}, var(--sq-icon-opacity));
+        '>
+          <ha-icon .icon=${icon}></ha-icon>
+        </div>
+        <div class='name'>${name}</div>
+      </div>
+    `;
+      }
+      _runRoutine(e) {
+        e.stopPropagation();
+        const iconElement = this.shadowRoot.getElementById('icon');
+        iconElement.style.color = `rgb(var(--sq-accent-rgb))`;
+        iconElement.style.backgroundColor = `rgba(var(--sq-accent-rgb), var(--sq-icon-opacity)`;
+        this._hass.callService('light', 'turn_off', {
+          area_id: this._area,
+          transition: 2
+        });
+        this._hass.callService('fan', 'turn_off', {
+          area_id: this._area
+        });
+        setTimeout(() => {
+          iconElement.style.color = `rgb(var(--sq-inactive-rgb))`;
+          iconElement.style.backgroundColor = `rgba(var(--sq-inactive-rgb), var(--sq-icon-opacity))`;
+        }, 2000);
+      }
+    }
+
+    class SmartQasaAreaTile extends s {
+      static get properties() {
+        return {
+          hass: {
+            type: Object
+          },
+          _config: {
+            type: Object
+          }
+        };
+      }
+      static styles = styleTileBase;
+      constructor() {
+        super();
+        this.hass = {};
+        this._config = {};
+      }
+      setConfig(config) {
+        if (!config.area) {
+          throw new Error('You need to define a area');
+        }
+        this._config = config;
+      }
+      render() {
+        if (!this.hass || !this._config) {
+          return x``;
+        }
+        const areaObj = this.hass.areas[this._config.area];
+        const name = this._config.name || areaObj?.name || 'Unknown';
+        const icon = this._config.icon || areaObj?.icon || 'hass:alert-circle-outline';
+        const iconColor = 'var(--sq-inactive-rgb)';
+        return x`
+      <div class='container' @click=${this._navigate}>
+        <div class='icon' id='icon' style='color: rgb(${iconColor}); background-color: rgba(${iconColor}, var(--sq-icon-opacity));'>
+          <ha-icon .icon=${icon}></ha-icon>
+        </div>
+        <div class='name'>${name}</div>
+      </div>
+    `;
+      }
+      _navigate() {
+        if (this._config.arae) {
+          if (this.hass && this.hass.callService) {
+            this.hass.callService('frontend', 'navigate', {
+              path: '/dashboard-sandbox/test-5'
+            });
+          } else {
+            // Fallback to direct manipulation if necessary
+            window.location.href = this._config.area;
+          }
+        } else {
+          console.error('Navigation path is not defined.');
+        }
+      }
+    }
+
     var styleTileState = i$2`
     .state {
         grid-area: s;
@@ -345,6 +475,22 @@
       }
     }
 
+    customElements.define('smartqasa-all-off-tile', SmartQasaAllOffTile);
+    window.customCards = window.customCards || [];
+    window.customCards.push({
+      type: 'smartqasa-all-off-tile',
+      name: 'SmartQasa All Off Tile',
+      preview: true,
+      description: 'A SmartQasa tile for turning off all light and fan entities in an area.'
+    });
+    customElements.define('smartqasa-area-tile', SmartQasaAreaTile);
+    window.customCards = window.customCards || [];
+    window.customCards.push({
+      type: 'smartqasa-area-tile',
+      name: 'SmartQasa Area Tile',
+      preview: true,
+      description: 'A SmartQasa tile for navigating to an area or a specific dashboard view.'
+    });
     customElements.define('smartqasa-fan-tile', SmartQasaFanTile);
     window.customCards = window.customCards || [];
     window.customCards.push({

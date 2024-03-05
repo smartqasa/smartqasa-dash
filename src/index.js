@@ -8,6 +8,16 @@ window.customCards.push({
   description: 'A SmartQasa tile for turning off all light and fan entities in an area.',
 });
 
+import { SmartQasaAreaTile } from './tiles/area-tile';
+customElements.define('smartqasa-area-tile', SmartQasaAreaTile);
+window.customCards = window.customCards || [];
+window.customCards.push({
+  type: 'smartqasa-area-tile',
+  name: 'SmartQasa Area Tile',
+  preview: true,
+  description: 'A SmartQasa tile for navigating to an area or a specific dashboard view.',
+});
+
 import { SmartQasaFanTile } from './tiles/fan-tile';
 customElements.define('smartqasa-fan-tile', SmartQasaFanTile);
 window.customCards = window.customCards || [];
