@@ -87,13 +87,3 @@ export class SmartQasaFanTile extends LitElement {
     this.dispatchEvent(event);
   }
 }
-
-customElements.define('smartqasa-fan-tile', SmartQasaFanTile);
-
-window.customCards = window.customCards || [];
-window.customCards.push({
-  type: 'smartqasa-fan-tile',
-  name: 'SmartQasa Fan Tile',
-  preview: true,
-  description: 'A SmartQasa tile for controlling a fan entity.',
-});

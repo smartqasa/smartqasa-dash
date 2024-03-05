@@ -161,13 +161,6 @@
         this.dispatchEvent(event);
       }
     }
-    customElements.define("smartqasa-light-tile", SmartQasaLightTile);
-    window.customCards = window.customCards || [];
-    window.customCards.push({
-      type: "smartqasa-light-tile",
-      name: "SmartQasa Light Tile",
-      description: "A SmartQasa tile for controlling a light entity."
-    });
 
     var styleTileIconSpin = i$2`
     @keyframes spin {
@@ -270,6 +263,14 @@
         this.dispatchEvent(event);
       }
     }
+
+    customElements.define("smartqasa-light-tile", SmartQasaLightTile);
+    window.customCards = window.customCards || [];
+    window.customCards.push({
+      type: "smartqasa-light-tile",
+      name: "SmartQasa Light Tile",
+      description: "A SmartQasa tile for controlling a light entity."
+    });
     customElements.define('smartqasa-fan-tile', SmartQasaFanTile);
     window.customCards = window.customCards || [];
     window.customCards.push({
