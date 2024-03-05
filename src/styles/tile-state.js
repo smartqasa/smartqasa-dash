@@ -5,6 +5,9 @@ export default css`
         grid-template-areas: "i n" "i s";
         grid-row-gap: var(--sq-card-gap-row, 0.3rem);
     }
+    .name {
+        place-self: end start;
+    }
     .state {
         grid-area: s;
         align-self: start;

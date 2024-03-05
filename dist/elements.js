@@ -54,7 +54,7 @@
     }
     .name {
         grid-area: n;
-        place-self: end start;
+        place-self: center start;
         max-height: 3.5rem;
         max-width: 100%;
         text-align: left;
@@ -62,7 +62,7 @@
         text-overflow: ellipsis;
         white-space: normal;
         font-weight: var(--sq-primary-font-weight, 400);
-        font-size: var(--sq-primary-font-size, 1.5rem);
+        font-size: var(--sq-primary-font-size, 16px);
         color: rgb(var(--sq-primary-font-rgb), 128, 128, 128);
     }
 `;
@@ -201,6 +201,9 @@
     .container {
         grid-template-areas: "i n" "i s";
         grid-row-gap: var(--sq-card-gap-row, 0.3rem);
+    }
+    .name {
+        place-self: end start;
     }
     .state {
         grid-area: s;
