@@ -4,7 +4,7 @@ import styleTileBase from '../styles/tile-base';
 import styleTileState from '../styles/tile-state';
 import styleTileIconSpin from '../styles/tile-icon-spin';
 
-export class SmartQasaFanCard extends LitElement {
+export class SmartQasaFanTile extends LitElement {
 
   _hass;
 
