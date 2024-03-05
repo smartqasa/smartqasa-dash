@@ -35,10 +35,9 @@
         border: var(--sq-card-border, 'none');
         border-radius: var(--sq-card-border-radius, 1.0rem);
         box-shadow: var(--sq-card-box-shadow, 0 2px 4px 0 rgba(0, 0, 0, 0.2));
-        grid-template-areas: "i n" "i s";
+        grid-template-areas: "i n";
         grid-template-columns: auto 1fr;
         grid-column-gap: var(--sq-card-gap-column, 0.7rem);
-        grid-row-gap: var(--sq-card-gap-row, 0.3rem);
         background-color: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
         cursor: pointer;
     }
@@ -199,6 +198,10 @@
     }
 
     var styleTileState = i$2`
+    .container {
+        grid-template-areas: "i n" "i s";
+        grid-row-gap: var(--sq-card-gap-row, 0.3rem);
+    }
     .state {
         grid-area: s;
         align-self: start;
