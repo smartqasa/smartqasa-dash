@@ -33,7 +33,7 @@ export default css`
         to {
           transform: rotate(360deg);
         }
-      }
+    }
     .name {
         grid-area: n;
         place-self: end start;
