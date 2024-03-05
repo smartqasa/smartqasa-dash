@@ -13,8 +13,7 @@ export class SmartQasaSwitchTile extends LitElement {
       _category: { state: true },
       _stateObj: { state: true },
       _icon: { state: true },
-      _name: { state: true },
-      _state: { state: true }
+      _name: { state: true }
     };
   }
 
@@ -39,9 +38,9 @@ export class SmartQasaSwitchTile extends LitElement {
   render() {
     let icon, iconColor, name, stateFmtd;
     if (this._stateObj) {
-      this._state = this._stateObj.state;
+      const state = this._stateObj.state;
       icon = this._icon || this._stateObj.attributes.icon;
-      iconColor = this._state == 'on'
+      iconColor = state == 'on'
         ? `var(--sq-switch${this._category ? '-' + this._category : ''}-on-rgb)`
         : 'var(--sq-inactive-rgb)';
       name = this._name || this._stateObj.attributes.friendly_name;

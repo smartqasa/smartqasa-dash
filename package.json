@@ -3,8 +3,14 @@
   "version": "1.0.0",
   "description": "SmartQasa Dashboard Cards",
   "type": "module",
+  "author": "Paul Bottein",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/smartqasa/smartqasa-dash"
+  },
   "scripts": {
-    "build": "rollup -c"
+    "build": "rollup --config",
+    "watch": "rollup --config --watch"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",

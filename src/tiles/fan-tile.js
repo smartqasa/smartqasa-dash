@@ -38,10 +38,10 @@ export class SmartQasaFanTile extends LitElement {
   render() {
     let icon, iconColor, iconAnimation, name, stateFmtd;
     if (this._stateObj) {
-      this._state = this._stateObj.state;
+      const state = this._stateObj.state;
       icon = this._icon || 'hass:fan'
-      iconColor = this._state == 'on' ? 'var(--sq-fan-on-rgb)' : 'var(--sq-inactive-rgb)';
-      if (this._state === 'on') {
+      iconColor = state == 'on' ? 'var(--sq-fan-on-rgb)' : 'var(--sq-inactive-rgb)';
+      if (state === 'on') {
         if (this._stateObj.attributes.percentage) {
           const speed = 0.5 + (1 - this._stateObj.attributes.percentage / 100);
           const direction = this._stateObj.attributes.direction === 'reverse' ? 'reverse' : 'normal';
@@ -52,7 +52,7 @@ export class SmartQasaFanTile extends LitElement {
       }
       name = this._name || this._stateObj.attributes.friendly_name || 'Unknown';
       stateFmtd = this._hass.formatEntityState(this._stateObj) +
-        (this._state === 'on' && this._stateObj.attributes.percentage ? ' - ' +
+        (state === 'on' && this._stateObj.attributes.percentage ? ' - ' +
         this._hass.formatEntityAttributeValue(this._stateObj, 'percentage') : '');
     } else {
       icon = 'hass:alert-rhombus';
