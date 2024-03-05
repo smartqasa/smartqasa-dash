@@ -161,7 +161,6 @@
         this.dispatchEvent(event);
       }
     }
-
     customElements.define("smartqasa-light-tile", SmartQasaLightTile);
     window.customCards = window.customCards || [];
     window.customCards.push({
