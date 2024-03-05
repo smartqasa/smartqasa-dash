@@ -2,7 +2,7 @@ import { css } from 'lit';
 
 export default css`
     .container {
-        grid-template-areas: "i n" "i s";
+        grid-template-areas: 'i n' 'i s';
         grid-row-gap: var(--sq-card-gap-row, 0.3rem);
     }
     .name {

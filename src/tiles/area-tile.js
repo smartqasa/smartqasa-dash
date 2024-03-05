@@ -3,41 +3,53 @@ import { LitElement, html } from 'lit';
 import styleTileBase from '../styles/tile-base';
 
 export class SmartQasaAreaTile extends LitElement {
+
+  _hass;
+
   static get properties() {
     return {
-      hass: { type: Object },
-      _config: { type: Object },
+      _area: { state: true },
+      _areaObj: { state: true },
+      _icon: { state: true },
+      _name: { state: true },
     };
+  }
+
+  setConfig(config) {
+    if (config.area) {
+      this._area = config.area || null;
+      this._icon = config.icon || null;
+      this._name = config.name || null;
+    } else {
+      throw new Error('You need to define an area');
+    };
+  }
+
+  set hass(hass) {
+    this._hass = hass;
+    this._areaObj = this._hass.areas[this._area] || undefined;
   }
 
   static styles = styleTileBase;
 
-  constructor() {
-    super();
-    this.hass = {};
-    this._config = {};
-  }
-
-  setConfig(config) {
-    if (!config.area) {
-      throw new Error('You need to define a area');
-    }
-    this._config = config;
-  }
-
   render() {
-    if (!this.hass || !this._config) {
-      return html``;
+    let icon, iconColor, name;
+    if (this._areaObj) {
+      icon = this._icon || this._areaObj.icon || 'hass:alert-circle-outline';
+      iconColor = 'var(--sq-inactive-rgb)';
+      name = this._name || this._areaObj.name || 'Unknown';
+    } else {
+      icon = this._icon || 'hass:alert-rhombus';
+      iconColor = 'var(--sq-unavailable-rgb)';
+      name = this._name || 'Unknown';
     }
-
-    const areaObj = this.hass.areas[this._config.area];
-    const name = this._config.name || areaObj?.name || 'Unknown';
-    const icon = this._config.icon || areaObj?.icon || 'hass:alert-circle-outline';
-    const iconColor = 'var(--sq-inactive-rgb)';
 
     return html`
       <div class='container' @click=${this._navigate}>
-        <div class='icon' id='icon' style='color: rgb(${iconColor}); background-color: rgba(${iconColor}, var(--sq-icon-opacity));'>
+        <div class='icon' id='icon' style='
+          color: rgb(${iconColor});
+          background-color: rgba(${iconColor}, var(--sq-icon-opacity));
+        '>
           <ha-icon .icon=${icon}></ha-icon>
         </div>
         <div class='name'>${name}</div>
@@ -46,12 +58,11 @@ export class SmartQasaAreaTile extends LitElement {
   }
 
   _navigate() {
-    if (this._config.arae) {
-      if (this.hass && this.hass.callService) {
-        this.hass.callService('frontend', 'navigate', {path: '/dashboard-sandbox/test-5'});
+    if (this._area) {
+      if (this._hass && this._hass.callService) {
+        this._hass.callService('frontend', 'navigate', {path: "/home-dash/kitchen"});
       } else {
-        // Fallback to direct manipulation if necessary
-        window.location.href = this._config.area;
+        window.location.href = this._area;
       }
     } else {
       console.error('Navigation path is not defined.');
