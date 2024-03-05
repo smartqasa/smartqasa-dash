@@ -27,7 +27,7 @@
      * SPDX-License-Identifier: BSD-3-Clause
      */class s extends b{constructor(){super(...arguments),this.renderOptions={host:this},this._$Do=void 0;}createRenderRoot(){const t=super.createRenderRoot();return this.renderOptions.renderBefore??=t.firstChild,t}update(t){const i=this.render();this.hasUpdated||(this.renderOptions.isConnected=this.isConnected),super.update(t),this._$Do=j(i,this.renderRoot,this.renderOptions);}connectedCallback(){super.connectedCallback(),this._$Do?.setConnected(!0);}disconnectedCallback(){super.disconnectedCallback(),this._$Do?.setConnected(!1);}render(){return w}}s._$litElement$=!0,s[("finalized")]=!0,globalThis.litElementHydrateSupport?.({LitElement:s});const r=globalThis.litElementPolyfillSupport;r?.({LitElement:s});(globalThis.litElementVersions??=[]).push("4.0.4");
 
-    i$2`
+    var styleTileBase = i$2`
     .container {
         display: grid;
         height: var(--sq-card-height, 4.0rem);
@@ -66,9 +66,19 @@
         font-size: var(--sq-primary-font-size, 16px);
         color: rgb(var(--sq-primary-font-rgb), 128, 128, 128);
     }
+    .state {
+        grid-area: s;
+        align-self: start;
+        text-align: left;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        font-weight: var(--sq-secondary-font-weight, 300);
+        font-size: var(--sq-secondary-font-size, 14px);
+        color: rgb(var(--sq-secondary-font-rgb, 0, 0, 0));
+    }
 `;
 
-    i$2`
+    var styleTileState = i$2`
     .state {
         grid-area: s;
         align-self: start;
@@ -115,7 +125,7 @@
         this._hass = hass;
         this._stateObj = this._hass.states[this._entity] || undefined;
       }
-      static styles = [tileStyleBase, tileStyleState];
+      static styles = [styleTileBase, styleTileState];
       render() {
         let icon, iconColor, name, stateFmtd;
         if (this._stateObj) {

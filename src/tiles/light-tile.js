@@ -1,5 +1,5 @@
 import { LitElement, html } from 'lit';
-import styleTileBase from '../styles/tile-base';
+import styleTileBase from '../styles/tile';
 import styleTileState from '../styles/tile-state';
 
 export class SmartQasaLightTile extends LitElement {
