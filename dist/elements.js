@@ -131,6 +131,7 @@
       }
       static styles = [styleTileBase, styleTileState, styleTileIconSpin];
       render() {
+        console.log('Hello Barbi');
         let icon, iconColor, iconAnimation, name, stateFmtd;
         if (this._stateObj) {
           this._state = this._stateObj.state;
