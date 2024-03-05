@@ -481,7 +481,7 @@
       type: 'smartqasa-all-off-tile',
       name: 'SmartQasa All Off Tile',
       preview: true,
-      description: 'A SmartQasa tile for turning off all light and fan entities in an area.'
+      description: 'A SmartQasa tile for turning off all light and fan entities in an area..'
     });
     customElements.define('smartqasa-area-tile', SmartQasaAreaTile);
     window.customCards = window.customCards || [];

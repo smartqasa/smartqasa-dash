@@ -5,7 +5,7 @@ window.customCards.push({
   type: 'smartqasa-all-off-tile',
   name: 'SmartQasa All Off Tile',
   preview: true,
-  description: 'A SmartQasa tile for turning off all light and fan entities in an area.',
+  description: 'A SmartQasa tile for turning off all light and fan entities in an area..',
 });
 
 import { SmartQasaAreaTile } from './tiles/area-tile';
