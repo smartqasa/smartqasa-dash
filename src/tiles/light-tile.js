@@ -1,5 +1,6 @@
 import { LitElement, html } from 'lit';
-import styles from '../styles/tile';
+import styleTileBase from '../styles/tile-base';
+import styleTileState from '../styles/tile-state';
 
 export class SmartQasaLightTile extends LitElement {
 
@@ -30,7 +31,7 @@ export class SmartQasaLightTile extends LitElement {
     this._stateObj = this._hass.states[this._entity] || undefined;
   }
 
-  static styles = styles;
+  static styles = [styleTileBase, styleTileState];
 
   render() {
     let icon, iconColor, name, stateFmtd;
