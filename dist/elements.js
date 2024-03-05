@@ -45,11 +45,11 @@
     .icon {
         grid-area: i;
         display: flex;
-        height: var(--sq-icon-size, 25px);
-        width: var(--sq-icon-size, 25px);
+        height: var(--sq-icon-size, 1.8rem);
+        width: var(--sq-icon-size, 1.8rem);
         justify-content: center;
         align-self: center;
-        padding: var(--sq-icon-padding, 14px);
+        padding: var(--sq-icon-padding, 1.0rem);
         border-radius: 50%;
         transition: var(--sq-icon-transition, none);
     }
@@ -63,7 +63,7 @@
         text-overflow: ellipsis;
         white-space: normal;
         font-weight: var(--sq-primary-font-weight, 400);
-        font-size: var(--sq-primary-font-size, 16px);
+        font-size: var(--sq-primary-font-size, 1.5rem);
         color: rgb(var(--sq-primary-font-rgb), 128, 128, 128);
     }
 `;
@@ -76,7 +76,7 @@
         text-overflow: ellipsis;
         overflow: hidden;
         font-weight: var(--sq-secondary-font-weight, 300);
-        font-size: var(--sq-secondary-font-size, 14px);
+        font-size: var(--sq-secondary-font-size, 1.0rem);
         color: rgb(var(--sq-secondary-font-rgb, 0, 0, 0));
     }
 `;

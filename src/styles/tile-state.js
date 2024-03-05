@@ -8,7 +8,7 @@ export default css`
         text-overflow: ellipsis;
         overflow: hidden;
         font-weight: var(--sq-secondary-font-weight, 300);
-        font-size: var(--sq-secondary-font-size, 14px);
+        font-size: var(--sq-secondary-font-size, 1.0rem);
         color: rgb(var(--sq-secondary-font-rgb, 0, 0, 0));
     }
 `;
