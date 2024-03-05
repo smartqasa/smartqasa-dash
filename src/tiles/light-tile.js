@@ -13,7 +13,6 @@ export class SmartQasaLightTile extends LitElement {
       _stateObj: { state: true },
       _icon: { state: true },
       _name: { state: true },
-      _state: { state: true }
     };
   }
 
@@ -37,12 +36,12 @@ export class SmartQasaLightTile extends LitElement {
   render() {
     let icon, iconColor, name, stateFmtd;
     if (this._stateObj) {
-      this._state = this._stateObj.state;
+      const state = this._stateObj.state;
       icon = this._icon || this._stateObj.attributes.icon;
       name = this._name || this._stateObj.attributes.friendly_name;
-      iconColor = this._state == 'on' ? 'var(--sq-light-on-rgb)' : 'var(--sq-inactive-rgb)';
+      iconColor = state == 'on' ? 'var(--sq-light-on-rgb)' : 'var(--sq-inactive-rgb)';
       stateFmtd = this._hass.formatEntityState(this._stateObj) +
-        (this._state == 'on' && this._stateObj.attributes.brightness ? ' - ' +
+        (state == 'on' && this._stateObj.attributes.brightness ? ' - ' +
         this._hass.formatEntityAttributeValue(this._stateObj, 'brightness') : '');
     } else {
       icon = 'hass:alert-rhombus';

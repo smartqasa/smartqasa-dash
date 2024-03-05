@@ -16,3 +16,13 @@ window.customCards.push({
     name: 'SmartQasa Light Tile',
     description: 'A SmartQasa tile for controlling a light entity.',
 });
+
+import { SmartQasaSwitchTile } from './tiles/switch-tile';
+customElements.define('smartqasa-switch-tile', SmartQasaSwitchTile);
+window.customCards = window.customCards || [];
+window.customCards.push({
+  type: 'smartqasa-switch-tile',
+  name: 'SmartQasa Switch Tile',
+  preview: true,
+  description: 'A SmartQasa tile for toggling an entity.',
+});
