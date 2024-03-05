@@ -112,7 +112,7 @@
           this._icon = config.icon || null;
           this._name = config.name || null;
         } else {
-          throw new Error('You need to define an entity.');
+          throw new Error('You need to define an entity..');
         }
       }
       set hass(hass) {
