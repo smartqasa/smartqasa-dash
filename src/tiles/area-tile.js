@@ -35,7 +35,7 @@ export class SmartQasaAreaTile extends LitElement {
   render() {
     let icon, iconColor, name;
     if (this._areaObj) {
-      icon = this._icon || this._areaObj.icon || 'hass:alert-circle-outline';
+      icon = this._icon || this._areaObj.icon || 'hass:help-circle';
       iconColor = 'var(--sq-inactive-rgb)';
       name = this._name || this._areaObj.name || 'Unknown';
     } else {
