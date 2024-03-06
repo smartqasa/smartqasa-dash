@@ -559,7 +559,7 @@
           icon = 'hass:alert-rhombus';
           iconColor = 'var(--sq-unavailable-rgb)';
           name = this._name || 'Unknown';
-          stateFmtd = 'Unknown!';
+          stateFmtd = 'Unknown';
         }
         return x`
             <div class='container' @click=${this._showMoreInfo}>
