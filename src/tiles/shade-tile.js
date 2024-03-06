@@ -20,8 +20,8 @@ export class SmartQasaShadeTile extends LitElement {
     setConfig(config) {
         if (config.entity) {
             this._entity = config.entity;
-            this._name = config.name || null;
-            this._tilt = config.tilt || 100;
+            this._name = config.name ?? null;
+            this._tilt = config.tilt ?? 100;
         } else {
             throw new Error('You need to define an entity');
         }
@@ -29,7 +29,7 @@ export class SmartQasaShadeTile extends LitElement {
 
     set hass(hass) {
         this._hass = hass;
-        this._stateObj = this._hass.states[this._entity] || undefined;
+        this._stateObj = this._hass.states[this._entity] ?? undefined;
     }
 
     static styles = [styleTileBase, styleTileState];
@@ -64,11 +64,11 @@ export class SmartQasaShadeTile extends LitElement {
                 (state === 'open' && this._stateObj.attributes.current_position
                     ? ' - ' + this._hass.formatEntityAttributeValue(this._stateObj, 'current_position')
                     : '');
-            name = this._name || this._stateObj.attributes.friendly_name || 'Unknown';
+            name = this._name ?? this._stateObj.attributes.friendly_name ?? 'Unknown';
         } else {
             icon = 'hass:alert-rhombus';
             iconColor = 'var(--sq-unavailable-rgb)';
-            name = this._name || 'Unknown';
+            name = this._name ?? 'Unknown';
             stateFmtd = 'Unknown';
         }
 

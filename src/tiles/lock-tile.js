@@ -19,7 +19,7 @@ export class SmartQasaLockTile extends LitElement {
     setConfig(config) {
         if (config.entity) {
             this._entity = config.entity;
-            this._name = config.name || null;
+            this._name = config.name ?? null;
         } else {
             throw new Error('You need to define an entity');
         };
@@ -27,7 +27,7 @@ export class SmartQasaLockTile extends LitElement {
 
     set hass(hass) {
         this._hass = hass;
-        this._stateObj = this._hass.states[this._entity] || undefined;
+        this._stateObj = this._hass.states[this._entity] ?? undefined;
     }
 
     static styles = [styleTileBase, styleTileState, styleTileIconSpin];
@@ -50,12 +50,12 @@ export class SmartQasaLockTile extends LitElement {
                     iconColor = 'var(--sq-unavailable-rgb, 255, 0, 255)';
                     break;
             }
-            name = this._name || this._stateObj.attributes.friendly_name;
+            name = this._name ?? this._stateObj.attributes.friendly_name;
             stateFmtd = this._hass.formatEntityState(this._stateObj);
         } else {
             icon = 'hass:alert-rhombus';
             iconColor = 'var(--sq-unavailable-rgb)';
-            name = this._name || 'Unknown';
+            name = this._name ?? 'Unknown';
             stateFmtd = 'Unknown';
         }
 
@@ -78,9 +78,7 @@ export class SmartQasaLockTile extends LitElement {
         const haIconElement = this.shadowRoot.querySelector('ha-icon');
         haIconElement.icon = 'hass:rotate-right';
         const iconElement = this.shadowRoot.getElementById('icon');
-        iconElement.style.color = `rgb(var(--sq-accent-rgb))`;
-        iconElement.style.backgroundColor = `rgba(var(--sq-accent-rgb), var(--sq-icon-opacity)`;
-        iconElement.style.animation = 'spin 2.0s linear infinite';
+        iconElement.style.animation = 'spin 1.0s linear infinite';
 
         this._hass.callService('lock', this._state === 'locked' ? 'unlock' : 'lock', { entity_id: this._entity });
     }

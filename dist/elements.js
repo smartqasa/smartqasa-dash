@@ -88,28 +88,28 @@
       }
       setConfig(config) {
         if (config.area) {
-          this._area = config.area || null;
-          this._icon = config.icon || null;
-          this._name = config.name || null;
+          this._area = config.area ?? null;
+          this._icon = config.icon ?? null;
+          this._name = config.name ?? null;
         } else {
           throw new Error('You need to define an area');
         }
       }
       set hass(hass) {
         this._hass = hass;
-        this._areaObj = this._hass.areas[this._area] || undefined;
+        this._areaObj = this._hass.areas[this._area] ?? undefined;
       }
       static styles = styleTileBase;
       render() {
         let icon, iconColor, name;
         if (this._areaObj) {
-          icon = this._icon || 'hass:power';
+          icon = this._icon ?? 'hass:power';
           iconColor = 'var(--sq-inactive-rgb)';
-          name = this._name || 'All Off';
+          name = this._name ?? 'All Off';
         } else {
-          icon = this._icon || 'hass:alert-rhombus';
+          icon = this._icon ?? 'hass:alert-rhombus';
           iconColor = 'var(--sq-unavailable-rgb)';
-          name = this._name || 'Unknown';
+          name = this._name ?? 'Unknown';
         }
         return x`
             <div class='container' @click=${this._runRoutine}>
@@ -162,28 +162,28 @@
       }
       setConfig(config) {
         if (config.area) {
-          this._area = config.area || null;
-          this._icon = config.icon || null;
-          this._name = config.name || null;
+          this._area = config.area ?? null;
+          this._icon = config.icon ?? null;
+          this._name = config.name ?? null;
         } else {
           throw new Error('You need to define an area');
         }
       }
       set hass(hass) {
         this._hass = hass;
-        this._areaObj = this._hass.areas[this._area] || undefined;
+        this._areaObj = this._hass.areas[this._area] ?? undefined;
       }
       static styles = styleTileBase;
       render() {
         let icon, iconColor, name;
         if (this._areaObj) {
-          icon = this._icon || this._areaObj.icon || 'hass:help-circle';
+          icon = this._icon ?? this._areaObj.icon ?? 'hass:help-circle';
           iconColor = 'var(--sq-inactive-rgb)';
-          name = this._name || this._areaObj.name || 'Unknown';
+          name = this._name ?? this._areaObj.name ?? 'Unknown';
         } else {
-          icon = this._icon || 'hass:alert-rhombus';
+          icon = this._icon ?? 'hass:alert-rhombus';
           iconColor = 'var(--sq-unavailable-rgb)';
-          name = this._name || 'Unknown';
+          name = this._name ?? 'Unknown';
         }
         return x`
             <div class='container' @click=${this._navigate}>
@@ -256,22 +256,22 @@
       setConfig(config) {
         if (config.entity) {
           this._entity = config.entity;
-          this._icon = config.icon || null;
-          this._name = config.name || null;
+          this._icon = config.icon ?? null;
+          this._name = config.name ?? null;
         } else {
           throw new Error('You need to define an entity');
         }
       }
       set hass(hass) {
         this._hass = hass;
-        this._stateObj = this._hass.states[this._entity] || undefined;
+        this._stateObj = this._hass.states[this._entity] ?? undefined;
       }
       static styles = [styleTileBase, styleTileState, styleTileIconSpin];
       render() {
         let icon, iconColor, iconAnimation, name, stateFmtd;
         if (this._stateObj) {
           const state = this._stateObj.state;
-          icon = this._icon || 'hass:fan';
+          icon = this._icon ?? 'hass:fan';
           iconColor = state == 'on' ? 'var(--sq-fan-on-rgb)' : 'var(--sq-inactive-rgb)';
           if (state === 'on') {
             if (this._stateObj.attributes.percentage) {
@@ -282,12 +282,12 @@
               iconAnimation = `spin 0.5s linear infinite normal`;
             }
           }
-          name = this._name || this._stateObj.attributes.friendly_name || 'Unknown';
+          name = this._name ?? this._stateObj.attributes.friendly_name ?? 'Unknown';
           stateFmtd = this._hass.formatEntityState(this._stateObj) + (state === 'on' && this._stateObj.attributes.percentage ? ' - ' + this._hass.formatEntityAttributeValue(this._stateObj, 'percentage') : '');
         } else {
           icon = 'hass:alert-rhombus';
           iconColor = 'var(--sq-unavailable-rgb)';
-          name = this._name || 'Unknown';
+          name = this._name ?? 'Unknown';
           stateFmtd = 'Unknown';
         }
         return x`
@@ -344,14 +344,14 @@
       setConfig(config) {
         if (config.entity) {
           this._entity = config.entity;
-          this._name = config.name || null;
+          this._name = config.name ?? null;
         } else {
           throw new Error('You need to define an entity');
         }
       }
       set hass(hass) {
         this._hass = hass;
-        this._stateObj = this._hass.states[this._entity] || undefined;
+        this._stateObj = this._hass.states[this._entity] ?? undefined;
       }
       static styles = [styleTileBase, styleTileState];
       render() {
@@ -381,11 +381,11 @@
               break;
           }
           stateFmtd = this._hass.formatEntityState(this._stateObj) + (state === 'open' && this._stateObj.attributes.current_position ? ' - ' + this._hass.formatEntityAttributeValue(this._stateObj, 'current_position') : '');
-          name = this._name || this._stateObj.attributes.friendly_name;
+          name = this._name ?? this._stateObj.attributes.friendly_name;
         } else {
           icon = 'hass:alert-rhombus';
           iconColor = 'var(--sq-unavailable-rgb)';
-          name = this._name || 'Unknown';
+          name = this._name ?? 'Unknown';
           stateFmtd = 'Unknown';
         }
         return x`
@@ -441,28 +441,28 @@
       setConfig(config) {
         if (config.entity) {
           this._entity = config.entity;
-          this._icon = config.icon || null;
-          this._name = config.name || null;
+          this._icon = config.icon ?? null;
+          this._name = config.name ?? null;
         } else {
           throw new Error('You need to define an entity...');
         }
       }
       set hass(hass) {
         this._hass = hass;
-        this._stateObj = this._hass.states[this._entity] || undefined;
+        this._stateObj = this._hass.states[this._entity] ?? undefined;
       }
       static styles = [styleTileBase, styleTileState];
       render() {
         let icon, iconColor, name, stateFmtd;
         if (this._stateObj) {
           const state = this._stateObj.state;
-          icon = this._icon || this._stateObj.attributes.icon;
-          name = this._name || this._stateObj.attributes.friendly_name;
+          icon = this._icon ?? this._stateObj.attributes.icon;
+          name = this._name ?? this._stateObj.attributes.friendly_name;
           iconColor = state == 'on' ? 'var(--sq-light-on-rgb)' : 'var(--sq-inactive-rgb)';
           stateFmtd = this._hass.formatEntityState(this._stateObj) + (state == 'on' && this._stateObj.attributes.brightness ? ' - ' + this._hass.formatEntityAttributeValue(this._stateObj, 'brightness') : '');
         } else {
           icon = 'hass:alert-rhombus';
-          name = this._name || 'Unknown';
+          name = this._name ?? 'Unknown';
           iconColor = 'var(--sq-unavailable-rgb)';
           stateFmtd = 'Unknown';
         }
@@ -519,14 +519,14 @@
       setConfig(config) {
         if (config.entity) {
           this._entity = config.entity;
-          this._name = config.name || null;
+          this._name = config.name ?? null;
         } else {
           throw new Error('You need to define an entity');
         }
       }
       set hass(hass) {
         this._hass = hass;
-        this._stateObj = this._hass.states[this._entity] || undefined;
+        this._stateObj = this._hass.states[this._entity] ?? undefined;
       }
       static styles = [styleTileBase, styleTileState, styleTileIconSpin];
       render() {
@@ -547,12 +547,12 @@
               iconColor = 'var(--sq-unavailable-rgb, 255, 0, 255)';
               break;
           }
-          name = this._name || this._stateObj.attributes.friendly_name;
+          name = this._name ?? this._stateObj.attributes.friendly_name;
           stateFmtd = this._hass.formatEntityState(this._stateObj);
         } else {
           icon = 'hass:alert-rhombus';
           iconColor = 'var(--sq-unavailable-rgb)';
-          name = this._name || 'Unknown';
+          name = this._name ?? 'Unknown';
           stateFmtd = 'Unknown';
         }
         return x`
@@ -573,9 +573,7 @@
         const haIconElement = this.shadowRoot.querySelector('ha-icon');
         haIconElement.icon = 'hass:rotate-right';
         const iconElement = this.shadowRoot.getElementById('icon');
-        iconElement.style.color = `rgb(var(--sq-accent-rgb))`;
-        iconElement.style.backgroundColor = `rgba(var(--sq-accent-rgb), var(--sq-icon-opacity)`;
-        iconElement.style.animation = 'spin 2.0s linear infinite';
+        iconElement.style.animation = 'spin 1.0s linear infinite';
         this._hass.callService('lock', this._state === 'locked' ? 'unlock' : 'lock', {
           entity_id: this._entity
         });
@@ -614,25 +612,25 @@
       setConfig(config) {
         if (config.entity) {
           this._entity = config.entity;
-          this._icon = config.icon || null;
-          this._name = config.name || null;
+          this._icon = config.icon ?? null;
+          this._name = config.name ?? null;
         } else {
           throw new Error('You need to define an entity');
         }
       }
       set hass(hass) {
         this._hass = hass;
-        this._stateObj = this._hass.states[this._entity] || undefined;
+        this._stateObj = this._hass.states[this._entity] ?? undefined;
       }
-      static styles = styleTileBase;
+      static styles = [styleTileBase, styleTileIconSpin];
       render() {
-        let icon, iconColor, name;
+        let iconColor, name;
         if (this._stateObj) {
-          icon = this._icon || this._stateObj.attributes.icon;
+          this._icon = this._icon ?? this._stateObj.attributes.icon;
           iconColor = 'var(--sq-inactive-rgb)';
-          name = this._name || this._stateObj.attributes.friendly_name;
+          name = this._name ?? this._stateObj.attributes.friendly_name;
         } else {
-          icon = 'hass:alert-rhombus';
+          this._icon = 'hass:alert-rhombus';
           iconColor = 'var(--sq-unavailable-rgb)';
           name = 'Unknown';
         }
@@ -649,35 +647,39 @@
       `;
       }
       _runRoutine(e) {
-        e.stopPropagation();
-        const iconElement = this.shadowRoot.getElementById('icon');
-        iconElement.style.color = `rgb(var(--sq-accent-rgb))`;
-        iconElement.style.backgroundColor = `rgba(var(--sq-accent-rgb), var(--sq-icon-opacity)`;
-        const domain = this._entity.split('.')[0];
-        switch (domain) {
-          case 'script':
-            this._hass.callService('script', 'turn_on', {
-              entity_id: this._entity
-            });
-            break;
-          case 'scene':
-            this._hass.callService('scene', 'turn_on', {
-              entity_id: this._entity
-            });
-            break;
-          case 'automation':
-            this._hass.callService('automation', 'trigger', {
-              entity_id: this._entity
-            });
-            break;
-          default:
-            console.error('Unsupported entity domain:', domain);
-            return;
+        if (this._stateObj) {
+          e.stopPropagation();
+          const haIconElement = this.shadowRoot.querySelector('ha-icon');
+          haIconElement.icon = 'hass:rotate-right';
+          const iconElement = this.shadowRoot.getElementById('icon');
+          iconElement.style.animation = 'spin 1.0s linear infinite';
+          const domain = this._entity.split('.')[0];
+          switch (domain) {
+            case 'script':
+              this._hass.callService('script', 'turn_on', {
+                entity_id: this._entity
+              });
+              break;
+            case 'scene':
+              this._hass.callService('scene', 'turn_on', {
+                entity_id: this._entity
+              });
+              break;
+            case 'automation':
+              this._hass.callService('automation', 'trigger', {
+                entity_id: this._entity
+              });
+              break;
+            default:
+              console.error('Unsupported entity domain:', domain);
+              return;
+          }
+          setTimeout(() => {
+            haIconElement.icon = this._icon;
+            iconElement.style.color = `rgb(var(--sq-inactive-rgb))`;
+            iconElement.style.animation = none;
+          }, 2000);
         }
-        setTimeout(() => {
-          iconElement.style.color = `rgb(var(--sq-inactive-rgb))`;
-          iconElement.style.backgroundColor = `rgba(var(--sq-inactive-rgb), var(--sq-icon-opacity))`;
-        }, 2000);
       }
     }
 
@@ -705,15 +707,15 @@
       setConfig(config) {
         if (config.entity) {
           this._entity = config.entity;
-          this._name = config.name || null;
-          this._tilt = config.tilt || 100;
+          this._name = config.name ?? null;
+          this._tilt = config.tilt ?? 100;
         } else {
           throw new Error('You need to define an entity');
         }
       }
       set hass(hass) {
         this._hass = hass;
-        this._stateObj = this._hass.states[this._entity] || undefined;
+        this._stateObj = this._hass.states[this._entity] ?? undefined;
       }
       static styles = [styleTileBase, styleTileState];
       render() {
@@ -743,11 +745,11 @@
               break;
           }
           stateFmtd = this._hass.formatEntityState(this._stateObj) + (state === 'open' && this._stateObj.attributes.current_position ? ' - ' + this._hass.formatEntityAttributeValue(this._stateObj, 'current_position') : '');
-          name = this._name || this._stateObj.attributes.friendly_name || 'Unknown';
+          name = this._name ?? this._stateObj.attributes.friendly_name ?? 'Unknown';
         } else {
           icon = 'hass:alert-rhombus';
           iconColor = 'var(--sq-unavailable-rgb)';
-          name = this._name || 'Unknown';
+          name = this._name ?? 'Unknown';
           stateFmtd = 'Unknown';
         }
         return x`
@@ -820,25 +822,25 @@
       setConfig(config) {
         if (config.entity) {
           this._entity = config.entity;
-          this._category = config.category || null;
-          this._icon = config.icon || null;
-          this._name = config.name || null;
+          this._category = config.category ?? null;
+          this._icon = config.icon ?? null;
+          this._name = config.name ?? null;
         } else {
           throw new Error('You need to define an entity');
         }
       }
       set hass(hass) {
         this._hass = hass;
-        this._stateObj = this._hass.states[this._entity] || undefined;
+        this._stateObj = this._hass.states[this._entity] ?? undefined;
       }
       static styles = [styleTileBase, styleTileState];
       render() {
         let icon, iconColor, name, stateFmtd;
         if (this._stateObj) {
           const state = this._stateObj.state;
-          icon = this._icon || this._stateObj.attributes.icon;
+          icon = this._icon ?? this._stateObj.attributes.icon;
           iconColor = state == 'on' ? `var(--sq-switch${this._category ? '-' + this._category : ''}-on-rgb)` : 'var(--sq-inactive-rgb)';
-          name = this._name || this._stateObj.attributes.friendly_name;
+          name = this._name ?? this._stateObj.attributes.friendly_name;
           stateFmtd = this._hass.formatEntityState(this._stateObj);
         } else {
           icon = 'hass:alert-rhombus';

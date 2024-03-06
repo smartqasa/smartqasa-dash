@@ -19,7 +19,7 @@ export class SmartQasaGarageTile extends LitElement {
     setConfig(config) {
         if (config.entity) {
             this._entity = config.entity;
-            this._name = config.name || null;
+            this._name = config.name ?? null;
         } else {
             throw new Error('You need to define an entity');
         }
@@ -27,7 +27,7 @@ export class SmartQasaGarageTile extends LitElement {
 
     set hass(hass) {
         this._hass = hass;
-        this._stateObj = this._hass.states[this._entity] || undefined;
+        this._stateObj = this._hass.states[this._entity] ?? undefined;
     }
 
     static styles = [styleTileBase, styleTileState];
@@ -62,11 +62,11 @@ export class SmartQasaGarageTile extends LitElement {
                 (state === 'open' && this._stateObj.attributes.current_position
                 ? ' - ' + this._hass.formatEntityAttributeValue(this._stateObj, 'current_position')
                 : '');
-            name = this._name || this._stateObj.attributes.friendly_name;
+            name = this._name ?? this._stateObj.attributes.friendly_name;
         } else {
             icon = 'hass:alert-rhombus';
             iconColor = 'var(--sq-unavailable-rgb)';
-            name = this._name || 'Unknown';
+            name = this._name ?? 'Unknown';
             stateFmtd = 'Unknown';
         }
         return html`

@@ -20,9 +20,9 @@ export class SmartQasaSwitchTile extends LitElement {
     setConfig(config) {
         if (config.entity) {
             this._entity = config.entity;
-            this._category = config.category || null;
-            this._icon = config.icon || null;
-            this._name = config.name || null;
+            this._category = config.category ?? null;
+            this._icon = config.icon ?? null;
+            this._name = config.name ?? null;
         } else {
             throw new Error('You need to define an entity');
         }
@@ -30,7 +30,7 @@ export class SmartQasaSwitchTile extends LitElement {
 
     set hass(hass) {
         this._hass = hass;
-        this._stateObj = this._hass.states[this._entity] || undefined;
+        this._stateObj = this._hass.states[this._entity] ?? undefined;
     }
 
     static styles = [styleTileBase, styleTileState];
@@ -39,11 +39,11 @@ export class SmartQasaSwitchTile extends LitElement {
         let icon, iconColor, name, stateFmtd;
         if (this._stateObj) {
             const state = this._stateObj.state;
-            icon = this._icon || this._stateObj.attributes.icon;
+            icon = this._icon ?? this._stateObj.attributes.icon;
             iconColor = state == 'on' ?
                 `var(--sq-switch${this._category ? '-' + this._category : ''}-on-rgb)` :
                 'var(--sq-inactive-rgb)';
-            name = this._name || this._stateObj.attributes.friendly_name;
+            name = this._name ?? this._stateObj.attributes.friendly_name;
             stateFmtd = this._hass.formatEntityState(this._stateObj);
         } else {
             icon = 'hass:alert-rhombus';

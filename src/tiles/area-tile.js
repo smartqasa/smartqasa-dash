@@ -17,9 +17,9 @@ export class SmartQasaAreaTile extends LitElement {
 
     setConfig(config) {
         if (config.area) {
-            this._area = config.area || null;
-            this._icon = config.icon || null;
-            this._name = config.name || null;
+            this._area = config.area ?? null;
+            this._icon = config.icon ?? null;
+            this._name = config.name ?? null;
         } else {
             throw new Error('You need to define an area');
         }
@@ -27,7 +27,7 @@ export class SmartQasaAreaTile extends LitElement {
 
     set hass(hass) {
         this._hass = hass;
-        this._areaObj = this._hass.areas[this._area] || undefined;
+        this._areaObj = this._hass.areas[this._area] ?? undefined;
     }
 
     static styles = styleTileBase;
@@ -35,13 +35,13 @@ export class SmartQasaAreaTile extends LitElement {
     render() {
         let icon, iconColor, name;
         if (this._areaObj) {
-            icon = this._icon || this._areaObj.icon || 'hass:help-circle';
+            icon = this._icon ?? this._areaObj.icon ?? 'hass:help-circle';
             iconColor = 'var(--sq-inactive-rgb)';
-            name = this._name || this._areaObj.name || 'Unknown';
+            name = this._name ?? this._areaObj.name ?? 'Unknown';
         } else {
-            icon = this._icon || 'hass:alert-rhombus';
+            icon = this._icon ?? 'hass:alert-rhombus';
             iconColor = 'var(--sq-unavailable-rgb)';
-            name = this._name || 'Unknown';
+            name = this._name ?? 'Unknown';
         }
 
         return html`

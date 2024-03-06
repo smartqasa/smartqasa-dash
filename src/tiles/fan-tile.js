@@ -20,8 +20,8 @@ export class SmartQasaFanTile extends LitElement {
     setConfig(config) {
         if (config.entity) {
             this._entity = config.entity;
-            this._icon = config.icon || null;
-            this._name = config.name || null;
+            this._icon = config.icon ?? null;
+            this._name = config.name ?? null;
         } else {
             throw new Error('You need to define an entity');
         }
@@ -29,7 +29,7 @@ export class SmartQasaFanTile extends LitElement {
 
     set hass(hass) {
         this._hass = hass;
-        this._stateObj = this._hass.states[this._entity] || undefined;
+        this._stateObj = this._hass.states[this._entity] ?? undefined;
     }
 
     static styles = [styleTileBase, styleTileState, styleTileIconSpin];
@@ -38,7 +38,7 @@ export class SmartQasaFanTile extends LitElement {
         let icon, iconColor, iconAnimation, name, stateFmtd;
         if (this._stateObj) {
             const state = this._stateObj.state;
-            icon = this._icon || 'hass:fan';
+            icon = this._icon ?? 'hass:fan';
             iconColor = state == 'on' ? 'var(--sq-fan-on-rgb)' : 'var(--sq-inactive-rgb)';
             if (state === 'on') {
                 if (this._stateObj.attributes.percentage) {
@@ -49,14 +49,14 @@ export class SmartQasaFanTile extends LitElement {
                     iconAnimation = `spin 0.5s linear infinite normal`;
                 }
             }
-            name = this._name || this._stateObj.attributes.friendly_name || 'Unknown';
+            name = this._name ?? this._stateObj.attributes.friendly_name ?? 'Unknown';
             stateFmtd = this._hass.formatEntityState(this._stateObj) +
                 (state === 'on' && this._stateObj.attributes.percentage ? ' - ' +
                 this._hass.formatEntityAttributeValue(this._stateObj, 'percentage') : '');
         } else {
             icon = 'hass:alert-rhombus';
             iconColor = 'var(--sq-unavailable-rgb)';
-            name = this._name || 'Unknown';
+            name = this._name ?? 'Unknown';
             stateFmtd = 'Unknown';
         }
 
