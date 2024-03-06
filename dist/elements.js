@@ -200,9 +200,8 @@
       _navigate() {
         if (this._areaObj) {
           window.history.pushState(null, '', `/home-dash/${this._area}`);
-          // Test
           window.dispatchEvent(new CustomEvent('location-changed'));
-          this._hass.callService('browser_mod', 'close_pupup', {});
+          this._hass.callService('browser_mod', 'close_popup', {});
         } else {
           console.error('Area is not found.');
         }
