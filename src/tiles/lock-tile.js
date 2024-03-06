@@ -11,6 +11,7 @@ export class SmartQasaLockTile extends LitElement {
         return {
             _entity: { state: true },
             _stateObj: { state: true },
+            _icon: { state: true },
             _name: { state: true },
             _state: { state: true }
         };
@@ -33,27 +34,27 @@ export class SmartQasaLockTile extends LitElement {
     static styles = [styleTileBase, styleTileState, styleTileIconBlink];
 
     render() {
-        let icon, iconColor, name, stateFmtd;
+        let iconColor, name, stateFmtd;
         if (this._stateObj) {
             this._state = this._stateObj.state;
             switch (this._state) {
                 case 'locked':
-                    icon = 'hass:lock';
+                    this._icon = 'hass:lock';
                     iconColor = 'var(--sq-inactive-rgb, 128, 128, 128)';
                     break;
                 case 'unlocked':
-                    icon = 'hass:lock-open';
+                    this._icon = 'hass:lock-open';
                     iconColor = 'var(--sq-lock-unlocked-rgb, 255, 120, 0)';
                     break;
                 default:
-                    icon = 'hass:alert-rhombus';
+                    this._icon = 'hass:alert-rhombus';
                     iconColor = 'var(--sq-unavailable-rgb, 255, 0, 255)';
                     break;
             }
             name = this._name || this._stateObj.attributes.friendly_name;
             stateFmtd = this._hass.formatEntityState(this._stateObj);
         } else {
-            icon = 'hass:alert-rhombus';
+            this._icon = 'hass:alert-rhombus';
             iconColor = 'var(--sq-unavailable-rgb)';
             name = this._name || 'Unknown';
             stateFmtd = 'Unknown';
@@ -75,11 +76,10 @@ export class SmartQasaLockTile extends LitElement {
 
     _toggleLock(e) {
         e.stopPropagation();
+        this._icon = 'hass:hass:rotate-right'
         const iconElement = this.shadowRoot.getElementById('icon');
-        console.log(iconElement);
         iconElement.style.color = `rgb(var(--sq-accent-rgb))`;
         iconElement.style.backgroundColor = `rgba(var(--sq-accent-rgb), var(--sq-icon-opacity)`;
-        iconElement.setAttribute('icon', 'hass:rotate-right');
         iconElement.style.animation = 'blink 2.0s linear infinite';
         this._hass.callService('lock', this._state === 'locked' ? 'unlock' : 'lock', { entity_id: this._entity });
     }
