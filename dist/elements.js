@@ -507,6 +507,7 @@
     }
 `;
 
+    // test
     class SmartQasaLockTile extends s {
       _hass;
       static get properties() {

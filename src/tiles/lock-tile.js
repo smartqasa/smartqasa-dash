@@ -3,7 +3,7 @@ import { LitElement, html } from 'lit';
 import styleTileBase from '../styles/tile-base';
 import styleTileState from '../styles/tile-state';
 import styleTileIconBlink from '../styles/tile-icon-blink';
-
+// test
 export class SmartQasaLockTile extends LitElement {
 
   _hass;

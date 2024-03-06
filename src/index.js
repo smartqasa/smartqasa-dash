@@ -5,7 +5,7 @@ window.customCards.push({
   type: 'smartqasa-all-off-tile',
   name: 'SmartQasa All Off Tile',
   preview: true,
-  description: 'A SmartQasa tile for turning off all light and fan entities in an area..',
+  description: 'A SmartQasa tile for turning off all light and fan entities in an area..'
 });
 
 import { SmartQasaAreaTile } from './tiles/area-tile';
@@ -15,7 +15,7 @@ window.customCards.push({
   type: 'smartqasa-area-tile',
   name: 'SmartQasa Area Tile',
   preview: true,
-  description: 'A SmartQasa tile for navigating to an area or a specific dashboard view.',
+  description: 'A SmartQasa tile for navigating to an area or a specific dashboard view.'
 });
 
 import { SmartQasaFanTile } from './tiles/fan-tile';
@@ -25,7 +25,7 @@ window.customCards.push({
   type: 'smartqasa-fan-tile',
   name: 'SmartQasa Fan Tile',
   preview: true,
-  description: 'A SmartQasa tile for controlling a fan entity.',
+  description: 'A SmartQasa tile for controlling a fan entity.'
 });
 
 // Garage Tile //
@@ -36,7 +36,7 @@ window.customCards.push({
   type: 'smartqasa-garage-tile',
   name: 'SmartQasa Garage Tile',
   preview: true,
-  description: 'A SmartQasa tile for controlling a garage cover entity.',
+  description: 'A SmartQasa tile for controlling a garage cover entity.'
 });
 
 import { SmartQasaLightTile } from './tiles/light-tile';
@@ -45,7 +45,7 @@ window.customCards = window.customCards || [];
 window.customCards.push({
     type: 'smartqasa-light-tile',
     name: 'SmartQasa Light Tile',
-    description: 'A SmartQasa tile for controlling a light entity.',
+    description: 'A SmartQasa tile for controlling a light entity.'
 });
 
 import { SmartQasaLockTile } from './tiles/lock-tile';
@@ -55,7 +55,7 @@ window.customCards.push({
   type: 'smartqasa-lock-tile',
   name: 'SmartQasa Lock Tile',
   preview: true,
-  description: 'A SmartQasa tile for controlling a lock entity.',
+  description: 'A SmartQasa tile for controlling a lock entity.'
 });
 
 import { SmartQasaSwitchTile } from './tiles/switch-tile';
@@ -65,5 +65,5 @@ window.customCards.push({
   type: 'smartqasa-switch-tile',
   name: 'SmartQasa Switch Tile',
   preview: true,
-  description: 'A SmartQasa tile for toggling an entity.',
+  description: 'A SmartQasa tile for toggling an entity.'
 });
