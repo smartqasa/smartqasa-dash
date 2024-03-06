@@ -68,6 +68,16 @@ window.customCards.push({
   description: 'A SmartQasa tile for triggering an automation, scene, or script entity.',
 });
 
+import { SmartQasaShadeTile } from './tiles/shade-tile';
+customElements.define('smartqasa-shade-tile', SmartQasaShadeTile);
+window.customCards = window.customCards || [];
+window.customCards.push({
+  type: 'smartqasa-shade-tile',
+  name: 'SmartQasa Shade Tile',
+  preview: true,
+  description: 'A SmartQasa tile for controlling a window shade entity.',
+});
+
 import { SmartQasaSwitchTile } from './tiles/switch-tile';
 customElements.define('smartqasa-switch-tile', SmartQasaSwitchTile);
 window.customCards = window.customCards || [];
