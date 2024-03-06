@@ -498,12 +498,6 @@
       }
     }
 
-    var styleTileIconBlink = i$2`
-    @keyframes blink {
-        50% { opacity: 0.25; }
-    }
-`;
-
     class SmartQasaLockTile extends s {
       _hass;
       static get properties() {
@@ -534,7 +528,7 @@
         this._hass = hass;
         this._stateObj = this._hass.states[this._entity] || undefined;
       }
-      static styles = [styleTileBase, styleTileState, styleTileIconBlink];
+      static styles = [styleTileBase, styleTileState, styleTileIconSpin];
       render() {
         let icon, iconColor, name, stateFmtd;
         if (this._stateObj) {
@@ -581,7 +575,7 @@
         const iconElement = this.shadowRoot.getElementById('icon');
         iconElement.style.color = `rgb(var(--sq-accent-rgb))`;
         iconElement.style.backgroundColor = `rgba(var(--sq-accent-rgb), var(--sq-icon-opacity)`;
-        iconElement.style.animation = 'blink 2.0s linear infinite';
+        iconElement.style.animation = 'spin 2.0s linear infinite';
         this._hass.callService('lock', this._state === 'locked' ? 'unlock' : 'lock', {
           entity_id: this._entity
         });

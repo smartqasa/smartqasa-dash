@@ -2,7 +2,7 @@ import { LitElement, html } from 'lit';
 
 import styleTileBase from '../styles/tile-base';
 import styleTileState from '../styles/tile-state';
-import styleTileIconBlink from '../styles/tile-icon-blink';
+import styleTileIconSpin from '../styles/tile-icon-spin';
 export class SmartQasaLockTile extends LitElement {
 
     _hass;
@@ -30,7 +30,7 @@ export class SmartQasaLockTile extends LitElement {
         this._stateObj = this._hass.states[this._entity] || undefined;
     }
 
-    static styles = [styleTileBase, styleTileState, styleTileIconBlink];
+    static styles = [styleTileBase, styleTileState, styleTileIconSpin];
 
     render() {
         let icon, iconColor, name, stateFmtd;
@@ -80,7 +80,7 @@ export class SmartQasaLockTile extends LitElement {
         const iconElement = this.shadowRoot.getElementById('icon');
         iconElement.style.color = `rgb(var(--sq-accent-rgb))`;
         iconElement.style.backgroundColor = `rgba(var(--sq-accent-rgb), var(--sq-icon-opacity)`;
-        iconElement.style.animation = 'blink 2.0s linear infinite';
+        iconElement.style.animation = 'spin 2.0s linear infinite';
 
         this._hass.callService('lock', this._state === 'locked' ? 'unlock' : 'lock', { entity_id: this._entity });
     }
