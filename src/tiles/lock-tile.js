@@ -33,7 +33,7 @@ export class SmartQasaLockTile extends LitElement {
     static styles = [styleTileBase, styleTileState, styleTileIconBlink];
 
     render() {
-        let iconColor, name, stateFmtd;
+        let icon, iconColor, name, stateFmtd;
         if (this._stateObj) {
             this._state = this._stateObj.state;
             switch (this._state) {
