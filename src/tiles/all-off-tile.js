@@ -22,7 +22,7 @@ export class SmartQasaAllOffTile extends LitElement {
             this._name = config.name || null;
         } else {
             throw new Error('You need to define an area');
-        };
+        }
     }
 
     set hass(hass) {
@@ -42,7 +42,8 @@ export class SmartQasaAllOffTile extends LitElement {
             icon = this._icon || 'hass:alert-rhombus';
             iconColor = 'var(--sq-unavailable-rgb)';
             name = this._name || 'Unknown';
-        };
+        }
+
         return html`
             <div class='container' @click=${this._runRoutine}>
                 <div class='icon' id='icon' style='

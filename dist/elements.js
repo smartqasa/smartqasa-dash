@@ -250,9 +250,6 @@
           },
           _name: {
             state: true
-          },
-          _state: {
-            state: true
           }
         };
       }
@@ -294,18 +291,18 @@
           stateFmtd = 'Unknown';
         }
         return x`
-      <div class='container' @click=${this._showMoreInfo}>
-        <div class='icon' @click=${this._toggleEntity} style='
-          color: rgb(${iconColor});
-          background-color: rgba(${iconColor}, var(--sq-icon-opacity));
-          animation: ${iconAnimation};
-        '>
-          <ha-icon .icon=${icon}></ha-icon>
-        </div>
-        <div class='name'>${name}</div>
-        <div class='state'>${stateFmtd}</div>
-      </div>
-    `;
+            <div class='container' @click=${this._showMoreInfo}>
+                <div class='icon' @click=${this._toggleEntity} style='
+                    color: rgb(${iconColor});
+                    background-color: rgba(${iconColor}, var(--sq-icon-opacity));
+                    animation: ${iconAnimation};
+                    '>
+                    <ha-icon .icon=${icon}></ha-icon>
+                </div>
+                <div class='name'>${name}</div>
+                <div class='state'>${stateFmtd}</div>
+            </div>
+        `;
       }
       _toggleEntity(e) {
         e.stopPropagation();
@@ -565,17 +562,17 @@
           stateFmtd = 'Unknown';
         }
         return x`
-        <div class='container' @click=${this._showMoreInfo}>
-            <div class='icon' id='icon' @click=${this._toggleLock} style='
-                color: rgb(${iconColor});
-                background-color: rgba(${iconColor}, var(--sq-icon-opacity));
-                '>
-                <ha-icon .icon=${icon}></ha-icon>
+            <div class='container' @click=${this._showMoreInfo}>
+                <div class='icon' id='icon' @click=${this._toggleLock} style='
+                    color: rgb(${iconColor});
+                    background-color: rgba(${iconColor}, var(--sq-icon-opacity));
+                    '>
+                    <ha-icon .icon=${icon}></ha-icon>
+                </div>
+                <div class='name'>${name}</div>
+                <div class='state'>${stateFmtd}</div>
             </div>
-            <div class='name'>${name}</div>
-            <div class='state'>${stateFmtd}</div>
-        </div>
-    `;
+        `;
       }
       _toggleLock(e) {
         e.stopPropagation();
@@ -717,9 +714,6 @@
         } else {
           throw new Error('You need to define an entity');
         }
-        if (this._hass) {
-          this.hass = this._hass;
-        }
       }
       set hass(hass) {
         this._hass = hass;
@@ -727,9 +721,9 @@
       }
       static styles = [styleTileBase, styleTileState];
       render() {
-        let icon, iconColor, name, state, stateFmtd;
+        let icon, iconColor, name, stateFmtd;
         if (this._stateObj) {
-          state = this._stateObj.state;
+          const state = this._stateObj.state;
           switch (state) {
             case 'closed':
               icon = 'hass:roller-shade-closed';
@@ -763,10 +757,10 @@
         return x`
         <div class='container' @click=${this._showMoreInfo}>
             <div class='icon' @click=${this._toggleEntity} style='
-            color: rgb(${iconColor});
-            background-color: rgba(${iconColor}, var(--sq-icon-opacity));
-            '>
-            <ha-icon .icon=${icon}></ha-icon>
+                color: rgb(${iconColor});
+                background-color: rgba(${iconColor}, var(--sq-icon-opacity));
+                '>
+                <ha-icon .icon=${icon}></ha-icon>
             </div>
             <div class='name'>${name}</div>
             <div class='state'>${stateFmtd}</div>
@@ -887,6 +881,78 @@
       }
     }
 
+    class SmartQasaTimeCard extends s {
+      _hass;
+      static get properties() {
+        return {
+          _time: {
+            state: true
+          },
+          _date: {
+            state: true
+          }
+        };
+      }
+      setConfig(config) {}
+      set hass(hass) {
+        this._hass = hass;
+        this._time = this._hass.states['sensor.current_time'].state;
+        this._date = this._hass.states['sensor.current_date'].state;
+      }
+      static get styles() {
+        return i$2`
+            :host {
+                display: block;
+                padding: 0;
+                background-color: transparent;
+            }
+            .container {
+                display: grid;
+                grid-template-rows: auto auto;
+                padding: 0;
+                border-radius: 0;
+                border: none;
+                box-shadow: none;
+                background-color: transparent;
+                cursor: pointer;
+            }
+            .time, .date {
+                justify-self: start;
+                text-align: left;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            .time {
+                line-height: var(--sq-title-font-size, 16px);
+                font-size: var(--sq-title-font-size, 16px);
+                font-weight: var(--sq-title-font-weight, 400);
+                color: rgb(var(--sq-title-font-rgb, 0, 0, 0));
+            }
+            .date {
+                font-size: var(--sq-primary-font-size, 14px);
+                font-weight: var(--sq-primary-font-weight, 300);
+                color: rgb(var(--sq-secondary-font-rgb, 128, 128, 128));
+            }
+        `;
+      }
+      render() {
+        return x`
+            <div class='container' @click='${this._handleTap}'>
+                <div class='time'>${this._time}</div>
+                <div class='date'>${this._date}</div>
+            </div>
+        `;
+      }
+      _handleTap() {
+        if (typeof fully !== 'undefined' && fully.startApplication) {
+          fully.startApplication('com.google.android.deskclock');
+        } else {
+          console.warn('fully.startApplication is not available.');
+        }
+      }
+    }
+
     customElements.define('smartqasa-all-off-tile', SmartQasaAllOffTile);
     window.customCards = window.customCards || [];
     window.customCards.push({
@@ -924,6 +990,7 @@
     window.customCards.push({
       type: 'smartqasa-light-tile',
       name: 'SmartQasa Light Tile',
+      preview: true,
       description: 'A SmartQasa tile for controlling a light entity.'
     });
     customElements.define('smartqasa-lock-tile', SmartQasaLockTile);
@@ -958,5 +1025,6 @@
       preview: true,
       description: 'A SmartQasa tile for toggling an entity.'
     });
+    customElements.define('smartqasa-time-card', SmartQasaTimeCard);
 
 })();

@@ -13,8 +13,8 @@ export class SmartQasaShadeTile extends LitElement {
             _stateObj: { state: true },
             _icon: { state: true },
             _name: { state: true },
-            _tilt: { state: true },
-        };
+            _tilt: { state: true }
+        }
     }
 
     setConfig(config) {
@@ -24,10 +24,7 @@ export class SmartQasaShadeTile extends LitElement {
             this._tilt = config.tilt || 100;
         } else {
             throw new Error('You need to define an entity');
-        };
-        if (this._hass) {
-            this.hass = this._hass
-        };
+        }
     }
 
     set hass(hass) {
@@ -38,9 +35,9 @@ export class SmartQasaShadeTile extends LitElement {
     static styles = [styleTileBase, styleTileState];
 
     render() {
-        let icon, iconColor, name, state, stateFmtd;
+        let icon, iconColor, name, stateFmtd;
         if (this._stateObj) {
-            state = this._stateObj.state;
+            const state = this._stateObj.state;
             switch (state) {
                 case 'closed':
                     icon = 'hass:roller-shade-closed';
@@ -62,7 +59,7 @@ export class SmartQasaShadeTile extends LitElement {
                     icon = 'hass:alert-rhombus';
                     iconColor = 'var(--sq-unavailable-rgb, 255, 0, 255)';
                     break;
-            };
+            }
             stateFmtd = this._hass.formatEntityState(this._stateObj) +
                 (state === 'open' && this._stateObj.attributes.current_position
                     ? ' - ' + this._hass.formatEntityAttributeValue(this._stateObj, 'current_position')
@@ -73,15 +70,15 @@ export class SmartQasaShadeTile extends LitElement {
             iconColor = 'var(--sq-unavailable-rgb)';
             name = this._name || 'Unknown';
             stateFmtd = 'Unknown';
-        };
+        }
 
         return html`
         <div class='container' @click=${this._showMoreInfo}>
             <div class='icon' @click=${this._toggleEntity} style='
-            color: rgb(${iconColor});
-            background-color: rgba(${iconColor}, var(--sq-icon-opacity));
-            '>
-            <ha-icon .icon=${icon}></ha-icon>
+                color: rgb(${iconColor});
+                background-color: rgba(${iconColor}, var(--sq-icon-opacity));
+                '>
+                <ha-icon .icon=${icon}></ha-icon>
             </div>
             <div class='name'>${name}</div>
             <div class='state'>${stateFmtd}</div>
@@ -92,19 +89,19 @@ export class SmartQasaShadeTile extends LitElement {
     _toggleEntity(e) {
         e.stopPropagation();
         if (this._tilt > 0 && this._tilt <= 100) {
-        if (this._stateObj.attributes.current_position < this._tilt) {
-            this._hass.callService('cover', 'set_cover_position', {
-            entity_id: this._entity,
-            position: this._tilt
-            });
+            if (this._stateObj.attributes.current_position < this._tilt) {
+                this._hass.callService('cover', 'set_cover_position', {
+                    entity_id: this._entity,
+                    position: this._tilt
+                });
+            } else {
+                this._hass.callService('cover', 'set_cover_position', {
+                    entity_id: this._entity,
+                    position: 0
+                });
+            }
         } else {
-            this._hass.callService('cover', 'set_cover_position', {
-            entity_id: this._entity,
-            position: 0
-            });
-        }
-        } else {
-        this.hass.callService('cover', 'toggle', { entity_id: this._entity });
+            this.hass.callService('cover', 'toggle', { entity_id: this._entity });
         }
     }
 

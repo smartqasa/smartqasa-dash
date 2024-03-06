@@ -57,20 +57,20 @@ export class SmartQasaLockTile extends LitElement {
             iconColor = 'var(--sq-unavailable-rgb)';
             name = this._name || 'Unknown';
             stateFmtd = 'Unknown';
-        };
+        }
 
-    return html`
-        <div class='container' @click=${this._showMoreInfo}>
-            <div class='icon' id='icon' @click=${this._toggleLock} style='
-                color: rgb(${iconColor});
-                background-color: rgba(${iconColor}, var(--sq-icon-opacity));
-                '>
-                <ha-icon .icon=${icon}></ha-icon>
+        return html`
+            <div class='container' @click=${this._showMoreInfo}>
+                <div class='icon' id='icon' @click=${this._toggleLock} style='
+                    color: rgb(${iconColor});
+                    background-color: rgba(${iconColor}, var(--sq-icon-opacity));
+                    '>
+                    <ha-icon .icon=${icon}></ha-icon>
+                </div>
+                <div class='name'>${name}</div>
+                <div class='state'>${stateFmtd}</div>
             </div>
-            <div class='name'>${name}</div>
-            <div class='state'>${stateFmtd}</div>
-        </div>
-    `;
+        `;
     }
 
     _toggleLock(e) {
