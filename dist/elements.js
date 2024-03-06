@@ -45,11 +45,11 @@
     .icon {
         grid-area: i;
         display: flex;
-        height: var(--sq-icon-size, 25px);
-        width: var(--sq-icon-size, 25px);
+        height: var(--sq-icon-size, 1.8rem);
+        width: var(--sq-icon-size, 1.8rem);
         justify-content: center;
         align-self: center;
-        padding: var(--sq-icon-padding, 14px);
+        padding: var(--sq-icon-padding, 1.0rem);
         border-radius: 50%;
         transition: var(--sq-icon-transition, none);
     }
@@ -63,7 +63,7 @@
         text-overflow: ellipsis;
         white-space: normal;
         font-weight: var(--sq-primary-font-weight, 400);
-        font-size: var(--sq-primary-font-size, 16px);
+        font-size: var(--sq-primary-font-size, 1.5rem);
         color: rgb(var(--sq-primary-font-rgb), 128, 128, 128);
     }
 `;
@@ -579,6 +579,7 @@
         const iconElement = this.shadowRoot.getElementById('icon');
         iconElement.style.color = `rgb(var(--sq-accent-rgb))`;
         iconElement.style.backgroundColor = `rgba(var(--sq-accent-rgb), var(--sq-icon-opacity)`;
+        iconElement.setAttribute('icon', 'hass:rotate-right');
         iconElement.style.animation = 'blink 2.0s linear infinite';
         this._hass.callService('lock', this._state === 'locked' ? 'unlock' : 'lock', {
           entity_id: this._entity

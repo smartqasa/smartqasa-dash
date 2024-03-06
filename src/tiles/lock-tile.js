@@ -78,6 +78,7 @@ export class SmartQasaLockTile extends LitElement {
         const iconElement = this.shadowRoot.getElementById('icon');
         iconElement.style.color = `rgb(var(--sq-accent-rgb))`;
         iconElement.style.backgroundColor = `rgba(var(--sq-accent-rgb), var(--sq-icon-opacity)`;
+        iconElement.setAttribute('icon', 'hass:rotate-right');
         iconElement.style.animation = 'blink 2.0s linear infinite';
         this._hass.callService('lock', this._state === 'locked' ? 'unlock' : 'lock', { entity_id: this._entity });
     }
