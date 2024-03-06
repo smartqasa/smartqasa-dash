@@ -11,7 +11,6 @@ export class SmartQasaLockTile extends LitElement {
         return {
             _entity: { state: true },
             _stateObj: { state: true },
-            _icon: { state: true },
             _name: { state: true },
             _state: { state: true }
         };
@@ -39,22 +38,22 @@ export class SmartQasaLockTile extends LitElement {
             this._state = this._stateObj.state;
             switch (this._state) {
                 case 'locked':
-                    this._icon = 'hass:lock';
+                    icon = 'hass:lock';
                     iconColor = 'var(--sq-inactive-rgb, 128, 128, 128)';
                     break;
                 case 'unlocked':
-                    this._icon = 'hass:lock-open';
+                    icon = 'hass:lock-open';
                     iconColor = 'var(--sq-lock-unlocked-rgb, 255, 120, 0)';
                     break;
                 default:
-                    this._icon = 'hass:alert-rhombus';
+                    icon = 'hass:alert-rhombus';
                     iconColor = 'var(--sq-unavailable-rgb, 255, 0, 255)';
                     break;
             }
             name = this._name || this._stateObj.attributes.friendly_name;
             stateFmtd = this._hass.formatEntityState(this._stateObj);
         } else {
-            this._icon = 'hass:alert-rhombus';
+            icon = 'hass:alert-rhombus';
             iconColor = 'var(--sq-unavailable-rgb)';
             name = this._name || 'Unknown';
             stateFmtd = 'Unknown';
@@ -76,11 +75,13 @@ export class SmartQasaLockTile extends LitElement {
 
     _toggleLock(e) {
         e.stopPropagation();
-        this._icon = 'hass:hass:rotate-right'
+        const haIconElement = this.shadowRoot.querySelector('ha-icon');
+        haIconElement.icon = 'hass:rotate-right';
         const iconElement = this.shadowRoot.getElementById('icon');
         iconElement.style.color = `rgb(var(--sq-accent-rgb))`;
         iconElement.style.backgroundColor = `rgba(var(--sq-accent-rgb), var(--sq-icon-opacity)`;
         iconElement.style.animation = 'blink 2.0s linear infinite';
+
         this._hass.callService('lock', this._state === 'locked' ? 'unlock' : 'lock', { entity_id: this._entity });
     }
 
