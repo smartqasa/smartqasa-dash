@@ -76,6 +76,7 @@ export class SmartQasaLockTile extends LitElement {
     _toggleLock(e) {
         e.stopPropagation();
         const iconElement = this.shadowRoot.getElementById('icon');
+        console.log(iconElement);
         iconElement.style.color = `rgb(var(--sq-accent-rgb))`;
         iconElement.style.backgroundColor = `rgba(var(--sq-accent-rgb), var(--sq-icon-opacity)`;
         iconElement.setAttribute('icon', 'hass:rotate-right');
