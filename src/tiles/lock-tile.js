@@ -21,7 +21,7 @@ export class SmartQasaLockTile extends LitElement {
             this._entity = config.entity;
             this._name = config.name || null;
         } else {
-            throw new Error('You need to define an entity.');
+            throw new Error('You need to define an entity');
         };
     }
 
