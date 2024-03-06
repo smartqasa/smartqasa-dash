@@ -199,7 +199,7 @@
       }
       _navigate() {
         if (this._areaObj) {
-          window.history.pushState(null, "", `/dash-home/${this._path}`);
+          window.history.pushState(null, '', `/home-dash/${this._area}`);
           window.dispatchEvent(new CustomEvent("location-changed"));
         } else {
           console.error('Area is not found.');
