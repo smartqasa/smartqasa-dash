@@ -365,11 +365,11 @@
       }
       static styles = [styleTileBase, styleTileState];
       render() {
-        let icon, iconColor, name, stateFmtd;
+        let icon, iconColor, name, state, stateFmtd;
         if (this._stateObj) {
           name = this._name || this._stateObj.attributes.friendly_name;
-          this._state = this._stateObj.state;
-          switch (this._state) {
+          state = this._stateObj.state;
+          switch (state) {
             case 'closed':
               icon = 'hass:garage-variant';
               iconColor = 'var(--sq-inactive-rgb, 128, 128, 128)';
@@ -391,7 +391,7 @@
               iconColor = 'var(--sq-unavailable-rgb, 255, 0, 255)';
               break;
           }
-          stateFmtd = this._hass.formatEntityState(this._stateObj) + (this._state === 'open' && this._stateObj.attributes.current_position ? ' - ' + this._hass.formatEntityAttributeValue(this._stateObj, 'current_position') : '');
+          stateFmtd = this._hass.formatEntityState(this._stateObj) + (state === 'open' && this._stateObj.attributes.current_position ? ' - ' + this._hass.formatEntityAttributeValue(this._stateObj, 'current_position') : '');
         } else {
           icon = 'hass:alert-rhombus';
           iconColor = 'var(--sq-unavailable-rgb)';
@@ -429,14 +429,6 @@
         this.dispatchEvent(event);
       }
     }
-    customElements.define('smartqasa-garage-card', SmartQasaGarageCard);
-    window.customCards = window.customCards || [];
-    window.customCards.push({
-      type: 'smartqasa-garage-card',
-      name: 'SmartQasa Garage Card',
-      preview: true,
-      description: 'A SmartQasa card for controlling a garage door entity.'
-    });
 
     class SmartQasaLightTile extends s {
       _hass;
