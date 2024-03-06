@@ -201,7 +201,6 @@
         if (this._areaObj) {
           window.history.pushState(null, '', `/home-dash/${this._area}`);
           window.dispatchEvent(new CustomEvent('location-changed'));
-          // Test
           this._hass.callService('browser_mod', 'close_popup', {});
         } else {
           console.error('Area is not found.');
@@ -333,6 +332,111 @@
         this.dispatchEvent(event);
       }
     }
+
+    class SmartQasaGarageTile extends s {
+      _hass;
+      static get properties() {
+        return {
+          _entity: {
+            state: true
+          },
+          _stateObj: {
+            state: true
+          },
+          _icon: {
+            state: true
+          },
+          _name: {
+            state: true
+          }
+        };
+      }
+      setConfig(config) {
+        if (config.entity) {
+          this._entity = config.entity;
+          this._name = config.name || null;
+        } else {
+          throw new Error('You need to define an entity');
+        }
+      }
+      set hass(hass) {
+        this._hass = hass;
+        this._stateObj = this._hass.states[this._entity] || undefined;
+      }
+      static styles = [styleTileBase, styleTileState];
+      render() {
+        let icon, iconColor, name, stateFmtd;
+        if (this._stateObj) {
+          name = this._name || this._stateObj.attributes.friendly_name;
+          this._state = this._stateObj.state;
+          switch (this._state) {
+            case 'closed':
+              icon = 'hass:garage-variant';
+              iconColor = 'var(--sq-inactive-rgb, 128, 128, 128)';
+              break;
+            case 'closing':
+              icon = 'hass:arrow-down-box';
+              iconColor = 'var(--sq-garage-closing-rgb, 255, 120, 0)';
+              break;
+            case 'opening':
+              icon = 'hass:arrow-up-box';
+              iconColor = 'var(--sq-garage-opening-rgb, 255, 120, 0)';
+              break;
+            case 'open':
+              icon = 'hass:garage-open-variant';
+              iconColor = 'var(--sq-garage-open-rgb, 255, 120, 0)';
+              break;
+            default:
+              icon = 'hass:alert-rhombus';
+              iconColor = 'var(--sq-unavailable-rgb, 255, 0, 255)';
+              break;
+          }
+          stateFmtd = this._hass.formatEntityState(this._stateObj) + (this._state === 'open' && this._stateObj.attributes.current_position ? ' - ' + this._hass.formatEntityAttributeValue(this._stateObj, 'current_position') : '');
+        } else {
+          icon = 'hass:alert-rhombus';
+          iconColor = 'var(--sq-unavailable-rgb)';
+          name = this._name || 'Unknown';
+          stateFmtd = 'Unknown';
+        }
+        return x`
+      <div class='container' @click=${this._showMoreInfo}>
+        <div class='icon' @click=${this._toggleEntity} style='
+          color: rgb(${iconColor});
+          background-color: rgba(${iconColor}, var(--sq-icon-opacity));
+        '>
+          <ha-icon .icon=${icon}></ha-icon>
+        </div>
+        <div class='name'>${name}</div>
+        <div class='state'>${stateFmtd}</div>
+      </div>
+    `;
+      }
+      _toggleEntity(e) {
+        e.stopPropagation();
+        this._hass.callService('cover', 'toggle', {
+          entity_id: this._entity
+        });
+      }
+      _showMoreInfo(e) {
+        e.stopPropagation();
+        const event = new CustomEvent('hass-more-info', {
+          bubbles: true,
+          composed: true,
+          detail: {
+            entityId: this._entity
+          }
+        });
+        this.dispatchEvent(event);
+      }
+    }
+    customElements.define('smartqasa-garage-card', SmartQasaGarageCard);
+    window.customCards = window.customCards || [];
+    window.customCards.push({
+      type: 'smartqasa-garage-card',
+      name: 'SmartQasa Garage Card',
+      preview: true,
+      description: 'A SmartQasa card for controlling a garage door entity.'
+    });
 
     class SmartQasaLightTile extends s {
       _hass;
@@ -516,6 +620,14 @@
       name: 'SmartQasa Fan Tile',
       preview: true,
       description: 'A SmartQasa tile for controlling a fan entity.'
+    });
+    customElements.define('smartqasa-garage-tile', SmartQasaGarageTile);
+    window.customCards = window.customCards || [];
+    window.customCards.push({
+      type: 'smartqasa-garage-tile',
+      name: 'SmartQasa Garage Tile',
+      preview: true,
+      description: 'A SmartQasa tile for controlling a garage door entity.'
     });
     customElements.define('smartqasa-light-tile', SmartQasaLightTile);
     window.customCards = window.customCards || [];

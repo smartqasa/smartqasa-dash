@@ -61,7 +61,6 @@ export class SmartQasaAreaTile extends LitElement {
     if (this._areaObj) {
       window.history.pushState(null, '', `/home-dash/${this._area}`);
       window.dispatchEvent(new CustomEvent('location-changed'));
-      // Test
       this._hass.callService('browser_mod', 'close_popup', {});
     } else {
       console.error('Area is not found.');

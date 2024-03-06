@@ -28,6 +28,16 @@ window.customCards.push({
   description: 'A SmartQasa tile for controlling a fan entity.',
 });
 
+import { SmartQasaGarageTile } from './tiles/garage-tile';
+customElements.define('smartqasa-garage-tile', SmartQasaGarageTile);
+window.customCards = window.customCards || [];
+window.customCards.push({
+  type: 'smartqasa-garage-tile',
+  name: 'SmartQasa Garage Tile',
+  preview: true,
+  description: 'A SmartQasa tile for controlling a garage door entity.',
+});
+
 import { SmartQasaLightTile } from './tiles/light-tile';
 customElements.define('smartqasa-light-tile', SmartQasaLightTile);
 window.customCards = window.customCards || [];
