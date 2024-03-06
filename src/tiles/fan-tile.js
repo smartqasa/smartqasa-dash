@@ -63,9 +63,9 @@ export class SmartQasaFanTile extends LitElement {
         return html`
             <div class='container' @click=${this._showMoreInfo}>
                 <div class='icon' @click=${this._toggleEntity} style='
-                    color: rgb(${iconColor});
-                    background-color: rgba(${iconColor}, var(--sq-icon-opacity));
-                    animation: ${iconAnimation};
+                        color: rgb(${iconColor});
+                        background-color: rgba(${iconColor}, var(--sq-icon-opacity));
+                        animation: ${iconAnimation};
                     '>
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>

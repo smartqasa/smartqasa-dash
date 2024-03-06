@@ -56,7 +56,7 @@
     .name {
         grid-area: n;
         place-self: center start;
-        max-height: 3.5rem;
+        max-height: 3.6rem;
         max-width: 100%;
         text-align: left;
         overflow: hidden;
@@ -114,8 +114,8 @@
         return x`
             <div class='container' @click=${this._runRoutine}>
                 <div class='icon' id='icon' style='
-                    color: rgb(${iconColor});
-                    background-color: rgba(${iconColor}, var(--sq-icon-opacity));
+                        color: rgb(${iconColor});
+                        background-color: rgba(${iconColor}, var(--sq-icon-opacity));
                     '>
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
@@ -186,16 +186,16 @@
           name = this._name || 'Unknown';
         }
         return x`
-      <div class='container' @click=${this._navigate}>
-        <div class='icon' id='icon' style='
-          color: rgb(${iconColor});
-          background-color: rgba(${iconColor}, var(--sq-icon-opacity));
-        '>
-          <ha-icon .icon=${icon}></ha-icon>
-        </div>
-        <div class='name'>${name}</div>
-      </div>
-    `;
+            <div class='container' @click=${this._navigate}>
+                <div class='icon' id='icon' style='
+                        color: rgb(${iconColor});
+                        background-color: rgba(${iconColor}, var(--sq-icon-opacity));
+                    '>
+                    <ha-icon .icon=${icon}></ha-icon>
+                </div>
+                <div class='name'>${name}</div>
+            </div>
+        `;
       }
       _navigate() {
         if (this._areaObj) {
@@ -293,9 +293,9 @@
         return x`
             <div class='container' @click=${this._showMoreInfo}>
                 <div class='icon' @click=${this._toggleEntity} style='
-                    color: rgb(${iconColor});
-                    background-color: rgba(${iconColor}, var(--sq-icon-opacity));
-                    animation: ${iconAnimation};
+                        color: rgb(${iconColor});
+                        background-color: rgba(${iconColor}, var(--sq-icon-opacity));
+                        animation: ${iconAnimation};
                     '>
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
@@ -389,16 +389,16 @@
           stateFmtd = 'Unknown';
         }
         return x`
-        <div class='container' @click=${this._showMoreInfo}>
-            <div class='icon' @click=${this._toggleEntity} style='
-            color: rgb(${iconColor});
-            background-color: rgba(${iconColor}, var(--sq-icon-opacity));
-            '>
-            <ha-icon .icon=${icon}></ha-icon>
+            <div class='container' @click=${this._showMoreInfo}>
+                <div class='icon' @click=${this._toggleEntity} style='
+                        color: rgb(${iconColor});
+                        background-color: rgba(${iconColor}, var(--sq-icon-opacity));
+                    '>
+                    <ha-icon .icon=${icon}></ha-icon>
+                </div>
+                <div class='name'>${name}</div>
+                <div class='state'>${stateFmtd}</div>
             </div>
-            <div class='name'>${name}</div>
-            <div class='state'>${stateFmtd}</div>
-        </div>
         `;
       }
       _toggleEntity(e) {
@@ -467,17 +467,17 @@
           stateFmtd = 'Unknown';
         }
         return x`
-      <div class='container' @click=${this._showMoreInfo}>
-        <div class='icon' @click=${this._toggleEntity} style='
-          color: rgb(${iconColor});
-          background-color: rgba(${iconColor}, var(--sq-icon-opacity));
-        '>
-          <ha-icon .icon=${icon}></ha-icon>
-        </div>
-        <div class='name'>${name}</div>
-        <div class='state'>${stateFmtd}</div>
-      </div>
-    `;
+            <div class='container' @click=${this._showMoreInfo}>
+                <div class='icon' @click=${this._toggleEntity} style='
+                        color: rgb(${iconColor});
+                        background-color: rgba(${iconColor}, var(--sq-icon-opacity));
+                    '>
+                    <ha-icon .icon=${icon}></ha-icon>
+                </div>
+                <div class='name'>${name}</div>
+                <div class='state'>${stateFmtd}</div>
+            </div>
+        `;
       }
       _toggleEntity(e) {
         e.stopPropagation();
@@ -564,8 +564,8 @@
         return x`
             <div class='container' @click=${this._showMoreInfo}>
                 <div class='icon' id='icon' @click=${this._toggleLock} style='
-                    color: rgb(${iconColor});
-                    background-color: rgba(${iconColor}, var(--sq-icon-opacity));
+                        color: rgb(${iconColor});
+                        background-color: rgba(${iconColor}, var(--sq-icon-opacity));
                     '>
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
@@ -641,16 +641,16 @@
           name = 'Unknown';
         }
         return x`
-      <div class='container' @click=${this._runRoutine}>
-        <div class='icon' id='icon' @click=${this._showMoreInfo} style='
-          color: rgb(${iconColor});
-          background-color: rgba(${iconColor}, var(--sq-icon-opacity));
-        '>
-          <ha-icon .icon=${icon}></ha-icon>
+        <div class='container' @click=${this._runRoutine}>
+            <div class='icon' id='icon' @click=${this._showMoreInfo} style='
+                    color: rgb(${iconColor});
+                    background-color: rgba(${iconColor}, var(--sq-icon-opacity));
+                '>
+                <ha-icon .icon=${icon}></ha-icon>
+            </div>
+            <div class='name'>${name}</div>
         </div>
-        <div class='name'>${name}</div>
-      </div>
-    `;
+      `;
       }
       _runRoutine(e) {
         e.stopPropagation();
@@ -757,8 +757,8 @@
         return x`
         <div class='container' @click=${this._showMoreInfo}>
             <div class='icon' @click=${this._toggleEntity} style='
-                color: rgb(${iconColor});
-                background-color: rgba(${iconColor}, var(--sq-icon-opacity));
+                    color: rgb(${iconColor});
+                    background-color: rgba(${iconColor}, var(--sq-icon-opacity));
                 '>
                 <ha-icon .icon=${icon}></ha-icon>
             </div>
@@ -850,17 +850,17 @@
           stateFmtd = 'Unknown';
         }
         return x`
-      <div class='container' @click=${this._showMoreInfo}>
-        <div class='icon' @click=${this._toggleEntity} style='
-          color: rgb(${iconColor});
-          background-color: rgba(${iconColor}, var(--sq-icon-opacity));
-        '>
-          <ha-icon .icon=${icon}></ha-icon>
-        </div>
-        <div class='name'>${name}</div>
-        <div class='state'>${stateFmtd}</div>
-      </div>
-    `;
+            <div class='container' @click=${this._showMoreInfo}>
+                <div class='icon' @click=${this._toggleEntity} style='
+                        color: rgb(${iconColor});
+                        background-color: rgba(${iconColor}, var(--sq-icon-opacity));
+                    '>
+                    <ha-icon .icon=${icon}></ha-icon>
+                </div>
+                <div class='name'>${name}</div>
+                <div class='state'>${stateFmtd}</div>
+            </div>
+        `;
       }
       _toggleEntity(e) {
         e.stopPropagation();

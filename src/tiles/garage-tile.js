@@ -9,20 +9,20 @@ export class SmartQasaGarageTile extends LitElement {
 
     static get properties() {
         return {
-        _entity: { state: true },
-        _stateObj: { state: true },
-        _icon: { state: true },
-        _name: { state: true },
-        };
+            _entity: { state: true },
+            _stateObj: { state: true },
+            _icon: { state: true },
+            _name: { state: true },
+        }
     }
 
     setConfig(config) {
         if (config.entity) {
-        this._entity = config.entity;
-        this._name = config.name || null;
+            this._entity = config.entity;
+            this._name = config.name || null;
         } else {
-        throw new Error('You need to define an entity');
-        };
+            throw new Error('You need to define an entity');
+        }
     }
 
     set hass(hass) {
@@ -68,18 +68,18 @@ export class SmartQasaGarageTile extends LitElement {
             iconColor = 'var(--sq-unavailable-rgb)';
             name = this._name || 'Unknown';
             stateFmtd = 'Unknown';
-        };
+        }
         return html`
-        <div class='container' @click=${this._showMoreInfo}>
-            <div class='icon' @click=${this._toggleEntity} style='
-            color: rgb(${iconColor});
-            background-color: rgba(${iconColor}, var(--sq-icon-opacity));
-            '>
-            <ha-icon .icon=${icon}></ha-icon>
+            <div class='container' @click=${this._showMoreInfo}>
+                <div class='icon' @click=${this._toggleEntity} style='
+                        color: rgb(${iconColor});
+                        background-color: rgba(${iconColor}, var(--sq-icon-opacity));
+                    '>
+                    <ha-icon .icon=${icon}></ha-icon>
+                </div>
+                <div class='name'>${name}</div>
+                <div class='state'>${stateFmtd}</div>
             </div>
-            <div class='name'>${name}</div>
-            <div class='state'>${stateFmtd}</div>
-        </div>
         `;
     }
 

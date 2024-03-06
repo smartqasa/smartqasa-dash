@@ -75,8 +75,8 @@ export class SmartQasaShadeTile extends LitElement {
         return html`
         <div class='container' @click=${this._showMoreInfo}>
             <div class='icon' @click=${this._toggleEntity} style='
-                color: rgb(${iconColor});
-                background-color: rgba(${iconColor}, var(--sq-icon-opacity));
+                    color: rgb(${iconColor});
+                    background-color: rgba(${iconColor}, var(--sq-icon-opacity));
                 '>
                 <ha-icon .icon=${icon}></ha-icon>
             </div>

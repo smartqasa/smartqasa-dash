@@ -29,7 +29,7 @@ export default css`
     .name {
         grid-area: n;
         place-self: center start;
-        max-height: 3.5rem;
+        max-height: 3.6rem;
         max-width: 100%;
         text-align: left;
         overflow: hidden;
