@@ -58,10 +58,11 @@ export class SmartQasaAreaTile extends LitElement {
   }
 
   _navigate() {
-    if (this._area) {
-      window.location.href = `/home-dash/${this._area}`;
+    if (this._areaObj) {
+      window.history.pushState(null, "", `/dash-home/${this._path}`);
+      window.dispatchEvent(new CustomEvent("location-changed"));
     } else {
-      console.error('Navigation path is not defined.');
+      console.error('Area is not found.');
     }
   }
 }
