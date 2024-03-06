@@ -619,7 +619,7 @@
       type: 'smartqasa-garage-tile',
       name: 'SmartQasa Garage Tile',
       preview: true,
-      description: 'A SmartQasa tile for controlling a garage door entity.'
+      description: 'A SmartQasa tile for controlling a garage cover entity.'
     });
     customElements.define('smartqasa-light-tile', SmartQasaLightTile);
     window.customCards = window.customCards || [];

@@ -36,7 +36,7 @@ window.customCards.push({
   type: 'smartqasa-garage-tile',
   name: 'SmartQasa Garage Tile',
   preview: true,
-  description: 'A SmartQasa tile for controlling a garage door entity.',
+  description: 'A SmartQasa tile for controlling a garage cover entity.',
 });
 
 import { SmartQasaLightTile } from './tiles/light-tile';
