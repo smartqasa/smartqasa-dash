@@ -367,7 +367,6 @@
       render() {
         let icon, iconColor, name, state, stateFmtd;
         if (this._stateObj) {
-          name = this._name || this._stateObj.attributes.friendly_name;
           state = this._stateObj.state;
           switch (state) {
             case 'closed':
@@ -392,6 +391,7 @@
               break;
           }
           stateFmtd = this._hass.formatEntityState(this._stateObj) + (state === 'open' && this._stateObj.attributes.current_position ? ' - ' + this._hass.formatEntityAttributeValue(this._stateObj, 'current_position') : '');
+          name = this._name || this._stateObj.attributes.friendly_name;
         } else {
           icon = 'hass:alert-rhombus';
           iconColor = 'var(--sq-unavailable-rgb)';
@@ -399,17 +399,17 @@
           stateFmtd = 'Unknown';
         }
         return x`
-      <div class='container' @click=${this._showMoreInfo}>
-        <div class='icon' @click=${this._toggleEntity} style='
-          color: rgb(${iconColor});
-          background-color: rgba(${iconColor}, var(--sq-icon-opacity));
-        '>
-          <ha-icon .icon=${icon}></ha-icon>
+        <div class='container' @click=${this._showMoreInfo}>
+            <div class='icon' @click=${this._toggleEntity} style='
+            color: rgb(${iconColor});
+            background-color: rgba(${iconColor}, var(--sq-icon-opacity));
+            '>
+            <ha-icon .icon=${icon}></ha-icon>
+            </div>
+            <div class='name'>${name}</div>
+            <div class='state'>${stateFmtd}</div>
         </div>
-        <div class='name'>${name}</div>
-        <div class='state'>${stateFmtd}</div>
-      </div>
-    `;
+        `;
       }
       _toggleEntity(e) {
         e.stopPropagation();

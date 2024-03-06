@@ -28,6 +28,7 @@ window.customCards.push({
   description: 'A SmartQasa tile for controlling a fan entity.',
 });
 
+// Garage Tile //
 import { SmartQasaGarageTile } from './tiles/garage-tile';
 customElements.define('smartqasa-garage-tile', SmartQasaGarageTile);
 window.customCards = window.customCards || [];
