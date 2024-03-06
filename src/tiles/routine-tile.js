@@ -51,7 +51,7 @@ export class SmartQasaRoutineTile extends LitElement {
                     color: rgb(${iconColor});
                     background-color: rgba(${iconColor}, var(--sq-icon-opacity));
                 '>
-                <ha-icon .icon=${icon}></ha-icon>
+                <ha-icon .icon=${this._icon}></ha-icon>
             </div>
             <div class='name'>${name}</div>
         </div>

@@ -640,7 +640,7 @@
                     color: rgb(${iconColor});
                     background-color: rgba(${iconColor}, var(--sq-icon-opacity));
                 '>
-                <ha-icon .icon=${icon}></ha-icon>
+                <ha-icon .icon=${this._icon}></ha-icon>
             </div>
             <div class='name'>${name}</div>
         </div>
@@ -677,7 +677,7 @@
           setTimeout(() => {
             haIconElement.icon = this._icon;
             iconElement.style.color = `rgb(var(--sq-inactive-rgb))`;
-            iconElement.style.animation = none;
+            iconElement.style.animation = 'none';
           }, 2000);
         }
       }
