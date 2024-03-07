@@ -985,7 +985,7 @@
         if (config.entity) {
           this._entity = config.entity ?? null;
         } else {
-          throw new Error('You need to define an area');
+          throw new Error('You need to define an entity');
         }
       }
       set hass(hass) {
@@ -1023,7 +1023,6 @@
                     '>
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
-                <div class='name'>${name}</div>
             </div>
         `;
       }
