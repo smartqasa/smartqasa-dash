@@ -6,6 +6,7 @@ export default css`
         display: grid;
         grid-template-areas: 'i';
         border: var(--sq-card-border);
+        border-radius: var(--sq-chip-border-radius);
         background-color: var(--sq-card-background-color);
         cursor: pointer;
     }
@@ -15,7 +16,6 @@ export default css`
         height: var(--sq-icon-size, 1.8rem);
         width: var(--sq-icon-size, 1.8rem);
         padding: var(--sq-icon-padding, 1.0rem);
-        border-radius: 50%;
         transition: var(--sq-icon-transition, none);
     }
 `;
