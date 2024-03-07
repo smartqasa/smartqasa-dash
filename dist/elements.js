@@ -355,7 +355,7 @@
       }
       static styles = [styleTileBase, styleTileState, styleTileBlink];
       render() {
-        let icon, iconColor, name, state, stateFmtd;
+        let icon, iconColor, iconAnimation, name, state, stateFmtd;
         if (this._stateObj) {
           state = this._stateObj.state;
           switch (state) {

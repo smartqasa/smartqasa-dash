@@ -10,7 +10,8 @@
   },
   "scripts": {
     "clean": "rm -f dist/elements.js",
-    "build": "npm run clean && rollup -c"
+    "build": "npm run clean && rollup -c",
+    "watch": "npm run clean && rollup -c --watch"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",
