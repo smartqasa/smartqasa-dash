@@ -3,11 +3,10 @@ import { css } from 'lit';
 export default css`
     .container {
         display: grid;
-        height: var(--sq-card-height, 4.0rem);
-        padding: var(--sq-card-padding, 0 1.0rem);
+        height: 4.0rem;
+        padding: 0 1.0rem;
         border: var(--sq-card-border, 'none');
-        border-radius: var(--sq-card-border-radius, 1.0rem);
-        box-shadow: var(--sq-card-box-shadow, 0 2px 4px 0 rgba(0, 0, 0, 0.2));
+        border-radius: var(--sq-card-border-radius, 1.5rem);
         grid-template-areas: 'i n';
         grid-template-columns: auto 1fr;
         grid-column-gap: var(--sq-card-gap-column, 0.7rem);

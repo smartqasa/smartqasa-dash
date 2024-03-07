@@ -1,9 +1,9 @@
 {
-  "name": "smartqasa-cards",
+  "name": "smartqasa-elements",
   "version": "1.0.0",
-  "description": "SmartQasa Dashboard Cards",
+  "description": "SmartQasa Dashboard Elements",
   "type": "module",
-  "author": "Paul Bottein",
+  "author": "Tom BRuno",
   "repository": {
     "type": "git",
     "url": "https://github.com/smartqasa/smartqasa-dash"
