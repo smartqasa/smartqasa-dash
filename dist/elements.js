@@ -353,7 +353,7 @@
         this._hass = hass;
         this._stateObj = this._hass.states[this._entity] ?? undefined;
       }
-      static styles = [styleTileBase, styleTileState];
+      static styles = [styleTileBase, styleTileState, styleTileBlink];
       render() {
         let icon, iconColor, name, state, stateFmtd;
         if (this._stateObj) {
@@ -362,22 +362,27 @@
             case 'closed':
               icon = 'hass:garage-variant';
               iconColor = 'var(--sq-inactive-rgb, 128, 128, 128)';
+              iconAnimation = 'none';
               break;
             case 'closing':
               icon = 'hass:arrow-down-box';
               iconColor = 'var(--sq-garage-closing-rgb, 255, 120, 0)';
+              iconAnimation = 'blink 2.0s linear infinite';
               break;
             case 'opening':
               icon = 'hass:arrow-up-box';
               iconColor = 'var(--sq-garage-opening-rgb, 255, 120, 0)';
+              iconAnimation = 'blink 2.0s linear infinite';
               break;
             case 'open':
               icon = 'hass:garage-open-variant';
               iconColor = 'var(--sq-garage-open-rgb, 255, 120, 0)';
+              iconAnimation = 'none';
               break;
             default:
               icon = 'hass:alert-rhombus';
               iconColor = 'var(--sq-unavailable-rgb, 255, 0, 255)';
+              iconAnimation = 'none';
               break;
           }
           stateFmtd = this._hass.formatEntityState(this._stateObj) + (state === 'open' && this._stateObj.attributes.current_position ? ' - ' + this._hass.formatEntityAttributeValue(this._stateObj, 'current_position') : '');
@@ -393,6 +398,7 @@
                 <div class='icon' @click=${this._toggleEntity} style='
                         color: rgb(${iconColor});
                         background-color: rgba(${iconColor}, var(--sq-icon-opacity));
+                        animation: ${iconAnimation};
                     '>
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
@@ -966,7 +972,7 @@
         display: flex;
         height: var(--sq-icon-size, 1.8rem);
         width: var(--sq-icon-size, 1.8rem);
-        padding: var(--sq-icon-padding, 1.0rem);
+        padding: calc(var(--sq-icon-padding) + 2px);
         transition: var(--sq-icon-transition, none);
     }
 `;

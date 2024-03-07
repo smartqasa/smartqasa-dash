@@ -2,6 +2,7 @@ import { LitElement, html } from 'lit';
 
 import styleTileBase from '../styles/tile-base';
 import styleTileState from '../styles/tile-state';
+import styleTileIconbBlink from '../styles/tile-icon-spin';
 
 export class SmartQasaGarageTile extends LitElement {
 
@@ -30,7 +31,7 @@ export class SmartQasaGarageTile extends LitElement {
         this._stateObj = this._hass.states[this._entity] ?? undefined;
     }
 
-    static styles = [styleTileBase, styleTileState];
+    static styles = [styleTileBase, styleTileState, styleTileBlink ];
 
     render() {
         let icon, iconColor, name, state, stateFmtd;
@@ -40,22 +41,27 @@ export class SmartQasaGarageTile extends LitElement {
                 case 'closed':
                     icon = 'hass:garage-variant';
                     iconColor = 'var(--sq-inactive-rgb, 128, 128, 128)';
+                    iconAnimation = 'none'
                     break;
                 case 'closing':
                     icon = 'hass:arrow-down-box';
                     iconColor = 'var(--sq-garage-closing-rgb, 255, 120, 0)';
+                    iconAnimation = 'blink 2.0s linear infinite'
                     break;
                 case 'opening':
                     icon = 'hass:arrow-up-box';
                     iconColor = 'var(--sq-garage-opening-rgb, 255, 120, 0)';
+                    iconAnimation = 'blink 2.0s linear infinite'
                     break;
                 case 'open':
                     icon = 'hass:garage-open-variant';
                     iconColor = 'var(--sq-garage-open-rgb, 255, 120, 0)';
+                    iconAnimation = 'none'
                     break;
                 default:
                     icon = 'hass:alert-rhombus';
                     iconColor = 'var(--sq-unavailable-rgb, 255, 0, 255)';
+                    iconAnimation = 'none'
                     break;
             }
             stateFmtd = this._hass.formatEntityState(this._stateObj) +
@@ -74,6 +80,7 @@ export class SmartQasaGarageTile extends LitElement {
                 <div class='icon' @click=${this._toggleEntity} style='
                         color: rgb(${iconColor});
                         background-color: rgba(${iconColor}, var(--sq-icon-opacity));
+                        animation: ${iconAnimation};
                     '>
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>

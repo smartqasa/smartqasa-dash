@@ -1,5 +1,5 @@
 # SmartQasa Dash
 
-SmartQasa Dash is a collection of cards that run on [Home Assistant][home-assistant] Dashboard UI.
+SmartQasa Dash is a collection of cards that run on Home Assistant Dashboard UI.
 
-The views, tiles, chips and dialogs are purpose built for supporting SmartQasa HA instances.
+The views, tiles, chips and dialogs contained in this collection are purpose built for supporting SmartQasa HA instances.

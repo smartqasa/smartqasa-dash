@@ -9,8 +9,8 @@
     "url": "https://github.com/smartqasa/smartqasa-dash"
   },
   "scripts": {
-    "build": "rollup --config",
-    "watch": "rollup --config --watch"
+    "clean": "rm -f dist/elements.js",
+    "build": "npm run clean && rollup -c"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",
