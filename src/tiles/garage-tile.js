@@ -22,7 +22,7 @@ export class SmartQasaGarageTile extends LitElement {
             this._entity = config.entity;
             this._name = config.name ?? null;
         } else {
-            throw new Error('You need to define an entity');
+            throw new Error('You need to define an entity.');
         }
     }
 
@@ -41,27 +41,27 @@ export class SmartQasaGarageTile extends LitElement {
                 case 'closed':
                     icon = 'hass:garage-variant';
                     iconColor = 'var(--sq-inactive-rgb, 128, 128, 128)';
-                    iconAnimation = 'none'
+                    iconAnimation = 'none';
                     break;
                 case 'closing':
                     icon = 'hass:arrow-down-box';
                     iconColor = 'var(--sq-garage-closing-rgb, 255, 120, 0)';
-                    iconAnimation = 'blink 2.0s linear infinite'
+                    iconAnimation = 'blink 2.0s linear infinite';
                     break;
                 case 'opening':
                     icon = 'hass:arrow-up-box';
                     iconColor = 'var(--sq-garage-opening-rgb, 255, 120, 0)';
-                    iconAnimation = 'blink 2.0s linear infinite'
+                    iconAnimation = 'blink 2.0s linear infinite';
                     break;
                 case 'open':
                     icon = 'hass:garage-open-variant';
                     iconColor = 'var(--sq-garage-open-rgb, 255, 120, 0)';
-                    iconAnimation = 'none'
+                    iconAnimation = 'none';
                     break;
                 default:
                     icon = 'hass:alert-rhombus';
                     iconColor = 'var(--sq-unavailable-rgb, 255, 0, 255)';
-                    iconAnimation = 'none'
+                    iconAnimation = 'none';
                     break;
             }
             stateFmtd = this._hass.formatEntityState(this._stateObj) +
