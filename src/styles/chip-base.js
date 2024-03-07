@@ -15,7 +15,7 @@ export default css`
         display: flex;
         height: var(--sq-icon-size, 1.8rem);
         width: var(--sq-icon-size, 1.8rem);
-        padding: var(--sq-icon-padding, 1.0rem);
+        padding: calc(var(--sq-icon-padding) + 2px);
         transition: var(--sq-icon-transition, none);
     }
 `;
