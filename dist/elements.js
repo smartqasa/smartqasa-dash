@@ -323,6 +323,12 @@
       }
     }
 
+    var styleTileIconBlink = i$2`
+    @keyframes blink {
+        50% { opacity: 0.25; }
+    }
+`;
+
     class SmartQasaGarageTile extends s {
       _hass;
       static get properties() {
@@ -353,7 +359,7 @@
         this._hass = hass;
         this._stateObj = this._hass.states[this._entity] ?? undefined;
       }
-      static styles = [styleTileBase, styleTileState, styleTileIconSpin];
+      static styles = [styleTileBase, styleTileState, styleTileIconBlink];
       render() {
         let icon, iconColor, iconAnimation, name, state, stateFmtd;
         if (this._stateObj) {

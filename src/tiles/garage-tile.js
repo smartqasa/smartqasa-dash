@@ -2,7 +2,7 @@ import { LitElement, html } from 'lit';
 
 import styleTileBase from '../styles/tile-base';
 import styleTileState from '../styles/tile-state';
-import styleTileIconBlink from '../styles/tile-icon-spin';
+import styleTileIconBlink from '../styles/tile-icon-blink';
 
 export class SmartQasaGarageTile extends LitElement {
 
