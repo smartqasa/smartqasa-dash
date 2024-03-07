@@ -2,7 +2,7 @@ import { LitElement, html } from 'lit';
 
 import styleTileBase from '../styles/tile-base';
 import styleTileState from '../styles/tile-state';
-import styleTileIconbBlink from '../styles/tile-icon-spin';
+import styleTileIconBlink from '../styles/tile-icon-spin';
 
 export class SmartQasaGarageTile extends LitElement {
 
@@ -31,7 +31,7 @@ export class SmartQasaGarageTile extends LitElement {
         this._stateObj = this._hass.states[this._entity] ?? undefined;
     }
 
-    static styles = [styleTileBase, styleTileState, styleTileBlink ];
+    static styles = [styleTileBase, styleTileState, styleTileIconBlink ];
 
     render() {
         let icon, iconColor, iconAnimation, name, state, stateFmtd;

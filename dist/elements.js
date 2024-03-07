@@ -353,7 +353,7 @@
         this._hass = hass;
         this._stateObj = this._hass.states[this._entity] ?? undefined;
       }
-      static styles = [styleTileBase, styleTileState, styleTileBlink];
+      static styles = [styleTileBase, styleTileState, styleTileIconSpin];
       render() {
         let icon, iconColor, iconAnimation, name, state, stateFmtd;
         if (this._stateObj) {
