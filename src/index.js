@@ -91,3 +91,6 @@ window.customCards.push({
 
 import { SmartQasaTimeCard } from './misc/time-card';
 customElements.define('smartqasa-time-card', SmartQasaTimeCard);
+
+import { SmartQasaMotionChip } from './chips/motion-chip';
+customElements.define('smartqasa-motion-chip', SmartQasaMotionChip);

@@ -951,6 +951,90 @@
       }
     }
 
+    var styleChipBase = i$2`
+    .container {
+        display: grid;
+        grid-template-areas: 'i';
+        border: var(--sq-card-border, 'none');
+        cursor: pointer;
+    }
+    .icon {
+        grid-area: i;
+        display: flex;
+        height: var(--sq-icon-size, 1.8rem);
+        width: var(--sq-icon-size, 1.8rem);
+        padding: var(--sq-icon-padding, 1.0rem);
+        border-radius: 50%;
+        transition: var(--sq-icon-transition, none);
+    }
+`;
+
+    class SmartQasaMotionChip extends s {
+      _hass;
+      static get properties() {
+        return {
+          _entity: {
+            state: true
+          },
+          _stateObj: {
+            state: true
+          }
+        };
+      }
+      setConfig(config) {
+        if (config.entity) {
+          this._entity = config.entity ?? null;
+        } else {
+          throw new Error('You need to define an area');
+        }
+      }
+      set hass(hass) {
+        this._hass = hass;
+        this._stateObj = this._hass.states[this._entity] ?? undefined;
+      }
+      static styles = styleChipBase;
+      render() {
+        let icon, iconColor, state;
+        if (this._stateObj) {
+          state = this._stateObj.state;
+          switch (state) {
+            case 'on':
+              icon = 'hass:motion-sensor';
+              iconColor = 'var(--sq-primary-font-rgb, 128, 128, 128)';
+              break;
+            case 'off':
+              icon = 'hass:motion-sensor-off';
+              iconColor = 'var(--sq-red-rgb, 255, 0, 0)';
+              break;
+            default:
+              icon = 'hass:motion-sensor-off';
+              iconColor = 'var(--sq-unavailable-rgb, 255, 0, 255)';
+              break;
+          }
+        } else {
+          icon = 'hass:motion-sensor-off';
+          iconColor = 'var(--sq-unavailable-rgb, 255, 0, 255)';
+        }
+        return x`
+            <div class='container' @click=${this._toggleEntity}>
+                <div class='icon' id='icon' style='
+                        color: rgb(${iconColor});
+                        background-color: rgba(${iconColor}, var(--sq-icon-opacity));
+                    '>
+                    <ha-icon .icon=${icon}></ha-icon>
+                </div>
+                <div class='name'>${name}</div>
+            </div>
+        `;
+      }
+      _toggleEntity(e) {
+        e.stopPropagation();
+        this._hass.callService('homeassistant', 'toggle', {
+          entity_id: this._entity
+        });
+      }
+    }
+
     customElements.define('smartqasa-all-off-tile', SmartQasaAllOffTile);
     window.customCards = window.customCards || [];
     window.customCards.push({
@@ -1024,5 +1108,6 @@
       description: 'A SmartQasa tile for toggling an entity.'
     });
     customElements.define('smartqasa-time-card', SmartQasaTimeCard);
+    customElements.define('smartqasa-motion-chip', SmartQasaMotionChip);
 
 })();
