@@ -94,3 +94,10 @@ customElements.define('smartqasa-time-card', SmartQasaTimeCard);
 
 import { SmartQasaMotionChip } from './chips/motion-chip';
 customElements.define('smartqasa-motion-chip', SmartQasaMotionChip);
+window.customCards = window.customCards || [];
+window.customCards.push({
+    type: 'smartqasa-motion-chip',
+    name: 'SmartQasa Motion Sensor Chip',
+    preview: true,
+    description: 'A SmartQasa chip for toggling an motion sensor entity.'
+});
