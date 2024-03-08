@@ -64,7 +64,7 @@ export class SmartQasaShadeTile extends LitElement {
                 (state === 'open' && this._stateObj.attributes.current_position
                     ? ' - ' + this._hass.formatEntityAttributeValue(this._stateObj, 'current_position')
                     : '');
-            name = this._name ?? this._stateObj.attributes.friendly_name ?? 'Unknown';
+            name = this._name ?? this._stateObj.attributes.friendly_name ?? this._entity;
         } else {
             icon = 'hass:alert-rhombus';
             iconColor = 'var(--sq-unavailable-rgb)';

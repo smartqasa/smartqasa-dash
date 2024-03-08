@@ -38,7 +38,7 @@ export class SmartQasaLightTile extends LitElement {
         if (this._stateObj) {
             const state = this._stateObj.state;
             icon = this._icon ?? this._stateObj.attributes.icon ?? 'hass:help-circle';
-            name = this._name ?? this._stateObj.attributes.friendly_name;
+            name = this._name ?? this._stateObj.attributes.friendly_name ?? this._entity;
             iconColor = state == 'on' ? 'var(--sq-light-on-rgb)' : 'var(--sq-inactive-rgb)';
             stateFmtd = this._hass.formatEntityState(this._stateObj) +
                 (state == 'on' && this._stateObj.attributes.brightness ? ' - ' +

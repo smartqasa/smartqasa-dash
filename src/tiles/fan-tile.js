@@ -49,7 +49,7 @@ export class SmartQasaFanTile extends LitElement {
                     iconAnimation = `spin 0.5s linear infinite normal`;
                 }
             }
-            name = this._name ?? this._stateObj.attributes.friendly_name ?? 'Unknown';
+            name = this._name ?? this._stateObj.attributes.friendly_name ?? this._entity;
             stateFmtd = this._hass.formatEntityState(this._stateObj) +
                 (state === 'on' && this._stateObj.attributes.percentage ? ' - ' +
                 this._hass.formatEntityAttributeValue(this._stateObj, 'percentage') : '');

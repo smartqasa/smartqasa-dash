@@ -43,7 +43,7 @@ export class SmartQasaSwitchTile extends LitElement {
             iconColor = state == 'on' ?
                 `var(--sq-switch${this._category ? '-' + this._category : ''}-on-rgb)` :
                 'var(--sq-inactive-rgb)';
-            name = this._name ?? this._stateObj.attributes.friendly_name;
+            name = this._name ?? this._stateObj.attributes.friendly_name ?? this._entity;
             stateFmtd = this._hass.formatEntityState(this._stateObj);
         } else {
             icon = 'hass:alert-rhombus';

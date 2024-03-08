@@ -50,7 +50,7 @@ export class SmartQasaLockTile extends LitElement {
                     iconColor = 'var(--sq-unavailable-rgb, 255, 0, 255)';
                     break;
             }
-            name = this._name ?? this._stateObj.attributes.friendly_name;
+            name = this._name ?? this._stateObj.attributes.friendly_name ?? this._entity;
             stateFmtd = this._hass.formatEntityState(this._stateObj);
         } else {
             icon = 'hass:alert-rhombus';

@@ -38,7 +38,7 @@ export class SmartQasaRoutineTile extends LitElement {
         if (this._stateObj) {
             this._icon = this._icon ?? this._stateObj.attributes.icon ?? 'hass:help-circle';
             iconColor = 'var(--sq-inactive-rgb)';
-            name = this._name ?? this._stateObj.attributes.friendly_name;
+            name = this._name ?? this._stateObj.attributes.friendly_name ?? this._entity;
         } else {
             this._icon = 'hass:alert-rhombus';
             iconColor = 'var(--sq-unavailable-rgb)';
