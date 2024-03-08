@@ -153,7 +153,7 @@
         _icon: {
           state: true
         },
-        _imageIcon: {
+        _image: {
           state: true
         },
         _name: {
@@ -169,7 +169,7 @@
     }
     setConfig(config) {
       this._icon = config.icon ?? null;
-      this._imageIcon = config.imageIcon ?? null;
+      this._image = config.image ?? null;
       this._name = config.name ?? "Unknown";
       this._package = config.package ?? null;
       this._uri = config.uri ?? null;
@@ -182,10 +182,10 @@
       let icon, iconStyle;
       if (this._imageIcon) {
         icon = x`<img
-        src="/local/sq-storage/images/${this._imageIcon}"
+        src="/local/sq-storage/images/${this._image}"
         alt="App Icon"
       />`;
-        iconStyle = "height: 3.8rem; width: 3.8rem; padding: 0; border: none;";
+        iconStyle = "height: 3.8rem; width: 3.8rem; padding: 0; border: none; border-radius: 50%;";
       } else if (this._icon) {
         icon = x`<ha-icon .icon=${this._icon}></ha-icon>`;
         iconStyle = "color: rgb(var(--sq-inactive-rgb)); background-color: rgba(var(--sq-inactive-rgb), var(--sq-icon-opacity));";

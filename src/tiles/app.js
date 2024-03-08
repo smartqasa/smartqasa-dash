@@ -7,7 +7,7 @@ export class SmartQasaAppTile extends LitElement {
   static get properties() {
     return {
       _icon: { state: true },
-      _imageIcon: { state: true },
+      _image: { state: true },
       _name: { state: true },
       _package: { state: true },
       _uri: { state: true },
@@ -16,7 +16,7 @@ export class SmartQasaAppTile extends LitElement {
 
   setConfig(config) {
     this._icon = config.icon ?? null;
-    this._imageIcon = config.imageIcon ?? null;
+    this._image = config.image ?? null;
     this._name = config.name ?? "Unknown";
     this._package = config.package ?? null;
     this._uri = config.uri ?? null;
@@ -32,10 +32,11 @@ export class SmartQasaAppTile extends LitElement {
     let icon, iconStyle;
     if (this._imageIcon) {
       icon = html`<img
-        src="/local/sq-storage/images/${this._imageIcon}"
+        src="/local/sq-storage/images/${this._image}"
         alt="App Icon"
       />`;
-      iconStyle = "height: 3.8rem; width: 3.8rem; padding: 0; border: none;";
+      iconStyle =
+        "height: 3.8rem; width: 3.8rem; padding: 0; border: none; border-radius: 50%;";
     } else if (this._icon) {
       icon = html`<ha-icon .icon=${this._icon}></ha-icon>`;
       iconStyle =
