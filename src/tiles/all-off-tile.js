@@ -12,7 +12,7 @@ export class SmartQasaAllOffTile extends LitElement {
             _areaObj: { state: true },
             _icon: { state: true },
             _name: { state: true },
-        };
+        }
     }
 
     setConfig(config) {

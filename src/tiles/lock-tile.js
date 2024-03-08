@@ -13,7 +13,7 @@ export class SmartQasaLockTile extends LitElement {
             _stateObj: { state: true },
             _name: { state: true },
             _state: { state: true }
-        };
+        }
     }
 
     setConfig(config) {

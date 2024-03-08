@@ -10,12 +10,14 @@ export class SmartQasaMotionChip extends LitElement {
         return {
             _entity: { state: true },
             _stateObj: { state: true },
-        };
+            _name: { state: true }
+        }
     }
 
     setConfig(config) {
         if (config.entity) {
             this._entity = config.entity ?? null;
+            this._name = config.name ?? null;
         } else {
             throw new Error('You need to define an entity');
         }
@@ -57,6 +59,7 @@ export class SmartQasaMotionChip extends LitElement {
                     '>
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
+                <div class='name'>${this._name}</div>
             </div>
         `;
     }

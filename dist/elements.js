@@ -30,11 +30,10 @@
     var styleTileBase = i$2`
     .container {
         display: grid;
-        height: var(--sq-card-height, 4.0rem);
-        padding: var(--sq-card-padding, 0 1.0rem);
+        height: 4.0rem;
+        padding: 0 1.0rem;
         border: var(--sq-card-border, 'none');
-        border-radius: var(--sq-card-border-radius, 1.0rem);
-        box-shadow: var(--sq-card-box-shadow, 0 2px 4px 0 rgba(0, 0, 0, 0.2));
+        border-radius: var(--sq-card-border-radius, 1.5rem);
         grid-template-areas: 'i n';
         grid-template-columns: auto 1fr;
         grid-column-gap: var(--sq-card-gap-column, 0.7rem);
@@ -968,7 +967,7 @@
         width: fit-content;
         place-self: center;
         display: grid;
-        grid-template-areas: 'i';
+        grid-template-areas: 'i n';
         border: var(--sq-card-border);
         border-radius: var(--sq-chip-border-radius);
         background-color: var(--sq-card-background-color);
@@ -982,6 +981,17 @@
         padding: calc(var(--sq-icon-padding) + 2px);
         transition: var(--sq-icon-transition, none);
     }
+    .name {
+        grid-area: n;
+        place-self: center start;
+        text-align: left;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: normal;
+        font-weight: var(--sq-primary-font-weight, 400);
+        font-size: var(--sq-primary-font-size, 1.5rem);
+        color: rgb(var(--sq-primary-font-rgb), 128, 128, 128);
+    }
 `;
 
     class SmartQasaMotionChip extends s {
@@ -993,12 +1003,16 @@
           },
           _stateObj: {
             state: true
+          },
+          _name: {
+            state: true
           }
         };
       }
       setConfig(config) {
         if (config.entity) {
           this._entity = config.entity ?? null;
+          this._name = config.name ?? null;
         } else {
           throw new Error('You need to define an entity');
         }
@@ -1037,6 +1051,7 @@
                     '>
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
+                <div class='name'>${this._name}</div>
             </div>
         `;
       }
