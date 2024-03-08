@@ -22,7 +22,6 @@ export default css`
         height: var(--sq-icon-size, 1.8rem);
         width: var(--sq-icon-size, 1.8rem);
         margin-left: 1.0rem;
-        padding: 1.0rem;
         border-radius: 50%;
         transition: var(--sq-icon-transition, none);
     }
