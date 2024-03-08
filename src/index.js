@@ -1,103 +1,116 @@
-import { SmartQasaAllOffTile } from './tiles/all-off-tile';
-customElements.define('smartqasa-all-off-tile', SmartQasaAllOffTile);
+import { SmartQasaAllOffTile } from "./tiles/all-off";
+customElements.define("smartqasa-all-off-tile", SmartQasaAllOffTile);
 window.customCards = window.customCards || [];
 window.customCards.push({
-    type: 'smartqasa-all-off-tile',
-    name: 'SmartQasa All Off Tile',
-    preview: true,
-    description: 'A SmartQasa tile for turning off all light and fan entities in an area..'
+  type: "smartqasa-all-off-tile",
+  name: "SmartQasa All Off Tile",
+  preview: true,
+  description:
+    "A SmartQasa tile for turning off all light and fan entities in an area.",
 });
 
-import { SmartQasaAreaTile } from './tiles/area-tile';
-customElements.define('smartqasa-area-tile', SmartQasaAreaTile);
+import { SmartQasaAppTile } from "./tiles/app";
+customElements.define("smartqasa-app-tile", SmartQasaAppTile);
 window.customCards = window.customCards || [];
 window.customCards.push({
-    type: 'smartqasa-area-tile',
-    name: 'SmartQasa Area Tile',
-    preview: true,
-    description: 'A SmartQasa tile for navigating to an area or a specific dashboard view.'
+  type: "smartqasa-app-tile",
+  name: "SmartQasa App Tile",
+  preview: true,
+  description: "A SmartQasa tile for launching applications from the dashboard",
 });
 
-import { SmartQasaFanTile } from './tiles/fan-tile';
-customElements.define('smartqasa-fan-tile', SmartQasaFanTile);
+import { SmartQasaAreaTile } from "./tiles/area";
+customElements.define("smartqasa-area-tile", SmartQasaAreaTile);
 window.customCards = window.customCards || [];
 window.customCards.push({
-    type: 'smartqasa-fan-tile',
-    name: 'SmartQasa Fan Tile',
-    preview: true,
-    description: 'A SmartQasa tile for controlling a fan entity.'
+  type: "smartqasa-area-tile",
+  name: "SmartQasa Area Tile",
+  preview: true,
+  description:
+    "A SmartQasa tile for navigating to an area or a specific dashboard view.",
+});
+
+import { SmartQasaFanTile } from "./tiles/fan";
+customElements.define("smartqasa-fan-tile", SmartQasaFanTile);
+window.customCards = window.customCards || [];
+window.customCards.push({
+  type: "smartqasa-fan-tile",
+  name: "SmartQasa Fan Tile",
+  preview: true,
+  description: "A SmartQasa tile for controlling a fan entity.",
 });
 
 // Garage Tile //
-import { SmartQasaGarageTile } from './tiles/garage-tile';
-customElements.define('smartqasa-garage-tile', SmartQasaGarageTile);
+import { SmartQasaGarageTile } from "./tiles/garage";
+customElements.define("smartqasa-garage-tile", SmartQasaGarageTile);
 window.customCards = window.customCards || [];
 window.customCards.push({
-    type: 'smartqasa-garage-tile',
-    name: 'SmartQasa Garage Tile',
-    preview: true,
-    description: 'A SmartQasa tile for controlling a garage cover entity.'
+  type: "smartqasa-garage-tile",
+  name: "SmartQasa Garage Tile",
+  preview: true,
+  description: "A SmartQasa tile for controlling a garage cover entity.",
 });
 
-import { SmartQasaLightTile } from './tiles/light-tile';
-customElements.define('smartqasa-light-tile', SmartQasaLightTile);
+import { SmartQasaLightTile } from "./tiles/light";
+customElements.define("smartqasa-light-tile", SmartQasaLightTile);
 window.customCards = window.customCards || [];
 window.customCards.push({
-      type: 'smartqasa-light-tile',
-      name: 'SmartQasa Light Tile',
-      preview: true,
-      description: 'A SmartQasa tile for controlling a light entity.'
+  type: "smartqasa-light-tile",
+  name: "SmartQasa Light Tile",
+  preview: true,
+  description: "A SmartQasa tile for controlling a light entity.",
 });
 
-import { SmartQasaLockTile } from './tiles/lock-tile';
-customElements.define('smartqasa-lock-tile', SmartQasaLockTile);
+import { SmartQasaLockTile } from "./tiles/lock";
+customElements.define("smartqasa-lock-tile", SmartQasaLockTile);
 window.customCards = window.customCards || [];
 window.customCards.push({
-    type: 'smartqasa-lock-tile',
-    name: 'SmartQasa Lock Tile',
-    preview: true,
-    description: 'A SmartQasa tile for controlling a lock entity.'
+  type: "smartqasa-lock-tile",
+  name: "SmartQasa Lock Tile",
+  preview: true,
+  description: "A SmartQasa tile for controlling a lock entity.",
 });
 
-import { SmartQasaRoutineTile } from './tiles/routine-tile';
-customElements.define('smartqasa-routine-tile', SmartQasaRoutineTile);
+import { SmartQasaRoutineTile } from "./tiles/routine";
+customElements.define("smartqasa-routine-tile", SmartQasaRoutineTile);
 window.customCards = window.customCards || [];
 window.customCards.push({
-    type: 'smartqasa-routine-tile',
-    name: 'SmartQasa Routine Tile',
-    preview: true,
-    description: 'A SmartQasa tile for triggering an automation, scene, or script entity.',
+  type: "smartqasa-routine-tile",
+  name: "SmartQasa Routine Tile",
+  preview: true,
+  description:
+    "A SmartQasa tile for triggering an automation, scene, or script entity.",
 });
 
-import { SmartQasaShadeTile } from './tiles/shade-tile';
-customElements.define('smartqasa-shade-tile', SmartQasaShadeTile);
+import { SmartQasaShadeTile } from "./tiles/shade";
+customElements.define("smartqasa-shade-tile", SmartQasaShadeTile);
 window.customCards = window.customCards || [];
 window.customCards.push({
-    type: 'smartqasa-shade-tile',
-    name: 'SmartQasa Shade Tile',
-    preview: true,
-    description: 'A SmartQasa tile for controlling a window shade entity.',
+  type: "smartqasa-shade-tile",
+  name: "SmartQasa Shade Tile",
+  preview: true,
+  description: "A SmartQasa tile for controlling a window shade entity.",
 });
 
-import { SmartQasaSwitchTile } from './tiles/switch-tile';
-customElements.define('smartqasa-switch-tile', SmartQasaSwitchTile);
+import { SmartQasaSwitchTile } from "./tiles/switch";
+customElements.define("smartqasa-switch-tile", SmartQasaSwitchTile);
 window.customCards = window.customCards || [];
 window.customCards.push({
-    type: 'smartqasa-switch-tile',
-    name: 'SmartQasa Switch Tile',
-    preview: true,
-    description: 'A SmartQasa tile for toggling an entity.'
+  type: "smartqasa-switch-tile",
+  name: "SmartQasa Switch Tile",
+  preview: true,
+  description: "A SmartQasa tile for toggling an entity.",
 });
 
-import { SmartQasaTimeCard } from './misc/time-card';
-customElements.define('smartqasa-time-card', SmartQasaTimeCard);
+import { SmartQasaTimeCard } from "./misc/date-time";
+customElements.define("smartqasa-time-card", SmartQasaTimeCard);
 
-import { SmartQasaMotionChip } from './chips/motion-chip';
-customElements.define('smartqasa-motion-chip', SmartQasaMotionChip);
+import { SmartQasaMotionChip } from "./chips/motion";
+customElements.define("smartqasa-motion-chip", SmartQasaMotionChip);
 window.customCards = window.customCards || [];
 window.customCards.push({
-    type: 'smartqasa-motion-chip',
-    name: 'SmartQasa Motion Sensor Chip',
-    preview: true,
-    description: 'A SmartQasa chip for toggling an motion sensor entity.'
+  type: "smartqasa-motion-chip",
+  name: "SmartQasa Motion Sensor Chip",
+  preview: true,
+  description: "A SmartQasa chip for toggling an motion sensor entity.",
 });

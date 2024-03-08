@@ -1,0 +1,73 @@
+import { LitElement, html, css } from "lit";
+import styleTileBase from "../styles/tile-base";
+
+export class SmartQasaAppTile extends LitElement {
+  _hass;
+
+  static get properties() {
+    return {
+      _icon: { state: true },
+      _imageIcon: { state: true },
+      _name: { state: true },
+      _package: { state: true },
+      _uri: { state: true },
+    };
+  }
+
+  setConfig(config) {
+    this._icon = config.icon ?? null;
+    this._imageIcon = config.imageIcon ?? null;
+    this._name = config.name ?? "Unknown";
+    this._package = config.package ?? null;
+    this._uri = config.uri ?? null;
+  }
+
+  set hass(hass) {
+    this._hass = hass;
+  }
+
+  static styles = styleTileBase;
+
+  render() {
+    let icon, iconStyle;
+    if (this._imageIcon) {
+      icon = html`<img
+        src="/local/sq-storage/images/${this._imageIcon}"
+        alt="App Icon"
+      />`;
+      iconStyle = "height: 3.8rem; width: 3.8rem; padding: 0; border: none;";
+    } else if (this._icon) {
+      icon = html`<ha-icon .icon=${this._icon}></ha-icon>`;
+      iconStyle =
+        "color: rgb(var(--sq-inactive-rgb)); background-color: rgba(var(--sq-inactive-rgb), var(--sq-icon-opacity));";
+    } else {
+      icon = html`<ha-icon .icon="hass:alert-rhombus"></ha-icon>`;
+      iconStyle =
+        "color: rgb(var(--sq-unavailable-rgb)); background-color: rgba(var(--sq-unavailable-rgb), var(--sq-icon-opacity));";
+    }
+
+    return html`
+      <div class="container" @click=${this._launchApp}>
+        <div class="icon" style=${iconStyle}>${icon}</div>
+        <div class="name">${this._name}</div>
+      </div>
+    `;
+  }
+
+  _launchApp(e) {
+    e.stopPropagation();
+    if (this._uri) {
+      window.location.href = this._uri;
+    } else if (this._package) {
+      if (typeof fully !== "undefined" && fully.startApplication) {
+        fully.startApplication(this._package);
+      } else {
+        console.error("fully.startApplication is not available.");
+      }
+    } else {
+      throw new Error(
+        "Neither URI nor package ID is provided for launching the app."
+      );
+    }
+  }
+}
