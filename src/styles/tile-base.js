@@ -3,7 +3,6 @@ import { css } from 'lit';
 export default css`
     .container {
         display: grid;
-        height: 6.0rem;
         border: var(--sq-card-border, 'none');
         border-radius: var(--sq-card-border-radius, 1.5rem);
         grid-template-areas: 'i n';
