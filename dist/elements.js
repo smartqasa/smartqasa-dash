@@ -210,7 +210,7 @@
     var styleTileState = i$2`
     .container {
         grid-template-areas: 'i n' 'i s';
-        grid-row-gap: var(--sq-card-gap-row, 0.3rem);
+        grid-row-gap: 0.3rem;
     }
     .name {
         place-self: end start;
