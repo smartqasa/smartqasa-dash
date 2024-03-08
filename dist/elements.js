@@ -32,11 +32,11 @@
     display: grid;
     height: 5.2rem;
     border: var(--sq-card-border, none);
-    border-radius: var(--sq-card-border-radius, 1.5rem);
+    border-radius: 1.5rem;
     grid-template-areas: "i n";
     grid-template-columns: auto 1fr;
-    grid-column-gap: var(--sq-card-gap-column, 0.7rem);
-    grid-row-gap: var(--sq-card-gap-row, 0.3rem);
+    grid-column-gap: 0.7rem;
+    grid-row-gap: 0.3rem;
     padding: 1rem;
     background-color: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
     cursor: pointer;
@@ -143,6 +143,76 @@
         iconElement.style.color = `rgb(var(--sq-inactive-rgb))`;
         iconElement.style.backgroundColor = `rgba(var(--sq-inactive-rgb), var(--sq-icon-opacity))`;
       }, 2000);
+    }
+  }
+
+  class SmartQasaAppTile extends s {
+    _hass;
+    static get properties() {
+      return {
+        _icon: {
+          state: true
+        },
+        _imageIcon: {
+          state: true
+        },
+        _name: {
+          state: true
+        },
+        _package: {
+          state: true
+        },
+        _uri: {
+          state: true
+        }
+      };
+    }
+    setConfig(config) {
+      this._icon = config.icon ?? null;
+      this._imageIcon = config.imageIcon ?? null;
+      this._name = config.name ?? "Unknown";
+      this._package = config.package ?? null;
+      this._uri = config.uri ?? null;
+    }
+    set hass(hass) {
+      this._hass = hass;
+    }
+    static styles = styleTileBase;
+    render() {
+      let icon, iconStyle;
+      if (this._imageIcon) {
+        icon = x`<img
+        src="/local/sq-storage/images/${this._imageIcon}"
+        alt="App Icon"
+      />`;
+        iconStyle = "height: 3.8rem; width: 3.8rem; padding: 0; border: none;";
+      } else if (this._icon) {
+        icon = x`<ha-icon .icon=${this._icon}></ha-icon>`;
+        iconStyle = "color: rgb(var(--sq-inactive-rgb)); background-color: rgba(var(--sq-inactive-rgb), var(--sq-icon-opacity));";
+      } else {
+        icon = x`<ha-icon .icon="hass:alert-rhombus"></ha-icon>`;
+        iconStyle = "color: rgb(var(--sq-unavailable-rgb)); background-color: rgba(var(--sq-unavailable-rgb), var(--sq-icon-opacity));";
+      }
+      return x`
+      <div class="container" @click=${this._launchApp}>
+        <div class="icon" style=${iconStyle}>${icon}</div>
+        <div class="name">${this._name}</div>
+      </div>
+    `;
+    }
+    _launchApp(e) {
+      e.stopPropagation();
+      if (this._uri) {
+        window.location.href = this._uri;
+      } else if (this._package) {
+        if (typeof fully !== "undefined" && fully.startApplication) {
+          fully.startApplication(this._package);
+        } else {
+          console.error("fully.startApplication is not available.");
+        }
+      } else {
+        throw new Error("Neither URI nor package ID is provided for launching the app.");
+      }
     }
   }
 
@@ -506,9 +576,9 @@
           class="icon"
           @click=${this._toggleEntity}
           style="
-                        color: rgb(${iconColor});
-                        background-color: rgba(${iconColor}, var(--sq-icon-opacity));
-                        "
+              color: rgb(${iconColor});
+              background-color: rgba(${iconColor}, var(--sq-icon-opacity));
+            "
         >
           <ha-icon .icon=${icon}></ha-icon>
         </div>
@@ -1059,7 +1129,7 @@
         this._entity = config.entity ?? null;
         this._name = config.name ?? null;
       } else {
-        throw new Error('You need to define an entity');
+        throw new Error("You need to define an entity");
       }
     }
     set hass(hass) {
@@ -1072,37 +1142,41 @@
       if (this._stateObj) {
         state = this._stateObj.state;
         switch (state) {
-          case 'on':
-            icon = 'hass:motion-sensor';
-            iconColor = 'var(--sq-primary-font-rgb, 128, 128, 128)';
+          case "on":
+            icon = "hass:motion-sensor";
+            iconColor = "var(--sq-primary-font-rgb, 128, 128, 128)";
             break;
-          case 'off':
-            icon = 'hass:motion-sensor-off';
-            iconColor = 'var(--sq-red-rgb, 255, 0, 0)';
+          case "off":
+            icon = "hass:motion-sensor-off";
+            iconColor = "var(--sq-red-rgb, 255, 0, 0)";
             break;
           default:
-            icon = 'hass:motion-sensor-off';
-            iconColor = 'var(--sq-unavailable-rgb, 255, 0, 255)';
+            icon = "hass:motion-sensor-off";
+            iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
             break;
         }
       } else {
-        icon = 'hass:motion-sensor-off';
-        iconColor = 'var(--sq-unavailable-rgb, 255, 0, 255)';
+        icon = "hass:motion-sensor-off";
+        iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
       }
       return x`
-            <div class='container' @click=${this._toggleEntity}>
-                <div class='icon' id='icon' style='
+      <div class="container" @click=${this._toggleEntity}>
+        <div
+          class="icon"
+          id="icon"
+          style="
                         color: rgb(${iconColor});
-                    '>
-                    <ha-icon .icon=${icon}></ha-icon>
-                </div>
-                <div class='name'>${this._name}</div>
-            </div>
-        `;
+                    "
+        >
+          <ha-icon .icon=${icon}></ha-icon>
+        </div>
+        <div class="name">${this._name}</div>
+      </div>
+    `;
     }
     _toggleEntity(e) {
       e.stopPropagation();
-      this._hass.callService('homeassistant', 'toggle', {
+      this._hass.callService("homeassistant", "toggle", {
         entity_id: this._entity
       });
     }
@@ -1114,7 +1188,15 @@
     type: "smartqasa-all-off-tile",
     name: "SmartQasa All Off Tile",
     preview: true,
-    description: "A SmartQasa tile for turning off all light and fan entities in an area.."
+    description: "A SmartQasa tile for turning off all light and fan entities in an area."
+  });
+  customElements.define("smartqasa-app-tile", SmartQasaAppTile);
+  window.customCards = window.customCards || [];
+  window.customCards.push({
+    type: "smartqasa-app-tile",
+    name: "SmartQasa App Tile",
+    preview: true,
+    description: "A SmartQasa tile for launching applications from the dashboard"
   });
   customElements.define("smartqasa-area-tile", SmartQasaAreaTile);
   window.customCards = window.customCards || [];

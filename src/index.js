@@ -102,7 +102,7 @@ window.customCards.push({
   description: "A SmartQasa tile for toggling an entity.",
 });
 
-import { SmartQasaTimeCard } from "./misc/date-time";
+import { SmartQasaTimeCard } from "./misc/time-card";
 customElements.define("smartqasa-time-card", SmartQasaTimeCard);
 
 import { SmartQasaMotionChip } from "./chips/motion";
