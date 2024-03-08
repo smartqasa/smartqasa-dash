@@ -30,7 +30,7 @@
     var styleTileBase = i$2`
     .container {
         display: grid;
-        height: 4.0rem;
+        height: 6.0rem;
         border: var(--sq-card-border, 'none');
         border-radius: var(--sq-card-border-radius, 1.5rem);
         grid-template-areas: 'i n';
@@ -43,11 +43,12 @@
     .icon {
         grid-area: i;
         display: flex;
-        height: var(--sq-icon-size, 1.8rem);
-        width: var(--sq-icon-size, 1.8rem);
         justify-content: center;
         align-self: center;
-        padding: var(--sq-icon-padding, 1.0rem);
+        height: var(--sq-icon-size, 1.8rem);
+        width: var(--sq-icon-size, 1.8rem);
+        margin-left: 1.0rem;
+        padding: 1.0rem;
         border-radius: 50%;
         transition: var(--sq-icon-transition, none);
     }
