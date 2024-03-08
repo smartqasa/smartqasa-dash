@@ -29,7 +29,7 @@ export default css`
         grid-area: n;
         place-self: center start;
         max-height: calc(var(--sq-primary-font-size) * 2);
-        max-width: 90%;
+        max-width: 100%;
         text-align: left;
         overflow: hidden;
         text-overflow: ellipsis;
