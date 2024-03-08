@@ -3,6 +3,7 @@ import { css } from 'lit';
 export default css`
     .container {
         display: grid;
+        height: 5.5rem;
         border: var(--sq-card-border, 'none');
         border-radius: var(--sq-card-border-radius, 1.5rem);
         grid-template-areas: 'i n';
@@ -27,7 +28,7 @@ export default css`
     .name {
         grid-area: n;
         place-self: center start;
-        max-height: 3.6rem;
+        max-height: calc(var(--sq-primary-font-size) * 2.1);
         max-width: fit-content;
         text-align: left;
         overflow: hidden;
