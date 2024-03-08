@@ -28,7 +28,7 @@ export default css`
     .name {
         grid-area: n;
         place-self: center start;
-        max-height: calc(var(--sq-primary-font-size) * 2);
+        max-height: calc(var(--sq-primary-font-size) * 2.1);
         line-height: 1.2;
         max-width: 100%;
         text-align: left;
