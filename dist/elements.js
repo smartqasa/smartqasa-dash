@@ -37,6 +37,7 @@
         grid-template-columns: auto 1fr;
         grid-column-gap: var(--sq-card-gap-column, 0.7rem);
         grid-row-gap: var(--sq-card-gap-row, 0.3rem);
+        padding: 1.0rem;
         background-color: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
         cursor: pointer;
     }
@@ -56,7 +57,7 @@
         grid-area: n;
         place-self: center start;
         max-height: 3.6rem;
-        max-width: 100%;
+        max-width: fit-content;
         text-align: left;
         overflow: hidden;
         text-overflow: ellipsis;
