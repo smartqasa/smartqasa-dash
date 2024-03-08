@@ -30,7 +30,7 @@
     var styleTileBase = i$2`
     .container {
         display: grid;
-        height: 5.3rem;
+        height: 5.2rem;
         border: var(--sq-card-border, none);
         border-radius: var(--sq-card-border-radius, 1.5rem);
         grid-template-areas: 'i n';
@@ -55,7 +55,7 @@
     .name {
         grid-area: n;
         place-self: center start;
-        max-height: calc(var(--sq-primary-font-size) * 2.2);
+        max-height: 3.6rem;
         line-height: 1.2;
         max-width: 100%;
         text-align: left;
