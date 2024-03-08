@@ -190,7 +190,7 @@
                 <div class='icon' id='icon' style='
                         color: rgb(${iconColor});
                         background-color: rgba(${iconColor}, var(--sq-icon-opacity));
-                    '>
+                        '>
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
                 <div class='name'>${name}</div>
@@ -296,7 +296,7 @@
                         color: rgb(${iconColor});
                         background-color: rgba(${iconColor}, var(--sq-icon-opacity));
                         animation: ${iconAnimation};
-                    '>
+                        '>
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
                 <div class='name'>${name}</div>
@@ -405,7 +405,7 @@
                         color: rgb(${iconColor});
                         background-color: rgba(${iconColor}, var(--sq-icon-opacity));
                         animation: ${iconAnimation};
-                    '>
+                        '>
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
                 <div class='name'>${name}</div>
@@ -468,7 +468,7 @@
         let icon, iconColor, name, stateFmtd;
         if (this._stateObj) {
           const state = this._stateObj.state;
-          icon = this._icon ?? this._stateObj.attributes.icon;
+          icon = this._icon ?? this._stateObj.attributes.icon ?? 'hass:help-circle';
           name = this._name ?? this._stateObj.attributes.friendly_name;
           iconColor = state == 'on' ? 'var(--sq-light-on-rgb)' : 'var(--sq-inactive-rgb)';
           stateFmtd = this._hass.formatEntityState(this._stateObj) + (state == 'on' && this._stateObj.attributes.brightness ? ' - ' + this._hass.formatEntityAttributeValue(this._stateObj, 'brightness') : '');
@@ -483,7 +483,7 @@
                 <div class='icon' @click=${this._toggleEntity} style='
                         color: rgb(${iconColor});
                         background-color: rgba(${iconColor}, var(--sq-icon-opacity));
-                    '>
+                        '>
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
                 <div class='name'>${name}</div>
@@ -572,7 +572,7 @@
                 <div class='icon' id='icon' @click=${this._toggleLock} style='
                         color: rgb(${iconColor});
                         background-color: rgba(${iconColor}, var(--sq-icon-opacity));
-                    '>
+                        '>
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
                 <div class='name'>${name}</div>
@@ -638,7 +638,7 @@
       render() {
         let iconColor, name;
         if (this._stateObj) {
-          this._icon = this._icon ?? this._stateObj.attributes.icon;
+          this._icon = this._icon ?? this._stateObj.attributes.icon ?? 'hass:help-circle';
           iconColor = 'var(--sq-inactive-rgb)';
           name = this._name ?? this._stateObj.attributes.friendly_name;
         } else {
@@ -651,7 +651,7 @@
             <div class='icon' id='icon' @click=${this._showMoreInfo} style='
                     color: rgb(${iconColor});
                     background-color: rgba(${iconColor}, var(--sq-icon-opacity));
-                '>
+                    '>
                 <ha-icon .icon=${this._icon}></ha-icon>
             </div>
             <div class='name'>${name}</div>
@@ -769,7 +769,7 @@
             <div class='icon' @click=${this._toggleEntity} style='
                     color: rgb(${iconColor});
                     background-color: rgba(${iconColor}, var(--sq-icon-opacity));
-                '>
+                    '>
                 <ha-icon .icon=${icon}></ha-icon>
             </div>
             <div class='name'>${name}</div>
@@ -850,7 +850,7 @@
         let icon, iconColor, name, stateFmtd;
         if (this._stateObj) {
           const state = this._stateObj.state;
-          icon = this._icon ?? this._stateObj.attributes.icon;
+          icon = this._icon ?? this._stateObj.attributes.icon ?? 'hass:help-circle';
           iconColor = state == 'on' ? `var(--sq-switch${this._category ? '-' + this._category : ''}-on-rgb)` : 'var(--sq-inactive-rgb)';
           name = this._name ?? this._stateObj.attributes.friendly_name;
           stateFmtd = this._hass.formatEntityState(this._stateObj);
@@ -864,7 +864,7 @@
                 <div class='icon' @click=${this._toggleEntity} style='
                         color: rgb(${iconColor});
                         background-color: rgba(${iconColor}, var(--sq-icon-opacity));
-                    '>
+                        '>
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
                 <div class='name'>${name}</div>
