@@ -11,7 +11,7 @@ export class SmartQasaAllOffTile extends LitElement {
             _area: { state: true },
             _areaObj: { state: true },
             _icon: { state: true },
-            _name: { state: true },
+            _name: { state: true }
         }
     }
 

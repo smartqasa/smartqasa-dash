@@ -31,7 +31,6 @@
     .container {
         display: grid;
         height: 4.0rem;
-        padding: 0 1.0rem;
         border: var(--sq-card-border, 'none');
         border-radius: var(--sq-card-border-radius, 1.5rem);
         grid-template-areas: 'i n';
