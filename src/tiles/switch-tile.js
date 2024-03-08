@@ -39,7 +39,7 @@ export class SmartQasaSwitchTile extends LitElement {
         let icon, iconColor, name, stateFmtd;
         if (this._stateObj) {
             const state = this._stateObj.state;
-            icon = this._icon ?? this._stateObj.attributes.icon;
+            icon = this._icon ?? this._stateObj.attributes.icon ?? 'hass:help-circle';
             iconColor = state == 'on' ?
                 `var(--sq-switch${this._category ? '-' + this._category : ''}-on-rgb)` :
                 'var(--sq-inactive-rgb)';
@@ -55,7 +55,7 @@ export class SmartQasaSwitchTile extends LitElement {
                 <div class='icon' @click=${this._toggleEntity} style='
                         color: rgb(${iconColor});
                         background-color: rgba(${iconColor}, var(--sq-icon-opacity));
-                    '>
+                        '>
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
                 <div class='name'>${name}</div>

@@ -81,7 +81,7 @@ export class SmartQasaGarageTile extends LitElement {
                         color: rgb(${iconColor});
                         background-color: rgba(${iconColor}, var(--sq-icon-opacity));
                         animation: ${iconAnimation};
-                    '>
+                        '>
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
                 <div class='name'>${name}</div>

@@ -36,7 +36,7 @@ export class SmartQasaRoutineTile extends LitElement {
     render() {
         let iconColor, name;
         if (this._stateObj) {
-            this._icon = this._icon ?? this._stateObj.attributes.icon;
+            this._icon = this._icon ?? this._stateObj.attributes.icon ?? 'hass:help-circle';
             iconColor = 'var(--sq-inactive-rgb)';
             name = this._name ?? this._stateObj.attributes.friendly_name;
         } else {
@@ -50,7 +50,7 @@ export class SmartQasaRoutineTile extends LitElement {
             <div class='icon' id='icon' @click=${this._showMoreInfo} style='
                     color: rgb(${iconColor});
                     background-color: rgba(${iconColor}, var(--sq-icon-opacity));
-                '>
+                    '>
                 <ha-icon .icon=${this._icon}></ha-icon>
             </div>
             <div class='name'>${name}</div>

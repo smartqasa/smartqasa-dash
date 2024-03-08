@@ -64,7 +64,7 @@ export class SmartQasaLockTile extends LitElement {
                 <div class='icon' id='icon' @click=${this._toggleLock} style='
                         color: rgb(${iconColor});
                         background-color: rgba(${iconColor}, var(--sq-icon-opacity));
-                    '>
+                        '>
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
                 <div class='name'>${name}</div>
