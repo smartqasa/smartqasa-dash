@@ -153,7 +153,7 @@
         _icon: {
           state: true
         },
-        _image: {
+        _appIcon: {
           state: true
         },
         _name: {
@@ -169,7 +169,7 @@
     }
     setConfig(config) {
       this._icon = config.icon ?? null;
-      this._image = config.image ?? null;
+      this._appIcon = config.app_icon ?? null;
       this._name = config.name ?? "Unknown";
       this._package = config.package ?? null;
       this._uri = config.uri ?? null;
@@ -180,9 +180,9 @@
     static styles = styleTileBase;
     render() {
       let icon, iconStyle;
-      if (this._imageIcon) {
+      if (this._appIcon) {
         icon = x`<img
-        src="/local/sq-storage/images/${this._image}"
+        src="/local/sq-storage/images/${this._appIcon}"
         alt="App Icon"
       />`;
         iconStyle = "height: 3.8rem; width: 3.8rem; padding: 0; border: none; border-radius: 50%;";
@@ -211,7 +211,7 @@
           console.error("fully.startApplication is not available.");
         }
       } else {
-        throw new Error("Neither URI nor package ID is provided for launching the app.");
+        console.error("Neither URI nor package ID is provided for launching the app.");
       }
     }
   }

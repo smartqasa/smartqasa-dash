@@ -7,7 +7,7 @@ export class SmartQasaAppTile extends LitElement {
   static get properties() {
     return {
       _icon: { state: true },
-      _image: { state: true },
+      _appIcon: { state: true },
       _name: { state: true },
       _package: { state: true },
       _uri: { state: true },
@@ -16,7 +16,7 @@ export class SmartQasaAppTile extends LitElement {
 
   setConfig(config) {
     this._icon = config.icon ?? null;
-    this._image = config.image ?? null;
+    this._appIcon = config.app_icon ?? null;
     this._name = config.name ?? "Unknown";
     this._package = config.package ?? null;
     this._uri = config.uri ?? null;
@@ -30,9 +30,9 @@ export class SmartQasaAppTile extends LitElement {
 
   render() {
     let icon, iconStyle;
-    if (this._imageIcon) {
+    if (this._appIcon) {
       icon = html`<img
-        src="/local/sq-storage/images/${this._image}"
+        src="/local/sq-storage/images/${this._appIcon}"
         alt="App Icon"
       />`;
       iconStyle =
@@ -66,7 +66,7 @@ export class SmartQasaAppTile extends LitElement {
         console.error("fully.startApplication is not available.");
       }
     } else {
-      throw new Error(
+      console.error(
         "Neither URI nor package ID is provided for launching the app."
       );
     }
