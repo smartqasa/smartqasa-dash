@@ -184,8 +184,9 @@
         icon = x`<img
         src="/local/sq-storage/images/${this._appIcon}"
         alt="App Icon"
+        style="border-radius: 50%;"
       />`;
-        iconStyle = "height: 3.8rem; width: 3.8rem; padding: 0; border: none; border-radius: 50%;";
+        iconStyle = "height: 3.8rem; width: 3.8rem; padding: 0;";
       } else if (this._icon) {
         icon = x`<ha-icon .icon=${this._icon}></ha-icon>`;
         iconStyle = "color: rgb(var(--sq-inactive-rgb)); background-color: rgba(var(--sq-inactive-rgb), var(--sq-icon-opacity));";
