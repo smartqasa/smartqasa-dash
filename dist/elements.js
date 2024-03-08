@@ -30,8 +30,8 @@
     var styleTileBase = i$2`
     .container {
         display: grid;
-        height: 5.5rem;
-        border: var(--sq-card-border, 'none');
+        height: 5.4rem;
+        border: var(--sq-card-border, none);
         border-radius: var(--sq-card-border-radius, 1.5rem);
         grid-template-areas: 'i n';
         grid-template-columns: auto 1fr;
