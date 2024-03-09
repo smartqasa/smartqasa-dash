@@ -1084,7 +1084,8 @@
     place-self: center;
     display: grid;
     grid-template-areas: "i n";
-    grid-row-gap: 0.7rem;
+    grid-column-gap: 0.7rem;
+    padding: 3.8rem;
     border: var(--sq-card-border);
     border-radius: var(--sq-chip-border-radius);
     background-color: var(--sq-card-background-color);
@@ -1093,9 +1094,8 @@
   .icon {
     grid-area: i;
     display: flex;
-    height: var(--sq-icon-size, 1.8rem);
-    width: var(--sq-icon-size, 1.8rem);
-    padding: calc(var(--sq-icon-padding) + 2px);
+    height: 1.8rem;
+    width: 1.8rem;
     transition: var(--sq-icon-transition, none);
   }
   .name {

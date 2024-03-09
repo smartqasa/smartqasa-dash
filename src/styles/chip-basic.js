@@ -6,7 +6,7 @@ export default css`
     place-self: center;
     display: grid;
     grid-template-areas: "i n";
-    grid-row-gap: 0.7rem;
+    grid-column-gap: 0.7rem;
     padding: 3.8rem;
     border: var(--sq-card-border);
     border-radius: var(--sq-chip-border-radius);
@@ -18,7 +18,6 @@ export default css`
     display: flex;
     height: 1.8rem;
     width: 1.8rem;
-    padding: calc(var(--sq-icon-padding) + 2px);
     transition: var(--sq-icon-transition, none);
   }
   .name {
