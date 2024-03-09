@@ -1,6 +1,6 @@
 import { LitElement, html } from "lit";
 
-import styleChipBase from "../styles/chip-base";
+import styleChipBase from "../styles/chip-basic";
 
 export class SmartQasaMotionChip extends LitElement {
   _hass;
