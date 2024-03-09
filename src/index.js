@@ -1,7 +1,6 @@
 window.customCards = window.customCards || [];
 
 import { SmartQasaAllOffTile } from "./tiles/all-off";
-customElements.define("smartqasa-all-off-tile", SmartQasaAllOffTile);
 
 import { SmartQasaAppTile } from "./tiles/app";
 customElements.define("smartqasa-app-tile", SmartQasaAppTile);

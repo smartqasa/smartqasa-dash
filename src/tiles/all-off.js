@@ -81,6 +81,7 @@ export class SmartQasaAllOffTile extends LitElement {
   }
 }
 
+customElements.define("smartqasa-all-off-tile", SmartQasaAllOffTile);
 window.customCards.push({
   type: "smartqasa-all-off-tile",
   name: "SmartQasa All Off Tile",

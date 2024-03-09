@@ -145,6 +145,13 @@
       }, 2000);
     }
   }
+  customElements.define("smartqasa-all-off-tile", SmartQasaAllOffTile);
+  window.customCards.push({
+    type: "smartqasa-all-off-tile",
+    name: "SmartQasa All Off Tile",
+    preview: true,
+    description: "A SmartQasa tile for turning off all light and fan entities in an area."
+  });
 
   class SmartQasaAppTile extends s {
     _hass;
@@ -1191,7 +1198,6 @@
   }
 
   window.customCards = window.customCards || [];
-  customElements.define("smartqasa-all-off-tile", SmartQasaAllOffTile);
   customElements.define("smartqasa-app-tile", SmartQasaAppTile);
   window.customCards.push({
     type: "smartqasa-app-tile",
