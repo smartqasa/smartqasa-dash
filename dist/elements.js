@@ -1161,14 +1161,15 @@
         icon = "hass:motion-sensor-off";
         iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
       }
+      this._name ? null : "grid-template-areas: 'i'; grid-column-gap: 0; justify-content: center;";
       return x`
       <div class="container" @click=${this._toggleEntity}>
         <div
           class="icon"
           id="icon"
           style="
-                        color: rgb(${iconColor});
-                    "
+            color: rgb(${iconColor});
+          "
         >
           <ha-icon .icon=${icon}></ha-icon>
         </div>
