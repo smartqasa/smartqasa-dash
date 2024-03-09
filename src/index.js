@@ -1,17 +1,10 @@
+window.customCards = window.customCards || [];
+
 import { SmartQasaAllOffTile } from "./tiles/all-off";
 customElements.define("smartqasa-all-off-tile", SmartQasaAllOffTile);
-window.customCards = window.customCards || [];
-window.customCards.push({
-  type: "smartqasa-all-off-tile",
-  name: "SmartQasa All Off Tile",
-  preview: true,
-  description:
-    "A SmartQasa tile for turning off all light and fan entities in an area.",
-});
 
 import { SmartQasaAppTile } from "./tiles/app";
 customElements.define("smartqasa-app-tile", SmartQasaAppTile);
-window.customCards = window.customCards || [];
 window.customCards.push({
   type: "smartqasa-app-tile",
   name: "SmartQasa App Tile",

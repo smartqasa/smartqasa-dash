@@ -80,3 +80,11 @@ export class SmartQasaAllOffTile extends LitElement {
     }, 2000);
   }
 }
+
+window.customCards.push({
+  type: "smartqasa-all-off-tile",
+  name: "SmartQasa All Off Tile",
+  preview: true,
+  description:
+    "A SmartQasa tile for turning off all light and fan entities in an area.",
+});

@@ -60,7 +60,8 @@ export class SmartQasaAreaTile extends LitElement {
     `;
   }
 
-  _navigate() {
+  _navigate(e) {
+    e.stopPropagation();
     if (this._areaObj) {
       window.history.pushState(null, "", `/home-dash/${this._area}`);
       window.dispatchEvent(new CustomEvent("location-changed"));

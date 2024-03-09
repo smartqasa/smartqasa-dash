@@ -276,7 +276,8 @@
       </div>
     `;
     }
-    _navigate() {
+    _navigate(e) {
+      e.stopPropagation();
       if (this._areaObj) {
         window.history.pushState(null, "", `/home-dash/${this._area}`);
         window.dispatchEvent(new CustomEvent("location-changed"));
@@ -1189,16 +1190,9 @@
     }
   }
 
+  window.customCards = window.customCards || [];
   customElements.define("smartqasa-all-off-tile", SmartQasaAllOffTile);
-  window.customCards = window.customCards || [];
-  window.customCards.push({
-    type: "smartqasa-all-off-tile",
-    name: "SmartQasa All Off Tile",
-    preview: true,
-    description: "A SmartQasa tile for turning off all light and fan entities in an area."
-  });
   customElements.define("smartqasa-app-tile", SmartQasaAppTile);
-  window.customCards = window.customCards || [];
   window.customCards.push({
     type: "smartqasa-app-tile",
     name: "SmartQasa App Tile",
