@@ -102,3 +102,12 @@ export class SmartQasaRoutineTile extends LitElement {
     }
   }
 }
+
+customElements.define("smartqasa-routine-tile", SmartQasaRoutineTile);
+window.customCards.push({
+  type: "smartqasa-routine-tile",
+  name: "SmartQasa Routine Tile",
+  preview: true,
+  description:
+    "A SmartQasa tile for triggering an automation, scene, or script entity.",
+});

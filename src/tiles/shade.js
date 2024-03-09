@@ -124,3 +124,11 @@ export class SmartQasaShadeTile extends LitElement {
     this.dispatchEvent(event);
   }
 }
+
+customElements.define("smartqasa-shade-tile", SmartQasaShadeTile);
+window.customCards.push({
+  type: "smartqasa-shade-tile",
+  name: "SmartQasa Shade Tile",
+  preview: true,
+  description: "A SmartQasa tile for controlling a window shade entity.",
+});

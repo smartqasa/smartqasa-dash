@@ -72,3 +72,11 @@ export class SmartQasaAppTile extends LitElement {
     }
   }
 }
+
+customElements.define("smartqasa-app-tile", SmartQasaAppTile);
+window.customCards.push({
+  type: "smartqasa-app-tile",
+  name: "SmartQasa App Tile",
+  preview: true,
+  description: "A SmartQasa tile for launching applications from the dashboard",
+});

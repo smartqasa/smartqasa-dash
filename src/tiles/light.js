@@ -87,3 +87,11 @@ export class SmartQasaLightTile extends LitElement {
     this.dispatchEvent(event);
   }
 }
+
+customElements.define("smartqasa-light-tile", SmartQasaLightTile);
+window.customCards.push({
+  type: "smartqasa-light-tile",
+  name: "SmartQasa Light Tile",
+  preview: true,
+  description: "A SmartQasa tile for controlling a light entity.",
+});

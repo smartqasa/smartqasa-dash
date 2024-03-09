@@ -88,3 +88,11 @@ export class SmartQasaSwitchTile extends LitElement {
     this.dispatchEvent(event);
   }
 }
+
+customElements.define("smartqasa-switch-tile", SmartQasaSwitchTile);
+window.customCards.push({
+  type: "smartqasa-switch-tile",
+  name: "SmartQasa Switch Tile",
+  preview: true,
+  description: "A SmartQasa tile for toggling an entity.",
+});

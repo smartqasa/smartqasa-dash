@@ -82,3 +82,11 @@ export class SmartQasaMotionChip extends LitElement {
     });
   }
 }
+
+customElements.define("smartqasa-motion-chip", SmartQasaMotionChip);
+window.customCards.push({
+  type: "smartqasa-motion-chip",
+  name: "SmartQasa Motion Sensor Chip",
+  preview: true,
+  description: "A SmartQasa chip for toggling an motion sensor entity.",
+});

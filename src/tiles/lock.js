@@ -102,3 +102,11 @@ export class SmartQasaLockTile extends LitElement {
     this.dispatchEvent(event);
   }
 }
+
+customElements.define("smartqasa-lock-tile", SmartQasaLockTile);
+window.customCards.push({
+  type: "smartqasa-lock-tile",
+  name: "SmartQasa Lock Tile",
+  preview: true,
+  description: "A SmartQasa tile for controlling a lock entity.",
+});

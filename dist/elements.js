@@ -223,6 +223,13 @@
       }
     }
   }
+  customElements.define("smartqasa-app-tile", SmartQasaAppTile);
+  window.customCards.push({
+    type: "smartqasa-app-tile",
+    name: "SmartQasa App Tile",
+    preview: true,
+    description: "A SmartQasa tile for launching applications from the dashboard"
+  });
 
   class SmartQasaAreaTile extends s {
     _hass;
@@ -294,6 +301,13 @@
       }
     }
   }
+  customElements.define("smartqasa-area-tile", SmartQasaAreaTile);
+  window.customCards.push({
+    type: "smartqasa-area-tile",
+    name: "SmartQasa Area Tile",
+    preview: true,
+    description: "A SmartQasa tile for navigating to an area or a specific dashboard view."
+  });
 
   var styleTileState = i$2`
     .container {
@@ -417,6 +431,13 @@
       this.dispatchEvent(event);
     }
   }
+  customElements.define("smartqasa-fan-tile", SmartQasaFanTile);
+  window.customCards.push({
+    type: "smartqasa-fan-tile",
+    name: "SmartQasa Fan Tile",
+    preview: true,
+    description: "A SmartQasa tile for controlling a fan entity."
+  });
 
   var styleTileIconBlink = i$2`
   @keyframes blink {
@@ -532,6 +553,13 @@
       this.dispatchEvent(event);
     }
   }
+  customElements.define("smartqasa-garage-tile", SmartQasaGarageTile);
+  window.customCards.push({
+    type: "smartqasa-garage-tile",
+    name: "SmartQasa Garage Tile",
+    preview: true,
+    description: "A SmartQasa tile for controlling a garage cover entity."
+  });
 
   class SmartQasaLightTile extends s {
     _hass;
@@ -614,6 +642,13 @@
       this.dispatchEvent(event);
     }
   }
+  customElements.define("smartqasa-light-tile", SmartQasaLightTile);
+  window.customCards.push({
+    type: "smartqasa-light-tile",
+    name: "SmartQasa Light Tile",
+    preview: true,
+    description: "A SmartQasa tile for controlling a light entity."
+  });
 
   class SmartQasaLockTile extends s {
     _hass;
@@ -712,6 +747,13 @@
       this.dispatchEvent(event);
     }
   }
+  customElements.define("smartqasa-lock-tile", SmartQasaLockTile);
+  window.customCards.push({
+    type: "smartqasa-lock-tile",
+    name: "SmartQasa Lock Tile",
+    preview: true,
+    description: "A SmartQasa tile for controlling a lock entity."
+  });
 
   class SmartQasaRoutineTile extends s {
     _hass;
@@ -809,6 +851,13 @@
       }
     }
   }
+  customElements.define("smartqasa-routine-tile", SmartQasaRoutineTile);
+  window.customCards.push({
+    type: "smartqasa-routine-tile",
+    name: "SmartQasa Routine Tile",
+    preview: true,
+    description: "A SmartQasa tile for triggering an automation, scene, or script entity."
+  });
 
   class SmartQasaShadeTile extends s {
     _hass;
@@ -928,6 +977,13 @@
       this.dispatchEvent(event);
     }
   }
+  customElements.define("smartqasa-shade-tile", SmartQasaShadeTile);
+  window.customCards.push({
+    type: "smartqasa-shade-tile",
+    name: "SmartQasa Shade Tile",
+    preview: true,
+    description: "A SmartQasa tile for controlling a window shade entity."
+  });
 
   class SmartQasaSwitchTile extends s {
     _hass;
@@ -1013,78 +1069,13 @@
       this.dispatchEvent(event);
     }
   }
-
-  class SmartQasaTimeCard extends s {
-    _hass;
-    static get properties() {
-      return {
-        _time: {
-          state: true
-        },
-        _date: {
-          state: true
-        }
-      };
-    }
-    setConfig(config) {}
-    set hass(hass) {
-      this._hass = hass;
-      this._time = this._hass.states['sensor.current_time'].state;
-      this._date = this._hass.states['sensor.current_date'].state;
-    }
-    static get styles() {
-      return i$2`
-            :host {
-                display: block;
-                padding: 0;
-                background-color: transparent;
-            }
-            .container {
-                display: grid;
-                grid-template-rows: auto auto;
-                padding: 0;
-                border-radius: 0;
-                border: none;
-                box-shadow: none;
-                background-color: transparent;
-                cursor: pointer;
-            }
-            .time, .date {
-                justify-self: start;
-                text-align: left;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-            }
-            .time {
-                line-height: var(--sq-title-font-size, 16px);
-                font-size: var(--sq-title-font-size, 16px);
-                font-weight: var(--sq-title-font-weight, 400);
-                color: rgb(var(--sq-title-font-rgb, 0, 0, 0));
-            }
-            .date {
-                font-size: var(--sq-primary-font-size, 14px);
-                font-weight: var(--sq-primary-font-weight, 300);
-                color: rgb(var(--sq-secondary-font-rgb, 128, 128, 128));
-            }
-        `;
-    }
-    render() {
-      return x`
-            <div class='container' @click='${this._handleTap}'>
-                <div class='time'>${this._time}</div>
-                <div class='date'>${this._date}</div>
-            </div>
-        `;
-    }
-    _handleTap() {
-      if (typeof fully !== 'undefined' && fully.startApplication) {
-        fully.startApplication('com.google.android.deskclock');
-      } else {
-        console.warn('fully.startApplication is not available.');
-      }
-    }
-  }
+  customElements.define("smartqasa-switch-tile", SmartQasaSwitchTile);
+  window.customCards.push({
+    type: "smartqasa-switch-tile",
+    name: "SmartQasa Switch Tile",
+    preview: true,
+    description: "A SmartQasa tile for toggling an entity."
+  });
 
   var styleChipBase = i$2`
   .container {
@@ -1196,87 +1187,88 @@
       });
     }
   }
-
-  window.customCards = window.customCards || [];
-  customElements.define("smartqasa-app-tile", SmartQasaAppTile);
-  window.customCards.push({
-    type: "smartqasa-app-tile",
-    name: "SmartQasa App Tile",
-    preview: true,
-    description: "A SmartQasa tile for launching applications from the dashboard"
-  });
-  customElements.define("smartqasa-area-tile", SmartQasaAreaTile);
-  window.customCards = window.customCards || [];
-  window.customCards.push({
-    type: "smartqasa-area-tile",
-    name: "SmartQasa Area Tile",
-    preview: true,
-    description: "A SmartQasa tile for navigating to an area or a specific dashboard view."
-  });
-  customElements.define("smartqasa-fan-tile", SmartQasaFanTile);
-  window.customCards = window.customCards || [];
-  window.customCards.push({
-    type: "smartqasa-fan-tile",
-    name: "SmartQasa Fan Tile",
-    preview: true,
-    description: "A SmartQasa tile for controlling a fan entity."
-  });
-  customElements.define("smartqasa-garage-tile", SmartQasaGarageTile);
-  window.customCards = window.customCards || [];
-  window.customCards.push({
-    type: "smartqasa-garage-tile",
-    name: "SmartQasa Garage Tile",
-    preview: true,
-    description: "A SmartQasa tile for controlling a garage cover entity."
-  });
-  customElements.define("smartqasa-light-tile", SmartQasaLightTile);
-  window.customCards = window.customCards || [];
-  window.customCards.push({
-    type: "smartqasa-light-tile",
-    name: "SmartQasa Light Tile",
-    preview: true,
-    description: "A SmartQasa tile for controlling a light entity."
-  });
-  customElements.define("smartqasa-lock-tile", SmartQasaLockTile);
-  window.customCards = window.customCards || [];
-  window.customCards.push({
-    type: "smartqasa-lock-tile",
-    name: "SmartQasa Lock Tile",
-    preview: true,
-    description: "A SmartQasa tile for controlling a lock entity."
-  });
-  customElements.define("smartqasa-routine-tile", SmartQasaRoutineTile);
-  window.customCards = window.customCards || [];
-  window.customCards.push({
-    type: "smartqasa-routine-tile",
-    name: "SmartQasa Routine Tile",
-    preview: true,
-    description: "A SmartQasa tile for triggering an automation, scene, or script entity."
-  });
-  customElements.define("smartqasa-shade-tile", SmartQasaShadeTile);
-  window.customCards = window.customCards || [];
-  window.customCards.push({
-    type: "smartqasa-shade-tile",
-    name: "SmartQasa Shade Tile",
-    preview: true,
-    description: "A SmartQasa tile for controlling a window shade entity."
-  });
-  customElements.define("smartqasa-switch-tile", SmartQasaSwitchTile);
-  window.customCards = window.customCards || [];
-  window.customCards.push({
-    type: "smartqasa-switch-tile",
-    name: "SmartQasa Switch Tile",
-    preview: true,
-    description: "A SmartQasa tile for toggling an entity."
-  });
-  customElements.define("smartqasa-time-card", SmartQasaTimeCard);
   customElements.define("smartqasa-motion-chip", SmartQasaMotionChip);
-  window.customCards = window.customCards || [];
   window.customCards.push({
     type: "smartqasa-motion-chip",
     name: "SmartQasa Motion Sensor Chip",
     preview: true,
     description: "A SmartQasa chip for toggling an motion sensor entity."
   });
+
+  class SmartQasaTimeCard extends s {
+    _hass;
+    static get properties() {
+      return {
+        _time: {
+          state: true
+        },
+        _date: {
+          state: true
+        }
+      };
+    }
+    setConfig(config) {}
+    set hass(hass) {
+      this._hass = hass;
+      this._time = this._hass.states["sensor.current_time"].state;
+      this._date = this._hass.states["sensor.current_date"].state;
+    }
+    static get styles() {
+      return i$2`
+      :host {
+        display: block;
+        padding: 0;
+        background-color: transparent;
+      }
+      .container {
+        display: grid;
+        grid-template-rows: auto auto;
+        padding: 0;
+        border-radius: 0;
+        border: none;
+        box-shadow: none;
+        background-color: transparent;
+        cursor: pointer;
+      }
+      .time,
+      .date {
+        justify-self: start;
+        text-align: left;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .time {
+        line-height: var(--sq-title-font-size, 16px);
+        font-size: var(--sq-title-font-size, 16px);
+        font-weight: var(--sq-title-font-weight, 400);
+        color: rgb(var(--sq-title-font-rgb, 0, 0, 0));
+      }
+      .date {
+        font-size: var(--sq-primary-font-size, 14px);
+        font-weight: var(--sq-primary-font-weight, 300);
+        color: rgb(var(--sq-secondary-font-rgb, 128, 128, 128));
+      }
+    `;
+    }
+    render() {
+      return x`
+      <div class="container" @click="${this._handleTap}">
+        <div class="time">${this._time}</div>
+        <div class="date">${this._date}</div>
+      </div>
+    `;
+    }
+    _handleTap() {
+      if (typeof fully !== "undefined" && fully.startApplication) {
+        fully.startApplication("com.google.android.deskclock");
+      } else {
+        console.warn("fully.startApplication is not available.");
+      }
+    }
+  }
+  customElements.define("smartqasa-time-card", SmartQasaTimeCard);
+
+  window.customCards = window.customCards || [];
 
 })();

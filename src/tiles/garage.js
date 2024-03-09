@@ -114,3 +114,11 @@ export class SmartQasaGarageTile extends LitElement {
     this.dispatchEvent(event);
   }
 }
+
+customElements.define("smartqasa-garage-tile", SmartQasaGarageTile);
+window.customCards.push({
+  type: "smartqasa-garage-tile",
+  name: "SmartQasa Garage Tile",
+  preview: true,
+  description: "A SmartQasa tile for controlling a garage cover entity.",
+});

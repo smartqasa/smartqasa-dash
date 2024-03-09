@@ -71,3 +71,12 @@ export class SmartQasaAreaTile extends LitElement {
     }
   }
 }
+
+customElements.define("smartqasa-area-tile", SmartQasaAreaTile);
+window.customCards.push({
+  type: "smartqasa-area-tile",
+  name: "SmartQasa Area Tile",
+  preview: true,
+  description:
+    "A SmartQasa tile for navigating to an area or a specific dashboard view.",
+});
