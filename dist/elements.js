@@ -1161,9 +1161,13 @@
         icon = "hass:motion-sensor-off";
         iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
       }
-      this._name ? null : "grid-template-areas: 'i'; grid-column-gap: 0; justify-content: center;";
+      const containerStyle = this._name ? null : "grid-template-areas: 'i'; grid-column-gap: 0; justify-content: center;";
       return x`
-      <div class="container" @click=${this._toggleEntity}>
+      <div
+        class="container"
+        style="${containerStyle}"
+        @click=${this._toggleEntity}
+      >
         <div
           class="icon"
           id="icon"

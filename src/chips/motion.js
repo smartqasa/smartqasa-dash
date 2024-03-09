@@ -54,8 +54,13 @@ export class SmartQasaMotionChip extends LitElement {
     const containerStyle = this._name
       ? null
       : "grid-template-areas: 'i'; grid-column-gap: 0; justify-content: center;";
+
     return html`
-      <div class="container" @click=${this._toggleEntity}>
+      <div
+        class="container"
+        style="${containerStyle}"
+        @click=${this._toggleEntity}
+      >
         <div
           class="icon"
           id="icon"
@@ -69,6 +74,7 @@ export class SmartQasaMotionChip extends LitElement {
       </div>
     `;
   }
+
   _toggleEntity(e) {
     e.stopPropagation();
     this._hass.callService("homeassistant", "toggle", {
