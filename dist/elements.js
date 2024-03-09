@@ -1084,6 +1084,7 @@
     place-self: center;
     display: grid;
     grid-template-areas: "i n";
+    grid-row-gap: 0.7rem;
     border: var(--sq-card-border);
     border-radius: var(--sq-chip-border-radius);
     background-color: var(--sq-card-background-color);
