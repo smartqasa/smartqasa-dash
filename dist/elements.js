@@ -1210,16 +1210,16 @@
   }
   .icon1 {
     grid-area: i1;
-    display: flex;
-    height: 2.8rem;
-    width: 2.8rem;
-    color: rgb(var(--sq-primary-text-rgb));
   }
   .icon2 {
     grid-area: i2;
+  }
+  .icon1,
+  .icon2 {
     display: flex;
-    height: 2.8rem;
-    width: 2.8rem;
+    height: 1.8rem;
+    width: 1.8rem;
+    font-size: 1.3rem;
     color: rgb(var(--sq-primary-text-rgb));
   }
 `;
