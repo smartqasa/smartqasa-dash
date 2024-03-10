@@ -51,7 +51,7 @@ export class SmartQasaNavigateChip extends LitElement {
       window.dispatchEvent(new CustomEvent("location-changed"));
       window.browser_mod.service("close_popup", {});
     } else {
-      console.error("Area is not found");
+      console.error("Area is not found.");
     }
   }
   _navigateNext(e) {
@@ -61,7 +61,7 @@ export class SmartQasaNavigateChip extends LitElement {
       window.dispatchEvent(new CustomEvent("location-changed"));
       window.browser_mod.service("close_popup", {});
     } else {
-      console.error("Area is not found");
+      console.error("Area is not found.");
     }
   }
 }
