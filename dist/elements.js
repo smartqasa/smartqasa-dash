@@ -1219,7 +1219,7 @@
     display: flex;
     height: 1.8rem;
     width: 1.8rem;
-    font-size: 1.3rem;
+    --mdc-icon-size: 1.3rem;
     color: rgb(var(--sq-primary-text-rgb));
   }
 `;
