@@ -6,7 +6,7 @@ export default css`
     place-self: center;
     display: grid;
     grid-template-areas: "i n";
-    grid-column-gap: 0.7rem;
+    grid-column-gap: 1rem;
     padding: 1rem;
     border: var(--sq-card-border);
     border-radius: var(--sq-chip-border-radius);

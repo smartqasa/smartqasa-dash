@@ -35,8 +35,8 @@
     border-radius: 1.5rem;
     grid-template-areas: "i n";
     grid-template-columns: auto 1fr;
-    grid-column-gap: 0.7rem;
-    grid-row-gap: 0.3rem;
+    grid-column-gap: 1rem;
+    grid-row-gap: 0.4rem;
     padding: 1rem;
     background-color: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
     cursor: pointer;
@@ -1083,7 +1083,7 @@
     place-self: center;
     display: grid;
     grid-template-areas: "i n";
-    grid-column-gap: 0.7rem;
+    grid-column-gap: 1rem;
     padding: 1rem;
     border: var(--sq-card-border);
     border-radius: var(--sq-chip-border-radius);
@@ -1201,7 +1201,7 @@
     place-self: center;
     display: grid;
     grid-template-areas: "i1 i2";
-    grid-column-gap: 0.8rem;
+    grid-column-gap: 0.5rem;
     padding: 0.2rem;
     border: var(--sq-card-border);
     border-radius: var(--sq-chip-border-radius);

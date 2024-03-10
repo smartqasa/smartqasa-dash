@@ -8,8 +8,8 @@ export default css`
     border-radius: 1.5rem;
     grid-template-areas: "i n";
     grid-template-columns: auto 1fr;
-    grid-column-gap: 0.7rem;
-    grid-row-gap: 0.3rem;
+    grid-column-gap: 1rem;
+    grid-row-gap: 0.4rem;
     padding: 1rem;
     background-color: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
     cursor: pointer;
