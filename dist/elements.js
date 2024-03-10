@@ -1195,6 +1195,35 @@
     description: "A SmartQasa chip for toggling an motion sensor entity."
   });
 
+  i$2`
+  .container {
+    width: fit-content;
+    place-self: center;
+    display: grid;
+    grid-template-areas: "i1 i2";
+    grid-column-gap: 1rem;
+    padding: 1rem;
+    border: var(--sq-card-border);
+    border-radius: var(--sq-chip-border-radius);
+    background-color: var(--sq-card-background-color);
+    cursor: pointer;
+  }
+  .icon1 {
+    grid-area: i1;
+    display: flex;
+    height: 1.8rem;
+    width: 1.8rem;
+    color: rgb(var(--sq-primary-text-rgb));
+  }
+  .icon2 {
+    grid-area: i2;
+    display: flex;
+    height: 1.8rem;
+    width: 1.8rem;
+    color: rgb(var(--sq-primary-text-rgb));
+  }
+`;
+
   class SmartQasaTimeCard extends s {
     _hass;
     static get properties() {
