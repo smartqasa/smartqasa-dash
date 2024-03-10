@@ -1,9 +1,6 @@
 import { css } from "lit";
 
 export default css`
-  :host {
-    --mdc-icon-size: 4rem;
-  }
   .container {
     width: fit-content;
     place-self: center;
@@ -25,6 +22,7 @@ export default css`
   .icon1,
   .icon2 {
     display: flex;
+    --mdc-icon-size: 5rem;
     color: rgb(var(--sq-primary-text-rgb));
   }
 `;
