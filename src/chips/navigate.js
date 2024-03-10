@@ -66,7 +66,7 @@ export class SmartQasaNavigateChip extends LitElement {
   }
 }
 
-customElements.define("smartqasa-motion-chip", SmartQasaNavigateChip);
+customElements.define("smartqasa-navigate-chip", SmartQasaNavigateChip);
 window.customCards.push({
   type: "smartqasa-navigate-chip",
   name: "SmartQasa Navigate Sensor Chip",
