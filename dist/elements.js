@@ -1196,6 +1196,9 @@
   });
 
   var styleChipDouble = i$2`
+  :host {
+    --mdc-icon-size: 4rem;
+  }
   .container {
     width: fit-content;
     place-self: center;
@@ -1217,9 +1220,6 @@
   .icon1,
   .icon2 {
     display: flex;
-    height: 1.8rem;
-    width: 1.8rem;
-    --mdc-icon-size: 100%;
     color: rgb(var(--sq-primary-text-rgb));
   }
 `;
