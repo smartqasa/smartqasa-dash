@@ -1211,15 +1211,15 @@
   .icon1 {
     grid-area: i1;
     display: flex;
-    height: 1.8rem;
-    width: 1.8rem;
+    height: 2.8rem;
+    width: 2.8rem;
     color: rgb(var(--sq-primary-text-rgb));
   }
   .icon2 {
     grid-area: i2;
     display: flex;
-    height: 1.8rem;
-    width: 1.8rem;
+    height: 2.8rem;
+    width: 2.8rem;
     color: rgb(var(--sq-primary-text-rgb));
   }
 `;
