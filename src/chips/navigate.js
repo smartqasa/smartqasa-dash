@@ -32,13 +32,16 @@ export class SmartQasaNavigateChip extends LitElement {
   static styles = styleChipDouble;
 
   render() {
+    const icon1 = "hass:menu-left";
+    const icon2 = "hass:menu-right";
+
     return html`
       <div class="container">
         <div class="icon1" @click=${this._navigatePrev}>
-          <ha-icon .icon="hass:menu-left"></ha-icon>
+          <ha-icon .icon=${icon1}></ha-icon>
         </div>
         <div class="icon2" @click=${this._navigateNext}>
-          <ha-icon .icon="hass:menu-right"></ha-icon>
+          <ha-icon .icon=${icon2}></ha-icon>
         </div>
       </div>
     `;
@@ -69,7 +72,7 @@ export class SmartQasaNavigateChip extends LitElement {
 customElements.define("smartqasa-navigate-chip", SmartQasaNavigateChip);
 window.customCards.push({
   type: "smartqasa-navigate-chip",
-  name: "SmartQasa Navigate Sensor Chip",
+  name: "SmartQasa Area Navigattion Chip",
   preview: true,
   description: "A SmartQasa chip for navigating to a previous/next area.",
 });
