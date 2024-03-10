@@ -65,3 +65,11 @@ export class SmartQasaNavigateChip extends LitElement {
     }
   }
 }
+
+customElements.define("smartqasa-motion-chip", SmartQasaNavigateChip);
+window.customCards.push({
+  type: "smartqasa-navigate-chip",
+  name: "SmartQasa Navigate Sensor Chip",
+  preview: true,
+  description: "A SmartQasa chip for navigating to a previous/next area.",
+});
