@@ -7,7 +7,7 @@ export default css`
     display: grid;
     grid-template-areas: "i t";
     grid-column-gap: 0.5rem;
-    margin-right: 0.5rem;
+    margin-right: 0.7rem;
     padding: 1rem;
     border: var(--sq-card-border);
     border-radius: var(--sq-chip-border-radius);
