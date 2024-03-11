@@ -1409,7 +1409,7 @@
     }
     static styles = styleChipBase;
     render() {
-      if (this._entity) {
+      if (!this._entity) {
         return x``;
       }
       let icon, iconColor, state;
