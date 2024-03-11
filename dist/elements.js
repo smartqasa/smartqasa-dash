@@ -197,7 +197,7 @@
       launcher: "package",
       package: "de.bmw.connected.mobile20.na"
     },
-    bond_home: {
+    bond: {
       name: "Bond Home",
       app_icon: "icon_bond.png",
       launcher: "package",
@@ -347,7 +347,7 @@
       launcher: "package",
       package: "com.roku.remote"
     },
-    sense_energy: {
+    sense: {
       name: "Sense Energy",
       app_icon: "icon_sense.png",
       launcher: "package",
