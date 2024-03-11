@@ -1524,7 +1524,7 @@
     }
     static styles = styleChipDouble;
     render() {
-      if (!this._areaObjPrev || !this.areaObjNext) {
+      if (!this._areaObjPrev || !this._areaObjNext) {
         return x``;
       }
       const icon1 = "hass:menu-left";
