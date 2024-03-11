@@ -153,68 +153,341 @@
     description: "A SmartQasa tile for turning off all light and fan entities in an area."
   });
 
+  var appTable = {
+    accuweather: {
+      name: "AccuWeather",
+      app_icon: "icon_accuweather.png",
+      launcher: "package",
+      package: "com.accuweather.android"
+    },
+    allrecipes: {
+      name: "AllRecipes",
+      app_icon: "icon_allrecipes.png",
+      launcher: "package",
+      package: "com.allrecipes.spinner.free"
+    },
+    amazon_music: {
+      name: "Amazon Music",
+      app_icon: "icon_amazon_music.png",
+      launcher: "uri_scheme",
+      uri_scheme: "amznmp3://"
+    },
+    amazon_shopping: {
+      name: "Amazon Shopping",
+      app_icon: "icon_amazon_shopping.png",
+      launcher: "uri_scheme",
+      package: "com.amazon.windowshop",
+      uri_scheme: "amazon://"
+    },
+    amcrest_smart_home: {
+      name: "Amcrest Smart Home",
+      app_icon: "icon_amcrest_smart_home.png",
+      launcher: "package",
+      package: "com.mm.android.amcrestsmarthome"
+    },
+    apple_music: {
+      name: "Apple Music",
+      app_icon: "icon_apple_music.png",
+      launcher: "package",
+      package: "com.apple.android.music"
+    },
+    my_bmw: {
+      name: "My BMW",
+      app_icon: "icon_bmw.png",
+      launcher: "package",
+      package: "de.bmw.connected.mobile20.na"
+    },
+    bond_home: {
+      name: "Bond Home",
+      app_icon: "icon_bond.png",
+      launcher: "package",
+      package: "io.olibra.bondapp"
+    },
+    calculator: {
+      name: "Calculator",
+      app_icon: "icon_calculator.png",
+      launcher: "package",
+      package: "com.google.android.calculator"
+    },
+    chatgpt: {
+      name: "ChatGPT",
+      app_icon: "icon_chatgpt.png",
+      launcher: "package",
+      package: "com.openai.chatgpt"
+    },
+    chrome: {
+      name: "Chrome",
+      app_icon: "icon_chrome.png",
+      launcher: "uri_scheme",
+      uri_scheme: "chrome://",
+      package: "com.android.chrome"
+    },
+    clock_timer: {
+      name: "Clock/Timer",
+      app_icon: "icon_clock.png",
+      launcher: "package",
+      package: "com.google.android.deskclock"
+    },
+    doordash: {
+      name: "Doordash",
+      app_icon: "icon_doordash.png",
+      launcher: "uri_scheme",
+      uri_scheme: "doordash://",
+      package: "com.dd.dashdash"
+    },
+    eufy_security: {
+      name: "Eufy Security",
+      app_icon: "icon_eufy_security.png",
+      launcher: "package",
+      package: "com.oceanwing.battery.cam"
+    },
+    grubhub: {
+      name: "Grubhub",
+      app_icon: "icon_grubhub.png",
+      launcher: "uri_scheme",
+      uri_scheme: "grubhub://",
+      package: "com.grubhub.android"
+    },
+    home_connect: {
+      name: "Home Connect",
+      app_icon: "icon_home_connect.png",
+      launcher: "package",
+      package: "com.bshg.homeconnect.android.release.na"
+    },
+    hue: {
+      name: "Hue",
+      app_icon: "icon_hue.png",
+      launcher: "package",
+      package: "com.philips.lighting.hue2"
+    },
+    hulu: {
+      name: "Hulu",
+      app_icon: "icon_hulu.png",
+      launcher: "uri_scheme",
+      uri_scheme: "hulu://",
+      package: "com.hulu.plus"
+    },
+    irobot: {
+      name: "iRobot",
+      app_icon: "icon_irobot.png",
+      launcher: "package",
+      package: "com.irobot.home"
+    },
+    keurig: {
+      name: "Keurig",
+      app_icon: "icon_keurig.png",
+      launcher: "package",
+      package: "com.keurig.kconnect"
+    },
+    lionchief: {
+      name: "LionChief",
+      app_icon: "icon_lionchief.png",
+      launcher: "package",
+      package: "com.lionel.lionchief"
+    },
+    lutron: {
+      name: "Lutron",
+      app_icon: "icon_lutron.png",
+      launcher: "package",
+      package: "com.lutron.mmw"
+    },
+    myq: {
+      name: "MyQ",
+      app_icon: "icon_myq.png",
+      launcher: "package",
+      package: "com.chamberlain.android.liftmaster.myq"
+    },
+    nest: {
+      name: "Nest",
+      app_icon: "icon_nest.png",
+      launcher: "package",
+      package: "com.nest.android"
+    },
+    netflix: {
+      name: "Netflix",
+      app_icon: "icon_netflix.png",
+      launcher: "package",
+      package: "com.netflix.mediaclient"
+    },
+    pandora: {
+      name: "Pandora",
+      app_icon: "icon_pandora.png",
+      launcher: "uri_scheme",
+      uri_scheme: "pandora://",
+      package: "com.pandora.android"
+    },
+    play_store: {
+      name: "Play Store",
+      app_icon: "mdi:store",
+      launcher: "package",
+      package: "com.android.vending"
+    },
+    rachio: {
+      name: "Rachio",
+      app_icon: "icon_rachio.png",
+      launcher: "package",
+      package: "com.rachio.iro"
+    },
+    rainbird: {
+      name: "Rainbird",
+      app_icon: "icon_rainbird.png",
+      launcher: "package",
+      package: "com.rainbird"
+    },
+    ring: {
+      name: "Ring",
+      app_icon: "icon_ring.png",
+      launcher: "uri_scheme",
+      uri_scheme: "ring://",
+      package: "com.ringapp"
+    },
+    roku_remote: {
+      name: "Roku Remote",
+      app_icon: "icon_roku.png",
+      launcher: "package",
+      package: "com.roku.remote"
+    },
+    sense_energy: {
+      name: "Sense Energy",
+      app_icon: "icon_sense.png",
+      launcher: "package",
+      package: "com.sense.androidclient"
+    },
+    shazam: {
+      name: "Shazam",
+      app_icon: "icon_shazam.png",
+      launcher: "package",
+      package: "com.shazam.android"
+    },
+    shipt_shopper: {
+      name: "Shipt Shopper",
+      app_icon: "icon_shipt.png",
+      launcher: "package",
+      package: "com.shipt.shopper"
+    },
+    sleepiq: {
+      name: "SleepIQ",
+      app_icon: "icon_sleepiq.png",
+      launcher: "package",
+      package: "com.selectcomfort.SleepIQ"
+    },
+    solitaire: {
+      name: "Solitaire",
+      app_icon: "icon_solitaire.png",
+      launcher: "package",
+      package: "com.tripledot.solitaire"
+    },
+    sonos: {
+      name: "Sonos",
+      app_icon: "icon_sonos.png",
+      launcher: "uri_scheme",
+      uri_scheme: "sonos://",
+      package: "com.sonos.acr2"
+    },
+    spotify: {
+      name: "Spotify",
+      app_icon: "icon_spotify.png",
+      launcher: "uri_scheme",
+      uri_scheme: "spotify://",
+      package: "com.spotify.music"
+    },
+    tuya_smart: {
+      name: "Tuya Smart",
+      app_icon: "icon_tuya.png",
+      launcher: "package",
+      package: "com.tuya.smart"
+    },
+    uber_eats: {
+      name: "Uber Eats",
+      app_icon: "icon_uber_eats.png",
+      launcher: "package",
+      package: "com.ubercab.eats"
+    },
+    weather_channel: {
+      name: "Weather Channel",
+      app_icon: "icon_weather_channel.png",
+      launcher: "package",
+      package: "com.weather.Weather"
+    },
+    weather_underground: {
+      name: "Weather Underground",
+      app_icon: "icon_weather_underground.png",
+      launcher: "package",
+      package: "com.wunderground.android.weather"
+    },
+    yummly_recipes: {
+      name: "Yummly Recipes",
+      app_icon: "icon_yummly.png",
+      launcher: "package",
+      package: "com.yummly.android"
+    }
+  };
+
   class SmartQasaAppTile extends s {
     _hass;
     static get properties() {
       return {
+        _app: {
+          state: true
+        },
+        _appObj: {
+          state: true
+        },
         _icon: {
           state: true
         },
-        _appIcon: {
-          state: true
-        },
         _name: {
-          state: true
-        },
-        _package: {
-          state: true
-        },
-        _uri: {
           state: true
         }
       };
     }
     setConfig(config) {
+      this._app = config.app ?? null;
+      this._appObj = appTable[this._app] ?? undefined;
       this._icon = config.icon ?? null;
-      this._appIcon = config.app_icon ?? null;
-      this._name = config.name ?? "Unknown";
-      this._package = config.package ?? null;
-      this._uri = config.uri ?? null;
+      this._name = config.name ?? null;
     }
     set hass(hass) {
       this._hass = hass;
     }
     static styles = styleTileBase;
     render() {
-      let icon, iconStyle;
-      if (this._appIcon) {
-        icon = x`<img
-        src="/local/sq-storage/images/${this._appIcon}"
-        alt="App Icon"
-        style="border-radius: 50%;"
-      />`;
-        iconStyle = "height: 3.8rem; width: 3.8rem; padding: 0;";
-      } else if (this._icon) {
-        icon = x`<ha-icon .icon=${this._icon}></ha-icon>`;
-        iconStyle = "color: rgb(var(--sq-inactive-rgb)); background-color: rgba(var(--sq-inactive-rgb), var(--sq-icon-opacity));";
+      let icon, iconStyle, name;
+      if (this._appObj) {
+        if (this._icon) {
+          icon = x`<ha-icon .icon=${this._icon}></ha-icon>`;
+          iconStyle = "color: rgb(var(--sq-inactive-rgb)); background-color: rgba(var(--sq-inactive-rgb), var(--sq-icon-opacity));";
+        } else if (this._appObj.app_icon) {
+          icon = x`<img
+          src="/local/sq-storage/images/${this._appObj.app_icon}"
+          alt="App Icon"
+          style="border-radius: 50%;"
+        />`;
+          iconStyle = "height: 3.8rem; width: 3.8rem; padding: 0;";
+        } else {
+          icon = x`<ha-icon .icon="hass:alert-rhombus"></ha-icon>`;
+          iconStyle = "color: rgb(var(--sq-unavailable-rgb)); background-color: rgba(var(--sq-unavailable-rgb), var(--sq-icon-opacity));";
+        }
+        name = this._name ?? this._appObj.name ?? "Unknown";
       } else {
         icon = x`<ha-icon .icon="hass:alert-rhombus"></ha-icon>`;
         iconStyle = "color: rgb(var(--sq-unavailable-rgb)); background-color: rgba(var(--sq-unavailable-rgb), var(--sq-icon-opacity));";
+        name = this._name ?? "Unknown";
       }
       return x`
       <div class="container" @click=${this._launchApp}>
         <div class="icon" style=${iconStyle}>${icon}</div>
-        <div class="name">${this._name}</div>
+        <div class="name">${name}</div>
       </div>
     `;
     }
     _launchApp(e) {
       e.stopPropagation();
-      if (this._uri) {
-        window.location.href = this._uri;
-      } else if (this._package) {
+      if (this._appObj.launcher === "uri_scheme" && this._appObj.uri_scheme) {
+        window.location.href = this._appObj.uri_scheme;
+      } else if (this._appObj.launcher === "package" && this._appObj.package) {
         if (typeof fully !== "undefined" && fully.startApplication) {
-          fully.startApplication(this._package);
+          fully.startApplication(this._appObj.package);
         } else {
           console.error("fully.startApplication is not available.");
         }
