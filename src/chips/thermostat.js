@@ -2,21 +2,19 @@ import { LitElement, html } from "lit";
 
 import styleChipBase from "../styles/chip-basic";
 
-export class SmartQasaMotionChip extends LitElement {
+export class SmartQasaThermostatChip extends LitElement {
   _hass;
 
   static get properties() {
     return {
       _entity: { state: true },
       _stateObj: { state: true },
-      _name: { state: true },
     };
   }
 
   setConfig(config) {
     if (config.entity) {
       this._entity = config.entity;
-      this._name = config.name;
     } else {
       throw new Error("You need to specify an entity");
     }
@@ -30,36 +28,38 @@ export class SmartQasaMotionChip extends LitElement {
   static styles = styleChipBase;
 
   render() {
-    let icon, iconColor, state;
+    const icon = "hass:thermometer-lines";
+    let iconColor, text;
     if (this._stateObj) {
-      state = this._stateObj.state;
-      switch (state) {
-        case "on":
-          icon = "hass:motion-sensor";
-          iconColor = "var(--sq-primary-font-rgb, 128, 128, 128)";
+      const hvacAction = this._stateObj.attributes.hvac_action;
+      switch (hvacAction) {
+        case "cooling":
+          iconColor = "rgb(var(--sq-climate-cool-rgb), 0, 0, 255)";
+          break;
+        case "heating":
+          iconColor = "rgb(var(--sq-climate-heat-rgb), 255, 0, 0)";
+          break;
+        case "fan_only":
+          iconColor = "rgb(var(--sq-primary-text-rgb), 128, 128, 128)";
           break;
         case "off":
-          icon = "hass:motion-sensor-off";
-          iconColor = "var(--sq-red-rgb, 255, 0, 0)";
+          iconColor = "rgb(var(--sq-inactive-rgb), 128, 128, 128)";
           break;
         default:
-          icon = "hass:motion-sensor-off";
           iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
           break;
       }
+      text = this._stateObj.attributes.current_temperature + "°";
     } else {
-      icon = "hass:motion-sensor-off";
       iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+      text = "??°";
     }
-    const containerStyle = this._name
-      ? null
-      : "grid-template-areas: 'i'; grid-column-gap: 0; justify-content: center;";
 
     return html`
       <div
         class="container"
         style="${containerStyle}"
-        @click=${this._toggleEntity}
+        @click=${this._showDialog}
       >
         <div
           class="icon"
@@ -70,23 +70,20 @@ export class SmartQasaMotionChip extends LitElement {
         >
           <ha-icon .icon=${icon}></ha-icon>
         </div>
-        <div class="content">${this._name}</div>
+        <div class="text">${text}</div>
       </div>
     `;
   }
 
-  _toggleEntity(e) {
+  _showDialog(e) {
     e.stopPropagation();
-    this._hass.callService("homeassistant", "toggle", {
-      entity_id: this._entity,
-    });
   }
 }
 
-customElements.define("smartqasa-motion-chip", SmartQasaMotionChip);
+customElements.define("smartqasa-thermostat-chip", SmartQasaThermostatChip);
 window.customCards.push({
-  type: "smartqasa-motion-chip",
-  name: "SmartQasa Motion Sensor Chip",
+  type: "smartqasa-thermostat-chip",
+  name: "SmartQasa Thermostat Chip",
   preview: true,
-  description: "A SmartQasa chip for toggling an motion sensor entity.",
+  description: "A SmartQasa chip for controlling a thermostat entity.",
 });

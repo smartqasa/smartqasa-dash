@@ -88,16 +88,16 @@
     }
     setConfig(config) {
       if (config.area) {
-        this._area = config.area ?? null;
-        this._icon = config.icon ?? null;
-        this._name = config.name ?? null;
+        this._area = config.area;
+        this._icon = config.icon;
+        this._name = config.name;
       } else {
-        throw new Error("You need to define an area");
+        throw new Error("You need to specify an area");
       }
     }
     set hass(hass) {
       this._hass = hass;
-      this._areaObj = this._hass.areas[this._area] ?? undefined;
+      this._areaObj = this._hass.areas[this._area];
     }
     static styles = styleTileBase;
     render() {
@@ -443,9 +443,9 @@
     }
     setConfig(config) {
       this._app = config.app ?? null;
-      this._appObj = appTable[this._app] ?? undefined;
-      this._icon = config.icon ?? null;
-      this._name = config.name ?? null;
+      this._appObj = appTable[this._app];
+      this._icon = config.icon;
+      this._name = config.name;
     }
     set hass(hass) {
       this._hass = hass;
@@ -524,16 +524,16 @@
     }
     setConfig(config) {
       if (config.area) {
-        this._area = config.area ?? null;
-        this._icon = config.icon ?? null;
-        this._name = config.name ?? null;
+        this._area = config.area;
+        this._icon = config.icon;
+        this._name = config.name;
       } else {
-        throw new Error("You need to define an area");
+        throw new Error("You need to specify an area");
       }
     }
     set hass(hass) {
       this._hass = hass;
-      this._areaObj = this._hass.areas[this._area] ?? undefined;
+      this._areaObj = this._hass.areas[this._area];
     }
     static styles = styleTileBase;
     render() {
@@ -634,15 +634,15 @@
     setConfig(config) {
       if (config.entity) {
         this._entity = config.entity;
-        this._icon = config.icon ?? null;
-        this._name = config.name ?? null;
+        this._icon = config.icon;
+        this._name = config.name;
       } else {
-        throw new Error("You need to define an entity");
+        throw new Error("You need to specify an entity");
       }
     }
     set hass(hass) {
       this._hass = hass;
-      this._stateObj = this._hass.states[this._entity] ?? undefined;
+      this._stateObj = this._hass.states[this._entity];
     }
     static styles = [styleTileBase, styleTileState, styleTileIconSpin];
     render() {
@@ -741,14 +741,14 @@
     setConfig(config) {
       if (config.entity) {
         this._entity = config.entity;
-        this._name = config.name ?? null;
+        this._name = config.name;
       } else {
-        throw new Error("You need to define an entity");
+        throw new Error("You need to specify an entity");
       }
     }
     set hass(hass) {
       this._hass = hass;
-      this._stateObj = this._hass.states[this._entity] ?? undefined;
+      this._stateObj = this._hass.states[this._entity];
     }
     static styles = [styleTileBase, styleTileState, styleTileIconBlink];
     render() {
@@ -858,7 +858,7 @@
         this._icon = config.icon ?? null;
         this._name = config.name ?? null;
       } else {
-        throw new Error("You need to define an entity");
+        throw new Error("You need to specify an entity");
       }
     }
     set hass(hass) {
@@ -944,14 +944,14 @@
     setConfig(config) {
       if (config.entity) {
         this._entity = config.entity;
-        this._name = config.name ?? null;
+        this._name = config.name;
       } else {
-        throw new Error("You need to define an entity");
+        throw new Error("You need to specify an entity");
       }
     }
     set hass(hass) {
       this._hass = hass;
-      this._stateObj = this._hass.states[this._entity] ?? undefined;
+      this._stateObj = this._hass.states[this._entity];
     }
     static styles = [styleTileBase, styleTileState, styleTileIconSpin];
     render() {
@@ -1049,15 +1049,15 @@
     setConfig(config) {
       if (config.entity) {
         this._entity = config.entity;
-        this._icon = config.icon ?? null;
-        this._name = config.name ?? null;
+        this._icon = config.icon;
+        this._name = config.name;
       } else {
-        throw new Error("You need to define an entity");
+        throw new Error("You need to specify an entity");
       }
     }
     set hass(hass) {
       this._hass = hass;
-      this._stateObj = this._hass.states[this._entity] ?? undefined;
+      this._stateObj = this._hass.states[this._entity];
     }
     static styles = [styleTileBase, styleTileIconSpin];
     render() {
@@ -1156,15 +1156,15 @@
     setConfig(config) {
       if (config.entity) {
         this._entity = config.entity;
-        this._name = config.name ?? null;
+        this._name = config.name;
         this._tilt = config.tilt ?? 100;
       } else {
-        throw new Error("You need to define an entity");
+        throw new Error("You need to specify an entity");
       }
     }
     set hass(hass) {
       this._hass = hass;
-      this._stateObj = this._hass.states[this._entity] ?? undefined;
+      this._stateObj = this._hass.states[this._entity];
     }
     static styles = [styleTileBase, styleTileState];
     render() {
@@ -1282,16 +1282,16 @@
     setConfig(config) {
       if (config.entity) {
         this._entity = config.entity;
-        this._category = config.category ?? null;
-        this._icon = config.icon ?? null;
-        this._name = config.name ?? null;
+        this._category = config.category;
+        this._icon = config.icon;
+        this._name = config.name;
       } else {
-        throw new Error("You need to define an entity");
+        throw new Error("You need to specify an entity");
       }
     }
     set hass(hass) {
       this._hass = hass;
-      this._stateObj = this._hass.states[this._entity] ?? undefined;
+      this._stateObj = this._hass.states[this._entity];
     }
     static styles = [styleTileBase, styleTileState];
     render() {
@@ -1355,7 +1355,7 @@
     width: fit-content;
     place-self: center;
     display: grid;
-    grid-template-areas: "i n";
+    grid-template-areas: "i c";
     grid-column-gap: 1rem;
     padding: 1rem;
     border: var(--sq-card-border);
@@ -1370,8 +1370,8 @@
     width: 1.8rem;
     transition: var(--sq-icon-transition, none);
   }
-  .name {
-    grid-area: n;
+  .content {
+    grid-area: c;
     place-self: center start;
     text-align: left;
     overflow: hidden;
@@ -1400,15 +1400,15 @@
     }
     setConfig(config) {
       if (config.entity) {
-        this._entity = config.entity ?? null;
-        this._name = config.name ?? null;
+        this._entity = config.entity;
+        this._name = config.name;
       } else {
-        throw new Error("You need to define an entity");
+        throw new Error("You need to specify an entity");
       }
     }
     set hass(hass) {
       this._hass = hass;
-      this._stateObj = this._hass.states[this._entity] ?? undefined;
+      this._stateObj = this._hass.states[this._entity];
     }
     static styles = styleChipBase;
     render() {
@@ -1449,7 +1449,7 @@
         >
           <ha-icon .icon=${icon}></ha-icon>
         </div>
-        <div class="name">${this._name}</div>
+        <div class="content">${this._name}</div>
       </div>
     `;
     }
@@ -1515,16 +1515,16 @@
     }
     setConfig(config) {
       if (config.area_prev && config.area_next) {
-        this._areaPrev = config.area_prev ?? null;
-        this._areaNext = config.area_next ?? null;
+        this._areaPrev = config.area_prev;
+        this._areaNext = config.area_next;
       } else {
-        throw new Error("You need to define an area");
+        throw new Error("You need to specify an area");
       }
     }
     set hass(hass) {
       this._hass = hass;
-      this._areaObjPrev = this._hass.areas[this._areaPrev] ?? undefined;
-      this._areaObjNext = this._hass.areas[this._areaNext] ?? undefined;
+      this._areaObjPrev = this._hass.areas[this._areaPrev];
+      this._areaObjNext = this._hass.areas[this._areaNext];
     }
     static styles = styleChipDouble;
     render() {
@@ -1568,6 +1568,88 @@
     name: "SmartQasa Area Navigattion Chip",
     preview: true,
     description: "A SmartQasa chip for navigating to a previous/next area."
+  });
+
+  class SmartQasaThermostatChip extends s {
+    _hass;
+    static get properties() {
+      return {
+        _entity: {
+          state: true
+        },
+        _stateObj: {
+          state: true
+        }
+      };
+    }
+    setConfig(config) {
+      if (config.entity) {
+        this._entity = config.entity;
+      } else {
+        throw new Error("You need to specify an entity");
+      }
+    }
+    set hass(hass) {
+      this._hass = hass;
+      this._stateObj = this._hass.states[this._entity];
+    }
+    static styles = styleChipBase;
+    render() {
+      const icon = "hass:thermometer-lines";
+      let iconColor, text;
+      if (this._stateObj) {
+        const hvacAction = this._stateObj.attributes.hvac_action;
+        switch (hvacAction) {
+          case "cooling":
+            iconColor = "rgb(var(--sq-climate-cool-rgb), 0, 0, 255)";
+            break;
+          case "heating":
+            iconColor = "rgb(var(--sq-climate-heat-rgb), 255, 0, 0)";
+            break;
+          case "fan_only":
+            iconColor = "rgb(var(--sq-primary-text-rgb), 128, 128, 128)";
+            break;
+          case "off":
+            iconColor = "rgb(var(--sq-inactive-rgb), 128, 128, 128)";
+            break;
+          default:
+            iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+            break;
+        }
+        text = this._stateObj.attributes.current_temperature + "°";
+      } else {
+        iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+        text = "??°";
+      }
+      return x`
+      <div
+        class="container"
+        style="${containerStyle}"
+        @click=${this._showDialog}
+      >
+        <div
+          class="icon"
+          id="icon"
+          style="
+            color: rgb(${iconColor});
+          "
+        >
+          <ha-icon .icon=${icon}></ha-icon>
+        </div>
+        <div class="text">${text}</div>
+      </div>
+    `;
+    }
+    _showDialog(e) {
+      e.stopPropagation();
+    }
+  }
+  customElements.define("smartqasa-thermostat-chip", SmartQasaThermostatChip);
+  window.customCards.push({
+    type: "smartqasa-thermostat-chip",
+    name: "SmartQasa Thermostat Chip",
+    preview: true,
+    description: "A SmartQasa chip for controlling a thermostat entity."
   });
 
   class SmartQasaTimeCard extends s {

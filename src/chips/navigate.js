@@ -16,17 +16,17 @@ export class SmartQasaNavigateChip extends LitElement {
 
   setConfig(config) {
     if (config.area_prev && config.area_next) {
-      this._areaPrev = config.area_prev ?? null;
-      this._areaNext = config.area_next ?? null;
+      this._areaPrev = config.area_prev;
+      this._areaNext = config.area_next;
     } else {
-      throw new Error("You need to define an area");
+      throw new Error("You need to specify an area");
     }
   }
 
   set hass(hass) {
     this._hass = hass;
-    this._areaObjPrev = this._hass.areas[this._areaPrev] ?? undefined;
-    this._areaObjNext = this._hass.areas[this._areaNext] ?? undefined;
+    this._areaObjPrev = this._hass.areas[this._areaPrev];
+    this._areaObjNext = this._hass.areas[this._areaNext];
   }
 
   static styles = styleChipDouble;

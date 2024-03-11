@@ -16,9 +16,9 @@ export class SmartQasaAppTile extends LitElement {
 
   setConfig(config) {
     this._app = config.app ?? null;
-    this._appObj = appTable[this._app] ?? undefined;
-    this._icon = config.icon ?? null;
-    this._name = config.name ?? null;
+    this._appObj = appTable[this._app];
+    this._icon = config.icon;
+    this._name = config.name;
   }
 
   set hass(hass) {

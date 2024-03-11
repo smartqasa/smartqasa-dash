@@ -19,16 +19,16 @@ export class SmartQasaShadeTile extends LitElement {
   setConfig(config) {
     if (config.entity) {
       this._entity = config.entity;
-      this._name = config.name ?? null;
+      this._name = config.name;
       this._tilt = config.tilt ?? 100;
     } else {
-      throw new Error("You need to define an entity");
+      throw new Error("You need to specify an entity");
     }
   }
 
   set hass(hass) {
     this._hass = hass;
-    this._stateObj = this._hass.states[this._entity] ?? undefined;
+    this._stateObj = this._hass.states[this._entity];
   }
 
   static styles = [styleTileBase, styleTileState];

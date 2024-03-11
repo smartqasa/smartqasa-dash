@@ -15,6 +15,7 @@ import { SmartQasaSwitchTile } from "./tiles/switch";
 // Chips
 import { SmartQasaMotionChip } from "./chips/motion";
 import { SmartQasaNavigateChip } from "./chips/navigate";
+import { SmartQasaThermostatChip } from "./chips/thermostat";
 
 // Misc
 import { SmartQasaTimeCard } from "./misc/time-card";

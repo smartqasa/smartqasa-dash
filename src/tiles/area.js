@@ -16,17 +16,17 @@ export class SmartQasaAreaTile extends LitElement {
 
   setConfig(config) {
     if (config.area) {
-      this._area = config.area ?? null;
-      this._icon = config.icon ?? null;
-      this._name = config.name ?? null;
+      this._area = config.area;
+      this._icon = config.icon;
+      this._name = config.name;
     } else {
-      throw new Error("You need to define an area");
+      throw new Error("You need to specify an area");
     }
   }
 
   set hass(hass) {
     this._hass = hass;
-    this._areaObj = this._hass.areas[this._area] ?? undefined;
+    this._areaObj = this._hass.areas[this._area];
   }
 
   static styles = styleTileBase;
