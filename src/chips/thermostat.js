@@ -29,7 +29,7 @@ export class SmartQasaThermostatChip extends LitElement {
 
   render() {
     const icon = "hass:thermometer-lines";
-    let iconColor, text;
+    let iconColor, temperature;
     if (this._stateObj) {
       const hvacAction = this._stateObj.attributes.hvac_action;
       switch (hvacAction) {

@@ -1596,7 +1596,7 @@
     static styles = styleChipBase;
     render() {
       const icon = "hass:thermometer-lines";
-      let iconColor;
+      let iconColor, temperature;
       if (this._stateObj) {
         const hvacAction = this._stateObj.attributes.hvac_action;
         switch (hvacAction) {
