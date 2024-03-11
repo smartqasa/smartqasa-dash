@@ -1597,28 +1597,20 @@
     render() {
       const icon = "hass:thermometer-lines";
       let iconColor, temperature;
+      const actionColor = {
+        cooling: "var(--sq-climate-cool-rgb, 0, 0, 255)",
+        heating: "var(--sq-climate-heat-rgb, 255, 0, 0)",
+        fan_only: "var(--sq-climate-fan_only-rgb, 0, 255, 0)",
+        idle: "var(--sq-primary-text-rgb, 128, 128, 128)",
+        off: "var(--sq-inactive-rgb, 128, 128, 128)",
+        default: "var(--sq-unavailable-rgb, 255, 0, 255)"
+      };
       if (this._stateObj) {
         const hvacAction = this._stateObj.attributes.hvac_action;
-        switch (hvacAction) {
-          case "cooling":
-            iconColor = "var(--sq-climate-cool-rgb, 0, 0, 255)";
-            break;
-          case "heating":
-            iconColor = "var(--sq-climate-heat-rgb, 255, 0, 0)";
-            break;
-          case "fan_only":
-            iconColor = "var(--sq-primary-text-rgb, 128, 128, 128)";
-            break;
-          case "off":
-            iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
-            break;
-          default:
-            iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            break;
-        }
+        iconColor = actionColor[hvacAction] || actionColor.default;
         temperature = this._stateObj.attributes.current_temperature ?? "??";
       } else {
-        iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+        iconColor = actionColor.default;
         temperature = "??";
       }
       return x`
