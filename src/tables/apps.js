@@ -36,7 +36,7 @@ export default {
     launcher: "package",
     package: "com.apple.android.music",
   },
-  my_bmw: {
+  bmw: {
     name: "My BMW",
     app_icon: "icon_bmw.png",
     launcher: "package",
