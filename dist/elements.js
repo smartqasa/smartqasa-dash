@@ -1356,7 +1356,7 @@
     place-self: center;
     display: grid;
     grid-template-areas: "i t";
-    grid-column-gap: 1rem;
+    grid-column-gap: 0.5rem;
     padding: 1rem;
     border: var(--sq-card-border);
     border-radius: var(--sq-chip-border-radius);
@@ -1599,7 +1599,6 @@
       let iconColor, temperature;
       if (this._stateObj) {
         const hvacAction = this._stateObj.attributes.hvac_action;
-        console.log(hvacAction);
         switch (hvacAction) {
           case "cooling":
             iconColor = "var(--sq-climate-cool-rgb, 0, 0, 255)";
@@ -1639,6 +1638,14 @@
     }
     _showDialog(e) {
       e.stopPropagation();
+      const event = new CustomEvent("hass-more-info", {
+        bubbles: true,
+        composed: true,
+        detail: {
+          entityId: this._entity
+        }
+      });
+      this.dispatchEvent(event);
     }
   }
   customElements.define("smartqasa-thermostat-chip", SmartQasaThermostatChip);
