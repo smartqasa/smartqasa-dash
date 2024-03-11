@@ -1449,7 +1449,7 @@
         >
           <ha-icon .icon=${icon}></ha-icon>
         </div>
-        <div class="content">${this._name}</div>
+        <div class="text">${this._name}</div>
       </div>
     `;
     }
@@ -1596,30 +1596,30 @@
     static styles = styleChipBase;
     render() {
       const icon = "hass:thermometer-lines";
-      let iconColor, text;
+      let iconColor;
       if (this._stateObj) {
         const hvacAction = this._stateObj.attributes.hvac_action;
         switch (hvacAction) {
           case "cooling":
-            iconColor = "rgb(var(--sq-climate-cool-rgb), 0, 0, 255)";
+            iconColor = "var(--sq-climate-cool-rgb, 0, 0, 255)";
             break;
           case "heating":
-            iconColor = "rgb(var(--sq-climate-heat-rgb), 255, 0, 0)";
+            iconColor = "var(--sq-climate-heat-rgb, 255, 0, 0)";
             break;
           case "fan_only":
-            iconColor = "rgb(var(--sq-primary-text-rgb), 128, 128, 128)";
+            iconColor = "var(--sq-primary-text-rgb, 128, 128, 128)";
             break;
           case "off":
-            iconColor = "rgb(var(--sq-inactive-rgb), 128, 128, 128)";
+            iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
             break;
           default:
             iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
             break;
         }
-        text = this._stateObj.attributes.current_temperature + "°";
+        temperature = this._stateObj.attributes.current_temperature + "°";
       } else {
         iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-        text = "??°";
+        temperature = "??°";
       }
       return x`
       <div
@@ -1636,7 +1636,7 @@
         >
           <ha-icon .icon=${icon}></ha-icon>
         </div>
-        <div class="text">${text}</div>
+        <div class="text">${temperature}</div>
       </div>
     `;
     }

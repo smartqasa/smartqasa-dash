@@ -70,7 +70,7 @@ export class SmartQasaMotionChip extends LitElement {
         >
           <ha-icon .icon=${icon}></ha-icon>
         </div>
-        <div class="content">${this._name}</div>
+        <div class="text">${this._name}</div>
       </div>
     `;
   }

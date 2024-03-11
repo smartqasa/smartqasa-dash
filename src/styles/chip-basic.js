@@ -5,7 +5,7 @@ export default css`
     width: fit-content;
     place-self: center;
     display: grid;
-    grid-template-areas: "i c";
+    grid-template-areas: "i t";
     grid-column-gap: 1rem;
     padding: 1rem;
     border: var(--sq-card-border);
@@ -20,8 +20,8 @@ export default css`
     width: 1.8rem;
     transition: var(--sq-icon-transition, none);
   }
-  .content {
-    grid-area: c;
+  .text {
+    grid-area: t;
     place-self: center start;
     text-align: left;
     overflow: hidden;
