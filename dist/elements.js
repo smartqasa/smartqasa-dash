@@ -1520,7 +1520,9 @@
     set hass(hass) {
       this._hass = hass;
       this._areaObjPrev = this._hass.areas[this._areaPrev];
+      console.log(this.areaObjPrev);
       this._areaObjNext = this._hass.areas[this._areaNext];
+      console.log(this.areaObjNext);
     }
     static styles = styleChipDouble;
     render() {
