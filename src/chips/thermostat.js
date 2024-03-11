@@ -13,11 +13,7 @@ export class SmartQasaThermostatChip extends LitElement {
   }
 
   setConfig(config) {
-    if (config.entity) {
-      this._entity = config.entity;
-    } else {
-      throw new Error("You need to specify an entity");
-    }
+    this._entity = config.entity;
   }
 
   set hass(hass) {
@@ -28,6 +24,10 @@ export class SmartQasaThermostatChip extends LitElement {
   static styles = styleChipBase;
 
   render() {
+    if (!this._entity) {
+      return html``;
+    }
+
     const icon = "hass:thermometer-lines";
     let iconColor, temperature;
     const actionColor = {

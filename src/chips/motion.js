@@ -14,12 +14,8 @@ export class SmartQasaMotionChip extends LitElement {
   }
 
   setConfig(config) {
-    if (config.entity) {
-      this._entity = config.entity;
-      this._name = config.name;
-    } else {
-      throw new Error("You need to specify an entity");
-    }
+    this._entity = config.entity;
+    this._name = config.name;
   }
 
   set hass(hass) {
@@ -30,6 +26,10 @@ export class SmartQasaMotionChip extends LitElement {
   static styles = styleChipBase;
 
   render() {
+    if (!this._entity) {
+      return html``;
+    }
+
     let icon, iconColor, state;
     if (this._stateObj) {
       state = this._stateObj.state;

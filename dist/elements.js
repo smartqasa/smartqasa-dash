@@ -1357,6 +1357,7 @@
     display: grid;
     grid-template-areas: "i t";
     grid-column-gap: 0.5rem;
+    margin-right: 0.5rem;
     padding: 1rem;
     border: var(--sq-card-border);
     border-radius: var(--sq-chip-border-radius);
@@ -1399,12 +1400,8 @@
       };
     }
     setConfig(config) {
-      if (config.entity) {
-        this._entity = config.entity;
-        this._name = config.name;
-      } else {
-        throw new Error("You need to specify an entity");
-      }
+      this._entity = config.entity;
+      this._name = config.name;
     }
     set hass(hass) {
       this._hass = hass;
@@ -1412,6 +1409,9 @@
     }
     static styles = styleChipBase;
     render() {
+      if (this._entity) {
+        return x``;
+      }
       let icon, iconColor, state;
       if (this._stateObj) {
         state = this._stateObj.state;
@@ -1582,11 +1582,7 @@
       };
     }
     setConfig(config) {
-      if (config.entity) {
-        this._entity = config.entity;
-      } else {
-        throw new Error("You need to specify an entity");
-      }
+      this._entity = config.entity;
     }
     set hass(hass) {
       this._hass = hass;
@@ -1594,6 +1590,9 @@
     }
     static styles = styleChipBase;
     render() {
+      if (!this._entity) {
+        return x``;
+      }
       const icon = "hass:thermometer-lines";
       let iconColor, temperature;
       const actionColor = {
