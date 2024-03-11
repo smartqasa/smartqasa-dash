@@ -1352,7 +1352,6 @@
 
   var styleChipBase = i$2`
   .container {
-    width: fit-content;
     place-self: center;
     display: grid;
     grid-template-areas: "i t";
@@ -1520,9 +1519,7 @@
     set hass(hass) {
       this._hass = hass;
       this._areaObjPrev = this._hass.areas[this._areaPrev];
-      console.log(this._areaObjPrev);
       this._areaObjNext = this._hass.areas[this._areaNext];
-      console.log(this._areaObjNext);
     }
     static styles = styleChipDouble;
     render() {

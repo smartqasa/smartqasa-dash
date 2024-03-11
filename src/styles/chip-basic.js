@@ -2,7 +2,6 @@ import { css } from "lit";
 
 export default css`
   .container {
-    width: fit-content;
     place-self: center;
     display: grid;
     grid-template-areas: "i t";
