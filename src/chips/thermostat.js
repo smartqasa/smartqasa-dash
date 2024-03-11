@@ -16,7 +16,7 @@ export class SmartQasaThermostatChip extends LitElement {
     if (config.entity) {
       this._entity = config.entity;
     } else {
-      throw new Error("You need to specify an entity");
+      throw new Error("You need to specify an entity.");
     }
   }
 

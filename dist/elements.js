@@ -1355,7 +1355,7 @@
     width: fit-content;
     place-self: center;
     display: grid;
-    grid-template-areas: "i c";
+    grid-template-areas: "i t";
     grid-column-gap: 1rem;
     padding: 1rem;
     border: var(--sq-card-border);
@@ -1370,8 +1370,8 @@
     width: 1.8rem;
     transition: var(--sq-icon-transition, none);
   }
-  .content {
-    grid-area: c;
+  .text {
+    grid-area: t;
     place-self: center start;
     text-align: left;
     overflow: hidden;
@@ -1586,7 +1586,7 @@
       if (config.entity) {
         this._entity = config.entity;
       } else {
-        throw new Error("You need to specify an entity");
+        throw new Error("You need to specify an entity.");
       }
     }
     set hass(hass) {
