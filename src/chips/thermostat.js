@@ -49,10 +49,10 @@ export class SmartQasaThermostatChip extends LitElement {
           iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
           break;
       }
-      temperature = this._stateObj.attributes.current_temperature + "°";
+      temperature = this._stateObj.attributes.current_temperature ?? "??";
     } else {
       iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-      temperature = "??°";
+      temperature = "??";
     }
 
     return html`
@@ -66,7 +66,7 @@ export class SmartQasaThermostatChip extends LitElement {
         >
           <ha-icon .icon=${icon}></ha-icon>
         </div>
-        <div class="text">${temperature}</div>
+        <div class="text">${temperature}"°"</div>
       </div>
     `;
   }
