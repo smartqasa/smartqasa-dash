@@ -1599,6 +1599,7 @@
       let iconColor, temperature;
       if (this._stateObj) {
         const hvacAction = this._stateObj.attributes.hvac_action;
+        console.log(hvac_action);
         switch (hvacAction) {
           case "cooling":
             iconColor = "var(--sq-climate-cool-rgb, 0, 0, 255)";
@@ -1632,7 +1633,7 @@
         >
           <ha-icon .icon=${icon}></ha-icon>
         </div>
-        <div class="text">${temperature}"°"</div>
+        <div class="text">${temperature}°</div>
       </div>
     `;
     }
