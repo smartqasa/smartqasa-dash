@@ -32,7 +32,7 @@ export class SmartQasaThermostatChip extends LitElement {
     let iconColor, temperature;
     if (this._stateObj) {
       const hvacAction = this._stateObj.attributes.hvac_action;
-      console.log(hvac_action);
+      console.log(hvacAction);
       switch (hvacAction) {
         case "cooling":
           iconColor = "var(--sq-climate-cool-rgb, 0, 0, 255)";
