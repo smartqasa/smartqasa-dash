@@ -203,6 +203,12 @@
       launcher: "package",
       package: "io.olibra.bondapp"
     },
+    bring: {
+      name: "Bring!",
+      app_icon: "icon_bring.png",
+      launcher: "package",
+      package: "ch.publisheria.bring"
+    },
     calculator: {
       name: "Calculator",
       app_icon: "icon_calculator.png",
