@@ -1352,6 +1352,7 @@
 
   var styleChipBase = i$2`
   .container {
+    width: fit-content;
     place-self: center;
     display: grid;
     grid-template-areas: "i t";
