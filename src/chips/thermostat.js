@@ -16,7 +16,7 @@ export class SmartQasaThermostatChip extends LitElement {
     if (config.entity) {
       this._entity = config.entity;
     } else {
-      throw new Error("You need to specify an entity.");
+      throw new Error("You need to specify an entity");
     }
   }
 
@@ -56,11 +56,7 @@ export class SmartQasaThermostatChip extends LitElement {
     }
 
     return html`
-      <div
-        class="container"
-        style="${containerStyle}"
-        @click=${this._showDialog}
-      >
+      <div class="container" @click=${this._showDialog}>
         <div
           class="icon"
           id="icon"
