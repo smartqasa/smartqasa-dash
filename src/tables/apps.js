@@ -260,7 +260,7 @@ export default {
     launcher: "package",
     package: "com.wunderground.android.weather",
   },
-  yummly_recipes: {
+  yummly: {
     name: "Yummly Recipes",
     app_icon: "icon_yummly.png",
     launcher: "package",
