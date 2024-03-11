@@ -1514,12 +1514,8 @@
       };
     }
     setConfig(config) {
-      if (config.area_prev && config.area_next) {
-        this._areaPrev = config.area_prev;
-        this._areaNext = config.area_next;
-      } else {
-        throw new Error("You need to specify an area");
-      }
+      this._areaPrev = config.area_prev;
+      this._areaNext = config.area_next;
     }
     set hass(hass) {
       this._hass = hass;
@@ -1528,6 +1524,9 @@
     }
     static styles = styleChipDouble;
     render() {
+      if (!this._areaObjPrev || !this.areaObjNext) {
+        return x``;
+      }
       const icon1 = "hass:menu-left";
       const icon2 = "hass:menu-right";
       return x`
