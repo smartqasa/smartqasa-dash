@@ -1,4 +1,12 @@
-window.customCards = window.customCards || [];
+window.smartqasa = window.smartqasa ?? {};
+window.smartqasa.deviceType =
+  typeof window.screen.width !== "number"
+    ? "tablet"
+    : window.screen.width < 600
+    ? "phone"
+    : "tablet";
+
+window.customCards = window.customCards ?? [];
 
 // Tiles
 import { SmartQasaAllOffTile } from "./tiles/all-off";
