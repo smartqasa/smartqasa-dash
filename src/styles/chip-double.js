@@ -20,7 +20,7 @@ export default css`
     width: 1px;
     background-color: rgb(128, 128, 128);
     margin: auto;
-    height: 80%;
+    height: 60%;
   }
   .icon1 {
     grid-area: i1;
