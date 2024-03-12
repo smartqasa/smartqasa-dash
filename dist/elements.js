@@ -1479,7 +1479,7 @@
     width: fit-content;
     place-self: center;
     display: grid;
-    grid-template-areas: "i1 i2";
+    grid-template-areas: "i1 s i2";
     grid-column-gap: 0.5rem;
     margin-right: 0.7rem;
     padding: 0.2rem;
@@ -1487,6 +1487,14 @@
     border-radius: var(--sq-chip-border-radius);
     background-color: var(--sq-card-background-color);
     cursor: pointer;
+  }
+  .container::after {
+    content: "";
+    grid-area: s;
+    width: 1px;
+    background-color: rgb(128, 128, 128);
+    margin: auto;
+    height: 80%;
   }
   .icon1 {
     grid-area: i1;
