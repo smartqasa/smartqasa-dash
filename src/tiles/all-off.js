@@ -17,7 +17,7 @@ export class SmartQasaAllOffTile extends LitElement {
   setConfig(config) {
     if (config.area) {
       this._area = config.area;
-      this._icon = config.icon;
+      this._icon = config.icon ?? "hass:power";
       this._name = config.name;
     } else {
       throw new Error("You need to specify an area");
@@ -32,13 +32,11 @@ export class SmartQasaAllOffTile extends LitElement {
   static styles = styleTileBase;
 
   render() {
-    let icon, iconColor, name;
+    let iconColor, name;
     if (this._areaObj) {
-      icon = this._icon ?? "hass:power";
       iconColor = "var(--sq-inactive-rgb)";
       name = this._name ?? "All Off";
     } else {
-      icon = this._icon ?? "hass:alert-rhombus";
       iconColor = "var(--sq-unavailable-rgb)";
       name = this._name ?? "Unknown";
     }
@@ -49,11 +47,11 @@ export class SmartQasaAllOffTile extends LitElement {
           class="icon"
           id="icon"
           style="
-                        color: rgb(${iconColor});
-                        background-color: rgba(${iconColor}, var(--sq-icon-opacity));
-                    "
+            color: rgb(${iconColor});
+            background-color: rgba(${iconColor}, var(--sq-icon-opacity));
+          "
         >
-          <ha-icon .icon=${icon}></ha-icon>
+          <ha-icon .icon=${this._icon}></ha-icon>
         </div>
         <div class="name">${name}</div>
       </div>
@@ -62,9 +60,10 @@ export class SmartQasaAllOffTile extends LitElement {
 
   _runRoutine(e) {
     e.stopPropagation();
+    const haIconElement = this.shadowRoot.querySelector("ha-icon");
+    haIconElement.icon = "hass:rotate-right";
     const iconElement = this.shadowRoot.getElementById("icon");
-    iconElement.style.color = `rgb(var(--sq-accent-rgb))`;
-    iconElement.style.backgroundColor = `rgba(var(--sq-accent-rgb), var(--sq-icon-opacity)`;
+    iconElement.style.animation = "spin 1.0s linear infinite";
 
     this._hass.callService("light", "turn_off", {
       area_id: this._area,
@@ -75,8 +74,9 @@ export class SmartQasaAllOffTile extends LitElement {
     });
 
     setTimeout(() => {
+      haIconElement.icon = this._icon;
       iconElement.style.color = `rgb(var(--sq-inactive-rgb))`;
-      iconElement.style.backgroundColor = `rgba(var(--sq-inactive-rgb), var(--sq-icon-opacity))`;
+      iconElement.style.animation = "none";
     }, 2000);
   }
 }
