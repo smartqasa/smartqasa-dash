@@ -1,6 +1,7 @@
 import { LitElement, html } from "lit";
 
 import styleTileBase from "../styles/tile-base";
+import styleTileIconSpin from "../styles/tile-icon-spin";
 
 export class SmartQasaAllOffTile extends LitElement {
   _hass;
@@ -29,7 +30,7 @@ export class SmartQasaAllOffTile extends LitElement {
     this._areaObj = this._hass.areas[this._area];
   }
 
-  static styles = styleTileBase;
+  static styles = [styleTileBase, styleTileIconSpin];
 
   render() {
     let iconColor, name;

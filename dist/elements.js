@@ -68,6 +68,17 @@
   }
 `;
 
+  var styleTileIconSpin = i$2`
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+`;
+
   class SmartQasaAllOffTile extends s {
     _hass;
     static get properties() {
@@ -99,7 +110,7 @@
       this._hass = hass;
       this._areaObj = this._hass.areas[this._area];
     }
-    static styles = styleTileBase;
+    static styles = [styleTileBase, styleTileIconSpin];
     render() {
       let iconColor, name;
       if (this._areaObj) {
@@ -606,17 +617,6 @@
         font-size: var(--sq-secondary-font-size, 1.0rem);
         color: rgb(var(--sq-secondary-font-rgb, 0, 0, 0));
     }
-`;
-
-  var styleTileIconSpin = i$2`
-  @keyframes spin {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
-  }
 `;
 
   class SmartQasaFanTile extends s {
