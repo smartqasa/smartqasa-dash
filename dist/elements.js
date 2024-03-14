@@ -1813,9 +1813,11 @@
       if (!this._areaObj) {
         return x``;
       }
-      const picture = `/local/sq-areas/${this._area}.png`;
+      `/local/sq-areas/${this._area}.png`;
       return x`
-      <ha-card style="background-image: url('${picture}')"></ha-card>
+      <ha-card
+        style="background-image: url('/local/sq-areas/kitchen.png')"
+      ></ha-card>
     `;
     }
     getCardSize() {

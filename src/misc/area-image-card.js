@@ -49,7 +49,9 @@ export class SmartQasaAreaImageCard extends LitElement {
 
     const picture = `/local/sq-areas/${this._area}.png`;
     return html`
-      <ha-card style="background-image: url('${picture}')"></ha-card>
+      <ha-card
+        style="background-image: url('/local/sq-areas/kitchen.png')"
+      ></ha-card>
     `;
   }
 
