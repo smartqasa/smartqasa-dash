@@ -21,7 +21,7 @@ export class SmartQasaGarageTile extends LitElement {
       this._entity = config.entity;
       this._name = config.name;
     } else {
-      throw new Error("You need to specify an entity");
+      throw new Error("You must specify an entity");
     }
   }
 
@@ -81,7 +81,7 @@ export class SmartQasaGarageTile extends LitElement {
       stateFmtd = "Unknown";
     }
     return html`
-      <div class="container" @click=${this._showMoreInfo}>
+      <div class="ha-card" @click=${this._showMoreInfo}>
         <div
           class="icon"
           @click=${this._toggleEntity}
@@ -112,6 +112,10 @@ export class SmartQasaGarageTile extends LitElement {
       detail: { entityId: this._entity },
     });
     this.dispatchEvent(event);
+  }
+
+  getCardSize() {
+    return 1;
   }
 }
 

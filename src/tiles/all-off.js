@@ -21,7 +21,7 @@ export class SmartQasaAllOffTile extends LitElement {
       this._icon = config.icon ?? "hass:power";
       this._name = config.name;
     } else {
-      throw new Error("You need to specify an area");
+      throw new Error("You must specify an area");
     }
   }
 
@@ -43,7 +43,7 @@ export class SmartQasaAllOffTile extends LitElement {
     }
 
     return html`
-      <div class="container" @click=${this._runRoutine}>
+      <div class="ha-card" @click=${this._runRoutine}>
         <div
           class="icon"
           id="icon"
@@ -79,6 +79,10 @@ export class SmartQasaAllOffTile extends LitElement {
       iconElement.style.color = `rgb(var(--sq-inactive-rgb))`;
       iconElement.style.animation = "none";
     }, 2000);
+  }
+
+  getCardSize() {
+    return 1;
   }
 }
 

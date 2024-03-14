@@ -73,6 +73,10 @@ export class SmartQasaTimeCard extends LitElement {
       console.warn("fully.startApplication is not available.");
     }
   }
+
+  getCardSize() {
+    return 1;
+  }
 }
 
 customElements.define("smartqasa-time-card", SmartQasaTimeCard);

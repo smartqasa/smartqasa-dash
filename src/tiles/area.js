@@ -20,7 +20,7 @@ export class SmartQasaAreaTile extends LitElement {
       this._icon = config.icon;
       this._name = config.name;
     } else {
-      throw new Error("You need to specify an area");
+      throw new Error("You must specify an area");
     }
   }
 
@@ -44,7 +44,7 @@ export class SmartQasaAreaTile extends LitElement {
     }
 
     return html`
-      <div class="container" @click=${this._navigate}>
+      <div class="ha-card" @click=${this._navigate}>
         <div
           class="icon"
           id="icon"
@@ -69,6 +69,10 @@ export class SmartQasaAreaTile extends LitElement {
     } else {
       console.error("Area is not found.");
     }
+  }
+
+  getCardSize() {
+    return 1;
   }
 }
 

@@ -21,7 +21,7 @@ export class SmartQasaLightTile extends LitElement {
       this._icon = config.icon ?? null;
       this._name = config.name ?? null;
     } else {
-      throw new Error("You need to specify an entity");
+      throw new Error("You must specify an entity");
     }
   }
 
@@ -55,7 +55,7 @@ export class SmartQasaLightTile extends LitElement {
     }
 
     return html`
-      <div class="container" @click=${this._showMoreInfo}>
+      <div class="ha-card" @click=${this._showMoreInfo}>
         <div
           class="icon"
           @click=${this._toggleEntity}
@@ -85,6 +85,10 @@ export class SmartQasaLightTile extends LitElement {
       detail: { entityId: this._entity },
     });
     this.dispatchEvent(event);
+  }
+
+  getCardSize() {
+    return 1;
   }
 }
 

@@ -22,7 +22,7 @@ export class SmartQasaShadeTile extends LitElement {
       this._name = config.name;
       this._tilt = config.tilt ?? 100;
     } else {
-      throw new Error("You need to specify an entity");
+      throw new Error("You must specify an entity");
     }
   }
 
@@ -78,7 +78,7 @@ export class SmartQasaShadeTile extends LitElement {
     }
 
     return html`
-      <div class="container" @click=${this._showMoreInfo}>
+      <div class="ha-card" @click=${this._showMoreInfo}>
         <div
           class="icon"
           @click=${this._toggleEntity}
@@ -122,6 +122,10 @@ export class SmartQasaShadeTile extends LitElement {
       detail: { entityId: this._entity },
     });
     this.dispatchEvent(event);
+  }
+
+  getCardSize() {
+    return 1;
   }
 }
 

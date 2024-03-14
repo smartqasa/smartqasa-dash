@@ -54,7 +54,7 @@ export class SmartQasaAppTile extends LitElement {
       name = this._name ?? "Unknown";
     }
     return html`
-      <div class="container" @click=${this._launchApp}>
+      <div class="ha-card" @click=${this._launchApp}>
         <div class="icon" style=${iconStyle}>${icon}</div>
         <div class="name">${name}</div>
       </div>
@@ -76,6 +76,10 @@ export class SmartQasaAppTile extends LitElement {
         "Neither URI nor package ID is provided for launching the app."
       );
     }
+  }
+
+  getCardSize() {
+    return 1;
   }
 }
 

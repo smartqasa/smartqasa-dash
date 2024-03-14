@@ -21,7 +21,7 @@ export class SmartQasaRoutineTile extends LitElement {
       this._icon = config.icon;
       this._name = config.name;
     } else {
-      throw new Error("You need to specify an entity");
+      throw new Error("You must specify an entity");
     }
   }
 
@@ -47,7 +47,7 @@ export class SmartQasaRoutineTile extends LitElement {
     }
 
     return html`
-      <div class="container" @click=${this._runRoutine}>
+      <div class="ha-card" @click=${this._runRoutine}>
         <div
           class="icon"
           id="icon"
@@ -100,6 +100,10 @@ export class SmartQasaRoutineTile extends LitElement {
         iconElement.style.animation = "none";
       }, 2000);
     }
+  }
+
+  getCardSize() {
+    return 1;
   }
 }
 
