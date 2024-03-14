@@ -1798,6 +1798,7 @@
       }
 
       ha-card {
+        height: 15vh;
         background-size: cover;
         background-repeat: no-repeat;
         background-position: center center;
