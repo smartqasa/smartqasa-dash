@@ -1817,9 +1817,8 @@
       const picture = this._areaObj.picture ?? "/local/sq-storage/images/default.png";
       return x`
       <ha-card
-        height="${height}"
-        style="background-image: url(${picture})"
-        class="picture "
+        style="background-image: url(${picture}); height: ${height};"
+        class="picture"
       ></ha-card>
     `;
     }
