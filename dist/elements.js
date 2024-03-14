@@ -1818,7 +1818,14 @@
         return x``;
       }
       const height = smartqasa.devicetype === "phone" ? "15vh" : "20vh";
-      const picture = this._areaObj.picture ?? `/local/sq-areas/${this._picture}` ?? "/local/sq-storage/images/default.png";
+      let picture;
+      if (this._picture) {
+        picture = `/local/sq-areas/${this._picture}`;
+      } else if (this._areaObj.picture) {
+        picture = this._areaObj.picture;
+      } else {
+        picture = "/local/sq-storage/images/default.png";
+      }
       return x`
       <ha-card
         style="background-image: url(${picture}); height: ${height};"
