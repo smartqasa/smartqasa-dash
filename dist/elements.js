@@ -1813,11 +1813,11 @@
       if (!this._areaObj) {
         return x``;
       }
-      const picture = this._areaObj.picture ?? "/local/sq-storage/images/default.png";
       const height = smartqasa.devicetype === "phone" ? "15vh" : "20vh";
+      const picture = this._areaObj.picture ?? "/local/sq-storage/images/default.png";
       return x`
       <ha-card
-        height=${height}
+        height="${height}"
         style="background-image: url(${picture})"
         class="picture "
       ></ha-card>
