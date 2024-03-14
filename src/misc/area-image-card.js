@@ -30,7 +30,7 @@ export class SmartQasaAreaImageCard extends LitElement {
       }
 
       ha-card {
-        height: smartqasa.devicetype==='phone'?'15vh' : "20vh";
+        height: smartqasa.devicetype === 'phone' ? '15vh' : "20vh";
         background-size: cover;
         background-repeat: no-repeat;
         background-position: center center;
