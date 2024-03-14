@@ -44,7 +44,7 @@ export class SmartQasaAreaTile extends LitElement {
     }
 
     return html`
-      <div class="ha-card" @click=${this._navigate}>
+      <div class="container" @click=${this._navigate}>
         <div
           class="icon"
           id="icon"

@@ -103,7 +103,7 @@
         this._icon = config.icon ?? "hass:power";
         this._name = config.name;
       } else {
-        throw new Error("You need to specify an area");
+        throw new Error("You must specify an area");
       }
     }
     set hass(hass) {
@@ -121,7 +121,7 @@
         name = this._name ?? "Unknown";
       }
       return x`
-      <div class="container" @click=${this._runRoutine}>
+      <div class="ha-card" @click=${this._runRoutine}>
         <div
           class="icon"
           id="icon"
@@ -154,6 +154,9 @@
         iconElement.style.color = `rgb(var(--sq-inactive-rgb))`;
         iconElement.style.animation = "none";
       }, 2000);
+    }
+    getCardSize() {
+      return 1;
     }
   }
   customElements.define("smartqasa-all-off-tile", SmartQasaAllOffTile);
@@ -512,6 +515,9 @@
         console.error("Neither URI nor package ID is provided for launching the app.");
       }
     }
+    getCardSize() {
+      return 1;
+    }
   }
   customElements.define("smartqasa-app-tile", SmartQasaAppTile);
   window.customCards.push({
@@ -545,7 +551,7 @@
         this._icon = config.icon;
         this._name = config.name;
       } else {
-        throw new Error("You need to specify an area");
+        throw new Error("You must specify an area");
       }
     }
     set hass(hass) {
@@ -589,6 +595,9 @@
       } else {
         console.error("Area is not found.");
       }
+    }
+    getCardSize() {
+      return 1;
     }
   }
   customElements.define("smartqasa-area-tile", SmartQasaAreaTile);
@@ -643,7 +652,7 @@
         this._icon = config.icon;
         this._name = config.name;
       } else {
-        throw new Error("You need to specify an entity");
+        throw new Error("You must specify an entity");
       }
     }
     set hass(hass) {
@@ -709,6 +718,9 @@
       });
       this.dispatchEvent(event);
     }
+    getCardSize() {
+      return 1;
+    }
   }
   customElements.define("smartqasa-fan-tile", SmartQasaFanTile);
   window.customCards.push({
@@ -749,7 +761,7 @@
         this._entity = config.entity;
         this._name = config.name;
       } else {
-        throw new Error("You need to specify an entity");
+        throw new Error("You must specify an entity");
       }
     }
     set hass(hass) {
@@ -831,6 +843,9 @@
       });
       this.dispatchEvent(event);
     }
+    getCardSize() {
+      return 1;
+    }
   }
   customElements.define("smartqasa-garage-tile", SmartQasaGarageTile);
   window.customCards.push({
@@ -864,7 +879,7 @@
         this._icon = config.icon ?? null;
         this._name = config.name ?? null;
       } else {
-        throw new Error("You need to specify an entity");
+        throw new Error("You must specify an entity");
       }
     }
     set hass(hass) {
@@ -920,6 +935,9 @@
       });
       this.dispatchEvent(event);
     }
+    getCardSize() {
+      return 1;
+    }
   }
   customElements.define("smartqasa-light-tile", SmartQasaLightTile);
   window.customCards.push({
@@ -952,7 +970,7 @@
         this._entity = config.entity;
         this._name = config.name;
       } else {
-        throw new Error("You need to specify an entity");
+        throw new Error("You must specify an entity");
       }
     }
     set hass(hass) {
@@ -1025,6 +1043,9 @@
       });
       this.dispatchEvent(event);
     }
+    getCardSize() {
+      return 1;
+    }
   }
   customElements.define("smartqasa-lock-tile", SmartQasaLockTile);
   window.customCards.push({
@@ -1058,7 +1079,7 @@
         this._icon = config.icon;
         this._name = config.name;
       } else {
-        throw new Error("You need to specify an entity");
+        throw new Error("You must specify an entity");
       }
     }
     set hass(hass) {
@@ -1129,6 +1150,9 @@
         }, 2000);
       }
     }
+    getCardSize() {
+      return 1;
+    }
   }
   customElements.define("smartqasa-routine-tile", SmartQasaRoutineTile);
   window.customCards.push({
@@ -1165,7 +1189,7 @@
         this._name = config.name;
         this._tilt = config.tilt ?? 100;
       } else {
-        throw new Error("You need to specify an entity");
+        throw new Error("You must specify an entity");
       }
     }
     set hass(hass) {
@@ -1255,6 +1279,9 @@
       });
       this.dispatchEvent(event);
     }
+    getCardSize() {
+      return 1;
+    }
   }
   customElements.define("smartqasa-shade-tile", SmartQasaShadeTile);
   window.customCards.push({
@@ -1292,7 +1319,7 @@
         this._icon = config.icon;
         this._name = config.name;
       } else {
-        throw new Error("You need to specify an entity");
+        throw new Error("You must specify an entity");
       }
     }
     set hass(hass) {
@@ -1346,6 +1373,9 @@
         }
       });
       this.dispatchEvent(event);
+    }
+    getCardSize() {
+      return 1;
     }
   }
   customElements.define("smartqasa-switch-tile", SmartQasaSwitchTile);
@@ -1731,6 +1761,9 @@
       } else {
         console.warn("fully.startApplication is not available.");
       }
+    }
+    getCardSize() {
+      return 1;
     }
   }
   customElements.define("smartqasa-time-card", SmartQasaTimeCard);

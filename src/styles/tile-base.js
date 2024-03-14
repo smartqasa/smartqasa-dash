@@ -1,7 +1,7 @@
 import { css } from "lit";
 
 export default css`
-  ha-card {
+  .container {
     display: grid;
     height: 5.2rem;
     border: var(--sq-card-border, none);

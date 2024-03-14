@@ -47,7 +47,7 @@ export class SmartQasaRoutineTile extends LitElement {
     }
 
     return html`
-      <div class="ha-card" @click=${this._runRoutine}>
+      <div class="container" @click=${this._runRoutine}>
         <div
           class="icon"
           id="icon"

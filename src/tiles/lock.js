@@ -60,7 +60,7 @@ export class SmartQasaLockTile extends LitElement {
     }
 
     return html`
-      <div class="ha-card" @click=${this._showMoreInfo}>
+      <div class="container" @click=${this._showMoreInfo}>
         <div
           class="icon"
           id="icon"

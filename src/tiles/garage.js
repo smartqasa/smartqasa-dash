@@ -81,7 +81,7 @@ export class SmartQasaGarageTile extends LitElement {
       stateFmtd = "Unknown";
     }
     return html`
-      <div class="ha-card" @click=${this._showMoreInfo}>
+      <div class="container" @click=${this._showMoreInfo}>
         <div
           class="icon"
           @click=${this._toggleEntity}
