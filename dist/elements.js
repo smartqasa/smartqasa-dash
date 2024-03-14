@@ -1798,7 +1798,7 @@
       }
 
       ha-card {
-        smartqasa.devicetype==='phone' ? '15vh' : "20vh";
+        smartqasa.devicetype==='phone'? '15vh' : "20vh";
         background-size: cover;
         background-repeat: no-repeat;
         background-position: center center;
@@ -1816,7 +1816,10 @@
       }
       const picture = this._areaObj.picture ?? "/local/sq-storage/images/default.png";
       return x`
-      <ha-card style="background-image: url('${picture}')"></ha-card>
+      <ha-card
+        style="background-image: url('${picture}')"
+        clas="picture "
+      ></ha-card>
     `;
     }
     getCardSize() {
