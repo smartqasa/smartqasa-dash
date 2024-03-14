@@ -1768,6 +1768,14 @@
   }
   customElements.define("smartqasa-time-card", SmartQasaTimeCard);
 
+  customElements.define("smartqasa-area-image-card", SmartQasaAreaImageCard);
+  window.customCards.push({
+    type: "smartqasa-area-image-card",
+    name: "SmartQasa Area Image Card",
+    preview: true,
+    description: "A SmartQasa tile for displaying the image associated with an area."
+  });
+
   window.smartqasa = window.smartqasa ?? {};
   window.smartqasa.deviceType = typeof window.screen.width !== "number" ? "tablet" : window.screen.width < 600 ? "phone" : "tablet";
   window.customCards = window.customCards ?? [];

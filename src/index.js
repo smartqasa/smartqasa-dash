@@ -27,3 +27,4 @@ import { SmartQasaThermostatChip } from "./chips/thermostat";
 
 // Misc
 import { SmartQasaTimeCard } from "./misc/time-card";
+import { SmartQasaAreaImageCard } from "./misc/area-image-card";
