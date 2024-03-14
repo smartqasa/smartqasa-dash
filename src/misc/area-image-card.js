@@ -30,7 +30,7 @@ export class SmartQasaAreaImageCard extends LitElement {
       }
 
       ha-card {
-        height: 15vh;
+        smartqasa.devicetype=== 'phone' ? '15vh' : "20vh";
         background-size: cover;
         background-repeat: no-repeat;
         background-position: center center;
@@ -48,10 +48,12 @@ export class SmartQasaAreaImageCard extends LitElement {
       return html``;
     }
 
-    const picture = `/local/sq-areas/${this._area}.png`;
+    const picture =
+      this._areaObj.picture ?? "/local/sq-storage/images/default.png";
     return html`
       <ha-card
-        style="background-image: url('/local/sq-areas/kitchen.png')"
+        style="background-image: url('${picture}')"
+        class="picture"
       ></ha-card>
     `;
   }

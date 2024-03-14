@@ -1798,7 +1798,7 @@
       }
 
       ha-card {
-        height: 15vh;
+        smartqasa.devicetype=== 'phone' ? '15vh' : "20vh";
         background-size: cover;
         background-repeat: no-repeat;
         background-position: center center;
@@ -1814,10 +1814,11 @@
       if (!this._areaObj) {
         return x``;
       }
-      `/local/sq-areas/${this._area}.png`;
+      const picture = this._areaObj.picture ?? "/local/sq-storage/images/default.png";
       return x`
       <ha-card
-        style="background-image: url('/local/sq-areas/kitchen.png')"
+        style="background-image: url('${picture}')"
+        class="picture"
       ></ha-card>
     `;
     }
