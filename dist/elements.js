@@ -121,7 +121,7 @@
         name = this._name ?? "Unknown";
       }
       return x`
-      <div class="ha-card" @click=${this._runRoutine}>
+      <div class="container" @click=${this._runRoutine}>
         <div
           class="icon"
           id="icon"
