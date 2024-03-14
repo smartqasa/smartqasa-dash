@@ -1,6 +1,6 @@
 import { LitElement, html, css } from "lit";
 
-export class SmartQasaTimeCard extends LitElement {
+export class SmartQasaTimeDate extends LitElement {
   _hass;
 
   static get properties() {
@@ -79,4 +79,4 @@ export class SmartQasaTimeCard extends LitElement {
   }
 }
 
-customElements.define("smartqasa-time-card", SmartQasaTimeCard);
+customElements.define("smartqasa-time-date", SmartQasaTimeDate);

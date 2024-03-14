@@ -1,18 +1,20 @@
 import { LitElement, html, css } from "lit";
 
-export class SmartQasaAreaImageCard extends LitElement {
+export class SmartQasaAreaPicture extends LitElement {
   _hass;
 
   static get properties() {
     return {
       _area: { state: true },
       _areaObj: { state: true },
+      _picture: { state: true },
     };
   }
 
   setConfig(config) {
     if (config.area) {
       this._area = config.area;
+      this._picture = config.picture;
     } else {
       throw new Error("You must specify an area");
     }
@@ -49,7 +51,9 @@ export class SmartQasaAreaImageCard extends LitElement {
 
     const height = smartqasa.devicetype === "phone" ? "15vh" : "20vh";
     const picture =
-      this._areaObj.picture ?? "/local/sq-storage/images/default.png";
+      this._areaObj.picture ??
+      `/local/sq-areas/${this._picture}` ??
+      "/local/sq-storage/images/default.png";
     return html`
       <ha-card
         style="background-image: url(${picture}); height: ${height};"
@@ -63,11 +67,11 @@ export class SmartQasaAreaImageCard extends LitElement {
   }
 }
 
-customElements.define("smartqasa-area-image-card", SmartQasaAreaImageCard);
+customElements.define("smartqasa-area-picture", SmartQasaAreaPicture);
 window.customCards.push({
-  type: "smartqasa-area-image-card",
-  name: "SmartQasa Area Image Card",
+  type: "smartqasa-area-picture",
+  name: "SmartQasa Area Picture",
   preview: true,
   description:
-    "A SmartQasa tile for displaying the image associated with an area.",
+    "A SmartQasa tile for displaying the picture associated with an area.",
 });

@@ -1691,7 +1691,7 @@
     description: "A SmartQasa chip for controlling a thermostat entity."
   });
 
-  class SmartQasaTimeCard extends s {
+  class SmartQasaTimeDate extends s {
     _hass;
     static get properties() {
       return {
@@ -1766,9 +1766,9 @@
       return 1;
     }
   }
-  customElements.define("smartqasa-time-card", SmartQasaTimeCard);
+  customElements.define("smartqasa-time-date", SmartQasaTimeDate);
 
-  class SmartQasaAreaImageCard extends s {
+  class SmartQasaAreaPicture extends s {
     _hass;
     static get properties() {
       return {
@@ -1777,12 +1777,16 @@
         },
         _areaObj: {
           state: true
+        },
+        _picture: {
+          state: true
         }
       };
     }
     setConfig(config) {
       if (config.area) {
         this._area = config.area;
+        this._picture = config.picture;
       } else {
         throw new Error("You must specify an area");
       }
@@ -1814,7 +1818,7 @@
         return x``;
       }
       const height = smartqasa.devicetype === "phone" ? "15vh" : "20vh";
-      const picture = this._areaObj.picture ?? "/local/sq-storage/images/default.png";
+      const picture = this._areaObj.picture ?? `/local/sq-areas/${this._picture}` ?? "/local/sq-storage/images/default.png";
       return x`
       <ha-card
         style="background-image: url(${picture}); height: ${height};"
@@ -1826,12 +1830,12 @@
       return 1;
     }
   }
-  customElements.define("smartqasa-area-image-card", SmartQasaAreaImageCard);
+  customElements.define("smartqasa-area-picture", SmartQasaAreaPicture);
   window.customCards.push({
-    type: "smartqasa-area-image-card",
-    name: "SmartQasa Area Image Card",
+    type: "smartqasa-area-picture",
+    name: "SmartQasa Area Picture",
     preview: true,
-    description: "A SmartQasa tile for displaying the image associated with an area."
+    description: "A SmartQasa tile for displaying the picture associated with an area."
   });
 
   window.smartqasa = window.smartqasa ?? {};
