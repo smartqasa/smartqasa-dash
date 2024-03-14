@@ -1813,7 +1813,7 @@
       if (!this._areaObj) {
         return x``;
       }
-      const picture = `url('/local/sq-areas/${this._area}')`;
+      const picture = `url('/local/sq-areas/${this._area}.png')`;
       return x`
       <ha-card style="background-image: url('${picture}')"></ha-card>
     `;
