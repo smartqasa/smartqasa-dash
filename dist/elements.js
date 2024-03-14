@@ -576,9 +576,9 @@
           class="icon"
           id="icon"
           style="
-                        color: rgb(${iconColor});
-                        background-color: rgba(${iconColor}, var(--sq-icon-opacity));
-                        "
+            color: rgb(${iconColor});
+            background-color: rgba(${iconColor}, var(--sq-icon-opacity));
+          "
         >
           <ha-icon .icon=${icon}></ha-icon>
         </div>
@@ -1798,7 +1798,7 @@
       }
 
       ha-card {
-        smartqasa.devicetype=== 'phone' ? '15vh' : "20vh";
+        smartqasa.devicetype==='phone' ? '15vh' : "20vh";
         background-size: cover;
         background-repeat: no-repeat;
         background-position: center center;
@@ -1816,10 +1816,7 @@
       }
       const picture = this._areaObj.picture ?? "/local/sq-storage/images/default.png";
       return x`
-      <ha-card
-        style="background-image: url('${picture}')"
-        class="picture"
-      ></ha-card>
+      <ha-card style="background-image: url('${picture}')"></ha-card>
     `;
     }
     getCardSize() {

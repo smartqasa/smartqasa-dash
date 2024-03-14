@@ -49,9 +49,9 @@ export class SmartQasaAreaTile extends LitElement {
           class="icon"
           id="icon"
           style="
-                        color: rgb(${iconColor});
-                        background-color: rgba(${iconColor}, var(--sq-icon-opacity));
-                        "
+            color: rgb(${iconColor});
+            background-color: rgba(${iconColor}, var(--sq-icon-opacity));
+          "
         >
           <ha-icon .icon=${icon}></ha-icon>
         </div>
