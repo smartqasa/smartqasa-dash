@@ -1821,10 +1821,13 @@
       let picture;
       if (this._picture) {
         picture = `/local/sq-areas/${this._picture}`;
+        console.log(`First:  ${picture}`);
       } else if (this._areaObj.picture) {
         picture = this._areaObj.picture;
+        console.log(`Second: ${picture}`);
       } else {
         picture = "/local/sq-storage/images/default.png";
+        console.log(`Default: ${picture}`);
       }
       return x`
       <ha-card
