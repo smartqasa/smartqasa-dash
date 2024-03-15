@@ -15,7 +15,6 @@ export class SmartQasaAreaPicture extends LitElement {
     if (config.area) {
       this._area = config.area;
       this._picture = config.picture;
-      console.log(`Config: ${config.picture}`);
     } else {
       throw new Error("You must specify an area");
     }
@@ -46,7 +45,7 @@ export class SmartQasaAreaPicture extends LitElement {
   }
 
   render() {
-    if (!this._areaObj) {
+    if (!this._areaObj && this._area !== "home") {
       return html``;
     }
 
@@ -54,13 +53,10 @@ export class SmartQasaAreaPicture extends LitElement {
     let picture;
     if (this._picture) {
       picture = `/local/sq-areas/${this._picture}`;
-      console.log(`First:  ${picture}`);
     } else if (this._areaObj.picture) {
       picture = this._areaObj.picture;
-      console.log(`Second: ${picture}`);
     } else {
       picture = "/local/sq-storage/images/default.png";
-      console.log(`Default: ${picture}`);
     }
     return html`
       <ha-card
