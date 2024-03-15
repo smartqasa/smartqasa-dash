@@ -1787,6 +1787,7 @@
       if (config.area) {
         this._area = config.area;
         this._picture = config.picture;
+        console.log(`Config ${config.picture}`);
       } else {
         throw new Error("You must specify an area");
       }
