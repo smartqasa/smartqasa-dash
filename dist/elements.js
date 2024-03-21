@@ -107,6 +107,118 @@
   }
 `;
 
+  var styleTileIconSpin = i$2 `
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+`;
+
+  class SmartQasaAllOffTile extends s {
+      constructor() {
+          super(...arguments);
+          this._icon = "hass:power";
+      }
+      setConfig(config) {
+          var _a, _b;
+          if (config.area) {
+              this._area = config.area;
+              this._icon = (_a = config.icon) !== null && _a !== void 0 ? _a : "hass:power";
+              this._name = (_b = config.name) !== null && _b !== void 0 ? _b : null;
+          }
+          else {
+              throw new Error("You must specify an area");
+          }
+      }
+      set hass(hass) {
+          var _a;
+          this._hass = hass;
+          this._areaObj = (_a = this._hass.areas[this._area]) !== null && _a !== void 0 ? _a : undefined;
+      }
+      render() {
+          var _a, _b;
+          let iconColor, name;
+          if (this._areaObj) {
+              iconColor = "var(--sq-inactive-rgb)";
+              name = (_a = this._name) !== null && _a !== void 0 ? _a : "All Off";
+          }
+          else {
+              iconColor = "var(--sq-unavailable-rgb)";
+              name = (_b = this._name) !== null && _b !== void 0 ? _b : "Unknown";
+          }
+          return x `
+      <div class="container" @click=${this._runRoutine}>
+        <div
+          class="icon"
+          id="icon"
+          style="
+            color: rgb(${iconColor});
+            background-color: rgba(${iconColor}, var(--sq-icon-opacity));
+          "
+        >
+          <ha-icon .icon=${this._icon}></ha-icon>
+        </div>
+        <div class="name">${name}</div>
+      </div>
+    `;
+      }
+      _runRoutine(e) {
+          var _a, _b;
+          e.stopPropagation();
+          const haIconElement = (_a = this.shadowRoot) === null || _a === void 0 ? void 0 : _a.querySelector("ha-icon");
+          if (haIconElement) {
+              haIconElement.icon = "hass:rotate-right";
+          }
+          const iconElement = (_b = this.shadowRoot) === null || _b === void 0 ? void 0 : _b.getElementById("icon");
+          if (iconElement) {
+              iconElement.style.animation = "spin 1.0s linear infinite";
+          }
+          this._hass.callService("light", "turn_off", {
+              area_id: this._area,
+              transition: 2,
+          });
+          this._hass.callService("fan", "turn_off", {
+              area_id: this._area,
+          });
+          setTimeout(() => {
+              if (haIconElement) {
+                  haIconElement.icon = this._icon;
+              }
+              if (iconElement) {
+                  iconElement.style.color = `rgb(var(--sq-inactive-rgb))`;
+                  iconElement.style.animation = "none";
+              }
+          }, 2000);
+      }
+      getCardSize() {
+          return 1;
+      }
+  }
+  SmartQasaAllOffTile.styles = [styleTileBase, styleTileIconSpin];
+  __decorate([
+      r()
+  ], SmartQasaAllOffTile.prototype, "_area", void 0);
+  __decorate([
+      r()
+  ], SmartQasaAllOffTile.prototype, "_areaObj", void 0);
+  __decorate([
+      r()
+  ], SmartQasaAllOffTile.prototype, "_icon", void 0);
+  __decorate([
+      r()
+  ], SmartQasaAllOffTile.prototype, "_name", void 0);
+  customElements.define("smartqasa-all-off-tile", SmartQasaAllOffTile);
+  window.customCards.push({
+      type: "smartqasa-all-off-tile",
+      name: "SmartQasa All Off Tile",
+      preview: true,
+      description: "A SmartQasa tile for turning off all light and fan entities in an area.",
+  });
+
   var styleTileState = i$2 `
     .container {
         grid-template-areas: 'i n' 'i s';
@@ -145,27 +257,21 @@
           this._stateObj = (_a = this._hass.states[this._entity]) !== null && _a !== void 0 ? _a : undefined;
       }
       render() {
-          var _a, _b, _c, _d, _e;
-          let icon, iconColor, name, stateFmtd;
+          var _a, _b, _c, _d;
+          let icon = "hass:alert-rhombus";
+          let iconColor = "var(--sq-unavailable-rgb)";
+          let name = "Unknown";
+          let stateFmtd = "Unknown";
           if (this._stateObj) {
               const state = this._stateObj.state;
               icon = (_b = (_a = this._icon) !== null && _a !== void 0 ? _a : this._stateObj.attributes.icon) !== null && _b !== void 0 ? _b : "hass:help-circle";
-              name =
-                  (_d = (_c = this._name) !== null && _c !== void 0 ? _c : this._stateObj.attributes.friendly_name) !== null && _d !== void 0 ? _d : this._entity;
-              iconColor =
-                  state == "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
+              iconColor = state == "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
+              name = (_d = (_c = this._name) !== null && _c !== void 0 ? _c : this._stateObj.attributes.friendly_name) !== null && _d !== void 0 ? _d : this._entity;
               stateFmtd =
                   this._hass.formatEntityState(this._stateObj) +
                       (state == "on" && this._stateObj.attributes.brightness
-                          ? " - " +
-                              this._hass.formatEntityAttributeValue(this._stateObj, "brightness")
+                          ? " - " + this._hass.formatEntityAttributeValue(this._stateObj, "brightness")
                           : "");
-          }
-          else {
-              icon = "hass:alert-rhombus";
-              name = (_e = this._name) !== null && _e !== void 0 ? _e : "Unknown";
-              iconColor = "var(--sq-unavailable-rgb)";
-              stateFmtd = "Unknown";
           }
           return x `
       <div class="container" @click=${this._showMoreInfo}>
@@ -173,9 +279,9 @@
           class="icon"
           @click=${this._toggleEntity}
           style="
-              color: rgb(${iconColor});
-              background-color: rgba(${iconColor}, var(--sq-icon-opacity));
-            "
+            color: rgb(${iconColor});
+            background-color: rgba(${iconColor}, var(--sq-icon-opacity));
+          "
         >
           <ha-icon .icon=${icon}></ha-icon>
         </div>
@@ -207,16 +313,13 @@
   ], SmartQasaLightTile.prototype, "_entity", void 0);
   __decorate([
       r()
-  ], SmartQasaLightTile.prototype, "_name", void 0);
-  __decorate([
-      r()
   ], SmartQasaLightTile.prototype, "_icon", void 0);
   __decorate([
       r()
+  ], SmartQasaLightTile.prototype, "_name", void 0);
+  __decorate([
+      r()
   ], SmartQasaLightTile.prototype, "_stateObj", void 0);
-
-  var _a;
-  window.customCards = (_a = window.customCards) !== null && _a !== void 0 ? _a : [];
   customElements.define("smartqasa-light-tile", SmartQasaLightTile);
   window.customCards.push({
       type: "smartqasa-light-tile",
@@ -224,5 +327,8 @@
       preview: true,
       description: "A SmartQasa tile for controlling a light entity.",
   });
+
+  var _a;
+  window.customCards = (_a = window.customCards) !== null && _a !== void 0 ? _a : [];
 
 })();

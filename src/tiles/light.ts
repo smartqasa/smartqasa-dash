@@ -1,4 +1,4 @@
-import { LitElement, html, nothing } from "lit";
+import { CSSResultGroup, html, LitElement, nothing, TemplateResult } from "lit";
 import { state } from "lit/decorators.js";
 
 import styleTileBase from "../styles/tile-base";
@@ -9,21 +9,19 @@ import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 
 interface Config extends LovelaceCardConfig {
   entity: string;
-  name: string;
-  icon: string;
+  icon?: string;
+  name?: string;
 }
 
 export class SmartQasaLightTile extends LitElement {
-
   @state() private _entity: string;
-  @state() private _name: string | typeof nothing;
   @state() private _icon: string | typeof nothing;
+  @state() private _name: string | typeof nothing;
   @state() private _stateObj: HassEntity;
 
-  // private property
   private _hass;
 
-  setConfig(config: Config) {
+  setConfig(config: Config): void {
     if (config.entity) {
       this._entity = config.entity;
       this._icon = config.icon ?? null;
@@ -38,28 +36,24 @@ export class SmartQasaLightTile extends LitElement {
     this._stateObj = this._hass.states[this._entity] ?? undefined;
   }
 
-  static styles = [styleTileBase, styleTileState];
+  static styles: CSSResultGroup = [styleTileBase, styleTileState];
 
-  render() {
-    let icon, iconColor, name, stateFmtd;
+  render(): TemplateResult {
+    let icon: any = "hass:alert-rhombus";
+    let iconColor: string = "var(--sq-unavailable-rgb)";
+    let name: any = "Unknown";
+    let stateFmtd: string = "Unknown";
+
     if (this._stateObj) {
       const state = this._stateObj.state;
       icon = this._icon ?? this._stateObj.attributes.icon ?? "hass:help-circle";
-      name =
-        this._name ?? this._stateObj.attributes.friendly_name ?? this._entity;
-      iconColor =
-        state == "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
+      iconColor = state == "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
+      name = this._name ?? this._stateObj.attributes.friendly_name ?? this._entity;
       stateFmtd =
         this._hass.formatEntityState(this._stateObj) +
         (state == "on" && this._stateObj.attributes.brightness
-          ? " - " +
-            this._hass.formatEntityAttributeValue(this._stateObj, "brightness")
+          ? " - " + this._hass.formatEntityAttributeValue(this._stateObj, "brightness")
           : "");
-    } else {
-      icon = "hass:alert-rhombus";
-      name = this._name ?? "Unknown";
-      iconColor = "var(--sq-unavailable-rgb)";
-      stateFmtd = "Unknown";
     }
 
     return html`
@@ -68,9 +62,9 @@ export class SmartQasaLightTile extends LitElement {
           class="icon"
           @click=${this._toggleEntity}
           style="
-              color: rgb(${iconColor});
-              background-color: rgba(${iconColor}, var(--sq-icon-opacity));
-            "
+            color: rgb(${iconColor});
+            background-color: rgba(${iconColor}, var(--sq-icon-opacity));
+          "
         >
           <ha-icon .icon=${icon}></ha-icon>
         </div>
@@ -80,12 +74,12 @@ export class SmartQasaLightTile extends LitElement {
     `;
   }
 
-  _toggleEntity(e) {
+  private _toggleEntity(e: Event): void {
     e.stopPropagation();
     this._hass.callService("light", "toggle", { entity_id: this._entity });
   }
 
-  _showMoreInfo(e) {
+  private _showMoreInfo(e: Event): void {
     e.stopPropagation();
     const event = new CustomEvent("hass-more-info", {
       bubbles: true,
@@ -99,3 +93,12 @@ export class SmartQasaLightTile extends LitElement {
     return 1;
   }
 }
+
+customElements.define("smartqasa-light-tile", SmartQasaLightTile);
+
+window.customCards.push({
+  type: "smartqasa-light-tile",
+  name: "SmartQasa Light Tile",
+  preview: true,
+  description: "A SmartQasa tile for controlling a light entity.",
+});
