@@ -257,27 +257,21 @@
           this._stateObj = (_a = this._hass.states[this._entity]) !== null && _a !== void 0 ? _a : undefined;
       }
       render() {
-          var _a, _b, _c, _d, _e;
-          let icon, iconColor, name, stateFmtd;
+          var _a, _b, _c, _d;
+          let icon = "hass:alert-rhombus";
+          let iconColor = "var(--sq-unavailable-rgb)";
+          let name = "Unknown";
+          let stateFmtd = "Unknown";
           if (this._stateObj) {
               const state = this._stateObj.state;
               icon = (_b = (_a = this._icon) !== null && _a !== void 0 ? _a : this._stateObj.attributes.icon) !== null && _b !== void 0 ? _b : "hass:help-circle";
-              name =
-                  (_d = (_c = this._name) !== null && _c !== void 0 ? _c : this._stateObj.attributes.friendly_name) !== null && _d !== void 0 ? _d : this._entity;
-              iconColor =
-                  state == "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
+              iconColor = state == "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
+              name = (_d = (_c = this._name) !== null && _c !== void 0 ? _c : this._stateObj.attributes.friendly_name) !== null && _d !== void 0 ? _d : this._entity;
               stateFmtd =
                   this._hass.formatEntityState(this._stateObj) +
                       (state == "on" && this._stateObj.attributes.brightness
-                          ? " - " +
-                              this._hass.formatEntityAttributeValue(this._stateObj, "brightness")
+                          ? " - " + this._hass.formatEntityAttributeValue(this._stateObj, "brightness")
                           : "");
-          }
-          else {
-              icon = "hass:alert-rhombus";
-              name = (_e = this._name) !== null && _e !== void 0 ? _e : "Unknown";
-              iconColor = "var(--sq-unavailable-rgb)";
-              stateFmtd = "Unknown";
           }
           return x `
       <div class="container" @click=${this._showMoreInfo}>
@@ -319,10 +313,10 @@
   ], SmartQasaLightTile.prototype, "_entity", void 0);
   __decorate([
       r()
-  ], SmartQasaLightTile.prototype, "_name", void 0);
+  ], SmartQasaLightTile.prototype, "_icon", void 0);
   __decorate([
       r()
-  ], SmartQasaLightTile.prototype, "_icon", void 0);
+  ], SmartQasaLightTile.prototype, "_name", void 0);
   __decorate([
       r()
   ], SmartQasaLightTile.prototype, "_stateObj", void 0);
