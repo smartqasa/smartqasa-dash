@@ -7,4 +7,5 @@ declare global {
 window.customCards = window.customCards ?? [];
 
 import "./tiles/all-off";
+import "./tiles/fan";
 import "./tiles/light";
