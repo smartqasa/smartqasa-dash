@@ -239,6 +239,105 @@
     }
 `;
 
+  class SmartQasaFanTile extends s {
+      setConfig(config) {
+          var _a, _b;
+          if (config.entity) {
+              this._entity = config.entity;
+              this._icon = (_a = config.icon) !== null && _a !== void 0 ? _a : null;
+              this._name = (_b = config.name) !== null && _b !== void 0 ? _b : null;
+          }
+          else {
+              throw new Error("You must specify an entity");
+          }
+      }
+      set hass(hass) {
+          var _a;
+          this._hass = hass;
+          this._stateObj = (_a = this._hass.states[this._entity]) !== null && _a !== void 0 ? _a : undefined;
+      }
+      render() {
+          var _a, _b, _c;
+          let icon = "hass:alert-rhombus";
+          let iconColor = "var(--sq-unavailable-rgb)";
+          let iconAnimation;
+          let name = "Unknown";
+          let stateFmtd = "Unknown";
+          if (this._stateObj) {
+              const state = this._stateObj.state;
+              icon = (_a = this._icon) !== null && _a !== void 0 ? _a : "hass:fan";
+              iconColor = state == "on" ? "var(--sq-fan-on-rgb)" : "var(--sq-inactive-rgb)";
+              if (state === "on") {
+                  if (this._stateObj.attributes.percentage) {
+                      const speed = 0.5 + (1 - this._stateObj.attributes.percentage / 100);
+                      const direction = this._stateObj.attributes.direction === "reverse"
+                          ? "reverse"
+                          : "normal";
+                      iconAnimation = `spin ${speed}s linear infinite ${direction}`;
+                  }
+                  else {
+                      iconAnimation = `spin 0.5s linear infinite normal`;
+                  }
+              }
+              name = (_c = (_b = this._name) !== null && _b !== void 0 ? _b : this._stateObj.attributes.friendly_name) !== null && _c !== void 0 ? _c : this._entity;
+              stateFmtd =
+                  this._hass.formatEntityState(this._stateObj) +
+                      (state == "on" && this._stateObj.attributes.percentage
+                          ? " - " + this._hass.formatEntityAttributeValue(this._stateObj, "percentage")
+                          : "");
+          }
+          return x `
+      <div class="container" @click=${this._showMoreInfo}>
+        <div
+          class="icon"
+          @click=${this._toggleEntity}
+          style="color: rgb(${iconColor}); background-color: rgba(${iconColor}, var(--sq-icon-opacity)); animation: ${iconAnimation};"
+        >
+          <ha-icon .icon=${icon}></ha-icon>
+        </div>
+        <div class="name">${name}</div>
+        <div class="state">${stateFmtd}</div>
+      </div>
+    `;
+      }
+      _toggleEntity(e) {
+          e.stopPropagation();
+          this._hass.callService("fan", "toggle", { entity_id: this._entity });
+      }
+      _showMoreInfo(e) {
+          e.stopPropagation();
+          const event = new CustomEvent("hass-more-info", {
+              bubbles: true,
+              composed: true,
+              detail: { entityId: this._entity },
+          });
+          this.dispatchEvent(event);
+      }
+      getCardSize() {
+          return 1;
+      }
+  }
+  SmartQasaFanTile.styles = [styleTileBase, styleTileState, styleTileIconSpin];
+  __decorate([
+      r()
+  ], SmartQasaFanTile.prototype, "_entity", void 0);
+  __decorate([
+      r()
+  ], SmartQasaFanTile.prototype, "_icon", void 0);
+  __decorate([
+      r()
+  ], SmartQasaFanTile.prototype, "_name", void 0);
+  __decorate([
+      r()
+  ], SmartQasaFanTile.prototype, "_stateObj", void 0);
+  customElements.define("smartqasa-fan-tile", SmartQasaFanTile);
+  window.customCards.push({
+      type: "smartqasa-fan-tile",
+      name: "SmartQasa Fan Tile",
+      preview: true,
+      description: "A SmartQasa tile for controlling a fan entity.",
+  });
+
   class SmartQasaLightTile extends s {
       setConfig(config) {
           var _a, _b;
