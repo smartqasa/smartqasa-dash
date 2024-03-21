@@ -122,17 +122,16 @@
       constructor() {
           super(...arguments);
           this._icon = "hass:power";
+          this._name = T;
       }
       setConfig(config) {
           var _a, _b;
-          if (config.area) {
-              this._area = config.area;
-              this._icon = (_a = config.icon) !== null && _a !== void 0 ? _a : "hass:power";
-              this._name = (_b = config.name) !== null && _b !== void 0 ? _b : null;
-          }
-          else {
+          if (!config.area) {
               throw new Error("You must specify an area");
           }
+          this._area = config.area;
+          this._icon = (_a = config.icon) !== null && _a !== void 0 ? _a : "hass:power";
+          this._name = (_b = config.name) !== null && _b !== void 0 ? _b : T;
       }
       set hass(hass) {
           var _a;
@@ -141,14 +140,11 @@
       }
       render() {
           var _a, _b;
-          let iconColor, name;
+          let iconColor = "var(--sq-unavailable-rgb)";
+          let name = (_a = this._name) !== null && _a !== void 0 ? _a : "Unknown";
           if (this._areaObj) {
               iconColor = "var(--sq-inactive-rgb)";
-              name = (_a = this._name) !== null && _a !== void 0 ? _a : "All Off";
-          }
-          else {
-              iconColor = "var(--sq-unavailable-rgb)";
-              name = (_b = this._name) !== null && _b !== void 0 ? _b : "Unknown";
+              name = (_b = this._name) !== null && _b !== void 0 ? _b : "All Off";
           }
           return x `
       <div class="container" @click=${this._runRoutine}>
@@ -169,30 +165,24 @@
       _runRoutine(e) {
           var _a, _b;
           e.stopPropagation();
-          const haIconElement = (_a = this.shadowRoot) === null || _a === void 0 ? void 0 : _a.querySelector("ha-icon");
-          if (haIconElement) {
+          if (this._hass && this._areaObj) {
+              const haIconElement = (_a = this.shadowRoot) === null || _a === void 0 ? void 0 : _a.querySelector("ha-icon");
               haIconElement.icon = "hass:rotate-right";
-          }
-          const iconElement = (_b = this.shadowRoot) === null || _b === void 0 ? void 0 : _b.getElementById("icon");
-          if (iconElement) {
+              const iconElement = (_b = this.shadowRoot) === null || _b === void 0 ? void 0 : _b.getElementById("icon");
               iconElement.style.animation = "spin 1.0s linear infinite";
-          }
-          this._hass.callService("light", "turn_off", {
-              area_id: this._area,
-              transition: 2,
-          });
-          this._hass.callService("fan", "turn_off", {
-              area_id: this._area,
-          });
-          setTimeout(() => {
-              if (haIconElement) {
+              this._hass.callService("light", "turn_off", {
+                  area_id: this._area,
+                  transition: 2,
+              });
+              this._hass.callService("fan", "turn_off", {
+                  area_id: this._area,
+              });
+              setTimeout(() => {
                   haIconElement.icon = this._icon;
-              }
-              if (iconElement) {
                   iconElement.style.color = `rgb(var(--sq-inactive-rgb))`;
                   iconElement.style.animation = "none";
-              }
-          }, 2000);
+              }, 2000);
+          }
       }
       getCardSize() {
           return 1;
@@ -244,8 +234,8 @@
           var _a, _b;
           if (config.entity) {
               this._entity = config.entity;
-              this._icon = (_a = config.icon) !== null && _a !== void 0 ? _a : null;
-              this._name = (_b = config.name) !== null && _b !== void 0 ? _b : null;
+              this._icon = (_a = config.icon) !== null && _a !== void 0 ? _a : T;
+              this._name = (_b = config.name) !== null && _b !== void 0 ? _b : T;
           }
           else {
               throw new Error("You must specify an entity");
@@ -257,15 +247,15 @@
           this._stateObj = (_a = this._hass.states[this._entity]) !== null && _a !== void 0 ? _a : undefined;
       }
       render() {
-          var _a, _b, _c;
+          var _a, _b, _c, _d;
           let icon = "hass:alert-rhombus";
           let iconColor = "var(--sq-unavailable-rgb)";
-          let iconAnimation;
+          let iconAnimation = "none";
           let name = "Unknown";
           let stateFmtd = "Unknown";
           if (this._stateObj) {
-              const state = this._stateObj.state;
-              icon = (_a = this._icon) !== null && _a !== void 0 ? _a : "hass:fan";
+              const state = (_a = this._stateObj.state) !== null && _a !== void 0 ? _a : "unknown";
+              icon = (_b = this._icon) !== null && _b !== void 0 ? _b : "hass:fan";
               iconColor = state == "on" ? "var(--sq-fan-on-rgb)" : "var(--sq-inactive-rgb)";
               if (state === "on") {
                   if (this._stateObj.attributes.percentage) {
@@ -279,7 +269,7 @@
                       iconAnimation = `spin 0.5s linear infinite normal`;
                   }
               }
-              name = (_c = (_b = this._name) !== null && _b !== void 0 ? _b : this._stateObj.attributes.friendly_name) !== null && _c !== void 0 ? _c : this._entity;
+              name = (_d = (_c = this._name) !== null && _c !== void 0 ? _c : this._stateObj.attributes.friendly_name) !== null && _d !== void 0 ? _d : this._entity;
               stateFmtd =
                   this._hass.formatEntityState(this._stateObj) +
                       (state == "on" && this._stateObj.attributes.percentage
@@ -302,7 +292,9 @@
       }
       _toggleEntity(e) {
           e.stopPropagation();
-          this._hass.callService("fan", "toggle", { entity_id: this._entity });
+          if (this._hass && this._stateObj) {
+              this._hass.callService("fan", "toggle", { entity_id: this._entity });
+          }
       }
       _showMoreInfo(e) {
           e.stopPropagation();
@@ -338,17 +330,22 @@
       description: "A SmartQasa tile for controlling a fan entity.",
   });
 
-  class SmartQasaLightTile extends s {
+  var styleTileIconBlink = i$2 `
+  @keyframes blink {
+    50% {
+      opacity: 0.25;
+    }
+  }
+`;
+
+  class SmartQasaGarageTile extends s {
       setConfig(config) {
-          var _a, _b;
-          if (config.entity) {
-              this._entity = config.entity;
-              this._icon = (_a = config.icon) !== null && _a !== void 0 ? _a : null;
-              this._name = (_b = config.name) !== null && _b !== void 0 ? _b : null;
-          }
-          else {
+          var _a;
+          if (!config.entity) {
               throw new Error("You must specify an entity");
           }
+          this._entity = config.entity;
+          this._name = (_a = config.name) !== null && _a !== void 0 ? _a : T;
       }
       set hass(hass) {
           var _a;
@@ -356,16 +353,128 @@
           this._stateObj = (_a = this._hass.states[this._entity]) !== null && _a !== void 0 ? _a : undefined;
       }
       render() {
-          var _a, _b, _c, _d;
+          var _a, _b, _c;
+          let icon = "hass:alert-rhombus";
+          let iconColor = "var(--sq-unavailable-rgb)";
+          let iconAnimation = "none";
+          let name = "Unknown";
+          let stateFmtd = "Unknown";
+          if (this._stateObj) {
+              const state = (_a = this._stateObj.state) !== null && _a !== void 0 ? _a : "unknown";
+              switch (state) {
+                  case "closed":
+                      icon = "hass:garage-variant";
+                      iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+                      iconAnimation = "none";
+                      break;
+                  case "closing":
+                      icon = "hass:arrow-down-box";
+                      iconColor = "var(--sq-garage-closing-rgb, 255, 120, 0)";
+                      iconAnimation = "blink 2.0s linear infinite";
+                      break;
+                  case "opening":
+                      icon = "hass:arrow-up-box";
+                      iconColor = "var(--sq-garage-opening-rgb, 255, 120, 0)";
+                      iconAnimation = "blink 2.0s linear infinite";
+                      break;
+                  case "open":
+                      icon = "hass:garage-open-variant";
+                      iconColor = "var(--sq-garage-open-rgb, 255, 120, 0)";
+                      iconAnimation = "none";
+                      break;
+                  default:
+                      icon = "hass:alert-rhombus";
+                      iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+                      iconAnimation = "none";
+                      break;
+              }
+              stateFmtd =
+                  this._hass.formatEntityState(this._stateObj) +
+                      (state === "open" && this._stateObj.attributes.current_position
+                          ? " - " +
+                              this._hass.formatEntityAttributeValue(this._stateObj, "current_position")
+                          : "");
+              name = (_c = (_b = this._name) !== null && _b !== void 0 ? _b : this._stateObj.attributes.friendly_name) !== null && _c !== void 0 ? _c : this._entity;
+          }
+          return x `
+      <div class="container" @click=${this._showMoreInfo}>
+        <div
+          class="icon"
+          @click=${this._toggleEntity}
+          style="
+            color: rgb(${iconColor});
+            background-color: rgba(${iconColor}, var(--sq-icon-opacity));
+            animation: ${iconAnimation};
+          "
+        >
+          <ha-icon .icon=${icon}></ha-icon>
+        </div>
+        <div class="name">${name}</div>
+        <div class="state">${stateFmtd}</div>
+      </div>
+    `;
+      }
+      _toggleEntity(e) {
+          e.stopPropagation();
+          this._hass.callService("cover", "toggle", { entity_id: this._entity });
+      }
+      _showMoreInfo(e) {
+          e.stopPropagation();
+          const event = new CustomEvent("hass-more-info", {
+              bubbles: true,
+              composed: true,
+              detail: { entityId: this._entity },
+          });
+          this.dispatchEvent(event);
+      }
+      getCardSize() {
+          return 1;
+      }
+  }
+  SmartQasaGarageTile.styles = [styleTileBase, styleTileState, styleTileIconBlink];
+  __decorate([
+      r()
+  ], SmartQasaGarageTile.prototype, "_entity", void 0);
+  __decorate([
+      r()
+  ], SmartQasaGarageTile.prototype, "_name", void 0);
+  __decorate([
+      r()
+  ], SmartQasaGarageTile.prototype, "_stateObj", void 0);
+  customElements.define("smartqasa-garage-tile", SmartQasaGarageTile);
+  window.customCards.push({
+      type: "smartqasa-garage-tile",
+      name: "SmartQasa Garage Tile",
+      preview: true,
+      description: "A SmartQasa tile for controlling a garage cover entity.",
+  });
+
+  class SmartQasaLightTile extends s {
+      setConfig(config) {
+          var _a, _b;
+          if (!config.entity) {
+              throw new Error("You must specify an entity");
+          }
+          this._entity = config.entity;
+          this._icon = (_a = config.icon) !== null && _a !== void 0 ? _a : T;
+          this._name = (_b = config.name) !== null && _b !== void 0 ? _b : T;
+      }
+      set hass(hass) {
+          var _a;
+          this._hass = hass;
+          this._stateObj = (_a = this._hass.states[this._entity]) !== null && _a !== void 0 ? _a : undefined;
+      }
+      render() {
+          var _a, _b, _c, _d, _e;
           let icon = "hass:alert-rhombus";
           let iconColor = "var(--sq-unavailable-rgb)";
           let name = "Unknown";
           let stateFmtd = "Unknown";
           if (this._stateObj) {
-              const state = this._stateObj.state;
-              icon = (_b = (_a = this._icon) !== null && _a !== void 0 ? _a : this._stateObj.attributes.icon) !== null && _b !== void 0 ? _b : "hass:help-circle";
+              const state = (_a = this._stateObj.state) !== null && _a !== void 0 ? _a : "unknown";
+              icon = (_c = (_b = this._icon) !== null && _b !== void 0 ? _b : this._stateObj.attributes.icon) !== null && _c !== void 0 ? _c : "hass:help-circle";
               iconColor = state == "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
-              name = (_d = (_c = this._name) !== null && _c !== void 0 ? _c : this._stateObj.attributes.friendly_name) !== null && _d !== void 0 ? _d : this._entity;
+              name = (_e = (_d = this._name) !== null && _d !== void 0 ? _d : this._stateObj.attributes.friendly_name) !== null && _e !== void 0 ? _e : this._entity;
               stateFmtd =
                   this._hass.formatEntityState(this._stateObj) +
                       (state == "on" && this._stateObj.attributes.brightness
@@ -391,7 +500,9 @@
       }
       _toggleEntity(e) {
           e.stopPropagation();
-          this._hass.callService("light", "toggle", { entity_id: this._entity });
+          if (this._hass && this._stateObj) {
+              this._hass.callService("light", "toggle", { entity_id: this._entity });
+          }
       }
       _showMoreInfo(e) {
           e.stopPropagation();
@@ -428,6 +539,13 @@
   });
 
   var _a;
+  window.smartqasa = window.smartqasa || {};
+  if (typeof window.screen.width === "number") {
+      window.smartqasa.deviceType = window.screen.width < 600 ? "phone" : "tablet";
+  }
+  else {
+      window.smartqasa.deviceType = "tablet";
+  }
   window.customCards = (_a = window.customCards) !== null && _a !== void 0 ? _a : [];
 
 })();

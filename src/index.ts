@@ -1,11 +1,22 @@
 declare global {
   interface Window {
     customCards: Array<Object>;
+    smartqasa: { deviceType?: string; };
   }
+}
+
+window.smartqasa = window.smartqasa || {};
+
+if (typeof window.screen.width === "number") {
+  window.smartqasa.deviceType = window.screen.width < 600 ? "phone" : "tablet";
+} else {
+  window.smartqasa.deviceType = "tablet";
 }
 
 window.customCards = window.customCards ?? [];
 
+// Import tiles
 import "./tiles/all-off";
 import "./tiles/fan";
+import "./tiles/garage";
 import "./tiles/light";

@@ -17,18 +17,17 @@ export class SmartQasaLightTile extends LitElement {
   @state() private _entity: string;
   @state() private _icon: string | typeof nothing;
   @state() private _name: string | typeof nothing;
-  @state() private _stateObj: HassEntity;
+  @state() private _stateObj?: HassEntity;
 
   private _hass;
 
   setConfig(config: Config): void {
-    if (config.entity) {
-      this._entity = config.entity;
-      this._icon = config.icon ?? null;
-      this._name = config.name ?? null;
-    } else {
+    if (!config.entity) {
       throw new Error("You must specify an entity");
     }
+    this._entity = config.entity;
+    this._icon = config.icon ?? nothing;
+    this._name = config.name ?? nothing;
   }
 
   set hass(hass: HomeAssistant) {
@@ -45,7 +44,7 @@ export class SmartQasaLightTile extends LitElement {
     let stateFmtd: string = "Unknown";
 
     if (this._stateObj) {
-      const state = this._stateObj.state;
+      const state: string = this._stateObj.state ?? "unknown";
       icon = this._icon ?? this._stateObj.attributes.icon ?? "hass:help-circle";
       iconColor = state == "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
       name = this._name ?? this._stateObj.attributes.friendly_name ?? this._entity;
@@ -76,7 +75,9 @@ export class SmartQasaLightTile extends LitElement {
 
   private _toggleEntity(e: Event): void {
     e.stopPropagation();
-    this._hass.callService("light", "toggle", { entity_id: this._entity });
+    if (this._hass && this._stateObj) {
+      this._hass.callService("light", "toggle", { entity_id: this._entity });
+    }
   }
 
   private _showMoreInfo(e: Event): void {

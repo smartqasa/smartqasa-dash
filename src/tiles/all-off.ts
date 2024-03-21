@@ -15,20 +15,19 @@ interface Config extends LovelaceCardConfig {
 
 export class SmartQasaAllOffTile extends LitElement {
   @state() private _area: string;
-  @state() private _areaObj: HassEntity;
+  @state() private _areaObj?: HassEntity;
   @state() private _icon: string = "hass:power";
-  @state() private _name?: string;
+  @state() private _name: string | typeof nothing = nothing;
 
   private _hass;
 
   setConfig(config: Config): void {
-    if (config.area) {
-      this._area = config.area;
-      this._icon = config.icon ?? "hass:power";
-      this._name = config.name ?? null;
-    } else {
+    if (!config.area) {
       throw new Error("You must specify an area");
     }
+      this._area = config.area;
+      this._icon = config.icon ?? "hass:power";
+      this._name = config.name ?? nothing;
   }
 
   set hass(hass: HomeAssistant) {
@@ -39,13 +38,12 @@ export class SmartQasaAllOffTile extends LitElement {
   static styles: CSSResultGroup = [styleTileBase, styleTileIconSpin];
 
   render(): TemplateResult {
-    let iconColor: string, name: string;
+    let iconColor: string = "var(--sq-unavailable-rgb)";
+    let name: any = this._name ?? "Unknown";
+
     if (this._areaObj) {
       iconColor = "var(--sq-inactive-rgb)";
       name = this._name ?? "All Off";
-    } else {
-      iconColor = "var(--sq-unavailable-rgb)";
-      name = this._name ?? "Unknown";
     }
 
     return html`
@@ -67,34 +65,28 @@ export class SmartQasaAllOffTile extends LitElement {
 
   private _runRoutine(e: Event): void {
     e.stopPropagation();
-    const haIconElement = this.shadowRoot?.querySelector("ha-icon") as HTMLElement & { icon: string };
-    if (haIconElement) {
+
+    if (this._hass && this._areaObj) {
+      const haIconElement = this.shadowRoot?.querySelector("ha-icon") as HTMLElement & { icon: string };
       haIconElement.icon = "hass:rotate-right";
-    }
-    const iconElement = this.shadowRoot?.getElementById("icon") as HTMLElement;
-    if (iconElement) {
+      const iconElement = this.shadowRoot?.getElementById("icon") as HTMLElement;
       iconElement.style.animation = "spin 1.0s linear infinite";
-    }
 
-    this._hass.callService("light", "turn_off", {
-      area_id: this._area,
-      transition: 2,
-    });
-    this._hass.callService("fan", "turn_off", {
-      area_id: this._area,
-    });
+      this._hass.callService("light", "turn_off", {
+        area_id: this._area,
+        transition: 2,
+      });
+      this._hass.callService("fan", "turn_off", {
+        area_id: this._area,
+      });
 
-    setTimeout(() => {
-      if (haIconElement) {
-        haIconElement.icon = this._icon;
-      }
-      if (iconElement) {
+      setTimeout(() => {
+        haIconElement.icon = this._icon as string;
         iconElement.style.color = `rgb(var(--sq-inactive-rgb))`;
         iconElement.style.animation = "none";
-      }
-    }, 2000);
+      }, 2000);
+    }
   }
-
 
   getCardSize(): number {
     return 1;
