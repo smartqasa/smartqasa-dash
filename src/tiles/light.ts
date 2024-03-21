@@ -1,21 +1,29 @@
-import { LitElement, html } from "lit";
+import { LitElement, html, nothing } from "lit";
+import { state } from "lit/decorators.js";
 
 import styleTileBase from "../styles/tile-base";
 import styleTileState from "../styles/tile-state";
 
+import { HassEntity } from "home-assistant-js-websocket";
+import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
+
+interface Config extends LovelaceCardConfig {
+  entity: string;
+  name: string;
+  icon: string;
+}
+
 export class SmartQasaLightTile extends LitElement {
-  _hass;
 
-  static get properties() {
-    return {
-      _entity: { state: true },
-      _stateObj: { state: true },
-      _icon: { state: true },
-      _name: { state: true },
-    };
-  }
+  @state() private _entity: string;
+  @state() private _name: string | typeof nothing;
+  @state() private _icon: string | typeof nothing;
+  @state() private _stateObj: HassEntity;
 
-  setConfig(config) {
+  // private property
+  private _hass;
+
+  setConfig(config: Config) {
     if (config.entity) {
       this._entity = config.entity;
       this._icon = config.icon ?? null;
@@ -25,7 +33,7 @@ export class SmartQasaLightTile extends LitElement {
     }
   }
 
-  set hass(hass) {
+  set hass(hass: HomeAssistant) {
     this._hass = hass;
     this._stateObj = this._hass.states[this._entity] ?? undefined;
   }
@@ -91,11 +99,3 @@ export class SmartQasaLightTile extends LitElement {
     return 1;
   }
 }
-
-customElements.define("smartqasa-light-tile", SmartQasaLightTile);
-window.customCards.push({
-  type: "smartqasa-light-tile",
-  name: "SmartQasa Light Tile",
-  preview: true,
-  description: "A SmartQasa tile for controlling a light entity.",
-});
