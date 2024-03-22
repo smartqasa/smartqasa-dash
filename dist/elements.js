@@ -148,6 +148,12 @@
       r()
   ], SmartQasaTimeDate.prototype, "_date", void 0);
   customElements.define("smartqasa-time-date", SmartQasaTimeDate);
+  window.customCards.push({
+      type: "smartqasa-time-date-tile",
+      name: "SmartQasa Time Date Tile",
+      preview: true,
+      description: "A SmartQasa card for rendering the time and date.",
+  });
 
   var styleTileBase = i$2 `
   .container {
