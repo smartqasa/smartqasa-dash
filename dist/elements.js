@@ -1145,6 +1145,7 @@
           var _a, _b, _c, _d, _e, _f;
           this._icon = (_a = this._icon) !== null && _a !== void 0 ? _a : "hass:alert-rhombus";
           let iconColor = "var(--sq-unavailable-rgb)";
+          this._iconAnimation = "none";
           let name = (_b = this._name) !== null && _b !== void 0 ? _b : "Unknown";
           if (this._stateObj) {
               this._icon = (_d = (_c = this._icon) !== null && _c !== void 0 ? _c : this._stateObj.attributes.icon) !== null && _d !== void 0 ? _d : "hass:help-circle";
@@ -1157,7 +1158,11 @@
           class="icon"
           id="icon"
           @click=${this._runRoutine}
-          style="color: rgb(${iconColor}); background-color: rgba(${iconColor}, var(--sq-icon-opacity));"
+          style="
+            color: rgb(${iconColor});
+            background-color: rgba(${iconColor}, var(--sq-icon-opacity));
+            animation: ${this._iconAnimation};
+          "
         >
           <ha-icon .icon=${this._icon}></ha-icon>
         </div>
@@ -1166,13 +1171,11 @@
     `;
       }
       _runRoutine(e) {
-          var _a, _b;
           e.stopPropagation();
           if (this._hass && this._stateObj) {
-              const haIconElement = (_a = this.shadowRoot) === null || _a === void 0 ? void 0 : _a.querySelector("ha-icon");
-              haIconElement.icon = "hass:rotate-right";
-              const iconElement = (_b = this.shadowRoot) === null || _b === void 0 ? void 0 : _b.getElementById("icon");
-              iconElement.style.animation = "spin 1.0s linear infinite";
+              let icon = this._icon;
+              this._icon = "hass:rotate-right";
+              this._iconAnimation = "spin 1.0s linear infinite";
               const domain = this._entity.split(".")[0];
               switch (domain) {
                   case "script":
@@ -1189,9 +1192,8 @@
                       return;
               }
               setTimeout(() => {
-                  haIconElement.icon = this._icon;
-                  iconElement.style.color = `rgb(var(--sq-inactive-rgb))`;
-                  iconElement.style.animation = "none";
+                  this._icon = icon;
+                  this._iconAnimation = "none";
               }, 2000);
           }
       }
@@ -1206,6 +1208,9 @@
   __decorate([
       r()
   ], SmartQasaRoutineTile.prototype, "_icon", void 0);
+  __decorate([
+      r()
+  ], SmartQasaRoutineTile.prototype, "_iconAnimation", void 0);
   __decorate([
       r()
   ], SmartQasaRoutineTile.prototype, "_name", void 0);
