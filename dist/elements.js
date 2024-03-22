@@ -66,6 +66,68 @@
    * SPDX-License-Identifier: BSD-3-Clause
    */function r(r){return n({...r,state:!0,attribute:!1})}
 
+  class SmartQasaAreaPicture extends s {
+      setConfig(config) {
+          var _a;
+          if (!config.area) {
+              throw new Error("You must specify an area");
+          }
+          this._area = config.area;
+          this._picture = (_a = config.picture) !== null && _a !== void 0 ? _a : undefined;
+      }
+      set hass(hass) {
+          var _a;
+          this._hass = hass;
+          this._areaObj = (_a = this._hass.areas[this._area]) !== null && _a !== void 0 ? _a : undefined;
+      }
+      static get styles() {
+          return i$2 `
+      :host {
+        display: block;
+      }
+      ha-card {
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center center;
+        border-radius: 4px;
+        border: none;
+        box-shadow: none;
+        background-color: transparent;
+        overflow: hidden;
+      }
+    `;
+      }
+      render() {
+          var _a, _b, _c;
+          if (!this._areaObj && this._area !== "home") {
+              return x ``;
+          }
+          const height = window.smartqasa.deviceType == "phone" ? "15vh" : "20vh";
+          const picture = this._picture
+              ? `/local/sq-areas/${this._picture}`
+              : (_c = (_b = (_a = this._hass) === null || _a === void 0 ? void 0 : _a.areas[this._area]) === null || _b === void 0 ? void 0 : _b.picture) !== null && _c !== void 0 ? _c : "/local/sq-storage/images/default.png";
+          return x `
+      <ha-card
+        style="background-image: url(${picture}); height: ${height};"
+        class="picture"
+      ></ha-card>
+    `;
+      }
+      getCardSize() {
+          return 1;
+      }
+  }
+  __decorate([
+      r()
+  ], SmartQasaAreaPicture.prototype, "_area", void 0);
+  __decorate([
+      r()
+  ], SmartQasaAreaPicture.prototype, "_areaObj", void 0);
+  __decorate([
+      r()
+  ], SmartQasaAreaPicture.prototype, "_picture", void 0);
+  customElements.define("smartqasa-area-picture", SmartQasaAreaPicture);
+
   class SmartQasaTimeDate extends s {
       constructor() {
           super(...arguments);
@@ -149,8 +211,8 @@
   ], SmartQasaTimeDate.prototype, "_date", void 0);
   customElements.define("smartqasa-time-date", SmartQasaTimeDate);
   window.customCards.push({
-      type: "smartqasa-time-date-tile",
-      name: "SmartQasa Time Date Tile",
+      type: "smartqasa-time-date",
+      name: "SmartQasa Time Date",
       preview: true,
       description: "A SmartQasa card for rendering the time and date.",
   });
@@ -218,19 +280,18 @@
           this._name = (_b = config.name) !== null && _b !== void 0 ? _b : undefined;
       }
       set hass(hass) {
-          var _a;
+          var _a, _b, _c, _d;
           this._hass = hass;
-          this._areaObj = (_a = this._hass.areas[this._area]) !== null && _a !== void 0 ? _a : undefined;
+          this._areaObj = (_b = (_a = this._hass.areas) !== null && _a !== void 0 ? _a : [this._area]) !== null && _b !== void 0 ? _b : undefined;
+          this._icon = (_d = (_c = this._hass.areas[this._area].icon) !== null && _c !== void 0 ? _c : this._icon) !== null && _d !== void 0 ? _d : "hass:power";
       }
       render() {
-          var _a, _b, _c;
-          this._icon = "hass:alert-rhombus";
+          var _a, _b;
           let iconColor = "var(--sq-unavailable-rgb)";
           let name = (_a = this._name) !== null && _a !== void 0 ? _a : "Unknown";
           if (this._areaObj) {
-              this._icon = (_b = this._icon) !== null && _b !== void 0 ? _b : "hass:power";
               iconColor = "var(--sq-inactive-rgb)";
-              name = (_c = this._name) !== null && _c !== void 0 ? _c : "All Off";
+              name = (_b = this._name) !== null && _b !== void 0 ? _b : "All Off";
           }
           return x `
       <div class="container" @click=${this._runRoutine}>
@@ -686,7 +747,7 @@
               const state = (_c = this._stateObj.state) !== null && _c !== void 0 ? _c : "unknown";
               icon = (_d = this._icon) !== null && _d !== void 0 ? _d : "hass:fan";
               iconColor = state == "on" ? "var(--sq-fan-on-rgb)" : "var(--sq-inactive-rgb)";
-              if (state === "on") {
+              if (state === "on" && !this._icon) {
                   if (this._stateObj.attributes.percentage) {
                       const speed = 0.5 + (1 - this._stateObj.attributes.percentage / 100);
                       const direction = this._stateObj.attributes.direction === "reverse"
