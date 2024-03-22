@@ -66,6 +66,89 @@
    * SPDX-License-Identifier: BSD-3-Clause
    */function r(r){return n({...r,state:!0,attribute:!1})}
 
+  class SmartQasaTimeDate extends s {
+      constructor() {
+          super(...arguments);
+          this._time = '';
+          this._date = '';
+      }
+      setConfig(config) {
+          // Handle configuration setup if necessary
+      }
+      set hass(hass) {
+          this._hass = hass;
+          this._time = this._hass.states["sensor.current_time"].state;
+          this._date = this._hass.states["sensor.current_date"].state;
+      }
+      static get styles() {
+          return i$2 `
+      :host {
+        display: block;
+        padding: 0;
+        background-color: transparent;
+      }
+      .container {
+        display: grid;
+        grid-template-rows: auto auto;
+        padding: 0;
+        border-radius: 0;
+        border: none;
+        box-shadow: none;
+        background-color: transparent;
+        cursor: pointer;
+      }
+      .time,
+      .date {
+        justify-self: start;
+        text-align: left;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .time {
+        line-height: var(--sq-title-font-size, 16px);
+        font-size: var(--sq-title-font-size, 16px);
+        font-weight: var(--sq-title-font-weight, 400);
+        color: rgb(var(--sq-title-font-rgb, 0, 0, 0));
+      }
+      .date {
+        font-size: var(--sq-primary-font-size, 14px);
+        font-weight: var(--sq-primary-font-weight, 300);
+        color: rgb(var(--sq-secondary-font-rgb, 128, 128, 128));
+      }
+    `;
+      }
+      render() {
+          return x `
+      <div class="container" @click="${this._handleTap}">
+        <div class="time">${this._time}</div>
+        <div class="date">${this._date}</div>
+      </div>
+    `;
+      }
+      _handleTap() {
+          if (typeof window.fully !== "undefined" && window.fully.startApplication) {
+              window.fully.startApplication("com.google.android.deskclock");
+          }
+          else {
+              console.warn("fully.startApplication is not available.");
+          }
+      }
+      getCardSize() {
+          return 1;
+      }
+  }
+  __decorate([
+      r()
+  ], SmartQasaTimeDate.prototype, "_hass", void 0);
+  __decorate([
+      r()
+  ], SmartQasaTimeDate.prototype, "_time", void 0);
+  __decorate([
+      r()
+  ], SmartQasaTimeDate.prototype, "_date", void 0);
+  customElements.define("smartqasa-time-date", SmartQasaTimeDate);
+
   var styleTileBase = i$2 `
   .container {
     display: grid;
