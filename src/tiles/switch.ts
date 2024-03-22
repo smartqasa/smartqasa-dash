@@ -1,4 +1,4 @@
-import { CSSResultGroup, html, LitElement, nothing, TemplateResult } from "lit";
+import { CSSResultGroup, html, LitElement, TemplateResult } from "lit";
 import { state } from "lit/decorators.js";
 
 import styleTileBase from "../styles/tile-base";
@@ -15,10 +15,10 @@ interface Config extends LovelaceCardConfig {
 }
 
 export class SmartQasaSwitchTile extends LitElement {
-  @state() private _category?: string| typeof nothing;
+  @state() private _category?: string;
   @state() private _entity: string;
-  @state() private _icon?: string | typeof nothing;
-  @state() private _name?: string | typeof nothing;
+  @state() private _icon?: string;
+  @state() private _name?: string;
   @state() private _stateObj?: HassEntity;
 
   private _hass;
@@ -27,10 +27,10 @@ export class SmartQasaSwitchTile extends LitElement {
     if (!config.entity) {
       throw new Error("You must specify an entity");
     }
-    this._category = config.category ?? nothing;
+    this._category = config.category ?? undefined;
     this._entity = config.entity;
-    this._icon = config.icon ?? nothing;
-    this._name = config.name ?? nothing;
+    this._icon = config.icon ?? undefined;
+    this._name = config.name ?? undefined;
   }
 
   set hass(hass: HomeAssistant) {
@@ -41,7 +41,7 @@ export class SmartQasaSwitchTile extends LitElement {
   static styles: CSSResultGroup = [styleTileBase, styleTileState];
 
   render(): TemplateResult {
-    let icon = "hass:alert-rhombus";
+    let icon = this._icon ?? "hass:alert-rhombus";
     let iconColor = "var(--sq-unavailable-rgb)";
     let name = this._name ?? "Unknown";
     let stateFmtd = "Unknown";

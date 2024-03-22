@@ -16,8 +16,8 @@ interface Config extends LovelaceCardConfig {
 export class SmartQasaAllOffTile extends LitElement {
   @state() private _area: string;
   @state() private _areaObj?: HassEntity;
-  @state() private _icon: string = "hass:power";
-  @state() private _name: string | typeof nothing = nothing;
+  @state() private _icon?: string;
+  @state() private _name?: string;
 
   private _hass;
 
@@ -26,8 +26,8 @@ export class SmartQasaAllOffTile extends LitElement {
       throw new Error("You must specify an area");
     }
       this._area = config.area;
-      this._icon = config.icon ?? "hass:power";
-      this._name = config.name ?? nothing;
+      this._icon = config.icon ?? undefined;
+      this._name = config.name ?? undefined;
   }
 
   set hass(hass: HomeAssistant) {
@@ -38,10 +38,12 @@ export class SmartQasaAllOffTile extends LitElement {
   static styles: CSSResultGroup = [styleTileBase, styleTileIconSpin];
 
   render(): TemplateResult {
-    let iconColor: string = "var(--sq-unavailable-rgb)";
-    let name: any = this._name ?? "Unknown";
+    this._icon = this._icon ?? "hass:alert-rhombus";
+    let iconColor = "var(--sq-unavailable-rgb)";
+    let name= this._name ?? "Unknown";
 
     if (this._areaObj) {
+      this._icon = this._icon ?? "hass:power";
       iconColor = "var(--sq-inactive-rgb)";
       name = this._name ?? "All Off";
     }

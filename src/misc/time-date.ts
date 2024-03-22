@@ -92,3 +92,10 @@ export class SmartQasaTimeDate extends LitElement {
 }
 
 customElements.define("smartqasa-time-date", SmartQasaTimeDate);
+
+window.customCards.push({
+  type: "smartqasa-time-date",
+  name: "SmartQasa Time Date",
+  preview: true,
+  description: "A SmartQasa card for rendering the time and date.",
+});

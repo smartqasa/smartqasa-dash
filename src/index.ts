@@ -15,7 +15,10 @@ if (typeof window.screen.width === "number") {
 
 window.customCards = window.customCards ?? [];
 
-// Import tiles
+// Misc
+import "./misc/time-date";
+
+// Tiles
 import "./tiles/all-off";
 import "./tiles/app";
 import "./tiles/fan";

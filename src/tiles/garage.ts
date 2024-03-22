@@ -1,4 +1,4 @@
-import { CSSResultGroup, html, LitElement, nothing, TemplateResult } from "lit";
+import { CSSResultGroup, html, LitElement, TemplateResult } from "lit";
 import { state } from "lit/decorators.js";
 
 import styleTileBase from "../styles/tile-base";
@@ -15,7 +15,7 @@ interface Config extends LovelaceCardConfig {
 
 export class SmartQasaGarageTile extends LitElement {
   @state() private _entity: string;
-  @state() private _name: string | typeof nothing;
+  @state() private _name?: string;
   @state() private _stateObj?: HassEntity;
 
   private _hass;
@@ -25,7 +25,7 @@ export class SmartQasaGarageTile extends LitElement {
       throw new Error("You must specify an entity");
     }
     this._entity = config.entity;
-    this._name = config.name ?? nothing;
+    this._name = config.name ?? undefined;
   }
 
   set hass(hass: HomeAssistant) {
@@ -39,11 +39,11 @@ export class SmartQasaGarageTile extends LitElement {
     let icon = "hass:alert-rhombus";
     let iconColor = "var(--sq-unavailable-rgb)";
     let iconAnimation = "none";
-    let name = this._name as string ?? "Unknown";
+    let name = this._name ?? "Unknown";
     let stateFmtd: "Unknown";
 
     if (this._stateObj) {
-        const state: string = this._stateObj.state as string ?? "unknown";
+        const state = this._stateObj.state ?? "unknown";
         switch (state) {
           case "closed":
             icon = "hass:garage-variant";

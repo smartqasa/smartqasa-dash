@@ -1,4 +1,4 @@
-import { CSSResultGroup, html, LitElement, nothing, TemplateResult } from "lit";
+import { CSSResultGroup, html, LitElement, TemplateResult } from "lit";
 import { state } from "lit/decorators.js";
 
 import styleTileBase from "../styles/tile-base";
@@ -16,9 +16,9 @@ interface Config extends LovelaceCardConfig {
 
 export class SmartQasaShadeTile extends LitElement {
   @state() private _entity: string;
-  @state() private _name: string | typeof nothing;
+  @state() private _name?: string;
   @state() private _stateObj?: HassEntity;
-  @state() private _tilt: number | typeof nothing;
+  @state() private _tilt?: number;
 
   private _hass;
 
@@ -27,7 +27,7 @@ export class SmartQasaShadeTile extends LitElement {
       throw new Error("You must specify an entity");
     }
     this._entity = config.entity;
-    this._name = config.name ?? nothing;
+    this._name = config.name ?? undefined;
     this._tilt = config.tilt ?? 100;
   }
 
@@ -36,13 +36,13 @@ export class SmartQasaShadeTile extends LitElement {
     this._stateObj = this._hass.states[this._entity] ?? undefined;
   }
 
-  static styles: CSSResultGroup = [styleTileBase, styleTileState];
+  static styles: CSSResultGroup = [styleTileBase, styleTileState, styleTileIconBlink];
 
   render(): TemplateResult {
     let icon = "hass:alert-rhombus";
     let iconColor = "var(--sq-unavailable-rgb)";
     let iconAnimation = "none";
-    let name = this._name as string ?? "Unknown";
+    let name = this._name ?? "Unknown";
     let stateFmtd = "Unknown";
 
     if (this._stateObj) {
@@ -84,7 +84,7 @@ export class SmartQasaShadeTile extends LitElement {
             )
           : "");
       name =
-        this._name as string ?? this._stateObj.attributes.friendly_name ?? this._entity;
+        this._name ?? this._stateObj.attributes.friendly_name ?? this._entity;
     }
 
     return html`

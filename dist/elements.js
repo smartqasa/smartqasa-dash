@@ -66,6 +66,95 @@
    * SPDX-License-Identifier: BSD-3-Clause
    */function r(r){return n({...r,state:!0,attribute:!1})}
 
+  class SmartQasaTimeDate extends s {
+      constructor() {
+          super(...arguments);
+          this._time = '';
+          this._date = '';
+      }
+      setConfig(config) {
+          // Handle configuration setup if necessary
+      }
+      set hass(hass) {
+          this._hass = hass;
+          this._time = this._hass.states["sensor.current_time"].state;
+          this._date = this._hass.states["sensor.current_date"].state;
+      }
+      static get styles() {
+          return i$2 `
+      :host {
+        display: block;
+        padding: 0;
+        background-color: transparent;
+      }
+      .container {
+        display: grid;
+        grid-template-rows: auto auto;
+        padding: 0;
+        border-radius: 0;
+        border: none;
+        box-shadow: none;
+        background-color: transparent;
+        cursor: pointer;
+      }
+      .time,
+      .date {
+        justify-self: start;
+        text-align: left;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .time {
+        line-height: var(--sq-title-font-size, 16px);
+        font-size: var(--sq-title-font-size, 16px);
+        font-weight: var(--sq-title-font-weight, 400);
+        color: rgb(var(--sq-title-font-rgb, 0, 0, 0));
+      }
+      .date {
+        font-size: var(--sq-primary-font-size, 14px);
+        font-weight: var(--sq-primary-font-weight, 300);
+        color: rgb(var(--sq-secondary-font-rgb, 128, 128, 128));
+      }
+    `;
+      }
+      render() {
+          return x `
+      <div class="container" @click="${this._handleTap}">
+        <div class="time">${this._time}</div>
+        <div class="date">${this._date}</div>
+      </div>
+    `;
+      }
+      _handleTap() {
+          if (typeof window.fully !== "undefined" && window.fully.startApplication) {
+              window.fully.startApplication("com.google.android.deskclock");
+          }
+          else {
+              console.warn("fully.startApplication is not available.");
+          }
+      }
+      getCardSize() {
+          return 1;
+      }
+  }
+  __decorate([
+      r()
+  ], SmartQasaTimeDate.prototype, "_hass", void 0);
+  __decorate([
+      r()
+  ], SmartQasaTimeDate.prototype, "_time", void 0);
+  __decorate([
+      r()
+  ], SmartQasaTimeDate.prototype, "_date", void 0);
+  customElements.define("smartqasa-time-date", SmartQasaTimeDate);
+  window.customCards.push({
+      type: "smartqasa-time-date",
+      name: "SmartQasa Time Date",
+      preview: true,
+      description: "A SmartQasa card for rendering the time and date.",
+  });
+
   var styleTileBase = i$2 `
   .container {
     display: grid;
@@ -119,19 +208,14 @@
 `;
 
   class SmartQasaAllOffTile extends s {
-      constructor() {
-          super(...arguments);
-          this._icon = "hass:power";
-          this._name = T;
-      }
       setConfig(config) {
           var _a, _b;
           if (!config.area) {
               throw new Error("You must specify an area");
           }
           this._area = config.area;
-          this._icon = (_a = config.icon) !== null && _a !== void 0 ? _a : "hass:power";
-          this._name = (_b = config.name) !== null && _b !== void 0 ? _b : T;
+          this._icon = (_a = config.icon) !== null && _a !== void 0 ? _a : undefined;
+          this._name = (_b = config.name) !== null && _b !== void 0 ? _b : undefined;
       }
       set hass(hass) {
           var _a;
@@ -139,12 +223,14 @@
           this._areaObj = (_a = this._hass.areas[this._area]) !== null && _a !== void 0 ? _a : undefined;
       }
       render() {
-          var _a, _b;
+          var _a, _b, _c, _d;
+          this._icon = (_a = this._icon) !== null && _a !== void 0 ? _a : "hass:alert-rhombus";
           let iconColor = "var(--sq-unavailable-rgb)";
-          let name = (_a = this._name) !== null && _a !== void 0 ? _a : "Unknown";
+          let name = (_b = this._name) !== null && _b !== void 0 ? _b : "Unknown";
           if (this._areaObj) {
+              this._icon = (_c = this._icon) !== null && _c !== void 0 ? _c : "hass:power";
               iconColor = "var(--sq-inactive-rgb)";
-              name = (_b = this._name) !== null && _b !== void 0 ? _b : "All Off";
+              name = (_d = this._name) !== null && _d !== void 0 ? _d : "All Off";
           }
           return x `
       <div class="container" @click=${this._runRoutine}>
@@ -577,14 +663,12 @@
   class SmartQasaFanTile extends s {
       setConfig(config) {
           var _a, _b;
-          if (config.entity) {
-              this._entity = config.entity;
-              this._icon = (_a = config.icon) !== null && _a !== void 0 ? _a : T;
-              this._name = (_b = config.name) !== null && _b !== void 0 ? _b : T;
-          }
-          else {
+          if (!config.entity) {
               throw new Error("You must specify an entity");
           }
+          this._entity = config.entity;
+          this._icon = (_a = config.icon) !== null && _a !== void 0 ? _a : undefined;
+          this._name = (_b = config.name) !== null && _b !== void 0 ? _b : undefined;
       }
       set hass(hass) {
           var _a;
@@ -592,15 +676,15 @@
           this._stateObj = (_a = this._hass.states[this._entity]) !== null && _a !== void 0 ? _a : undefined;
       }
       render() {
-          var _a, _b, _c, _d;
-          let icon = "hass:alert-rhombus";
+          var _a, _b, _c, _d, _e, _f;
+          let icon = (_a = this._icon) !== null && _a !== void 0 ? _a : "hass:alert-rhombus";
           let iconColor = "var(--sq-unavailable-rgb)";
           let iconAnimation = "none";
-          let name = "Unknown";
+          let name = (_b = this._name) !== null && _b !== void 0 ? _b : "Unknown";
           let stateFmtd = "Unknown";
           if (this._stateObj) {
-              const state = (_a = this._stateObj.state) !== null && _a !== void 0 ? _a : "unknown";
-              icon = (_b = this._icon) !== null && _b !== void 0 ? _b : "hass:fan";
+              const state = (_c = this._stateObj.state) !== null && _c !== void 0 ? _c : "unknown";
+              icon = (_d = this._icon) !== null && _d !== void 0 ? _d : "hass:fan";
               iconColor = state == "on" ? "var(--sq-fan-on-rgb)" : "var(--sq-inactive-rgb)";
               if (state === "on") {
                   if (this._stateObj.attributes.percentage) {
@@ -614,7 +698,7 @@
                       iconAnimation = `spin 0.5s linear infinite normal`;
                   }
               }
-              name = (_d = (_c = this._name) !== null && _c !== void 0 ? _c : this._stateObj.attributes.friendly_name) !== null && _d !== void 0 ? _d : this._entity;
+              name = (_f = (_e = this._name) !== null && _e !== void 0 ? _e : this._stateObj.attributes.friendly_name) !== null && _f !== void 0 ? _f : this._entity;
               stateFmtd =
                   this._hass.formatEntityState(this._stateObj) +
                       (state == "on" && this._stateObj.attributes.percentage
@@ -690,7 +774,7 @@
               throw new Error("You must specify an entity");
           }
           this._entity = config.entity;
-          this._name = (_a = config.name) !== null && _a !== void 0 ? _a : T;
+          this._name = (_a = config.name) !== null && _a !== void 0 ? _a : undefined;
       }
       set hass(hass) {
           var _a;
@@ -803,8 +887,8 @@
               throw new Error("You must specify an entity");
           }
           this._entity = config.entity;
-          this._icon = (_a = config.icon) !== null && _a !== void 0 ? _a : T;
-          this._name = (_b = config.name) !== null && _b !== void 0 ? _b : T;
+          this._icon = (_a = config.icon) !== null && _a !== void 0 ? _a : undefined;
+          this._name = (_b = config.name) !== null && _b !== void 0 ? _b : undefined;
       }
       set hass(hass) {
           var _a;
@@ -812,16 +896,16 @@
           this._stateObj = (_a = this._hass.states[this._entity]) !== null && _a !== void 0 ? _a : undefined;
       }
       render() {
-          var _a, _b, _c, _d, _e;
-          let icon = "hass:alert-rhombus";
+          var _a, _b, _c, _d, _e, _f, _g;
+          let icon = (_a = this._icon) !== null && _a !== void 0 ? _a : "hass:alert-rhombus";
           let iconColor = "var(--sq-unavailable-rgb)";
-          let name = "Unknown";
+          let name = (_b = this._name) !== null && _b !== void 0 ? _b : "Unknown";
           let stateFmtd = "Unknown";
           if (this._stateObj) {
-              const state = (_a = this._stateObj.state) !== null && _a !== void 0 ? _a : "unknown";
-              icon = (_c = (_b = this._icon) !== null && _b !== void 0 ? _b : this._stateObj.attributes.icon) !== null && _c !== void 0 ? _c : "hass:help-circle";
+              const state = (_c = this._stateObj.state) !== null && _c !== void 0 ? _c : "unknown";
+              icon = (_e = (_d = this._icon) !== null && _d !== void 0 ? _d : this._stateObj.attributes.icon) !== null && _e !== void 0 ? _e : "hass:help-circle";
               iconColor = state == "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
-              name = (_e = (_d = this._name) !== null && _d !== void 0 ? _d : this._stateObj.attributes.friendly_name) !== null && _e !== void 0 ? _e : this._entity;
+              name = (_g = (_f = this._name) !== null && _f !== void 0 ? _f : this._stateObj.attributes.friendly_name) !== null && _g !== void 0 ? _g : this._entity;
               stateFmtd =
                   this._hass.formatEntityState(this._stateObj) +
                       (state == "on" && this._stateObj.attributes.brightness
@@ -892,7 +976,7 @@
               throw new Error("You must specify an entity");
           }
           this._entity = config.entity;
-          this._name = (_a = config.name) !== null && _a !== void 0 ? _a : T;
+          this._name = (_a = config.name) !== null && _a !== void 0 ? _a : undefined;
       }
       set hass(hass) {
           var _a;
@@ -900,13 +984,13 @@
           this._stateObj = (_a = this._hass.states[this._entity]) !== null && _a !== void 0 ? _a : undefined;
       }
       render() {
-          var _a, _b, _c;
+          var _a, _b, _c, _d;
           let icon = "hass:alert-rhombus";
           let iconColor = "var(--sq-unavailable-rgb)";
-          let name = "Unknown";
+          let name = (_a = this._name) !== null && _a !== void 0 ? _a : "Unknown";
           let stateFmtd = "Unknown";
           if (this._stateObj) {
-              const state = (_a = this._stateObj.state) !== null && _a !== void 0 ? _a : "unknown";
+              const state = (_b = this._stateObj.state) !== null && _b !== void 0 ? _b : "unknown";
               switch (state) {
                   case "locked":
                       icon = "hass:lock";
@@ -921,7 +1005,7 @@
                       iconColor = "var(--sq-unavailable-rgb)";
                       break;
               }
-              name = (_c = (_b = this._name) !== null && _b !== void 0 ? _b : this._stateObj.attributes.friendly_name) !== null && _c !== void 0 ? _c : this._entity;
+              name = (_d = (_c = this._name) !== null && _c !== void 0 ? _c : this._stateObj.attributes.friendly_name) !== null && _d !== void 0 ? _d : this._entity;
               stateFmtd = this._hass.formatEntityState(this._stateObj);
           }
           return x `
@@ -982,19 +1066,14 @@
   });
 
   class SmartQasaRoutineTile extends s {
-      constructor() {
-          super(...arguments);
-          this._icon = T;
-          this._name = T;
-      }
       setConfig(config) {
           var _a, _b;
           if (!config.entity) {
               throw new Error("You must specify an entity");
           }
           this._entity = config.entity;
-          this._icon = (_a = config.icon) !== null && _a !== void 0 ? _a : T;
-          this._name = (_b = config.name) !== null && _b !== void 0 ? _b : T;
+          this._icon = (_a = config.icon) !== null && _a !== void 0 ? _a : undefined;
+          this._name = (_b = config.name) !== null && _b !== void 0 ? _b : undefined;
       }
       set hass(hass) {
           var _a;
@@ -1002,14 +1081,14 @@
           this._stateObj = (_a = this._hass.states[this._entity]) !== null && _a !== void 0 ? _a : undefined;
       }
       render() {
-          var _a, _b, _c, _d, _e;
-          this._icon = "hass:alert-rhombus";
+          var _a, _b, _c, _d, _e, _f;
+          this._icon = (_a = this._icon) !== null && _a !== void 0 ? _a : "hass:alert-rhombus";
           let iconColor = "var(--sq-unavailable-rgb)";
-          let name = (_a = this._name) !== null && _a !== void 0 ? _a : "Unknown";
+          let name = (_b = this._name) !== null && _b !== void 0 ? _b : "Unknown";
           if (this._stateObj) {
-              this._icon = (_c = (_b = this._icon) !== null && _b !== void 0 ? _b : this._stateObj.attributes.icon) !== null && _c !== void 0 ? _c : "hass:help-circle";
+              this._icon = (_d = (_c = this._icon) !== null && _c !== void 0 ? _c : this._stateObj.attributes.icon) !== null && _d !== void 0 ? _d : "hass:help-circle";
               iconColor = "var(--sq-inactive-rgb)";
-              name = (_e = (_d = this._name) !== null && _d !== void 0 ? _d : this._stateObj.attributes.friendly_name) !== null && _e !== void 0 ? _e : this._entity;
+              name = (_f = (_e = this._name) !== null && _e !== void 0 ? _e : this._stateObj.attributes.friendly_name) !== null && _f !== void 0 ? _f : this._entity;
           }
           return x `
       <div class="container" @click=${this._runRoutine}>
@@ -1087,7 +1166,7 @@
               throw new Error("You must specify an entity");
           }
           this._entity = config.entity;
-          this._name = (_a = config.name) !== null && _a !== void 0 ? _a : T;
+          this._name = (_a = config.name) !== null && _a !== void 0 ? _a : undefined;
           this._tilt = (_b = config.tilt) !== null && _b !== void 0 ? _b : 100;
       }
       set hass(hass) {
@@ -1181,7 +1260,7 @@
           return 1;
       }
   }
-  SmartQasaShadeTile.styles = [styleTileBase, styleTileState];
+  SmartQasaShadeTile.styles = [styleTileBase, styleTileState, styleTileIconBlink];
   __decorate([
       r()
   ], SmartQasaShadeTile.prototype, "_entity", void 0);
@@ -1208,10 +1287,10 @@
           if (!config.entity) {
               throw new Error("You must specify an entity");
           }
-          this._category = (_a = config.category) !== null && _a !== void 0 ? _a : T;
+          this._category = (_a = config.category) !== null && _a !== void 0 ? _a : undefined;
           this._entity = config.entity;
-          this._icon = (_b = config.icon) !== null && _b !== void 0 ? _b : T;
-          this._name = (_c = config.name) !== null && _c !== void 0 ? _c : T;
+          this._icon = (_b = config.icon) !== null && _b !== void 0 ? _b : undefined;
+          this._name = (_c = config.name) !== null && _c !== void 0 ? _c : undefined;
       }
       set hass(hass) {
           var _a;
@@ -1219,18 +1298,18 @@
           this._stateObj = (_a = this._hass.states[this._entity]) !== null && _a !== void 0 ? _a : undefined;
       }
       render() {
-          var _a, _b, _c, _d, _e;
-          let icon = "hass:alert-rhombus";
+          var _a, _b, _c, _d, _e, _f;
+          let icon = (_a = this._icon) !== null && _a !== void 0 ? _a : "hass:alert-rhombus";
           let iconColor = "var(--sq-unavailable-rgb)";
-          let name = (_a = this._name) !== null && _a !== void 0 ? _a : "Unknown";
+          let name = (_b = this._name) !== null && _b !== void 0 ? _b : "Unknown";
           let stateFmtd = "Unknown";
           if (this._stateObj) {
               const state = this._stateObj.state;
-              icon = (_c = (_b = this._icon) !== null && _b !== void 0 ? _b : this._stateObj.attributes.icon) !== null && _c !== void 0 ? _c : "hass:help-circle";
+              icon = (_d = (_c = this._icon) !== null && _c !== void 0 ? _c : this._stateObj.attributes.icon) !== null && _d !== void 0 ? _d : "hass:help-circle";
               iconColor = state === "on"
                   ? `var(--sq-switch${this._category ? `-${this._category}` : ""}-on-rgb)`
                   : "var(--sq-inactive-rgb)";
-              name = (_e = (_d = this._name) !== null && _d !== void 0 ? _d : this._stateObj.attributes.friendly_name) !== null && _e !== void 0 ? _e : this._entity;
+              name = (_f = (_e = this._name) !== null && _e !== void 0 ? _e : this._stateObj.attributes.friendly_name) !== null && _f !== void 0 ? _f : this._entity;
               stateFmtd = this._hass ? this._hass.formatEntityState(this._stateObj) : "Unknown";
           }
           return x `

@@ -4,7 +4,6 @@ import { state } from "lit/decorators.js";
 import styleTileBase from "../styles/tile-base";
 import appTable from "../tables/apps";
 
-// Define the type for a single app entry
 interface AppEntry {
   name: string;
   app_icon?: string;
