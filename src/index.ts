@@ -17,6 +17,11 @@ window.customCards = window.customCards ?? [];
 
 // Import tiles
 import "./tiles/all-off";
+import "./tiles/app";
 import "./tiles/fan";
 import "./tiles/garage";
 import "./tiles/light";
+import "./tiles/lock";
+import "./tiles/routine";
+import "./tiles/shade";
+import "./tiles/switch";

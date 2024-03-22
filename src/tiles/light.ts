@@ -38,14 +38,14 @@ export class SmartQasaLightTile extends LitElement {
   static styles: CSSResultGroup = [styleTileBase, styleTileState];
 
   render(): TemplateResult {
-    let icon: any = "hass:alert-rhombus";
-    let iconColor: string = "var(--sq-unavailable-rgb)";
+    let icon = "hass:alert-rhombus";
+    let iconColor = "var(--sq-unavailable-rgb)";
     let name: any = "Unknown";
-    let stateFmtd: string = "Unknown";
+    let stateFmtd = "Unknown";
 
     if (this._stateObj) {
       const state: string = this._stateObj.state ?? "unknown";
-      icon = this._icon ?? this._stateObj.attributes.icon ?? "hass:help-circle";
+      icon = this._icon as string ?? this._stateObj.attributes.icon ?? "hass:help-circle";
       iconColor = state == "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
       name = this._name ?? this._stateObj.attributes.friendly_name ?? this._entity;
       stateFmtd =

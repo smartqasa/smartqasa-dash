@@ -36,14 +36,14 @@ export class SmartQasaGarageTile extends LitElement {
   static styles: CSSResultGroup = [styleTileBase, styleTileState, styleTileIconBlink];
 
   render(): TemplateResult {
-    let icon: any = "hass:alert-rhombus";
-    let iconColor: string = "var(--sq-unavailable-rgb)";
-    let iconAnimation: string = "none";
-    let name: any = "Unknown";
-    let stateFmtd: string = "Unknown";
+    let icon = "hass:alert-rhombus";
+    let iconColor = "var(--sq-unavailable-rgb)";
+    let iconAnimation = "none";
+    let name = this._name as string ?? "Unknown";
+    let stateFmtd: "Unknown";
 
     if (this._stateObj) {
-        const state: string = this._stateObj.state ?? "unknown";
+        const state: string = this._stateObj.state as string ?? "unknown";
         switch (state) {
           case "closed":
             icon = "hass:garage-variant";
@@ -80,7 +80,7 @@ export class SmartQasaGarageTile extends LitElement {
                 "current_position"
               )
             : "");
-        name = this._name ?? this._stateObj.attributes.friendly_name ?? this._entity;
+        name = this._name as string ?? this._stateObj.attributes.friendly_name ?? this._entity;
       }
 
     return html`
@@ -104,7 +104,9 @@ export class SmartQasaGarageTile extends LitElement {
 
   private _toggleEntity(e: Event): void {
     e.stopPropagation();
-    this._hass.callService("cover", "toggle", { entity_id: this._entity });
+    if (this._hass && this._stateObj) {
+      this._hass.callService("cover", "toggle", { entity_id: this._entity });
+    }
   }
 
   private _showMoreInfo(e: Event): void {

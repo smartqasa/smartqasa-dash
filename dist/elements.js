@@ -209,6 +209,351 @@
       description: "A SmartQasa tile for turning off all light and fan entities in an area.",
   });
 
+  var appTable = {
+      accuweather: {
+          name: "AccuWeather",
+          app_icon: "icon_accuweather.png",
+          launcher: "package",
+          package: "com.accuweather.android",
+      },
+      allrecipes: {
+          name: "AllRecipes",
+          app_icon: "icon_allrecipes.png",
+          launcher: "package",
+          package: "com.allrecipes.spinner.free",
+      },
+      amazon_music: {
+          name: "Amazon Music",
+          app_icon: "icon_amazon_music.png",
+          launcher: "uri_scheme",
+          uri_scheme: "amznmp3://",
+      },
+      amazon_shopping: {
+          name: "Amazon Shopping",
+          app_icon: "icon_amazon_shopping.png",
+          launcher: "uri_scheme",
+          package: "com.amazon.windowshop",
+          uri_scheme: "amazon://",
+      },
+      amcrest_smart_home: {
+          name: "Amcrest Smart Home",
+          app_icon: "icon_amcrest_smart_home.png",
+          launcher: "package",
+          package: "com.mm.android.amcrestsmarthome",
+      },
+      apple_music: {
+          name: "Apple Music",
+          app_icon: "icon_apple_music.png",
+          launcher: "package",
+          package: "com.apple.android.music",
+      },
+      bmw: {
+          name: "My BMW",
+          app_icon: "icon_bmw.png",
+          launcher: "package",
+          package: "de.bmw.connected.mobile20.na",
+      },
+      bond: {
+          name: "Bond Home",
+          app_icon: "icon_bond.png",
+          launcher: "package",
+          package: "io.olibra.bondapp",
+      },
+      bring: {
+          name: "Bring!",
+          app_icon: "icon_bring.png",
+          launcher: "package",
+          package: "ch.publisheria.bring",
+      },
+      calculator: {
+          name: "Calculator",
+          app_icon: "icon_calculator.png",
+          launcher: "package",
+          package: "com.google.android.calculator",
+      },
+      chatgpt: {
+          name: "ChatGPT",
+          app_icon: "icon_chatgpt.png",
+          launcher: "package",
+          package: "com.openai.chatgpt",
+      },
+      chrome: {
+          name: "Chrome",
+          app_icon: "icon_chrome.png",
+          launcher: "uri_scheme",
+          uri_scheme: "chrome://",
+          package: "com.android.chrome",
+      },
+      clock_timer: {
+          name: "Clock/Timer",
+          app_icon: "icon_clock.png",
+          launcher: "package",
+          package: "com.google.android.deskclock",
+      },
+      doordash: {
+          name: "Doordash",
+          app_icon: "icon_doordash.png",
+          launcher: "uri_scheme",
+          uri_scheme: "doordash://",
+          package: "com.dd.dashdash",
+      },
+      eufy_security: {
+          name: "Eufy Security",
+          app_icon: "icon_eufy_security.png",
+          launcher: "package",
+          package: "com.oceanwing.battery.cam",
+      },
+      grubhub: {
+          name: "Grubhub",
+          app_icon: "icon_grubhub.png",
+          launcher: "uri_scheme",
+          uri_scheme: "grubhub://",
+          package: "com.grubhub.android",
+      },
+      home_connect: {
+          name: "Home Connect",
+          app_icon: "icon_home_connect.png",
+          launcher: "package",
+          package: "com.bshg.homeconnect.android.release.na",
+      },
+      hue: {
+          name: "Hue",
+          app_icon: "icon_hue.png",
+          launcher: "package",
+          package: "com.philips.lighting.hue2",
+      },
+      hulu: {
+          name: "Hulu",
+          app_icon: "icon_hulu.png",
+          launcher: "uri_scheme",
+          uri_scheme: "hulu://",
+          package: "com.hulu.plus",
+      },
+      irobot: {
+          name: "iRobot",
+          app_icon: "icon_irobot.png",
+          launcher: "package",
+          package: "com.irobot.home",
+      },
+      keurig: {
+          name: "Keurig",
+          app_icon: "icon_keurig.png",
+          launcher: "package",
+          package: "com.keurig.kconnect",
+      },
+      lionchief: {
+          name: "LionChief",
+          app_icon: "icon_lionchief.png",
+          launcher: "package",
+          package: "com.lionel.lionchief",
+      },
+      lutron: {
+          name: "Lutron",
+          app_icon: "icon_lutron.png",
+          launcher: "package",
+          package: "com.lutron.mmw",
+      },
+      myq: {
+          name: "MyQ",
+          app_icon: "icon_myq.png",
+          launcher: "package",
+          package: "com.chamberlain.android.liftmaster.myq",
+      },
+      nest: {
+          name: "Nest",
+          app_icon: "icon_nest.png",
+          launcher: "package",
+          package: "com.nest.android",
+      },
+      netflix: {
+          name: "Netflix",
+          app_icon: "icon_netflix.png",
+          launcher: "package",
+          package: "com.netflix.mediaclient",
+      },
+      pandora: {
+          name: "Pandora",
+          app_icon: "icon_pandora.png",
+          launcher: "uri_scheme",
+          uri_scheme: "pandora://",
+          package: "com.pandora.android",
+      },
+      play_store: {
+          name: "Play Store",
+          app_icon: "mdi:store",
+          launcher: "package",
+          package: "com.android.vending",
+      },
+      rachio: {
+          name: "Rachio",
+          app_icon: "icon_rachio.png",
+          launcher: "package",
+          package: "com.rachio.iro",
+      },
+      rainbird: {
+          name: "Rainbird",
+          app_icon: "icon_rainbird.png",
+          launcher: "package",
+          package: "com.rainbird",
+      },
+      ring: {
+          name: "Ring",
+          app_icon: "icon_ring.png",
+          launcher: "uri_scheme",
+          uri_scheme: "ring://",
+          package: "com.ringapp",
+      },
+      roku_remote: {
+          name: "Roku Remote",
+          app_icon: "icon_roku.png",
+          launcher: "package",
+          package: "com.roku.remote",
+      },
+      sense: {
+          name: "Sense Energy",
+          app_icon: "icon_sense.png",
+          launcher: "package",
+          package: "com.sense.androidclient",
+      },
+      shazam: {
+          name: "Shazam",
+          app_icon: "icon_shazam.png",
+          launcher: "package",
+          package: "com.shazam.android",
+      },
+      shipt_shopper: {
+          name: "Shipt Shopper",
+          app_icon: "icon_shipt.png",
+          launcher: "package",
+          package: "com.shipt.shopper",
+      },
+      sleepiq: {
+          name: "SleepIQ",
+          app_icon: "icon_sleepiq.png",
+          launcher: "package",
+          package: "com.selectcomfort.SleepIQ",
+      },
+      solitaire: {
+          name: "Solitaire",
+          app_icon: "icon_solitaire.png",
+          launcher: "package",
+          package: "com.tripledot.solitaire",
+      },
+      sonos: {
+          name: "Sonos",
+          app_icon: "icon_sonos.png",
+          launcher: "uri_scheme",
+          uri_scheme: "sonos://",
+          package: "com.sonos.acr2",
+      },
+      spotify: {
+          name: "Spotify",
+          app_icon: "icon_spotify.png",
+          launcher: "uri_scheme",
+          uri_scheme: "spotify://",
+          package: "com.spotify.music",
+      },
+      tuya_smart: {
+          name: "Tuya Smart",
+          app_icon: "icon_tuya.png",
+          launcher: "package",
+          package: "com.tuya.smart",
+      },
+      uber_eats: {
+          name: "Uber Eats",
+          app_icon: "icon_uber_eats.png",
+          launcher: "package",
+          package: "com.ubercab.eats",
+      },
+      weather_channel: {
+          name: "Weather Channel",
+          app_icon: "icon_weather_channel.png",
+          launcher: "package",
+          package: "com.weather.Weather",
+      },
+      weather_underground: {
+          name: "Weather Underground",
+          app_icon: "icon_weather_underground.png",
+          launcher: "package",
+          package: "com.wunderground.android.weather",
+      },
+      yummly: {
+          name: "Yummly Recipes",
+          app_icon: "icon_yummly.png",
+          launcher: "package",
+          package: "com.yummly.android",
+      },
+  };
+
+  class SmartQasaAppTile extends s {
+      setConfig(config) {
+          if (!config.app) {
+              throw new Error("You must specify an app");
+          }
+          this._app = config.app;
+          this._appObj = appTable[this._app];
+          this._icon = config.icon;
+          this._name = config.name;
+      }
+      render() {
+          var _a, _b;
+          let icon, iconStyle, name;
+          if (this._appObj) {
+              if (this._icon) {
+                  icon = x `<ha-icon .icon=${this._icon}></ha-icon>`;
+                  iconStyle = "color: rgb(var(--sq-inactive-rgb)); background-color: rgba(var(--sq-inactive-rgb), var(--sq-icon-opacity));";
+              }
+              else if (this._appObj.app_icon) {
+                  icon = x `<img src="/local/sq-storage/images/${this._appObj.app_icon}" alt="App Icon" style="border-radius: 50%;" />`;
+                  iconStyle = "height: 3.8rem; width: 3.8rem; padding: 0;";
+              }
+              else {
+                  icon = x `<ha-icon .icon="hass:alert-rhombus"></ha-icon>`;
+                  iconStyle = "color: rgb(var(--sq-unavailable-rgb)); background-color: rgba(var(--sq-unavailable-rgb), var(--sq-icon-opacity));";
+              }
+              name = (_b = (_a = this._name) !== null && _a !== void 0 ? _a : this._appObj.name) !== null && _b !== void 0 ? _b : "Unknown";
+          }
+          else {
+              icon = x `<ha-icon .icon="hass:alert-rhombus"></ha-icon>`;
+              iconStyle = "color: rgb(var(--sq-unavailable-rgb)); background-color: rgba(var(--sq-unavailable-rgb), var(--sq-icon-opacity));";
+              name = "Unknown";
+          }
+          return x `
+      <div class="container" @click=${this._launchApp}>
+        <div class="icon" style=${iconStyle}>${icon}</div>
+        <div class="name">${name}</div>
+      </div>
+    `;
+      }
+      _launchApp(e) {
+          e.stopPropagation();
+          // Launch logic remains unchanged, assuming `fully` and `window.location.href` are globally accessible
+      }
+      getCardSize() {
+          return 1;
+      }
+  }
+  SmartQasaAppTile.styles = styleTileBase;
+  __decorate([
+      r()
+  ], SmartQasaAppTile.prototype, "_app", void 0);
+  __decorate([
+      r()
+  ], SmartQasaAppTile.prototype, "_appObj", void 0);
+  __decorate([
+      r()
+  ], SmartQasaAppTile.prototype, "_icon", void 0);
+  __decorate([
+      r()
+  ], SmartQasaAppTile.prototype, "_name", void 0);
+  customElements.define("smartqasa-app-tile", SmartQasaAppTile);
+  window.customCards.push({
+      type: "smartqasa-app-tile",
+      name: "SmartQasa App Tile",
+      preview: true,
+      description: "A SmartQasa tile for launching applications from the dashboard",
+  });
+
   var styleTileState = i$2 `
     .container {
         grid-template-areas: 'i n' 'i s';
@@ -353,14 +698,14 @@
           this._stateObj = (_a = this._hass.states[this._entity]) !== null && _a !== void 0 ? _a : undefined;
       }
       render() {
-          var _a, _b, _c;
+          var _a, _b, _c, _d;
           let icon = "hass:alert-rhombus";
           let iconColor = "var(--sq-unavailable-rgb)";
           let iconAnimation = "none";
-          let name = "Unknown";
-          let stateFmtd = "Unknown";
+          let name = (_a = this._name) !== null && _a !== void 0 ? _a : "Unknown";
+          let stateFmtd;
           if (this._stateObj) {
-              const state = (_a = this._stateObj.state) !== null && _a !== void 0 ? _a : "unknown";
+              const state = (_b = this._stateObj.state) !== null && _b !== void 0 ? _b : "unknown";
               switch (state) {
                   case "closed":
                       icon = "hass:garage-variant";
@@ -394,7 +739,7 @@
                           ? " - " +
                               this._hass.formatEntityAttributeValue(this._stateObj, "current_position")
                           : "");
-              name = (_c = (_b = this._name) !== null && _b !== void 0 ? _b : this._stateObj.attributes.friendly_name) !== null && _c !== void 0 ? _c : this._entity;
+              name = (_d = (_c = this._name) !== null && _c !== void 0 ? _c : this._stateObj.attributes.friendly_name) !== null && _d !== void 0 ? _d : this._entity;
           }
           return x `
       <div class="container" @click=${this._showMoreInfo}>
@@ -416,7 +761,9 @@
       }
       _toggleEntity(e) {
           e.stopPropagation();
-          this._hass.callService("cover", "toggle", { entity_id: this._entity });
+          if (this._hass && this._stateObj) {
+              this._hass.callService("cover", "toggle", { entity_id: this._entity });
+          }
       }
       _showMoreInfo(e) {
           e.stopPropagation();
@@ -536,6 +883,413 @@
       name: "SmartQasa Light Tile",
       preview: true,
       description: "A SmartQasa tile for controlling a light entity.",
+  });
+
+  class SmartQasaLockTile extends s {
+      setConfig(config) {
+          var _a;
+          if (!config.entity) {
+              throw new Error("You must specify an entity");
+          }
+          this._entity = config.entity;
+          this._name = (_a = config.name) !== null && _a !== void 0 ? _a : T;
+      }
+      set hass(hass) {
+          var _a;
+          this._hass = hass;
+          this._stateObj = (_a = this._hass.states[this._entity]) !== null && _a !== void 0 ? _a : undefined;
+      }
+      render() {
+          var _a, _b, _c;
+          let icon = "hass:alert-rhombus";
+          let iconColor = "var(--sq-unavailable-rgb)";
+          let name = "Unknown";
+          let stateFmtd = "Unknown";
+          if (this._stateObj) {
+              const state = (_a = this._stateObj.state) !== null && _a !== void 0 ? _a : "unknown";
+              switch (state) {
+                  case "locked":
+                      icon = "hass:lock";
+                      iconColor = "var(--sq-inactive-rgb)";
+                      break;
+                  case "unlocked":
+                      icon = "hass:lock-open";
+                      iconColor = "var(--sq-lock-unlocked-rgb)";
+                      break;
+                  default:
+                      icon = "hass:alert-rhombus";
+                      iconColor = "var(--sq-unavailable-rgb)";
+                      break;
+              }
+              name = (_c = (_b = this._name) !== null && _b !== void 0 ? _b : this._stateObj.attributes.friendly_name) !== null && _c !== void 0 ? _c : this._entity;
+              stateFmtd = this._hass.formatEntityState(this._stateObj);
+          }
+          return x `
+      <div class="container" @click=${this._showMoreInfo}>
+        <div
+          class="icon"
+          id="icon"
+          @click=${this._toggleLock}
+          style="color: rgb(${iconColor}); background-color: rgba(${iconColor}, var(--sq-icon-opacity));"
+        >
+          <ha-icon .icon=${icon}></ha-icon>
+        </div>
+        <div class="name">${name}</div>
+        <div class="state">${stateFmtd}</div>
+      </div>
+    `;
+      }
+      _toggleLock(e) {
+          var _a, _b, _c;
+          e.stopPropagation();
+          if (this._hass && this._stateObj) {
+              const haIconElement = (_a = this.shadowRoot) === null || _a === void 0 ? void 0 : _a.querySelector("ha-icon");
+              haIconElement.icon = "hass:rotate-right";
+              const iconElement = (_b = this.shadowRoot) === null || _b === void 0 ? void 0 : _b.getElementById("icon");
+              iconElement.style.animation = "spin 1.0s linear infinite";
+              this._hass.callService("lock", ((_c = this._stateObj) === null || _c === void 0 ? void 0 : _c.state) === "locked" ? "unlock" : "lock", { entity_id: this._entity });
+          }
+      }
+      _showMoreInfo(e) {
+          e.stopPropagation();
+          const event = new CustomEvent("hass-more-info", {
+              bubbles: true,
+              composed: true,
+              detail: { entityId: this._entity },
+          });
+          this.dispatchEvent(event);
+      }
+      getCardSize() {
+          return 1;
+      }
+  }
+  SmartQasaLockTile.styles = [styleTileBase, styleTileState, styleTileIconSpin];
+  __decorate([
+      r()
+  ], SmartQasaLockTile.prototype, "_entity", void 0);
+  __decorate([
+      r()
+  ], SmartQasaLockTile.prototype, "_name", void 0);
+  __decorate([
+      r()
+  ], SmartQasaLockTile.prototype, "_stateObj", void 0);
+  customElements.define("smartqasa-lock-tile", SmartQasaLockTile);
+  window.customCards.push({
+      type: "smartqasa-lock-tile",
+      name: "SmartQasa Lock Tile",
+      preview: true,
+      description: "A SmartQasa tile for controlling a lock entity.",
+  });
+
+  class SmartQasaRoutineTile extends s {
+      constructor() {
+          super(...arguments);
+          this._icon = T;
+          this._name = T;
+      }
+      setConfig(config) {
+          var _a, _b;
+          if (!config.entity) {
+              throw new Error("You must specify an entity");
+          }
+          this._entity = config.entity;
+          this._icon = (_a = config.icon) !== null && _a !== void 0 ? _a : T;
+          this._name = (_b = config.name) !== null && _b !== void 0 ? _b : T;
+      }
+      set hass(hass) {
+          var _a;
+          this._hass = hass;
+          this._stateObj = (_a = this._hass.states[this._entity]) !== null && _a !== void 0 ? _a : undefined;
+      }
+      render() {
+          var _a, _b, _c, _d, _e;
+          this._icon = "hass:alert-rhombus";
+          let iconColor = "var(--sq-unavailable-rgb)";
+          let name = (_a = this._name) !== null && _a !== void 0 ? _a : "Unknown";
+          if (this._stateObj) {
+              this._icon = (_c = (_b = this._icon) !== null && _b !== void 0 ? _b : this._stateObj.attributes.icon) !== null && _c !== void 0 ? _c : "hass:help-circle";
+              iconColor = "var(--sq-inactive-rgb)";
+              name = (_e = (_d = this._name) !== null && _d !== void 0 ? _d : this._stateObj.attributes.friendly_name) !== null && _e !== void 0 ? _e : this._entity;
+          }
+          return x `
+      <div class="container" @click=${this._runRoutine}>
+        <div
+          class="icon"
+          id="icon"
+          @click=${this._runRoutine}
+          style="color: rgb(${iconColor}); background-color: rgba(${iconColor}, var(--sq-icon-opacity));"
+        >
+          <ha-icon .icon=${this._icon}></ha-icon>
+        </div>
+        <div class="name">${name}</div>
+      </div>
+    `;
+      }
+      _runRoutine(e) {
+          var _a, _b;
+          e.stopPropagation();
+          if (this._hass && this._stateObj) {
+              const haIconElement = (_a = this.shadowRoot) === null || _a === void 0 ? void 0 : _a.querySelector("ha-icon");
+              haIconElement.icon = "hass:rotate-right";
+              const iconElement = (_b = this.shadowRoot) === null || _b === void 0 ? void 0 : _b.getElementById("icon");
+              iconElement.style.animation = "spin 1.0s linear infinite";
+              const domain = this._entity.split(".")[0];
+              switch (domain) {
+                  case "script":
+                      this._hass.callService("script", "turn_on", { entity_id: this._entity });
+                      break;
+                  case "scene":
+                      this._hass.callService("scene", "turn_on", { entity_id: this._entity });
+                      break;
+                  case "automation":
+                      this._hass.callService("automation", "trigger", { entity_id: this._entity });
+                      break;
+                  default:
+                      console.error("Unsupported entity domain:", domain);
+                      return;
+              }
+              setTimeout(() => {
+                  haIconElement.icon = this._icon;
+                  iconElement.style.color = `rgb(var(--sq-inactive-rgb))`;
+                  iconElement.style.animation = "none";
+              }, 2000);
+          }
+      }
+      getCardSize() {
+          return 1;
+      }
+  }
+  SmartQasaRoutineTile.styles = [styleTileBase, styleTileIconSpin];
+  __decorate([
+      r()
+  ], SmartQasaRoutineTile.prototype, "_entity", void 0);
+  __decorate([
+      r()
+  ], SmartQasaRoutineTile.prototype, "_icon", void 0);
+  __decorate([
+      r()
+  ], SmartQasaRoutineTile.prototype, "_name", void 0);
+  __decorate([
+      r()
+  ], SmartQasaRoutineTile.prototype, "_stateObj", void 0);
+  customElements.define("smartqasa-routine-tile", SmartQasaRoutineTile);
+  window.customCards.push({
+      type: "smartqasa-routine-tile",
+      name: "SmartQasa Routine Tile",
+      preview: true,
+      description: "A SmartQasa tile for triggering an automation, scene, or script entity.",
+  });
+
+  class SmartQasaShadeTile extends s {
+      setConfig(config) {
+          var _a, _b;
+          if (!config.entity) {
+              throw new Error("You must specify an entity");
+          }
+          this._entity = config.entity;
+          this._name = (_a = config.name) !== null && _a !== void 0 ? _a : T;
+          this._tilt = (_b = config.tilt) !== null && _b !== void 0 ? _b : 100;
+      }
+      set hass(hass) {
+          var _a;
+          this._hass = hass;
+          this._stateObj = (_a = this._hass.states[this._entity]) !== null && _a !== void 0 ? _a : undefined;
+      }
+      render() {
+          var _a, _b, _c;
+          let icon = "hass:alert-rhombus";
+          let iconColor = "var(--sq-unavailable-rgb)";
+          let iconAnimation = "none";
+          let name = (_a = this._name) !== null && _a !== void 0 ? _a : "Unknown";
+          let stateFmtd = "Unknown";
+          if (this._stateObj) {
+              const state = this._stateObj.state;
+              switch (state) {
+                  case "closed":
+                      icon = "hass:roller-shade-closed";
+                      iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+                      iconAnimation = "none";
+                      break;
+                  case "closing":
+                      icon = "hass:arrow-down-box";
+                      iconColor = "var(--sq-shade-closing-rgb, 146, 107, 199)";
+                      iconAnimation = "blink 2.0s linear infinite";
+                      break;
+                  case "opening":
+                      icon = "hass:arrow-up-box";
+                      iconColor = "var(--sq-shade-opening-rgb, 146, 107, 199)";
+                      iconAnimation = "blink 2.0s linear infinite";
+                      break;
+                  case "open":
+                      icon = "hass:roller-shade";
+                      iconColor = "var(--sq-shade-open-rgb, 146, 107, 199)";
+                      iconAnimation = "none";
+                      break;
+                  default:
+                      icon = "hass:alert-rhombus";
+                      iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+                      iconAnimation = "none";
+                      break;
+              }
+              stateFmtd =
+                  this._hass.formatEntityState(this._stateObj) +
+                      (state === "open" && this._stateObj.attributes.current_position
+                          ? " - " +
+                              this._hass.formatEntityAttributeValue(this._stateObj, "current_position")
+                          : "");
+              name =
+                  (_c = (_b = this._name) !== null && _b !== void 0 ? _b : this._stateObj.attributes.friendly_name) !== null && _c !== void 0 ? _c : this._entity;
+          }
+          return x `
+      <div class="container" @click=${this._showMoreInfo}>
+        <div
+          class="icon"
+          @click=${this._toggleEntity}
+          style="
+            color: rgb(${iconColor});
+            background-color: rgba(${iconColor}, var(--sq-icon-opacity));
+            animation: ${iconAnimation};
+          "
+        >
+          <ha-icon .icon=${icon}></ha-icon>
+        </div>
+        <div class="name">${name}</div>
+        <div class="state">${stateFmtd}</div>
+      </div>
+    `;
+      }
+      _toggleEntity(e) {
+          e.stopPropagation();
+          if (this._hass && this._stateObj && typeof this._tilt === "number") {
+              const newPosition = this._stateObj.attributes.current_position < this._tilt ? this._tilt : 0;
+              this._hass.callService("cover", "set_cover_position", {
+                  entity_id: this._entity,
+                  position: newPosition,
+              });
+          }
+      }
+      _showMoreInfo(e) {
+          e.stopPropagation();
+          const event = new CustomEvent("hass-more-info", {
+              bubbles: true,
+              composed: true,
+              detail: { entityId: this._entity },
+          });
+          this.dispatchEvent(event);
+      }
+      getCardSize() {
+          return 1;
+      }
+  }
+  SmartQasaShadeTile.styles = [styleTileBase, styleTileState];
+  __decorate([
+      r()
+  ], SmartQasaShadeTile.prototype, "_entity", void 0);
+  __decorate([
+      r()
+  ], SmartQasaShadeTile.prototype, "_name", void 0);
+  __decorate([
+      r()
+  ], SmartQasaShadeTile.prototype, "_stateObj", void 0);
+  __decorate([
+      r()
+  ], SmartQasaShadeTile.prototype, "_tilt", void 0);
+  customElements.define("smartqasa-shade-tile", SmartQasaShadeTile);
+  window.customCards.push({
+      type: "smartqasa-shade-tile",
+      name: "SmartQasa Shade Tile",
+      preview: true,
+      description: "A SmartQasa tile for controlling a window shade entity.",
+  });
+
+  class SmartQasaSwitchTile extends s {
+      setConfig(config) {
+          var _a, _b, _c;
+          if (!config.entity) {
+              throw new Error("You must specify an entity");
+          }
+          this._category = (_a = config.category) !== null && _a !== void 0 ? _a : T;
+          this._entity = config.entity;
+          this._icon = (_b = config.icon) !== null && _b !== void 0 ? _b : T;
+          this._name = (_c = config.name) !== null && _c !== void 0 ? _c : T;
+      }
+      set hass(hass) {
+          var _a;
+          this._hass = hass;
+          this._stateObj = (_a = this._hass.states[this._entity]) !== null && _a !== void 0 ? _a : undefined;
+      }
+      render() {
+          var _a, _b, _c, _d, _e;
+          let icon = "hass:alert-rhombus";
+          let iconColor = "var(--sq-unavailable-rgb)";
+          let name = (_a = this._name) !== null && _a !== void 0 ? _a : "Unknown";
+          let stateFmtd = "Unknown";
+          if (this._stateObj) {
+              const state = this._stateObj.state;
+              icon = (_c = (_b = this._icon) !== null && _b !== void 0 ? _b : this._stateObj.attributes.icon) !== null && _c !== void 0 ? _c : "hass:help-circle";
+              iconColor = state === "on"
+                  ? `var(--sq-switch${this._category ? `-${this._category}` : ""}-on-rgb)`
+                  : "var(--sq-inactive-rgb)";
+              name = (_e = (_d = this._name) !== null && _d !== void 0 ? _d : this._stateObj.attributes.friendly_name) !== null && _e !== void 0 ? _e : this._entity;
+              stateFmtd = this._hass ? this._hass.formatEntityState(this._stateObj) : "Unknown";
+          }
+          return x `
+      <div class="container" @click=${this._showMoreInfo}>
+        <div
+          class="icon"
+          @click=${this._toggleEntity}
+          style="color: rgb(${iconColor}); background-color: rgba(${iconColor}, var(--sq-icon-opacity));"
+        >
+          <ha-icon .icon=${icon}></ha-icon>
+        </div>
+        <div class="name">${name}</div>
+        <div class="state">${stateFmtd}</div>
+      </div>
+    `;
+      }
+      _toggleEntity(e) {
+          e.stopPropagation();
+          if (this._hass && this._stateObj) {
+              this._hass.callService("homeassistant", "toggle", {
+                  entity_id: this._entity,
+              });
+          }
+      }
+      _showMoreInfo(e) {
+          e.stopPropagation();
+          const event = new CustomEvent("hass-more-info", {
+              bubbles: true,
+              composed: true,
+              detail: { entityId: this._entity },
+          });
+          this.dispatchEvent(event);
+      }
+      getCardSize() {
+          return 1;
+      }
+  }
+  SmartQasaSwitchTile.styles = [styleTileBase, styleTileState];
+  __decorate([
+      r()
+  ], SmartQasaSwitchTile.prototype, "_category", void 0);
+  __decorate([
+      r()
+  ], SmartQasaSwitchTile.prototype, "_entity", void 0);
+  __decorate([
+      r()
+  ], SmartQasaSwitchTile.prototype, "_icon", void 0);
+  __decorate([
+      r()
+  ], SmartQasaSwitchTile.prototype, "_name", void 0);
+  __decorate([
+      r()
+  ], SmartQasaSwitchTile.prototype, "_stateObj", void 0);
+  customElements.define("smartqasa-switch-tile", SmartQasaSwitchTile);
+  window.customCards.push({
+      type: "smartqasa-switch-tile",
+      name: "SmartQasa Switch Tile",
+      preview: true,
+      description: "A SmartQasa tile for toggling an entity.",
   });
 
   var _a;
