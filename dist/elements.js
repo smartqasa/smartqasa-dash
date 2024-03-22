@@ -892,8 +892,8 @@
               throw new Error("You must specify an entity");
           }
           this._entity = config.entity;
-          this._icon = (_a = config.icon) !== null && _a !== void 0 ? _a : T;
-          this._name = (_b = config.name) !== null && _b !== void 0 ? _b : T;
+          this._icon = (_a = config.icon) !== null && _a !== void 0 ? _a : null;
+          this._name = (_b = config.name) !== null && _b !== void 0 ? _b : null;
       }
       set hass(hass) {
           var _a;
