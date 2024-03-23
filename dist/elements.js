@@ -1036,63 +1036,66 @@
           if (!config.entity) {
               throw new Error("You must specify an entity");
           }
-          this._entity = config.entity;
           this._name = (_a = config.name) !== null && _a !== void 0 ? _a : undefined;
       }
       set hass(hass) {
-          var _a;
+          var _a, _b, _c, _d;
           this._hass = hass;
           this._stateObj = (_a = this._hass.states[this._entity]) !== null && _a !== void 0 ? _a : undefined;
-      }
-      render() {
-          var _a, _b, _c, _d;
-          let icon = "hass:alert-rhombus";
-          let iconColor = "var(--sq-unavailable-rgb)";
-          let name = (_a = this._name) !== null && _a !== void 0 ? _a : "Unknown";
-          let stateFmtd = "Unknown";
           if (this._stateObj) {
               const state = (_b = this._stateObj.state) !== null && _b !== void 0 ? _b : "unknown";
               switch (state) {
                   case "locked":
-                      icon = "hass:lock";
-                      iconColor = "var(--sq-inactive-rgb)";
+                      this._icon = "hass:lock";
+                      this._iconColor = "var(--sq-inactive-rgb)";
                       break;
                   case "unlocked":
-                      icon = "hass:lock-open";
-                      iconColor = "var(--sq-lock-unlocked-rgb)";
+                      this._icon = "hass:lock-open";
+                      this._iconColor = "var(--sq-lock-unlocked-rgb)";
                       break;
                   default:
-                      icon = "hass:alert-rhombus";
-                      iconColor = "var(--sq-unavailable-rgb)";
+                      this._icon = "hass:alert-rhombus";
+                      this._iconColor = "var(--sq-unavailable-rgb)";
                       break;
               }
-              name = (_d = (_c = this._name) !== null && _c !== void 0 ? _c : this._stateObj.attributes.friendly_name) !== null && _d !== void 0 ? _d : this._entity;
-              stateFmtd = this._hass.formatEntityState(this._stateObj);
+              this._iconAnimation = "none";
+              this._name = (_d = (_c = this._name) !== null && _c !== void 0 ? _c : this._stateObj.attributes.friendly_name) !== null && _d !== void 0 ? _d : this._entity;
+              this._stateFmtd = this._hass.formatEntityState(this._stateObj);
           }
+          else {
+              this._icon = "hass:alert-rhombus";
+              this._iconAnimation = "none";
+              this._iconColor = "var(--sq-unavailable-rgb)";
+              this._name = "Unknown";
+              this._stateFmtd = "Unknown";
+          }
+      }
+      render() {
           return x `
       <div class="container" @click=${this._showMoreInfo}>
         <div
           class="icon"
           id="icon"
           @click=${this._toggleLock}
-          style="color: rgb(${iconColor}); background-color: rgba(${iconColor}, var(--sq-icon-opacity));"
+          style="
+            color: rgb(${this._iconColor});
+            background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
+            animation: ${this._iconAnimation}"
         >
-          <ha-icon .icon=${icon}></ha-icon>
+          <ha-icon .icon=${this._icon}></ha-icon>
         </div>
-        <div class="name">${name}</div>
-        <div class="state">${stateFmtd}</div>
+        <div class="name">${this._name}</div>
+        <div class="state">${this._stateFmtd}</div>
       </div>
     `;
       }
       _toggleLock(e) {
-          var _a, _b, _c;
+          var _a;
           e.stopPropagation();
           if (this._hass && this._stateObj) {
-              const haIconElement = (_a = this.shadowRoot) === null || _a === void 0 ? void 0 : _a.querySelector("ha-icon");
-              haIconElement.icon = "hass:rotate-right";
-              const iconElement = (_b = this.shadowRoot) === null || _b === void 0 ? void 0 : _b.getElementById("icon");
-              iconElement.style.animation = "spin 1.0s linear infinite";
-              this._hass.callService("lock", ((_c = this._stateObj) === null || _c === void 0 ? void 0 : _c.state) === "locked" ? "unlock" : "lock", { entity_id: this._entity });
+              this._icon = "hass:rotate-right";
+              this._iconAnimation = "spin 1.0s linear infinite";
+              this._hass.callService("lock", ((_a = this._stateObj) === null || _a === void 0 ? void 0 : _a.state) === "locked" ? "unlock" : "lock", { entity_id: this._entity });
           }
       }
       _showMoreInfo(e) {
@@ -1115,6 +1118,18 @@
   __decorate([
       r()
   ], SmartQasaLockTile.prototype, "_name", void 0);
+  __decorate([
+      r()
+  ], SmartQasaLockTile.prototype, "_icon", void 0);
+  __decorate([
+      r()
+  ], SmartQasaLockTile.prototype, "_iconColor", void 0);
+  __decorate([
+      r()
+  ], SmartQasaLockTile.prototype, "_iconAnimation", void 0);
+  __decorate([
+      r()
+  ], SmartQasaLockTile.prototype, "_stateFmtd", void 0);
   __decorate([
       r()
   ], SmartQasaLockTile.prototype, "_stateObj", void 0);
