@@ -1038,6 +1038,9 @@
           }
           this._entity = config.entity;
           this._name = (_a = config.name) !== null && _a !== void 0 ? _a : undefined;
+          if (this._hass) {
+              this.hass = this._hass;
+          }
       }
       set hass(hass) {
           var _a, _b, _c, _d;
