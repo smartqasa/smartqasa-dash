@@ -1043,25 +1043,35 @@
           var _a, _b, _c, _d;
           this._hass = hass;
           this._stateObj = (_a = this._hass.states[this._entity]) !== null && _a !== void 0 ? _a : undefined;
-          console.log(this._entity);
           if (this._stateObj) {
               const state = (_b = this._stateObj.state) !== null && _b !== void 0 ? _b : "unknown";
-              console.log(state);
               switch (state) {
                   case "locked":
                       this._icon = "hass:lock";
+                      this._iconAnimation = "none";
+                      this._iconColor = "var(--sq-inactive-rgb)";
+                      break;
+                  case "unlocking":
+                      this._icon = "hass:rotate-right";
+                      this._iconAnimation = "spin 1.0s linear infinite";
                       this._iconColor = "var(--sq-inactive-rgb)";
                       break;
                   case "unlocked":
                       this._icon = "hass:lock-open";
+                      this._iconAnimation = "none";
+                      this._iconColor = "var(--sq-lock-unlocked-rgb)";
+                      break;
+                  case "locking":
+                      this._icon = "hass:rotate-right";
+                      this._iconAnimation = "spin 1.0s linear infinite";
                       this._iconColor = "var(--sq-lock-unlocked-rgb)";
                       break;
                   default:
                       this._icon = "hass:alert-rhombus";
+                      this._iconAnimation = "none";
                       this._iconColor = "var(--sq-unavailable-rgb)";
                       break;
               }
-              this._iconAnimation = "none";
               this._name = (_d = (_c = this._name) !== null && _c !== void 0 ? _c : this._stateObj.attributes.friendly_name) !== null && _d !== void 0 ? _d : this._entity;
               this._stateFmtd = this._hass.formatEntityState(this._stateObj);
           }
