@@ -1036,6 +1036,7 @@
           if (!config.entity) {
               throw new Error("You must specify an entity");
           }
+          this._entity = config.entity;
           this._name = (_a = config.name) !== null && _a !== void 0 ? _a : undefined;
       }
       set hass(hass) {
