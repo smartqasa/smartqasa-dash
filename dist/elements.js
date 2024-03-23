@@ -1043,8 +1043,10 @@
           var _a, _b, _c, _d;
           this._hass = hass;
           this._stateObj = (_a = this._hass.states[this._entity]) !== null && _a !== void 0 ? _a : undefined;
+          console.log(this._entity);
           if (this._stateObj) {
               const state = (_b = this._stateObj.state) !== null && _b !== void 0 ? _b : "unknown";
+              console.log(state);
               switch (state) {
                   case "locked":
                       this._icon = "hass:lock";
@@ -1081,7 +1083,8 @@
           style="
             color: rgb(${this._iconColor});
             background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
-            animation: ${this._iconAnimation}"
+            animation: ${this._iconAnimation}
+          "
         >
           <ha-icon .icon=${this._icon}></ha-icon>
         </div>
