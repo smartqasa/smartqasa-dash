@@ -280,43 +280,46 @@
           this._name = (_b = config.name) !== null && _b !== void 0 ? _b : undefined;
       }
       set hass(hass) {
-          var _a, _b, _c, _d;
+          var _a, _b, _c, _d, _e, _f, _g, _h;
           this._hass = hass;
-          this._areaObj = (_b = (_a = this._hass.areas) !== null && _a !== void 0 ? _a : [this._area]) !== null && _b !== void 0 ? _b : undefined;
-          this._icon = (_d = (_c = this._hass.areas[this._area].icon) !== null && _c !== void 0 ? _c : this._icon) !== null && _d !== void 0 ? _d : "hass:power";
+          this._areaObj = (_b = (_a = this._hass) === null || _a === void 0 ? void 0 : _a.areas[this._area]) !== null && _b !== void 0 ? _b : undefined;
+          if (this._areaObj) {
+              this._icon = (_d = (_c = this._icon) !== null && _c !== void 0 ? _c : this._hass.areas[this._area].icon) !== null && _d !== void 0 ? _d : "hass:power";
+              this._iconAnimation = "none";
+              this._iconColor = "var(--sq-inactive-rgb)";
+              this._name = (_f = (_e = this._name) !== null && _e !== void 0 ? _e : this._hass.areas[this._area].friendly_name) !== null && _f !== void 0 ? _f : this._area;
+          }
+          else {
+              this._icon = (_g = this._icon) !== null && _g !== void 0 ? _g : "hass:alert-rhombus";
+              this._iconAnimation = "none";
+              this._iconColor = "var(--sq-unavailable-rgb)";
+              this._name = (_h = this._name) !== null && _h !== void 0 ? _h : "Unknown";
+          }
       }
       render() {
-          var _a, _b;
-          let iconColor = "var(--sq-unavailable-rgb)";
-          let name = (_a = this._name) !== null && _a !== void 0 ? _a : "Unknown";
-          if (this._areaObj) {
-              iconColor = "var(--sq-inactive-rgb)";
-              name = (_b = this._name) !== null && _b !== void 0 ? _b : "All Off";
-          }
           return x `
       <div class="container" @click=${this._runRoutine}>
         <div
           class="icon"
           id="icon"
           style="
-            color: rgb(${iconColor});
-            background-color: rgba(${iconColor}, var(--sq-icon-opacity));
+            color: rgb(${this._iconColor});
+            background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
+            animation: ${this._iconAnimation};
           "
         >
           <ha-icon .icon=${this._icon}></ha-icon>
         </div>
-        <div class="name">${name}</div>
+        <div class="name">${this._name}</div>
       </div>
     `;
       }
       _runRoutine(e) {
-          var _a, _b;
           e.stopPropagation();
           if (this._hass && this._areaObj) {
-              const haIconElement = (_a = this.shadowRoot) === null || _a === void 0 ? void 0 : _a.querySelector("ha-icon");
-              haIconElement.icon = "hass:rotate-right";
-              const iconElement = (_b = this.shadowRoot) === null || _b === void 0 ? void 0 : _b.getElementById("icon");
-              iconElement.style.animation = "spin 1.0s linear infinite";
+              const icon = this._icon;
+              this._icon = "hass:rotate-right";
+              this._iconAnimation = "spin 1.0s linear infinite";
               this._hass.callService("light", "turn_off", {
                   area_id: this._area,
                   transition: 2,
@@ -325,9 +328,8 @@
                   area_id: this._area,
               });
               setTimeout(() => {
-                  haIconElement.icon = this._icon;
-                  iconElement.style.color = `rgb(var(--sq-inactive-rgb))`;
-                  iconElement.style.animation = "none";
+                  this._icon = icon;
+                  this._iconAnimation = "none";
               }, 2000);
           }
       }
@@ -345,6 +347,12 @@
   __decorate([
       r()
   ], SmartQasaAllOffTile.prototype, "_icon", void 0);
+  __decorate([
+      r()
+  ], SmartQasaAllOffTile.prototype, "_iconAnimation", void 0);
+  __decorate([
+      r()
+  ], SmartQasaAllOffTile.prototype, "_iconColor", void 0);
   __decorate([
       r()
   ], SmartQasaAllOffTile.prototype, "_name", void 0);
@@ -1043,7 +1051,7 @@
           }
       }
       set hass(hass) {
-          var _a, _b, _c, _d;
+          var _a, _b, _c, _d, _e;
           this._hass = hass;
           this._stateObj = (_a = this._hass.states[this._entity]) !== null && _a !== void 0 ? _a : undefined;
           if (this._stateObj) {
@@ -1069,6 +1077,11 @@
                       this._iconAnimation = "spin 1.0s linear infinite";
                       this._iconColor = "var(--sq-lock-unlocked-rgb)";
                       break;
+                  case "jammed":
+                      this._icon = "hass:lock-open";
+                      this._iconAnimation = "blink 1.0s linear infinite";
+                      this._iconColor = "var(--sq-lock-jammed-rgb, 255, 0, 0)";
+                      break;
                   default:
                       this._icon = "hass:alert-rhombus";
                       this._iconAnimation = "none";
@@ -1082,7 +1095,7 @@
               this._icon = "hass:alert-rhombus";
               this._iconAnimation = "none";
               this._iconColor = "var(--sq-unavailable-rgb)";
-              this._name = "Unknown";
+              this._name = (_e = this._name) !== null && _e !== void 0 ? _e : "Unknown";
               this._stateFmtd = "Unknown";
           }
       }
@@ -1091,12 +1104,11 @@
       <div class="container" @click=${this._showMoreInfo}>
         <div
           class="icon"
-          id="icon"
           @click=${this._toggleLock}
           style="
             color: rgb(${this._iconColor});
             background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
-            animation: ${this._iconAnimation}
+            animation: ${this._iconAnimation};
           "
         >
           <ha-icon .icon=${this._icon}></ha-icon>
@@ -1107,12 +1119,12 @@
     `;
       }
       _toggleLock(e) {
-          var _a;
           e.stopPropagation();
           if (this._hass && this._stateObj) {
               this._icon = "hass:rotate-right";
               this._iconAnimation = "spin 1.0s linear infinite";
-              this._hass.callService("lock", ((_a = this._stateObj) === null || _a === void 0 ? void 0 : _a.state) === "locked" ? "unlock" : "lock", { entity_id: this._entity });
+              this._stateFmtd = this._stateObj.state == "locked" ? "Unlocking" : "Locking",
+                  this._hass.callService("lock", this._stateObj.state == "locked" ? "unlock" : "lock", { entity_id: this._entity });
           }
       }
       _showMoreInfo(e) {
@@ -1128,7 +1140,7 @@
           return 1;
       }
   }
-  SmartQasaLockTile.styles = [styleTileBase, styleTileState, styleTileIconSpin];
+  SmartQasaLockTile.styles = [styleTileBase, styleTileState, styleTileIconBlink, styleTileIconSpin];
   __decorate([
       r()
   ], SmartQasaLockTile.prototype, "_entity", void 0);
