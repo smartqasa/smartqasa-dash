@@ -1,5 +1,5 @@
 import { CSSResultGroup, html, LitElement, TemplateResult } from "lit";
-import { state } from "lit/decorators.js";
+import { customElement, state } from "lit/decorators.js";
 
 import styleTileBase from "../styles/tile-base";
 import styleTileState from "../styles/tile-state";
@@ -13,13 +13,18 @@ interface Config extends LovelaceCardConfig {
   name?: string;
 }
 
+@customElement("smartqasa-light-tile")
 export class SmartQasaLightTile extends LitElement {
   @state() private _entity: string;
-  @state() private _icon?: string;
-  @state() private _name?: string;
+  @state() private _name: string;
+  @state() private _icon: string;
+  @state() private _iconColor: string;
+  @state() private _stateFmtd: string;
   @state() private _stateObj?: HassEntity;
 
   private _hass;
+
+  static styles: CSSResultGroup = [styleTileBase, styleTileState];
 
   setConfig(config: Config): void {
     if (!config.entity) {
@@ -33,42 +38,43 @@ export class SmartQasaLightTile extends LitElement {
   set hass(hass: HomeAssistant) {
     this._hass = hass;
     this._stateObj = this._hass.states[this._entity] ?? undefined;
+    this._updateState();
   }
 
-  static styles: CSSResultGroup = [styleTileBase, styleTileState];
-
-  render(): TemplateResult {
-    let icon = this._icon ?? "hass:alert-rhombus";
-    let iconColor = "var(--sq-unavailable-rgb)";
-    let name = this._name ?? "Unknown";
-    let stateFmtd = "Unknown";
-
+  private _updateState(): void {
     if (this._stateObj) {
       const state = this._stateObj.state ?? "unknown";
-      icon = this._icon ?? this._stateObj.attributes.icon ?? "hass:help-circle";
-      iconColor = state == "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
-      name = this._name ?? this._stateObj.attributes.friendly_name ?? this._entity;
-      stateFmtd =
+      this._icon = this._icon ?? this._stateObj.attributes.icon ?? "hass:help-circle";
+      this._iconColor = state == "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
+      this._name = this._name ?? this._stateObj.attributes.friendly_name ?? this._entity;
+      this._stateFmtd =
         this._hass.formatEntityState(this._stateObj) +
         (state == "on" && this._stateObj.attributes.brightness
           ? " - " + this._hass.formatEntityAttributeValue(this._stateObj, "brightness")
           : "");
+    } else {
+      this._icon = this._icon ?? "hass:alert-rhombus";
+      this._iconColor = "var(--sq-unavailable-rgb)";
+      this._name = this._name ?? "Unknown";
+      this._stateFmtd = "Unknown";
     }
+  }
 
+  render(): TemplateResult {
     return html`
       <div class="container" @click=${this._showMoreInfo}>
         <div
           class="icon"
           @click=${this._toggleEntity}
           style="
-            color: rgb(${iconColor});
-            background-color: rgba(${iconColor}, var(--sq-icon-opacity));
+            color: rgb(${this._iconColor});
+            background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
           "
         >
-          <ha-icon .icon=${icon}></ha-icon>
+          <ha-icon .icon=${this._icon}></ha-icon>
         </div>
-        <div class="name">${name}</div>
-        <div class="state">${stateFmtd}</div>
+        <div class="name">${this._name}</div>
+        <div class="state">${this._stateFmtd}</div>
       </div>
     `;
   }
@@ -82,20 +88,20 @@ export class SmartQasaLightTile extends LitElement {
 
   private _showMoreInfo(e: Event): void {
     e.stopPropagation();
-    const event = new CustomEvent("hass-more-info", {
-      bubbles: true,
-      composed: true,
-      detail: { entityId: this._entity },
-    });
-    this.dispatchEvent(event);
+    if (this._hass && this._stateObj) {
+      const event = new CustomEvent("hass-more-info", {
+        bubbles: true,
+        composed: true,
+        detail: { entityId: this._entity },
+      });
+      this.dispatchEvent(event);
+    }
   }
 
   getCardSize() {
     return 1;
   }
 }
-
-customElements.define("smartqasa-light-tile", SmartQasaLightTile);
 
 window.customCards.push({
   type: "smartqasa-light-tile",

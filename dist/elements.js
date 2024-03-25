@@ -66,6 +66,68 @@
    * SPDX-License-Identifier: BSD-3-Clause
    */function r(r){return n({...r,state:!0,attribute:!1})}
 
+  class SmartQasaAreaPicture extends s {
+      setConfig(config) {
+          var _a;
+          if (!config.area) {
+              throw new Error("You must specify an area");
+          }
+          this._area = config.area;
+          this._picture = (_a = config.picture) !== null && _a !== void 0 ? _a : undefined;
+      }
+      set hass(hass) {
+          var _a;
+          this._hass = hass;
+          this._areaObj = (_a = this._hass.areas[this._area]) !== null && _a !== void 0 ? _a : undefined;
+      }
+      static get styles() {
+          return i$2 `
+      :host {
+        display: block;
+      }
+      ha-card {
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center center;
+        border-radius: 4px;
+        border: none;
+        box-shadow: none;
+        background-color: transparent;
+        overflow: hidden;
+      }
+    `;
+      }
+      render() {
+          var _a, _b, _c;
+          if (!this._areaObj && this._area !== "home") {
+              return x ``;
+          }
+          const height = window.smartqasa.deviceType == "phone" ? "15vh" : "20vh";
+          const picture = this._picture
+              ? `/local/sq-areas/${this._picture}`
+              : (_c = (_b = (_a = this._hass) === null || _a === void 0 ? void 0 : _a.areas[this._area]) === null || _b === void 0 ? void 0 : _b.picture) !== null && _c !== void 0 ? _c : "/local/sq-storage/images/default.png";
+          return x `
+      <ha-card
+        style="background-image: url(${picture}); height: ${height};"
+        class="picture"
+      ></ha-card>
+    `;
+      }
+      getCardSize() {
+          return 1;
+      }
+  }
+  __decorate([
+      r()
+  ], SmartQasaAreaPicture.prototype, "_area", void 0);
+  __decorate([
+      r()
+  ], SmartQasaAreaPicture.prototype, "_areaObj", void 0);
+  __decorate([
+      r()
+  ], SmartQasaAreaPicture.prototype, "_picture", void 0);
+  customElements.define("smartqasa-area-picture", SmartQasaAreaPicture);
+
   class SmartQasaTimeDate extends s {
       constructor() {
           super(...arguments);
@@ -218,44 +280,46 @@
           this._name = (_b = config.name) !== null && _b !== void 0 ? _b : undefined;
       }
       set hass(hass) {
-          var _a;
+          var _a, _b, _c, _d, _e, _f, _g, _h;
           this._hass = hass;
-          this._areaObj = (_a = this._hass.areas[this._area]) !== null && _a !== void 0 ? _a : undefined;
+          this._areaObj = (_b = (_a = this._hass) === null || _a === void 0 ? void 0 : _a.areas[this._area]) !== null && _b !== void 0 ? _b : undefined;
+          if (this._areaObj) {
+              this._icon = (_d = (_c = this._icon) !== null && _c !== void 0 ? _c : this._hass.areas[this._area].icon) !== null && _d !== void 0 ? _d : "hass:power";
+              this._iconAnimation = "none";
+              this._iconColor = "var(--sq-inactive-rgb)";
+              this._name = (_f = (_e = this._name) !== null && _e !== void 0 ? _e : this._hass.areas[this._area].name) !== null && _f !== void 0 ? _f : this._area;
+          }
+          else {
+              this._icon = (_g = this._icon) !== null && _g !== void 0 ? _g : "hass:alert-rhombus";
+              this._iconAnimation = "none";
+              this._iconColor = "var(--sq-unavailable-rgb)";
+              this._name = (_h = this._name) !== null && _h !== void 0 ? _h : "Unknown";
+          }
       }
       render() {
-          var _a, _b, _c, _d;
-          this._icon = (_a = this._icon) !== null && _a !== void 0 ? _a : "hass:alert-rhombus";
-          let iconColor = "var(--sq-unavailable-rgb)";
-          let name = (_b = this._name) !== null && _b !== void 0 ? _b : "Unknown";
-          if (this._areaObj) {
-              this._icon = (_c = this._icon) !== null && _c !== void 0 ? _c : "hass:power";
-              iconColor = "var(--sq-inactive-rgb)";
-              name = (_d = this._name) !== null && _d !== void 0 ? _d : "All Off";
-          }
           return x `
       <div class="container" @click=${this._runRoutine}>
         <div
           class="icon"
           id="icon"
           style="
-            color: rgb(${iconColor});
-            background-color: rgba(${iconColor}, var(--sq-icon-opacity));
+            color: rgb(${this._iconColor});
+            background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
+            animation: ${this._iconAnimation};
           "
         >
           <ha-icon .icon=${this._icon}></ha-icon>
         </div>
-        <div class="name">${name}</div>
+        <div class="name">${this._name}</div>
       </div>
     `;
       }
       _runRoutine(e) {
-          var _a, _b;
           e.stopPropagation();
           if (this._hass && this._areaObj) {
-              const haIconElement = (_a = this.shadowRoot) === null || _a === void 0 ? void 0 : _a.querySelector("ha-icon");
-              haIconElement.icon = "hass:rotate-right";
-              const iconElement = (_b = this.shadowRoot) === null || _b === void 0 ? void 0 : _b.getElementById("icon");
-              iconElement.style.animation = "spin 1.0s linear infinite";
+              const icon = this._icon;
+              this._icon = "hass:rotate-right";
+              this._iconAnimation = "spin 1.0s linear infinite";
               this._hass.callService("light", "turn_off", {
                   area_id: this._area,
                   transition: 2,
@@ -264,9 +328,8 @@
                   area_id: this._area,
               });
               setTimeout(() => {
-                  haIconElement.icon = this._icon;
-                  iconElement.style.color = `rgb(var(--sq-inactive-rgb))`;
-                  iconElement.style.animation = "none";
+                  this._icon = icon;
+                  this._iconAnimation = "none";
               }, 2000);
           }
       }
@@ -284,6 +347,12 @@
   __decorate([
       r()
   ], SmartQasaAllOffTile.prototype, "_icon", void 0);
+  __decorate([
+      r()
+  ], SmartQasaAllOffTile.prototype, "_iconAnimation", void 0);
+  __decorate([
+      r()
+  ], SmartQasaAllOffTile.prototype, "_iconColor", void 0);
   __decorate([
       r()
   ], SmartQasaAllOffTile.prototype, "_name", void 0);
@@ -671,51 +740,55 @@
           this._name = (_b = config.name) !== null && _b !== void 0 ? _b : undefined;
       }
       set hass(hass) {
-          var _a;
+          var _a, _b, _c, _d, _e, _f, _g;
           this._hass = hass;
           this._stateObj = (_a = this._hass.states[this._entity]) !== null && _a !== void 0 ? _a : undefined;
-      }
-      render() {
-          var _a, _b, _c, _d, _e, _f;
-          let icon = (_a = this._icon) !== null && _a !== void 0 ? _a : "hass:alert-rhombus";
-          let iconColor = "var(--sq-unavailable-rgb)";
-          let iconAnimation = "none";
-          let name = (_b = this._name) !== null && _b !== void 0 ? _b : "Unknown";
-          let stateFmtd = "Unknown";
           if (this._stateObj) {
-              const state = (_c = this._stateObj.state) !== null && _c !== void 0 ? _c : "unknown";
-              icon = (_d = this._icon) !== null && _d !== void 0 ? _d : "hass:fan";
-              iconColor = state == "on" ? "var(--sq-fan-on-rgb)" : "var(--sq-inactive-rgb)";
-              if (state === "on") {
+              const state = (_b = this._stateObj.state) !== null && _b !== void 0 ? _b : "unknown";
+              this._icon = (_c = this._icon) !== null && _c !== void 0 ? _c : "hass:fan";
+              if (state == "on" && this._icon == "hass:fan") {
                   if (this._stateObj.attributes.percentage) {
                       const speed = 0.5 + (1 - this._stateObj.attributes.percentage / 100);
                       const direction = this._stateObj.attributes.direction === "reverse"
                           ? "reverse"
                           : "normal";
-                      iconAnimation = `spin ${speed}s linear infinite ${direction}`;
+                      this._iconAnimation = `spin ${speed}s linear infinite ${direction}`;
                   }
                   else {
-                      iconAnimation = `spin 0.5s linear infinite normal`;
+                      this._iconAnimation = `spin 0.5s linear infinite normal`;
                   }
               }
-              name = (_f = (_e = this._name) !== null && _e !== void 0 ? _e : this._stateObj.attributes.friendly_name) !== null && _f !== void 0 ? _f : this._entity;
-              stateFmtd =
+              this._iconColor = state == "on" ? "var(--sq-fan-on-rgb)" : "var(--sq-inactive-rgb)";
+              this._name = (_e = (_d = this._name) !== null && _d !== void 0 ? _d : this._stateObj.attributes.friendly_name) !== null && _e !== void 0 ? _e : this._entity;
+              this._stateFmtd =
                   this._hass.formatEntityState(this._stateObj) +
                       (state == "on" && this._stateObj.attributes.percentage
                           ? " - " + this._hass.formatEntityAttributeValue(this._stateObj, "percentage")
                           : "");
           }
+          else {
+              this._icon = (_f = this._icon) !== null && _f !== void 0 ? _f : "hass:alert-rhombus";
+              this._iconAnimation = "none";
+              this._iconColor = "var(--sq-unavailable-rgb)";
+              this._name = (_g = this._name) !== null && _g !== void 0 ? _g : "Unknown";
+              this._stateFmtd = "Unknown";
+          }
+      }
+      render() {
           return x `
       <div class="container" @click=${this._showMoreInfo}>
         <div
           class="icon"
           @click=${this._toggleEntity}
-          style="color: rgb(${iconColor}); background-color: rgba(${iconColor}, var(--sq-icon-opacity)); animation: ${iconAnimation};"
+          style="
+            color: rgb(${this._iconColor});
+            background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
+            animation: ${this._iconAnimation};"
         >
-          <ha-icon .icon=${icon}></ha-icon>
+          <ha-icon .icon=${this._icon}></ha-icon>
         </div>
-        <div class="name">${name}</div>
-        <div class="state">${stateFmtd}</div>
+        <div class="name">${this._name}</div>
+        <div class="state">${this._stateFmtd}</div>
       </div>
     `;
       }
@@ -747,7 +820,16 @@
   ], SmartQasaFanTile.prototype, "_icon", void 0);
   __decorate([
       r()
+  ], SmartQasaFanTile.prototype, "_iconColor", void 0);
+  __decorate([
+      r()
+  ], SmartQasaFanTile.prototype, "_iconAnimation", void 0);
+  __decorate([
+      r()
   ], SmartQasaFanTile.prototype, "_name", void 0);
+  __decorate([
+      r()
+  ], SmartQasaFanTile.prototype, "_stateFmtd", void 0);
   __decorate([
       r()
   ], SmartQasaFanTile.prototype, "_stateObj", void 0);
@@ -777,69 +859,70 @@
           this._name = (_a = config.name) !== null && _a !== void 0 ? _a : undefined;
       }
       set hass(hass) {
-          var _a;
+          var _a, _b, _c, _d, _e;
           this._hass = hass;
           this._stateObj = (_a = this._hass.states[this._entity]) !== null && _a !== void 0 ? _a : undefined;
-      }
-      render() {
-          var _a, _b, _c, _d;
-          let icon = "hass:alert-rhombus";
-          let iconColor = "var(--sq-unavailable-rgb)";
-          let iconAnimation = "none";
-          let name = (_a = this._name) !== null && _a !== void 0 ? _a : "Unknown";
-          let stateFmtd;
           if (this._stateObj) {
               const state = (_b = this._stateObj.state) !== null && _b !== void 0 ? _b : "unknown";
               switch (state) {
                   case "closed":
-                      icon = "hass:garage-variant";
-                      iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
-                      iconAnimation = "none";
-                      break;
-                  case "closing":
-                      icon = "hass:arrow-down-box";
-                      iconColor = "var(--sq-garage-closing-rgb, 255, 120, 0)";
-                      iconAnimation = "blink 2.0s linear infinite";
+                      this._icon = "hass:garage-variant";
+                      this._iconAnimation = "none";
+                      this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
                       break;
                   case "opening":
-                      icon = "hass:arrow-up-box";
-                      iconColor = "var(--sq-garage-opening-rgb, 255, 120, 0)";
-                      iconAnimation = "blink 2.0s linear infinite";
+                      this._icon = "hass:arrow-up-box";
+                      this._iconAnimation = "blink 2.0s linear infinite";
+                      this._iconColor = "var(--sq-garage-opening-rgb, 255, 120, 0)";
                       break;
                   case "open":
-                      icon = "hass:garage-open-variant";
-                      iconColor = "var(--sq-garage-open-rgb, 255, 120, 0)";
-                      iconAnimation = "none";
+                      this._icon = "hass:garage-open-variant";
+                      this._iconAnimation = "none";
+                      this._iconColor = "var(--sq-garage-open-rgb, 255, 120, 0)";
+                      break;
+                  case "closing":
+                      this._icon = "hass:arrow-down-box";
+                      this._iconAnimation = "blink 2.0s linear infinite";
+                      this._iconColor = "var(--sq-garage-closing-rgb, 255, 120, 0)";
                       break;
                   default:
-                      icon = "hass:alert-rhombus";
-                      iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-                      iconAnimation = "none";
+                      this._icon = "hass:alert-rhombus";
+                      this._iconAnimation = "none";
+                      this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
                       break;
               }
-              stateFmtd =
+              this._stateFmtd =
                   this._hass.formatEntityState(this._stateObj) +
                       (state === "open" && this._stateObj.attributes.current_position
                           ? " - " +
                               this._hass.formatEntityAttributeValue(this._stateObj, "current_position")
                           : "");
-              name = (_d = (_c = this._name) !== null && _c !== void 0 ? _c : this._stateObj.attributes.friendly_name) !== null && _d !== void 0 ? _d : this._entity;
+              this._name = (_d = (_c = this._name) !== null && _c !== void 0 ? _c : this._stateObj.attributes.friendly_name) !== null && _d !== void 0 ? _d : this._entity;
           }
+          else {
+              this._icon = "hass:alert-rhombus";
+              this._iconAnimation = "none";
+              this._iconColor = "var(--sq-unavailable-rgb)";
+              this._name = (_e = this._name) !== null && _e !== void 0 ? _e : "Unknown";
+              this._stateFmtd = "Unknown";
+          }
+      }
+      render() {
           return x `
       <div class="container" @click=${this._showMoreInfo}>
         <div
           class="icon"
           @click=${this._toggleEntity}
           style="
-            color: rgb(${iconColor});
-            background-color: rgba(${iconColor}, var(--sq-icon-opacity));
-            animation: ${iconAnimation};
+            color: rgb(${this._iconColor});
+            background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
+            animation: ${this._iconAnimation};
           "
         >
-          <ha-icon .icon=${icon}></ha-icon>
+          <ha-icon .icon=${this._icon}></ha-icon>
         </div>
-        <div class="name">${name}</div>
-        <div class="state">${stateFmtd}</div>
+        <div class="name">${this._name}</div>
+        <div class="state">${this._stateFmtd}</div>
       </div>
     `;
       }
@@ -851,12 +934,14 @@
       }
       _showMoreInfo(e) {
           e.stopPropagation();
-          const event = new CustomEvent("hass-more-info", {
-              bubbles: true,
-              composed: true,
-              detail: { entityId: this._entity },
-          });
-          this.dispatchEvent(event);
+          if (this._hass && this._stateObj) {
+              const event = new CustomEvent("hass-more-info", {
+                  bubbles: true,
+                  composed: true,
+                  detail: { entityId: this._entity },
+              });
+              this.dispatchEvent(event);
+          }
       }
       getCardSize() {
           return 1;
@@ -869,6 +954,18 @@
   __decorate([
       r()
   ], SmartQasaGarageTile.prototype, "_name", void 0);
+  __decorate([
+      r()
+  ], SmartQasaGarageTile.prototype, "_icon", void 0);
+  __decorate([
+      r()
+  ], SmartQasaGarageTile.prototype, "_iconAnimation", void 0);
+  __decorate([
+      r()
+  ], SmartQasaGarageTile.prototype, "_iconColor", void 0);
+  __decorate([
+      r()
+  ], SmartQasaGarageTile.prototype, "_stateFmtd", void 0);
   __decorate([
       r()
   ], SmartQasaGarageTile.prototype, "_stateObj", void 0);
@@ -891,41 +988,42 @@
           this._name = (_b = config.name) !== null && _b !== void 0 ? _b : undefined;
       }
       set hass(hass) {
-          var _a;
+          var _a, _b, _c, _d, _e, _f, _g, _h;
           this._hass = hass;
           this._stateObj = (_a = this._hass.states[this._entity]) !== null && _a !== void 0 ? _a : undefined;
-      }
-      render() {
-          var _a, _b, _c, _d, _e, _f, _g;
-          let icon = (_a = this._icon) !== null && _a !== void 0 ? _a : "hass:alert-rhombus";
-          let iconColor = "var(--sq-unavailable-rgb)";
-          let name = (_b = this._name) !== null && _b !== void 0 ? _b : "Unknown";
-          let stateFmtd = "Unknown";
           if (this._stateObj) {
-              const state = (_c = this._stateObj.state) !== null && _c !== void 0 ? _c : "unknown";
-              icon = (_e = (_d = this._icon) !== null && _d !== void 0 ? _d : this._stateObj.attributes.icon) !== null && _e !== void 0 ? _e : "hass:help-circle";
-              iconColor = state == "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
-              name = (_g = (_f = this._name) !== null && _f !== void 0 ? _f : this._stateObj.attributes.friendly_name) !== null && _g !== void 0 ? _g : this._entity;
-              stateFmtd =
+              const state = (_b = this._stateObj.state) !== null && _b !== void 0 ? _b : "unknown";
+              this._icon = (_d = (_c = this._icon) !== null && _c !== void 0 ? _c : this._stateObj.attributes.icon) !== null && _d !== void 0 ? _d : "hass:help-circle";
+              this._iconColor = state == "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
+              this._name = (_f = (_e = this._name) !== null && _e !== void 0 ? _e : this._stateObj.attributes.friendly_name) !== null && _f !== void 0 ? _f : this._entity;
+              this._stateFmtd =
                   this._hass.formatEntityState(this._stateObj) +
                       (state == "on" && this._stateObj.attributes.brightness
                           ? " - " + this._hass.formatEntityAttributeValue(this._stateObj, "brightness")
                           : "");
           }
+          else {
+              this._icon = (_g = this._icon) !== null && _g !== void 0 ? _g : "hass:alert-rhombus";
+              this._iconColor = "var(--sq-unavailable-rgb)";
+              this._name = (_h = this._name) !== null && _h !== void 0 ? _h : "Unknown";
+              this._stateFmtd = "Unknown";
+          }
+      }
+      render() {
           return x `
       <div class="container" @click=${this._showMoreInfo}>
         <div
           class="icon"
           @click=${this._toggleEntity}
           style="
-            color: rgb(${iconColor});
-            background-color: rgba(${iconColor}, var(--sq-icon-opacity));
+            color: rgb(${this._iconColor});
+            background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
           "
         >
-          <ha-icon .icon=${icon}></ha-icon>
+          <ha-icon .icon=${this._icon}></ha-icon>
         </div>
-        <div class="name">${name}</div>
-        <div class="state">${stateFmtd}</div>
+        <div class="name">${this._name}</div>
+        <div class="state">${this._stateFmtd}</div>
       </div>
     `;
       }
@@ -937,12 +1035,14 @@
       }
       _showMoreInfo(e) {
           e.stopPropagation();
-          const event = new CustomEvent("hass-more-info", {
-              bubbles: true,
-              composed: true,
-              detail: { entityId: this._entity },
-          });
-          this.dispatchEvent(event);
+          if (this._hass && this._stateObj) {
+              const event = new CustomEvent("hass-more-info", {
+                  bubbles: true,
+                  composed: true,
+                  detail: { entityId: this._entity },
+              });
+              this.dispatchEvent(event);
+          }
       }
       getCardSize() {
           return 1;
@@ -954,10 +1054,16 @@
   ], SmartQasaLightTile.prototype, "_entity", void 0);
   __decorate([
       r()
+  ], SmartQasaLightTile.prototype, "_name", void 0);
+  __decorate([
+      r()
   ], SmartQasaLightTile.prototype, "_icon", void 0);
   __decorate([
       r()
-  ], SmartQasaLightTile.prototype, "_name", void 0);
+  ], SmartQasaLightTile.prototype, "_iconColor", void 0);
+  __decorate([
+      r()
+  ], SmartQasaLightTile.prototype, "_stateFmtd", void 0);
   __decorate([
       r()
   ], SmartQasaLightTile.prototype, "_stateObj", void 0);
@@ -977,83 +1083,121 @@
           }
           this._entity = config.entity;
           this._name = (_a = config.name) !== null && _a !== void 0 ? _a : undefined;
+          if (this._hass) {
+              this.hass = this._hass;
+          }
       }
       set hass(hass) {
-          var _a;
+          var _a, _b, _c, _d, _e;
           this._hass = hass;
           this._stateObj = (_a = this._hass.states[this._entity]) !== null && _a !== void 0 ? _a : undefined;
-      }
-      render() {
-          var _a, _b, _c, _d;
-          let icon = "hass:alert-rhombus";
-          let iconColor = "var(--sq-unavailable-rgb)";
-          let name = (_a = this._name) !== null && _a !== void 0 ? _a : "Unknown";
-          let stateFmtd = "Unknown";
           if (this._stateObj) {
               const state = (_b = this._stateObj.state) !== null && _b !== void 0 ? _b : "unknown";
               switch (state) {
                   case "locked":
-                      icon = "hass:lock";
-                      iconColor = "var(--sq-inactive-rgb)";
+                      this._icon = "hass:lock";
+                      this._iconAnimation = "none";
+                      this._iconColor = "var(--sq-inactive-rgb)";
+                      break;
+                  case "unlocking":
+                      this._icon = "hass:rotate-right";
+                      this._iconAnimation = "spin 1.0s linear infinite";
+                      this._iconColor = "var(--sq-inactive-rgb)";
                       break;
                   case "unlocked":
-                      icon = "hass:lock-open";
-                      iconColor = "var(--sq-lock-unlocked-rgb)";
+                      this._icon = "hass:lock-open";
+                      this._iconAnimation = "none";
+                      this._iconColor = "var(--sq-lock-unlocked-rgb)";
+                      break;
+                  case "locking":
+                      this._icon = "hass:rotate-right";
+                      this._iconAnimation = "spin 1.0s linear infinite";
+                      this._iconColor = "var(--sq-lock-unlocked-rgb)";
+                      break;
+                  case "jammed":
+                      this._icon = "hass:lock-open";
+                      this._iconAnimation = "blink 1.0s linear infinite";
+                      this._iconColor = "var(--sq-lock-jammed-rgb, 255, 0, 0)";
                       break;
                   default:
-                      icon = "hass:alert-rhombus";
-                      iconColor = "var(--sq-unavailable-rgb)";
+                      this._icon = "hass:alert-rhombus";
+                      this._iconAnimation = "none";
+                      this._iconColor = "var(--sq-unavailable-rgb)";
                       break;
               }
-              name = (_d = (_c = this._name) !== null && _c !== void 0 ? _c : this._stateObj.attributes.friendly_name) !== null && _d !== void 0 ? _d : this._entity;
-              stateFmtd = this._hass.formatEntityState(this._stateObj);
+              this._name = (_d = (_c = this._name) !== null && _c !== void 0 ? _c : this._stateObj.attributes.friendly_name) !== null && _d !== void 0 ? _d : this._entity;
+              this._stateFmtd = this._hass.formatEntityState(this._stateObj);
           }
+          else {
+              this._icon = "hass:alert-rhombus";
+              this._iconAnimation = "none";
+              this._iconColor = "var(--sq-unavailable-rgb)";
+              this._name = (_e = this._name) !== null && _e !== void 0 ? _e : "Unknown";
+              this._stateFmtd = "Unknown";
+          }
+      }
+      render() {
           return x `
       <div class="container" @click=${this._showMoreInfo}>
         <div
           class="icon"
-          id="icon"
           @click=${this._toggleLock}
-          style="color: rgb(${iconColor}); background-color: rgba(${iconColor}, var(--sq-icon-opacity));"
+          style="
+            color: rgb(${this._iconColor});
+            background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
+            animation: ${this._iconAnimation};
+          "
         >
-          <ha-icon .icon=${icon}></ha-icon>
+          <ha-icon .icon=${this._icon}></ha-icon>
         </div>
-        <div class="name">${name}</div>
-        <div class="state">${stateFmtd}</div>
+        <div class="name">${this._name}</div>
+        <div class="state">${this._stateFmtd}</div>
       </div>
     `;
       }
       _toggleLock(e) {
-          var _a, _b, _c;
           e.stopPropagation();
           if (this._hass && this._stateObj) {
-              const haIconElement = (_a = this.shadowRoot) === null || _a === void 0 ? void 0 : _a.querySelector("ha-icon");
-              haIconElement.icon = "hass:rotate-right";
-              const iconElement = (_b = this.shadowRoot) === null || _b === void 0 ? void 0 : _b.getElementById("icon");
-              iconElement.style.animation = "spin 1.0s linear infinite";
-              this._hass.callService("lock", ((_c = this._stateObj) === null || _c === void 0 ? void 0 : _c.state) === "locked" ? "unlock" : "lock", { entity_id: this._entity });
+              this._icon = "hass:rotate-right";
+              this._iconAnimation = "spin 1.0s linear infinite";
+              this._stateFmtd = this._stateObj.state == "locked" ? "Unlocking" : "Locking",
+                  this._hass.callService("lock", this._stateObj.state == "locked" ? "unlock" : "lock", { entity_id: this._entity });
           }
       }
       _showMoreInfo(e) {
           e.stopPropagation();
-          const event = new CustomEvent("hass-more-info", {
-              bubbles: true,
-              composed: true,
-              detail: { entityId: this._entity },
-          });
-          this.dispatchEvent(event);
+          if (this._hass && this._stateObj) {
+              const event = new CustomEvent("hass-more-info", {
+                  bubbles: true,
+                  composed: true,
+                  detail: { entityId: this._entity },
+              });
+              this.dispatchEvent(event);
+          }
       }
       getCardSize() {
           return 1;
       }
   }
-  SmartQasaLockTile.styles = [styleTileBase, styleTileState, styleTileIconSpin];
+  SmartQasaLockTile.styles = [styleTileBase, styleTileState, styleTileIconBlink, styleTileIconSpin];
   __decorate([
       r()
   ], SmartQasaLockTile.prototype, "_entity", void 0);
   __decorate([
       r()
   ], SmartQasaLockTile.prototype, "_name", void 0);
+  __decorate([
+      r()
+  ], SmartQasaLockTile.prototype, "_icon", void 0);
+  __decorate([
+      r()
+  ], SmartQasaLockTile.prototype, "_iconColor", void 0);
+  __decorate([
+      r()
+  ], SmartQasaLockTile.prototype, "_iconAnimation", void 0);
+  __decorate([
+      r()
+  ], SmartQasaLockTile.prototype, "_stateFmtd", void 0);
   __decorate([
       r()
   ], SmartQasaLockTile.prototype, "_stateObj", void 0);
@@ -1084,6 +1228,7 @@
           var _a, _b, _c, _d, _e, _f;
           this._icon = (_a = this._icon) !== null && _a !== void 0 ? _a : "hass:alert-rhombus";
           let iconColor = "var(--sq-unavailable-rgb)";
+          this._iconAnimation = "none";
           let name = (_b = this._name) !== null && _b !== void 0 ? _b : "Unknown";
           if (this._stateObj) {
               this._icon = (_d = (_c = this._icon) !== null && _c !== void 0 ? _c : this._stateObj.attributes.icon) !== null && _d !== void 0 ? _d : "hass:help-circle";
@@ -1096,7 +1241,11 @@
           class="icon"
           id="icon"
           @click=${this._runRoutine}
-          style="color: rgb(${iconColor}); background-color: rgba(${iconColor}, var(--sq-icon-opacity));"
+          style="
+            color: rgb(${iconColor});
+            background-color: rgba(${iconColor}, var(--sq-icon-opacity));
+            animation: ${this._iconAnimation};
+          "
         >
           <ha-icon .icon=${this._icon}></ha-icon>
         </div>
@@ -1105,13 +1254,11 @@
     `;
       }
       _runRoutine(e) {
-          var _a, _b;
           e.stopPropagation();
           if (this._hass && this._stateObj) {
-              const haIconElement = (_a = this.shadowRoot) === null || _a === void 0 ? void 0 : _a.querySelector("ha-icon");
-              haIconElement.icon = "hass:rotate-right";
-              const iconElement = (_b = this.shadowRoot) === null || _b === void 0 ? void 0 : _b.getElementById("icon");
-              iconElement.style.animation = "spin 1.0s linear infinite";
+              let icon = this._icon;
+              this._icon = "hass:rotate-right";
+              this._iconAnimation = "spin 1.0s linear infinite";
               const domain = this._entity.split(".")[0];
               switch (domain) {
                   case "script":
@@ -1128,9 +1275,8 @@
                       return;
               }
               setTimeout(() => {
-                  haIconElement.icon = this._icon;
-                  iconElement.style.color = `rgb(var(--sq-inactive-rgb))`;
-                  iconElement.style.animation = "none";
+                  this._icon = icon;
+                  this._iconAnimation = "none";
               }, 2000);
           }
       }
@@ -1145,6 +1291,9 @@
   __decorate([
       r()
   ], SmartQasaRoutineTile.prototype, "_icon", void 0);
+  __decorate([
+      r()
+  ], SmartQasaRoutineTile.prototype, "_iconAnimation", void 0);
   __decorate([
       r()
   ], SmartQasaRoutineTile.prototype, "_name", void 0);
@@ -1170,91 +1319,105 @@
           this._tilt = (_b = config.tilt) !== null && _b !== void 0 ? _b : 100;
       }
       set hass(hass) {
-          var _a;
+          var _a, _b, _c, _d;
           this._hass = hass;
           this._stateObj = (_a = this._hass.states[this._entity]) !== null && _a !== void 0 ? _a : undefined;
-      }
-      render() {
-          var _a, _b, _c;
-          let icon = "hass:alert-rhombus";
-          let iconColor = "var(--sq-unavailable-rgb)";
-          let iconAnimation = "none";
-          let name = (_a = this._name) !== null && _a !== void 0 ? _a : "Unknown";
-          let stateFmtd = "Unknown";
           if (this._stateObj) {
               const state = this._stateObj.state;
               switch (state) {
                   case "closed":
-                      icon = "hass:roller-shade-closed";
-                      iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
-                      iconAnimation = "none";
-                      break;
-                  case "closing":
-                      icon = "hass:arrow-down-box";
-                      iconColor = "var(--sq-shade-closing-rgb, 146, 107, 199)";
-                      iconAnimation = "blink 2.0s linear infinite";
+                      this._icon = "hass:roller-shade-closed";
+                      this._iconAnimation = "none";
+                      this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
                       break;
                   case "opening":
-                      icon = "hass:arrow-up-box";
-                      iconColor = "var(--sq-shade-opening-rgb, 146, 107, 199)";
-                      iconAnimation = "blink 2.0s linear infinite";
+                      this._icon = "hass:arrow-up-box";
+                      this._iconAnimation = "blink 2.0s linear infinite";
+                      this._iconColor = "var(--sq-shade-opening-rgb, 146, 107, 199)";
                       break;
                   case "open":
-                      icon = "hass:roller-shade";
-                      iconColor = "var(--sq-shade-open-rgb, 146, 107, 199)";
-                      iconAnimation = "none";
+                      this._icon = "hass:roller-shade";
+                      this._iconAnimation = "none";
+                      this._iconColor = "var(--sq-shade-open-rgb, 146, 107, 199)";
+                      break;
+                  case "closing":
+                      this._icon = "hass:arrow-down-box";
+                      this._iconAnimation = "blink 2.0s linear infinite";
+                      this._iconColor = "var(--sq-shade-closing-rgb, 146, 107, 199)";
                       break;
                   default:
-                      icon = "hass:alert-rhombus";
-                      iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-                      iconAnimation = "none";
+                      this._icon = "hass:alert-rhombus";
+                      this._iconAnimation = "none";
+                      this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
                       break;
               }
-              stateFmtd =
+              this._name = (_c = (_b = this._name) !== null && _b !== void 0 ? _b : this._stateObj.attributes.friendly_name) !== null && _c !== void 0 ? _c : this._entity;
+              this._stateFmtd =
                   this._hass.formatEntityState(this._stateObj) +
                       (state === "open" && this._stateObj.attributes.current_position
                           ? " - " +
                               this._hass.formatEntityAttributeValue(this._stateObj, "current_position")
                           : "");
-              name =
-                  (_c = (_b = this._name) !== null && _b !== void 0 ? _b : this._stateObj.attributes.friendly_name) !== null && _c !== void 0 ? _c : this._entity;
           }
+          else {
+              this._icon = "hass:alert-rhombus";
+              this._iconColor = "var(--sq-unavailable-rgb)";
+              this._iconAnimation = "none";
+              this._name = (_d = this._name) !== null && _d !== void 0 ? _d : "Unknown";
+              this._stateFmtd = "Unknown";
+          }
+      }
+      render() {
           return x `
       <div class="container" @click=${this._showMoreInfo}>
         <div
           class="icon"
           @click=${this._toggleEntity}
           style="
-            color: rgb(${iconColor});
-            background-color: rgba(${iconColor}, var(--sq-icon-opacity));
-            animation: ${iconAnimation};
+            color: rgb(${this._iconColor});
+            background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
+            animation: ${this._iconAnimation};
           "
         >
-          <ha-icon .icon=${icon}></ha-icon>
+          <ha-icon .icon=${this._icon}></ha-icon>
         </div>
-        <div class="name">${name}</div>
-        <div class="state">${stateFmtd}</div>
+        <div class="name">${this._name}</div>
+        <div class="state">${this._stateFmtd}</div>
       </div>
     `;
       }
       _toggleEntity(e) {
           e.stopPropagation();
-          if (this._hass && this._stateObj && typeof this._tilt === "number") {
-              const newPosition = this._stateObj.attributes.current_position < this._tilt ? this._tilt : 0;
-              this._hass.callService("cover", "set_cover_position", {
-                  entity_id: this._entity,
-                  position: newPosition,
-              });
+          if (this._hass && this._stateObj) {
+              if (this._tilt > 0 && this._tilt <= 100) {
+                  if (this._stateObj.attributes.current_position < this._tilt) {
+                      this._hass.callService("cover", "set_cover_position", {
+                          entity_id: this._entity,
+                          position: this._tilt,
+                      });
+                  }
+                  else {
+                      this._hass.callService("cover", "set_cover_position", {
+                          entity_id: this._entity,
+                          position: 0,
+                      });
+                  }
+              }
+              else {
+                  this.hass.callService("cover", "toggle", { entity_id: this._entity });
+              }
           }
       }
       _showMoreInfo(e) {
           e.stopPropagation();
-          const event = new CustomEvent("hass-more-info", {
-              bubbles: true,
-              composed: true,
-              detail: { entityId: this._entity },
-          });
-          this.dispatchEvent(event);
+          if (this._hass && this._stateObj) {
+              const event = new CustomEvent("hass-more-info", {
+                  bubbles: true,
+                  composed: true,
+                  detail: { entityId: this._entity },
+              });
+              this.dispatchEvent(event);
+          }
       }
       getCardSize() {
           return 1;
@@ -1267,6 +1430,18 @@
   __decorate([
       r()
   ], SmartQasaShadeTile.prototype, "_name", void 0);
+  __decorate([
+      r()
+  ], SmartQasaShadeTile.prototype, "_icon", void 0);
+  __decorate([
+      r()
+  ], SmartQasaShadeTile.prototype, "_iconAnimation", void 0);
+  __decorate([
+      r()
+  ], SmartQasaShadeTile.prototype, "_iconColor", void 0);
+  __decorate([
+      r()
+  ], SmartQasaShadeTile.prototype, "_stateFmtd", void 0);
   __decorate([
       r()
   ], SmartQasaShadeTile.prototype, "_stateObj", void 0);
@@ -1293,36 +1468,40 @@
           this._name = (_c = config.name) !== null && _c !== void 0 ? _c : undefined;
       }
       set hass(hass) {
-          var _a;
+          var _a, _b, _c, _d, _e, _f, _g;
           this._hass = hass;
           this._stateObj = (_a = this._hass.states[this._entity]) !== null && _a !== void 0 ? _a : undefined;
-      }
-      render() {
-          var _a, _b, _c, _d, _e, _f;
-          let icon = (_a = this._icon) !== null && _a !== void 0 ? _a : "hass:alert-rhombus";
-          let iconColor = "var(--sq-unavailable-rgb)";
-          let name = (_b = this._name) !== null && _b !== void 0 ? _b : "Unknown";
-          let stateFmtd = "Unknown";
           if (this._stateObj) {
               const state = this._stateObj.state;
-              icon = (_d = (_c = this._icon) !== null && _c !== void 0 ? _c : this._stateObj.attributes.icon) !== null && _d !== void 0 ? _d : "hass:help-circle";
-              iconColor = state === "on"
+              this._icon = (_c = (_b = this._icon) !== null && _b !== void 0 ? _b : this._stateObj.attributes.icon) !== null && _c !== void 0 ? _c : "hass:help-circle";
+              this._iconColor = state === "on"
                   ? `var(--sq-switch${this._category ? `-${this._category}` : ""}-on-rgb)`
                   : "var(--sq-inactive-rgb)";
-              name = (_f = (_e = this._name) !== null && _e !== void 0 ? _e : this._stateObj.attributes.friendly_name) !== null && _f !== void 0 ? _f : this._entity;
-              stateFmtd = this._hass ? this._hass.formatEntityState(this._stateObj) : "Unknown";
+              this._name = (_e = (_d = this._name) !== null && _d !== void 0 ? _d : this._stateObj.attributes.friendly_name) !== null && _e !== void 0 ? _e : this._entity;
+              this._stateFmtd = this._hass ? this._hass.formatEntityState(this._stateObj) : "Unknown";
           }
+          else {
+              this._icon = (_f = this._icon) !== null && _f !== void 0 ? _f : "hass:alert-rhombus";
+              this._iconColor = "var(--sq-unavailable-rgb)";
+              this._name = (_g = this._name) !== null && _g !== void 0 ? _g : "Unknown";
+              this._stateFmtd = "Unknown";
+          }
+      }
+      render() {
           return x `
       <div class="container" @click=${this._showMoreInfo}>
         <div
           class="icon"
           @click=${this._toggleEntity}
-          style="color: rgb(${iconColor}); background-color: rgba(${iconColor}, var(--sq-icon-opacity));"
+          style="
+            color: rgb(${this._iconColor});
+            background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
+          "
         >
-          <ha-icon .icon=${icon}></ha-icon>
+          <ha-icon .icon=${this._icon}></ha-icon>
         </div>
-        <div class="name">${name}</div>
-        <div class="state">${stateFmtd}</div>
+        <div class="name">${this._name}</div>
+        <div class="state">${this._stateFmtd}</div>
       </div>
     `;
       }
@@ -1336,12 +1515,14 @@
       }
       _showMoreInfo(e) {
           e.stopPropagation();
-          const event = new CustomEvent("hass-more-info", {
-              bubbles: true,
-              composed: true,
-              detail: { entityId: this._entity },
-          });
-          this.dispatchEvent(event);
+          if (this._hass && this._stateObj) {
+              const event = new CustomEvent("hass-more-info", {
+                  bubbles: true,
+                  composed: true,
+                  detail: { entityId: this._entity },
+              });
+              this.dispatchEvent(event);
+          }
       }
       getCardSize() {
           return 1;
@@ -1359,7 +1540,13 @@
   ], SmartQasaSwitchTile.prototype, "_icon", void 0);
   __decorate([
       r()
+  ], SmartQasaSwitchTile.prototype, "_iconColor", void 0);
+  __decorate([
+      r()
   ], SmartQasaSwitchTile.prototype, "_name", void 0);
+  __decorate([
+      r()
+  ], SmartQasaSwitchTile.prototype, "_stateFmtd", void 0);
   __decorate([
       r()
   ], SmartQasaSwitchTile.prototype, "_stateObj", void 0);

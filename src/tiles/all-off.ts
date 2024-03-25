@@ -16,10 +16,14 @@ interface Config extends LovelaceCardConfig {
 export class SmartQasaAllOffTile extends LitElement {
   @state() private _area: string;
   @state() private _areaObj?: HassEntity;
-  @state() private _icon?: string;
-  @state() private _name?: string;
+  @state() private _icon: string;
+  @state() private _iconAnimation: string;
+  @state() private _iconColor: string;
+  @state() private _name: string;
 
   private _hass;
+
+  static styles: CSSResultGroup = [styleTileBase, styleTileIconSpin];
 
   setConfig(config: Config): void {
     if (!config.area) {
@@ -32,35 +36,35 @@ export class SmartQasaAllOffTile extends LitElement {
 
   set hass(hass: HomeAssistant) {
     this._hass = hass;
-    this._areaObj = this._hass.areas[this._area] ?? undefined;
+    this._areaObj = this._hass?.areas[this._area] ?? undefined;
+    if (this._areaObj) {
+      this._icon = this._icon ?? this._hass.areas[this._area].icon ?? "hass:power";
+      this._iconAnimation = "none";
+      this._iconColor = "var(--sq-inactive-rgb)"
+      this._name = this._name ?? this._hass.areas[this._area].name ?? this._area;
+    } else {
+      this._icon = this._icon ?? "hass:alert-rhombus";
+      this._iconAnimation = "none";
+      this._iconColor = "var(--sq-unavailable-rgb)";
+      this._name = this._name ?? "Unknown";
+    }
   }
 
-  static styles: CSSResultGroup = [styleTileBase, styleTileIconSpin];
-
   render(): TemplateResult {
-    this._icon = this._icon ?? "hass:alert-rhombus";
-    let iconColor = "var(--sq-unavailable-rgb)";
-    let name= this._name ?? "Unknown";
-
-    if (this._areaObj) {
-      this._icon = this._icon ?? "hass:power";
-      iconColor = "var(--sq-inactive-rgb)";
-      name = this._name ?? "All Off";
-    }
-
     return html`
       <div class="container" @click=${this._runRoutine}>
         <div
           class="icon"
           id="icon"
           style="
-            color: rgb(${iconColor});
-            background-color: rgba(${iconColor}, var(--sq-icon-opacity));
+            color: rgb(${this._iconColor});
+            background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
+            animation: ${this._iconAnimation};
           "
         >
           <ha-icon .icon=${this._icon}></ha-icon>
         </div>
-        <div class="name">${name}</div>
+        <div class="name">${this._name}</div>
       </div>
     `;
   }
@@ -69,10 +73,10 @@ export class SmartQasaAllOffTile extends LitElement {
     e.stopPropagation();
 
     if (this._hass && this._areaObj) {
-      const haIconElement = this.shadowRoot?.querySelector("ha-icon") as HTMLElement & { icon: string };
-      haIconElement.icon = "hass:rotate-right";
-      const iconElement = this.shadowRoot?.getElementById("icon") as HTMLElement;
-      iconElement.style.animation = "spin 1.0s linear infinite";
+      const icon = this._icon;
+
+      this._icon = "hass:rotate-right";
+      this._iconAnimation = "spin 1.0s linear infinite";
 
       this._hass.callService("light", "turn_off", {
         area_id: this._area,
@@ -83,9 +87,8 @@ export class SmartQasaAllOffTile extends LitElement {
       });
 
       setTimeout(() => {
-        haIconElement.icon = this._icon as string;
-        iconElement.style.color = `rgb(var(--sq-inactive-rgb))`;
-        iconElement.style.animation = "none";
+        this._icon = icon;
+        this._iconAnimation = "none";
       }, 2000);
     }
   }

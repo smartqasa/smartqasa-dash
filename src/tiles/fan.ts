@@ -16,11 +16,16 @@ interface Config extends LovelaceCardConfig {
 
 export class SmartQasaFanTile extends LitElement {
   @state() private _entity: string;
-  @state() private _icon?: string;
-  @state() private _name?: string;
+  @state() private _icon: string;
+  @state() private _iconColor: string;
+  @state() private _iconAnimation: string;
+  @state() private _name: string;
+  @state() private _stateFmtd: string;
   @state() private _stateObj?: HassEntity;
 
   private _hass;
+
+  static styles: CSSResultGroup = [styleTileBase, styleTileState, styleTileIconSpin];
 
   setConfig(config: Config): void {
     if (!config.entity) {
@@ -34,52 +39,52 @@ export class SmartQasaFanTile extends LitElement {
   set hass(hass: HomeAssistant) {
     this._hass = hass;
     this._stateObj = this._hass.states[this._entity] ?? undefined;
-  }
-
-  static styles: CSSResultGroup = [styleTileBase, styleTileState, styleTileIconSpin];
-
-  render(): TemplateResult {
-    let icon = this._icon ?? "hass:alert-rhombus";
-    let iconColor = "var(--sq-unavailable-rgb)";
-    let iconAnimation = "none";
-    let name = this._name ?? "Unknown";
-    let stateFmtd = "Unknown";
-
     if (this._stateObj) {
       const state: string = this._stateObj.state ?? "unknown";
-      icon = this._icon ?? "hass:fan";
-      iconColor = state == "on" ? "var(--sq-fan-on-rgb)" : "var(--sq-inactive-rgb)";
-      if (state === "on") {
+      this._icon = this._icon ?? "hass:fan";
+      if (state == "on" && this._icon == "hass:fan") {
         if (this._stateObj.attributes.percentage) {
           const speed = 0.5 + (1 - this._stateObj.attributes.percentage / 100);
           const direction =
             this._stateObj.attributes.direction === "reverse"
               ? "reverse"
               : "normal";
-          iconAnimation = `spin ${speed}s linear infinite ${direction}`;
+          this._iconAnimation = `spin ${speed}s linear infinite ${direction}`;
         } else {
-          iconAnimation = `spin 0.5s linear infinite normal`;
+          this._iconAnimation = `spin 0.5s linear infinite normal`;
         }
       }
-      name = this._name ?? this._stateObj.attributes.friendly_name ?? this._entity;
-      stateFmtd =
+      this._iconColor = state == "on" ? "var(--sq-fan-on-rgb)" : "var(--sq-inactive-rgb)";
+      this._name = this._name ?? this._stateObj.attributes.friendly_name ?? this._entity;
+      this._stateFmtd =
         this._hass.formatEntityState(this._stateObj) +
         (state == "on" && this._stateObj.attributes.percentage
           ? " - " + this._hass.formatEntityAttributeValue(this._stateObj, "percentage")
           : "");
+    } else {
+      this._icon = this._icon ?? "hass:alert-rhombus";
+      this._iconAnimation = "none";
+      this._iconColor = "var(--sq-unavailable-rgb)";
+      this._name = this._name ?? "Unknown";
+      this._stateFmtd = "Unknown";
     }
+  }
 
+  render(): TemplateResult {
     return html`
       <div class="container" @click=${this._showMoreInfo}>
         <div
           class="icon"
           @click=${this._toggleEntity}
-          style="color: rgb(${iconColor}); background-color: rgba(${iconColor}, var(--sq-icon-opacity)); animation: ${iconAnimation};"
+          style="
+            color: rgb(${this._iconColor});
+            background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
+            animation: ${this._iconAnimation};"
         >
-          <ha-icon .icon=${icon}></ha-icon>
+          <ha-icon .icon=${this._icon}></ha-icon>
         </div>
-        <div class="name">${name}</div>
-        <div class="state">${stateFmtd}</div>
+        <div class="name">${this._name}</div>
+        <div class="state">${this._stateFmtd}</div>
       </div>
     `;
   }

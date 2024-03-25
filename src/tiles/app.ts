@@ -4,6 +4,14 @@ import { state } from "lit/decorators.js";
 import styleTileBase from "../styles/tile-base";
 import appTable from "../tables/apps";
 
+import { LovelaceCardConfig } from "custom-card-helpers";
+
+interface Config extends LovelaceCardConfig {
+  app: string;
+  icon?: string;
+  name?: string;
+}
+
 interface AppEntry {
   name: string;
   app_icon?: string;
@@ -12,16 +20,8 @@ interface AppEntry {
   uri_scheme?: string;
 }
 
-// Define the type for the application table
 interface AppTable {
   [key: string]: AppEntry;
-}
-
-// Define the configuration interface
-interface Config {
-  app: string;
-  icon?: string;
-  name?: string;
 }
 
 export class SmartQasaAppTile extends LitElement {
@@ -29,6 +29,8 @@ export class SmartQasaAppTile extends LitElement {
   @state() private _appObj?: AppEntry;
   @state() private _icon?: string;
   @state() private _name?: string;
+
+  private _hass;
 
   static styles: CSSResultGroup = styleTileBase;
 
@@ -38,8 +40,10 @@ export class SmartQasaAppTile extends LitElement {
     }
     this._app = config.app;
     this._appObj = appTable[this._app] as AppEntry;
-    this._icon = config.icon;
-    this._name = config.name;
+    if (this._appObj) {
+      this._icon = config.icon ?? undefined;
+      this._name = config.name ?? undefined;
+    }
   }
 
   render(): TemplateResult {
@@ -72,7 +76,24 @@ export class SmartQasaAppTile extends LitElement {
 
   private _launchApp(e: Event): void {
     e.stopPropagation();
-    // Launch logic remains unchanged, assuming `fully` and `window.location.href` are globally accessible
+
+    if (this._appObj.launcher === "uri_scheme" && this._appObj.uri_scheme) {
+      window.location.href = this._appObj.uri_scheme;
+    } else if (this._appObj.launcher === "package" && this._appObj.package) {
+      if (this._hass) {
+        this._hass.callService("fully_kiosk", "start_application", {
+          application: this._appObj.package,
+        }).catch((error) => {
+          console.error("Error calling fully_kiosk.start_application service:", error);
+        });
+      } else {
+        console.error("Home Assistant client (this._hass) is not available.");
+      }
+    } else {
+      console.error(
+        "Neither URI scheme nor package ID is provided for launching the app."
+      );
+    }
   }
 
   getCardSize(): number {

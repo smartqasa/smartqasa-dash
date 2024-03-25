@@ -16,6 +16,7 @@ interface Config extends LovelaceCardConfig {
 export class SmartQasaRoutineTile extends LitElement {
   @state() private _entity: string;
   @state() private _icon?: string;
+  @state() private _iconAnimation: string;
   @state() private _name?: string;
   @state() private _stateObj?: HassEntity;
 
@@ -40,6 +41,7 @@ export class SmartQasaRoutineTile extends LitElement {
   render(): TemplateResult {
     this._icon = this._icon ?? "hass:alert-rhombus";
     let iconColor = "var(--sq-unavailable-rgb)";
+    this._iconAnimation = "none";
     let name = this._name ?? "Unknown";
 
     if (this._stateObj) {
@@ -54,9 +56,13 @@ export class SmartQasaRoutineTile extends LitElement {
           class="icon"
           id="icon"
           @click=${this._runRoutine}
-          style="color: rgb(${iconColor}); background-color: rgba(${iconColor}, var(--sq-icon-opacity));"
+          style="
+            color: rgb(${iconColor});
+            background-color: rgba(${iconColor}, var(--sq-icon-opacity));
+            animation: ${this._iconAnimation};
+          "
         >
-          <ha-icon .icon=${this._icon as string}></ha-icon>
+          <ha-icon .icon=${this._icon}></ha-icon>
         </div>
         <div class="name">${name}</div>
       </div>
@@ -67,10 +73,9 @@ export class SmartQasaRoutineTile extends LitElement {
     e.stopPropagation();
 
     if (this._hass && this._stateObj) {
-      const haIconElement = this.shadowRoot?.querySelector("ha-icon") as HTMLElement & { icon: string };
-      haIconElement.icon = "hass:rotate-right";
-      const iconElement = this.shadowRoot?.getElementById("icon") as HTMLElement;
-      iconElement.style.animation = "spin 1.0s linear infinite";
+      let icon = this._icon;
+      this._icon = "hass:rotate-right"
+      this._iconAnimation = "spin 1.0s linear infinite"
 
       const domain = this._entity.split(".")[0];
       switch (domain) {
@@ -89,9 +94,8 @@ export class SmartQasaRoutineTile extends LitElement {
       }
 
       setTimeout(() => {
-        haIconElement.icon = this._icon as string;
-        iconElement.style.color = `rgb(var(--sq-inactive-rgb))`;
-        iconElement.style.animation = "none";
+        this._icon = icon;
+        this._iconAnimation = "none";
       }, 2000);
     }
   }
