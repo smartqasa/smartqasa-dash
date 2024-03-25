@@ -1097,12 +1097,12 @@
           var _a, _b, _c, _d, _e, _f;
           if (this._areaObj) {
               this._icon = (_b = (_a = this._icon) !== null && _a !== void 0 ? _a : this._hass.areas[this._area].icon) !== null && _b !== void 0 ? _b : "hass:help-rhombus";
-              this._iconColor = "var(--sq-inactive-rgb)";
+              this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
               this._name = (_d = (_c = this._name) !== null && _c !== void 0 ? _c : this._hass.areas[this._area].name) !== null && _d !== void 0 ? _d : "Unknown";
           }
           else {
               this._icon = (_e = this._icon) !== null && _e !== void 0 ? _e : "hass:alert-rhombus";
-              this._iconColor = "var(--sq-unavailable-rgb)";
+              this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
               this._name = (_f = this._name) !== null && _f !== void 0 ? _f : "Unknown";
           }
           return x `
@@ -1125,7 +1125,7 @@
           if (this._areaObj) {
               window.history.pushState(null, "", `/home-dash/${this._area}`);
               window.dispatchEvent(new CustomEvent("location-changed"));
-              this._hass.callService("browser_mod", "close_popup", {});
+              this._hass.callService("browser_mod", "close_popup", { "browser_id": "748e06a3-6cfb99c1" });
           }
           else {
               console.error("Area is not found.");

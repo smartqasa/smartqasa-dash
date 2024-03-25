@@ -20,7 +20,7 @@ export class SmartQasaAreaTile extends LitElement {
   @state() private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
   @state() private _name: string = "Loading...";
 
-  private _hass;
+  private _hass: any;
 
   static styles: CSSResult = styleTileBase;
 
@@ -41,11 +41,11 @@ export class SmartQasaAreaTile extends LitElement {
   render(): TemplateResult {
     if (this._areaObj) {
       this._icon = this._icon ?? this._hass.areas[this._area!].icon ?? "hass:help-rhombus";
-      this._iconColor = "var(--sq-inactive-rgb)";
+      this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
       this._name = this._name ?? this._hass.areas[this._area!].name ?? "Unknown";
     } else {
       this._icon = this._icon ?? "hass:alert-rhombus";
-      this._iconColor = "var(--sq-unavailable-rgb)";
+      this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
       this._name = this._name ?? "Unknown";
     }
 
@@ -70,7 +70,7 @@ export class SmartQasaAreaTile extends LitElement {
     if (this._areaObj) {
       window.history.pushState(null, "", `/home-dash/${this._area}`);
       window.dispatchEvent(new CustomEvent("location-changed"));
-      this._hass.callService("browser_mod", "close_popup", {});
+      this._hass.callService("browser_mod", "close_popup", {"browser_id": "748e06a3-6cfb99c1"});
     } else {
       console.error("Area is not found.");
     }
