@@ -997,7 +997,7 @@
           package: "com.ringapp",
       },
       roku: {
-          name: "Roku Remote",
+          name: "Roku",
           app_icon: rokuIcon,
           launcher: "package",
           package: "com.roku.remote",
