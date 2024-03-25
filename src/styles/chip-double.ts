@@ -8,7 +8,7 @@ export default css`
     grid-template-areas: "i1 s i2";
     grid-column-gap: 0.5rem;
     margin-right: 0.7rem;
-    padding: 0.2rem;
+    padding: 0.7rem;
     border: var(--sq-card-border);
     border-radius: var(--sq-chip-border-radius);
     background-color: var(--sq-card-background-color);
@@ -20,7 +20,7 @@ export default css`
     width: 1px;
     background-color: rgb(128, 128, 128);
     margin: auto;
-    height: 70%;
+    height: 80%;
   }
   .icon1 {
     grid-area: i1;
@@ -31,7 +31,7 @@ export default css`
   .icon1,
   .icon2 {
     display: flex;
-    --mdc-icon-size: 3.4rem;
+    --mdc-icon-size: 2.4rem;
     color: rgb(var(--sq-primary-text-rgb));
   }
 `;
