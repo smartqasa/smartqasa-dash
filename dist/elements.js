@@ -714,277 +714,365 @@
       description: "A SmartQasa tile for turning off all light and fan entities in an area.",
   });
 
+  var accuweatherIcon = "app_icons/c6398f61b62006d6.webp";
+
+  var allrecipesIcon = "app_icons/95efca8d7bfa91b4.webp";
+
+  var amazonMusicIcon = "app_icons/bc9fbce2e6d159f1.webp";
+
+  var amazonShoppingIcon = "app_icons/78dfd5a2ee0e0c76.webp";
+
+  var amcrestSmartHomeIcon = "app_icons/a796754eaa177607.webp";
+
+  var appleMusicIcon = "app_icons/fcc95fef3d003919.webp";
+
+  var bmwIcon = "app_icons/623fbb0a26f0d279.webp";
+
+  var bondIcon = "app_icons/7956df979b9a8ade.webp";
+
+  var bringIcon = "app_icons/87b8dc0b3e6c6043.webp";
+
+  var calculatorIcon = "app_icons/d9ada803a6c25a27.webp";
+
+  var chatgptIcon = "app_icons/1593e8d54b2dc414.webp";
+
+  var chromeIcon = "app_icons/e2355f8b7ea2187d.webp";
+
+  var clockTimerIcon = "app_icons/ce287d0d4033f900.webp";
+
+  var doordashIcon = "app_icons/8b89b6f5ec6c9a65.webp";
+
+  var eufySecurityIcon = "app_icons/f04fb646ab6b01f4.webp";
+
+  var grubhubIcon = "app_icons/9df9536903a489da.webp";
+
+  var homeConnectIcon = "app_icons/b497656d840080ce.webp";
+
+  var hueIcon = "app_icons/80a26493036f69bd.webp";
+
+  var huluIcon = "app_icons/a9e70cc295d0b952.webp";
+
+  var irobotIcon = "app_icons/0ca373151c325a19.webp";
+
+  var keurigIcon = "app_icons/6919f9f6902faad1.webp";
+
+  var lionchiefIcon = "app_icons/de72bd1dc39aed3c.webp";
+
+  var lutronIcon = "app_icons/ef28e1bb6bdd6f4a.webp";
+
+  var myqIcon = "app_icons/fd002324ee1e87ca.webp";
+
+  var nestIcon = "app_icons/b71d57ceda34fc91.webp";
+
+  var netflixIcon = "app_icons/42aff84499087026.webp";
+
+  var pandoraIcon = "app_icons/b04f28bda90d27ca.webp";
+
+  var playStoreIcon = "app_icons/5573abb5c42c140d.webp";
+
+  var rachioIcon = "app_icons/bdb033e07cbf2ebc.webp";
+
+  var rainbirdIcon = "app_icons/2985d73af4d60b6f.webp";
+
+  var ringIcon = "app_icons/05629b1fdf51e8ef.webp";
+
+  var rokuIcon = "app_icons/d3e41621bc247c26.webp";
+
+  var senseIcon = "app_icons/aa0bc15c183551a2.webp";
+
+  var shazamIcon = "app_icons/7fd799675986693c.webp";
+
+  var shiptShopperIcon = "app_icons/396351f26be46824.webp";
+
+  var sleepNumberIcon = "app_icons/1a1f41625f88e574.webp";
+
+  var solitaireIcon = "app_icons/331a9cf3880f3af0.webp";
+
+  var sonosIcon = "app_icons/62222c7dce17a7d8.webp";
+
+  var spotifyIcon = "app_icons/6a9035b3a3858196.webp";
+
+  var tuyaSmartIcon = "app_icons/29030c5e49b1e08e.webp";
+
+  var uberEatsIcon = "app_icons/1d5583bd9b1fc7ea.webp";
+
+  var weatherChannelIcon = "app_icons/a19d116cd9972ad0.webp";
+
+  var weatherUndergroundIcon = "app_icons/be60d7ad16675704.webp";
+
+  var yummlyIcon = "app_icons/a7c3ec923f5fabd7.webp";
+
   var appTable = {
       accuweather: {
           name: "AccuWeather",
-          app_icon: "icon_accuweather.png",
+          app_icon: accuweatherIcon,
           launcher: "package",
           package: "com.accuweather.android",
       },
       allrecipes: {
           name: "AllRecipes",
-          app_icon: "icon_allrecipes.png",
+          app_icon: allrecipesIcon,
           launcher: "package",
           package: "com.allrecipes.spinner.free",
       },
       amazon_music: {
           name: "Amazon Music",
-          app_icon: "icon_amazon_music.png",
+          app_icon: amazonMusicIcon,
           launcher: "uri_scheme",
           uri_scheme: "amznmp3://",
       },
       amazon_shopping: {
           name: "Amazon Shopping",
-          app_icon: "icon_amazon_shopping.png",
+          app_icon: amazonShoppingIcon,
           launcher: "uri_scheme",
           package: "com.amazon.windowshop",
           uri_scheme: "amazon://",
       },
       amcrest_smart_home: {
           name: "Amcrest Smart Home",
-          app_icon: "icon_amcrest_smart_home.png",
+          app_icon: amcrestSmartHomeIcon,
           launcher: "package",
           package: "com.mm.android.amcrestsmarthome",
       },
       apple_music: {
           name: "Apple Music",
-          app_icon: "icon_apple_music.png",
+          app_icon: appleMusicIcon,
           launcher: "package",
           package: "com.apple.android.music",
       },
       bmw: {
           name: "My BMW",
-          app_icon: "icon_bmw.png",
+          app_icon: bmwIcon,
           launcher: "package",
           package: "de.bmw.connected.mobile20.na",
       },
       bond: {
           name: "Bond Home",
-          app_icon: "icon_bond.png",
+          app_icon: bondIcon,
           launcher: "package",
           package: "io.olibra.bondapp",
       },
       bring: {
           name: "Bring!",
-          app_icon: "icon_bring.png",
+          app_icon: bringIcon,
           launcher: "package",
           package: "ch.publisheria.bring",
       },
       calculator: {
           name: "Calculator",
-          app_icon: "icon_calculator.png",
+          app_icon: calculatorIcon,
           launcher: "package",
           package: "com.google.android.calculator",
       },
       chatgpt: {
           name: "ChatGPT",
-          app_icon: "icon_chatgpt.png",
+          app_icon: chatgptIcon,
           launcher: "package",
           package: "com.openai.chatgpt",
       },
       chrome: {
           name: "Chrome",
-          app_icon: "icon_chrome.png",
+          app_icon: chromeIcon,
           launcher: "uri_scheme",
           uri_scheme: "chrome://",
           package: "com.android.chrome",
       },
       clock_timer: {
           name: "Clock/Timer",
-          app_icon: "icon_clock.png",
+          app_icon: clockTimerIcon,
           launcher: "package",
           package: "com.google.android.deskclock",
       },
       doordash: {
           name: "Doordash",
-          app_icon: "icon_doordash.png",
+          app_icon: doordashIcon,
           launcher: "uri_scheme",
           uri_scheme: "doordash://",
           package: "com.dd.dashdash",
       },
       eufy_security: {
           name: "Eufy Security",
-          app_icon: "icon_eufy_security.png",
+          app_icon: eufySecurityIcon,
           launcher: "package",
           package: "com.oceanwing.battery.cam",
       },
       grubhub: {
           name: "Grubhub",
-          app_icon: "icon_grubhub.png",
+          app_icon: grubhubIcon,
           launcher: "uri_scheme",
           uri_scheme: "grubhub://",
           package: "com.grubhub.android",
       },
       home_connect: {
           name: "Home Connect",
-          app_icon: "icon_home_connect.png",
+          app_icon: homeConnectIcon,
           launcher: "package",
           package: "com.bshg.homeconnect.android.release.na",
       },
       hue: {
           name: "Hue",
-          app_icon: "icon_hue.png",
+          app_icon: hueIcon,
           launcher: "package",
           package: "com.philips.lighting.hue2",
       },
       hulu: {
           name: "Hulu",
-          app_icon: "icon_hulu.png",
+          app_icon: huluIcon,
           launcher: "uri_scheme",
           uri_scheme: "hulu://",
           package: "com.hulu.plus",
       },
       irobot: {
           name: "iRobot",
-          app_icon: "icon_irobot.png",
+          app_icon: irobotIcon,
           launcher: "package",
           package: "com.irobot.home",
       },
       keurig: {
           name: "Keurig",
-          app_icon: "icon_keurig.png",
+          app_icon: keurigIcon,
           launcher: "package",
           package: "com.keurig.kconnect",
       },
       lionchief: {
           name: "LionChief",
-          app_icon: "icon_lionchief.png",
+          app_icon: lionchiefIcon,
           launcher: "package",
           package: "com.lionel.lionchief",
       },
       lutron: {
           name: "Lutron",
-          app_icon: "icon_lutron.png",
+          app_icon: lutronIcon,
           launcher: "package",
           package: "com.lutron.mmw",
       },
       myq: {
           name: "MyQ",
-          app_icon: "icon_myq.png",
+          app_icon: myqIcon,
           launcher: "package",
           package: "com.chamberlain.android.liftmaster.myq",
       },
       nest: {
           name: "Nest",
-          app_icon: "icon_nest.png",
+          app_icon: nestIcon,
           launcher: "package",
           package: "com.nest.android",
       },
       netflix: {
           name: "Netflix",
-          app_icon: "icon_netflix.png",
+          app_icon: netflixIcon,
           launcher: "package",
           package: "com.netflix.mediaclient",
       },
       pandora: {
           name: "Pandora",
-          app_icon: "icon_pandora.png",
+          app_icon: pandoraIcon,
           launcher: "uri_scheme",
           uri_scheme: "pandora://",
           package: "com.pandora.android",
       },
       play_store: {
           name: "Play Store",
-          app_icon: "mdi:store",
+          app_icon: playStoreIcon,
           launcher: "package",
           package: "com.android.vending",
       },
       rachio: {
           name: "Rachio",
-          app_icon: "icon_rachio.png",
+          app_icon: rachioIcon,
           launcher: "package",
           package: "com.rachio.iro",
       },
       rainbird: {
           name: "Rainbird",
-          app_icon: "icon_rainbird.png",
+          app_icon: rainbirdIcon,
           launcher: "package",
           package: "com.rainbird",
       },
       ring: {
           name: "Ring",
-          app_icon: "icon_ring.png",
+          app_icon: ringIcon,
           launcher: "uri_scheme",
           uri_scheme: "ring://",
           package: "com.ringapp",
       },
-      roku_remote: {
+      roku: {
           name: "Roku Remote",
-          app_icon: "icon_roku.png",
+          app_icon: rokuIcon,
           launcher: "package",
           package: "com.roku.remote",
       },
       sense: {
           name: "Sense Energy",
-          app_icon: "icon_sense.png",
+          app_icon: senseIcon,
           launcher: "package",
           package: "com.sense.androidclient",
       },
       shazam: {
           name: "Shazam",
-          app_icon: "icon_shazam.png",
+          app_icon: shazamIcon,
           launcher: "package",
           package: "com.shazam.android",
       },
       shipt_shopper: {
           name: "Shipt Shopper",
-          app_icon: "icon_shipt.png",
+          app_icon: shiptShopperIcon,
           launcher: "package",
           package: "com.shipt.shopper",
       },
-      sleepiq: {
-          name: "SleepIQ",
-          app_icon: "icon_sleepiq.png",
+      sleep_number: {
+          name: "Sleep Number",
+          app_icon: sleepNumberIcon,
           launcher: "package",
           package: "com.selectcomfort.SleepIQ",
       },
       solitaire: {
           name: "Solitaire",
-          app_icon: "icon_solitaire.png",
+          app_icon: solitaireIcon,
           launcher: "package",
           package: "com.tripledot.solitaire",
       },
       sonos: {
           name: "Sonos",
-          app_icon: "icon_sonos.png",
+          app_icon: sonosIcon,
           launcher: "uri_scheme",
           uri_scheme: "sonos://",
           package: "com.sonos.acr2",
       },
       spotify: {
           name: "Spotify",
-          app_icon: "icon_spotify.png",
+          app_icon: spotifyIcon,
           launcher: "uri_scheme",
           uri_scheme: "spotify://",
           package: "com.spotify.music",
       },
       tuya_smart: {
           name: "Tuya Smart",
-          app_icon: "icon_tuya.png",
+          app_icon: tuyaSmartIcon,
           launcher: "package",
           package: "com.tuya.smart",
       },
       uber_eats: {
           name: "Uber Eats",
-          app_icon: "icon_uber_eats.png",
+          app_icon: uberEatsIcon,
           launcher: "package",
           package: "com.ubercab.eats",
       },
       weather_channel: {
           name: "Weather Channel",
-          app_icon: "icon_weather_channel.png",
+          app_icon: weatherChannelIcon,
           launcher: "package",
           package: "com.weather.Weather",
       },
       weather_underground: {
           name: "Weather Underground",
-          app_icon: "icon_weather_underground.png",
+          app_icon: weatherUndergroundIcon,
           launcher: "package",
           package: "com.wunderground.android.weather",
       },
       yummly: {
           name: "Yummly Recipes",
-          app_icon: "icon_yummly.png",
+          app_icon: yummlyIcon,
           launcher: "package",
           package: "com.yummly.android",
       },
