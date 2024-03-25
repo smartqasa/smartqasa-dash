@@ -994,7 +994,11 @@
     }
 `;
 
-  class SmartQasaFanTile extends s {
+  let SmartQasaFanTile = class SmartQasaFanTile extends s {
+      constructor() {
+          super(...arguments);
+          this._iconAnimation = "none";
+      }
       setConfig(config) {
           var _a, _b;
           if (!config.entity) {
@@ -1005,12 +1009,16 @@
           this._name = (_b = config.name) !== null && _b !== void 0 ? _b : undefined;
       }
       set hass(hass) {
-          var _a, _b, _c, _d, _e, _f, _g;
+          var _a, _b;
           this._hass = hass;
-          this._stateObj = (_a = this._hass.states[this._entity]) !== null && _a !== void 0 ? _a : undefined;
+          this._stateObj = (_b = (_a = this._hass) === null || _a === void 0 ? void 0 : _a.states[this._entity]) !== null && _b !== void 0 ? _b : undefined;
+          this._updateState();
+      }
+      _updateState() {
+          var _a, _b, _c, _d, _e, _f;
           if (this._stateObj) {
-              const state = (_b = this._stateObj.state) !== null && _b !== void 0 ? _b : "unknown";
-              this._icon = (_c = this._icon) !== null && _c !== void 0 ? _c : "hass:fan";
+              const state = (_a = this._stateObj.state) !== null && _a !== void 0 ? _a : "unknown";
+              this._icon = (_b = this._icon) !== null && _b !== void 0 ? _b : "hass:fan";
               if (state == "on" && this._icon == "hass:fan") {
                   if (this._stateObj.attributes.percentage) {
                       const speed = 0.5 + (1 - this._stateObj.attributes.percentage / 100);
@@ -1023,8 +1031,11 @@
                       this._iconAnimation = `spin 0.5s linear infinite normal`;
                   }
               }
+              else {
+                  this._iconAnimation = "none";
+              }
               this._iconColor = state == "on" ? "var(--sq-fan-on-rgb)" : "var(--sq-inactive-rgb)";
-              this._name = (_e = (_d = this._name) !== null && _d !== void 0 ? _d : this._stateObj.attributes.friendly_name) !== null && _e !== void 0 ? _e : this._entity;
+              this._name = (_d = (_c = this._name) !== null && _c !== void 0 ? _c : this._stateObj.attributes.friendly_name) !== null && _d !== void 0 ? _d : this._entity;
               this._stateFmtd =
                   this._hass.formatEntityState(this._stateObj) +
                       (state == "on" && this._stateObj.attributes.percentage
@@ -1032,10 +1043,10 @@
                           : "");
           }
           else {
-              this._icon = (_f = this._icon) !== null && _f !== void 0 ? _f : "hass:alert-rhombus";
+              this._icon = (_e = this._icon) !== null && _e !== void 0 ? _e : "hass:alert-rhombus";
               this._iconAnimation = "none";
               this._iconColor = "var(--sq-unavailable-rgb)";
-              this._name = (_g = this._name) !== null && _g !== void 0 ? _g : "Unknown";
+              this._name = (_f = this._name) !== null && _f !== void 0 ? _f : "Unknown";
               this._stateFmtd = "Unknown";
           }
       }
@@ -1059,23 +1070,25 @@
       }
       _toggleEntity(e) {
           e.stopPropagation();
-          if (this._hass && this._stateObj) {
+          if (this._stateObj) {
               this._hass.callService("fan", "toggle", { entity_id: this._entity });
           }
       }
       _showMoreInfo(e) {
           e.stopPropagation();
-          const event = new CustomEvent("hass-more-info", {
-              bubbles: true,
-              composed: true,
-              detail: { entityId: this._entity },
-          });
-          this.dispatchEvent(event);
+          if (this._stateObj) {
+              const event = new CustomEvent("hass-more-info", {
+                  bubbles: true,
+                  composed: true,
+                  detail: { entityId: this._entity },
+              });
+              this.dispatchEvent(event);
+          }
       }
       getCardSize() {
           return 1;
       }
-  }
+  };
   SmartQasaFanTile.styles = [styleTileBase, styleTileState, styleTileIconSpin];
   __decorate([
       r()
@@ -1098,7 +1111,9 @@
   __decorate([
       r()
   ], SmartQasaFanTile.prototype, "_stateObj", void 0);
-  customElements.define("smartqasa-fan-tile", SmartQasaFanTile);
+  SmartQasaFanTile = __decorate([
+      t("smartqasa-fan-tile")
+  ], SmartQasaFanTile);
   window.customCards.push({
       type: "smartqasa-fan-tile",
       name: "SmartQasa Fan Tile",
@@ -1114,7 +1129,7 @@
   }
 `;
 
-  class SmartQasaGarageTile extends s {
+  let SmartQasaGarageTile = class SmartQasaGarageTile extends s {
       setConfig(config) {
           var _a;
           if (!config.entity) {
@@ -1124,11 +1139,15 @@
           this._name = (_a = config.name) !== null && _a !== void 0 ? _a : undefined;
       }
       set hass(hass) {
-          var _a, _b, _c, _d, _e;
+          var _a, _b;
           this._hass = hass;
-          this._stateObj = (_a = this._hass.states[this._entity]) !== null && _a !== void 0 ? _a : undefined;
+          this._stateObj = (_b = (_a = this._hass) === null || _a === void 0 ? void 0 : _a.states[this._entity]) !== null && _b !== void 0 ? _b : undefined;
+          this._updateState();
+      }
+      _updateState() {
+          var _a, _b, _c, _d;
           if (this._stateObj) {
-              const state = (_b = this._stateObj.state) !== null && _b !== void 0 ? _b : "unknown";
+              const state = (_a = this._stateObj.state) !== null && _a !== void 0 ? _a : "unknown";
               switch (state) {
                   case "closed":
                       this._icon = "hass:garage-variant";
@@ -1162,13 +1181,13 @@
                           ? " - " +
                               this._hass.formatEntityAttributeValue(this._stateObj, "current_position")
                           : "");
-              this._name = (_d = (_c = this._name) !== null && _c !== void 0 ? _c : this._stateObj.attributes.friendly_name) !== null && _d !== void 0 ? _d : this._entity;
+              this._name = (_c = (_b = this._name) !== null && _b !== void 0 ? _b : this._stateObj.attributes.friendly_name) !== null && _c !== void 0 ? _c : this._entity;
           }
           else {
               this._icon = "hass:alert-rhombus";
               this._iconAnimation = "none";
               this._iconColor = "var(--sq-unavailable-rgb)";
-              this._name = (_e = this._name) !== null && _e !== void 0 ? _e : "Unknown";
+              this._name = (_d = this._name) !== null && _d !== void 0 ? _d : "Unknown";
               this._stateFmtd = "Unknown";
           }
       }
@@ -1211,7 +1230,7 @@
       getCardSize() {
           return 1;
       }
-  }
+  };
   SmartQasaGarageTile.styles = [styleTileBase, styleTileState, styleTileIconBlink];
   __decorate([
       r()
@@ -1234,7 +1253,9 @@
   __decorate([
       r()
   ], SmartQasaGarageTile.prototype, "_stateObj", void 0);
-  customElements.define("smartqasa-garage-tile", SmartQasaGarageTile);
+  SmartQasaGarageTile = __decorate([
+      t("smartqasa-garage-tile")
+  ], SmartQasaGarageTile);
   window.customCards.push({
       type: "smartqasa-garage-tile",
       name: "SmartQasa Garage Tile",
@@ -1253,9 +1274,9 @@
           this._name = (_b = config.name) !== null && _b !== void 0 ? _b : undefined;
       }
       set hass(hass) {
-          var _a;
+          var _a, _b;
           this._hass = hass;
-          this._stateObj = (_a = this._hass.states[this._entity]) !== null && _a !== void 0 ? _a : undefined;
+          this._stateObj = (_b = (_a = this._hass) === null || _a === void 0 ? void 0 : _a.states[this._entity]) !== null && _b !== void 0 ? _b : undefined;
           this._updateState();
       }
       _updateState() {
@@ -1298,13 +1319,13 @@
       }
       _toggleEntity(e) {
           e.stopPropagation();
-          if (this._hass && this._stateObj) {
+          if (this._stateObj) {
               this._hass.callService("light", "toggle", { entity_id: this._entity });
           }
       }
       _showMoreInfo(e) {
           e.stopPropagation();
-          if (this._hass && this._stateObj) {
+          if (this._stateObj) {
               const event = new CustomEvent("hass-more-info", {
                   bubbles: true,
                   composed: true,
