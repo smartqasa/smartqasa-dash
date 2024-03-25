@@ -35,11 +35,12 @@ export class SmartQasaAreaPicture extends LitElement {
   }
 
   setConfig(config: Config): void {
-    if (!config.area) {
-      throw new Error("You must specify an area");
-    }
+    if (!config.area) throw new Error("You must specify an area");
+
     this._area = config.area;
     this._picture = config.picture ?? undefined;
+
+    if (this._hass) this.hass = this._hass;
   }
 
   set hass(hass: HomeAssistant) {

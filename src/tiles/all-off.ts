@@ -1,5 +1,5 @@
-import { CSSResultGroup, LitElement, html, TemplateResult, nothing } from "lit";
-import { state } from "lit/decorators.js";
+import { CSSResultGroup, LitElement, html, TemplateResult } from "lit";
+import { customElement, state } from "lit/decorators.js";
 
 import styleTileBase from "../styles/tile-base";
 import styleTileIconSpin from "../styles/tile-icon-spin";
@@ -13,34 +13,40 @@ interface Config extends LovelaceCardConfig {
   name?: string;
 }
 
+@customElement("smartqasa-all-off-tile")
 export class SmartQasaAllOffTile extends LitElement {
   @state() private _area: string;
   @state() private _areaObj?: HassEntity;
-  @state() private _icon: string;
-  @state() private _iconAnimation: string;
-  @state() private _iconColor: string;
-  @state() private _name: string;
+  @state() private _icon: string = "hass:help-rhombus-outline";
+  @state() private _iconAnimation: string = "none";
+  @state() private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
+  @state() private _name: string = "Loading...";
 
   private _hass;
 
   static styles: CSSResultGroup = [styleTileBase, styleTileIconSpin];
 
   setConfig(config: Config): void {
-    if (!config.area) {
-      throw new Error("You must specify an area");
-    }
-      this._area = config.area;
-      this._icon = config.icon ?? undefined;
-      this._name = config.name ?? undefined;
+    if (!config.area) throw new Error("You must specify an area");
+
+    this._area = config.area;
+    this._icon = config.icon ?? undefined;
+    this._name = config.name ?? undefined;
+
+    if (this._hass) this.hass = this._hass;
   }
 
   set hass(hass: HomeAssistant) {
     this._hass = hass;
     this._areaObj = this._hass?.areas[this._area] ?? undefined;
+    this._updateState();
+  }
+
+  private _updateState(): void {
     if (this._areaObj) {
       this._icon = this._icon ?? this._hass.areas[this._area].icon ?? "hass:power";
       this._iconAnimation = "none";
-      this._iconColor = "var(--sq-inactive-rgb)"
+      this._iconColor = "var(--sq-inactive-rgb)";
       this._name = this._name ?? this._hass.areas[this._area].name ?? this._area;
     } else {
       this._icon = this._icon ?? "hass:alert-rhombus";
@@ -50,12 +56,11 @@ export class SmartQasaAllOffTile extends LitElement {
     }
   }
 
-  render(): TemplateResult {
+  protected render(): TemplateResult {
     return html`
       <div class="container" @click=${this._runRoutine}>
         <div
           class="icon"
-          id="icon"
           style="
             color: rgb(${this._iconColor});
             background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
@@ -71,8 +76,7 @@ export class SmartQasaAllOffTile extends LitElement {
 
   private _runRoutine(e: Event): void {
     e.stopPropagation();
-
-    if (this._hass && this._areaObj) {
+    if (this._areaObj) {
       const icon = this._icon;
 
       this._icon = "hass:rotate-right";
@@ -97,8 +101,6 @@ export class SmartQasaAllOffTile extends LitElement {
     return 1;
   }
 }
-
-customElements.define("smartqasa-all-off-tile", SmartQasaAllOffTile);
 
 window.customCards.push({
   type: "smartqasa-all-off-tile",

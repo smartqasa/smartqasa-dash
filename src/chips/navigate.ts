@@ -1,6 +1,7 @@
 import { CSSResult, html, LitElement, TemplateResult } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
-import { HomeAssistant, LovelaceCardConfig } from 'custom-card-helpers'; // Assume correct import based on context
+
+import { HomeAssistant, LovelaceCardConfig } from 'custom-card-helpers';
 
 import styleChipDouble from '../styles/chip-double';
 
@@ -9,14 +10,14 @@ interface Config extends LovelaceCardConfig  {
   area_next: string;
 }
 
-@customElement("smartqasa-switch-tile")
+@customElement("smartqasa-navigate-chip")
 export class SmartQasaNavigateChip extends LitElement {
   @state() private _areaPrev?: string;
   @state() private _areaNext?: string;
   @state() private _areaObjPrev?: string;
   @state() private _areaObjNext?: string;
 
-  private _hass;
+  private _hass: any;
 
   static styles: CSSResult = styleChipDouble;
 
@@ -30,7 +31,7 @@ export class SmartQasaNavigateChip extends LitElement {
 
   set hass(hass: HomeAssistant) {
     this._hass = hass;
-    if (this._hass.areas) {
+    if (this._hass?.areas) {
       this._areaObjPrev = this._hass.areas[this._areaPrev];
       this._areaObjNext = this._hass.areas[this._areaNext];
     }
@@ -80,8 +81,8 @@ export class SmartQasaNavigateChip extends LitElement {
 }
 
 window.customCards.push({
-  type: "smartqasa-switch-tile",
-  name: "SmartQasa Switch Tile",
+  type: "smartqasa-navigate-chip",
+  name: "SmartQasa Navigate Chip",
   preview: true,
-  description: "A SmartQasa tile for toggling an entity.",
+  description: "A SmartQasa chip for navigating to a previous/next area.",
 });

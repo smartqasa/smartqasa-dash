@@ -33,7 +33,7 @@
    * Copyright 2019 Google LLC
    * SPDX-License-Identifier: BSD-3-Clause
    */
-  const t$1=globalThis,e$2=t$1.ShadowRoot&&(void 0===t$1.ShadyCSS||t$1.ShadyCSS.nativeShadow)&&"adoptedStyleSheets"in Document.prototype&&"replace"in CSSStyleSheet.prototype,s$2=Symbol(),o$3=new WeakMap;class n$3{constructor(t,e,o){if(this._$cssResult$=!0,o!==s$2)throw Error("CSSResult is not constructable. Use `unsafeCSS` or `css` instead.");this.cssText=t,this.t=e;}get styleSheet(){let t=this.o;const s=this.t;if(e$2&&void 0===t){const e=void 0!==s&&1===s.length;e&&(t=o$3.get(s)),void 0===t&&((this.o=t=new CSSStyleSheet).replaceSync(this.cssText),e&&o$3.set(s,t));}return t}toString(){return this.cssText}}const r$5=t=>new n$3("string"==typeof t?t:t+"",void 0,s$2),i$2=(t,...e)=>{const o=1===t.length?t[0]:e.reduce(((e,s,o)=>e+(t=>{if(!0===t._$cssResult$)return t.cssText;if("number"==typeof t)return t;throw Error("Value passed to 'css' function must be a 'css' function result: "+t+". Use 'unsafeCSS' to pass non-literal values, but take care to ensure page security.")})(s)+t[o+1]),t[0]);return new n$3(o,t,s$2)},S$1=(s,o)=>{if(e$2)s.adoptedStyleSheets=o.map((t=>t instanceof CSSStyleSheet?t:t.styleSheet));else for(const e of o){const o=document.createElement("style"),n=t$1.litNonce;void 0!==n&&o.setAttribute("nonce",n),o.textContent=e.cssText,s.appendChild(o);}},c$2=e$2?t=>t:t=>t instanceof CSSStyleSheet?(t=>{let e="";for(const s of t.cssRules)e+=s.cssText;return r$5(e)})(t):t;
+  const t$2=globalThis,e$2=t$2.ShadowRoot&&(void 0===t$2.ShadyCSS||t$2.ShadyCSS.nativeShadow)&&"adoptedStyleSheets"in Document.prototype&&"replace"in CSSStyleSheet.prototype,s$2=Symbol(),o$3=new WeakMap;class n$3{constructor(t,e,o){if(this._$cssResult$=!0,o!==s$2)throw Error("CSSResult is not constructable. Use `unsafeCSS` or `css` instead.");this.cssText=t,this.t=e;}get styleSheet(){let t=this.o;const s=this.t;if(e$2&&void 0===t){const e=void 0!==s&&1===s.length;e&&(t=o$3.get(s)),void 0===t&&((this.o=t=new CSSStyleSheet).replaceSync(this.cssText),e&&o$3.set(s,t));}return t}toString(){return this.cssText}}const r$5=t=>new n$3("string"==typeof t?t:t+"",void 0,s$2),i$2=(t,...e)=>{const o=1===t.length?t[0]:e.reduce(((e,s,o)=>e+(t=>{if(!0===t._$cssResult$)return t.cssText;if("number"==typeof t)return t;throw Error("Value passed to 'css' function must be a 'css' function result: "+t+". Use 'unsafeCSS' to pass non-literal values, but take care to ensure page security.")})(s)+t[o+1]),t[0]);return new n$3(o,t,s$2)},S$1=(s,o)=>{if(e$2)s.adoptedStyleSheets=o.map((t=>t instanceof CSSStyleSheet?t:t.styleSheet));else for(const e of o){const o=document.createElement("style"),n=t$2.litNonce;void 0!==n&&o.setAttribute("nonce",n),o.textContent=e.cssText,s.appendChild(o);}},c$2=e$2?t=>t:t=>t instanceof CSSStyleSheet?(t=>{let e="";for(const s of t.cssRules)e+=s.cssText;return r$5(e)})(t):t;
 
   /**
    * @license
@@ -46,13 +46,20 @@
    * Copyright 2017 Google LLC
    * SPDX-License-Identifier: BSD-3-Clause
    */
-  const t=globalThis,i=t.trustedTypes,s$1=i?i.createPolicy("lit-html",{createHTML:t=>t}):void 0,e="$lit$",h=`lit$${(Math.random()+"").slice(9)}$`,o$1="?"+h,n$1=`<${o$1}>`,r$3=document,l=()=>r$3.createComment(""),c=t=>null===t||"object"!=typeof t&&"function"!=typeof t,a=Array.isArray,u=t=>a(t)||"function"==typeof t?.[Symbol.iterator],d="[ \t\n\f\r]",f=/<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g,v=/-->/g,_=/>/g,m=RegExp(`>|${d}(?:([^\\s"'>=/]+)(${d}*=${d}*(?:[^ \t\n\f\r"'\`<>=]|("|')|))|$)`,"g"),p=/'/g,g=/"/g,$=/^(?:script|style|textarea|title)$/i,y=t=>(i,...s)=>({_$litType$:t,strings:i,values:s}),x=y(1),w=Symbol.for("lit-noChange"),T=Symbol.for("lit-nothing"),A=new WeakMap,E=r$3.createTreeWalker(r$3,129);function C(t,i){if(!Array.isArray(t)||!t.hasOwnProperty("raw"))throw Error("invalid template strings array");return void 0!==s$1?s$1.createHTML(i):i}const P=(t,i)=>{const s=t.length-1,o=[];let r,l=2===i?"<svg>":"",c=f;for(let i=0;i<s;i++){const s=t[i];let a,u,d=-1,y=0;for(;y<s.length&&(c.lastIndex=y,u=c.exec(s),null!==u);)y=c.lastIndex,c===f?"!--"===u[1]?c=v:void 0!==u[1]?c=_:void 0!==u[2]?($.test(u[2])&&(r=RegExp("</"+u[2],"g")),c=m):void 0!==u[3]&&(c=m):c===m?">"===u[0]?(c=r??f,d=-1):void 0===u[1]?d=-2:(d=c.lastIndex-u[2].length,a=u[1],c=void 0===u[3]?m:'"'===u[3]?g:p):c===g||c===p?c=m:c===v||c===_?c=f:(c=m,r=void 0);const x=c===m&&t[i+1].startsWith("/>")?" ":"";l+=c===f?s+n$1:d>=0?(o.push(a),s.slice(0,d)+e+s.slice(d)+h+x):s+h+(-2===d?i:x);}return [C(t,l+(t[s]||"<?>")+(2===i?"</svg>":"")),o]};class V{constructor({strings:t,_$litType$:s},n){let r;this.parts=[];let c=0,a=0;const u=t.length-1,d=this.parts,[f,v]=P(t,s);if(this.el=V.createElement(f,n),E.currentNode=this.el.content,2===s){const t=this.el.content.firstChild;t.replaceWith(...t.childNodes);}for(;null!==(r=E.nextNode())&&d.length<u;){if(1===r.nodeType){if(r.hasAttributes())for(const t of r.getAttributeNames())if(t.endsWith(e)){const i=v[a++],s=r.getAttribute(t).split(h),e=/([.?@])?(.*)/.exec(i);d.push({type:1,index:c,name:e[2],strings:s,ctor:"."===e[1]?k:"?"===e[1]?H:"@"===e[1]?I:R}),r.removeAttribute(t);}else t.startsWith(h)&&(d.push({type:6,index:c}),r.removeAttribute(t));if($.test(r.tagName)){const t=r.textContent.split(h),s=t.length-1;if(s>0){r.textContent=i?i.emptyScript:"";for(let i=0;i<s;i++)r.append(t[i],l()),E.nextNode(),d.push({type:2,index:++c});r.append(t[s],l());}}}else if(8===r.nodeType)if(r.data===o$1)d.push({type:2,index:c});else {let t=-1;for(;-1!==(t=r.data.indexOf(h,t+1));)d.push({type:7,index:c}),t+=h.length-1;}c++;}}static createElement(t,i){const s=r$3.createElement("template");return s.innerHTML=t,s}}function N(t,i,s=t,e){if(i===w)return i;let h=void 0!==e?s._$Co?.[e]:s._$Cl;const o=c(i)?void 0:i._$litDirective$;return h?.constructor!==o&&(h?._$AO?.(!1),void 0===o?h=void 0:(h=new o(t),h._$AT(t,s,e)),void 0!==e?(s._$Co??=[])[e]=h:s._$Cl=h),void 0!==h&&(i=N(t,h._$AS(t,i.values),h,e)),i}class S{constructor(t,i){this._$AV=[],this._$AN=void 0,this._$AD=t,this._$AM=i;}get parentNode(){return this._$AM.parentNode}get _$AU(){return this._$AM._$AU}u(t){const{el:{content:i},parts:s}=this._$AD,e=(t?.creationScope??r$3).importNode(i,!0);E.currentNode=e;let h=E.nextNode(),o=0,n=0,l=s[0];for(;void 0!==l;){if(o===l.index){let i;2===l.type?i=new M(h,h.nextSibling,this,t):1===l.type?i=new l.ctor(h,l.name,l.strings,this,t):6===l.type&&(i=new L(h,this,t)),this._$AV.push(i),l=s[++n];}o!==l?.index&&(h=E.nextNode(),o++);}return E.currentNode=r$3,e}p(t){let i=0;for(const s of this._$AV)void 0!==s&&(void 0!==s.strings?(s._$AI(t,s,i),i+=s.strings.length-2):s._$AI(t[i])),i++;}}class M{get _$AU(){return this._$AM?._$AU??this._$Cv}constructor(t,i,s,e){this.type=2,this._$AH=T,this._$AN=void 0,this._$AA=t,this._$AB=i,this._$AM=s,this.options=e,this._$Cv=e?.isConnected??!0;}get parentNode(){let t=this._$AA.parentNode;const i=this._$AM;return void 0!==i&&11===t?.nodeType&&(t=i.parentNode),t}get startNode(){return this._$AA}get endNode(){return this._$AB}_$AI(t,i=this){t=N(this,t,i),c(t)?t===T||null==t||""===t?(this._$AH!==T&&this._$AR(),this._$AH=T):t!==this._$AH&&t!==w&&this._(t):void 0!==t._$litType$?this.$(t):void 0!==t.nodeType?this.T(t):u(t)?this.k(t):this._(t);}S(t){return this._$AA.parentNode.insertBefore(t,this._$AB)}T(t){this._$AH!==t&&(this._$AR(),this._$AH=this.S(t));}_(t){this._$AH!==T&&c(this._$AH)?this._$AA.nextSibling.data=t:this.T(r$3.createTextNode(t)),this._$AH=t;}$(t){const{values:i,_$litType$:s}=t,e="number"==typeof s?this._$AC(t):(void 0===s.el&&(s.el=V.createElement(C(s.h,s.h[0]),this.options)),s);if(this._$AH?._$AD===e)this._$AH.p(i);else {const t=new S(e,this),s=t.u(this.options);t.p(i),this.T(s),this._$AH=t;}}_$AC(t){let i=A.get(t.strings);return void 0===i&&A.set(t.strings,i=new V(t)),i}k(t){a(this._$AH)||(this._$AH=[],this._$AR());const i=this._$AH;let s,e=0;for(const h of t)e===i.length?i.push(s=new M(this.S(l()),this.S(l()),this,this.options)):s=i[e],s._$AI(h),e++;e<i.length&&(this._$AR(s&&s._$AB.nextSibling,e),i.length=e);}_$AR(t=this._$AA.nextSibling,i){for(this._$AP?.(!1,!0,i);t&&t!==this._$AB;){const i=t.nextSibling;t.remove(),t=i;}}setConnected(t){void 0===this._$AM&&(this._$Cv=t,this._$AP?.(t));}}class R{get tagName(){return this.element.tagName}get _$AU(){return this._$AM._$AU}constructor(t,i,s,e,h){this.type=1,this._$AH=T,this._$AN=void 0,this.element=t,this.name=i,this._$AM=e,this.options=h,s.length>2||""!==s[0]||""!==s[1]?(this._$AH=Array(s.length-1).fill(new String),this.strings=s):this._$AH=T;}_$AI(t,i=this,s,e){const h=this.strings;let o=!1;if(void 0===h)t=N(this,t,i,0),o=!c(t)||t!==this._$AH&&t!==w,o&&(this._$AH=t);else {const e=t;let n,r;for(t=h[0],n=0;n<h.length-1;n++)r=N(this,e[s+n],i,n),r===w&&(r=this._$AH[n]),o||=!c(r)||r!==this._$AH[n],r===T?t=T:t!==T&&(t+=(r??"")+h[n+1]),this._$AH[n]=r;}o&&!e&&this.j(t);}j(t){t===T?this.element.removeAttribute(this.name):this.element.setAttribute(this.name,t??"");}}class k extends R{constructor(){super(...arguments),this.type=3;}j(t){this.element[this.name]=t===T?void 0:t;}}class H extends R{constructor(){super(...arguments),this.type=4;}j(t){this.element.toggleAttribute(this.name,!!t&&t!==T);}}class I extends R{constructor(t,i,s,e,h){super(t,i,s,e,h),this.type=5;}_$AI(t,i=this){if((t=N(this,t,i,0)??T)===w)return;const s=this._$AH,e=t===T&&s!==T||t.capture!==s.capture||t.once!==s.once||t.passive!==s.passive,h=t!==T&&(s===T||e);e&&this.element.removeEventListener(this.name,this,s),h&&this.element.addEventListener(this.name,this,t),this._$AH=t;}handleEvent(t){"function"==typeof this._$AH?this._$AH.call(this.options?.host??this.element,t):this._$AH.handleEvent(t);}}class L{constructor(t,i,s){this.element=t,this.type=6,this._$AN=void 0,this._$AM=i,this.options=s;}get _$AU(){return this._$AM._$AU}_$AI(t){N(this,t);}}const Z=t.litHtmlPolyfillSupport;Z?.(V,M),(t.litHtmlVersions??=[]).push("3.1.2");const j=(t,i,s)=>{const e=s?.renderBefore??i;let h=e._$litPart$;if(void 0===h){const t=s?.renderBefore??null;e._$litPart$=h=new M(i.insertBefore(l(),t),t,void 0,s??{});}return h._$AI(t),h};
+  const t$1=globalThis,i=t$1.trustedTypes,s$1=i?i.createPolicy("lit-html",{createHTML:t=>t}):void 0,e="$lit$",h=`lit$${(Math.random()+"").slice(9)}$`,o$1="?"+h,n$1=`<${o$1}>`,r$3=document,l=()=>r$3.createComment(""),c=t=>null===t||"object"!=typeof t&&"function"!=typeof t,a=Array.isArray,u=t=>a(t)||"function"==typeof t?.[Symbol.iterator],d="[ \t\n\f\r]",f=/<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g,v=/-->/g,_=/>/g,m=RegExp(`>|${d}(?:([^\\s"'>=/]+)(${d}*=${d}*(?:[^ \t\n\f\r"'\`<>=]|("|')|))|$)`,"g"),p=/'/g,g=/"/g,$=/^(?:script|style|textarea|title)$/i,y=t=>(i,...s)=>({_$litType$:t,strings:i,values:s}),x=y(1),w=Symbol.for("lit-noChange"),T=Symbol.for("lit-nothing"),A=new WeakMap,E=r$3.createTreeWalker(r$3,129);function C(t,i){if(!Array.isArray(t)||!t.hasOwnProperty("raw"))throw Error("invalid template strings array");return void 0!==s$1?s$1.createHTML(i):i}const P=(t,i)=>{const s=t.length-1,o=[];let r,l=2===i?"<svg>":"",c=f;for(let i=0;i<s;i++){const s=t[i];let a,u,d=-1,y=0;for(;y<s.length&&(c.lastIndex=y,u=c.exec(s),null!==u);)y=c.lastIndex,c===f?"!--"===u[1]?c=v:void 0!==u[1]?c=_:void 0!==u[2]?($.test(u[2])&&(r=RegExp("</"+u[2],"g")),c=m):void 0!==u[3]&&(c=m):c===m?">"===u[0]?(c=r??f,d=-1):void 0===u[1]?d=-2:(d=c.lastIndex-u[2].length,a=u[1],c=void 0===u[3]?m:'"'===u[3]?g:p):c===g||c===p?c=m:c===v||c===_?c=f:(c=m,r=void 0);const x=c===m&&t[i+1].startsWith("/>")?" ":"";l+=c===f?s+n$1:d>=0?(o.push(a),s.slice(0,d)+e+s.slice(d)+h+x):s+h+(-2===d?i:x);}return [C(t,l+(t[s]||"<?>")+(2===i?"</svg>":"")),o]};class V{constructor({strings:t,_$litType$:s},n){let r;this.parts=[];let c=0,a=0;const u=t.length-1,d=this.parts,[f,v]=P(t,s);if(this.el=V.createElement(f,n),E.currentNode=this.el.content,2===s){const t=this.el.content.firstChild;t.replaceWith(...t.childNodes);}for(;null!==(r=E.nextNode())&&d.length<u;){if(1===r.nodeType){if(r.hasAttributes())for(const t of r.getAttributeNames())if(t.endsWith(e)){const i=v[a++],s=r.getAttribute(t).split(h),e=/([.?@])?(.*)/.exec(i);d.push({type:1,index:c,name:e[2],strings:s,ctor:"."===e[1]?k:"?"===e[1]?H:"@"===e[1]?I:R}),r.removeAttribute(t);}else t.startsWith(h)&&(d.push({type:6,index:c}),r.removeAttribute(t));if($.test(r.tagName)){const t=r.textContent.split(h),s=t.length-1;if(s>0){r.textContent=i?i.emptyScript:"";for(let i=0;i<s;i++)r.append(t[i],l()),E.nextNode(),d.push({type:2,index:++c});r.append(t[s],l());}}}else if(8===r.nodeType)if(r.data===o$1)d.push({type:2,index:c});else {let t=-1;for(;-1!==(t=r.data.indexOf(h,t+1));)d.push({type:7,index:c}),t+=h.length-1;}c++;}}static createElement(t,i){const s=r$3.createElement("template");return s.innerHTML=t,s}}function N(t,i,s=t,e){if(i===w)return i;let h=void 0!==e?s._$Co?.[e]:s._$Cl;const o=c(i)?void 0:i._$litDirective$;return h?.constructor!==o&&(h?._$AO?.(!1),void 0===o?h=void 0:(h=new o(t),h._$AT(t,s,e)),void 0!==e?(s._$Co??=[])[e]=h:s._$Cl=h),void 0!==h&&(i=N(t,h._$AS(t,i.values),h,e)),i}class S{constructor(t,i){this._$AV=[],this._$AN=void 0,this._$AD=t,this._$AM=i;}get parentNode(){return this._$AM.parentNode}get _$AU(){return this._$AM._$AU}u(t){const{el:{content:i},parts:s}=this._$AD,e=(t?.creationScope??r$3).importNode(i,!0);E.currentNode=e;let h=E.nextNode(),o=0,n=0,l=s[0];for(;void 0!==l;){if(o===l.index){let i;2===l.type?i=new M(h,h.nextSibling,this,t):1===l.type?i=new l.ctor(h,l.name,l.strings,this,t):6===l.type&&(i=new L(h,this,t)),this._$AV.push(i),l=s[++n];}o!==l?.index&&(h=E.nextNode(),o++);}return E.currentNode=r$3,e}p(t){let i=0;for(const s of this._$AV)void 0!==s&&(void 0!==s.strings?(s._$AI(t,s,i),i+=s.strings.length-2):s._$AI(t[i])),i++;}}class M{get _$AU(){return this._$AM?._$AU??this._$Cv}constructor(t,i,s,e){this.type=2,this._$AH=T,this._$AN=void 0,this._$AA=t,this._$AB=i,this._$AM=s,this.options=e,this._$Cv=e?.isConnected??!0;}get parentNode(){let t=this._$AA.parentNode;const i=this._$AM;return void 0!==i&&11===t?.nodeType&&(t=i.parentNode),t}get startNode(){return this._$AA}get endNode(){return this._$AB}_$AI(t,i=this){t=N(this,t,i),c(t)?t===T||null==t||""===t?(this._$AH!==T&&this._$AR(),this._$AH=T):t!==this._$AH&&t!==w&&this._(t):void 0!==t._$litType$?this.$(t):void 0!==t.nodeType?this.T(t):u(t)?this.k(t):this._(t);}S(t){return this._$AA.parentNode.insertBefore(t,this._$AB)}T(t){this._$AH!==t&&(this._$AR(),this._$AH=this.S(t));}_(t){this._$AH!==T&&c(this._$AH)?this._$AA.nextSibling.data=t:this.T(r$3.createTextNode(t)),this._$AH=t;}$(t){const{values:i,_$litType$:s}=t,e="number"==typeof s?this._$AC(t):(void 0===s.el&&(s.el=V.createElement(C(s.h,s.h[0]),this.options)),s);if(this._$AH?._$AD===e)this._$AH.p(i);else {const t=new S(e,this),s=t.u(this.options);t.p(i),this.T(s),this._$AH=t;}}_$AC(t){let i=A.get(t.strings);return void 0===i&&A.set(t.strings,i=new V(t)),i}k(t){a(this._$AH)||(this._$AH=[],this._$AR());const i=this._$AH;let s,e=0;for(const h of t)e===i.length?i.push(s=new M(this.S(l()),this.S(l()),this,this.options)):s=i[e],s._$AI(h),e++;e<i.length&&(this._$AR(s&&s._$AB.nextSibling,e),i.length=e);}_$AR(t=this._$AA.nextSibling,i){for(this._$AP?.(!1,!0,i);t&&t!==this._$AB;){const i=t.nextSibling;t.remove(),t=i;}}setConnected(t){void 0===this._$AM&&(this._$Cv=t,this._$AP?.(t));}}class R{get tagName(){return this.element.tagName}get _$AU(){return this._$AM._$AU}constructor(t,i,s,e,h){this.type=1,this._$AH=T,this._$AN=void 0,this.element=t,this.name=i,this._$AM=e,this.options=h,s.length>2||""!==s[0]||""!==s[1]?(this._$AH=Array(s.length-1).fill(new String),this.strings=s):this._$AH=T;}_$AI(t,i=this,s,e){const h=this.strings;let o=!1;if(void 0===h)t=N(this,t,i,0),o=!c(t)||t!==this._$AH&&t!==w,o&&(this._$AH=t);else {const e=t;let n,r;for(t=h[0],n=0;n<h.length-1;n++)r=N(this,e[s+n],i,n),r===w&&(r=this._$AH[n]),o||=!c(r)||r!==this._$AH[n],r===T?t=T:t!==T&&(t+=(r??"")+h[n+1]),this._$AH[n]=r;}o&&!e&&this.j(t);}j(t){t===T?this.element.removeAttribute(this.name):this.element.setAttribute(this.name,t??"");}}class k extends R{constructor(){super(...arguments),this.type=3;}j(t){this.element[this.name]=t===T?void 0:t;}}class H extends R{constructor(){super(...arguments),this.type=4;}j(t){this.element.toggleAttribute(this.name,!!t&&t!==T);}}class I extends R{constructor(t,i,s,e,h){super(t,i,s,e,h),this.type=5;}_$AI(t,i=this){if((t=N(this,t,i,0)??T)===w)return;const s=this._$AH,e=t===T&&s!==T||t.capture!==s.capture||t.once!==s.once||t.passive!==s.passive,h=t!==T&&(s===T||e);e&&this.element.removeEventListener(this.name,this,s),h&&this.element.addEventListener(this.name,this,t),this._$AH=t;}handleEvent(t){"function"==typeof this._$AH?this._$AH.call(this.options?.host??this.element,t):this._$AH.handleEvent(t);}}class L{constructor(t,i,s){this.element=t,this.type=6,this._$AN=void 0,this._$AM=i,this.options=s;}get _$AU(){return this._$AM._$AU}_$AI(t){N(this,t);}}const Z=t$1.litHtmlPolyfillSupport;Z?.(V,M),(t$1.litHtmlVersions??=[]).push("3.1.2");const j=(t,i,s)=>{const e=s?.renderBefore??i;let h=e._$litPart$;if(void 0===h){const t=s?.renderBefore??null;e._$litPart$=h=new M(i.insertBefore(l(),t),t,void 0,s??{});}return h._$AI(t),h};
 
   /**
    * @license
    * Copyright 2017 Google LLC
    * SPDX-License-Identifier: BSD-3-Clause
    */class s extends b{constructor(){super(...arguments),this.renderOptions={host:this},this._$Do=void 0;}createRenderRoot(){const t=super.createRenderRoot();return this.renderOptions.renderBefore??=t.firstChild,t}update(t){const i=this.render();this.hasUpdated||(this.renderOptions.isConnected=this.isConnected),super.update(t),this._$Do=j(i,this.renderRoot,this.renderOptions);}connectedCallback(){super.connectedCallback(),this._$Do?.setConnected(!0);}disconnectedCallback(){super.disconnectedCallback(),this._$Do?.setConnected(!1);}render(){return w}}s._$litElement$=!0,s[("finalized")]=!0,globalThis.litElementHydrateSupport?.({LitElement:s});const r$2=globalThis.litElementPolyfillSupport;r$2?.({LitElement:s});(globalThis.litElementVersions??=[]).push("4.0.4");
+
+  /**
+   * @license
+   * Copyright 2017 Google LLC
+   * SPDX-License-Identifier: BSD-3-Clause
+   */
+  const t=t=>(e,o)=>{void 0!==o?o.addInitializer((()=>{customElements.define(t,e);})):customElements.define(t,e);};
 
   /**
    * @license
@@ -66,20 +73,239 @@
    * SPDX-License-Identifier: BSD-3-Clause
    */function r(r){return n({...r,state:!0,attribute:!1})}
 
-  class SmartQasaAreaPicture extends s {
+  var styleChipBasic = i$2 `
+  .container {
+    width: fit-content;
+    place-self: center;
+    display: grid;
+    grid-template-areas: "i t";
+    grid-column-gap: 0.5rem;
+    margin-right: 0.7rem;
+    padding: 1rem;
+    border: var(--sq-card-border);
+    border-radius: var(--sq-chip-border-radius);
+    background-color: var(--sq-card-background-color);
+    cursor: pointer;
+  }
+  .icon {
+    grid-area: i;
+    display: flex;
+    height: 1.8rem;
+    width: 1.8rem;
+    transition: var(--sq-icon-transition, none);
+  }
+  .text {
+    grid-area: t;
+    place-self: center start;
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+    font-weight: var(--sq-primary-font-weight, 400);
+    font-size: var(--sq-primary-font-size, 1.5rem);
+    color: rgb(var(--sq-primary-font-rgb), 128, 128, 128);
+  }
+`;
+
+  let SmartQasaMotionChip = class SmartQasaMotionChip extends s {
       setConfig(config) {
-          var _a;
-          if (!config.area) {
-              throw new Error("You must specify an area");
-          }
-          this._area = config.area;
-          this._picture = (_a = config.picture) !== null && _a !== void 0 ? _a : undefined;
+          var _a, _b;
+          this._entity = (_a = config.entity) !== null && _a !== void 0 ? _a : undefined;
+          this._name = (_b = config.name) !== null && _b !== void 0 ? _b : undefined;
+          this._containerStyle = this._name
+              ? null
+              : "grid-template-areas: 'i'; grid-column-gap: 0; justify-content: center;";
       }
       set hass(hass) {
-          var _a;
-          this._hass = hass;
-          this._areaObj = (_a = this._hass.areas[this._area]) !== null && _a !== void 0 ? _a : undefined;
+          var _a, _b;
+          if (this._entity) {
+              this._hass = hass;
+              this._stateObj = (_a = this._hass.states[this._entity]) !== null && _a !== void 0 ? _a : undefined;
+              if (this._stateObj) {
+                  const state = (_b = this._stateObj.state) !== null && _b !== void 0 ? _b : undefined;
+                  switch (state) {
+                      case 'on':
+                          this._icon = 'hass:motion-sensor';
+                          this._iconColor = 'var(--sq-primary-font-rgb, 128, 128, 128)';
+                          break;
+                      case 'off':
+                          this._icon = 'hass:motion-sensor-off';
+                          this._iconColor = 'var(--sq-red-rgb, 255, 0, 0)';
+                          break;
+                      default:
+                          this._icon = 'hass:motion-sensor-off';
+                          this._iconColor = 'var(--sq-unavailable-rgb, 255, 0, 255)';
+                          break;
+                  }
+              }
+          }
       }
+      render() {
+          if (!this._entity) {
+              return x ``;
+          }
+          return x `
+      <div class="container" style="${this._containerStyle}" @click=${this._toggleEntity}>
+        <div class="icon" id="icon" style="color: rgb(${this._iconColor});">
+          <ha-icon .icon=${this._icon}></ha-icon>
+        </div>
+        ${this._name ? x `<div class="text">${this._name}</div>` : null}
+      </div>
+    `;
+      }
+      _toggleEntity(e) {
+          e.stopPropagation();
+          if (this.hass && this._stateObj) {
+              this.hass.callService('homeassistant', 'toggle', {
+                  entity_id: this._entity,
+              });
+          }
+      }
+  };
+  SmartQasaMotionChip.styles = styleChipBasic;
+  __decorate([
+      r()
+  ], SmartQasaMotionChip.prototype, "_containerStyle", void 0);
+  __decorate([
+      r()
+  ], SmartQasaMotionChip.prototype, "_entity", void 0);
+  __decorate([
+      r()
+  ], SmartQasaMotionChip.prototype, "_icon", void 0);
+  __decorate([
+      r()
+  ], SmartQasaMotionChip.prototype, "_iconColor", void 0);
+  __decorate([
+      r()
+  ], SmartQasaMotionChip.prototype, "_name", void 0);
+  __decorate([
+      r()
+  ], SmartQasaMotionChip.prototype, "_stateObj", void 0);
+  SmartQasaMotionChip = __decorate([
+      t("smartqasa-motion-chip")
+  ], SmartQasaMotionChip);
+  window.customCards.push({
+      type: 'smartqasa-motion-chip',
+      name: 'SmartQasa Motion Sensor Chip',
+      preview: true,
+      description: 'A SmartQasa chip for toggling a motion sensor automation entity.',
+  });
+
+  var styleChipDouble = i$2 `
+  .container {
+    width: fit-content;
+    place-self: center;
+    display: grid;
+    grid-template-areas: "i1 s i2";
+    grid-column-gap: 0.5rem;
+    margin-right: 0.7rem;
+    padding: 0.2rem;
+    border: var(--sq-card-border);
+    border-radius: var(--sq-chip-border-radius);
+    background-color: var(--sq-card-background-color);
+    cursor: pointer;
+  }
+  .container::after {
+    content: "";
+    grid-area: s;
+    width: 1px;
+    background-color: rgb(128, 128, 128);
+    margin: auto;
+    height: 70%;
+  }
+  .icon1 {
+    grid-area: i1;
+  }
+  .icon2 {
+    grid-area: i2;
+  }
+  .icon1,
+  .icon2 {
+    display: flex;
+    --mdc-icon-size: 3.4rem;
+    color: rgb(var(--sq-primary-text-rgb));
+  }
+`;
+
+  let SmartQasaNavigateChip = class SmartQasaNavigateChip extends s {
+      setConfig(config) {
+          if (!config.area_prev || !config.area_next) {
+              throw new Error('Both area_prev and area_next must be specified');
+          }
+          this._areaPrev = config.area_prev;
+          this._areaNext = config.area_next;
+      }
+      set hass(hass) {
+          this._hass = hass;
+          if (this._hass.areas) {
+              this._areaObjPrev = this._hass.areas[this._areaPrev];
+              this._areaObjNext = this._hass.areas[this._areaNext];
+          }
+      }
+      render() {
+          if (!this._areaObjPrev || !this._areaObjNext) {
+              return x ``;
+          }
+          const iconPrev = 'hass:arrow-left';
+          const iconNext = 'hass:arrow-right';
+          return x `
+      <div class="container">
+        <div class="icon1" @click=${this._navigatePrev}>
+          <ha-icon .icon=${iconPrev}></ha-icon>
+        </div>
+        <div class="icon2" @click=${this._navigateNext}>
+          <ha-icon .icon=${iconNext}></ha-icon>
+        </div>
+      </div>
+    `;
+      }
+      _navigatePrev(e) {
+          e.stopPropagation();
+          if (this._areaObjPrev) {
+              window.history.pushState(null, '', `/home-dash/${this._areaPrev}`);
+              window.dispatchEvent(new CustomEvent('location-changed'));
+              // Assume browser_mod is correctly typed and included
+          }
+          else {
+              console.error('Previous area is not found.');
+          }
+      }
+      _navigateNext(e) {
+          e.stopPropagation();
+          if (this._areaObjNext) {
+              window.history.pushState(null, '', `/home-dash/${this._areaNext}`);
+              window.dispatchEvent(new CustomEvent('location-changed'));
+              // Assume browser_mod is correctly typed and included
+          }
+          else {
+              console.error('Next area is not found.');
+          }
+      }
+  };
+  SmartQasaNavigateChip.styles = styleChipDouble;
+  __decorate([
+      r()
+  ], SmartQasaNavigateChip.prototype, "_areaPrev", void 0);
+  __decorate([
+      r()
+  ], SmartQasaNavigateChip.prototype, "_areaNext", void 0);
+  __decorate([
+      r()
+  ], SmartQasaNavigateChip.prototype, "_areaObjPrev", void 0);
+  __decorate([
+      r()
+  ], SmartQasaNavigateChip.prototype, "_areaObjNext", void 0);
+  SmartQasaNavigateChip = __decorate([
+      t("smartqasa-switch-tile")
+  ], SmartQasaNavigateChip);
+  window.customCards.push({
+      type: "smartqasa-switch-tile",
+      name: "SmartQasa Switch Tile",
+      preview: true,
+      description: "A SmartQasa tile for toggling an entity.",
+  });
+
+  class SmartQasaAreaPicture extends s {
       static get styles() {
           return i$2 `
       :host {
@@ -97,9 +323,22 @@
       }
     `;
       }
+      setConfig(config) {
+          var _a;
+          if (!config.area) {
+              throw new Error("You must specify an area");
+          }
+          this._area = config.area;
+          this._picture = (_a = config.picture) !== null && _a !== void 0 ? _a : undefined;
+      }
+      set hass(hass) {
+          var _a;
+          this._hass = hass;
+          this._areaObj = (_a = this._hass.areas[this._area]) !== null && _a !== void 0 ? _a : undefined;
+      }
       render() {
           var _a, _b, _c;
-          if (!this._areaObj && this._area !== "home") {
+          if (!this._areaObj && this._area != "home") {
               return x ``;
           }
           const height = window.smartqasa.deviceType == "phone" ? "15vh" : "20vh";
@@ -127,6 +366,12 @@
       r()
   ], SmartQasaAreaPicture.prototype, "_picture", void 0);
   customElements.define("smartqasa-area-picture", SmartQasaAreaPicture);
+  window.customCards.push({
+      type: "smartqasa-area-picture",
+      name: "SmartQasa Area Picture",
+      preview: true,
+      description: "A SmartQasa card for rendering an area picture.",
+  });
 
   class SmartQasaTimeDate extends s {
       constructor() {
@@ -269,7 +514,7 @@
   }
 `;
 
-  class SmartQasaAllOffTile extends s {
+  let SmartQasaAllOffTile = class SmartQasaAllOffTile extends s {
       setConfig(config) {
           var _a, _b;
           if (!config.area) {
@@ -280,20 +525,24 @@
           this._name = (_b = config.name) !== null && _b !== void 0 ? _b : undefined;
       }
       set hass(hass) {
-          var _a, _b, _c, _d, _e, _f, _g, _h;
+          var _a, _b;
           this._hass = hass;
           this._areaObj = (_b = (_a = this._hass) === null || _a === void 0 ? void 0 : _a.areas[this._area]) !== null && _b !== void 0 ? _b : undefined;
+          this._updateState();
+      }
+      _updateState() {
+          var _a, _b, _c, _d, _e, _f;
           if (this._areaObj) {
-              this._icon = (_d = (_c = this._icon) !== null && _c !== void 0 ? _c : this._hass.areas[this._area].icon) !== null && _d !== void 0 ? _d : "hass:power";
+              this._icon = (_b = (_a = this._icon) !== null && _a !== void 0 ? _a : this._hass.areas[this._area].icon) !== null && _b !== void 0 ? _b : "hass:power";
               this._iconAnimation = "none";
               this._iconColor = "var(--sq-inactive-rgb)";
-              this._name = (_f = (_e = this._name) !== null && _e !== void 0 ? _e : this._hass.areas[this._area].name) !== null && _f !== void 0 ? _f : this._area;
+              this._name = (_d = (_c = this._name) !== null && _c !== void 0 ? _c : this._hass.areas[this._area].name) !== null && _d !== void 0 ? _d : this._area;
           }
           else {
-              this._icon = (_g = this._icon) !== null && _g !== void 0 ? _g : "hass:alert-rhombus";
+              this._icon = (_e = this._icon) !== null && _e !== void 0 ? _e : "hass:alert-rhombus";
               this._iconAnimation = "none";
               this._iconColor = "var(--sq-unavailable-rgb)";
-              this._name = (_h = this._name) !== null && _h !== void 0 ? _h : "Unknown";
+              this._name = (_f = this._name) !== null && _f !== void 0 ? _f : "Unknown";
           }
       }
       render() {
@@ -316,7 +565,7 @@
       }
       _runRoutine(e) {
           e.stopPropagation();
-          if (this._hass && this._areaObj) {
+          if (this._areaObj) {
               const icon = this._icon;
               this._icon = "hass:rotate-right";
               this._iconAnimation = "spin 1.0s linear infinite";
@@ -336,7 +585,7 @@
       getCardSize() {
           return 1;
       }
-  }
+  };
   SmartQasaAllOffTile.styles = [styleTileBase, styleTileIconSpin];
   __decorate([
       r()
@@ -356,7 +605,9 @@
   __decorate([
       r()
   ], SmartQasaAllOffTile.prototype, "_name", void 0);
-  customElements.define("smartqasa-all-off-tile", SmartQasaAllOffTile);
+  SmartQasaAllOffTile = __decorate([
+      t("smartqasa-all-off-tile")
+  ], SmartQasaAllOffTile);
   window.customCards.push({
       type: "smartqasa-all-off-tile",
       name: "SmartQasa All Off Tile",
@@ -642,13 +893,16 @@
 
   class SmartQasaAppTile extends s {
       setConfig(config) {
+          var _a, _b;
           if (!config.app) {
               throw new Error("You must specify an app");
           }
           this._app = config.app;
           this._appObj = appTable[this._app];
-          this._icon = config.icon;
-          this._name = config.name;
+          if (this._appObj) {
+              this._icon = (_a = config.icon) !== null && _a !== void 0 ? _a : undefined;
+              this._name = (_b = config.name) !== null && _b !== void 0 ? _b : undefined;
+          }
       }
       render() {
           var _a, _b;
@@ -682,7 +936,24 @@
       }
       _launchApp(e) {
           e.stopPropagation();
-          // Launch logic remains unchanged, assuming `fully` and `window.location.href` are globally accessible
+          if (this._appObj.launcher === "uri_scheme" && this._appObj.uri_scheme) {
+              window.location.href = this._appObj.uri_scheme;
+          }
+          else if (this._appObj.launcher === "package" && this._appObj.package) {
+              if (this._hass) {
+                  this._hass.callService("fully_kiosk", "start_application", {
+                      application: this._appObj.package,
+                  }).catch((error) => {
+                      console.error("Error calling fully_kiosk.start_application service:", error);
+                  });
+              }
+              else {
+                  console.error("Home Assistant client (this._hass) is not available.");
+              }
+          }
+          else {
+              console.error("Neither URI scheme nor package ID is provided for launching the app.");
+          }
       }
       getCardSize() {
           return 1;
@@ -729,7 +1000,11 @@
     }
 `;
 
-  class SmartQasaFanTile extends s {
+  let SmartQasaFanTile = class SmartQasaFanTile extends s {
+      constructor() {
+          super(...arguments);
+          this._iconAnimation = "none";
+      }
       setConfig(config) {
           var _a, _b;
           if (!config.entity) {
@@ -740,12 +1015,16 @@
           this._name = (_b = config.name) !== null && _b !== void 0 ? _b : undefined;
       }
       set hass(hass) {
-          var _a, _b, _c, _d, _e, _f, _g;
+          var _a, _b;
           this._hass = hass;
-          this._stateObj = (_a = this._hass.states[this._entity]) !== null && _a !== void 0 ? _a : undefined;
+          this._stateObj = (_b = (_a = this._hass) === null || _a === void 0 ? void 0 : _a.states[this._entity]) !== null && _b !== void 0 ? _b : undefined;
+          this._updateState();
+      }
+      _updateState() {
+          var _a, _b, _c, _d, _e, _f;
           if (this._stateObj) {
-              const state = (_b = this._stateObj.state) !== null && _b !== void 0 ? _b : "unknown";
-              this._icon = (_c = this._icon) !== null && _c !== void 0 ? _c : "hass:fan";
+              const state = (_a = this._stateObj.state) !== null && _a !== void 0 ? _a : "unknown";
+              this._icon = (_b = this._icon) !== null && _b !== void 0 ? _b : "hass:fan";
               if (state == "on" && this._icon == "hass:fan") {
                   if (this._stateObj.attributes.percentage) {
                       const speed = 0.5 + (1 - this._stateObj.attributes.percentage / 100);
@@ -758,8 +1037,11 @@
                       this._iconAnimation = `spin 0.5s linear infinite normal`;
                   }
               }
+              else {
+                  this._iconAnimation = "none";
+              }
               this._iconColor = state == "on" ? "var(--sq-fan-on-rgb)" : "var(--sq-inactive-rgb)";
-              this._name = (_e = (_d = this._name) !== null && _d !== void 0 ? _d : this._stateObj.attributes.friendly_name) !== null && _e !== void 0 ? _e : this._entity;
+              this._name = (_d = (_c = this._name) !== null && _c !== void 0 ? _c : this._stateObj.attributes.friendly_name) !== null && _d !== void 0 ? _d : this._entity;
               this._stateFmtd =
                   this._hass.formatEntityState(this._stateObj) +
                       (state == "on" && this._stateObj.attributes.percentage
@@ -767,10 +1049,10 @@
                           : "");
           }
           else {
-              this._icon = (_f = this._icon) !== null && _f !== void 0 ? _f : "hass:alert-rhombus";
+              this._icon = (_e = this._icon) !== null && _e !== void 0 ? _e : "hass:alert-rhombus";
               this._iconAnimation = "none";
               this._iconColor = "var(--sq-unavailable-rgb)";
-              this._name = (_g = this._name) !== null && _g !== void 0 ? _g : "Unknown";
+              this._name = (_f = this._name) !== null && _f !== void 0 ? _f : "Unknown";
               this._stateFmtd = "Unknown";
           }
       }
@@ -794,23 +1076,25 @@
       }
       _toggleEntity(e) {
           e.stopPropagation();
-          if (this._hass && this._stateObj) {
+          if (this._stateObj) {
               this._hass.callService("fan", "toggle", { entity_id: this._entity });
           }
       }
       _showMoreInfo(e) {
           e.stopPropagation();
-          const event = new CustomEvent("hass-more-info", {
-              bubbles: true,
-              composed: true,
-              detail: { entityId: this._entity },
-          });
-          this.dispatchEvent(event);
+          if (this._stateObj) {
+              const event = new CustomEvent("hass-more-info", {
+                  bubbles: true,
+                  composed: true,
+                  detail: { entityId: this._entity },
+              });
+              this.dispatchEvent(event);
+          }
       }
       getCardSize() {
           return 1;
       }
-  }
+  };
   SmartQasaFanTile.styles = [styleTileBase, styleTileState, styleTileIconSpin];
   __decorate([
       r()
@@ -833,7 +1117,9 @@
   __decorate([
       r()
   ], SmartQasaFanTile.prototype, "_stateObj", void 0);
-  customElements.define("smartqasa-fan-tile", SmartQasaFanTile);
+  SmartQasaFanTile = __decorate([
+      t("smartqasa-fan-tile")
+  ], SmartQasaFanTile);
   window.customCards.push({
       type: "smartqasa-fan-tile",
       name: "SmartQasa Fan Tile",
@@ -849,7 +1135,7 @@
   }
 `;
 
-  class SmartQasaGarageTile extends s {
+  let SmartQasaGarageTile = class SmartQasaGarageTile extends s {
       setConfig(config) {
           var _a;
           if (!config.entity) {
@@ -859,11 +1145,15 @@
           this._name = (_a = config.name) !== null && _a !== void 0 ? _a : undefined;
       }
       set hass(hass) {
-          var _a, _b, _c, _d, _e;
+          var _a, _b;
           this._hass = hass;
-          this._stateObj = (_a = this._hass.states[this._entity]) !== null && _a !== void 0 ? _a : undefined;
+          this._stateObj = (_b = (_a = this._hass) === null || _a === void 0 ? void 0 : _a.states[this._entity]) !== null && _b !== void 0 ? _b : undefined;
+          this._updateState();
+      }
+      _updateState() {
+          var _a, _b, _c, _d;
           if (this._stateObj) {
-              const state = (_b = this._stateObj.state) !== null && _b !== void 0 ? _b : "unknown";
+              const state = (_a = this._stateObj.state) !== null && _a !== void 0 ? _a : "unknown";
               switch (state) {
                   case "closed":
                       this._icon = "hass:garage-variant";
@@ -897,13 +1187,13 @@
                           ? " - " +
                               this._hass.formatEntityAttributeValue(this._stateObj, "current_position")
                           : "");
-              this._name = (_d = (_c = this._name) !== null && _c !== void 0 ? _c : this._stateObj.attributes.friendly_name) !== null && _d !== void 0 ? _d : this._entity;
+              this._name = (_c = (_b = this._name) !== null && _b !== void 0 ? _b : this._stateObj.attributes.friendly_name) !== null && _c !== void 0 ? _c : this._entity;
           }
           else {
               this._icon = "hass:alert-rhombus";
               this._iconAnimation = "none";
               this._iconColor = "var(--sq-unavailable-rgb)";
-              this._name = (_e = this._name) !== null && _e !== void 0 ? _e : "Unknown";
+              this._name = (_d = this._name) !== null && _d !== void 0 ? _d : "Unknown";
               this._stateFmtd = "Unknown";
           }
       }
@@ -946,7 +1236,7 @@
       getCardSize() {
           return 1;
       }
-  }
+  };
   SmartQasaGarageTile.styles = [styleTileBase, styleTileState, styleTileIconBlink];
   __decorate([
       r()
@@ -969,7 +1259,9 @@
   __decorate([
       r()
   ], SmartQasaGarageTile.prototype, "_stateObj", void 0);
-  customElements.define("smartqasa-garage-tile", SmartQasaGarageTile);
+  SmartQasaGarageTile = __decorate([
+      t("smartqasa-garage-tile")
+  ], SmartQasaGarageTile);
   window.customCards.push({
       type: "smartqasa-garage-tile",
       name: "SmartQasa Garage Tile",
@@ -977,7 +1269,7 @@
       description: "A SmartQasa tile for controlling a garage cover entity.",
   });
 
-  class SmartQasaLightTile extends s {
+  let SmartQasaLightTile = class SmartQasaLightTile extends s {
       setConfig(config) {
           var _a, _b;
           if (!config.entity) {
@@ -988,14 +1280,18 @@
           this._name = (_b = config.name) !== null && _b !== void 0 ? _b : undefined;
       }
       set hass(hass) {
-          var _a, _b, _c, _d, _e, _f, _g, _h;
+          var _a, _b;
           this._hass = hass;
-          this._stateObj = (_a = this._hass.states[this._entity]) !== null && _a !== void 0 ? _a : undefined;
+          this._stateObj = (_b = (_a = this._hass) === null || _a === void 0 ? void 0 : _a.states[this._entity]) !== null && _b !== void 0 ? _b : undefined;
+          this._updateState();
+      }
+      _updateState() {
+          var _a, _b, _c, _d, _e, _f, _g;
           if (this._stateObj) {
-              const state = (_b = this._stateObj.state) !== null && _b !== void 0 ? _b : "unknown";
-              this._icon = (_d = (_c = this._icon) !== null && _c !== void 0 ? _c : this._stateObj.attributes.icon) !== null && _d !== void 0 ? _d : "hass:help-circle";
+              const state = (_a = this._stateObj.state) !== null && _a !== void 0 ? _a : "unknown";
+              this._icon = (_c = (_b = this._icon) !== null && _b !== void 0 ? _b : this._stateObj.attributes.icon) !== null && _c !== void 0 ? _c : "hass:help-circle";
               this._iconColor = state == "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
-              this._name = (_f = (_e = this._name) !== null && _e !== void 0 ? _e : this._stateObj.attributes.friendly_name) !== null && _f !== void 0 ? _f : this._entity;
+              this._name = (_e = (_d = this._name) !== null && _d !== void 0 ? _d : this._stateObj.attributes.friendly_name) !== null && _e !== void 0 ? _e : this._entity;
               this._stateFmtd =
                   this._hass.formatEntityState(this._stateObj) +
                       (state == "on" && this._stateObj.attributes.brightness
@@ -1003,9 +1299,9 @@
                           : "");
           }
           else {
-              this._icon = (_g = this._icon) !== null && _g !== void 0 ? _g : "hass:alert-rhombus";
+              this._icon = (_f = this._icon) !== null && _f !== void 0 ? _f : "hass:alert-rhombus";
               this._iconColor = "var(--sq-unavailable-rgb)";
-              this._name = (_h = this._name) !== null && _h !== void 0 ? _h : "Unknown";
+              this._name = (_g = this._name) !== null && _g !== void 0 ? _g : "Unknown";
               this._stateFmtd = "Unknown";
           }
       }
@@ -1029,13 +1325,13 @@
       }
       _toggleEntity(e) {
           e.stopPropagation();
-          if (this._hass && this._stateObj) {
+          if (this._stateObj) {
               this._hass.callService("light", "toggle", { entity_id: this._entity });
           }
       }
       _showMoreInfo(e) {
           e.stopPropagation();
-          if (this._hass && this._stateObj) {
+          if (this._stateObj) {
               const event = new CustomEvent("hass-more-info", {
                   bubbles: true,
                   composed: true,
@@ -1047,7 +1343,7 @@
       getCardSize() {
           return 1;
       }
-  }
+  };
   SmartQasaLightTile.styles = [styleTileBase, styleTileState];
   __decorate([
       r()
@@ -1067,7 +1363,9 @@
   __decorate([
       r()
   ], SmartQasaLightTile.prototype, "_stateObj", void 0);
-  customElements.define("smartqasa-light-tile", SmartQasaLightTile);
+  SmartQasaLightTile = __decorate([
+      t("smartqasa-light-tile")
+  ], SmartQasaLightTile);
   window.customCards.push({
       type: "smartqasa-light-tile",
       name: "SmartQasa Light Tile",
@@ -1075,7 +1373,11 @@
       description: "A SmartQasa tile for controlling a light entity.",
   });
 
-  class SmartQasaLockTile extends s {
+  let SmartQasaLockTile = class SmartQasaLockTile extends s {
+      constructor() {
+          super(...arguments);
+          this._iconAnimation = "none";
+      }
       setConfig(config) {
           var _a;
           if (!config.entity) {
@@ -1088,11 +1390,15 @@
           }
       }
       set hass(hass) {
-          var _a, _b, _c, _d, _e;
+          var _a, _b;
           this._hass = hass;
-          this._stateObj = (_a = this._hass.states[this._entity]) !== null && _a !== void 0 ? _a : undefined;
+          this._stateObj = (_b = (_a = this._hass) === null || _a === void 0 ? void 0 : _a.states[this._entity]) !== null && _b !== void 0 ? _b : undefined;
+          this._updateState();
+      }
+      _updateState() {
+          var _a, _b, _c, _d;
           if (this._stateObj) {
-              const state = (_b = this._stateObj.state) !== null && _b !== void 0 ? _b : "unknown";
+              const state = (_a = this._stateObj.state) !== null && _a !== void 0 ? _a : "unknown";
               switch (state) {
                   case "locked":
                       this._icon = "hass:lock";
@@ -1125,14 +1431,14 @@
                       this._iconColor = "var(--sq-unavailable-rgb)";
                       break;
               }
-              this._name = (_d = (_c = this._name) !== null && _c !== void 0 ? _c : this._stateObj.attributes.friendly_name) !== null && _d !== void 0 ? _d : this._entity;
+              this._name = (_c = (_b = this._name) !== null && _b !== void 0 ? _b : this._stateObj.attributes.friendly_name) !== null && _c !== void 0 ? _c : this._entity;
               this._stateFmtd = this._hass.formatEntityState(this._stateObj);
           }
           else {
               this._icon = "hass:alert-rhombus";
               this._iconAnimation = "none";
               this._iconColor = "var(--sq-unavailable-rgb)";
-              this._name = (_e = this._name) !== null && _e !== void 0 ? _e : "Unknown";
+              this._name = (_d = this._name) !== null && _d !== void 0 ? _d : "Unknown";
               this._stateFmtd = "Unknown";
           }
       }
@@ -1157,7 +1463,7 @@
       }
       _toggleLock(e) {
           e.stopPropagation();
-          if (this._hass && this._stateObj) {
+          if (this._stateObj) {
               this._icon = "hass:rotate-right";
               this._iconAnimation = "spin 1.0s linear infinite";
               this._stateFmtd = this._stateObj.state == "locked" ? "Unlocking" : "Locking",
@@ -1166,7 +1472,7 @@
       }
       _showMoreInfo(e) {
           e.stopPropagation();
-          if (this._hass && this._stateObj) {
+          if (this._stateObj) {
               const event = new CustomEvent("hass-more-info", {
                   bubbles: true,
                   composed: true,
@@ -1178,7 +1484,7 @@
       getCardSize() {
           return 1;
       }
-  }
+  };
   SmartQasaLockTile.styles = [styleTileBase, styleTileState, styleTileIconBlink, styleTileIconSpin];
   __decorate([
       r()
@@ -1201,7 +1507,9 @@
   __decorate([
       r()
   ], SmartQasaLockTile.prototype, "_stateObj", void 0);
-  customElements.define("smartqasa-lock-tile", SmartQasaLockTile);
+  SmartQasaLockTile = __decorate([
+      t("smartqasa-lock-tile")
+  ], SmartQasaLockTile);
   window.customCards.push({
       type: "smartqasa-lock-tile",
       name: "SmartQasa Lock Tile",
@@ -1308,7 +1616,7 @@
       description: "A SmartQasa tile for triggering an automation, scene, or script entity.",
   });
 
-  class SmartQasaShadeTile extends s {
+  let SmartQasaShadeTile = class SmartQasaShadeTile extends s {
       setConfig(config) {
           var _a, _b;
           if (!config.entity) {
@@ -1319,9 +1627,13 @@
           this._tilt = (_b = config.tilt) !== null && _b !== void 0 ? _b : 100;
       }
       set hass(hass) {
-          var _a, _b, _c, _d;
+          var _a, _b;
           this._hass = hass;
-          this._stateObj = (_a = this._hass.states[this._entity]) !== null && _a !== void 0 ? _a : undefined;
+          this._stateObj = (_b = (_a = this._hass) === null || _a === void 0 ? void 0 : _a.states[this._entity]) !== null && _b !== void 0 ? _b : undefined;
+          this._updateState();
+      }
+      _updateState() {
+          var _a, _b, _c;
           if (this._stateObj) {
               const state = this._stateObj.state;
               switch (state) {
@@ -1351,7 +1663,7 @@
                       this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
                       break;
               }
-              this._name = (_c = (_b = this._name) !== null && _b !== void 0 ? _b : this._stateObj.attributes.friendly_name) !== null && _c !== void 0 ? _c : this._entity;
+              this._name = (_b = (_a = this._name) !== null && _a !== void 0 ? _a : this._stateObj.attributes.friendly_name) !== null && _b !== void 0 ? _b : this._entity;
               this._stateFmtd =
                   this._hass.formatEntityState(this._stateObj) +
                       (state === "open" && this._stateObj.attributes.current_position
@@ -1363,7 +1675,7 @@
               this._icon = "hass:alert-rhombus";
               this._iconColor = "var(--sq-unavailable-rgb)";
               this._iconAnimation = "none";
-              this._name = (_d = this._name) !== null && _d !== void 0 ? _d : "Unknown";
+              this._name = (_c = this._name) !== null && _c !== void 0 ? _c : "Unknown";
               this._stateFmtd = "Unknown";
           }
       }
@@ -1388,7 +1700,7 @@
       }
       _toggleEntity(e) {
           e.stopPropagation();
-          if (this._hass && this._stateObj) {
+          if (this._stateObj) {
               if (this._tilt > 0 && this._tilt <= 100) {
                   if (this._stateObj.attributes.current_position < this._tilt) {
                       this._hass.callService("cover", "set_cover_position", {
@@ -1410,7 +1722,7 @@
       }
       _showMoreInfo(e) {
           e.stopPropagation();
-          if (this._hass && this._stateObj) {
+          if (this._stateObj) {
               const event = new CustomEvent("hass-more-info", {
                   bubbles: true,
                   composed: true,
@@ -1422,7 +1734,7 @@
       getCardSize() {
           return 1;
       }
-  }
+  };
   SmartQasaShadeTile.styles = [styleTileBase, styleTileState, styleTileIconBlink];
   __decorate([
       r()
@@ -1448,7 +1760,9 @@
   __decorate([
       r()
   ], SmartQasaShadeTile.prototype, "_tilt", void 0);
-  customElements.define("smartqasa-shade-tile", SmartQasaShadeTile);
+  SmartQasaShadeTile = __decorate([
+      t("smartqasa-shade-tile")
+  ], SmartQasaShadeTile);
   window.customCards.push({
       type: "smartqasa-shade-tile",
       name: "SmartQasa Shade Tile",
@@ -1456,7 +1770,7 @@
       description: "A SmartQasa tile for controlling a window shade entity.",
   });
 
-  class SmartQasaSwitchTile extends s {
+  let SmartQasaSwitchTile = class SmartQasaSwitchTile extends s {
       setConfig(config) {
           var _a, _b, _c;
           if (!config.entity) {
@@ -1468,22 +1782,26 @@
           this._name = (_c = config.name) !== null && _c !== void 0 ? _c : undefined;
       }
       set hass(hass) {
-          var _a, _b, _c, _d, _e, _f, _g;
+          var _a, _b;
           this._hass = hass;
-          this._stateObj = (_a = this._hass.states[this._entity]) !== null && _a !== void 0 ? _a : undefined;
+          this._stateObj = (_b = (_a = this._hass) === null || _a === void 0 ? void 0 : _a.states[this._entity]) !== null && _b !== void 0 ? _b : undefined;
+          this._updateState();
+      }
+      _updateState() {
+          var _a, _b, _c, _d, _e, _f;
           if (this._stateObj) {
               const state = this._stateObj.state;
-              this._icon = (_c = (_b = this._icon) !== null && _b !== void 0 ? _b : this._stateObj.attributes.icon) !== null && _c !== void 0 ? _c : "hass:help-circle";
+              this._icon = (_b = (_a = this._icon) !== null && _a !== void 0 ? _a : this._stateObj.attributes.icon) !== null && _b !== void 0 ? _b : "hass:help-circle";
               this._iconColor = state === "on"
                   ? `var(--sq-switch${this._category ? `-${this._category}` : ""}-on-rgb)`
                   : "var(--sq-inactive-rgb)";
-              this._name = (_e = (_d = this._name) !== null && _d !== void 0 ? _d : this._stateObj.attributes.friendly_name) !== null && _e !== void 0 ? _e : this._entity;
+              this._name = (_d = (_c = this._name) !== null && _c !== void 0 ? _c : this._stateObj.attributes.friendly_name) !== null && _d !== void 0 ? _d : this._entity;
               this._stateFmtd = this._hass ? this._hass.formatEntityState(this._stateObj) : "Unknown";
           }
           else {
-              this._icon = (_f = this._icon) !== null && _f !== void 0 ? _f : "hass:alert-rhombus";
+              this._icon = (_e = this._icon) !== null && _e !== void 0 ? _e : "hass:alert-rhombus";
               this._iconColor = "var(--sq-unavailable-rgb)";
-              this._name = (_g = this._name) !== null && _g !== void 0 ? _g : "Unknown";
+              this._name = (_f = this._name) !== null && _f !== void 0 ? _f : "Unknown";
               this._stateFmtd = "Unknown";
           }
       }
@@ -1507,7 +1825,7 @@
       }
       _toggleEntity(e) {
           e.stopPropagation();
-          if (this._hass && this._stateObj) {
+          if (this._stateObj) {
               this._hass.callService("homeassistant", "toggle", {
                   entity_id: this._entity,
               });
@@ -1515,7 +1833,7 @@
       }
       _showMoreInfo(e) {
           e.stopPropagation();
-          if (this._hass && this._stateObj) {
+          if (this._stateObj) {
               const event = new CustomEvent("hass-more-info", {
                   bubbles: true,
                   composed: true,
@@ -1527,7 +1845,7 @@
       getCardSize() {
           return 1;
       }
-  }
+  };
   SmartQasaSwitchTile.styles = [styleTileBase, styleTileState];
   __decorate([
       r()
@@ -1550,7 +1868,9 @@
   __decorate([
       r()
   ], SmartQasaSwitchTile.prototype, "_stateObj", void 0);
-  customElements.define("smartqasa-switch-tile", SmartQasaSwitchTile);
+  SmartQasaSwitchTile = __decorate([
+      t("smartqasa-switch-tile")
+  ], SmartQasaSwitchTile);
   window.customCards.push({
       type: "smartqasa-switch-tile",
       name: "SmartQasa Switch Tile",

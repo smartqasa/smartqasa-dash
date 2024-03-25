@@ -15,41 +15,48 @@ interface Config extends LovelaceCardConfig {
 
 export class SmartQasaRoutineTile extends LitElement {
   @state() private _entity: string;
-  @state() private _icon?: string;
-  @state() private _iconAnimation: string;
-  @state() private _name?: string;
+  @state() private _icon: string = "hass:help-rhombus";
+  @state() private _iconAnimation: string = "none";
+  @state() private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
+  @state() private _name: string = "Loading...";
   @state() private _stateObj?: HassEntity;
 
-  private _hass;
+  private _hass: HomeAssistant;
+
+  static styles: CSSResultGroup = [styleTileBase, styleTileIconSpin];
 
   setConfig(config: Config): void {
-    if (!config.entity) {
-      throw new Error("You must specify an entity");
-    }
+    if (!config.entity) throw new Error("You must specify an entity");
+
     this._entity = config.entity;
     this._icon = config.icon ?? undefined;
     this._name = config.name ?? undefined;
+
+    if (this._hass) this.hass = this._hass;
   }
 
   set hass(hass: HomeAssistant) {
     this._hass = hass;
-    this._stateObj = this._hass.states[this._entity] ?? undefined;
+    if (this._hass) {
+      this._stateObj = this._hass?.states[this._entity] ?? undefined;
+      this._updateState();
+    }
   }
 
-  static styles: CSSResultGroup = [styleTileBase, styleTileIconSpin];
-
-  render(): TemplateResult {
-    this._icon = this._icon ?? "hass:alert-rhombus";
-    let iconColor = "var(--sq-unavailable-rgb)";
-    this._iconAnimation = "none";
-    let name = this._name ?? "Unknown";
-
+  private _updateState(): void {
     if (this._stateObj) {
       this._icon = this._icon ?? this._stateObj.attributes.icon ?? "hass:help-circle";
-      iconColor = "var(--sq-inactive-rgb)";
-      name = this._name ?? this._stateObj.attributes.friendly_name ?? this._entity;
+      this._iconColor = "var(--sq-inactive-rgb)";
+      this._name = this._name ?? this._stateObj.attributes.friendly_name ?? this._entity;
+    } else {
+      this._icon = this._icon ?? "hass:alert-rhombus";
+      this._iconColor = "var(--sq-unavailable-rgb)";
+      this._iconAnimation = "none";
+      this._name = this._name ?? "Unknown";
     }
+  }
 
+  render(): TemplateResult {
     return html`
       <div class="container" @click=${this._runRoutine}>
         <div
@@ -57,14 +64,14 @@ export class SmartQasaRoutineTile extends LitElement {
           id="icon"
           @click=${this._runRoutine}
           style="
-            color: rgb(${iconColor});
-            background-color: rgba(${iconColor}, var(--sq-icon-opacity));
+            color: rgb(${this._iconColor});
+            background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
             animation: ${this._iconAnimation};
           "
         >
           <ha-icon .icon=${this._icon}></ha-icon>
         </div>
-        <div class="name">${name}</div>
+        <div class="name">${this._name}</div>
       </div>
     `;
   }

@@ -1,10 +1,10 @@
 import { CSSResult, html, LitElement, TemplateResult } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 
-import styleChipBasic from '../styles/chip-basic';
-
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
+
+import styleChipBasic from '../styles/chip-basic';
 
 interface Config extends LovelaceCardConfig {
   entity?: string;
@@ -20,11 +20,11 @@ export class SmartQasaMotionChip extends LitElement {
   @state() private _name?: string;
   @state() private _stateObj?: HassEntity;
 
-  private _hass;
+  private _hass: any;
 
   static styles: CSSResult = styleChipBasic;
 
-  public setConfig(config: Config): void {
+  setConfig(config: Config): void {
     this._entity = config.entity ?? undefined;
     this._name = config.name ?? undefined;
     this._containerStyle = this._name
@@ -35,28 +35,32 @@ export class SmartQasaMotionChip extends LitElement {
   set hass(hass: HomeAssistant) {
     if (this._entity) {
       this._hass = hass;
-      this._stateObj = this._hass.states[this._entity] ?? undefined;
-      if (this._stateObj) {
-        const state = this._stateObj.state ?? undefined;
-        switch (state) {
-          case 'on':
-            this._icon = 'hass:motion-sensor';
-            this._iconColor = 'var(--sq-primary-font-rgb, 128, 128, 128)';
-            break;
-          case 'off':
-            this._icon = 'hass:motion-sensor-off';
-            this._iconColor = 'var(--sq-red-rgb, 255, 0, 0)';
-            break;
-          default:
-            this._icon = 'hass:motion-sensor-off';
-            this._iconColor = 'var(--sq-unavailable-rgb, 255, 0, 255)';
-            break;
-        }
+      this._stateObj = this._hass?.states[this._entity] ?? undefined;
+      this._updateState();
+    }
+  }
+
+  private _updateState(): void {
+    if (this._stateObj) {
+      const state = this._stateObj.state ?? undefined;
+      switch (state) {
+        case 'on':
+          this._icon = 'hass:motion-sensor';
+          this._iconColor = 'var(--sq-primary-font-rgb, 128, 128, 128)';
+          break;
+        case 'off':
+          this._icon = 'hass:motion-sensor-off';
+          this._iconColor = 'var(--sq-red-rgb, 255, 0, 0)';
+          break;
+        default:
+          this._icon = 'hass:motion-sensor-off';
+          this._iconColor = 'var(--sq-unavailable-rgb, 255, 0, 255)';
+          break;
       }
     }
   }
 
-  render(): TemplateResult {
+  protected render(): TemplateResult {
     if (!this._entity) {
       return html``;
     }
@@ -73,7 +77,7 @@ export class SmartQasaMotionChip extends LitElement {
 
   private _toggleEntity(e: Event): void {
     e.stopPropagation();
-    if (this.hass && this._stateObj) {
+    if (this._stateObj) {
       this.hass.callService('homeassistant', 'toggle', {
         entity_id: this._entity,
       });

@@ -1,5 +1,5 @@
 import { CSSResultGroup, html, LitElement, TemplateResult } from "lit";
-import { state } from "lit/decorators.js";
+import { customElement, state } from "lit/decorators.js";
 
 import styleTileBase from "../styles/tile-base";
 import styleTileState from "../styles/tile-state";
@@ -14,13 +14,14 @@ interface Config extends LovelaceCardConfig {
   name?: string;
 }
 
+@customElement("smartqasa-lock-tile")
 export class SmartQasaLockTile extends LitElement {
   @state() private _entity: string;
-  @state() private _name: string;
-  @state() private _icon: string;
-  @state() private _iconColor: string;
-  @state() private _iconAnimation: string;
-  @state() private _stateFmtd: string;
+  @state() private _icon: string = "hass:help-rhombus";
+  @state() private _iconAnimation: string = "none";
+  @state() private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
+  @state() private _name: string = "Loading...";
+  @state() private _stateFmtd: string = "Loading...";
   @state() private _stateObj?: HassEntity;
 
   private _hass;
@@ -28,19 +29,23 @@ export class SmartQasaLockTile extends LitElement {
   static styles: CSSResultGroup = [styleTileBase, styleTileState, styleTileIconBlink, styleTileIconSpin];
 
   setConfig(config: Config): void {
-    if (!config.entity) {
-      throw new Error("You must specify an entity");
-    }
+    if (!config.entity) throw new Error("You must specify an entity");
+
     this._entity = config.entity;
     this._name = config.name ?? undefined;
-    if (this._hass) {
-      this.hass = this._hass;
-    }
+
+    if (this._hass) this.hass = this._hass;
   }
 
   set hass(hass: HomeAssistant) {
     this._hass = hass;
-    this._stateObj = this._hass.states[this._entity] ?? undefined;
+    if (this._hass) {
+      this._stateObj = this._hass.states[this._entity] ?? undefined;
+      this._updateState();
+    }
+  }
+
+  private _updateState(): void {
     if (this._stateObj) {
       const state = this._stateObj.state ?? "unknown";
       switch (state) {
@@ -84,9 +89,9 @@ export class SmartQasaLockTile extends LitElement {
       this._name = this._name ?? "Unknown";
       this._stateFmtd = "Unknown";
     }
-  }
+}
 
-  render(): TemplateResult {
+  protected render(): TemplateResult {
     return html`
       <div class="container" @click=${this._showMoreInfo}>
         <div
@@ -108,8 +113,7 @@ export class SmartQasaLockTile extends LitElement {
 
   private _toggleLock(e: Event): void {
     e.stopPropagation();
-
-    if (this._hass && this._stateObj) {
+    if (this._stateObj) {
       this._icon = "hass:rotate-right";
       this._iconAnimation = "spin 1.0s linear infinite";
       this._stateFmtd = this._stateObj.state == "locked" ? "Unlocking" : "Locking",
@@ -124,7 +128,7 @@ export class SmartQasaLockTile extends LitElement {
 
   private _showMoreInfo(e: Event): void {
     e.stopPropagation();
-    if (this._hass && this._stateObj) {
+    if (this._stateObj) {
       const event = new CustomEvent("hass-more-info", {
         bubbles: true,
         composed: true,
@@ -139,7 +143,6 @@ export class SmartQasaLockTile extends LitElement {
   }
 }
 
-customElements.define("smartqasa-lock-tile", SmartQasaLockTile);
 
 window.customCards.push({
   type: "smartqasa-lock-tile",

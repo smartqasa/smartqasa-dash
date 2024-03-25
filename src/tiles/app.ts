@@ -1,5 +1,5 @@
 import { CSSResultGroup, html, LitElement, TemplateResult } from "lit";
-import { state } from "lit/decorators.js";
+import { customElement, state } from "lit/decorators.js";
 
 import styleTileBase from "../styles/tile-base";
 import appTable from "../tables/apps";
@@ -24,6 +24,7 @@ interface AppTable {
   [key: string]: AppEntry;
 }
 
+@customElement("smartqasa-app-tile")
 export class SmartQasaAppTile extends LitElement {
   @state() private _app: string;
   @state() private _appObj?: AppEntry;
@@ -35,41 +36,34 @@ export class SmartQasaAppTile extends LitElement {
   static styles: CSSResultGroup = styleTileBase;
 
   setConfig(config: Config): void {
-    if (!config.app) {
-      throw new Error("You must specify an app");
-    }
+    if (!config.app) throw new Error("You must specify an app");
+
     this._app = config.app;
-    this._appObj = appTable[this._app] as AppEntry;
+    this._appObj = appTable[this._app] as AppEntry ?? undefined;
     if (this._appObj) {
       this._icon = config.icon ?? undefined;
-      this._name = config.name ?? undefined;
+      this._name = config.name ?? this._appObj?.name ?? "Unknown";
     }
   }
 
-  render(): TemplateResult {
-    let icon, iconStyle, name;
-    if (this._appObj) {
-      if (this._icon) {
-        icon = html`<ha-icon .icon=${this._icon}></ha-icon>`;
-        iconStyle = "color: rgb(var(--sq-inactive-rgb)); background-color: rgba(var(--sq-inactive-rgb), var(--sq-icon-opacity));";
-      } else if (this._appObj.app_icon) {
-        icon = html`<img src="/local/sq-storage/images/${this._appObj.app_icon}" alt="App Icon" style="border-radius: 50%;" />`;
-        iconStyle = "height: 3.8rem; width: 3.8rem; padding: 0;";
-      } else {
-        icon = html`<ha-icon .icon="hass:alert-rhombus"></ha-icon>`;
-        iconStyle = "color: rgb(var(--sq-unavailable-rgb)); background-color: rgba(var(--sq-unavailable-rgb), var(--sq-icon-opacity));";
-      }
-      name = this._name ?? this._appObj.name ?? "Unknown";
+  protected render(): TemplateResult {
+    let iconTemplate: any;
+    let iconStyle = "color: rgb(var(--sq-inactive-rgb)); background-color: rgba(var(--sq-inactive-rgb), var(--sq-icon-opacity, 0.2));";
+
+    if (this._icon) {
+      iconTemplate = html`<ha-icon .icon=${this._icon}></ha-icon>`;
+    } else if (this._appObj?.app_icon) {
+      iconTemplate = html`<img src="/local/sq-storage/images/${this._appObj.app_icon}" alt="App Icon" style="border-radius: 50%;" />`;
+      iconStyle = "height: 3.8rem; width: 3.8rem; padding: 0;";
     } else {
-      icon = html`<ha-icon .icon="hass:alert-rhombus"></ha-icon>`;
+      iconTemplate = html`<ha-icon .icon="hass:alert-rhombus"></ha-icon>`;
       iconStyle = "color: rgb(var(--sq-unavailable-rgb)); background-color: rgba(var(--sq-unavailable-rgb), var(--sq-icon-opacity));";
-      name = "Unknown";
     }
 
     return html`
       <div class="container" @click=${this._launchApp}>
-        <div class="icon" style=${iconStyle}>${icon}</div>
-        <div class="name">${name}</div>
+        <div class="icon" style=${iconStyle}>${iconTemplate}</div>
+        <div class="name">${this._name}</div>
       </div>
     `;
   }
@@ -83,7 +77,7 @@ export class SmartQasaAppTile extends LitElement {
       if (this._hass) {
         this._hass.callService("fully_kiosk", "start_application", {
           application: this._appObj.package,
-        }).catch((error) => {
+        }).catch((error: any) => {
           console.error("Error calling fully_kiosk.start_application service:", error);
         });
       } else {
@@ -100,8 +94,6 @@ export class SmartQasaAppTile extends LitElement {
     return 1;
   }
 }
-
-customElements.define("smartqasa-app-tile", SmartQasaAppTile);
 
 window.customCards.push({
   type: "smartqasa-app-tile",

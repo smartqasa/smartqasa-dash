@@ -6,7 +6,6 @@ declare global {
 }
 
 window.smartqasa = window.smartqasa || {};
-
 if (typeof window.screen.width === "number") {
   window.smartqasa.deviceType = window.screen.width < 600 ? "phone" : "tablet";
 } else {
@@ -14,6 +13,11 @@ if (typeof window.screen.width === "number") {
 }
 
 window.customCards = window.customCards ?? [];
+
+// Chips
+import "./chips/motion";
+import "./chips/navigate";
+import "./chips/thermostat";
 
 // Misc
 import "./misc/area-picture";

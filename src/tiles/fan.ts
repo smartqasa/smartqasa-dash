@@ -1,5 +1,5 @@
 import { CSSResultGroup, html, LitElement, TemplateResult } from "lit";
-import { state } from "lit/decorators.js";
+import { customElement, state } from "lit/decorators.js";
 
 import styleTileBase from "../styles/tile-base";
 import styleTileState from "../styles/tile-state";
@@ -14,13 +14,14 @@ interface Config extends LovelaceCardConfig {
   name?: string;
 }
 
+@customElement("smartqasa-fan-tile")
 export class SmartQasaFanTile extends LitElement {
   @state() private _entity: string;
-  @state() private _icon: string;
-  @state() private _iconColor: string;
-  @state() private _iconAnimation: string;
-  @state() private _name: string;
-  @state() private _stateFmtd: string;
+  @state() private _icon: string = "hass:help-rhombus";
+  @state() private _iconAnimation: string = "none";
+  @state() private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
+  @state() private _name: string = "Loading...";
+  @state() private _stateFmtd: string = "Loading...";
   @state() private _stateObj?: HassEntity;
 
   private _hass;
@@ -28,17 +29,24 @@ export class SmartQasaFanTile extends LitElement {
   static styles: CSSResultGroup = [styleTileBase, styleTileState, styleTileIconSpin];
 
   setConfig(config: Config): void {
-    if (!config.entity) {
-      throw new Error("You must specify an entity");
-    }
+    if (!config.entity) throw new Error("You must specify an entity");
+
     this._entity = config.entity;
     this._icon = config.icon ?? undefined;
     this._name = config.name ?? undefined;
+
+    if (this._hass) this.hass = this._hass;
   }
 
   set hass(hass: HomeAssistant) {
     this._hass = hass;
-    this._stateObj = this._hass.states[this._entity] ?? undefined;
+    if (this._hass) {
+      this._stateObj = this._hass.states[this._entity] ?? undefined;
+      this._updateState();
+    }
+  }
+
+  private _updateState(): void {
     if (this._stateObj) {
       const state: string = this._stateObj.state ?? "unknown";
       this._icon = this._icon ?? "hass:fan";
@@ -53,6 +61,8 @@ export class SmartQasaFanTile extends LitElement {
         } else {
           this._iconAnimation = `spin 0.5s linear infinite normal`;
         }
+      } else {
+        this._iconAnimation = "none";
       }
       this._iconColor = state == "on" ? "var(--sq-fan-on-rgb)" : "var(--sq-inactive-rgb)";
       this._name = this._name ?? this._stateObj.attributes.friendly_name ?? this._entity;
@@ -70,7 +80,7 @@ export class SmartQasaFanTile extends LitElement {
     }
   }
 
-  render(): TemplateResult {
+  protected render(): TemplateResult {
     return html`
       <div class="container" @click=${this._showMoreInfo}>
         <div
@@ -91,27 +101,27 @@ export class SmartQasaFanTile extends LitElement {
 
   private _toggleEntity(e: Event): void {
     e.stopPropagation();
-    if (this._hass && this._stateObj) {
+    if (this._stateObj) {
       this._hass.callService("fan", "toggle", { entity_id: this._entity });
     }
   }
 
   private _showMoreInfo(e: Event): void {
     e.stopPropagation();
-    const event = new CustomEvent("hass-more-info", {
-      bubbles: true,
-      composed: true,
-      detail: { entityId: this._entity },
-    });
-    this.dispatchEvent(event);
+    if (this._stateObj) {
+      const event = new CustomEvent("hass-more-info", {
+        bubbles: true,
+        composed: true,
+        detail: { entityId: this._entity },
+      });
+      this.dispatchEvent(event);
+    }
   }
 
   getCardSize(): number {
     return 1;
   }
 }
-
-customElements.define("smartqasa-fan-tile", SmartQasaFanTile);
 
 window.customCards.push({
   type: "smartqasa-fan-tile",

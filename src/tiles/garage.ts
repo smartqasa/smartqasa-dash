@@ -1,5 +1,5 @@
 import { CSSResultGroup, html, LitElement, TemplateResult } from "lit";
-import { state } from "lit/decorators.js";
+import { customElement, state } from "lit/decorators.js";
 
 import styleTileBase from "../styles/tile-base";
 import styleTileState from "../styles/tile-state";
@@ -13,13 +13,14 @@ interface Config extends LovelaceCardConfig {
   name?: string;
 }
 
+@customElement("smartqasa-garage-tile")
 export class SmartQasaGarageTile extends LitElement {
   @state() private _entity: string;
-  @state() private _name: string;
-  @state() private _icon: string;
-  @state() private _iconAnimation: string;
-  @state() private _iconColor: string;
-  @state() private _stateFmtd: string;
+  @state() private _icon: string = "hass:help-rhombus";
+  @state() private _iconAnimation: string = "none";
+  @state() private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
+  @state() private _name: string = "Loading...";
+  @state() private _stateFmtd: string = "Loading...";
   @state() private _stateObj?: HassEntity;
 
   private _hass;
@@ -27,16 +28,23 @@ export class SmartQasaGarageTile extends LitElement {
   static styles: CSSResultGroup = [styleTileBase, styleTileState, styleTileIconBlink];
 
   setConfig(config: Config): void {
-    if (!config.entity) {
-      throw new Error("You must specify an entity");
-    }
+    if (!config.entity) throw new Error("You must specify an entity");
+
     this._entity = config.entity;
     this._name = config.name ?? undefined;
+
+    if (this._hass) this.hass = this._hass;
   }
 
   set hass(hass: HomeAssistant) {
     this._hass = hass;
-    this._stateObj = this._hass.states[this._entity] ?? undefined;
+    if (this._hass) {
+      this._stateObj = this._hass.states[this._entity] ?? undefined;
+      this._updateState();
+    }
+  }
+
+  private _updateState(): void {
     if (this._stateObj) {
       const state = this._stateObj.state ?? "unknown";
       switch (state) {
@@ -85,7 +93,7 @@ export class SmartQasaGarageTile extends LitElement {
     }
   }
 
-  render(): TemplateResult {
+  protected render(): TemplateResult {
     return html`
       <div class="container" @click=${this._showMoreInfo}>
         <div
@@ -128,8 +136,6 @@ export class SmartQasaGarageTile extends LitElement {
     return 1;
   }
 }
-
-customElements.define("smartqasa-garage-tile", SmartQasaGarageTile);
 
 window.customCards.push({
   type: "smartqasa-garage-tile",
