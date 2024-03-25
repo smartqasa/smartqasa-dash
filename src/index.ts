@@ -26,6 +26,7 @@ import "./misc/time-date";
 // Tiles
 import "./tiles/all-off";
 import "./tiles/app";
+import "./tiles/area";
 import "./tiles/fan";
 import "./tiles/garage";
 import "./tiles/light";

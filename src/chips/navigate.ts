@@ -6,8 +6,8 @@ import { HomeAssistant, LovelaceCardConfig } from 'custom-card-helpers';
 import styleChipDouble from '../styles/chip-double';
 
 interface Config extends LovelaceCardConfig  {
-  area_prev: string;
-  area_next: string;
+  area_prev?: string;
+  area_next?: string;
 }
 
 @customElement("smartqasa-navigate-chip")
@@ -22,18 +22,17 @@ export class SmartQasaNavigateChip extends LitElement {
   static styles: CSSResult = styleChipDouble;
 
   public setConfig(config: Config): void {
-    if (!config.area_prev || !config.area_next) {
-      throw new Error('Both area_prev and area_next must be specified');
-    }
-    this._areaPrev = config.area_prev;
-    this._areaNext = config.area_next;
+    this._areaPrev = config.area_prev ?? undefined;
+    this._areaNext = config.area_next ?? undefined;
   }
 
   set hass(hass: HomeAssistant) {
-    this._hass = hass;
-    if (this._hass?.areas) {
-      this._areaObjPrev = this._hass.areas[this._areaPrev];
-      this._areaObjNext = this._hass.areas[this._areaNext];
+    if (this._areaPrev && this._areaNext) {
+      this._hass = hass;
+      if (this._hass?.areas) {
+        this._areaObjPrev = this._hass.areas[this._areaPrev];
+        this._areaObjNext = this._hass.areas[this._areaNext];
+      }
     }
   }
 

@@ -233,18 +233,18 @@
 
   let SmartQasaNavigateChip = class SmartQasaNavigateChip extends s {
       setConfig(config) {
-          if (!config.area_prev || !config.area_next) {
-              throw new Error('Both area_prev and area_next must be specified');
-          }
-          this._areaPrev = config.area_prev;
-          this._areaNext = config.area_next;
+          var _a, _b;
+          this._areaPrev = (_a = config.area_prev) !== null && _a !== void 0 ? _a : undefined;
+          this._areaNext = (_b = config.area_next) !== null && _b !== void 0 ? _b : undefined;
       }
       set hass(hass) {
           var _a;
-          this._hass = hass;
-          if ((_a = this._hass) === null || _a === void 0 ? void 0 : _a.areas) {
-              this._areaObjPrev = this._hass.areas[this._areaPrev];
-              this._areaObjNext = this._hass.areas[this._areaNext];
+          if (this._areaPrev && this._areaNext) {
+              this._hass = hass;
+              if ((_a = this._hass) === null || _a === void 0 ? void 0 : _a.areas) {
+                  this._areaObjPrev = this._hass.areas[this._areaPrev];
+                  this._areaObjNext = this._hass.areas[this._areaNext];
+              }
           }
       }
       render() {
@@ -1070,6 +1070,95 @@
       name: "SmartQasa App Tile",
       preview: true,
       description: "A SmartQasa tile for launching applications from the dashboard",
+  });
+
+  let SmartQasaAreaTile = class SmartQasaAreaTile extends s {
+      constructor() {
+          super(...arguments);
+          this._icon = "hass:help-rhombus";
+          this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+          this._name = "Loading...";
+      }
+      setConfig(config) {
+          var _a, _b;
+          if (!config.area) {
+              throw new Error("You must specify an area");
+          }
+          this._area = config.area;
+          this._icon = (_a = config.icon) !== null && _a !== void 0 ? _a : undefined;
+          this._name = (_b = config.name) !== null && _b !== void 0 ? _b : undefined;
+      }
+      set hass(hass) {
+          var _a, _b;
+          this._hass = hass;
+          this._areaObj = (_b = (_a = this._hass) === null || _a === void 0 ? void 0 : _a.areas[this._area]) !== null && _b !== void 0 ? _b : undefined;
+      }
+      render() {
+          var _a, _b, _c, _d, _e, _f;
+          if (this._areaObj) {
+              this._icon = (_b = (_a = this._icon) !== null && _a !== void 0 ? _a : this._hass.areas[this._area].icon) !== null && _b !== void 0 ? _b : "hass:help-rhombus";
+              this._iconColor = "var(--sq-inactive-rgb)";
+              this._name = (_d = (_c = this._name) !== null && _c !== void 0 ? _c : this._hass.areas[this._area].name) !== null && _d !== void 0 ? _d : "Unknown";
+          }
+          else {
+              this._icon = (_e = this._icon) !== null && _e !== void 0 ? _e : "hass:alert-rhombus";
+              this._iconColor = "var(--sq-unavailable-rgb)";
+              this._name = (_f = this._name) !== null && _f !== void 0 ? _f : "Unknown";
+          }
+          return x `
+      <div class="container" @click=${this._navigate}>
+        <div
+          class="icon"
+          style="
+            color: rgb(${this._iconColor});
+            background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
+          "
+        >
+          <ha-icon .icon=${this._icon}></ha-icon>
+        </div>
+        <div class="name">${this._name}</div>
+      </div>
+    `;
+      }
+      _navigate(e) {
+          e.stopPropagation();
+          if (this._areaObj) {
+              window.history.pushState(null, "", `/home-dash/${this._area}`);
+              window.dispatchEvent(new CustomEvent("location-changed"));
+              this._hass.callService("browser_mod", "close_popup", {});
+          }
+          else {
+              console.error("Area is not found.");
+          }
+      }
+      getCardSize() {
+          return 1;
+      }
+  };
+  SmartQasaAreaTile.styles = styleTileBase;
+  __decorate([
+      r()
+  ], SmartQasaAreaTile.prototype, "_area", void 0);
+  __decorate([
+      r()
+  ], SmartQasaAreaTile.prototype, "_areaObj", void 0);
+  __decorate([
+      r()
+  ], SmartQasaAreaTile.prototype, "_icon", void 0);
+  __decorate([
+      r()
+  ], SmartQasaAreaTile.prototype, "_iconColor", void 0);
+  __decorate([
+      r()
+  ], SmartQasaAreaTile.prototype, "_name", void 0);
+  SmartQasaAreaTile = __decorate([
+      t("smartqasa-area-tile")
+  ], SmartQasaAreaTile);
+  window.customCards.push({
+      type: "smartqasa-area-tile",
+      name: "SmartQasa Area Tile",
+      preview: true,
+      description: "A SmartQasa card for navigating to an area panel.",
   });
 
   var styleTileState = i$2 `
