@@ -67,7 +67,7 @@ export class SmartQasaMotionChip extends LitElement {
 
     return html`
       <div class="container" style="${this._containerStyle}" @click=${this._toggleEntity}>
-        <div class="icon" id="icon" style="color: rgb(${this._iconColor});">
+        <div class="icon" style="color: rgb(${this._iconColor});">
           <ha-icon .icon=${this._icon}></ha-icon>
         </div>
         ${this._name ? html`<div class="text">${this._name}</div>` : null}
@@ -78,7 +78,7 @@ export class SmartQasaMotionChip extends LitElement {
   private _toggleEntity(e: Event): void {
     e.stopPropagation();
     if (this._stateObj) {
-      this.hass.callService('homeassistant', 'toggle', {
+      this._hass.callService('homeassistant', 'toggle', {
         entity_id: this._entity,
       });
     }
