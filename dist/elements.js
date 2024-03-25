@@ -1121,11 +1121,12 @@
     `;
       }
       _navigate(e) {
+          var _a;
           e.stopPropagation();
           if (this._areaObj) {
               window.history.pushState(null, "", `/home-dash/${this._area}`);
               window.dispatchEvent(new CustomEvent("location-changed"));
-              this._hass.callService("browser_mod", "close_popup", {});
+              (_a = window.browser_mod) === null || _a === void 0 ? void 0 : _a.service("close_popup", {});
           }
           else {
               console.error("Area is not found.");

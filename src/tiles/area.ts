@@ -12,6 +12,14 @@ interface Config extends LovelaceCardConfig{
   name?: string;
 }
 
+declare global {
+  interface Window {
+    browser_mod?: {
+      service: (service: string, data?: object) => void;
+    };
+  }
+}
+
 @customElement("smartqasa-area-tile")
 export class SmartQasaAreaTile extends LitElement {
   @state() private _area: string;
@@ -70,7 +78,7 @@ export class SmartQasaAreaTile extends LitElement {
     if (this._areaObj) {
       window.history.pushState(null, "", `/home-dash/${this._area}`);
       window.dispatchEvent(new CustomEvent("location-changed"));
-      this._hass.callService("browser_mod", "close_popup", {});
+      window.browser_mod?.service("close_popup", {});
     } else {
       console.error("Area is not found.");
     }
