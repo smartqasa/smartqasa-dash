@@ -1098,7 +1098,7 @@
               iconTemplate = x `<ha-icon .icon=${this._icon}></ha-icon>`;
           }
           else if ((_a = this._appObj) === null || _a === void 0 ? void 0 : _a.app_icon) {
-              iconTemplate = x `<img src="/local/sq-storage/images/${this._appObj.app_icon}" alt="App Icon" style="border-radius: 50%;" />`;
+              iconTemplate = x `<img src="${this._appObj.app_icon}" alt="App Icon" style="border-radius: 50%;" />`;
               iconStyle = "height: 3.8rem; width: 3.8rem; padding: 0;";
           }
           else {
