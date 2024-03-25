@@ -53,7 +53,7 @@ export class SmartQasaAppTile extends LitElement {
     if (this._icon) {
       iconTemplate = html`<ha-icon .icon=${this._icon}></ha-icon>`;
     } else if (this._appObj?.app_icon) {
-      iconTemplate = html`<img src="${this._appObj.app_icon}" alt="App Icon" style="border-radius: 50%;" />`;
+      iconTemplate = html`<img src="/local/smartqasa-dash/assets/${this._appObj.app_icon}" alt="App Icon" style="border-radius: 50%;" />`;
       iconStyle = "height: 3.8rem; width: 3.8rem; padding: 0;";
     } else {
       iconTemplate = html`<ha-icon .icon="hass:alert-rhombus"></ha-icon>`;
