@@ -118,7 +118,7 @@ export default {
     uri_scheme: "chrome://",
     package: "com.android.chrome",
   },
-  clock_timer: {
+  clock: {
     name: "Clock/Timer",
     app_icon: clockTimerIcon,
     launcher: "package",
