@@ -1677,10 +1677,9 @@
       _toggleLock(e) {
           e.stopPropagation();
           if (this._stateObj) {
-              this._hass.callService("lock", this._stateObj.state == "locked" ? "unlock" : "lock", { entity_id: this._entity });
-              this._icon = "hass:rotate-right";
-              this._iconAnimation = "spin 1.0s linear infinite";
-              this._stateFmtd = this._stateObj.state == "locked" ? "Unlocking" : "Locking";
+              const state = this._stateObj.state;
+              this._stateObj.state = state == "locked" ? "unlocking" : "locking";
+              this._hass.callService("lock", state == "locked" ? "unlock" : "lock", { entity_id: this._entity });
           }
       }
       _showMoreInfo(e) {
