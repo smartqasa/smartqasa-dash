@@ -631,18 +631,18 @@
           this._updateState();
       }
       _updateState() {
-          var _a, _b, _c, _d, _e, _f;
+          var _a, _b, _c, _d, _e;
           if (this._areaObj) {
-              this._icon = (_b = (_a = this._icon) !== null && _a !== void 0 ? _a : this._hass.areas[this._area].icon) !== null && _b !== void 0 ? _b : "hass:power";
+              this._icon = (_a = this._icon) !== null && _a !== void 0 ? _a : "hass:power";
               this._iconAnimation = "none";
               this._iconColor = "var(--sq-inactive-rgb)";
-              this._name = (_d = (_c = this._name) !== null && _c !== void 0 ? _c : this._hass.areas[this._area].name) !== null && _d !== void 0 ? _d : this._area;
+              this._name = (_c = (_b = this._name) !== null && _b !== void 0 ? _b : this._hass.areas[this._area].name) !== null && _c !== void 0 ? _c : this._area;
           }
           else {
-              this._icon = (_e = this._icon) !== null && _e !== void 0 ? _e : "hass:alert-rhombus";
+              this._icon = (_d = this._icon) !== null && _d !== void 0 ? _d : "hass:alert-rhombus";
               this._iconAnimation = "none";
               this._iconColor = "var(--sq-unavailable-rgb)";
-              this._name = (_f = this._name) !== null && _f !== void 0 ? _f : "Unknown";
+              this._name = (_e = this._name) !== null && _e !== void 0 ? _e : "Unknown";
           }
       }
       render() {
@@ -1125,7 +1125,7 @@
           if (this._areaObj) {
               window.history.pushState(null, "", `/home-dash/${this._area}`);
               window.dispatchEvent(new CustomEvent("location-changed"));
-              this._hass.callService("browser_mod", "close_popup");
+              this._hass.callService("browser_mod", "close_popup", {});
           }
           else {
               console.error("Area is not found.");

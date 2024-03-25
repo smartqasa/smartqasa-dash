@@ -44,7 +44,7 @@ export class SmartQasaAllOffTile extends LitElement {
 
   private _updateState(): void {
     if (this._areaObj) {
-      this._icon = this._icon ?? this._hass.areas[this._area].icon ?? "hass:power";
+      this._icon = this._icon ?? "hass:power";
       this._iconAnimation = "none";
       this._iconColor = "var(--sq-inactive-rgb)";
       this._name = this._name ?? this._hass.areas[this._area].name ?? this._area;
