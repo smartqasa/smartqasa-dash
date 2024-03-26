@@ -1799,7 +1799,7 @@ window.customCards.push({
     description: "A SmartQasa tile for controlling a lock entity.",
 });
 
-class SmartQasaRoutineTile extends s {
+let SmartQasaRoutineTile = class SmartQasaRoutineTile extends s {
     constructor() {
         super(...arguments);
         this._icon = "hass:help-rhombus";
@@ -1830,13 +1830,13 @@ class SmartQasaRoutineTile extends s {
         if (this._stateObj) {
             this._icon = this._icon ?? this._stateObj.attributes.icon ?? "hass:help-circle";
             this._iconColor = "var(--sq-inactive-rgb)";
-            this._name = this._name ?? this._stateObj.attributes.friendly_name ?? this._stateObj.entity_id;
+            this._name = this._config?.name ?? this._stateObj.attributes.friendly_name ?? this._stateObj.entity_id;
         }
         else {
-            this._icon = this._icon ?? "hass:alert-rhombus";
-            this._iconColor = "var(--sq-unavailable-rgb)";
+            this._icon = this._config?.icon ?? "hass:alert-rhombus";
+            this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
             this._iconAnimation = "none";
-            this._name = this._name ?? "Unknown";
+            this._name = this._config?.name ?? "Unknown";
         }
     }
     render() {
@@ -1888,7 +1888,7 @@ class SmartQasaRoutineTile extends s {
     getCardSize() {
         return 1;
     }
-}
+};
 __decorate([
     r()
 ], SmartQasaRoutineTile.prototype, "_config", void 0);
@@ -1907,7 +1907,9 @@ __decorate([
 __decorate([
     r()
 ], SmartQasaRoutineTile.prototype, "_stateObj", void 0);
-customElements.define("smartqasa-routine-tile", SmartQasaRoutineTile);
+SmartQasaRoutineTile = __decorate([
+    t("smartqasa-routine-tile")
+], SmartQasaRoutineTile);
 window.customCards.push({
     type: "smartqasa-routine-tile",
     name: "SmartQasa Routine Tile",

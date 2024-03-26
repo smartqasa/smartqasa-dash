@@ -1,5 +1,5 @@
 import { CSSResultGroup, html, LitElement, TemplateResult } from "lit";
-import { state } from "lit/decorators.js";
+import { customElement, state } from "lit/decorators.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 
@@ -12,6 +12,7 @@ interface Config extends LovelaceCardConfig {
   name?: string;
 }
 
+@customElement("smartqasa-routine-tile")
 export class SmartQasaRoutineTile extends LitElement {
   @state() private _config?: Config;
   @state() private _icon: string = "hass:help-rhombus";
@@ -46,12 +47,12 @@ export class SmartQasaRoutineTile extends LitElement {
     if (this._stateObj) {
       this._icon = this._icon ?? this._stateObj.attributes.icon ?? "hass:help-circle";
       this._iconColor = "var(--sq-inactive-rgb)";
-      this._name = this._name ?? this._stateObj.attributes.friendly_name ?? this._stateObj.entity_id;
+      this._name = this._config?.name ?? this._stateObj.attributes.friendly_name ?? this._stateObj.entity_id;
     } else {
-      this._icon = this._icon ?? "hass:alert-rhombus";
-      this._iconColor = "var(--sq-unavailable-rgb)";
+      this._icon = this._config?.icon ?? "hass:alert-rhombus";
+      this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
       this._iconAnimation = "none";
-      this._name = this._name ?? "Unknown";
+      this._name = this._config?.name ?? "Unknown";
     }
   }
 
@@ -110,8 +111,6 @@ export class SmartQasaRoutineTile extends LitElement {
     return 1;
   }
 }
-
-customElements.define("smartqasa-routine-tile", SmartQasaRoutineTile);
 
 window.customCards.push({
   type: "smartqasa-routine-tile",
