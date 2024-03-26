@@ -3,19 +3,9 @@ import { customElement, state } from "lit/decorators.js";
 
 import { HomeAssistant } from "custom-card-helpers";
 
-declare global {
-
-  interface Window {
-    fully: {
-      startApplication: (packageName: string) => void;
-    };
-  }
-}
-
 interface Config {
   // Configuration interface, define any expected properties
 }
-
 
 @customElement("smartqasa-time-date")
 export class SmartQasaTimeDate extends LitElement {

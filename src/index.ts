@@ -1,6 +1,9 @@
 declare global {
   interface Window {
     customCards: Array<Object>;
+    fully: {
+      startApplication: (packageName: string) => void;
+    };
     smartqasa: { deviceType?: string; };
   }
 }

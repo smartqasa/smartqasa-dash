@@ -61,14 +61,10 @@ export class SmartQasaAppTile extends LitElement {
     if (this._appObj.launcher === "uri_scheme" && this._appObj.uri_scheme) {
       window.location.href = this._appObj.uri_scheme;
     } else if (this._appObj.launcher === "package" && this._appObj.package) {
-      if (this._hass) {
-        this._hass.callService("fully_kiosk", "start_application", {
-          application: this._appObj.package,
-        }).catch((error: any) => {
-          console.error("Error calling fully_kiosk.start_application service:", error);
-        });
+      if (window.fully?.startApplication) {
+        window.fully.startApplication(this._appObj.package);
       } else {
-        console.error("Home Assistant client (this._hass) is not available.");
+        console.warn("fully.startApplication is not available.");
       }
     } else {
       console.error(
