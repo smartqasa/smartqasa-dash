@@ -1317,7 +1317,7 @@ let SmartQasaFanTile = class SmartQasaFanTile extends s {
         else {
             this._icon = this._config?._icon ?? this._icon;
             this._iconAnimation = "none";
-            this._iconColor = "var(--sq-unavailable-rgb)";
+            this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
             this._name = this._config?._name ?? "Unknown";
             this._stateFmtd = "Unavailable";
         }
