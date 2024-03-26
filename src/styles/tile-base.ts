@@ -35,13 +35,8 @@ export default css`
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: normal;
-    font-weight: 400;
-    font-size: 1.5rem;
+    font-weight: var(--sq-primary-font-weight, 400);
+    font-size: var(--sq-primary-font-size, 1.5rem);
     color: rgb(var(--sq-primary-font-rgb), 128, 128, 128);
-  }
-  @media (max-width: 600px) {
-    .name {
-      font-size: 1.4rem;
-    }
   }
 `;

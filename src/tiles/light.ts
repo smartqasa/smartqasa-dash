@@ -1,10 +1,11 @@
 import { CSSResultGroup, html, LitElement, TemplateResult } from "lit";
-import { customElement, state } from "lit/decorators";
-import { HassEntity } from "home-assistant-js-websocket";
-import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
+import { customElement, state } from "lit/decorators.js";
 
 import styleTileBase from "../styles/tile-base";
 import styleTileState from "../styles/tile-state";
+
+import { HassEntity } from "home-assistant-js-websocket";
+import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 
 interface Config extends LovelaceCardConfig {
   entity: string;
@@ -13,7 +14,7 @@ interface Config extends LovelaceCardConfig {
 }
 
 @customElement("smartqasa-light-tile")
-export class LightTile extends LitElement {
+export class SmartQasaLightTile extends LitElement {
   @state() private _entity: string;
   @state() private _icon: string = "hass:help-rhombus";
   @state() private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";

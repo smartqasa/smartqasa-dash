@@ -1,4 +1,4 @@
-import { css, CSSResult, html, LitElement, TemplateResult } from 'lit';
+import { css, CSSResultGroup, html, LitElement, TemplateResult } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 
 import { HassEntity } from "home-assistant-js-websocket";
@@ -9,7 +9,7 @@ interface Config extends LovelaceCardConfig {
   picture?: string;
   }
 
-@customElement("smartqasa-area-picture")
+  @customElement("smartqasa-area-picture")
 export class SmartQasaAreaPicture extends LitElement {
   @state() private _area: string;
   @state() private _areaObj?: HassEntity;
@@ -17,7 +17,7 @@ export class SmartQasaAreaPicture extends LitElement {
 
   private _hass: any;
 
-  static get styles(): CSSResult {
+  static get styles(): CSSResultGroup {
     return css`
       :host {
         display: block;

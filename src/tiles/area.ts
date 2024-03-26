@@ -77,6 +77,7 @@ export class SmartQasaAreaTile extends LitElement {
     e.stopPropagation();
     if (this._areaObj) {
       navigate(null, `/home-dash/${this._area}`, false);
+
       window.browser_mod?.service("close_popup", {});
     } else {
       console.error("Area is not found.");

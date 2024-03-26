@@ -1,4 +1,4 @@
-(function (decorators) {
+(function () {
   'use strict';
 
   /******************************************************************************
@@ -591,14 +591,9 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: normal;
-    font-weight: 400;
-    font-size: 1.5rem;
+    font-weight: var(--sq-primary-font-weight, 400);
+    font-size: var(--sq-primary-font-size, 1.5rem);
     color: rgb(var(--sq-primary-font-rgb), 128, 128, 128);
-  }
-  @media (max-width: 600px) {
-    .name {
-      font-size: 1.4rem;
-    }
   }
 `;
 
@@ -1565,7 +1560,7 @@
       description: "A SmartQasa tile for controlling a garage cover entity.",
   });
 
-  let LightTile = class LightTile extends s {
+  let SmartQasaLightTile = class SmartQasaLightTile extends s {
       constructor() {
           super(...arguments);
           this._icon = "hass:help-rhombus";
@@ -1650,28 +1645,28 @@
           return 1;
       }
   };
-  LightTile.styles = [styleTileBase, styleTileState];
+  SmartQasaLightTile.styles = [styleTileBase, styleTileState];
   __decorate([
-      decorators.state()
-  ], LightTile.prototype, "_entity", void 0);
+      r$1()
+  ], SmartQasaLightTile.prototype, "_entity", void 0);
   __decorate([
-      decorators.state()
-  ], LightTile.prototype, "_icon", void 0);
+      r$1()
+  ], SmartQasaLightTile.prototype, "_icon", void 0);
   __decorate([
-      decorators.state()
-  ], LightTile.prototype, "_iconColor", void 0);
+      r$1()
+  ], SmartQasaLightTile.prototype, "_iconColor", void 0);
   __decorate([
-      decorators.state()
-  ], LightTile.prototype, "_name", void 0);
+      r$1()
+  ], SmartQasaLightTile.prototype, "_name", void 0);
   __decorate([
-      decorators.state()
-  ], LightTile.prototype, "_stateFmtd", void 0);
+      r$1()
+  ], SmartQasaLightTile.prototype, "_stateFmtd", void 0);
   __decorate([
-      decorators.state()
-  ], LightTile.prototype, "_stateObj", void 0);
-  LightTile = __decorate([
-      decorators.customElement("smartqasa-light-tile")
-  ], LightTile);
+      r$1()
+  ], SmartQasaLightTile.prototype, "_stateObj", void 0);
+  SmartQasaLightTile = __decorate([
+      t$1("smartqasa-light-tile")
+  ], SmartQasaLightTile);
   window.customCards.push({
       type: "smartqasa-light-tile",
       name: "SmartQasa Light Tile",
@@ -2231,61 +2226,6 @@
       description: "A SmartQasa tile for toggling an entity.",
   });
 
-  let LightTileEditor = class LightTileEditor extends s {
-      setConfig(config) {
-          this._config = config;
-      }
-      render() {
-          return x `
-      <form class="table">
-        <div class="row">
-          <label class="label cell" for="entity">Entity:</label>
-          <input
-              @change="${this.handleChangedEvent}"
-              class="value cell" id="entity" value="${this._config.entity}"></input>
-        </div>
-        <div class="row">
-          <label class="label cell" for="name">Name</label>
-          <input
-              @change="${this.handleChangedEvent}"
-              class="value cell" id="name" value="${this._config.name}"></input>
-        </div>
-      </form>
-        `;
-      }
-      handleChangedEvent(changedEvent) {
-          const target = changedEvent.target;
-          // this._config is readonly, copy needed
-          const newConfig = Object.assign({}, this._config);
-          switch (target.id) {
-              case "entity":
-                  newConfig.entity = target.value;
-                  break;
-              case "name":
-                  newConfig.name = target.value;
-                  break;
-          }
-      }
-  };
-  LightTileEditor.styles = i$2 `
-    .table {
-      display: table;
-    }
-    .row {
-      display: table-row;
-    }
-    .cell {
-      display: table-cell;
-      padding: 0.5em;
-    }
-  `;
-  __decorate([
-      decorators.state()
-  ], LightTileEditor.prototype, "_config", void 0);
-  LightTileEditor = __decorate([
-      decorators.customElement("smartqasa-light-tile-editor")
-  ], LightTileEditor);
-
   var _a;
   window.smartqasa = window.smartqasa || {};
   if (typeof window.screen.width === "number") {
@@ -2296,4 +2236,4 @@
   }
   window.customCards = (_a = window.customCards) !== null && _a !== void 0 ? _a : [];
 
-})(decorators);
+})();
