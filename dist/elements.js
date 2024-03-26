@@ -1546,7 +1546,7 @@ window.customCards.push({
 let LightTile = class LightTile extends s {
     constructor() {
         super(...arguments);
-        this._icon = "hass:bulb";
+        this._icon = "hass:lightbulb-alert";
         this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
         this._name = "Loading...";
         this._stateFmtd = "Loading...";
@@ -1571,8 +1571,7 @@ let LightTile = class LightTile extends s {
     _updateState() {
         if (this._stateObj) {
             const state = this._stateObj.state ?? "unknown";
-            console.log(this._stateObj.attributes.icon);
-            this._icon = this._config?.icon || this._stateObj.attributes.icon || this._icon;
+            this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:lightbulb";
             this._iconColor = state == "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
             this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
             this._stateFmtd =
@@ -1582,7 +1581,7 @@ let LightTile = class LightTile extends s {
                         : "");
         }
         else {
-            this._icon = this._config?.icon ?? this._icon;
+            this._icon = this._config?.icon ?? "hass:lightbulb-alert";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
             this._name = this._config?.name ?? "Unknown";
             this._stateFmtd = "Unavailable";
