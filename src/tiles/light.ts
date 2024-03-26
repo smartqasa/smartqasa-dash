@@ -15,7 +15,7 @@ interface Config extends LovelaceCardConfig {
 @customElement("smartqasa-light-tile")
 export class LightTile extends LitElement {
   @state() private _config?: Config;
-  @state() private _icon: string = "hass:bulb";
+  @state() private _icon: string = "hass:lightbulb-alert";
   @state() private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
   @state() private _name?: string = "Loading...";
   @state() private _stateFmtd: string = "Loading...";
@@ -43,8 +43,7 @@ export class LightTile extends LitElement {
   private _updateState(): void {
     if (this._stateObj) {
       const state = this._stateObj.state ?? "unknown";
-      console.log(this._stateObj.attributes.icon);
-      this._icon = this._config?.icon || this._stateObj.attributes.icon || this._icon;
+      this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:lightbulb";
       this._iconColor = state == "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
       this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
       this._stateFmtd =
@@ -53,7 +52,7 @@ export class LightTile extends LitElement {
           ? " - " + this._hass.formatEntityAttributeValue(this._stateObj, "brightness")
           : "");
     } else {
-      this._icon = this._config?.icon ?? this._icon;
+      this._icon = this._config?.icon ?? "hass:lightbulb-alert";
       this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
       this._name = this._config?.name ?? "Unknown";
       this._stateFmtd = "Unavailable";
