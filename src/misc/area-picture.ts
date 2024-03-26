@@ -1,5 +1,5 @@
 import { css, CSSResultGroup, html, LitElement, TemplateResult } from 'lit';
-import { state } from 'lit/decorators.js';
+import { customElement, state } from 'lit/decorators.js';
 
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
@@ -9,12 +9,13 @@ interface Config extends LovelaceCardConfig {
   picture?: string;
   }
 
+  @customElement("smartqasa-area-picture")
 export class SmartQasaAreaPicture extends LitElement {
   @state() private _area: string;
   @state() private _areaObj?: HassEntity;
   @state() private _picture?: string;
 
-  private _hass;
+  private _hass: any;
 
   static get styles(): CSSResultGroup {
     return css`
@@ -70,8 +71,6 @@ export class SmartQasaAreaPicture extends LitElement {
     return 1;
   }
 }
-
-customElements.define("smartqasa-area-picture", SmartQasaAreaPicture);
 
 window.customCards.push({
   type: "smartqasa-area-picture",

@@ -24,7 +24,7 @@ export class SmartQasaFanTile extends LitElement {
   @state() private _stateFmtd: string = "Loading...";
   @state() private _stateObj?: HassEntity;
 
-  private _hass;
+  private _hass: any;
 
   static styles: CSSResultGroup = [styleTileBase, styleTileState, styleTileIconSpin];
 

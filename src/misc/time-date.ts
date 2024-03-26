@@ -1,9 +1,10 @@
 import { CSSResultGroup, LitElement, html, css, TemplateResult } from "lit";
-import { state } from "lit/decorators.js";
+import { customElement, state } from "lit/decorators.js";
 
 import { HomeAssistant } from "custom-card-helpers";
 
 declare global {
+
   interface Window {
     fully: {
       startApplication: (packageName: string) => void;
@@ -15,10 +16,13 @@ interface Config {
   // Configuration interface, define any expected properties
 }
 
+
+@customElement("smartqasa-time-date")
 export class SmartQasaTimeDate extends LitElement {
-  @state() private _hass?: HomeAssistant;
-  @state() private _time: string = '';
-  @state() private _date: string = '';
+  @state() private _time: string = "loading";
+  @state() private _date: string = "loading";
+
+private _hass: any
 
   setConfig(config: Config): void {
     // Handle configuration setup if necessary
@@ -26,8 +30,8 @@ export class SmartQasaTimeDate extends LitElement {
 
   set hass(hass: HomeAssistant) {
     this._hass = hass;
-    this._time = this._hass.states["sensor.current_time"].state;
-    this._date = this._hass.states["sensor.current_date"].state;
+    this._time = this._hass?.states["sensor.current_time"].state ?? "unavailable";
+    this._date = this._hass?.states["sensor.current_date"].state ?? "unavailable";
   }
 
   static get styles(): CSSResultGroup {
@@ -90,8 +94,6 @@ export class SmartQasaTimeDate extends LitElement {
     return 1;
   }
 }
-
-customElements.define("smartqasa-time-date", SmartQasaTimeDate);
 
 window.customCards.push({
   type: "smartqasa-time-date",

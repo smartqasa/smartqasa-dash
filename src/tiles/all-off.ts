@@ -22,7 +22,7 @@ export class SmartQasaAllOffTile extends LitElement {
   @state() private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
   @state() private _name: string = "Loading...";
 
-  private _hass;
+  private _hass: any;
 
   static styles: CSSResultGroup = [styleTileBase, styleTileIconSpin];
 

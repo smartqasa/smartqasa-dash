@@ -31,7 +31,7 @@ export class SmartQasaAppTile extends LitElement {
   @state() private _icon?: string;
   @state() private _name?: string;
 
-  private _hass;
+  private _hass: any;
 
   static styles: CSSResultGroup = styleTileBase;
 

@@ -21,7 +21,7 @@ export class SmartQasaRoutineTile extends LitElement {
   @state() private _name: string = "Loading...";
   @state() private _stateObj?: HassEntity;
 
-  private _hass: HomeAssistant;
+  private _hass: any;
 
   static styles: CSSResultGroup = [styleTileBase, styleTileIconSpin];
 

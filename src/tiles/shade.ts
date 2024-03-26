@@ -26,7 +26,7 @@ export class SmartQasaShadeTile extends LitElement {
   @state() private _stateObj: HassEntity;
   @state() private _tilt: number;
 
-  private _hass;
+  private _hass: any;
 
   static styles: CSSResultGroup = [styleTileBase, styleTileState, styleTileIconBlink];
 
