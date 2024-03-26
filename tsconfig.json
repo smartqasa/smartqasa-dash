@@ -1,11 +1,13 @@
 {
   "compilerOptions": {
     "isolatedModules": true,
-    "target": "es2017",
+    "target": "esnext",
+    "module": "esnext",
     "moduleResolution": "node",
+    "strict": true,
     "experimentalDecorators": true,
-    "useDefineForClassFields": false,
-    "module": "ESNext"
+    "esModuleInterop": true,
+    "useDefineForClassFields": false
   },
   "include": ["src/**/*.ts", "custom.d.ts"],
   "exclude": ["node_modules"]
