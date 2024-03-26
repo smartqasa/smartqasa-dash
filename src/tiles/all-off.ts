@@ -1,11 +1,9 @@
 import { CSSResultGroup, LitElement, html, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
+import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 
 import styleTileBase from "../styles/tile-base";
 import styleTileIconSpin from "../styles/tile-icon-spin";
-
-import { HassEntity } from "home-assistant-js-websocket";
-import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 
 interface Config extends LovelaceCardConfig {
   area: string;
@@ -15,8 +13,8 @@ interface Config extends LovelaceCardConfig {
 
 @customElement("smartqasa-all-off-tile")
 export class SmartQasaAllOffTile extends LitElement {
-  @state() private _area: string = "";
-  @state() private _areaObj?: HassEntity;
+  @state() private _config?: Config;
+  @state() private _areaObj?: any;
   @state() private _icon: string = "hass:help-rhombus-outline";
   @state() private _iconAnimation: string = "none";
   @state() private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
@@ -27,19 +25,18 @@ export class SmartQasaAllOffTile extends LitElement {
   static styles: CSSResultGroup = [styleTileBase, styleTileIconSpin];
 
   setConfig(config: Config): void {
-    if (!config.area) throw new Error("You must specify an area");
-
-    this._area = config.area;
-    this._icon = config.icon ?? "";
-    this._name = config.name ?? "";
-
+    if (!config.area) throw new Error("A valid area id is required.");
+    this._config = config;
     if (this._hass) this.hass = this._hass;
   }
 
   set hass(hass: HomeAssistant) {
     this._hass = hass;
-    this._areaObj = this._hass?.areas[this._area] ?? undefined;
-    this._updateState();
+    if (this._hass && this._config?.area) {
+      this._areaObj = this._hass.areas[this._config.area] ?? undefined;
+      if (!this._areaObj) throw new Error("The area could not be located.");
+      this._updateState();
+    }
   }
 
   private _updateState(): void {
@@ -47,7 +44,7 @@ export class SmartQasaAllOffTile extends LitElement {
       this._icon = this._icon ?? "hass:power";
       this._iconAnimation = "none";
       this._iconColor = "var(--sq-inactive-rgb)";
-      this._name = this._name ?? this._hass.areas[this._area].name ?? this._area;
+      this._name = this._name ?? this._areaObj?.name ?? this._areaObj.area;
     } else {
       this._icon = this._icon ?? "hass:alert-rhombus";
       this._iconAnimation = "none";
@@ -83,11 +80,11 @@ export class SmartQasaAllOffTile extends LitElement {
       this._iconAnimation = "spin 1.0s linear infinite";
 
       this._hass.callService("light", "turn_off", {
-        area_id: this._area,
+        area_id: this._areaObj.area,
         transition: 2,
       });
       this._hass.callService("fan", "turn_off", {
-        area_id: this._area,
+        area_id: this._areaObj.area,
       });
 
       setTimeout(() => {

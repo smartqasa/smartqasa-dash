@@ -1,6 +1,5 @@
 import { CSSResultGroup, html, LitElement, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
-
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 
@@ -15,8 +14,8 @@ interface Config extends LovelaceCardConfig {
 
 @customElement("smartqasa-garage-tile")
 export class SmartQasaGarageTile extends LitElement {
-  @state() private _entity: string = "";
-  @state() private _icon: string = "hass:help-rhombus";
+  @state() private _config?: Config;
+  @state() private _icon: string = "hass:garage-variant";
   @state() private _iconAnimation: string = "none";
   @state() private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
   @state() private _name: string = "Loading...";
@@ -28,18 +27,16 @@ export class SmartQasaGarageTile extends LitElement {
   static styles: CSSResultGroup = [styleTileBase, styleTileState, styleTileIconBlink];
 
   setConfig(config: Config): void {
-    if (!config.entity) throw new Error("You must specify an entity");
-
-    this._entity = config.entity;
-    this._name = config.name ?? "";
-
+    if (!config.entity || config.entity.split('.')[0] != "cover") throw new Error("A valid cover entity is required.");
+    this._config = config;
     if (this._hass) this.hass = this._hass;
   }
 
   set hass(hass: HomeAssistant) {
     this._hass = hass;
-    if (this._hass) {
-      this._stateObj = this._hass.states[this._entity] ?? undefined;
+    if (this._hass && this._config?.entity) {
+      this._stateObj = this._hass.states[this._config.entity] ?? undefined;
+      if (!this._stateObj) throw new Error("The entity could not be located.");
       this._updateState();
     }
   }
@@ -69,7 +66,7 @@ export class SmartQasaGarageTile extends LitElement {
           this._iconColor = "var(--sq-garage-closing-rgb, 255, 120, 0)";
           break;
         default:
-          this._icon = "hass:alert-rhombus";
+          this._icon = "hass:garage-alert-variant";
           this._iconAnimation = "none";
           this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
           break;
@@ -83,13 +80,13 @@ export class SmartQasaGarageTile extends LitElement {
               "current_position"
             )
           : "");
-      this._name = this._name ?? this._stateObj.attributes.friendly_name ?? this._entity;
+      this._name = this._config?.icon ?? this._stateObj.attributes.friendly_name ?? this._stateObj.entity_id;
     } else {
-      this._icon = "hass:alert-rhombus";
+      this._icon = "hass:garage-alert-variant";
       this._iconAnimation = "none";
-      this._iconColor = "var(--sq-unavailable-rgb)";
+      this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
       this._name = this._name ?? "Unknown";
-      this._stateFmtd = "Unknown";
+      this._stateFmtd = "Unavailable";
     }
   }
 
@@ -115,18 +112,18 @@ export class SmartQasaGarageTile extends LitElement {
 
   private _toggleEntity(e: Event): void {
     e.stopPropagation();
-    if (this._hass && this._stateObj) {
-      this._hass.callService("cover", "toggle", { entity_id: this._entity });
+    if (this._stateObj) {
+      this._hass.callService("cover", "toggle", { entity_id: this._stateObj.entity_id });
     }
   }
 
   private _showMoreInfo(e: Event): void {
     e.stopPropagation();
-    if (this._hass && this._stateObj) {
+    if (this._stateObj) {
       const event = new CustomEvent("hass-more-info", {
         bubbles: true,
         composed: true,
-        detail: { entityId: this._entity },
+        detail: { entityId: this._stateObj.entity_id },
       });
       this.dispatchEvent(event);
     }

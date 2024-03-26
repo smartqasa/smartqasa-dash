@@ -15,8 +15,8 @@ interface Config extends LovelaceCardConfig {
 
 @customElement("smartqasa-fan-tile")
 export class SmartQasaFanTile extends LitElement {
-  @state() private _entity: string = "";
-  @state() private _icon: string = "hass:help-rhombus";
+  @state() private _config?: Config;
+  @state() private _icon: string = "hass:fan";
   @state() private _iconAnimation: string = "none";
   @state() private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
   @state() private _name: string = "Loading...";
@@ -28,19 +28,16 @@ export class SmartQasaFanTile extends LitElement {
   static styles: CSSResultGroup = [styleTileBase, styleTileState, styleTileIconSpin];
 
   setConfig(config: Config): void {
-    if (!config.entity) throw new Error("You must specify an entity");
-
-    this._entity = config.entity;
-    this._icon = config.icon ?? "";
-    this._name = config.name ?? "";
-
+    if (!config.entity || config.entity.split('.')[0] != "fan") throw new Error("A valid fan entity is required.");
+    this._config = config;
     if (this._hass) this.hass = this._hass;
   }
 
   set hass(hass: HomeAssistant) {
     this._hass = hass;
-    if (this._hass) {
-      this._stateObj = this._hass.states[this._entity] ?? undefined;
+    if (this._hass && this._config?.entity) {
+      this._stateObj = this._hass.states[this._config.entity] ?? undefined;
+      if (!this._stateObj) throw new Error("The entity could not be located.");
       this._updateState();
     }
   }
@@ -48,7 +45,7 @@ export class SmartQasaFanTile extends LitElement {
   private _updateState(): void {
     if (this._stateObj) {
       const state: string = this._stateObj.state ?? "unknown";
-      this._icon = this._icon ?? "hass:fan";
+      this._icon = this._config?.icon ?? this._icon;
       if (state == "on" && this._icon == "hass:fan") {
         if (this._stateObj.attributes.percentage) {
           const speed = 0.5 + (1 - this._stateObj.attributes.percentage / 100);
@@ -64,24 +61,24 @@ export class SmartQasaFanTile extends LitElement {
         this._iconAnimation = "none";
       }
       this._iconColor = state == "on" ? "var(--sq-fan-on-rgb)" : "var(--sq-inactive-rgb)";
-      this._name = this._name ?? this._stateObj.attributes.friendly_name ?? this._entity;
+      this._name = this._config?.name ?? this._stateObj.attributes.friendly_name ?? this._stateObj.entity_id;
       this._stateFmtd =
         this._hass.formatEntityState(this._stateObj) +
         (state == "on" && this._stateObj.attributes.percentage
           ? " - " + this._hass.formatEntityAttributeValue(this._stateObj, "percentage")
           : "");
     } else {
-      this._icon = this._icon ?? "hass:alert-rhombus";
+      this._icon = this._config?._icon ?? this._icon;
       this._iconAnimation = "none";
       this._iconColor = "var(--sq-unavailable-rgb)";
-      this._name = this._name ?? "Unknown";
-      this._stateFmtd = "Unknown";
+      this._name = this._config?._name ?? "Unknown";
+      this._stateFmtd = "Unavailable";
     }
   }
 
   protected render(): TemplateResult {
     return html`
-        <ha-card class="container" @click=${this._showMoreInfo}>
+        <div class="container" @click=${this._showMoreInfo}>
           <div
             class="icon"
             @click=${this._toggleEntity}
@@ -94,14 +91,14 @@ export class SmartQasaFanTile extends LitElement {
           </div>
           <div class="name">${this._name}</div>
           <div class="state">${this._stateFmtd}</div>
-        </ha-card>
+        </div>
     `;
   }
 
   private _toggleEntity(e: Event): void {
     e.stopPropagation();
     if (this._stateObj) {
-      this._hass.callService("fan", "toggle", { entity_id: this._entity });
+      this._hass.callService("fan", "toggle", { entity_id: this._stateObj.entity_id });
     }
   }
 
@@ -111,7 +108,7 @@ export class SmartQasaFanTile extends LitElement {
       const event = new CustomEvent("hass-more-info", {
         bubbles: true,
         composed: true,
-        detail: { entityId: this._entity },
+        detail: { entityId: this._stateObj.entity_id },
       });
       this.dispatchEvent(event);
     }
