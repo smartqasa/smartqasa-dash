@@ -1,8 +1,7 @@
 import { CSSResult, html, LitElement, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
-
 import { HassEntity } from "home-assistant-js-websocket";
-import { HomeAssistant, LovelaceCardConfig, navigate } from "custom-card-helpers";
+import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 
 import styleTileBase from "../styles/tile-base";
 
@@ -76,8 +75,8 @@ export class SmartQasaAreaTile extends LitElement {
   private _navigate(e: Event): void {
     e.stopPropagation();
     if (this._areaObj) {
-      navigate(null, `/home-dash/${this._area}`, false);
-
+      window.history.pushState(null, "", `/home-dash/${this._area}`);
+      window.dispatchEvent(new CustomEvent("location-changed"));
       window.browser_mod?.service("close_popup", {});
     } else {
       console.error("Area is not found.");

@@ -1,12 +1,11 @@
 import { CSSResultGroup, html, LitElement, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
+import { HassEntity } from "home-assistant-js-websocket";
+import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 
 import styleTileBase from "../styles/tile-base";
 import styleTileState from "../styles/tile-state";
 import styleTileIconSpin from "../styles/tile-icon-spin";
-
-import { HassEntity } from "home-assistant-js-websocket";
-import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 
 interface Config extends LovelaceCardConfig {
   entity: string;
@@ -82,20 +81,20 @@ export class SmartQasaFanTile extends LitElement {
 
   protected render(): TemplateResult {
     return html`
-      <div class="container" @click=${this._showMoreInfo}>
-        <div
-          class="icon"
-          @click=${this._toggleEntity}
-          style="
-            color: rgb(${this._iconColor});
-            background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
-            animation: ${this._iconAnimation};"
-        >
-          <ha-icon .icon=${this._icon}></ha-icon>
-        </div>
-        <div class="name">${this._name}</div>
-        <div class="state">${this._stateFmtd}</div>
-      </div>
+        <ha-card class="container" @click=${this._showMoreInfo}>
+          <div
+            class="icon"
+            @click=${this._toggleEntity}
+            style="
+              color: rgb(${this._iconColor});
+              background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
+              animation: ${this._iconAnimation};"
+          >
+            <ha-icon .icon=${this._icon}></ha-icon>
+          </div>
+          <div class="name">${this._name}</div>
+          <div class="state">${this._stateFmtd}</div>
+        </ha-card>
     `;
   }
 

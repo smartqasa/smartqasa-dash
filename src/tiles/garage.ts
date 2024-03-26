@@ -1,12 +1,12 @@
 import { CSSResultGroup, html, LitElement, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
 
+import { HassEntity } from "home-assistant-js-websocket";
+import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
+
 import styleTileBase from "../styles/tile-base";
 import styleTileState from "../styles/tile-state";
 import styleTileIconBlink from "../styles/tile-icon-blink";
-
-import { HassEntity } from "home-assistant-js-websocket";
-import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 
 interface Config extends LovelaceCardConfig {
   entity: string;
@@ -95,7 +95,7 @@ export class SmartQasaGarageTile extends LitElement {
 
   protected render(): TemplateResult {
     return html`
-      <div class="container" @click=${this._showMoreInfo}>
+      <ha-card class="container" @click=${this._showMoreInfo}>
         <div
           class="icon"
           @click=${this._toggleEntity}
@@ -109,7 +109,7 @@ export class SmartQasaGarageTile extends LitElement {
         </div>
         <div class="name">${this._name}</div>
         <div class="state">${this._stateFmtd}</div>
-      </div>
+      </ha-card>
     `;
   }
 
