@@ -41,15 +41,15 @@ export class SmartQasaAllOffTile extends LitElement {
 
   private _updateState(): void {
     if (this._areaObj) {
-      this._icon = this._icon ?? "hass:power";
+      this._icon = this._config?.icon ?? "hass:power";
       this._iconAnimation = "none";
-      this._iconColor = "var(--sq-inactive-rgb)";
-      this._name = this._name ?? this._areaObj?.name ?? this._areaObj.area;
+      this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+      this._name = this._config?.name ?? this._areaObj?.name ?? this._areaObj.id;
     } else {
-      this._icon = this._icon ?? "hass:alert-rhombus";
+      this._icon = this._config?._icon ?? "hass:alert-rhombus";
       this._iconAnimation = "none";
-      this._iconColor = "var(--sq-unavailable-rgb)";
-      this._name = this._name ?? "Unknown";
+      this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+      this._name = this._config?.name ?? "Unknown";
     }
   }
 
@@ -80,11 +80,11 @@ export class SmartQasaAllOffTile extends LitElement {
       this._iconAnimation = "spin 1.0s linear infinite";
 
       this._hass.callService("light", "turn_off", {
-        area_id: this._areaObj.area,
+        area_id: this._areaObj.id,
         transition: 2,
       });
       this._hass.callService("fan", "turn_off", {
-        area_id: this._areaObj.area,
+        area_id: this._areaObj.id,
       });
 
       setTimeout(() => {

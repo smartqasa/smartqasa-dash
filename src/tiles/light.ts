@@ -43,6 +43,7 @@ export class LightTile extends LitElement {
   private _updateState(): void {
     if (this._stateObj) {
       const state = this._stateObj.state ?? "unknown";
+      console.log(this._stateObj.attributes.icon);
       this._icon = this._config?.icon || this._stateObj.attributes.icon || this._icon;
       this._iconColor = state == "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
       this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;

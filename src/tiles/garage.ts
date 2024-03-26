@@ -92,7 +92,7 @@ export class SmartQasaGarageTile extends LitElement {
 
   protected render(): TemplateResult {
     return html`
-      <ha-card class="container" @click=${this._showMoreInfo}>
+      <div class="container" @click=${this._showMoreInfo}>
         <div
           class="icon"
           @click=${this._toggleEntity}
@@ -106,7 +106,7 @@ export class SmartQasaGarageTile extends LitElement {
         </div>
         <div class="name">${this._name}</div>
         <div class="state">${this._stateFmtd}</div>
-      </ha-card>
+      </div>
     `;
   }
 

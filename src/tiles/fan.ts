@@ -16,7 +16,7 @@ interface Config extends LovelaceCardConfig {
 @customElement("smartqasa-fan-tile")
 export class SmartQasaFanTile extends LitElement {
   @state() private _config?: Config;
-  @state() private _icon: string = "hass:fan";
+  @state() private _icon: string = "hass:fan-alert";
   @state() private _iconAnimation: string = "none";
   @state() private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
   @state() private _name: string = "Loading...";
@@ -45,7 +45,7 @@ export class SmartQasaFanTile extends LitElement {
   private _updateState(): void {
     if (this._stateObj) {
       const state: string = this._stateObj.state ?? "unknown";
-      this._icon = this._config?.icon ?? this._icon;
+      this._icon = this._config?.icon ?? "hass:fan";
       if (state == "on" && this._icon == "hass:fan") {
         if (this._stateObj.attributes.percentage) {
           const speed = 0.5 + (1 - this._stateObj.attributes.percentage / 100);
@@ -68,7 +68,7 @@ export class SmartQasaFanTile extends LitElement {
           ? " - " + this._hass.formatEntityAttributeValue(this._stateObj, "percentage")
           : "");
     } else {
-      this._icon = this._config?._icon ?? this._icon;
+      this._icon = this._config?._icon ?? "hass:fan-alert";
       this._iconAnimation = "none";
       this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
       this._name = this._config?._name ?? "Unknown";

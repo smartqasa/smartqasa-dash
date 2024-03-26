@@ -13,7 +13,7 @@ interface Config extends LovelaceCardConfig {
 }
 
 export class SmartQasaRoutineTile extends LitElement {
-  @state() private _entity: string = "";
+  @state() private _config?: Config;
   @state() private _icon: string = "hass:help-rhombus";
   @state() private _iconAnimation: string = "none";
   @state() private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
@@ -25,19 +25,19 @@ export class SmartQasaRoutineTile extends LitElement {
   static styles: CSSResultGroup = [styleTileBase, styleTileIconSpin];
 
   setConfig(config: Config): void {
-    if (!config.entity) throw new Error("You must specify an entity");
-
-    this._entity = config.entity;
-    this._icon = config.icon ?? "";
-    this._name = config.name ?? "";
-
+    const validDomains = ['automation', 'scene', 'script'];
+    if (!config.entity || !validDomains.includes(config.entity.split('.')[0])) {
+      throw new Error("A valid automation, scene, or script entity is required.");
+    }
+    this._config = config;
     if (this._hass) this.hass = this._hass;
   }
 
   set hass(hass: HomeAssistant) {
     this._hass = hass;
-    if (this._hass) {
-      this._stateObj = this._hass?.states[this._entity] ?? undefined;
+    if (this._hass && this._config?.entity) {
+      this._stateObj = this._hass.states[this._config.entity] ?? undefined;
+      if (!this._stateObj) throw new Error("The entity could not be located.");
       this._updateState();
     }
   }
@@ -46,7 +46,7 @@ export class SmartQasaRoutineTile extends LitElement {
     if (this._stateObj) {
       this._icon = this._icon ?? this._stateObj.attributes.icon ?? "hass:help-circle";
       this._iconColor = "var(--sq-inactive-rgb)";
-      this._name = this._name ?? this._stateObj.attributes.friendly_name ?? this._entity;
+      this._name = this._name ?? this._stateObj.attributes.friendly_name ?? this._stateObj.entity_id;
     } else {
       this._icon = this._icon ?? "hass:alert-rhombus";
       this._iconColor = "var(--sq-unavailable-rgb)";
@@ -83,16 +83,16 @@ export class SmartQasaRoutineTile extends LitElement {
       this._icon = "hass:rotate-right"
       this._iconAnimation = "spin 1.0s linear infinite"
 
-      const domain = this._entity.split(".")[0];
+      const domain = this._stateObj.entity_id.split(".")[0];
       switch (domain) {
         case "script":
-          this._hass.callService("script", "turn_on", { entity_id: this._entity });
+          this._hass.callService("script", "turn_on", { entity_id: this._stateObj.entity_id });
           break;
         case "scene":
-          this._hass.callService("scene", "turn_on", { entity_id: this._entity });
+          this._hass.callService("scene", "turn_on", { entity_id: this._stateObj.entity_id });
           break;
         case "automation":
-          this._hass.callService("automation", "trigger", { entity_id: this._entity });
+          this._hass.callService("automation", "trigger", { entity_id: this._stateObj.entity_id });
           break;
         default:
           console.error("Unsupported entity domain:", domain);
