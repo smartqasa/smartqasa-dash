@@ -45,7 +45,7 @@ export class SmartQasaRoutineTile extends LitElement {
 
   private _updateState(): void {
     if (this._stateObj) {
-      this._icon = this._icon ?? this._stateObj.attributes.icon ?? "hass:help-circle";
+      this._icon = this._config?.icon ?? this._stateObj.attributes.icon ?? "hass:help-circle";
       this._iconColor = "var(--sq-inactive-rgb)";
       this._name = this._config?.name ?? this._stateObj.attributes.friendly_name ?? this._stateObj.entity_id;
     } else {
@@ -79,7 +79,7 @@ export class SmartQasaRoutineTile extends LitElement {
   private _runRoutine(e: Event): void {
     e.stopPropagation();
 
-    if (this._hass && this._stateObj) {
+    if (this._stateObj) {
       let icon = this._icon;
       this._icon = "hass:rotate-right"
       this._iconAnimation = "spin 1.0s linear infinite"
