@@ -1543,7 +1543,7 @@ window.customCards.push({
     description: "A SmartQasa tile for controlling a garage cover entity.",
 });
 
-let SmartQasaLightTile = class SmartQasaLightTile extends s {
+let LightTile = class LightTile extends s {
     constructor() {
         super(...arguments);
         this._entity = "";
@@ -1556,9 +1556,8 @@ let SmartQasaLightTile = class SmartQasaLightTile extends s {
     setConfig(config) {
         if (!config.entity)
             throw new Error("You must specify an entity");
+        this._config = config;
         this._entity = config.entity;
-        this._icon = config.icon ?? "";
-        this._name = config.name ?? "";
         if (this._hass)
             this.hass = this._hass;
     }
@@ -1572,9 +1571,9 @@ let SmartQasaLightTile = class SmartQasaLightTile extends s {
     _updateState() {
         if (this._stateObj) {
             const state = this._stateObj.state ?? "unknown";
-            this._icon = this._icon ?? this._stateObj.attributes.icon ?? "hass:help-circle";
+            this._icon = this._config?.icon ?? this._stateObj.attributes.icon ?? "hass:help-circle";
             this._iconColor = state == "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
-            this._name = this._name ?? this._stateObj.attributes.friendly_name ?? this._entity;
+            this._name = this._config?.name ?? this._stateObj.attributes.friendly_name ?? this._entity;
             this._stateFmtd =
                 this._hass.formatEntityState(this._stateObj) +
                     (state == "on" && this._stateObj.attributes.brightness
@@ -1582,15 +1581,15 @@ let SmartQasaLightTile = class SmartQasaLightTile extends s {
                         : "");
         }
         else {
-            this._icon = this._icon ?? "hass:alert-rhombus";
+            this._icon = this._config?.icon ?? "hass:alert-rhombus";
             this._iconColor = "var(--sq-unavailable-rgb)";
-            this._name = this._name ?? "Unknown";
+            this._name = this._config?.name ?? "Unknown";
             this._stateFmtd = "Unknown";
         }
     }
     render() {
         return x `
-      <div class="container" @click=${this._showMoreInfo}>
+      <ha-card class="container" @click=${this._showMoreInfo}>
         <div
           class="icon"
           @click=${this._toggleEntity}
@@ -1603,7 +1602,7 @@ let SmartQasaLightTile = class SmartQasaLightTile extends s {
         </div>
         <div class="name">${this._name}</div>
         <div class="state">${this._stateFmtd}</div>
-      </div>
+      </ha-card>
     `;
     }
     _toggleEntity(e) {
@@ -1629,25 +1628,28 @@ let SmartQasaLightTile = class SmartQasaLightTile extends s {
 };
 __decorate([
     r()
-], SmartQasaLightTile.prototype, "_entity", void 0);
+], LightTile.prototype, "_config", void 0);
 __decorate([
     r()
-], SmartQasaLightTile.prototype, "_icon", void 0);
+], LightTile.prototype, "_entity", void 0);
 __decorate([
     r()
-], SmartQasaLightTile.prototype, "_iconColor", void 0);
+], LightTile.prototype, "_icon", void 0);
 __decorate([
     r()
-], SmartQasaLightTile.prototype, "_name", void 0);
+], LightTile.prototype, "_iconColor", void 0);
 __decorate([
     r()
-], SmartQasaLightTile.prototype, "_stateFmtd", void 0);
+], LightTile.prototype, "_name", void 0);
 __decorate([
     r()
-], SmartQasaLightTile.prototype, "_stateObj", void 0);
-SmartQasaLightTile = __decorate([
+], LightTile.prototype, "_stateFmtd", void 0);
+__decorate([
+    r()
+], LightTile.prototype, "_stateObj", void 0);
+LightTile = __decorate([
     t("smartqasa-light-tile")
-], SmartQasaLightTile);
+], LightTile);
 window.customCards.push({
     type: "smartqasa-light-tile",
     name: "SmartQasa Light Tile",

@@ -1,11 +1,10 @@
 import { CSSResultGroup, html, LitElement, TemplateResult } from "lit";
 import { state } from "lit/decorators.js";
+import { HassEntity } from "home-assistant-js-websocket";
+import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 
 import styleTileBase from "../styles/tile-base";
 import styleTileIconSpin from "../styles/tile-icon-spin";
-
-import { HassEntity } from "home-assistant-js-websocket";
-import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 
 interface Config extends LovelaceCardConfig {
   entity: string;
