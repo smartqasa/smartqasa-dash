@@ -34,3 +34,6 @@ import "./tiles/lock";
 import "./tiles/routine";
 import "./tiles/shade";
 import "./tiles/switch";
+
+// Tile Editors
+import "./tiles/light-editor";
