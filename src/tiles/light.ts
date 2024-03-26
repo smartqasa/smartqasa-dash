@@ -64,19 +64,21 @@ export class LightTile extends LitElement {
 
   protected render(): TemplateResult {
     return html`
-      <ha-card class="container" @click=${this._showMoreInfo}>
-        <div
-          class="icon"
-          @click=${this._toggleEntity}
-          style="
-            color: rgb(${this._iconColor});
-            background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
-          "
-        >
-          <ha-icon .icon=${this._icon}></ha-icon>
+      <ha-card>
+        <div class="container" @click=${this._showMoreInfo}>
+          <div
+            class="icon"
+            @click=${this._toggleEntity}
+            style="
+              color: rgb(${this._iconColor});
+              background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
+            "
+          >
+            <ha-icon .icon=${this._icon}></ha-icon>
+          </div>
+          <div class="name">${this._name}</div>
+          <div class="state">${this._stateFmtd}</div>
         </div>
-        <div class="name">${this._name}</div>
-        <div class="state">${this._stateFmtd}</div>
       </ha-card>
     `;
   }
