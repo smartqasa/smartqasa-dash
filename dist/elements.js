@@ -1571,9 +1571,9 @@ let LightTile = class LightTile extends s {
     _updateState() {
         if (this._stateObj) {
             const state = this._stateObj.state ?? "unknown";
-            this._icon = this._config?.icon ?? this._stateObj.attributes.icon ?? this._icon;
+            this._icon = this._config?.icon || this._stateObj.attributes.icon || this._icon;
             this._iconColor = state == "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
-            this._name = this._config?.name ?? this._stateObj.attributes.friendly_name ?? this._stateObj.entity_id;
+            this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
             this._stateFmtd =
                 this._hass.formatEntityState(this._stateObj) +
                     (state == "on" && this._stateObj.attributes.brightness
@@ -1657,8 +1657,7 @@ window.customCards.push({
 let SmartQasaLockTile = class SmartQasaLockTile extends s {
     constructor() {
         super(...arguments);
-        this._entity = "";
-        this._icon = "hass:help-rhombus";
+        this._icon = "hass:lock";
         this._iconAnimation = "none";
         this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
         this._name = "Loading...";
@@ -1666,17 +1665,18 @@ let SmartQasaLockTile = class SmartQasaLockTile extends s {
     }
     static { this.styles = [styleTileBase, styleTileState, styleTileIconBlink, styleTileIconSpin]; }
     setConfig(config) {
-        if (!config.entity)
-            throw new Error("You must specify an entity");
-        this._entity = config.entity;
-        this._name = config.name ?? "";
+        if (!config.entity || config.entity.split('.')[0] != "lock")
+            throw new Error("A valid light entity is required.");
+        this._config = config;
         if (this._hass)
             this.hass = this._hass;
     }
     set hass(hass) {
         this._hass = hass;
-        if (this._hass) {
-            this._stateObj = this._hass.states[this._entity] ?? undefined;
+        if (this._hass && this._config?.entity) {
+            this._stateObj = this._hass.states[this._config.entity] ?? undefined;
+            if (!this._stateObj)
+                throw new Error("The entity could not be located.");
             this._updateState();
         }
     }
@@ -1770,7 +1770,7 @@ let SmartQasaLockTile = class SmartQasaLockTile extends s {
 };
 __decorate([
     r()
-], SmartQasaLockTile.prototype, "_entity", void 0);
+], SmartQasaLockTile.prototype, "_config", void 0);
 __decorate([
     r()
 ], SmartQasaLockTile.prototype, "_icon", void 0);

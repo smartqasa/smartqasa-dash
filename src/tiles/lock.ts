@@ -1,13 +1,12 @@
 import { CSSResultGroup, html, LitElement, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
+import { HassEntity } from "home-assistant-js-websocket";
+import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 
 import styleTileBase from "../styles/tile-base";
 import styleTileState from "../styles/tile-state";
 import styleTileIconBlink from "../styles/tile-icon-blink";
 import styleTileIconSpin from "../styles/tile-icon-spin";
-
-import { HassEntity } from "home-assistant-js-websocket";
-import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 
 interface Config extends LovelaceCardConfig {
   entity: string;
@@ -16,8 +15,8 @@ interface Config extends LovelaceCardConfig {
 
 @customElement("smartqasa-lock-tile")
 export class SmartQasaLockTile extends LitElement {
-  @state() private _entity: string = "";
-  @state() private _icon: string = "hass:help-rhombus";
+  @state() private _config?: Config;
+  @state() private _icon: string = "hass:lock";
   @state() private _iconAnimation: string = "none";
   @state() private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
   @state() private _name: string = "Loading...";
@@ -29,18 +28,16 @@ export class SmartQasaLockTile extends LitElement {
   static styles: CSSResultGroup = [styleTileBase, styleTileState, styleTileIconBlink, styleTileIconSpin];
 
   setConfig(config: Config): void {
-    if (!config.entity) throw new Error("You must specify an entity");
-
-    this._entity = config.entity;
-    this._name = config.name ?? "";
-
+    if (!config.entity || config.entity.split('.')[0] != "lock") throw new Error("A valid lock entity is required.");
+    this._config = config;
     if (this._hass) this.hass = this._hass;
   }
 
   set hass(hass: HomeAssistant) {
     this._hass = hass;
-    if (this._hass) {
-      this._stateObj = this._hass.states[this._entity] ?? undefined;
+    if (this._hass && this._config?.entity) {
+      this._stateObj = this._hass.states[this._config.entity] ?? undefined;
+      if (!this._stateObj) throw new Error("The entity could not be located.");
       this._updateState();
     }
   }
