@@ -15,7 +15,7 @@ interface Config extends LovelaceCardConfig {
 }
 
 @customElement("smartqasa-shade-tile")
-export class SmartQasaShadeTile extends LitElement {
+export class ShadeTile extends LitElement {
   @state() private _config?: Config;
   @state() private _icon: string = "hass:roller-shade";
   @state() private _iconAnimation: string = "none";
@@ -71,7 +71,7 @@ export class SmartQasaShadeTile extends LitElement {
           this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
           break;
       }
-      this._name = this._config?.name ?? this._stateObj.attributes.friendly_name ?? this._stateObj.entity_id;
+      this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
       this._stateFmtd =
         this._hass.formatEntityState(this._stateObj) +
         (state === "open" && this._stateObj.attributes.current_position
@@ -85,7 +85,7 @@ export class SmartQasaShadeTile extends LitElement {
       this._icon = "hass:roller-shade";
       this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
       this._iconAnimation = "none";
-      this._name = this._config?.name ?? "Unknown";
+      this._name = this._config?.name || "Unknown";
       this._stateFmtd = "Unknown";
     }
 }

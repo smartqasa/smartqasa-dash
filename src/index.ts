@@ -40,3 +40,4 @@ import "./tiles/lock";
 import "./tiles/routine";
 import "./tiles/shade";
 import "./tiles/switch";
+import "./tiles/thermostat";

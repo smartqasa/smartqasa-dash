@@ -12,7 +12,7 @@ interface Config extends LovelaceCardConfig {
 }
 
 @customElement("smartqasa-app-tile")
-export class SmartQasaAppTile extends LitElement {
+export class AppTile extends LitElement {
   @state() private _app: string = "";
   @state() private _appObj?: any;
   @state() private _icon?: string;
@@ -26,10 +26,10 @@ export class SmartQasaAppTile extends LitElement {
     if (!config.app) throw new Error("A valid app must be specified.");
 
     this._app = config.app;
-    this._appObj = appTable[this._app] ?? undefined;
+    this._appObj = appTable[this._app] || undefined;
     if (this._appObj) {
-      this._icon = config.icon ?? undefined;
-      this._name = config.name ?? this._appObj?.name ?? "Unknown";
+      this._icon = config.icon || "";
+      this._name = config.name || this._appObj?.name || "Unknown";
     }
   }
 
@@ -58,9 +58,9 @@ export class SmartQasaAppTile extends LitElement {
   private _launchApp(e: Event): void {
     e.stopPropagation();
 
-    if (this._appObj.launcher === "uri_scheme" && this._appObj.uri_scheme) {
+    if (this._appObj.launcher == "uri_scheme" && this._appObj.uri_scheme) {
       window.location.href = this._appObj.uri_scheme;
-    } else if (this._appObj.launcher === "package" && this._appObj.package) {
+    } else if (this._appObj.launcher == "package" && this._appObj.package) {
       if (window.fully?.startApplication) {
         window.fully.startApplication(this._appObj.package);
       } else {

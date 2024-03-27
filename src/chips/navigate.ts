@@ -22,8 +22,8 @@ export class SmartQasaNavigateChip extends LitElement {
   static styles: CSSResult = styleChipDouble;
 
   public setConfig(config: Config): void {
-    this._areaPrev = config.area_prev ?? undefined;
-    this._areaNext = config.area_next ?? undefined;
+    this._areaPrev = config.area_prev || undefined;
+    this._areaNext = config.area_next || undefined;
   }
 
   set hass(hass: HomeAssistant) {

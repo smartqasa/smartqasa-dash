@@ -25,8 +25,8 @@ export class SmartQasaMotionChip extends LitElement {
   static styles: CSSResult = styleChipBasic;
 
   setConfig(config: Config): void {
-    this._entity = config.entity ?? undefined;
-    this._name = config.name ?? undefined;
+    this._entity = config.entity || undefined;
+    this._name = config.name || undefined;
     this._containerStyle = this._name
     ? ""
     : "grid-template-areas: 'i'; grid-column-gap: 0; justify-content: center;";
@@ -35,14 +35,14 @@ export class SmartQasaMotionChip extends LitElement {
   set hass(hass: HomeAssistant) {
     if (this._entity) {
       this._hass = hass;
-      this._stateObj = this._hass?.states[this._entity] ?? undefined;
+      this._stateObj = this._hass?.states[this._entity] || undefined;
       this._updateState();
     }
   }
 
   private _updateState(): void {
     if (this._stateObj) {
-      const state = this._stateObj.state ?? undefined;
+      const state = this._stateObj.state || undefined;
       switch (state) {
         case 'on':
           this._icon = 'hass:motion-sensor';

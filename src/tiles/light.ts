@@ -39,7 +39,7 @@ export class LightTile extends LitElement {
 
   private _updateState(): void {
     if (this._stateObj) {
-      const state = this._stateObj.state ?? "unknown";
+      const state = this._stateObj.state || "unknown";
       this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:lightbulb";
       this._iconColor = state == "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
       this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
@@ -49,9 +49,9 @@ export class LightTile extends LitElement {
           ? " - " + this._hass.formatEntityAttributeValue(this._stateObj, "brightness")
           : "");
     } else {
-      this._icon = this._config?.icon ?? "hass:lightbulb-alert";
+      this._icon = this._config?.icon || "hass:lightbulb-alert";
       this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-      this._name = this._config?.name ?? "Unknown";
+      this._name = this._config?.name || "Unknown";
       this._stateFmtd = "Unavailable";
     }
   }

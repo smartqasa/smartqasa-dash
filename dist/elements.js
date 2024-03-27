@@ -109,8 +109,8 @@ var styleChipBasic = i$2 `
 let SmartQasaMotionChip = class SmartQasaMotionChip extends s {
     static { this.styles = styleChipBasic; }
     setConfig(config) {
-        this._entity = config.entity ?? undefined;
-        this._name = config.name ?? undefined;
+        this._entity = config.entity || undefined;
+        this._name = config.name || undefined;
         this._containerStyle = this._name
             ? ""
             : "grid-template-areas: 'i'; grid-column-gap: 0; justify-content: center;";
@@ -118,13 +118,13 @@ let SmartQasaMotionChip = class SmartQasaMotionChip extends s {
     set hass(hass) {
         if (this._entity) {
             this._hass = hass;
-            this._stateObj = this._hass?.states[this._entity] ?? undefined;
+            this._stateObj = this._hass?.states[this._entity] || undefined;
             this._updateState();
         }
     }
     _updateState() {
         if (this._stateObj) {
-            const state = this._stateObj.state ?? undefined;
+            const state = this._stateObj.state || undefined;
             switch (state) {
                 case 'on':
                     this._icon = 'hass:motion-sensor';
@@ -230,8 +230,8 @@ var styleChipDouble = i$2 `
 let SmartQasaNavigateChip = class SmartQasaNavigateChip extends s {
     static { this.styles = styleChipDouble; }
     setConfig(config) {
-        this._areaPrev = config.area_prev ?? undefined;
-        this._areaNext = config.area_next ?? undefined;
+        this._areaPrev = config.area_prev || undefined;
+        this._areaNext = config.area_next || undefined;
     }
     set hass(hass) {
         if (this._areaPrev && this._areaNext) {
@@ -309,16 +309,16 @@ let SmartQasaThermostatChip = class SmartQasaThermostatChip extends s {
         super(...arguments);
         this._icon = "hass:thermometer-lines";
         this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
-        this._temperature = "??";
+        this._temperature = "||";
     }
     static { this.styles = styleChipBasic; }
     setConfig(config) {
-        this._entity = config.entity ?? undefined;
+        this._entity = config.entity || undefined;
     }
     set hass(hass) {
         if (this._entity) {
             this._hass = hass;
-            this._stateObj = this._hass?.states[this._entity] ?? undefined;
+            this._stateObj = this._hass?.states[this._entity] || undefined;
             this._updateState();
         }
     }
@@ -334,11 +334,11 @@ let SmartQasaThermostatChip = class SmartQasaThermostatChip extends s {
         if (this._stateObj) {
             const hvacAction = this._stateObj.attributes.hvac_action;
             this._iconColor = actionColor[hvacAction] || actionColor.default;
-            this._temperature = this._stateObj.attributes.current_temperature ?? "??";
+            this._temperature = this._stateObj.attributes.current_temperature || "||";
         }
         else {
             this._iconColor = actionColor.default;
-            this._temperature = "??";
+            this._temperature = "||";
         }
     }
     render() {
@@ -612,26 +612,26 @@ let AllOffTile = class AllOffTile extends s {
     set hass(hass) {
         this._hass = hass;
         if (this._hass && this._config?.area) {
-            this._areaObj = this._hass.areas[this._config.area] ?? undefined;
+            this._areaObj = this._hass.areas[this._config.area] || undefined;
             if (this._areaObj?.icon != this._prevAreaIcon || this._areaObj?.name != this._prevAreaName) {
                 this._updateArea();
-                this._prevAreaIcon = this._areaObj.icon ?? "";
-                this._prevAreaName = this._areaObj.name ?? "";
+                this._prevAreaIcon = this._areaObj.icon || "";
+                this._prevAreaName = this._areaObj.name || "";
             }
         }
     }
     _updateArea() {
         if (this._areaObj) {
-            this._icon = this._config?.icon ?? "hass:power";
+            this._icon = this._config?.icon || "hass:power";
             this._iconAnimation = "none";
             this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
-            this._name = this._config?.name ?? this._areaObj.name ?? this._areaObj.id;
+            this._name = this._config?.name || this._areaObj.name || this._areaObj.id;
         }
         else {
-            this._icon = this._config?._icon ?? "hass:alert-rhombus";
+            this._icon = this._config?._icon || "hass:alert-rhombus";
             this._iconAnimation = "none";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            this._name = this._config?.name ?? "Unknown";
+            this._name = this._config?.name || "Unknown";
         }
     }
     render() {
@@ -1068,7 +1068,7 @@ const appTable = {
     },
 };
 
-let SmartQasaAppTile = class SmartQasaAppTile extends s {
+let AppTile = class AppTile extends s {
     constructor() {
         super(...arguments);
         this._app = "";
@@ -1078,10 +1078,10 @@ let SmartQasaAppTile = class SmartQasaAppTile extends s {
         if (!config.app)
             throw new Error("A valid app must be specified.");
         this._app = config.app;
-        this._appObj = appTable[this._app] ?? undefined;
+        this._appObj = appTable[this._app] || undefined;
         if (this._appObj) {
-            this._icon = config.icon ?? undefined;
-            this._name = config.name ?? this._appObj?.name ?? "Unknown";
+            this._icon = config.icon || "";
+            this._name = config.name || this._appObj?.name || "Unknown";
         }
     }
     render() {
@@ -1107,10 +1107,10 @@ let SmartQasaAppTile = class SmartQasaAppTile extends s {
     }
     _launchApp(e) {
         e.stopPropagation();
-        if (this._appObj.launcher === "uri_scheme" && this._appObj.uri_scheme) {
+        if (this._appObj.launcher == "uri_scheme" && this._appObj.uri_scheme) {
             window.location.href = this._appObj.uri_scheme;
         }
-        else if (this._appObj.launcher === "package" && this._appObj.package) {
+        else if (this._appObj.launcher == "package" && this._appObj.package) {
             if (window.fully?.startApplication) {
                 window.fully.startApplication(this._appObj.package);
             }
@@ -1128,19 +1128,19 @@ let SmartQasaAppTile = class SmartQasaAppTile extends s {
 };
 __decorate([
     r()
-], SmartQasaAppTile.prototype, "_app", void 0);
+], AppTile.prototype, "_app", void 0);
 __decorate([
     r()
-], SmartQasaAppTile.prototype, "_appObj", void 0);
+], AppTile.prototype, "_appObj", void 0);
 __decorate([
     r()
-], SmartQasaAppTile.prototype, "_icon", void 0);
+], AppTile.prototype, "_icon", void 0);
 __decorate([
     r()
-], SmartQasaAppTile.prototype, "_name", void 0);
-SmartQasaAppTile = __decorate([
+], AppTile.prototype, "_name", void 0);
+AppTile = __decorate([
     t("smartqasa-app-tile")
-], SmartQasaAppTile);
+], AppTile);
 window.customCards.push({
     type: "smartqasa-app-tile",
     name: "SmartQasa App Tile",
@@ -1256,7 +1256,7 @@ var styleTileState = i$2 `
     }
 `;
 
-let SmartQasaFanTile = class SmartQasaFanTile extends s {
+let FanTile = class FanTile extends s {
     constructor() {
         super(...arguments);
         this._icon = "hass:fan-alert";
@@ -1280,12 +1280,12 @@ let SmartQasaFanTile = class SmartQasaFanTile extends s {
     }
     _updateState() {
         if (this._stateObj) {
-            const state = this._stateObj.state ?? "unknown";
-            this._icon = this._config?.icon ?? "hass:fan";
+            const state = this._stateObj.state || "unknown";
+            this._icon = this._config?.icon || "hass:fan";
             if (state == "on" && this._icon == "hass:fan") {
                 if (this._stateObj.attributes.percentage) {
                     const speed = 0.5 + (1 - this._stateObj.attributes.percentage / 100);
-                    const direction = this._stateObj.attributes.direction === "reverse"
+                    const direction = this._stateObj.attributes.direction == "reverse"
                         ? "reverse"
                         : "normal";
                     this._iconAnimation = `spin ${speed}s linear infinite ${direction}`;
@@ -1298,7 +1298,7 @@ let SmartQasaFanTile = class SmartQasaFanTile extends s {
                 this._iconAnimation = "none";
             }
             this._iconColor = state == "on" ? "var(--sq-fan-on-rgb)" : "var(--sq-inactive-rgb)";
-            this._name = this._config?.name ?? this._stateObj.attributes.friendly_name ?? this._stateObj.entity_id;
+            this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
             this._stateFmtd =
                 this._hass.formatEntityState(this._stateObj) +
                     (state == "on" && this._stateObj.attributes.percentage
@@ -1306,10 +1306,10 @@ let SmartQasaFanTile = class SmartQasaFanTile extends s {
                         : "");
         }
         else {
-            this._icon = this._config?._icon ?? "hass:fan-alert";
+            this._icon = this._config?._icon || "hass:fan-alert";
             this._iconAnimation = "none";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            this._name = this._config?._name ?? "Unknown";
+            this._name = this._config?._name || "Unknown";
             this._stateFmtd = "Unavailable";
         }
     }
@@ -1354,28 +1354,28 @@ let SmartQasaFanTile = class SmartQasaFanTile extends s {
 };
 __decorate([
     r()
-], SmartQasaFanTile.prototype, "_config", void 0);
+], FanTile.prototype, "_config", void 0);
 __decorate([
     r()
-], SmartQasaFanTile.prototype, "_icon", void 0);
+], FanTile.prototype, "_icon", void 0);
 __decorate([
     r()
-], SmartQasaFanTile.prototype, "_iconAnimation", void 0);
+], FanTile.prototype, "_iconAnimation", void 0);
 __decorate([
     r()
-], SmartQasaFanTile.prototype, "_iconColor", void 0);
+], FanTile.prototype, "_iconColor", void 0);
 __decorate([
     r()
-], SmartQasaFanTile.prototype, "_name", void 0);
+], FanTile.prototype, "_name", void 0);
 __decorate([
     r()
-], SmartQasaFanTile.prototype, "_stateFmtd", void 0);
+], FanTile.prototype, "_stateFmtd", void 0);
 __decorate([
     r()
-], SmartQasaFanTile.prototype, "_stateObj", void 0);
-SmartQasaFanTile = __decorate([
+], FanTile.prototype, "_stateObj", void 0);
+FanTile = __decorate([
     t("smartqasa-fan-tile")
-], SmartQasaFanTile);
+], FanTile);
 window.customCards.push({
     type: "smartqasa-fan-tile",
     name: "SmartQasa Fan Tile",
@@ -1391,7 +1391,7 @@ var styleTileIconBlink = i$2 `
   }
 `;
 
-let SmartQasaGarageTile = class SmartQasaGarageTile extends s {
+let GarageTile = class GarageTile extends s {
     constructor() {
         super(...arguments);
         this._icon = "hass:garage-variant";
@@ -1415,7 +1415,7 @@ let SmartQasaGarageTile = class SmartQasaGarageTile extends s {
     }
     _updateState() {
         if (this._stateObj) {
-            const state = this._stateObj.state ?? "unknown";
+            const state = this._stateObj.state || "unknown";
             switch (state) {
                 case "closed":
                     this._icon = "hass:garage-variant";
@@ -1449,13 +1449,13 @@ let SmartQasaGarageTile = class SmartQasaGarageTile extends s {
                         ? " - " +
                             this._hass.formatEntityAttributeValue(this._stateObj, "current_position")
                         : "");
-            this._name = this._config?.icon ?? this._stateObj.attributes.friendly_name ?? this._stateObj.entity_id;
+            this._name = this._config?.icon || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
         }
         else {
             this._icon = "hass:garage-alert-variant";
             this._iconAnimation = "none";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            this._name = this._name ?? "Unknown";
+            this._name = this._name || "Unknown";
             this._stateFmtd = "Unavailable";
         }
     }
@@ -1501,28 +1501,28 @@ let SmartQasaGarageTile = class SmartQasaGarageTile extends s {
 };
 __decorate([
     r()
-], SmartQasaGarageTile.prototype, "_config", void 0);
+], GarageTile.prototype, "_config", void 0);
 __decorate([
     r()
-], SmartQasaGarageTile.prototype, "_icon", void 0);
+], GarageTile.prototype, "_icon", void 0);
 __decorate([
     r()
-], SmartQasaGarageTile.prototype, "_iconAnimation", void 0);
+], GarageTile.prototype, "_iconAnimation", void 0);
 __decorate([
     r()
-], SmartQasaGarageTile.prototype, "_iconColor", void 0);
+], GarageTile.prototype, "_iconColor", void 0);
 __decorate([
     r()
-], SmartQasaGarageTile.prototype, "_name", void 0);
+], GarageTile.prototype, "_name", void 0);
 __decorate([
     r()
-], SmartQasaGarageTile.prototype, "_stateFmtd", void 0);
+], GarageTile.prototype, "_stateFmtd", void 0);
 __decorate([
     r()
-], SmartQasaGarageTile.prototype, "_stateObj", void 0);
-SmartQasaGarageTile = __decorate([
+], GarageTile.prototype, "_stateObj", void 0);
+GarageTile = __decorate([
     t("smartqasa-garage-tile")
-], SmartQasaGarageTile);
+], GarageTile);
 window.customCards.push({
     type: "smartqasa-garage-tile",
     name: "SmartQasa Garage Tile",
@@ -1553,7 +1553,7 @@ let LightTile = class LightTile extends s {
     }
     _updateState() {
         if (this._stateObj) {
-            const state = this._stateObj.state ?? "unknown";
+            const state = this._stateObj.state || "unknown";
             this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:lightbulb";
             this._iconColor = state == "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
             this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
@@ -1564,9 +1564,9 @@ let LightTile = class LightTile extends s {
                         : "");
         }
         else {
-            this._icon = this._config?.icon ?? "hass:lightbulb-alert";
+            this._icon = this._config?.icon || "hass:lightbulb-alert";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            this._name = this._config?.name ?? "Unknown";
+            this._name = this._config?.name || "Unknown";
             this._stateFmtd = "Unavailable";
         }
     }
@@ -1637,7 +1637,7 @@ window.customCards.push({
     description: "A SmartQasa tile for controlling a light entity.",
 });
 
-let SmartQasaLockTile = class SmartQasaLockTile extends s {
+let LockTile = class LockTile extends s {
     constructor() {
         super(...arguments);
         this._icon = "hass:lock-alert";
@@ -1661,7 +1661,7 @@ let SmartQasaLockTile = class SmartQasaLockTile extends s {
     }
     _updateState() {
         if (this._stateObj) {
-            const state = this._stateObj.state ?? "unknown";
+            const state = this._stateObj.state || "unknown";
             switch (state) {
                 case "locked":
                     this._icon = "hass:lock";
@@ -1694,14 +1694,14 @@ let SmartQasaLockTile = class SmartQasaLockTile extends s {
                     this._iconColor = "var(--sq-unavailable-rgb)";
                     break;
             }
-            this._name = this._config?.name ?? this._stateObj.attributes.friendly_name ?? this._stateObj.entity_id;
+            this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
             this._stateFmtd = this._hass.formatEntityState(this._stateObj);
         }
         else {
             this._icon = "hass:lock-alert";
             this._iconAnimation = "none";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 0)";
-            this._name = this._config?.name ?? "Unknown";
+            this._name = this._config?.name || "Unknown";
             this._stateFmtd = "Unavailable";
         }
     }
@@ -1749,28 +1749,28 @@ let SmartQasaLockTile = class SmartQasaLockTile extends s {
 };
 __decorate([
     r()
-], SmartQasaLockTile.prototype, "_config", void 0);
+], LockTile.prototype, "_config", void 0);
 __decorate([
     r()
-], SmartQasaLockTile.prototype, "_icon", void 0);
+], LockTile.prototype, "_icon", void 0);
 __decorate([
     r()
-], SmartQasaLockTile.prototype, "_iconAnimation", void 0);
+], LockTile.prototype, "_iconAnimation", void 0);
 __decorate([
     r()
-], SmartQasaLockTile.prototype, "_iconColor", void 0);
+], LockTile.prototype, "_iconColor", void 0);
 __decorate([
     r()
-], SmartQasaLockTile.prototype, "_name", void 0);
+], LockTile.prototype, "_name", void 0);
 __decorate([
     r()
-], SmartQasaLockTile.prototype, "_stateFmtd", void 0);
+], LockTile.prototype, "_stateFmtd", void 0);
 __decorate([
     r()
-], SmartQasaLockTile.prototype, "_stateObj", void 0);
-SmartQasaLockTile = __decorate([
+], LockTile.prototype, "_stateObj", void 0);
+LockTile = __decorate([
     t("smartqasa-lock-tile")
-], SmartQasaLockTile);
+], LockTile);
 window.customCards.push({
     type: "smartqasa-lock-tile",
     name: "SmartQasa Lock Tile",
@@ -1803,21 +1803,21 @@ let RoutineTile = class RoutineTile extends s {
         this._stateObj = this._config?.entity ? this._hass.states[this._config.entity] : undefined;
         if (this._stateObj?.attributes.icon != this._prevStateIcon || this._stateObj.attributes.friendly_name != this._prevStateName) {
             this._updateState();
-            this._prevStateIcon = this._stateObj?.attributes.icon ?? "";
-            this._prevStateName = this._stateObj?.attributes.friendly_name ?? "";
+            this._prevStateIcon = this._stateObj?.attributes.icon || "";
+            this._prevStateName = this._stateObj?.attributes.friendly_name || "";
         }
     }
     _updateState() {
         if (this._stateObj) {
-            this._icon = this._config?.icon ?? this._stateObj.attributes.icon ?? "hass:help-circle";
+            this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:help-circle";
             this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
-            this._name = this._config?.name ?? this._stateObj.attributes.friendly_name ?? this._stateObj.entity_id;
+            this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
         }
         else {
-            this._icon = this._config?.icon ?? "hass:alert-rhombus";
+            this._icon = this._config?.icon || "hass:alert-rhombus";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
             this._iconAnimation = "none";
-            this._name = this._config?.name ?? "Unknown";
+            this._name = this._config?.name || "Unknown";
         }
     }
     render() {
@@ -1899,7 +1899,7 @@ window.customCards.push({
     description: "A SmartQasa tile for triggering an automation, scene, or script entity.",
 });
 
-let SmartQasaShadeTile = class SmartQasaShadeTile extends s {
+let ShadeTile = class ShadeTile extends s {
     constructor() {
         super(...arguments);
         this._icon = "hass:roller-shade";
@@ -1952,7 +1952,7 @@ let SmartQasaShadeTile = class SmartQasaShadeTile extends s {
                     this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
                     break;
             }
-            this._name = this._config?.name ?? this._stateObj.attributes.friendly_name ?? this._stateObj.entity_id;
+            this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
             this._stateFmtd =
                 this._hass.formatEntityState(this._stateObj) +
                     (state === "open" && this._stateObj.attributes.current_position
@@ -1964,7 +1964,7 @@ let SmartQasaShadeTile = class SmartQasaShadeTile extends s {
             this._icon = "hass:roller-shade";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
             this._iconAnimation = "none";
-            this._name = this._config?.name ?? "Unknown";
+            this._name = this._config?.name || "Unknown";
             this._stateFmtd = "Unknown";
         }
     }
@@ -2026,31 +2026,31 @@ let SmartQasaShadeTile = class SmartQasaShadeTile extends s {
 };
 __decorate([
     r()
-], SmartQasaShadeTile.prototype, "_config", void 0);
+], ShadeTile.prototype, "_config", void 0);
 __decorate([
     r()
-], SmartQasaShadeTile.prototype, "_icon", void 0);
+], ShadeTile.prototype, "_icon", void 0);
 __decorate([
     r()
-], SmartQasaShadeTile.prototype, "_iconAnimation", void 0);
+], ShadeTile.prototype, "_iconAnimation", void 0);
 __decorate([
     r()
-], SmartQasaShadeTile.prototype, "_iconColor", void 0);
+], ShadeTile.prototype, "_iconColor", void 0);
 __decorate([
     r()
-], SmartQasaShadeTile.prototype, "_name", void 0);
+], ShadeTile.prototype, "_name", void 0);
 __decorate([
     r()
-], SmartQasaShadeTile.prototype, "_stateFmtd", void 0);
+], ShadeTile.prototype, "_stateFmtd", void 0);
 __decorate([
     r()
-], SmartQasaShadeTile.prototype, "_stateObj", void 0);
+], ShadeTile.prototype, "_stateObj", void 0);
 __decorate([
     r()
-], SmartQasaShadeTile.prototype, "_tilt", void 0);
-SmartQasaShadeTile = __decorate([
+], ShadeTile.prototype, "_tilt", void 0);
+ShadeTile = __decorate([
     t("smartqasa-shade-tile")
-], SmartQasaShadeTile);
+], ShadeTile);
 window.customCards.push({
     type: "smartqasa-shade-tile",
     name: "SmartQasa Shade Tile",
@@ -2058,7 +2058,7 @@ window.customCards.push({
     description: "A SmartQasa tile for controlling a window shade entity.",
 });
 
-let SmartQasaSwitchTile = class SmartQasaSwitchTile extends s {
+let SwitchTile = class SwitchTile extends s {
     constructor() {
         super(...arguments);
         this._category = "";
@@ -2083,17 +2083,17 @@ let SmartQasaSwitchTile = class SmartQasaSwitchTile extends s {
     _updateState() {
         if (this._stateObj) {
             const state = this._stateObj.state;
-            this._icon = this._config?.icon ?? this._stateObj.attributes.icon ?? "hass:toggle-switch-variant";
+            this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:toggle-switch-variant";
             this._iconColor = state === "on"
                 ? `var(--sq-switch${this._category ? `-${this._category}` : ""}-on-rgb)`
                 : "var(--sq-inactive-rgb)";
-            this._name = this._config?.name ?? this._stateObj.attributes.friendly_name ?? this._stateObj.entity_id;
+            this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
             this._stateFmtd = this._hass ? this._hass.formatEntityState(this._stateObj) : "Unknown";
         }
         else {
-            this._icon = this._config?.icon ?? "hass:toggle-switch-variant";
+            this._icon = this._config?.icon || "hass:toggle-switch-variant";
             this._iconColor = "var(--sq-unavailable-rgb)";
-            this._name = this._name ?? "Unknown";
+            this._name = this._name || "Unknown";
             this._stateFmtd = "Unknown";
         }
     }
@@ -2140,33 +2140,157 @@ let SmartQasaSwitchTile = class SmartQasaSwitchTile extends s {
 };
 __decorate([
     r()
-], SmartQasaSwitchTile.prototype, "_category", void 0);
+], SwitchTile.prototype, "_category", void 0);
 __decorate([
     r()
-], SmartQasaSwitchTile.prototype, "_config", void 0);
+], SwitchTile.prototype, "_config", void 0);
 __decorate([
     r()
-], SmartQasaSwitchTile.prototype, "_icon", void 0);
+], SwitchTile.prototype, "_icon", void 0);
 __decorate([
     r()
-], SmartQasaSwitchTile.prototype, "_iconColor", void 0);
+], SwitchTile.prototype, "_iconColor", void 0);
 __decorate([
     r()
-], SmartQasaSwitchTile.prototype, "_name", void 0);
+], SwitchTile.prototype, "_name", void 0);
 __decorate([
     r()
-], SmartQasaSwitchTile.prototype, "_stateFmtd", void 0);
+], SwitchTile.prototype, "_stateFmtd", void 0);
 __decorate([
     r()
-], SmartQasaSwitchTile.prototype, "_stateObj", void 0);
-SmartQasaSwitchTile = __decorate([
+], SwitchTile.prototype, "_stateObj", void 0);
+SwitchTile = __decorate([
     t("smartqasa-switch-tile")
-], SmartQasaSwitchTile);
+], SwitchTile);
 window.customCards.push({
     type: "smartqasa-switch-tile",
     name: "SmartQasa Switch Tile",
     preview: true,
     description: "A SmartQasa tile for toggling an entity.",
+});
+
+let ThermostatTile = class ThermostatTile extends s {
+    constructor() {
+        super(...arguments);
+        this._icon = "hass:thermometer-lines";
+        this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+        this._name = "Loading...";
+        this._stateFmtd = "Loading...";
+    }
+    static { this.styles = [styleTileBase, styleTileState]; }
+    setConfig(config) {
+        if (!config.entity || config.entity.split(".")[0] != "climate")
+            throw new Error("A valid climate entity is required.");
+        this._config = config;
+        if (this._hass)
+            this.hass = this._hass;
+    }
+    set hass(hass) {
+        this._hass = hass;
+        this._stateObj = this._config?.entity ? this._hass.states[this._config.entity] : undefined;
+        this._updateState();
+    }
+    _updateState() {
+        const actionColor = {
+            cooling: "var(--sq-climate-cool-rgb, 0, 0, 255)",
+            heating: "var(--sq-climate-heat-rgb, 255, 0, 0)",
+            fan_only: "var(--sq-climate-fan_only-rgb, 0, 255, 0)",
+            idle: "var(--sq-primary-font-rgb, 128, 128, 128)",
+            off: "var(--sq-inactive-rgb, 128, 128, 128)",
+            default: "var(--sq-unavailable-rgb, 255, 0, 255)",
+        };
+        if (this._stateObj) {
+            const state = this._stateObj.state || "unavailable";
+            const hvacAction = this._stateObj.attributes.hvac_action || "default";
+            if (state == "off") {
+                this._iconColor = actionColor.off;
+            }
+            else {
+                this._iconColor = actionColor[hvacAction] || actionColor.default;
+            }
+            this._stateFmtd = this._hass.formatEntityState(this._stateObj);
+            if (state != "off") {
+                if (this._stateObj.attributes.current_temperature) {
+                    this._stateFmtd += ` - ${this._stateObj.attributes.current_temperature}°`;
+                }
+                if (this._stateObj.attributes.current_humidity) {
+                    this._stateFmtd += ` / ${this._stateObj.attributes.current_humidity}%`;
+                }
+            }
+            this._name = this._config?.icon || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
+        }
+        else {
+            this._icon = "hass:garage-alert-variant";
+            this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+            this._name = this._name || "Unknown";
+            this._stateFmtd = "Unavailable";
+        }
+    }
+    render() {
+        return x `
+      <div class="container" @click=${this._showMoreInfo}>
+        <div
+          class="icon"
+          @click=${this._toggleEntity}
+          style="
+            color: rgb(${this._iconColor});
+            background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
+          "
+        >
+          <ha-icon .icon=${this._icon}></ha-icon>
+        </div>
+        <div class="name">${this._name}</div>
+        <div class="state">${this._stateFmtd}</div>
+      </div>
+    `;
+    }
+    _toggleEntity(e) {
+        e.stopPropagation();
+        if (this._stateObj) {
+            this._hass.callService("climate", "toggle", { entity_id: this._stateObj.entity_id });
+        }
+    }
+    _showMoreInfo(e) {
+        e.stopPropagation();
+        if (this._stateObj) {
+            const event = new CustomEvent("hass-more-info", {
+                bubbles: true,
+                composed: true,
+                detail: { entityId: this._stateObj.entity_id },
+            });
+            this.dispatchEvent(event);
+        }
+    }
+    getCardSize() {
+        return 1;
+    }
+};
+__decorate([
+    r()
+], ThermostatTile.prototype, "_config", void 0);
+__decorate([
+    r()
+], ThermostatTile.prototype, "_icon", void 0);
+__decorate([
+    r()
+], ThermostatTile.prototype, "_iconColor", void 0);
+__decorate([
+    r()
+], ThermostatTile.prototype, "_name", void 0);
+__decorate([
+    r()
+], ThermostatTile.prototype, "_stateFmtd", void 0);
+__decorate([
+    r()
+], ThermostatTile.prototype, "_stateObj", void 0);
+ThermostatTile = __decorate([
+    t("smartqasa-thermostat-tile")
+], ThermostatTile);
+window.customCards.push({
+    type: "smartqasa-thermostat-tile",
+    name: "SmartQasa Thermostat Tile",
+    preview: true,
+    description: "A SmartQasa tile for controlling a thermostat climate entity.",
 });
 
 window.smartqasa = window.smartqasa || {};

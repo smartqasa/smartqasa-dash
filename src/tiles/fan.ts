@@ -14,7 +14,7 @@ interface Config extends LovelaceCardConfig {
 }
 
 @customElement("smartqasa-fan-tile")
-export class SmartQasaFanTile extends LitElement {
+export class FanTile extends LitElement {
   @state() private _config?: Config;
   @state() private _icon: string = "hass:fan-alert";
   @state() private _iconAnimation: string = "none";
@@ -41,13 +41,13 @@ export class SmartQasaFanTile extends LitElement {
 
   private _updateState(): void {
     if (this._stateObj) {
-      const state: string = this._stateObj.state ?? "unknown";
-      this._icon = this._config?.icon ?? "hass:fan";
+      const state: string = this._stateObj.state || "unknown";
+      this._icon = this._config?.icon || "hass:fan";
       if (state == "on" && this._icon == "hass:fan") {
         if (this._stateObj.attributes.percentage) {
           const speed = 0.5 + (1 - this._stateObj.attributes.percentage / 100);
           const direction =
-            this._stateObj.attributes.direction === "reverse"
+            this._stateObj.attributes.direction == "reverse"
               ? "reverse"
               : "normal";
           this._iconAnimation = `spin ${speed}s linear infinite ${direction}`;
@@ -58,17 +58,17 @@ export class SmartQasaFanTile extends LitElement {
         this._iconAnimation = "none";
       }
       this._iconColor = state == "on" ? "var(--sq-fan-on-rgb)" : "var(--sq-inactive-rgb)";
-      this._name = this._config?.name ?? this._stateObj.attributes.friendly_name ?? this._stateObj.entity_id;
+      this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
       this._stateFmtd =
         this._hass.formatEntityState(this._stateObj) +
         (state == "on" && this._stateObj.attributes.percentage
           ? " - " + this._hass.formatEntityAttributeValue(this._stateObj, "percentage")
           : "");
     } else {
-      this._icon = this._config?._icon ?? "hass:fan-alert";
+      this._icon = this._config?._icon || "hass:fan-alert";
       this._iconAnimation = "none";
       this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-      this._name = this._config?._name ?? "Unknown";
+      this._name = this._config?._name || "Unknown";
       this._stateFmtd = "Unavailable";
     }
   }

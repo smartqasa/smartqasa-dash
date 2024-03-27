@@ -13,7 +13,7 @@ interface Config extends LovelaceCardConfig {
 }
 
 @customElement("smartqasa-garage-tile")
-export class SmartQasaGarageTile extends LitElement {
+export class GarageTile extends LitElement {
   @state() private _config?: Config;
   @state() private _icon: string = "hass:garage-variant";
   @state() private _iconAnimation: string = "none";
@@ -40,7 +40,7 @@ export class SmartQasaGarageTile extends LitElement {
 
   private _updateState(): void {
     if (this._stateObj) {
-      const state = this._stateObj.state ?? "unknown";
+      const state = this._stateObj.state || "unknown";
       switch (state) {
         case "closed":
           this._icon = "hass:garage-variant";
@@ -77,12 +77,12 @@ export class SmartQasaGarageTile extends LitElement {
               "current_position"
             )
           : "");
-      this._name = this._config?.icon ?? this._stateObj.attributes.friendly_name ?? this._stateObj.entity_id;
+      this._name = this._config?.icon || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
     } else {
       this._icon = "hass:garage-alert-variant";
       this._iconAnimation = "none";
       this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-      this._name = this._name ?? "Unknown";
+      this._name = this._name || "Unknown";
       this._stateFmtd = "Unavailable";
     }
   }

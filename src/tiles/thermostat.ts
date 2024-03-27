@@ -7,17 +7,14 @@ import styleTileBase from "../styles/tile-base";
 import styleTileState from "../styles/tile-state";
 
 interface Config extends LovelaceCardConfig {
-  category?: string;
   entity: string;
-  icon?: string;
   name?: string;
 }
 
-@customElement("smartqasa-switch-tile")
-export class SwitchTile extends LitElement {
-  @state() private _category: string = "";
+@customElement("smartqasa-thermostat-tile")
+export class ThermostatTile extends LitElement {
   @state() private _config?: Config;
-  @state() private _icon: string = "hass:toggle-switch-variant";
+  @state() private _icon: string = "hass:thermometer-lines";
   @state() private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
   @state() private _name: string = "Loading...";
   @state() private _stateFmtd: string = "Loading...";
@@ -28,7 +25,7 @@ export class SwitchTile extends LitElement {
   static styles: CSSResultGroup = [styleTileBase, styleTileState];
 
   setConfig(config: Config): void {
-    if (!config.entity || config.entity.split('.')[0] != "switch") throw new Error("A valid switch entity is required.");
+    if (!config.entity || config.entity.split(".")[0] != "climate") throw new Error("A valid climate entity is required.");
     this._config = config;
     if (this._hass) this.hass = this._hass;
   }
@@ -40,19 +37,38 @@ export class SwitchTile extends LitElement {
   }
 
   private _updateState(): void {
+    const actionColor: Record<string, string> = {
+      cooling: "var(--sq-climate-cool-rgb, 0, 0, 255)",
+      heating: "var(--sq-climate-heat-rgb, 255, 0, 0)",
+      fan_only: "var(--sq-climate-fan_only-rgb, 0, 255, 0)",
+      idle: "var(--sq-primary-font-rgb, 128, 128, 128)",
+      off: "var(--sq-inactive-rgb, 128, 128, 128)",
+      default: "var(--sq-unavailable-rgb, 255, 0, 255)",
+    };
     if (this._stateObj) {
-      const state = this._stateObj.state;
-      this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:toggle-switch-variant";
-      this._iconColor = state === "on"
-        ? `var(--sq-switch${this._category ? `-${this._category}` : ""}-on-rgb)`
-        : "var(--sq-inactive-rgb)";
-      this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
-      this._stateFmtd = this._hass ? this._hass.formatEntityState(this._stateObj) : "Unknown";
+      const state = this._stateObj.state || "unavailable";
+      const hvacAction = this._stateObj.attributes.hvac_action || "default"
+      if (state == "off") {
+        this._iconColor = actionColor.off;
+      } else {
+        this._iconColor = actionColor[hvacAction] || actionColor.default;
+      }
+
+      this._stateFmtd = this._hass.formatEntityState(this._stateObj);
+      if (state != "off") {
+        if (this._stateObj.attributes.current_temperature) {
+          this._stateFmtd += ` - ${this._stateObj.attributes.current_temperature}°`;
+        }
+        if (this._stateObj.attributes.current_humidity) {
+          this._stateFmtd += ` / ${this._stateObj.attributes.current_humidity}%`;
+        }
+      }
+      this._name = this._config?.icon || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
     } else {
-      this._icon = this._config?.icon || "hass:toggle-switch-variant";
-      this._iconColor = "var(--sq-unavailable-rgb)";
+      this._icon = "hass:garage-alert-variant";
+      this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
       this._name = this._name || "Unknown";
-      this._stateFmtd = "Unknown";
+      this._stateFmtd = "Unavailable";
     }
   }
 
@@ -78,9 +94,7 @@ export class SwitchTile extends LitElement {
   private _toggleEntity(e: Event): void {
     e.stopPropagation();
     if (this._stateObj) {
-      this._hass.callService("homeassistant", "toggle", {
-        entity_id: this._stateObj.entity_id,
-      });
+      this._hass.callService("climate", "toggle", { entity_id: this._stateObj.entity_id });
     }
   }
 
@@ -102,8 +116,8 @@ export class SwitchTile extends LitElement {
 }
 
 window.customCards.push({
-  type: "smartqasa-switch-tile",
-  name: "SmartQasa Switch Tile",
+  type: "smartqasa-thermostat-tile",
+  name: "SmartQasa Thermostat Tile",
   preview: true,
-  description: "A SmartQasa tile for toggling an entity.",
+  description: "A SmartQasa tile for controlling a thermostat climate entity.",
 });

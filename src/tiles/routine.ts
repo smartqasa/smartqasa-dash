@@ -42,21 +42,21 @@ export class RoutineTile extends LitElement {
     this._stateObj = this._config?.entity ? this._hass.states[this._config.entity] : undefined;
     if (this._stateObj?.attributes.icon != this._prevStateIcon || this._stateObj.attributes.friendly_name != this._prevStateName) {
       this._updateState();
-      this._prevStateIcon = this._stateObj?.attributes.icon ?? "";
-      this._prevStateName = this._stateObj?.attributes.friendly_name ?? "";
+      this._prevStateIcon = this._stateObj?.attributes.icon || "";
+      this._prevStateName = this._stateObj?.attributes.friendly_name || "";
     }
   }
 
   private _updateState(): void {
     if (this._stateObj) {
-      this._icon = this._config?.icon ?? this._stateObj.attributes.icon ?? "hass:help-circle";
+      this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:help-circle";
       this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
-      this._name = this._config?.name ?? this._stateObj.attributes.friendly_name ?? this._stateObj.entity_id;
+      this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
     } else {
-      this._icon = this._config?.icon ?? "hass:alert-rhombus";
+      this._icon = this._config?.icon || "hass:alert-rhombus";
       this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
       this._iconAnimation = "none";
-      this._name = this._config?.name ?? "Unknown";
+      this._name = this._config?.name || "Unknown";
     }
   }
 

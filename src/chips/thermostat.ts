@@ -16,20 +16,20 @@ export class SmartQasaThermostatChip extends LitElement {
   @state() private _icon: string = "hass:thermometer-lines";
   @state() private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
   @state() private _stateObj?: HassEntity;
-  @state() private _temperature: string = "??";
+  @state() private _temperature: string = "||";
 
   private _hass: any;
 
   static styles: CSSResult = styleChipBasic;
 
   setConfig(config: Config): void {
-    this._entity = config.entity ?? undefined;
+    this._entity = config.entity || undefined;
   }
 
   set hass(hass: HomeAssistant) {
     if (this._entity) {
       this._hass = hass;
-      this._stateObj = this._hass?.states[this._entity] ?? undefined;
+      this._stateObj = this._hass?.states[this._entity] || undefined;
       this._updateState();
     }
   }
@@ -47,10 +47,10 @@ export class SmartQasaThermostatChip extends LitElement {
     if (this._stateObj) {
       const hvacAction = this._stateObj.attributes.hvac_action;
       this._iconColor = actionColor[hvacAction] || actionColor.default;
-      this._temperature = this._stateObj.attributes.current_temperature ?? "??";
+      this._temperature = this._stateObj.attributes.current_temperature || "||";
     } else {
       this._iconColor = actionColor.default;
-      this._temperature = "??";
+      this._temperature = "||";
     }
   }
 
