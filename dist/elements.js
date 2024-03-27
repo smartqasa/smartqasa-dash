@@ -1795,13 +1795,15 @@ window.customCards.push({
     description: "A SmartQasa tile for controlling a lock entity.",
 });
 
-let SmartQasaRoutineTile = class SmartQasaRoutineTile extends s {
+let RoutineTile = class RoutineTile extends s {
     constructor() {
         super(...arguments);
         this._icon = "hass:help-rhombus";
         this._iconAnimation = "none";
         this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
         this._name = "Loading...";
+        this._prevStateIcon = "";
+        this._prevStateName = "";
     }
     static { this.styles = [styleTileBase, styleTileIconSpin]; }
     setConfig(config) {
@@ -1819,7 +1821,11 @@ let SmartQasaRoutineTile = class SmartQasaRoutineTile extends s {
             this._stateObj = this._hass.states[this._config.entity] ?? undefined;
             if (!this._stateObj)
                 throw new Error("The entity could not be located.");
-            this._updateState();
+            if (this._stateObj.attributes.icon != this._prevStateIcon || this._stateObj.attributes.friendly_name != this._prevStateName) {
+                this._updateState();
+                this._prevStateIcon = this._stateObj.attributes.icon ?? "";
+                this._prevStateName = this._stateObj.attributes.friendly_name ?? "";
+            }
         }
     }
     _updateState() {
@@ -1856,6 +1862,10 @@ let SmartQasaRoutineTile = class SmartQasaRoutineTile extends s {
     _runRoutine(e) {
         e.stopPropagation();
         if (this._stateObj) {
+            let icon = this._icon;
+            this._icon = "hass:rotate-right";
+            this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
+            this._iconAnimation = "spin 1.0s linear infinite";
             const domain = this._stateObj.entity_id.split(".")[0];
             switch (domain) {
                 case "script":
@@ -1871,10 +1881,6 @@ let SmartQasaRoutineTile = class SmartQasaRoutineTile extends s {
                     console.error("Unsupported entity domain:", domain);
                     return;
             }
-            let icon = this._icon;
-            this._icon = "hass:rotate-right";
-            this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
-            this._iconAnimation = "spin 1.0s linear infinite";
             setTimeout(() => {
                 this._icon = icon;
                 this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
@@ -1888,25 +1894,25 @@ let SmartQasaRoutineTile = class SmartQasaRoutineTile extends s {
 };
 __decorate([
     r()
-], SmartQasaRoutineTile.prototype, "_config", void 0);
+], RoutineTile.prototype, "_config", void 0);
 __decorate([
     r()
-], SmartQasaRoutineTile.prototype, "_icon", void 0);
+], RoutineTile.prototype, "_icon", void 0);
 __decorate([
     r()
-], SmartQasaRoutineTile.prototype, "_iconAnimation", void 0);
+], RoutineTile.prototype, "_iconAnimation", void 0);
 __decorate([
     r()
-], SmartQasaRoutineTile.prototype, "_iconColor", void 0);
+], RoutineTile.prototype, "_iconColor", void 0);
 __decorate([
     r()
-], SmartQasaRoutineTile.prototype, "_name", void 0);
+], RoutineTile.prototype, "_name", void 0);
 __decorate([
     r()
-], SmartQasaRoutineTile.prototype, "_stateObj", void 0);
-SmartQasaRoutineTile = __decorate([
+], RoutineTile.prototype, "_stateObj", void 0);
+RoutineTile = __decorate([
     t("smartqasa-routine-tile")
-], SmartQasaRoutineTile);
+], RoutineTile);
 window.customCards.push({
     type: "smartqasa-routine-tile",
     name: "SmartQasa Routine Tile",

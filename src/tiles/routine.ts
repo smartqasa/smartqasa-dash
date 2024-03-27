@@ -13,13 +13,16 @@ interface Config extends LovelaceCardConfig {
 }
 
 @customElement("smartqasa-routine-tile")
-export class SmartQasaRoutineTile extends LitElement {
+export class RoutineTile extends LitElement {
   @state() private _config?: Config;
   @state() private _icon: string = "hass:help-rhombus";
   @state() private _iconAnimation: string = "none";
   @state() private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
   @state() private _name: string = "Loading...";
   @state() private _stateObj?: HassEntity;
+
+  private _prevStateIcon: string = "";
+  private _prevStateName: string = "";
 
   private _hass: any;
 
@@ -39,7 +42,11 @@ export class SmartQasaRoutineTile extends LitElement {
     if (this._hass && this._config?.entity) {
       this._stateObj = this._hass.states[this._config.entity] ?? undefined;
       if (!this._stateObj) throw new Error("The entity could not be located.");
-      this._updateState();
+        if (this._stateObj.attributes.icon != this._prevStateIcon || this._stateObj.attributes.friendly_name != this._prevStateName) {
+          this._updateState();
+          this._prevStateIcon = this._stateObj.attributes.icon ?? "";
+          this._prevStateName = this._stateObj.attributes.friendly_name ?? "";
+      }
     }
   }
 
@@ -79,6 +86,10 @@ export class SmartQasaRoutineTile extends LitElement {
     e.stopPropagation();
 
     if (this._stateObj) {
+      let icon = this._icon;
+      this._icon = "hass:rotate-right"
+      this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
+      this._iconAnimation = "spin 1.0s linear infinite"
 
       const domain = this._stateObj.entity_id.split(".")[0];
       switch (domain) {
@@ -96,10 +107,6 @@ export class SmartQasaRoutineTile extends LitElement {
           return;
       }
 
-      let icon = this._icon;
-      this._icon = "hass:rotate-right"
-      this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
-      this._iconAnimation = "spin 1.0s linear infinite"
       setTimeout(() => {
         this._icon = icon;
         this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
