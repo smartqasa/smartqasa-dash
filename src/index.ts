@@ -36,6 +36,7 @@ import "./tiles/area";
 import "./tiles/fan";
 import "./tiles/garage";
 import "./tiles/light";
+import "./tiles/light-editor";
 import "./tiles/lock";
 import "./tiles/routine";
 import "./tiles/shade";

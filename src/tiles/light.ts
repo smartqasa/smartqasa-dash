@@ -17,7 +17,7 @@ export class LightTile extends LitElement {
   @state() private _config?: Config;
   @state() private _icon: string = "hass:lightbulb-alert";
   @state() private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
-  @state() private _name?: string = "Loading...";
+  @state() private _name: string = "Loading...";
   @state() private _stateFmtd: string = "Loading...";
   @state() private _stateObj?: HassEntity;
 
@@ -96,6 +96,18 @@ export class LightTile extends LitElement {
 
   getCardSize() {
     return 1;
+  }
+
+  static getConfigElement() {
+    return document.createElement("smartqasa-light-tile-editor");
+  }
+
+  static getStubConfig() {
+    return {
+      entity: "",
+      icon: "",
+      name: "",
+    };
   }
 }
 

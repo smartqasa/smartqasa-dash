@@ -1603,6 +1603,16 @@ let LightTile = class LightTile extends s {
     getCardSize() {
         return 1;
     }
+    static getConfigElement() {
+        return document.createElement("smartqasa-light-tile-editor");
+    }
+    static getStubConfig() {
+        return {
+            entity: "",
+            icon: "",
+            name: "",
+        };
+    }
 };
 __decorate([
     r()
@@ -1631,6 +1641,67 @@ window.customCards.push({
     preview: true,
     description: "A SmartQasa tile for controlling a light entity.",
 });
+
+let LightTileEditor = class LightTileEditor extends s {
+    setConfig(config) {
+        this._config = config;
+    }
+    static { this.styles = i$2 `
+    .table {
+      display: table;
+    }
+    .row {
+      display: table-row;
+    }
+    .cell {
+      display: table-cell;
+      padding: 0.5em;
+    }
+  `; }
+    render() {
+        return x `
+      <form class="table">
+        <div class="row">
+          <label class="label cell" for="entity">Entity:</label>
+          <input
+              @change="${this.handleChangedEvent}"
+              class="value cell" id="entity" value="${this._config.entity}"></input>
+        </div>
+        <div class="row">
+          <label class="label cell" for="name">Name</label>
+          <input
+              @change="${this.handleChangedEvent}"
+              class="value cell" id="name" value="${this._config.name}"></input>
+        </div>
+      </form>
+        `;
+    }
+    handleChangedEvent(changedEvent) {
+        const target = changedEvent.target;
+        // this._config is readonly, copy needed
+        const newConfig = Object.assign({}, this._config);
+        switch (target.id) {
+            case "entity":
+                newConfig.entity = target.value;
+                break;
+            case "name":
+                newConfig.name = target.value;
+                break;
+        }
+        const messageEvent = new CustomEvent("config-changed", {
+            detail: { config: newConfig },
+            bubbles: true,
+            composed: true,
+        });
+        this.dispatchEvent(messageEvent);
+    }
+};
+__decorate([
+    r()
+], LightTileEditor.prototype, "_config", void 0);
+LightTileEditor = __decorate([
+    t("smartqasa-light-tile-editor")
+], LightTileEditor);
 
 let LockTile = class LockTile extends s {
     constructor() {
