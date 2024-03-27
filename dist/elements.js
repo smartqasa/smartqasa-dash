@@ -197,9 +197,9 @@ var styleChipDouble = i$2 `
     place-self: center;
     display: grid;
     grid-template-areas: "i1 s i2";
-    grid-column-gap: 0.5rem;
+    grid-column-gap: 0.8rem;
     margin-right: 0.7rem;
-    padding: 0.7rem;
+    padding: 0.8rem;
     border: var(--sq-card-border);
     border-radius: var(--sq-chip-border-radius);
     background-color: var(--sq-card-background-color);
@@ -211,7 +211,7 @@ var styleChipDouble = i$2 `
     width: 1px;
     background-color: rgb(128, 128, 128);
     margin: auto;
-    height: 80%;
+    height: 90%;
   }
   .icon1 {
     grid-area: i1;
@@ -222,7 +222,7 @@ var styleChipDouble = i$2 `
   .icon1,
   .icon2 {
     display: flex;
-    --mdc-icon-size: 2.4rem;
+    --mdc-icon-size: 2.2rem;
     color: rgb(var(--sq-primary-text-rgb));
   }
 `;
