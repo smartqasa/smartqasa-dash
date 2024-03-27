@@ -20,6 +20,9 @@ export class SmartQasaAllOffTile extends LitElement {
   @state() private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
   @state() private _name: string = "Loading...";
 
+  private _prevAreaIcon: string = "";
+  private _prevAreaName: string = "";
+
   private _hass: any;
 
   static styles: CSSResultGroup = [styleTileBase, styleTileIconSpin];
@@ -35,11 +38,15 @@ export class SmartQasaAllOffTile extends LitElement {
     if (this._hass && this._config?.area) {
       this._areaObj = this._hass.areas[this._config.area] ?? undefined;
       if (!this._areaObj) throw new Error("The area could not be located.");
-      this._updateState();
+        if (this._areaObj.icon != this._prevAreaIcon || this._areaObj.name != this._prevAreaName) {
+          this._updateArea();
+          this._prevAreaIcon = this._areaObj.icon ?? "";
+          this._prevAreaName = this._areaObj.name ?? "";
+      }
     }
   }
 
-  private _updateState(): void {
+  private _updateArea(): void {
     if (this._areaObj) {
       this._icon = this._config?.icon ?? "hass:power";
       this._iconAnimation = "none";

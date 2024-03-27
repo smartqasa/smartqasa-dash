@@ -606,6 +606,8 @@ let SmartQasaAllOffTile = class SmartQasaAllOffTile extends s {
         this._iconAnimation = "none";
         this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
         this._name = "Loading...";
+        this._prevAreaIcon = "";
+        this._prevAreaName = "";
     }
     static { this.styles = [styleTileBase, styleTileIconSpin]; }
     setConfig(config) {
@@ -621,10 +623,14 @@ let SmartQasaAllOffTile = class SmartQasaAllOffTile extends s {
             this._areaObj = this._hass.areas[this._config.area] ?? undefined;
             if (!this._areaObj)
                 throw new Error("The area could not be located.");
-            this._updateState();
+            if (this._areaObj.icon != this._prevAreaIcon || this._areaObj.name != this._prevAreaName) {
+                this._updateArea();
+                this._prevAreaIcon = this._areaObj.icon ?? "";
+                this._prevAreaName = this._areaObj.name ?? "";
+            }
         }
     }
-    _updateState() {
+    _updateArea() {
         if (this._areaObj) {
             this._icon = this._config?.icon ?? "hass:power";
             this._iconAnimation = "none";
