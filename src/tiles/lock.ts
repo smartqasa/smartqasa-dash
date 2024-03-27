@@ -35,7 +35,7 @@ export class SmartQasaLockTile extends LitElement {
 
   set hass(hass: HomeAssistant) {
     this._hass = hass;
-    this._stateObj = this._config?.entity ? this._hass?.states[this._config.entity] ?? undefined : undefined;
+    this._stateObj = this._config?.entity ? this._hass?.states[this._config.entity] : undefined;
     this._updateState();
   }
 

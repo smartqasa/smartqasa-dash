@@ -51,10 +51,8 @@ interface Config extends LovelaceCardConfig {
 
   set hass(hass: HomeAssistant) {
     this._hass = hass;
-    if (this._hass && this._config?.area) {
-      this._areaObj = this._hass.areas[this._config.area];
+    this._areaObj = this._config?.area ? this._hass?.areas[this._config.area] : undefined;
     }
-  }
 
   render(): TemplateResult {
     if (!this._areaObj && this._config?.area != "home") {

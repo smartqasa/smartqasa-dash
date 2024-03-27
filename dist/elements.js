@@ -414,9 +414,7 @@ let AreaPicture = class AreaPicture extends s {
     }
     set hass(hass) {
         this._hass = hass;
-        if (this._hass && this._config?.area) {
-            this._areaObj = this._hass.areas[this._config.area];
-        }
+        this._areaObj = this._config?.area ? this._hass?.areas[this._config.area] : undefined;
     }
     render() {
         if (!this._areaObj && this._config?.area != "home") {
@@ -615,7 +613,7 @@ let AllOffTile = class AllOffTile extends s {
         this._hass = hass;
         if (this._hass && this._config?.area) {
             this._areaObj = this._hass.areas[this._config.area] ?? undefined;
-            if (this._areaObj.icon != this._prevAreaIcon || this._areaObj.name != this._prevAreaName) {
+            if (this._areaObj?.icon != this._prevAreaIcon || this._areaObj?.name != this._prevAreaName) {
                 this._updateArea();
                 this._prevAreaIcon = this._areaObj.icon ?? "";
                 this._prevAreaName = this._areaObj.name ?? "";
@@ -627,7 +625,7 @@ let AllOffTile = class AllOffTile extends s {
             this._icon = this._config?.icon ?? "hass:power";
             this._iconAnimation = "none";
             this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
-            this._name = this._config?.name ?? this._areaObj?.name ?? this._areaObj.id;
+            this._name = this._config?.name ?? this._areaObj.name ?? this._areaObj.id;
         }
         else {
             this._icon = this._config?._icon ?? "hass:alert-rhombus";
@@ -1658,7 +1656,7 @@ let SmartQasaLockTile = class SmartQasaLockTile extends s {
     }
     set hass(hass) {
         this._hass = hass;
-        this._stateObj = this._config?.entity ? this._hass?.states[this._config.entity] ?? undefined : undefined;
+        this._stateObj = this._config?.entity ? this._hass?.states[this._config.entity] : undefined;
         this._updateState();
     }
     _updateState() {

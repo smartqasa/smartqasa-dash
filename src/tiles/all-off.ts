@@ -37,7 +37,7 @@ export class AllOffTile extends LitElement {
     this._hass = hass;
     if (this._hass && this._config?.area) {
       this._areaObj = this._hass.areas[this._config.area] ?? undefined;
-      if (this._areaObj.icon != this._prevAreaIcon || this._areaObj.name != this._prevAreaName) {
+      if (this._areaObj?.icon != this._prevAreaIcon || this._areaObj?.name != this._prevAreaName) {
         this._updateArea();
         this._prevAreaIcon = this._areaObj.icon ?? "";
         this._prevAreaName = this._areaObj.name ?? "";
@@ -50,7 +50,7 @@ export class AllOffTile extends LitElement {
       this._icon = this._config?.icon ?? "hass:power";
       this._iconAnimation = "none";
       this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
-      this._name = this._config?.name ?? this._areaObj?.name ?? this._areaObj.id;
+      this._name = this._config?.name ?? this._areaObj.name ?? this._areaObj.id;
     } else {
       this._icon = this._config?._icon ?? "hass:alert-rhombus";
       this._iconAnimation = "none";
