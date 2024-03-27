@@ -661,7 +661,7 @@ let SmartQasaAllOffTile = class SmartQasaAllOffTile extends s {
             const icon = this._icon;
             this._icon = "hass:rotate-right";
             this._iconAnimation = "spin 1.0s linear infinite";
-            console.log(this._areaObj.id);
+            console.log(this._areaObj);
             this._hass.callService("light", "turn_off", {
                 area_id: this._areaObj.id,
                 transition: 2,
