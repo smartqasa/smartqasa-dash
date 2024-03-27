@@ -406,8 +406,6 @@ let AreaPicture = class AreaPicture extends s {
     `;
     }
     setConfig(config) {
-        if (!config.area)
-            throw new Error("A valid area is required.");
         this._config = config;
         if (this._hass)
             this.hass = this._hass;
@@ -417,9 +415,6 @@ let AreaPicture = class AreaPicture extends s {
         this._areaObj = this._config?.area ? this._hass?.areas[this._config.area] : undefined;
     }
     render() {
-        if (!this._areaObj && this._config?.area != "home") {
-            return x ``;
-        }
         const height = window.smartqasa.deviceType == "phone" ? "15vh" : "20vh";
         const picture = this._config?.picture
             ? `/local/sq-areas/${this._config.picture}`

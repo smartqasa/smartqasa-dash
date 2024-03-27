@@ -44,7 +44,6 @@ interface Config extends LovelaceCardConfig {
   }
 
   setConfig(config: Config): void {
-    if (!config.area) throw new Error("A valid area is required.");
     this._config = config;
     if (this._hass) this.hass = this._hass;
   }
@@ -55,10 +54,6 @@ interface Config extends LovelaceCardConfig {
     }
 
   render(): TemplateResult {
-    if (!this._areaObj && this._config?.area != "home") {
-      return html``;
-    }
-
     const height = window.smartqasa.deviceType == "phone" ? "15vh" : "20vh";
 
     const picture = this._config?.picture
