@@ -2194,19 +2194,17 @@ let ThermostatTile = class ThermostatTile extends s {
         const actionColor = {
             cooling: "var(--sq-climate-cool-rgb, 0, 0, 255)",
             heating: "var(--sq-climate-heat-rgb, 255, 0, 0)",
-            fan_only: "var(--sq-climate-fan_only-rgb, 0, 255, 0)",
-            idle: "var(--sq-primary-font-rgb, 128, 128, 128)",
+            idle: "var(--sq-primary-font-rgb, 0, 0, 0)",
             off: "var(--sq-inactive-rgb, 128, 128, 128)",
-            default: "var(--sq-unavailable-rgb, 255, 0, 255)",
         };
         if (this._stateObj) {
             const state = this._stateObj.state || "unavailable";
-            const hvacAction = this._stateObj.attributes.hvac_action || "default";
+            const hvacAction = this._stateObj.attributes.hvac_action || "idle";
             if (state == "off") {
                 this._iconColor = actionColor.off;
             }
             else {
-                this._iconColor = actionColor[hvacAction] || actionColor.default;
+                this._iconColor = actionColor[hvacAction] || actionColor.idle;
             }
             this._stateFmtd = this._hass.formatEntityState(this._stateObj);
             if (state != "off") {
