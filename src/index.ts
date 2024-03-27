@@ -1,7 +1,10 @@
 declare global {
   interface Window {
+    browser_mod?: {
+      service: (service: string, data?: object) => void;
+    };
     customCards: Array<Object>;
-    fully: {
+    fully?: {
       startApplication: (packageName: string) => void;
     };
     smartqasa: { deviceType?: string; };

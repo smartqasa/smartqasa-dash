@@ -78,7 +78,7 @@ var styleChipBasic = i$2 `
     place-self: center;
     display: grid;
     grid-template-areas: "i t";
-    grid-column-gap: 0.5rem;
+    grid-column-gap: 0.8rem;
     margin-right: 0.7rem;
     padding: 1rem;
     border: var(--sq-card-border);
@@ -599,10 +599,10 @@ var styleTileIconSpin = i$2 `
   }
 `;
 
-let SmartQasaAllOffTile = class SmartQasaAllOffTile extends s {
+let AllOffTile = class AllOffTile extends s {
     constructor() {
         super(...arguments);
-        this._icon = "hass:help-rhombus-outline";
+        this._icon = "hass:help-rhombus";
         this._iconAnimation = "none";
         this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
         this._name = "Loading...";
@@ -688,25 +688,25 @@ let SmartQasaAllOffTile = class SmartQasaAllOffTile extends s {
 };
 __decorate([
     r()
-], SmartQasaAllOffTile.prototype, "_config", void 0);
+], AllOffTile.prototype, "_config", void 0);
 __decorate([
     r()
-], SmartQasaAllOffTile.prototype, "_areaObj", void 0);
+], AllOffTile.prototype, "_areaObj", void 0);
 __decorate([
     r()
-], SmartQasaAllOffTile.prototype, "_icon", void 0);
+], AllOffTile.prototype, "_icon", void 0);
 __decorate([
     r()
-], SmartQasaAllOffTile.prototype, "_iconAnimation", void 0);
+], AllOffTile.prototype, "_iconAnimation", void 0);
 __decorate([
     r()
-], SmartQasaAllOffTile.prototype, "_iconColor", void 0);
+], AllOffTile.prototype, "_iconColor", void 0);
 __decorate([
     r()
-], SmartQasaAllOffTile.prototype, "_name", void 0);
-SmartQasaAllOffTile = __decorate([
+], AllOffTile.prototype, "_name", void 0);
+AllOffTile = __decorate([
     t("smartqasa-all-off-tile")
-], SmartQasaAllOffTile);
+], AllOffTile);
 window.customCards.push({
     type: "smartqasa-all-off-tile",
     name: "SmartQasa All Off Tile",
@@ -1158,38 +1158,43 @@ window.customCards.push({
     description: "A SmartQasa tile for launching applications from the dashboard",
 });
 
-let SmartQasaAreaTile = class SmartQasaAreaTile extends s {
+let AreaTile = class AreaTile extends s {
     constructor() {
         super(...arguments);
-        this._area = "";
         this._icon = "hass:help-rhombus";
         this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
         this._name = "Loading...";
     }
     static { this.styles = styleTileBase; }
     setConfig(config) {
-        if (!config.area) {
-            throw new Error("You must specify an area");
-        }
-        this._area = config.area;
-        this._icon = config.icon ?? "";
-        this._name = config.name ?? "";
+        if (!config.area)
+            throw new Error("A valid area is required.");
+        this._config = config;
+        if (this._hass)
+            this.hass = this._hass;
     }
     set hass(hass) {
         this._hass = hass;
-        this._areaObj = this._hass?.areas[this._area] ?? undefined;
+        if (this._hass && this._config?.area) {
+            this._areaObj = this._hass.areas[this._config.area];
+            if (!this._areaObj)
+                throw new Error("The entity could not be located.");
+            this._updateArea();
+        }
     }
-    render() {
+    _updateArea() {
         if (this._areaObj) {
-            this._icon = this._icon ?? this._hass.areas[this._area].icon ?? "hass:help-rhombus";
+            this._icon = this._config?.icon ?? this._areaObj.icon ?? "hass:help-rhombus";
             this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
-            this._name = this._name ?? this._hass.areas[this._area].name ?? "Unknown";
+            this._name = this._config?.name ?? this._areaObj.name ?? "Unknown";
         }
         else {
-            this._icon = this._icon ?? "hass:alert-rhombus";
+            this._icon = this._config?.icon ?? "hass:alert-rhombus";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            this._name = this._name ?? "Unknown";
+            this._name = this._config?.name ?? "Unknown";
         }
+    }
+    render() {
         return x `
       <div class="container" @click=${this._navigate}>
         <div
@@ -1208,7 +1213,7 @@ let SmartQasaAreaTile = class SmartQasaAreaTile extends s {
     _navigate(e) {
         e.stopPropagation();
         if (this._areaObj) {
-            window.history.pushState(null, "", `/home-dash/${this._area}`);
+            window.history.pushState(null, "", `/home-dash/${this._areaObj.area_id}`);
             window.dispatchEvent(new CustomEvent("location-changed"));
             window.browser_mod?.service("close_popup", {});
         }
@@ -1222,22 +1227,22 @@ let SmartQasaAreaTile = class SmartQasaAreaTile extends s {
 };
 __decorate([
     r()
-], SmartQasaAreaTile.prototype, "_area", void 0);
+], AreaTile.prototype, "_config", void 0);
 __decorate([
     r()
-], SmartQasaAreaTile.prototype, "_areaObj", void 0);
+], AreaTile.prototype, "_areaObj", void 0);
 __decorate([
     r()
-], SmartQasaAreaTile.prototype, "_icon", void 0);
+], AreaTile.prototype, "_icon", void 0);
 __decorate([
     r()
-], SmartQasaAreaTile.prototype, "_iconColor", void 0);
+], AreaTile.prototype, "_iconColor", void 0);
 __decorate([
     r()
-], SmartQasaAreaTile.prototype, "_name", void 0);
-SmartQasaAreaTile = __decorate([
+], AreaTile.prototype, "_name", void 0);
+AreaTile = __decorate([
     t("smartqasa-area-tile")
-], SmartQasaAreaTile);
+], AreaTile);
 window.customCards.push({
     type: "smartqasa-area-tile",
     name: "SmartQasa Area Tile",
