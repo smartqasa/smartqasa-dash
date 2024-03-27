@@ -661,17 +661,18 @@ let SmartQasaAllOffTile = class SmartQasaAllOffTile extends s {
             const icon = this._icon;
             this._icon = "hass:rotate-right";
             this._iconAnimation = "spin 1.0s linear infinite";
-            console.log(this._areaObj);
+            this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
             this._hass.callService("light", "turn_off", {
-                area_id: this._areaObj.id,
+                area_id: this._areaObj.area_id,
                 transition: 2,
             });
             this._hass.callService("fan", "turn_off", {
-                area_id: this._areaObj.id,
+                area_id: this._areaObj.area_id,
             });
             setTimeout(() => {
                 this._icon = icon;
                 this._iconAnimation = "none";
+                this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
             }, 2000);
         }
     }
