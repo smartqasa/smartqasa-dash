@@ -35,11 +35,8 @@ export class SmartQasaFanTile extends LitElement {
 
   set hass(hass: HomeAssistant) {
     this._hass = hass;
-    if (this._hass && this._config?.entity) {
-      this._stateObj = this._hass.states[this._config.entity] ?? undefined;
-      if (!this._stateObj) throw new Error("The entity could not be located.");
-      this._updateState();
-    }
+    this._stateObj = this._config?.entity ? this._hass?.states[this._config.entity] : undefined;
+    this._updateState();
   }
 
   private _updateState(): void {

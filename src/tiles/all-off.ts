@@ -37,11 +37,10 @@ export class AllOffTile extends LitElement {
     this._hass = hass;
     if (this._hass && this._config?.area) {
       this._areaObj = this._hass.areas[this._config.area] ?? undefined;
-      if (!this._areaObj) throw new Error("The area could not be located.");
-        if (this._areaObj.icon != this._prevAreaIcon || this._areaObj.name != this._prevAreaName) {
-          this._updateArea();
-          this._prevAreaIcon = this._areaObj.icon ?? "";
-          this._prevAreaName = this._areaObj.name ?? "";
+      if (this._areaObj.icon != this._prevAreaIcon || this._areaObj.name != this._prevAreaName) {
+        this._updateArea();
+        this._prevAreaIcon = this._areaObj.icon ?? "";
+        this._prevAreaName = this._areaObj.name ?? "";
       }
     }
   }

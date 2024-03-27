@@ -416,8 +416,6 @@ let AreaPicture = class AreaPicture extends s {
         this._hass = hass;
         if (this._hass && this._config?.area) {
             this._areaObj = this._hass.areas[this._config.area];
-            if (!this._areaObj)
-                throw new Error("The entity could not be located.");
         }
     }
     render() {
@@ -461,14 +459,6 @@ let SmartQasaTimeDate = class SmartQasaTimeDate extends s {
         this._time = "loading";
         this._date = "loading";
     }
-    setConfig(config) {
-        // Handle configuration setup if necessary
-    }
-    set hass(hass) {
-        this._hass = hass;
-        this._time = this._hass?.states["sensor.current_time"].state ?? "unavailable";
-        this._date = this._hass?.states["sensor.current_date"].state ?? "unavailable";
-    }
     static get styles() {
         return i$2 `
       :host {
@@ -506,6 +496,14 @@ let SmartQasaTimeDate = class SmartQasaTimeDate extends s {
         color: rgb(var(--sq-secondary-font-rgb, 128, 128, 128));
       }
     `;
+    }
+    setConfig(config) {
+        // Handle configuration setup if necessary
+    }
+    set hass(hass) {
+        this._hass = hass;
+        this._time = this._hass?.states["sensor.current_time"].state ?? "unavailable";
+        this._date = this._hass?.states["sensor.current_date"].state ?? "unavailable";
     }
     render() {
         return x `
@@ -617,8 +615,6 @@ let AllOffTile = class AllOffTile extends s {
         this._hass = hass;
         if (this._hass && this._config?.area) {
             this._areaObj = this._hass.areas[this._config.area] ?? undefined;
-            if (!this._areaObj)
-                throw new Error("The area could not be located.");
             if (this._areaObj.icon != this._prevAreaIcon || this._areaObj.name != this._prevAreaName) {
                 this._updateArea();
                 this._prevAreaIcon = this._areaObj.icon ?? "";
@@ -1082,7 +1078,7 @@ let SmartQasaAppTile = class SmartQasaAppTile extends s {
     static { this.styles = styleTileBase; }
     setConfig(config) {
         if (!config.app)
-            throw new Error("You must specify an app");
+            throw new Error("A valid app must be specified.");
         this._app = config.app;
         this._appObj = appTable[this._app] ?? undefined;
         if (this._appObj) {
@@ -1171,12 +1167,8 @@ let AreaTile = class AreaTile extends s {
     }
     set hass(hass) {
         this._hass = hass;
-        if (this._hass && this._config?.area) {
-            this._areaObj = this._hass.areas[this._config.area];
-            if (!this._areaObj)
-                throw new Error("The entity could not be located.");
-            this._updateArea();
-        }
+        this._areaObj = this._config?.area ? this._hass?.areas[this._config.area] : undefined;
+        this._updateArea();
     }
     _updateArea() {
         if (this._areaObj) {
@@ -1285,12 +1277,8 @@ let SmartQasaFanTile = class SmartQasaFanTile extends s {
     }
     set hass(hass) {
         this._hass = hass;
-        if (this._hass && this._config?.entity) {
-            this._stateObj = this._hass.states[this._config.entity] ?? undefined;
-            if (!this._stateObj)
-                throw new Error("The entity could not be located.");
-            this._updateState();
-        }
+        this._stateObj = this._config?.entity ? this._hass?.states[this._config.entity] : undefined;
+        this._updateState();
     }
     _updateState() {
         if (this._stateObj) {
@@ -1424,12 +1412,8 @@ let SmartQasaGarageTile = class SmartQasaGarageTile extends s {
     }
     set hass(hass) {
         this._hass = hass;
-        if (this._hass && this._config?.entity) {
-            this._stateObj = this._hass.states[this._config.entity] ?? undefined;
-            if (!this._stateObj)
-                throw new Error("The entity could not be located.");
-            this._updateState();
-        }
+        this._stateObj = this._config?.entity ? this._hass.states[this._config.entity] : undefined;
+        this._updateState();
     }
     _updateState() {
         if (this._stateObj) {
@@ -1566,12 +1550,8 @@ let LightTile = class LightTile extends s {
     }
     set hass(hass) {
         this._hass = hass;
-        if (this._hass && this._config?.entity) {
-            this._stateObj = this._hass.states[this._config.entity] ?? undefined;
-            if (!this._stateObj)
-                throw new Error("The entity could not be located.");
-            this._updateState();
-        }
+        this._stateObj = this._config?.entity ? this._hass.states[this._config.entity] : undefined;
+        this._updateState();
     }
     _updateState() {
         if (this._stateObj) {
@@ -1678,12 +1658,8 @@ let SmartQasaLockTile = class SmartQasaLockTile extends s {
     }
     set hass(hass) {
         this._hass = hass;
-        if (this._hass && this._config?.entity) {
-            this._stateObj = this._hass.states[this._config.entity] ?? undefined;
-            if (!this._stateObj)
-                throw new Error("The entity could not be located.");
-            this._updateState();
-        }
+        this._stateObj = this._config?.entity ? this._hass?.states[this._config.entity] ?? undefined : undefined;
+        this._updateState();
     }
     _updateState() {
         if (this._stateObj) {
@@ -1826,15 +1802,11 @@ let RoutineTile = class RoutineTile extends s {
     }
     set hass(hass) {
         this._hass = hass;
-        if (this._hass && this._config?.entity) {
-            this._stateObj = this._hass.states[this._config.entity] ?? undefined;
-            if (!this._stateObj)
-                throw new Error("The entity could not be located.");
-            if (this._stateObj.attributes.icon != this._prevStateIcon || this._stateObj.attributes.friendly_name != this._prevStateName) {
-                this._updateState();
-                this._prevStateIcon = this._stateObj.attributes.icon ?? "";
-                this._prevStateName = this._stateObj.attributes.friendly_name ?? "";
-            }
+        this._stateObj = this._config?.entity ? this._hass.states[this._config.entity] : undefined;
+        if (this._stateObj?.attributes.icon != this._prevStateIcon || this._stateObj.attributes.friendly_name != this._prevStateName) {
+            this._updateState();
+            this._prevStateIcon = this._stateObj?.attributes.icon ?? "";
+            this._prevStateName = this._stateObj?.attributes.friendly_name ?? "";
         }
     }
     _updateState() {
@@ -1949,12 +1921,8 @@ let SmartQasaShadeTile = class SmartQasaShadeTile extends s {
     }
     set hass(hass) {
         this._hass = hass;
-        if (this._hass && this._config?.entity) {
-            this._stateObj = this._hass.states[this._config.entity] ?? undefined;
-            if (!this._stateObj)
-                throw new Error("The entity could not be located.");
-            this._updateState();
-        }
+        this._stateObj = this._config?.entity ? this._hass.states[this._config.entity] : undefined;
+        this._updateState();
     }
     _updateState() {
         if (this._stateObj) {
@@ -2111,12 +2079,8 @@ let SmartQasaSwitchTile = class SmartQasaSwitchTile extends s {
     }
     set hass(hass) {
         this._hass = hass;
-        if (this._hass && this._config?.entity) {
-            this._stateObj = this._hass.states[this._config.entity] ?? undefined;
-            if (!this._stateObj)
-                throw new Error("The entity could not be located.");
-            this._updateState();
-        }
+        this._stateObj = this._config?.entity ? this._hass.states[this._config.entity] : undefined;
+        this._updateState();
     }
     _updateState() {
         if (this._stateObj) {

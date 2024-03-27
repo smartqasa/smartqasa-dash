@@ -40,11 +40,8 @@ export class AreaTile extends LitElement {
 
   set hass(hass: HomeAssistant) {
     this._hass = hass;
-    if (this._hass && this._config?.area) {
-      this._areaObj = this._hass.areas[this._config.area];
-      if (!this._areaObj) throw new Error("The entity could not be located.");
-      this._updateArea();
-    }
+    this._areaObj = this._config?.area ? this._hass?.areas[this._config.area] : undefined;
+    this._updateArea();
   }
 
   private _updateArea(): void {

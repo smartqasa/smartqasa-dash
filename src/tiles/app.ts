@@ -23,7 +23,7 @@ export class SmartQasaAppTile extends LitElement {
   static styles: CSSResultGroup = styleTileBase;
 
   setConfig(config: Config): void {
-    if (!config.app) throw new Error("You must specify an app");
+    if (!config.app) throw new Error("A valid app must be specified.");
 
     this._app = config.app;
     this._appObj = appTable[this._app] ?? undefined;
