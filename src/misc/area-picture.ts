@@ -9,11 +9,19 @@ interface Config extends LovelaceCardConfig {
   picture?: string;
   }
 
+  interface AreaEntry {
+    [key: string]: {
+      area_id: string;
+      icon: string;
+      name: string;
+      picture: string;
+    };
+  }
+
   @customElement("smartqasa-area-picture")
-export class SmartQasaAreaPicture extends LitElement {
-  @state() private _area: string = "";
-  @state() private _areaObj?: HassEntity;
-  @state() private _picture?: string;
+  export class AreaPicture extends LitElement {
+  @state() private _config?: Config;
+  @state() private _areaObj?: AreaEntry;
 
   private _hass: any;
 
@@ -36,28 +44,29 @@ export class SmartQasaAreaPicture extends LitElement {
   }
 
   setConfig(config: Config): void {
-    if (!config.area) throw new Error("You must specify an area");
-
-    this._area = config.area;
-    this._picture = config.picture ?? undefined;
-
+    if (!config.area) throw new Error("A valid area is required.");
+    this._config = config;
     if (this._hass) this.hass = this._hass;
   }
 
   set hass(hass: HomeAssistant) {
     this._hass = hass;
-    this._areaObj = this._hass.areas[this._area] ?? undefined;
+    if (this._hass && this._config?.area) {
+      this._areaObj = this._hass.areas[this._config.area];
+      if (!this._areaObj) throw new Error("The entity could not be located.");
+    }
   }
 
   render(): TemplateResult {
-    if (!this._areaObj && this._area != "home") {
+    if (!this._areaObj && this._config?.area != "home") {
       return html``;
     }
 
     const height = window.smartqasa.deviceType == "phone" ? "15vh" : "20vh";
-    const picture = this._picture
-      ? `/local/sq-areas/${this._picture}`
-      : this._hass?.areas[this._area]?.picture ?? "/local/sq-storage/images/default.png";
+
+    const picture = this._config?.picture
+      ? `/local/sq-areas/${this._config.picture}`
+      : this._areaObj?.picture ?? "/local/sq-storage/images/default.png";
 
     return html`
       <ha-card
