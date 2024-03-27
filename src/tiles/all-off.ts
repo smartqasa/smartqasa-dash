@@ -79,6 +79,8 @@ export class SmartQasaAllOffTile extends LitElement {
       this._icon = "hass:rotate-right";
       this._iconAnimation = "spin 1.0s linear infinite";
 
+      console.log(this._areaObj.id);
+
       this._hass.callService("light", "turn_off", {
         area_id: this._areaObj.id,
         transition: 2,
