@@ -45,4 +45,4 @@ import "./tiles/shade";
 import "./tiles/switch";
 import "./tiles/thermostat";
 
-console.info(`%cSmartQasa - ${version}`, "background-color: #0000ff; color: #ffffff; font-weight: 700;");
+console.info(`%c SmartQasa - ${version} `, "background-color: #0000ff; color: #ffffff; font-weight: 700;");
