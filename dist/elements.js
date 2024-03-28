@@ -1,3 +1,5 @@
+const CARD_VERSION = '1.1.20';
+
 /******************************************************************************
 Copyright (c) Microsoft Corporation.
 
@@ -2356,6 +2358,7 @@ window.customCards.push({
     description: "A SmartQasa tile for controlling a thermostat climate entity.",
 });
 
+console.info(`%c  SmartQasa Elements \n%c ${CARD_VERSION}    `, 'color: orange; font-weight: bold; background: black', 'color: white; font-weight: bold; background: dimgray');
 window.smartqasa = window.smartqasa || {};
 if (typeof window.screen.width === "number") {
     window.smartqasa.deviceType = window.screen.width < 600 ? "phone" : "tablet";

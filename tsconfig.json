@@ -1,12 +1,13 @@
 {
   "compilerOptions": {
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
     "isolatedModules": true,
-    "target": "esnext",
     "module": "esnext",
     "moduleResolution": "node",
+    "target": "esnext",
+    "resolveJsonModule": true,
     "strict": true,
-    "experimentalDecorators": true,
-    "esModuleInterop": true,
     "useDefineForClassFields": false
   },
   "include": ["src/**/*.ts", "custom.d.ts"],

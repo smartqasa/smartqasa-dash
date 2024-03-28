@@ -1,3 +1,5 @@
+import { version } from "../package.json";
+
 declare global {
   interface Window {
     browser_mod?: {
@@ -42,3 +44,5 @@ import "./tiles/routine";
 import "./tiles/shade";
 import "./tiles/switch";
 import "./tiles/thermostat";
+
+console.info(`%cSmartQasa - ${version}`, "color: #ef5350; font-weight: 700;");
