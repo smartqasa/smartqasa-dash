@@ -2137,8 +2137,10 @@ let SwitchTile = class SwitchTile extends s {
     }
     static { this.styles = [styleTileBase, styleTileState]; }
     setConfig(config) {
-        if (!config.entity || config.entity.split('.')[0] != "switch")
-            throw new Error("A valid switch entity is required.");
+        const validDomains = ['fan', 'input_boolean', 'light', 'switch'];
+        if (!config.entity || !validDomains.includes(config.entity.split('.')[0])) {
+            throw new Error("A valid toggleable entity is required.");
+        }
         this._config = config;
         if (this._hass)
             this.hass = this._hass;
@@ -2151,9 +2153,10 @@ let SwitchTile = class SwitchTile extends s {
     _updateState() {
         if (this._stateObj) {
             const state = this._stateObj.state;
+            const domain = this._stateObj.entity_id.split('.'[0]);
             this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:toggle-switch-variant";
             this._iconColor = state === "on"
-                ? `var(--sq-switch${this._category ? `-${this._category}` : ""}-on-rgb)`
+                ? `var(--sq-${domain}${this._category ? `-${this._category}` : ""}-on-rgb)`
                 : "var(--sq-inactive-rgb)";
             this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
             this._stateFmtd = this._hass ? this._hass.formatEntityState(this._stateObj) : "Unknown";
@@ -2366,4 +2369,4 @@ else {
     window.smartqasa.deviceType = "tablet";
 }
 window.customCards = window.customCards ?? [];
-console.info(`%c SmartQasa - ${version} `, "background-color: #0000ff; color: #ffffff; font-weight: 700;");
+console.info(`%c SmartQasa ⏏ ${version} `, "background-color: #0000ff; color: #ffffff; font-weight: 700;");
