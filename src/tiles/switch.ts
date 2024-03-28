@@ -15,7 +15,6 @@ interface Config extends LovelaceCardConfig {
 
 @customElement("smartqasa-switch-tile")
 export class SwitchTile extends LitElement {
-  @state() private _category: string = "";
   @state() private _config?: Config;
   @state() private _icon: string = "hass:toggle-switch-variant";
   @state() private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
@@ -47,7 +46,7 @@ export class SwitchTile extends LitElement {
       const state = this._stateObj.state;
       this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:toggle-switch-variant";
       this._iconColor = state === "on"
-        ? `var(--sq-switch${this._category ? `-${this._category}` : ""}-on-rgb)`
+        ? `var(--sq-switch${this._config?.category ? `-${this._config.category}` : ""}-on-rgb)`
         : "var(--sq-inactive-rgb)";
       this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
       this._stateFmtd = this._hass ? this._hass.formatEntityState(this._stateObj) : "Unknown";

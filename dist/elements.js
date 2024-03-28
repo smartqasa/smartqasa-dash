@@ -1,4 +1,4 @@
-var version = "1.1.20";
+var version = "1.1.21";
 
 /******************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -2129,7 +2129,6 @@ window.customCards.push({
 let SwitchTile = class SwitchTile extends s {
     constructor() {
         super(...arguments);
-        this._category = "";
         this._icon = "hass:toggle-switch-variant";
         this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
         this._name = "Loading...";
@@ -2155,7 +2154,7 @@ let SwitchTile = class SwitchTile extends s {
             const state = this._stateObj.state;
             this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:toggle-switch-variant";
             this._iconColor = state === "on"
-                ? `var(--sq-switch${this._category ? `-${this._category}` : ""}-on-rgb)`
+                ? `var(--sq-switch${this._config?.category ? `-${this._config.category}` : ""}-on-rgb)`
                 : "var(--sq-inactive-rgb)";
             this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
             this._stateFmtd = this._hass ? this._hass.formatEntityState(this._stateObj) : "Unknown";
@@ -2208,9 +2207,6 @@ let SwitchTile = class SwitchTile extends s {
         return 1;
     }
 };
-__decorate([
-    r()
-], SwitchTile.prototype, "_category", void 0);
 __decorate([
     r()
 ], SwitchTile.prototype, "_config", void 0);
