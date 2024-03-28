@@ -45,7 +45,7 @@ export class SwitchTile extends LitElement {
   private _updateState(): void {
     if (this._stateObj) {
       const state = this._stateObj.state;
-      const domain = this._stateObj.entity_id.split('.'[0]);
+      const domain = this._stateObj.entity_id.split('.')[0];
       this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:toggle-switch-variant";
       this._iconColor = state === "on"
         ? `var(--sq-${domain}${this._category ? `-${this._category}` : ""}-on-rgb)`
