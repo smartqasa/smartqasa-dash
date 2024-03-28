@@ -1,4 +1,4 @@
-# SmartQasa Dash - TypeScript
+# SmartQasa Dash
 
 SmartQasa Dash is a collection of cards that run on Home Assistant Dashboard UI.
 

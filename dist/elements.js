@@ -2366,4 +2366,4 @@ else {
     window.smartqasa.deviceType = "tablet";
 }
 window.customCards = window.customCards ?? [];
-console.info(`%cSmartQasa - ${version}`, "background-color: #a0a0a0; color: #0000ff; font-weight: 700;");
+console.info(`%cSmartQasa - ${version}`, "background-color: #0000ff; color: #ffffff; font-weight: 700;");
