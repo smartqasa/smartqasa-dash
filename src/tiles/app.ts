@@ -14,7 +14,6 @@ interface Config extends LovelaceCardConfig {
 @customElement("smartqasa-app-tile")
 export class AppTile extends LitElement {
   @state() private _config?: Config;
-  @state() private _app: string = "";
   @state() private _appObj?: any;
 
   static styles: CSSResultGroup = styleTileBase;
@@ -22,7 +21,7 @@ export class AppTile extends LitElement {
   setConfig(config: Config): void {
     if (!config.app) throw new Error("A valid app must be specified.");
     this._config = config;
-    this._appObj = this._config?.app ? appTable[this._config.app] : undefined;
+    this._appObj = appTable[config.app] || undefined;
   }
 
   protected render(): TemplateResult {
@@ -38,12 +37,11 @@ export class AppTile extends LitElement {
         iconStyle = "color: rgb(var(--sq-unavailable-rgb)); background-color: rgba(var(--sq-unavailable-rgb), var(--sq-icon-opacity));";
         iconTemplate = html`<ha-icon .icon="hass:help-rhombus"></ha-icon>`;
       }
-      name = this._config?.name || this._appObj?.name || this._config?.app;
     } else {
       iconStyle = "color: rgb(var(--sq-unavailable-rgb)); background-color: rgba(var(--sq-unavailable-rgb), var(--sq-icon-opacity));";
       iconTemplate = html`<ha-icon .icon="hass:alert-rhombus"></ha-icon>`;
-      name = this._config?.name || this._appObj?.name || this._config?.app;
     }
+    name = this._config?.name || this._appObj?.name || this._config?.app;
 
     return html`
       <div class="container" @click=${this._launchApp}>

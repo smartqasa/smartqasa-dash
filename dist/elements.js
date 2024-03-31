@@ -1066,16 +1066,12 @@ const appTable = {
 };
 
 let AppTile = class AppTile extends s {
-    constructor() {
-        super(...arguments);
-        this._app = "";
-    }
     static { this.styles = styleTileBase; }
     setConfig(config) {
         if (!config.app)
             throw new Error("A valid app must be specified.");
         this._config = config;
-        this._appObj = this._config?.app ? appTable[this._config.app] : undefined;
+        this._appObj = appTable[config.app] || undefined;
     }
     render() {
         let iconStyle, iconTemplate, name;
@@ -1092,13 +1088,12 @@ let AppTile = class AppTile extends s {
                 iconStyle = "color: rgb(var(--sq-unavailable-rgb)); background-color: rgba(var(--sq-unavailable-rgb), var(--sq-icon-opacity));";
                 iconTemplate = x `<ha-icon .icon="hass:help-rhombus"></ha-icon>`;
             }
-            name = this._config?.name || this._appObj?.name || this._config?.app;
         }
         else {
             iconStyle = "color: rgb(var(--sq-unavailable-rgb)); background-color: rgba(var(--sq-unavailable-rgb), var(--sq-icon-opacity));";
             iconTemplate = x `<ha-icon .icon="hass:alert-rhombus"></ha-icon>`;
-            name = this._config?.name || this._appObj?.name || this._config?.app;
         }
+        name = this._config?.name || this._appObj?.name || this._config?.app;
         return x `
       <div class="container" @click=${this._launchApp}>
         <div class="icon" style=${iconStyle}>${iconTemplate}</div>
@@ -1130,9 +1125,6 @@ let AppTile = class AppTile extends s {
 __decorate([
     r()
 ], AppTile.prototype, "_config", void 0);
-__decorate([
-    r()
-], AppTile.prototype, "_app", void 0);
 __decorate([
     r()
 ], AppTile.prototype, "_appObj", void 0);
