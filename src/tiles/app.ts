@@ -22,11 +22,11 @@ export class AppTile extends LitElement {
   setConfig(config: Config): void {
     if (!config.app) throw new Error("A valid app must be specified.");
     this._config = config;
+    this._appObj = this._config?.app ? appTable[this._config.app] : undefined;
   }
 
   protected render(): TemplateResult {
     let iconStyle: string, iconTemplate: any, name: string;
-    this._appObj = appTable[this._app] || undefined;
     if (this._appObj) {
       if (this._config?.icon) {
         iconStyle = "color: rgb(var(--sq-inactive-rgb)); background-color: rgba(var(--sq-inactive-rgb), var(--sq-icon-opacity, 0.2));";
