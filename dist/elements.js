@@ -1074,31 +1074,35 @@ let AppTile = class AppTile extends s {
     setConfig(config) {
         if (!config.app)
             throw new Error("A valid app must be specified.");
-        this._app = config.app;
-        this._appObj = appTable[this._app] || undefined;
-        if (this._appObj) {
-            this._icon = config.icon || "";
-            this._name = config.name || this._appObj?.name || "Unknown";
-        }
+        this._config = config;
     }
     render() {
-        let iconTemplate;
-        let iconStyle = "color: rgb(var(--sq-inactive-rgb)); background-color: rgba(var(--sq-inactive-rgb), var(--sq-icon-opacity, 0.2));";
-        if (this._icon) {
-            iconTemplate = x `<ha-icon .icon=${this._icon}></ha-icon>`;
-        }
-        else if (this._appObj?.app_icon) {
-            iconTemplate = x `<img src="/local/community/smartqasa-dash/assets/${this._appObj.app_icon}" alt="App Icon" style="border-radius: 50%;" />`;
-            iconStyle = "height: 3.8rem; width: 3.8rem; padding: 0;";
+        let iconStyle, iconTemplate, name;
+        this._appObj = appTable[this._app] || undefined;
+        if (this._appObj) {
+            if (this._config?.icon) {
+                iconStyle = "color: rgb(var(--sq-inactive-rgb)); background-color: rgba(var(--sq-inactive-rgb), var(--sq-icon-opacity, 0.2));";
+                iconTemplate = x `<ha-icon .icon=${this._config.icon}></ha-icon>`;
+            }
+            else if (this._appObj?.app_icon) {
+                iconStyle = "height: 3.8rem; width: 3.8rem; padding: 0;";
+                iconTemplate = x `<img src="/local/community/smartqasa-dash/assets/${this._appObj.app_icon}" alt="App Icon" style="border-radius: 50%;" />`;
+            }
+            else {
+                iconStyle = "color: rgb(var(--sq-unavailable-rgb)); background-color: rgba(var(--sq-unavailable-rgb), var(--sq-icon-opacity));";
+                iconTemplate = x `<ha-icon .icon="hass:help-rhombus"></ha-icon>`;
+            }
+            name = this._config?.name || this._appObj?.name || this._config?.app;
         }
         else {
-            iconTemplate = x `<ha-icon .icon="hass:alert-rhombus"></ha-icon>`;
             iconStyle = "color: rgb(var(--sq-unavailable-rgb)); background-color: rgba(var(--sq-unavailable-rgb), var(--sq-icon-opacity));";
+            iconTemplate = x `<ha-icon .icon="hass:alert-rhombus"></ha-icon>`;
+            name = this._config?.name || this._appObj?.name || this._config?.app;
         }
         return x `
       <div class="container" @click=${this._launchApp}>
         <div class="icon" style=${iconStyle}>${iconTemplate}</div>
-        <div class="name">${this._name}</div>
+        <div class="name">${name}</div>
       </div>
     `;
     }
@@ -1125,16 +1129,13 @@ let AppTile = class AppTile extends s {
 };
 __decorate([
     r()
+], AppTile.prototype, "_config", void 0);
+__decorate([
+    r()
 ], AppTile.prototype, "_app", void 0);
 __decorate([
     r()
 ], AppTile.prototype, "_appObj", void 0);
-__decorate([
-    r()
-], AppTile.prototype, "_icon", void 0);
-__decorate([
-    r()
-], AppTile.prototype, "_name", void 0);
 AppTile = __decorate([
     t("smartqasa-app-tile")
 ], AppTile);

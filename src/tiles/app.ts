@@ -13,44 +13,42 @@ interface Config extends LovelaceCardConfig {
 
 @customElement("smartqasa-app-tile")
 export class AppTile extends LitElement {
+  @state() private _config?: Config;
   @state() private _app: string = "";
   @state() private _appObj?: any;
-  @state() private _icon?: string;
-  @state() private _name?: string;
-
-  private _hass: any;
 
   static styles: CSSResultGroup = styleTileBase;
 
   setConfig(config: Config): void {
     if (!config.app) throw new Error("A valid app must be specified.");
-
-    this._app = config.app;
-    this._appObj = appTable[this._app] || undefined;
-    if (this._appObj) {
-      this._icon = config.icon || "";
-      this._name = config.name || this._appObj?.name || "Unknown";
-    }
+    this._config = config;
   }
 
   protected render(): TemplateResult {
-    let iconTemplate: any;
-    let iconStyle = "color: rgb(var(--sq-inactive-rgb)); background-color: rgba(var(--sq-inactive-rgb), var(--sq-icon-opacity, 0.2));";
-
-    if (this._icon) {
-      iconTemplate = html`<ha-icon .icon=${this._icon}></ha-icon>`;
-    } else if (this._appObj?.app_icon) {
-      iconTemplate = html`<img src="/local/community/smartqasa-dash/assets/${this._appObj.app_icon}" alt="App Icon" style="border-radius: 50%;" />`;
-      iconStyle = "height: 3.8rem; width: 3.8rem; padding: 0;";
+    let iconStyle: string, iconTemplate: any, name: string;
+    this._appObj = appTable[this._app] || undefined;
+    if (this._appObj) {
+      if (this._config?.icon) {
+        iconStyle = "color: rgb(var(--sq-inactive-rgb)); background-color: rgba(var(--sq-inactive-rgb), var(--sq-icon-opacity, 0.2));";
+        iconTemplate = html`<ha-icon .icon=${this._config.icon}></ha-icon>`;
+      } else if (this._appObj?.app_icon) {
+        iconStyle = "height: 3.8rem; width: 3.8rem; padding: 0;";
+        iconTemplate = html`<img src="/local/community/smartqasa-dash/assets/${this._appObj.app_icon}" alt="App Icon" style="border-radius: 50%;" />`;
+      } else {
+        iconStyle = "color: rgb(var(--sq-unavailable-rgb)); background-color: rgba(var(--sq-unavailable-rgb), var(--sq-icon-opacity));";
+        iconTemplate = html`<ha-icon .icon="hass:help-rhombus"></ha-icon>`;
+      }
+      name = this._config?.name || this._appObj?.name || this._config?.app;
     } else {
-      iconTemplate = html`<ha-icon .icon="hass:alert-rhombus"></ha-icon>`;
       iconStyle = "color: rgb(var(--sq-unavailable-rgb)); background-color: rgba(var(--sq-unavailable-rgb), var(--sq-icon-opacity));";
+      iconTemplate = html`<ha-icon .icon="hass:alert-rhombus"></ha-icon>`;
+      name = this._config?.name || this._appObj?.name || this._config?.app;
     }
 
     return html`
       <div class="container" @click=${this._launchApp}>
         <div class="icon" style=${iconStyle}>${iconTemplate}</div>
-        <div class="name">${this._name}</div>
+        <div class="name">${name}</div>
       </div>
     `;
   }
