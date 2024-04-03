@@ -612,8 +612,8 @@ let AllOffTile = class AllOffTile extends s {
             this._areaObj = this._hass.areas[this._config.area] || undefined;
             if (this._areaObj?.icon != this._prevAreaIcon || this._areaObj?.name != this._prevAreaName) {
                 this._updateArea();
-                this._prevAreaIcon = this._areaObj.icon || "";
-                this._prevAreaName = this._areaObj.name || "";
+                this._prevAreaIcon = this._areaObj?.icon || "";
+                this._prevAreaName = this._areaObj?.name || "";
             }
         }
     }
