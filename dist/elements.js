@@ -1871,7 +1871,7 @@ let RoutineTile = class RoutineTile extends s {
     }
     _updateState() {
         if (this._stateObj) {
-            this._icon = this._config?.icon ?? (this._stateObj?.attributes.icon || "hass:help-circle");
+            this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:help-circle";
             this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
             this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
         }
