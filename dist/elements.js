@@ -806,6 +806,7 @@ const appTable = {
         name: "Amazon Music",
         app_icon: amazonMusicIcon,
         launcher: "uri_scheme",
+        package: "com.amazon.mp3",
         uri_scheme: "amznmp3://",
     },
     amazon_shopping: {

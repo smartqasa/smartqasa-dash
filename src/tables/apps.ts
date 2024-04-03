@@ -46,9 +46,9 @@ import yummlyIcon from "../assets/app_icons/yummly.webp";
 interface AppTable {
   [key: string]: {
     name: string;
-    app_icon?: string;
+    app_icon: string;
     launcher: "package" | "uri_scheme";
-    package?: string;
+    package: string;
     uri_scheme?: string;
   };
 }
@@ -70,6 +70,7 @@ const appTable: AppTable = {
     name: "Amazon Music",
     app_icon: amazonMusicIcon,
     launcher: "uri_scheme",
+    package: "com.amazon.mp3",
     uri_scheme: "amznmp3://",
   },
   amazon_shopping: {

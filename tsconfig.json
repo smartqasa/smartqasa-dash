@@ -5,6 +5,7 @@
     "isolatedModules": true,
     "module": "esnext",
     "moduleResolution": "node",
+    "noEmitOnError": true,
     "target": "esnext",
     "resolveJsonModule": true,
     "strict": true,
