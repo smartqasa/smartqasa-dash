@@ -1,4 +1,4 @@
-var version = "1.1.24";
+var version = "1.1.26";
 
 /******************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -336,11 +336,11 @@ let SmartQasaThermostatChip = class SmartQasaThermostatChip extends s {
         if (this._stateObj) {
             const hvacAction = this._stateObj.attributes.hvac_action;
             this._iconColor = actionColor[hvacAction] || actionColor.default;
-            this._temperature = this._stateObj.attributes.current_temperature || "||";
+            this._temperature = this._stateObj.attributes.current_temperature || "??";
         }
         else {
             this._iconColor = actionColor.default;
-            this._temperature = "||";
+            this._temperature = "??";
         }
     }
     render() {
