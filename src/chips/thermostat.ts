@@ -46,10 +46,10 @@ export class SmartQasaThermostatChip extends LitElement {
     if (this._stateObj) {
       const hvacAction = this._stateObj.attributes.hvac_action;
       this._iconColor = actionColor[hvacAction] || actionColor.default;
-      this._temperature = this._stateObj.attributes.current_temperature || "||";
+      this._temperature = this._stateObj.attributes.current_temperature || "??";
     } else {
       this._iconColor = actionColor.default;
-      this._temperature = "||";
+      this._temperature = "??";
     }
   }
 
