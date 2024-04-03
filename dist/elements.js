@@ -1,4 +1,4 @@
-var version = "1.1.22";
+var version = "1.1.24";
 
 /******************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -311,7 +311,7 @@ let SmartQasaThermostatChip = class SmartQasaThermostatChip extends s {
         super(...arguments);
         this._icon = "hass:thermometer-lines";
         this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
-        this._temperature = "||";
+        this._temperature = "??";
     }
     static { this.styles = styleChipBasic; }
     setConfig(config) {

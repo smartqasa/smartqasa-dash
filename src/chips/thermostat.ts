@@ -1,6 +1,5 @@
 import { CSSResult, html, LitElement, TemplateResult } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
-
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 
@@ -16,7 +15,7 @@ export class SmartQasaThermostatChip extends LitElement {
   @state() private _icon: string = "hass:thermometer-lines";
   @state() private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
   @state() private _stateObj?: HassEntity;
-  @state() private _temperature: string = "||";
+  @state() private _temperature: string = "??";
 
   private _hass: any;
 

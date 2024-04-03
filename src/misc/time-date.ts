@@ -1,6 +1,5 @@
 import { CSSResultGroup, LitElement, html, css, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
-
 import { HomeAssistant } from "custom-card-helpers";
 
 interface Config {

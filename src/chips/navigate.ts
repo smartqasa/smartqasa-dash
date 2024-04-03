@@ -1,6 +1,5 @@
 import { CSSResult, html, LitElement, TemplateResult } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
-
 import { HomeAssistant, LovelaceCardConfig } from 'custom-card-helpers';
 
 import styleChipDouble from '../styles/chip-double';
