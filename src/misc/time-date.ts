@@ -58,8 +58,10 @@ export class SmartQasaTimeDate extends LitElement {
 
   set hass(hass: HomeAssistant) {
     this._hass = hass;
-    this._time = this._hass?.states["sensor.current_time"].state ?? "unavailable";
-    this._date = this._hass?.states["sensor.current_date"].state ?? "unavailable";
+    if (this._hass) {
+      this._time = this._hass.states["sensor.current_time"].state || "unavailable";
+      this._date = this._hass.states["sensor.current_date"].state || "unavailable";
+    }
   }
 
   render(): TemplateResult {

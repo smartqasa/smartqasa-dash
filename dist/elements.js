@@ -497,8 +497,10 @@ let SmartQasaTimeDate = class SmartQasaTimeDate extends s {
     }
     set hass(hass) {
         this._hass = hass;
-        this._time = this._hass?.states["sensor.current_time"].state ?? "unavailable";
-        this._date = this._hass?.states["sensor.current_date"].state ?? "unavailable";
+        if (this._hass) {
+            this._time = this._hass.states["sensor.current_time"].state || "unavailable";
+            this._date = this._hass.states["sensor.current_date"].state || "unavailable";
+        }
     }
     render() {
         return x `
