@@ -7,6 +7,11 @@ import styleTileBase from "../styles/tile-base";
 interface Config extends LovelaceCardConfig {
   icon: string;
   name: string;
+  title?: string;
+  size?: string;
+  dismissable?: boolean;
+  timeout?: number;
+  content?: any;
 }
 
 @customElement("smartqasa-dialog-tile")
@@ -47,13 +52,14 @@ export class DialogTile extends LitElement {
   private _showDialog(e: Event): void {
     e.stopPropagation();
     const popupData = {
-      title: "Your Popup Title",
-      size: "fullscreen",
-      dismissable: false,
-      timeout: 30000, // Specify the timeout here (in milliseconds)
-      content: {
-        type: "custom:decluttering-card",
-        template: "clean-screen-dialog",
+      title: this._config?.title || this._name,
+      size: this._config?.size || "normal",
+      dismissable: this._config?.dismissable || true,
+      timeout: this._config?.timeout || 60000,
+      content: this._config?.content || {
+        type: "markdown",
+        title: "No content",
+        content: "No content provided.",
       },
     };
     window.browser_mod?.service("popup", popupData);

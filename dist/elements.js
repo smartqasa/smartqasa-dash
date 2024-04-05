@@ -1263,13 +1263,14 @@ let DialogTile = class DialogTile extends s {
     _showDialog(e) {
         e.stopPropagation();
         const popupData = {
-            title: "Your Popup Title",
-            size: "fullscreen",
-            dismissable: false,
-            timeout: 30000, // Specify the timeout here (in milliseconds)
-            content: {
-                type: "custom:decluttering-card",
-                template: "clean-screen-dialog",
+            title: this._config?.title || this._name,
+            size: this._config?.size || "normal",
+            dismissable: this._config?.dismissable || true,
+            timeout: this._config?.timeout || 60000,
+            content: this._config?.content || {
+                type: "markdown",
+                title: "No content",
+                content: "No content provided.",
             },
         };
         window.browser_mod?.service("popup", popupData);
