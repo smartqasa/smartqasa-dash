@@ -61,4 +61,3 @@ export class LightTileEditor extends LitElement {
         this.dispatchEvent(messageEvent);
     }
   }
-

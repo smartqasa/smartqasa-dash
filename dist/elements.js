@@ -1229,6 +1229,73 @@ window.customCards.push({
     description: "A SmartQasa card for navigating to an area panel.",
 });
 
+let DialogTile = class DialogTile extends s {
+    constructor() {
+        super(...arguments);
+        this._icon = "hass:help-rhombus";
+        this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+        this._name = "Loading...";
+    }
+    static { this.styles = styleTileBase; }
+    setConfig(config) {
+        this._config = config;
+    }
+    render() {
+        return x `
+      <div class="container" @click=${this._showDialog}>
+        <div
+          class="icon"
+          style="
+            color: rgb(${this._iconColor});
+            background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
+          "
+        >
+          <ha-icon .icon=${this._icon}></ha-icon>
+        </div>
+        <div class="name">${this._name}</div>
+      </div>
+    `;
+    }
+    _showDialog(e) {
+        e.stopPropagation();
+        const popupData = {
+            title: "Your Popup Title",
+            size: "fullscreen",
+            dismissable: false,
+            timeout: 30000, // Specify the timeout here (in milliseconds)
+            content: {
+                type: "custom:decluttering-card",
+                template: "clean-screen-dialog",
+            },
+        };
+        window.browser_mod?.service("popup", popupData);
+    }
+    getCardSize() {
+        return 1;
+    }
+};
+__decorate([
+    r()
+], DialogTile.prototype, "_config", void 0);
+__decorate([
+    r()
+], DialogTile.prototype, "_icon", void 0);
+__decorate([
+    r()
+], DialogTile.prototype, "_iconColor", void 0);
+__decorate([
+    r()
+], DialogTile.prototype, "_name", void 0);
+DialogTile = __decorate([
+    t("smartqasa-dialog-tile")
+], DialogTile);
+window.customCards.push({
+    type: "smartqasa-dialog-tile",
+    name: "SmartQasa Dialog Tile",
+    preview: true,
+    description: "A SmartQasa card for displaying a browser_mod popup dialog.",
+});
+
 var styleTileState = i$2 `
     .container {
         grid-template-areas: 'i n' 'i s';
