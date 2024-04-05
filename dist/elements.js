@@ -2080,8 +2080,8 @@ let RobotTile = class RobotTile extends s {
     }
     static { this.styles = [styleTileBase, styleTileState, styleTileIconBlink]; }
     setConfig(config) {
-        if (!config.entity || config.entity.split('.')[0] != "cover")
-            throw new Error("A valid cover entity is required.");
+        if (!config.entity || config.entity.split('.')[0] != "vacuum")
+            throw new Error("A valid robot vacuum entity is required.");
         this._config = config;
         if (this._hass)
             this.hass = this._hass;
@@ -2128,9 +2128,9 @@ let RobotTile = class RobotTile extends s {
             }
             this._stateFmtd =
                 this._hass.formatEntityState(this._stateObj) +
-                    (state === "open" && this._stateObj.attributes.current_position
+                    (this._stateObj.attributes.battery_level
                         ? " - " +
-                            this._hass.formatEntityAttributeValue(this._stateObj, "current_position")
+                            this._hass.formatEntityAttributeValue(this._stateObj, "battery_level")
                         : "");
             this._name = this._config?.icon || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
         }
