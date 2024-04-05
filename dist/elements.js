@@ -1321,6 +1321,42 @@ const dialogTable = {
             }
         }
     },
+    robots: {
+        icon: "hass:robot-vacuum",
+        name: "Robots",
+        data: {
+            title: "Robots",
+            size: "normal",
+            timeout: 60000,
+            content: {
+                type: "custom:auto-entities",
+                card: {
+                    type: "custom:layout-card",
+                    layout_type: "custom:grid-layout",
+                    layout: {
+                        "margin": 0,
+                        "grid-template-columns": "1fr",
+                        "grid-gap": "var(--sq-dialog-grid-gap)"
+                    }
+                },
+                card_param: "cards",
+                filter: {
+                    include: [
+                        {
+                            domain: "vacuum",
+                            sort: {
+                                method: "friendly_name",
+                                ignore_case: true
+                            },
+                            options: {
+                                type: "custom:smartqasa-robot-tile"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    },
     thermostats: {
         icon: "hass:thermometer-lines",
         name: "Thermostats",
@@ -2031,6 +2067,151 @@ window.customCards.push({
     name: "SmartQasa Lock Tile",
     preview: true,
     description: "A SmartQasa tile for controlling a lock entity.",
+});
+
+let RobotTile = class RobotTile extends s {
+    constructor() {
+        super(...arguments);
+        this._icon = "hass:robot-vacuum-variant";
+        this._iconAnimation = "none";
+        this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+        this._name = "Loading...";
+        this._stateFmtd = "Loading...";
+    }
+    static { this.styles = [styleTileBase, styleTileState, styleTileIconBlink]; }
+    setConfig(config) {
+        if (!config.entity || config.entity.split('.')[0] != "cover")
+            throw new Error("A valid cover entity is required.");
+        this._config = config;
+        if (this._hass)
+            this.hass = this._hass;
+    }
+    set hass(hass) {
+        this._hass = hass;
+        this._stateObj = this._config?.entity ? this._hass.states[this._config.entity] : undefined;
+        this._updateState();
+    }
+    _updateState() {
+        if (this._stateObj) {
+            const state = this._stateObj.state || "unknown";
+            switch (state) {
+                case "cleaning":
+                    this._icon = "hass:robot-vacuum-variant";
+                    this._iconAnimation = "none";
+                    this._iconColor = "var(--sq-vacuum-cleaning-rgb, 0, 150, 136)";
+                    break;
+                case "docked":
+                    this._icon = "hass:robot-vacuum-variant";
+                    this._iconAnimation = "blink 2.0s linear infinite";
+                    this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+                    break;
+                case "idle":
+                    this._icon = "hass:robot-vacuum-variant";
+                    this._iconAnimation = "blink 2.0s linear infinite";
+                    this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+                    break;
+                case "paused":
+                    this._icon = "hass:robot-vacuum-variant";
+                    this._iconAnimation = "none";
+                    this._iconColor = "var(--sq-vacuum-paused-rgb, 0, 150, 136)";
+                    break;
+                case "returning":
+                    this._icon = "hass:robot-vacuum-variant";
+                    this._iconAnimation = "blink 2.0s linear infinite";
+                    this._iconColor = "var(--sq-vacuum-returning-rgb, 0, 150, 136)";
+                    break;
+                default:
+                    this._icon = "hass:robot-vacuum-variant-alert";
+                    this._iconAnimation = "none";
+                    this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+                    break;
+            }
+            this._stateFmtd =
+                this._hass.formatEntityState(this._stateObj) +
+                    (state === "open" && this._stateObj.attributes.current_position
+                        ? " - " +
+                            this._hass.formatEntityAttributeValue(this._stateObj, "current_position")
+                        : "");
+            this._name = this._config?.icon || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
+        }
+        else {
+            this._icon = "hass:robot-vacuum-variant-alert";
+            this._iconAnimation = "none";
+            this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+            this._name = this._name || "Unknown";
+            this._stateFmtd = "Unavailable";
+        }
+    }
+    render() {
+        return x `
+      <div class="container" @click=${this._showMoreInfo}>
+        <div
+          class="icon"
+          @click=${this._toggleVacuum}
+          style="
+            color: rgb(${this._iconColor});
+            background-color: rgba(${this._iconColor}, var(--sq-icon-opacity, 0.2));
+            animation: ${this._iconAnimation};
+          "
+        >
+          <ha-icon .icon=${this._icon}></ha-icon>
+        </div>
+        <div class="name">${this._name}</div>
+        <div class="state">${this._stateFmtd}</div>
+      </div>
+    `;
+    }
+    _toggleVacuum(e) {
+        e.stopPropagation();
+        if (this._stateObj) {
+            const state = this._stateObj.state;
+            this._hass.callService("vacuum", state == "docked" || "idle" || "paused" ? "start" : "pause", { entity_id: this._stateObj.entity_id });
+        }
+    }
+    _showMoreInfo(e) {
+        e.stopPropagation();
+        if (this._stateObj) {
+            const event = new CustomEvent("hass-more-info", {
+                bubbles: true,
+                composed: true,
+                detail: { entityId: this._stateObj.entity_id },
+            });
+            this.dispatchEvent(event);
+        }
+    }
+    getCardSize() {
+        return 1;
+    }
+};
+__decorate([
+    r()
+], RobotTile.prototype, "_config", void 0);
+__decorate([
+    r()
+], RobotTile.prototype, "_icon", void 0);
+__decorate([
+    r()
+], RobotTile.prototype, "_iconAnimation", void 0);
+__decorate([
+    r()
+], RobotTile.prototype, "_iconColor", void 0);
+__decorate([
+    r()
+], RobotTile.prototype, "_name", void 0);
+__decorate([
+    r()
+], RobotTile.prototype, "_stateFmtd", void 0);
+__decorate([
+    r()
+], RobotTile.prototype, "_stateObj", void 0);
+RobotTile = __decorate([
+    t("smartqasa-robot-tile")
+], RobotTile);
+window.customCards.push({
+    type: "smartqasa-robot-tile",
+    name: "SmartQasa Robot Tile",
+    preview: true,
+    description: "A SmartQasa tile for controlling a robot vacuum entity.",
 });
 
 let RoutineTile = class RoutineTile extends s {
