@@ -49,18 +49,18 @@ export class RobotTile extends LitElement {
           break;
         case "docked":
           this._icon = "hass:robot-vacuum-variant";
-          this._iconAnimation = "blink 2.0s linear infinite";
+          this._iconAnimation = "none";
           this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
           break;
         case "idle":
           this._icon = "hass:robot-vacuum-variant";
           this._iconAnimation = "blink 2.0s linear infinite";
-          this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+          this._iconColor = "var(--sq-vacuum-idle-rgb, 190, 75, 85)";
           break;
         case "paused":
           this._icon = "hass:robot-vacuum-variant";
-          this._iconAnimation = "none";
-          this._iconColor = "var(--sq-vacuum-paused-rgb, 0, 150, 136)";
+          this._iconAnimation = "blink 2.0s linear infinite";
+          this._iconColor = "var(--sq-vacuum-paused-rgb, 190, 75, 85)";
           break;
         case "returning":
           this._icon = "hass:robot-vacuum-variant";
