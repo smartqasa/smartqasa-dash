@@ -1229,51 +1229,58 @@ window.customCards.push({
     description: "A SmartQasa card for navigating to an area panel.",
 });
 
+const dialogTable = {
+    clean_screen: {
+        icon: "hass:spray-bottle",
+        name: "Clean Screen",
+        data: {
+            title: "Clean Screen",
+            size: "fullscreen",
+            timeout: 30000,
+            dismissable: true,
+            content: {
+                type: "picture",
+                image: "/local/sq-storage/images/clean_screen.png",
+                card_mod: {
+                    style: {
+                        radius: "0px"
+                    }
+                }
+            }
+        }
+    },
+};
+
 let DialogTile = class DialogTile extends s {
-    constructor() {
-        super(...arguments);
-        this._icon = "hass:help-rhombus";
-        this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
-        this._name = "Loading...";
-    }
     static { this.styles = styleTileBase; }
     setConfig(config) {
-        if (!config)
-            throw new Error("You must specify an icon and name.");
+        if (!config.dialog)
+            throw new Error("A valid dialog must be specified.");
         this._config = config;
-        this._icon = this._config.icon;
-        this._name = this._config.name;
+        this._dialogObj = dialogTable[config.dialog] || undefined;
     }
     render() {
+        const icon = this._config?.icon || this._dialogObj?.icon || "hass:help-rhombus";
+        const iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+        const name = this._config?.name || this._dialogObj?.name || this._config?.dialog;
         return x `
       <div class="container" @click=${this._showDialog}>
         <div
           class="icon"
           style="
-            color: rgb(${this._iconColor});
-            background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
+            color: rgb(${iconColor});
+            background-color: rgba(${iconColor}, var(--sq-icon-opacity, 0.2));
           "
         >
-          <ha-icon .icon=${this._icon}></ha-icon>
+          <ha-icon .icon=${icon}></ha-icon>
         </div>
-        <div class="name">${this._name}</div>
+        <div class="name">${name}</div>
       </div>
     `;
     }
     _showDialog(e) {
         e.stopPropagation();
-        const popupData = {
-            title: this._config?.title || this._name,
-            size: this._config?.size || "normal",
-            dismissable: this._config?.dismissable || true,
-            timeout: this._config?.timeout || 60000,
-            content: this._config?.content || {
-                type: "markdown",
-                title: "No content",
-                content: "No content provided.",
-            },
-        };
-        window.browser_mod?.service("popup", popupData);
+        window.browser_mod?.service("popup", this._dialogObj.data);
     }
     getCardSize() {
         return 1;
@@ -1284,13 +1291,7 @@ __decorate([
 ], DialogTile.prototype, "_config", void 0);
 __decorate([
     r()
-], DialogTile.prototype, "_icon", void 0);
-__decorate([
-    r()
-], DialogTile.prototype, "_iconColor", void 0);
-__decorate([
-    r()
-], DialogTile.prototype, "_name", void 0);
+], DialogTile.prototype, "_dialogObj", void 0);
 DialogTile = __decorate([
     t("smartqasa-dialog-tile")
 ], DialogTile);
