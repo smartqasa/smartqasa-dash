@@ -1265,22 +1265,22 @@ const dialogTable = {
                         margin: 0,
                         gridTemplateColumns: "1fr",
                         gridGap: "var(--sq-dialog-grid-gap)"
-                    },
-                    card_param: "cards",
-                    filter: {
-                        include: [
-                            {
-                                group: "cover.all_garage_doors",
-                                sort: {
-                                    method: "friendly_name",
-                                    ignore_case: true
-                                },
-                                options: {
-                                    type: "custom:smartqasa-garage-tile"
-                                }
-                            }
-                        ]
                     }
+                },
+                card_param: "cards",
+                filter: {
+                    include: [
+                        {
+                            group: "cover.all_garage_doors",
+                            sort: {
+                                method: "friendly_name",
+                                ignore_case: true
+                            },
+                            options: {
+                                type: "custom:smartqasa-garage-tile"
+                            }
+                        }
+                    ]
                 }
             }
         }
