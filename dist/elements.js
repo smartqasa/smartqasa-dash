@@ -1238,7 +1238,11 @@ let DialogTile = class DialogTile extends s {
     }
     static { this.styles = styleTileBase; }
     setConfig(config) {
+        if (!config)
+            throw new Error("You must specify an icon and name.");
         this._config = config;
+        this._icon = this._config.icon;
+        this._name = this._config.name;
     }
     render() {
         return x `

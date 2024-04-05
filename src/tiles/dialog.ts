@@ -1,12 +1,12 @@
 import { CSSResult, LitElement, html, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
-import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
+import { LovelaceCardConfig } from "custom-card-helpers";
 
 import styleTileBase from "../styles/tile-base";
 
 interface Config extends LovelaceCardConfig {
-    icon: string;
-    name: string;
+  icon: string;
+  name: string;
 }
 
 @customElement("smartqasa-dialog-tile")
@@ -21,7 +21,10 @@ export class DialogTile extends LitElement {
   static styles: CSSResult = styleTileBase;
 
   setConfig(config: Config): void {
+    if (!config) throw new Error("You must specify an icon and name.");
     this._config = config;
+    this._icon = this._config.icon;
+    this._name = this._config.name;
   }
 
   protected render(): TemplateResult {
