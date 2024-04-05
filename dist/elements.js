@@ -1262,9 +1262,9 @@ const dialogTable = {
                     type: "custom:layout-card",
                     layout_type: "custom:grid-layout",
                     layout: {
-                        margin: 0,
-                        gridTemplateColumns: "1fr",
-                        gridGap: "var(--sq-dialog-grid-gap)"
+                        "margin": 0,
+                        "grid-template-columns": "1fr",
+                        "grid-gap": "var(--sq-dialog-grid-gap)"
                     }
                 },
                 card_param: "cards",
