@@ -26,9 +26,16 @@ export class DialogTile extends LitElement {
   }
 
   protected render(): TemplateResult {
-    const icon = this._config?.icon || this._dialogObj?.icon || "hass:help-rhombus";
-    const iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
-    const name = this._config?.name || this._dialogObj?.name || this._config?.dialog;
+    let icon: string, iconColor: string, name: string;
+    if (this._dialogObj) {
+      icon = this._config?.icon || this._dialogObj.icon;
+      iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+      name = this._config?.name || this._dialogObj.name;
+    } else {
+      icon = this._config?.icon || "hass:help-rhombus";
+      iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+      name = this._config?.dialog || "";
+    }
 
     return html`
       <div class="container" @click=${this._showDialog}>
@@ -48,6 +55,7 @@ export class DialogTile extends LitElement {
 
   private _showDialog(e: Event): void {
     e.stopPropagation();
+    if (!this._dialogObj) return;
     window.browser_mod?.service("popup", this._dialogObj.data);
   }
 

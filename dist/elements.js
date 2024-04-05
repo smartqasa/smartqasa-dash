@@ -1237,13 +1237,49 @@ const dialogTable = {
             title: "Clean Screen",
             size: "fullscreen",
             timeout: 30000,
-            dismissable: true,
+            dismissable: false,
             content: {
                 type: "picture",
                 image: "/local/sq-storage/images/clean_screen.png",
                 card_mod: {
                     style: {
                         radius: "0px"
+                    }
+                }
+            }
+        }
+    },
+    garages: {
+        icon: "hass:garage-variant",
+        name: "Garage Doors",
+        data: {
+            title: "Garage Doors",
+            size: "normal",
+            timeout: 60000,
+            content: {
+                type: "custom:auto-entities",
+                card: {
+                    type: "custom:layout-card",
+                    layout_type: "custom:grid-layout",
+                    layout: {
+                        margin: 0,
+                        gridTemplateColumns: "1fr",
+                        gridGap: "var(--sq-dialog-grid-gap)"
+                    },
+                    card_param: "cards",
+                    filter: {
+                        include: [
+                            {
+                                group: "cover.all_garage_doors",
+                                sort: {
+                                    method: "friendly_name",
+                                    ignore_case: true
+                                },
+                                options: {
+                                    type: "custom:smartqasa-garage-tile"
+                                }
+                            }
+                        ]
                     }
                 }
             }
@@ -1260,9 +1296,17 @@ let DialogTile = class DialogTile extends s {
         this._dialogObj = dialogTable[config.dialog] || undefined;
     }
     render() {
-        const icon = this._config?.icon || this._dialogObj?.icon || "hass:help-rhombus";
-        const iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
-        const name = this._config?.name || this._dialogObj?.name || this._config?.dialog;
+        let icon, iconColor, name;
+        if (this._dialogObj) {
+            icon = this._config?.icon || this._dialogObj.icon;
+            iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+            name = this._config?.name || this._dialogObj.name;
+        }
+        else {
+            icon = this._config?.icon || "hass:help-rhombus";
+            iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+            name = this._config?.dialog || "";
+        }
         return x `
       <div class="container" @click=${this._showDialog}>
         <div
@@ -1280,6 +1324,8 @@ let DialogTile = class DialogTile extends s {
     }
     _showDialog(e) {
         e.stopPropagation();
+        if (!this._dialogObj)
+            return;
         window.browser_mod?.service("popup", this._dialogObj.data);
     }
     getCardSize() {
