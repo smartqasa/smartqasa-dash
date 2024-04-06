@@ -118,7 +118,7 @@ export class RobotTile extends LitElement {
       const state = this._stateObj.state
       this._hass.callService(
         "vacuum",
-        state == "docked" || "idle" || "paused" ? "start" : "pause",
+        ["docked", "idle", "paused"].includes(state) ? "start" : "pause",
         { entity_id: this._stateObj.entity_id }
       );
     }

@@ -26,6 +26,37 @@ const dialogTable: DialogTable = {
       }
     }
   },
+  energy_monitor: {
+    icon: "hass:transmission-tower",
+    name: "Energy Monitor",
+    data: {
+      title: "Energy Monitor",
+      size: "fullscreen",
+      timeout: 120000,
+      dismissable: true,
+      content: {
+        type: "custom:layout-card",
+        layout_type: "custom:grid-layout",
+        layout: {
+          "grid-template-columns": "90vw",
+          "grid-template-rows": "auto",
+          "grid-gap": "var(--sq-dialog-grid-gap)",
+          "place-content": "center",
+          "margin": 0
+        },
+        cards: [
+          {
+            type: "horizontal-stack",
+            cards: [
+              { type: "energy-distribution" },
+              { type: "energy-date-selection" }
+            ]
+          },
+          { type: "energy-usage-graph" }
+        ]
+      }
+    }
+  },
   garages: {
     icon: "hass:garage-variant",
     name: "Garage Doors",
@@ -99,7 +130,7 @@ const dialogTable: DialogTable = {
     }
   },
   robots: {
-    icon: "hass:robot-vacuum",
+    icon: "hass:robot-vacuum-variant",
     name: "Robots",
     data: {
       title: "Robots",

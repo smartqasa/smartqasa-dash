@@ -1249,6 +1249,37 @@ const dialogTable = {
             }
         }
     },
+    energy_monitor: {
+        icon: "hass:transmission-tower",
+        name: "Energy Monitor",
+        data: {
+            title: "Energy Monitor",
+            size: "fullscreen",
+            timeout: 120000,
+            dismissable: true,
+            content: {
+                type: "custom:layout-card",
+                layout_type: "custom:grid-layout",
+                layout: {
+                    "grid-template-columns": "90vw",
+                    "grid-template-rows": "auto",
+                    "grid-gap": "var(--sq-dialog-grid-gap)",
+                    "place-content": "center",
+                    "margin": 0
+                },
+                cards: [
+                    {
+                        type: "horizontal-stack",
+                        cards: [
+                            { type: "energy-distribution" },
+                            { type: "energy-date-selection" }
+                        ]
+                    },
+                    { type: "energy-usage-graph" }
+                ]
+            }
+        }
+    },
     garages: {
         icon: "hass:garage-variant",
         name: "Garage Doors",
@@ -1322,7 +1353,7 @@ const dialogTable = {
         }
     },
     robots: {
-        icon: "hass:robot-vacuum",
+        icon: "hass:robot-vacuum-variant",
         name: "Robots",
         data: {
             title: "Robots",
@@ -2165,7 +2196,7 @@ let RobotTile = class RobotTile extends s {
         e.stopPropagation();
         if (this._stateObj) {
             const state = this._stateObj.state;
-            this._hass.callService("vacuum", state == "docked" || "idle" || "paused" ? "start" : "pause", { entity_id: this._stateObj.entity_id });
+            this._hass.callService("vacuum", ["docked", "idle", "paused"].includes(state) ? "start" : "pause", { entity_id: this._stateObj.entity_id });
         }
     }
     _showMoreInfo(e) {
