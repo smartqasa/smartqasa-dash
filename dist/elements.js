@@ -1316,6 +1316,28 @@ const dialogTable = {
             }
         }
     },
+    internet_speed: {
+        icon: "hass:gauge",
+        name: "Internet Speed",
+        data: {
+            title: "Internet Speed",
+            size: "normal",
+            timeout: 60000,
+            dismissable: true,
+            content: {
+                type: "statistics-graph",
+                entities: [
+                    "sensor.speedtest_download",
+                    "sensor.speedtest_upload"
+                ],
+                chart_type: "line",
+                period: "hour",
+                stat_types: "mean",
+                hide_legend: false,
+                days_to_show: 3
+            }
+        }
+    },
     locks: {
         icon: "hass:lock",
         name: "Door Locks",
