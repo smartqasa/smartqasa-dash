@@ -1256,7 +1256,6 @@ const dialogTable = {
             title: "Energy Monitor",
             size: "fullscreen",
             timeout: 120000,
-            dismissable: true,
             content: {
                 type: "custom:layout-card",
                 layout_type: "custom:grid-layout",
@@ -1285,7 +1284,6 @@ const dialogTable = {
         name: "Garage Doors",
         data: {
             title: "Garage Doors",
-            size: "normal",
             timeout: 60000,
             content: {
                 type: "custom:auto-entities",
@@ -1321,9 +1319,8 @@ const dialogTable = {
         name: "Internet Speed",
         data: {
             title: "Internet Speed",
-            size: "normal",
+            size: "wide",
             timeout: 60000,
-            dismissable: true,
             content: {
                 type: "statistics-graph",
                 entities: [
@@ -1343,7 +1340,6 @@ const dialogTable = {
         name: "Door Locks",
         data: {
             title: "Door Locks",
-            size: "normal",
             timeout: 60000,
             content: {
                 type: "custom:auto-entities",
@@ -1379,7 +1375,6 @@ const dialogTable = {
         name: "Robots",
         data: {
             title: "Robots",
-            size: "normal",
             timeout: 60000,
             content: {
                 type: "custom:auto-entities",
@@ -1410,12 +1405,46 @@ const dialogTable = {
             }
         }
     },
+    sensors_doors: {
+        icon: "hass:door-open",
+        name: "Door Sensors",
+        data: {
+            title: "Door Sensors",
+            timeout: 60000,
+            content: {
+                type: "custom:auto-entities",
+                card: {
+                    type: "custom:layout-card",
+                    layout_type: "custom:grid-layout",
+                    layout: {
+                        "margin": 0,
+                        "grid-template-columns": "1fr",
+                        "grid-gap": "var(--sq-dialog-grid-gap)"
+                    }
+                },
+                card_param: "cards",
+                filter: {
+                    include: [
+                        {
+                            group: "lock.all_door_sensors",
+                            sort: {
+                                method: "friendly_name",
+                                ignore_case: true
+                            },
+                            options: {
+                                type: "custom:smartqasa-lock-tile"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    },
     thermostats: {
         icon: "hass:thermometer-lines",
         name: "Thermostats",
         data: {
             title: "Thermostats",
-            size: "normal",
             timeout: 60000,
             content: {
                 type: "custom:auto-entities",
