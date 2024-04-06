@@ -27,7 +27,7 @@ export class SensorTile extends LitElement {
   static styles: CSSResultGroup = [styleTileBase, styleTileState];
 
   setConfig(config: Config): void {
-    if (!config.entity || config.entity.split('.')[0] != "binary_sensor") throw new Error("A valid light entity is required.");
+    if (!config.entity || config.entity.split('.')[0] != "binary_sensor") throw new Error("A valid binary_sensor entity is required.");
     this._config = config;
     if (this._hass) this.hass = this._hass;
   }
