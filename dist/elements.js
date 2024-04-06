@@ -2498,7 +2498,7 @@ let SensorTile = class SensorTile extends s {
             background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
           "
         >
-          <ha-icon .icon=${this._icon}></ha-icon>
+          <ha-state-icon .hass=${this._hass} .stateObj=${this._stateObj}></ha-state-icon>>
         </div>
         <div class="name">${this._name}</div>
         <div class="state">${this._stateFmtd}</div>
