@@ -59,7 +59,7 @@ export class LightTile extends LitElement {
 
   protected render(): TemplateResult {
     return html`
-      <div class="container" @click=${this.showMoreInfo} @contextmenu=${this.showGroupEntities}>
+      <div class="container" @click=${this.showMoreInfo} @dblclick=${this.showGroupEntities}>
         <div
           class="icon"
           @click=${this.toggleEntity}

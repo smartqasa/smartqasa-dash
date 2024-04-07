@@ -1954,7 +1954,7 @@ let LightTile = class LightTile extends s {
     }
     render() {
         return x `
-      <div class="container" @click=${this.showMoreInfo} @contextmenu=${this.showGroupEntities}>
+      <div class="container" @click=${this.showMoreInfo} @dblclick=${this.showGroupEntities}>
         <div
           class="icon"
           @click=${this.toggleEntity}
