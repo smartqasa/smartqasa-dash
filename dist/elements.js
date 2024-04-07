@@ -2031,7 +2031,9 @@ let LightTile = class LightTile extends s {
     }
     showGroupEntities(e) {
         e.stopPropagation();
-        if (!this._stateObj || !this._stateObj.attributes?.entity_id)
+        if (!this._stateObj ||
+            !Array.isArray(this._stateObj.attributes?.entity_id) ||
+            this._stateObj.attributes.entity_id.length === 0)
             return;
         const data = {
             title: this._stateObj.attributes.friendly_name || this._stateObj.entity_id,
