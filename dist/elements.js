@@ -2011,7 +2011,7 @@ let LightTile = class LightTile extends s {
                         filter: {
                             include: [
                                 {
-                                    group: this._stateObj.entity_id,
+                                    group: this._config?.parent,
                                     sort: {
                                         method: "friendly_name",
                                         ignore_case: true,
