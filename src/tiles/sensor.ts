@@ -40,10 +40,10 @@ export class SensorTile extends LitElement {
 
   private _updateState(): void {
     if (this._stateObj) {
-      if (this._config?.icon) {
-        this._iconTemplate = html`<ha-icon .icon=${this._config.icon}></ha-icon>`;
-      } else {
+      if (!this._config?.icon) {
         this._iconTemplate = html`<ha-state-icon .hass=${this._hass} .stateObj=${this._stateObj}></ha-state-icon>`;
+      } else {
+        this._iconTemplate = html`<ha-icon .icon=${this._config.icon}></ha-icon>`;
       }
       this._iconColor = this._stateObj.state === "on" ? "var(--sq-binary_sensor-on-rgb)" : "var(--sq-inactive-rgb)";
       this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
