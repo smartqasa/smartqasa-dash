@@ -62,6 +62,7 @@ export class LightTile extends LitElement {
         <div
           class="icon"
           @click=${this._toggleEntity}
+          @contextmenu=${this._showGroupEntities}
           style="
             color: rgb(${this._iconColor});
             background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
@@ -92,6 +93,43 @@ export class LightTile extends LitElement {
       });
       this.dispatchEvent(event);
     }
+  }
+
+  private _showGroupEntities(e: Event): void {
+    e.stopPropagation();
+    if (!this._stateObj?.attributes.entity_id) return;
+    const data:any = {
+      title: "Garage Doors",
+      timeout: 60000,
+      content: {
+        type: "custom:auto-entities",
+        card: {
+          type: "custom:layout-card",
+          layout_type: "custom:grid-layout",
+          layout: {
+            "margin": 0,
+            "grid-template-columns": "1fr",
+            "grid-gap": "var(--sq-dialog-grid-gap)"
+          }
+        },
+        card_param: "cards",
+        filter: {
+          include: [
+            {
+              group: this._stateObj.entity_id,
+              sort: {
+                method: "friendly_name",
+                ignore_case: true
+              },
+              options: {
+                type: "custom:smartqasa-light-tile"
+              }
+            }
+          ]
+        }
+      }
+    }
+    window.browser_mod?.service("popup", data);
   }
 
   getCardSize() {
