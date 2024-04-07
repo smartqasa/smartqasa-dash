@@ -2455,7 +2455,6 @@ window.customCards.push({
 let SensorTile = class SensorTile extends s {
     constructor() {
         super(...arguments);
-        this._icon = "hass:leak";
         this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
         this._name = "Loading...";
         this._stateFmtd = "Loading...";
@@ -2475,14 +2474,18 @@ let SensorTile = class SensorTile extends s {
     }
     _updateState() {
         if (this._stateObj) {
-            console.log(this._stateObj);
-            this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:leak";
+            if (this._config?.icon) {
+                this._iconTemplate = x `<ha-icon .icon=${this._config.icon}></ha-icon>`;
+            }
+            else {
+                this._iconTemplate = x `<ha-state-icon .hass=${this._hass} .stateObj=${this._stateObj}></ha-state-icon>`;
+            }
             this._iconColor = this._stateObj.state === "on" ? "var(--sq-binary_sensor-on-rgb)" : "var(--sq-inactive-rgb)";
             this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
             this._stateFmtd = this._hass ? this._hass.formatEntityState(this._stateObj) : "Unknown";
         }
         else {
-            this._icon = this._config?.icon || "hass:leak";
+            this._iconTemplate = x `<ha-icon .icon="hass:leak"></ha-icon>`;
             this._iconColor = "var(--sq-unavailable-rgb)";
             this._name = this._name || "Unknown";
             this._stateFmtd = "Unknown";
@@ -2498,7 +2501,7 @@ let SensorTile = class SensorTile extends s {
             background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
           "
         >
-          <ha-state-icon .hass=${this._hass} .stateObj=${this._stateObj}></ha-state-icon>>
+          ${this._iconTemplate}
         </div>
         <div class="name">${this._name}</div>
         <div class="state">${this._stateFmtd}</div>
@@ -2525,7 +2528,7 @@ __decorate([
 ], SensorTile.prototype, "_config", void 0);
 __decorate([
     r()
-], SensorTile.prototype, "_icon", void 0);
+], SensorTile.prototype, "_iconTemplate", void 0);
 __decorate([
     r()
 ], SensorTile.prototype, "_iconColor", void 0);

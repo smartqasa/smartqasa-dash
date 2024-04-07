@@ -16,7 +16,7 @@ interface Config extends LovelaceCardConfig {
 @customElement("smartqasa-sensor-tile")
 export class SensorTile extends LitElement {
   @state() private _config?: Config;
-  @state() private _icon: string = "hass:leak";
+  @state() private _iconTemplate: any;
   @state() private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
   @state() private _name: string = "Loading...";
   @state() private _stateFmtd: string = "Loading...";
@@ -40,13 +40,16 @@ export class SensorTile extends LitElement {
 
   private _updateState(): void {
     if (this._stateObj) {
-      console.log(this._stateObj);
-      this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:leak";
+      if (this._config?.icon) {
+        this._iconTemplate = html`<ha-icon .icon=${this._config.icon}></ha-icon>`;
+      } else {
+        this._iconTemplate = html`<ha-state-icon .hass=${this._hass} .stateObj=${this._stateObj}></ha-state-icon>`;
+      }
       this._iconColor = this._stateObj.state === "on" ? "var(--sq-binary_sensor-on-rgb)" : "var(--sq-inactive-rgb)";
       this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
       this._stateFmtd = this._hass ? this._hass.formatEntityState(this._stateObj) : "Unknown";
     } else {
-      this._icon = this._config?.icon || "hass:leak";
+      this._iconTemplate = html`<ha-icon .icon="hass:leak"></ha-icon>`;
       this._iconColor = "var(--sq-unavailable-rgb)";
       this._name = this._name || "Unknown";
       this._stateFmtd = "Unknown";
@@ -63,7 +66,7 @@ export class SensorTile extends LitElement {
             background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
           "
         >
-          <ha-state-icon .hass=${this._hass} .stateObj=${this._stateObj}></ha-state-icon>>
+          ${this._iconTemplate}
         </div>
         <div class="name">${this._name}</div>
         <div class="state">${this._stateFmtd}</div>
