@@ -29,6 +29,7 @@ import "./chips/thermostat";
 
 // Misc
 import "./misc/area-picture";
+import "./misc/more-info";
 import "./misc/time-date";
 
 // Tiles

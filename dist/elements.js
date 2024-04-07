@@ -448,6 +448,51 @@ window.customCards.push({
     description: "A SmartQasa card for rendering an area picture.",
 });
 
+let MoreInfoDialog = class MoreInfoDialog extends s {
+    setConfig(config) {
+        if (!config.entity)
+            throw new Error("A valid entity is required.");
+        this._config = config;
+        if (this._hass)
+            this.hass = this._hass;
+    }
+    set hass(hass) {
+        this._hass = hass;
+        this._stateObj = this._config?.entity ? this._hass.states[this._config.entity] : undefined;
+    }
+    render() {
+        return x `
+      <ha-card>
+        <div class="card-content">
+          <more-info-content
+            .hass=${this._hass}
+            .stateObj=${this._stateObj}
+            >
+          </more-info-content>
+        </div>
+      </ha-card>
+    `;
+    }
+    getCardSize() {
+        return 5;
+    }
+};
+__decorate([
+    r()
+], MoreInfoDialog.prototype, "_config", void 0);
+__decorate([
+    r()
+], MoreInfoDialog.prototype, "_stateObj", void 0);
+MoreInfoDialog = __decorate([
+    t("smartqasa-more-info-dialog")
+], MoreInfoDialog);
+window.customCards.push({
+    type: "smartqasa-more-info-dialog",
+    name: "SmartQasa More Info Dialog",
+    preview: true,
+    description: "A SmartQasa dialog for showing More Info for an entity.",
+});
+
 let SmartQasaTimeDate = class SmartQasaTimeDate extends s {
     constructor() {
         super(...arguments);
