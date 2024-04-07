@@ -1920,7 +1920,7 @@ let LightTile = class LightTile extends s {
         this._name = "Loading...";
         this._stateFmtd = "Loading...";
         this._groupDialog = {
-            title: this._name,
+            title: `${this._name}`,
             timeout: 60000,
             content: {
                 type: "custom:auto-entities",
@@ -1937,7 +1937,7 @@ let LightTile = class LightTile extends s {
                 filter: {
                     include: [
                         {
-                            group: this._stateObj?.entity_id,
+                            group: `${this._stateObj?.entity_id}`,
                             sort: {
                                 method: "friendly_name",
                                 ignore_case: true
