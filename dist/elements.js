@@ -2132,7 +2132,7 @@ let LockTile = class LockTile extends s {
     }
     static { this.styles = [styleTileBase, styleTileState, styleTileIconBlink, styleTileIconSpin]; }
     setConfig(config) {
-        if (!config.entity || config.entity.split('.')[0] != "lock")
+        if (!config.entity || config.entity.split(".")[0] != "lock")
             throw new Error("A valid lock entity is required.");
         this._config = config;
         if (this._hass)
@@ -2141,9 +2141,9 @@ let LockTile = class LockTile extends s {
     set hass(hass) {
         this._hass = hass;
         this._stateObj = this._config?.entity ? this._hass?.states[this._config.entity] : undefined;
-        this._updateState();
+        this.updateState();
     }
-    _updateState() {
+    updateState() {
         if (this._stateObj) {
             const state = this._stateObj.state || "unknown";
             switch (state) {
@@ -2191,41 +2191,46 @@ let LockTile = class LockTile extends s {
     }
     render() {
         return x `
-      <div class="container" @click=${this._showMoreInfo}>
-        <div
-          class="icon"
-          @click=${this._toggleLock}
-          style="
-            color: rgb(${this._iconColor});
-            background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
-            animation: ${this._iconAnimation};
-          "
-        >
-          <ha-icon .icon=${this._icon}></ha-icon>
-        </div>
-        <div class="name">${this._name}</div>
-        <div class="state">${this._stateFmtd}</div>
-      </div>
-    `;
+            <div class="container" @click=${this.showMoreInfo}>
+                <div
+                    class="icon"
+                    @click=${this.toggleLock}
+                    style="
+                        color: rgb(${this._iconColor});
+                        background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
+                        animation: ${this._iconAnimation};
+                    "
+                >
+                    <ha-icon .icon=${this._icon}></ha-icon>
+                </div>
+                <div class="name">${this._name}</div>
+                <div class="state">${this._stateFmtd}</div>
+            </div>
+        `;
     }
-    _toggleLock(e) {
+    toggleLock(e) {
         e.stopPropagation();
         if (this._stateObj) {
             const state = this._stateObj.state;
             this._stateObj.state = state == "locked" ? "unlocking" : "locking";
-            this._hass.callService("lock", state == "locked" ? "unlock" : "lock", { entity_id: this._stateObj.entity_id });
+            this._hass.callService("lock", state == "locked" ? "unlock" : "lock", {
+                entity_id: this._stateObj.entity_id,
+            });
         }
     }
-    _showMoreInfo(e) {
+    showMoreInfo(e) {
         e.stopPropagation();
-        if (this._stateObj) {
-            const event = new CustomEvent("hass-more-info", {
-                bubbles: true,
-                composed: true,
-                detail: { entityId: this._stateObj.entity_id },
-            });
-            this.dispatchEvent(event);
-        }
+        if (!this._stateObj?.attributes.entity_id)
+            return;
+        const data = {
+            title: this._name,
+            timeout: 60000,
+            content: {
+                type: "custom:smartqasa-more-info-dialog",
+                entity: this._stateObj.entity_id,
+            },
+        };
+        window.browser_mod?.service("popup", data);
     }
     getCardSize() {
         return 1;
