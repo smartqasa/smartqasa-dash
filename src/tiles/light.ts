@@ -139,7 +139,7 @@ export class LightTile extends LitElement {
 
     private showGroupEntities(e: Event): void {
         e.stopPropagation();
-        if (!this._stateObj || !this._stateObj.attributes?.entities) return;
+        if (!this._stateObj || !this._stateObj.attributes?.entity_id) return;
         const data: any = {
             title: this._stateObj.attributes.friendly_name || this._stateObj.entity_id,
             timeout: 60000,
