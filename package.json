@@ -1,34 +1,34 @@
 {
-  "name": "smartqasa-elements",
-  "version": "1.1.26",
-  "description": "SmartQasa Dashboard Elements",
-  "type": "module",
-  "author": "Tom BRuno",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/smartqasa/smartqasa-dash"
-  },
-  "scripts": {
-    "clean": "rm -f dist/elements.js",
-    "build": "npm run clean && rollup -c",
-    "watch": "npm run clean && rollup -c --watch"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.24.3",
-    "@babel/preset-env": "^7.24.3",
-    "@rollup/plugin-babel": "^6.0.4",
-    "@rollup/plugin-commonjs": "^25.0.7",
-    "@rollup/plugin-json": "^6.1.0",
-    "@rollup/plugin-node-resolve": "^15.2.3",
-    "@rollup/plugin-replace": "^5.0.5",
-    "@rollup/plugin-typescript": "^11.1.6",
-    "@rollup/plugin-url": "^8.0.2",
-    "rollup": "^4.13.0"
-  },
-  "dependencies": {
-    "browser-resolve": "^2.0.0",
-    "custom-card-helpers": "^1.9.0",
-    "home-assistant-js-websocket": "^9.2.1",
-    "lit": "^3.1.2"
-  }
+    "name": "smartqasa-elements",
+    "version": "1.1.31",
+    "description": "SmartQasa Dashboard Elements",
+    "type": "module",
+    "author": "Tom BRuno",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/smartqasa/smartqasa-dash"
+    },
+    "scripts": {
+        "clean": "rm -f dist/elements.js",
+        "build": "npm run clean && rollup -c",
+        "watch": "npm run clean && rollup -c --watch"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.24.3",
+        "@babel/preset-env": "^7.24.3",
+        "@rollup/plugin-babel": "^6.0.4",
+        "@rollup/plugin-commonjs": "^25.0.7",
+        "@rollup/plugin-json": "^6.1.0",
+        "@rollup/plugin-node-resolve": "^15.2.3",
+        "@rollup/plugin-replace": "^5.0.5",
+        "@rollup/plugin-typescript": "^11.1.6",
+        "@rollup/plugin-url": "^8.0.2",
+        "rollup": "^4.13.0"
+    },
+    "dependencies": {
+        "browser-resolve": "^2.0.0",
+        "custom-card-helpers": "^1.9.0",
+        "home-assistant-js-websocket": "^9.2.1",
+        "lit": "^3.1.2"
+    }
 }
