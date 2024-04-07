@@ -10,7 +10,7 @@ interface Config extends LovelaceCardConfig {
     entity: string;
     icon?: string;
     name?: string;
-    group?: boolean;
+    parent?: string;
 }
 
 @customElement("smartqasa-light-tile")
@@ -97,9 +97,11 @@ export class LightTile extends LitElement {
                 entity: this._stateObj.entity_id,
             },
             dismiss_action: {
-                service: this._config?.group ? "browser_mod.popup" : "none",
+                service: this._config?.parent ? "browser_mod.popup" : "none",
                 data: {
-                    title: this._name,
+                    title: this._config?.parent
+                        ? this._hass.states[this._config.parent].attributes.friendly_name
+                        : undefined,
                     timeout: 60000,
                     content: {
                         type: "custom:auto-entities",
@@ -123,7 +125,7 @@ export class LightTile extends LitElement {
                                     },
                                     options: {
                                         type: "custom:smartqasa-light-tile",
-                                        group: true,
+                                        parent: this._config?.parent,
                                     },
                                 },
                             ],
@@ -137,9 +139,9 @@ export class LightTile extends LitElement {
 
     private showGroupEntities(e: Event): void {
         e.stopPropagation();
-        if (!this._stateObj) return;
+        if (!this._stateObj || !this._stateObj.attributes?.entities) return;
         const data: any = {
-            title: this._name,
+            title: this._stateObj.attributes.friendly_name || this._stateObj.entity_id,
             timeout: 60000,
             content: {
                 type: "custom:auto-entities",
@@ -163,7 +165,7 @@ export class LightTile extends LitElement {
                             },
                             options: {
                                 type: "custom:smartqasa-light-tile",
-                                group: true,
+                                parent: this._stateObj.entity_id,
                             },
                         },
                     ],

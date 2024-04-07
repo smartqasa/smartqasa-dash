@@ -1990,9 +1990,11 @@ let LightTile = class LightTile extends s {
                 entity: this._stateObj.entity_id,
             },
             dismiss_action: {
-                service: this._config?.group ? "browser_mod.popup" : "none",
+                service: this._config?.parent ? "browser_mod.popup" : "none",
                 data: {
-                    title: this._name,
+                    title: this._config?.parent
+                        ? this._hass.states[this._config.parent].attributes.friendly_name
+                        : undefined,
                     timeout: 60000,
                     content: {
                         type: "custom:auto-entities",
@@ -2016,7 +2018,7 @@ let LightTile = class LightTile extends s {
                                     },
                                     options: {
                                         type: "custom:smartqasa-light-tile",
-                                        group: true,
+                                        parent: this._config?.parent,
                                     },
                                 },
                             ],
@@ -2029,10 +2031,10 @@ let LightTile = class LightTile extends s {
     }
     showGroupEntities(e) {
         e.stopPropagation();
-        if (!this._stateObj)
+        if (!this._stateObj || !this._stateObj.attributes?.entities)
             return;
         const data = {
-            title: this._name,
+            title: this._stateObj.attributes.friendly_name || this._stateObj.entity_id,
             timeout: 60000,
             content: {
                 type: "custom:auto-entities",
@@ -2056,7 +2058,7 @@ let LightTile = class LightTile extends s {
                             },
                             options: {
                                 type: "custom:smartqasa-light-tile",
-                                group: true,
+                                parent: this._stateObj.entity_id,
                             },
                         },
                     ],
