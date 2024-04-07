@@ -1909,11 +1909,10 @@ let LightTile = class LightTile extends s {
     }
     render() {
         return x `
-      <div class="container" @click=${this._showMoreInfo}>
+      <div class="container" @click=${this._showMoreInfo} @contextmenu=${this._showGroupEntities}>
         <div
           class="icon"
           @click=${this._toggleEntity}
-          @contextmenu=${this._showGroupEntities}
           style="
             color: rgb(${this._iconColor});
             background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
