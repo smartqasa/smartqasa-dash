@@ -84,14 +84,33 @@ export class LightTile extends LitElement {
 
   private showMoreInfo(e: Event): void {
     e.stopPropagation();
-    if (this._stateObj) {
-      const event = new CustomEvent("hass-more-info", {
-        bubbles: true,
-        composed: true,
-        detail: { entityId: this._stateObj.entity_id },
-      });
-      this.dispatchEvent(event);
+    if (!this._stateObj?.attributes.entity_id) return;
+    const cardModStyles = `
+    ha-card {
+      background: transparent !important;
     }
+    ha-card > div {
+      margin-top: 0 !important;
+    }
+    h1 {
+      display: none !important;
+    }
+    .card-content state-card-content {
+      display: none !important;
+    }
+    `;
+    const data: any = {
+      title: this._name,
+      timeout: 60000,
+      content: {
+        type: "custom:more-info-card",
+        entity: this._stateObj.entity_id,
+        card_mod: {
+          style: cardModStyles
+        }
+      }
+    };
+    window.browser_mod?.service("popup", data);
   }
 
   private showGroupEntities(e: Event): void {
