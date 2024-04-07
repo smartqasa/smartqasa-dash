@@ -88,7 +88,7 @@ export class LightTile extends LitElement {
 
     private showMoreInfo(e: Event): void {
         e.stopPropagation();
-        if (!this._stateObj?.attributes.entity_id) return;
+        if (!this._stateObj) return;
         const data: any = {
             title: this._name,
             timeout: 60000,

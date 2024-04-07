@@ -1980,7 +1980,7 @@ let LightTile = class LightTile extends s {
     }
     showMoreInfo(e) {
         e.stopPropagation();
-        if (!this._stateObj?.attributes.entity_id)
+        if (!this._stateObj)
             return;
         const data = {
             title: this._name,
@@ -2220,7 +2220,7 @@ let LockTile = class LockTile extends s {
     }
     showMoreInfo(e) {
         e.stopPropagation();
-        if (!this._stateObj?.attributes.entity_id)
+        if (!this._stateObj)
             return;
         const data = {
             title: this._name,
