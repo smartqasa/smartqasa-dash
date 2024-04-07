@@ -28,7 +28,7 @@ export class MoreInfoDialog extends LitElement {
 
   protected render(): TemplateResult {
     return html`
-      <ha-card>
+      <div>
         <div class="card-content">
           <more-info-content
             .hass=${this._hass}
@@ -36,7 +36,7 @@ export class MoreInfoDialog extends LitElement {
             >
           </more-info-content>
         </div>
-      </ha-card>
+      </div>
     `;
   }
 

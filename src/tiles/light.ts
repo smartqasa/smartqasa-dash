@@ -94,7 +94,7 @@ export class LightTile extends LitElement {
         entity: this._stateObj.entity_id,
       },
       dismiss_action: {
-        service: "browser_mod.popup",
+        service: this._config?.group ? "browser_mod.popup" : "none",
         data: {
           title: this._name,
           timeout: 60000,

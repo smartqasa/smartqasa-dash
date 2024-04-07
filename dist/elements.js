@@ -462,7 +462,7 @@ let MoreInfoDialog = class MoreInfoDialog extends s {
     }
     render() {
         return x `
-      <ha-card>
+      <div>
         <div class="card-content">
           <more-info-content
             .hass=${this._hass}
@@ -470,7 +470,7 @@ let MoreInfoDialog = class MoreInfoDialog extends s {
             >
           </more-info-content>
         </div>
-      </ha-card>
+      </div>
     `;
     }
     getCardSize() {
@@ -1988,7 +1988,7 @@ let LightTile = class LightTile extends s {
                 entity: this._stateObj.entity_id,
             },
             dismiss_action: {
-                service: "browser_mod.popup",
+                service: this._config?.group ? "browser_mod.popup" : "none",
                 data: {
                     title: this._name,
                     timeout: 60000,
