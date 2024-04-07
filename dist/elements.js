@@ -1989,41 +1989,6 @@ let LightTile = class LightTile extends s {
                 type: "custom:smartqasa-more-info-dialog",
                 entity: this._stateObj.entity_id,
             },
-            dismiss_action: {
-                service: this._config?.group ? "browser_mod.popup" : "none",
-                data: {
-                    title: this._name,
-                    timeout: 60000,
-                    content: {
-                        type: "custom:auto-entities",
-                        card: {
-                            type: "custom:layout-card",
-                            layout_type: "custom:grid-layout",
-                            layout: {
-                                margin: 0,
-                                "grid-template-columns": "1fr",
-                                "grid-gap": "var(--sq-dialog-grid-gap)",
-                            },
-                        },
-                        card_param: "cards",
-                        filter: {
-                            include: [
-                                {
-                                    group: this._stateObj.entity_id,
-                                    sort: {
-                                        method: "friendly_name",
-                                        ignore_case: true,
-                                    },
-                                    options: {
-                                        type: "custom:smartqasa-light-tile",
-                                        group: true,
-                                    },
-                                },
-                            ],
-                        },
-                    },
-                },
-            },
         };
         window.browser_mod?.service("popup", data);
     }
