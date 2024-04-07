@@ -1948,7 +1948,7 @@ let LightTile = class LightTile extends s {
         if (!this._stateObj?.attributes.entity_id)
             return;
         const data = {
-            title: "Garage Doors",
+            title: this._name,
             timeout: 60000,
             content: {
                 type: "custom:auto-entities",

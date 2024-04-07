@@ -99,7 +99,7 @@ export class LightTile extends LitElement {
     e.stopPropagation();
     if (!this._stateObj?.attributes.entity_id) return;
     const data:any = {
-      title: "Garage Doors",
+      title: this._name,
       timeout: 60000,
       content: {
         type: "custom:auto-entities",
