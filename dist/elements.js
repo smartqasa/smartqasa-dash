@@ -1886,9 +1886,9 @@ let LightTile = class LightTile extends s {
     set hass(hass) {
         this._hass = hass;
         this._stateObj = this._config?.entity ? this._hass.states[this._config.entity] : undefined;
-        this._updateState();
+        this.updateState();
     }
-    _updateState() {
+    updateState() {
         if (this._stateObj) {
             const state = this._stateObj.state || "unknown";
             this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:lightbulb";
@@ -1909,10 +1909,10 @@ let LightTile = class LightTile extends s {
     }
     render() {
         return x `
-      <div class="container" @click=${this._showMoreInfo} @contextmenu=${this._showGroupEntities}>
+      <div class="container" @click=${this.showMoreInfo} @contextmenu=${this.showGroupEntities}>
         <div
           class="icon"
-          @click=${this._toggleEntity}
+          @click=${this.toggleEntity}
           style="
             color: rgb(${this._iconColor});
             background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
@@ -1925,13 +1925,13 @@ let LightTile = class LightTile extends s {
       </div>
     `;
     }
-    _toggleEntity(e) {
+    toggleEntity(e) {
         e.stopPropagation();
         if (this._stateObj) {
             this._hass.callService("light", "toggle", { entity_id: this._stateObj.entity_id });
         }
     }
-    _showMoreInfo(e) {
+    showMoreInfo(e) {
         e.stopPropagation();
         if (this._stateObj) {
             const event = new CustomEvent("hass-more-info", {
@@ -1942,7 +1942,7 @@ let LightTile = class LightTile extends s {
             this.dispatchEvent(event);
         }
     }
-    _showGroupEntities(e) {
+    showGroupEntities(e) {
         e.stopPropagation();
         if (!this._stateObj?.attributes.entity_id)
             return;
@@ -1996,18 +1996,6 @@ let LightTile = class LightTile extends s {
 __decorate([
     r()
 ], LightTile.prototype, "_config", void 0);
-__decorate([
-    r()
-], LightTile.prototype, "_icon", void 0);
-__decorate([
-    r()
-], LightTile.prototype, "_iconColor", void 0);
-__decorate([
-    r()
-], LightTile.prototype, "_name", void 0);
-__decorate([
-    r()
-], LightTile.prototype, "_stateFmtd", void 0);
 __decorate([
     r()
 ], LightTile.prototype, "_stateObj", void 0);

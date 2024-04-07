@@ -15,13 +15,13 @@ interface Config extends LovelaceCardConfig {
 @customElement("smartqasa-light-tile")
 export class LightTile extends LitElement {
   @state() private _config?: Config;
-  @state() private _icon: string = "hass:lightbulb-alert";
-  @state() private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
-  @state() private _name: string = "Loading...";
-  @state() private _stateFmtd: string = "Loading...";
   @state() private _stateObj?: HassEntity;
 
   private _hass: any;
+  private _icon: string = "hass:lightbulb-alert";
+  private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
+  private _name: string = "Loading...";
+  private _stateFmtd: string = "Loading...";
 
   static styles: CSSResultGroup = [styleTileBase, styleTileState];
 
@@ -34,10 +34,10 @@ export class LightTile extends LitElement {
   set hass(hass: HomeAssistant) {
     this._hass = hass;
     this._stateObj = this._config?.entity ? this._hass.states[this._config.entity] : undefined;
-    this._updateState();
+    this.updateState();
   }
 
-  private _updateState(): void {
+  private updateState(): void {
     if (this._stateObj) {
       const state = this._stateObj.state || "unknown";
       this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:lightbulb";
@@ -58,10 +58,10 @@ export class LightTile extends LitElement {
 
   protected render(): TemplateResult {
     return html`
-      <div class="container" @click=${this._showMoreInfo} @contextmenu=${this._showGroupEntities}>
+      <div class="container" @click=${this.showMoreInfo} @contextmenu=${this.showGroupEntities}>
         <div
           class="icon"
-          @click=${this._toggleEntity}
+          @click=${this.toggleEntity}
           style="
             color: rgb(${this._iconColor});
             background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
@@ -75,14 +75,14 @@ export class LightTile extends LitElement {
     `;
   }
 
-  private _toggleEntity(e: Event): void {
+  private toggleEntity(e: Event): void {
     e.stopPropagation();
     if (this._stateObj) {
       this._hass.callService("light", "toggle", { entity_id: this._stateObj.entity_id });
     }
   }
 
-  private _showMoreInfo(e: Event): void {
+  private showMoreInfo(e: Event): void {
     e.stopPropagation();
     if (this._stateObj) {
       const event = new CustomEvent("hass-more-info", {
@@ -94,7 +94,7 @@ export class LightTile extends LitElement {
     }
   }
 
-  private _showGroupEntities(e: Event): void {
+  private showGroupEntities(e: Event): void {
     e.stopPropagation();
     if (!this._stateObj?.attributes.entity_id) return;
     const data:any = {
