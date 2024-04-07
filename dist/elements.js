@@ -1922,7 +1922,7 @@ let LightTile = class LightTile extends s {
     }
     static { this.styles = [styleTileBase, styleTileState]; }
     setConfig(config) {
-        if (!config.entity || config.entity.split('.')[0] != "light")
+        if (!config.entity || config.entity.split(".")[0] != "light")
             throw new Error("A valid light entity is required.");
         this._config = config;
         if (this._hass)
@@ -1930,19 +1930,31 @@ let LightTile = class LightTile extends s {
     }
     set hass(hass) {
         this._hass = hass;
-        this._stateObj = this._config?.entity ? this._hass.states[this._config.entity] : undefined;
+        this._stateObj = this._config?.entity
+            ? this._hass.states[this._config.entity]
+            : undefined;
         this.updateState();
     }
     updateState() {
         if (this._stateObj) {
             const state = this._stateObj.state || "unknown";
-            this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:lightbulb";
-            this._iconColor = state == "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
-            this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
+            this._icon =
+                this._config?.icon ||
+                    this._stateObj.attributes.icon ||
+                    "hass:lightbulb";
+            this._iconColor =
+                state == "on"
+                    ? "var(--sq-light-on-rgb)"
+                    : "var(--sq-inactive-rgb)";
+            this._name =
+                this._config?.name ||
+                    this._stateObj.attributes.friendly_name ||
+                    this._stateObj.entity_id;
             this._stateFmtd =
                 this._hass.formatEntityState(this._stateObj) +
                     (state == "on" && this._stateObj.attributes.brightness
-                        ? " - " + this._hass.formatEntityAttributeValue(this._stateObj, "brightness")
+                        ? " - " +
+                            this._hass.formatEntityAttributeValue(this._stateObj, "brightness")
                         : "");
         }
         else {
@@ -1954,26 +1966,33 @@ let LightTile = class LightTile extends s {
     }
     render() {
         return x `
-      <div class="container" @click=${this.showMoreInfo} @dblclick=${this.showGroupEntities}>
-        <div
-          class="icon"
-          @click=${this.toggleEntity}
-          style="
-            color: rgb(${this._iconColor});
-            background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
-          "
-        >
-          <ha-icon .icon=${this._icon}></ha-icon>
-        </div>
-        <div class="name">${this._name}</div>
-        <div class="state">${this._stateFmtd}</div>
-      </div>
-    `;
+            <div
+                class="container"
+                @click=${this.showMoreInfo}
+                @contextmenu=${this.showGroupEntities}
+            >
+                <div
+                    class="icon"
+                    @click=${this.toggleEntity}
+                    style="
+                color: rgb(${this._iconColor});
+                background-color: rgba(${this
+            ._iconColor}, var(--sq-icon-opacity));
+            "
+                >
+                    <ha-icon .icon=${this._icon}></ha-icon>
+                </div>
+                <div class="name">${this._name}</div>
+                <div class="state">${this._stateFmtd}</div>
+            </div>
+        `;
     }
     toggleEntity(e) {
         e.stopPropagation();
         if (this._stateObj) {
-            this._hass.callService("light", "toggle", { entity_id: this._stateObj.entity_id });
+            this._hass.callService("light", "toggle", {
+                entity_id: this._stateObj.entity_id,
+            });
         }
     }
     showMoreInfo(e) {
@@ -1998,10 +2017,10 @@ let LightTile = class LightTile extends s {
                             type: "custom:layout-card",
                             layout_type: "custom:grid-layout",
                             layout: {
-                                "margin": 0,
+                                margin: 0,
                                 "grid-template-columns": "1fr",
-                                "grid-gap": "var(--sq-dialog-grid-gap)"
-                            }
+                                "grid-gap": "var(--sq-dialog-grid-gap)",
+                            },
                         },
                         card_param: "cards",
                         filter: {
@@ -2010,18 +2029,18 @@ let LightTile = class LightTile extends s {
                                     group: this._stateObj.entity_id,
                                     sort: {
                                         method: "friendly_name",
-                                        ignore_case: true
+                                        ignore_case: true,
                                     },
                                     options: {
                                         type: "custom:smartqasa-light-tile",
-                                        group: true
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
+                                        group: true,
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                },
+            },
         };
         window.browser_mod?.service("popup", data);
     }
@@ -2038,10 +2057,10 @@ let LightTile = class LightTile extends s {
                     type: "custom:layout-card",
                     layout_type: "custom:grid-layout",
                     layout: {
-                        "margin": 0,
+                        margin: 0,
                         "grid-template-columns": "1fr",
-                        "grid-gap": "var(--sq-dialog-grid-gap)"
-                    }
+                        "grid-gap": "var(--sq-dialog-grid-gap)",
+                    },
                 },
                 card_param: "cards",
                 filter: {
@@ -2050,16 +2069,16 @@ let LightTile = class LightTile extends s {
                             group: this._stateObj.entity_id,
                             sort: {
                                 method: "friendly_name",
-                                ignore_case: true
+                                ignore_case: true,
                             },
                             options: {
                                 type: "custom:smartqasa-light-tile",
-                                group: true
-                            }
-                        }
-                    ]
-                }
-            }
+                                group: true,
+                            },
+                        },
+                    ],
+                },
+            },
         };
         window.browser_mod?.service("popup", data);
     }
