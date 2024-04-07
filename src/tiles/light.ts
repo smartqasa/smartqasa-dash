@@ -24,39 +24,6 @@ export class LightTile extends LitElement {
   private _name: string = "Loading...";
   private _stateFmtd: string = "Loading...";
 
-  private _groupDialog:any = {
-    title: `${this._name}`,
-    timeout: 60000,
-    content: {
-      type: "custom:auto-entities",
-      card: {
-        type: "custom:layout-card",
-        layout_type: "custom:grid-layout",
-        layout: {
-          "margin": 0,
-          "grid-template-columns": "1fr",
-          "grid-gap": "var(--sq-dialog-grid-gap)"
-        }
-      },
-      card_param: "cards",
-      filter: {
-        include: [
-          {
-            group: `${this._stateObj?.entity_id}`,
-            sort: {
-              method: "friendly_name",
-              ignore_case: true
-            },
-            options: {
-              type: "custom:smartqasa-light-tile",
-              group: true
-            }
-          }
-        ]
-      }
-    }
-  }
-
   static styles: CSSResultGroup = [styleTileBase, styleTileState];
 
   setConfig(config: Config): void {
@@ -127,8 +94,39 @@ export class LightTile extends LitElement {
         entity: this._stateObj.entity_id,
       },
       dismiss_action: {
-        service: this._config?.group ? "browser_mod.popup" : "none",
-        data: this._groupDialog
+        service: "browser_mod.popup",
+        data: {
+          title: this._name,
+          timeout: 60000,
+          content: {
+            type: "custom:auto-entities",
+            card: {
+              type: "custom:layout-card",
+              layout_type: "custom:grid-layout",
+              layout: {
+                "margin": 0,
+                "grid-template-columns": "1fr",
+                "grid-gap": "var(--sq-dialog-grid-gap)"
+              }
+            },
+            card_param: "cards",
+            filter: {
+              include: [
+                {
+                  group: this._stateObj.entity_id,
+                  sort: {
+                    method: "friendly_name",
+                    ignore_case: true
+                  },
+                  options: {
+                    type: "custom:smartqasa-light-tile",
+                    group: true
+                  }
+                }
+              ]
+            }
+          }
+        }
       }
     };
     window.browser_mod?.service("popup", data);
@@ -137,7 +135,39 @@ export class LightTile extends LitElement {
   private showGroupEntities(e: Event): void {
     e.stopPropagation();
     if (!this._stateObj?.attributes.entity_id) return;
-    window.browser_mod?.service("popup", this._groupDialog);
+    const data:any = {
+      title: this._name,
+      timeout: 60000,
+      content: {
+        type: "custom:auto-entities",
+        card: {
+          type: "custom:layout-card",
+          layout_type: "custom:grid-layout",
+          layout: {
+            "margin": 0,
+            "grid-template-columns": "1fr",
+            "grid-gap": "var(--sq-dialog-grid-gap)"
+          }
+        },
+        card_param: "cards",
+        filter: {
+          include: [
+            {
+              group: this._stateObj.entity_id,
+              sort: {
+                method: "friendly_name",
+                ignore_case: true
+              },
+              options: {
+                type: "custom:smartqasa-light-tile",
+                group: true
+              }
+            }
+          ]
+        }
+      }
+    }
+    window.browser_mod?.service("popup", data);
   }
 
   getCardSize() {
