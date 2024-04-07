@@ -10,6 +10,7 @@ interface Config extends LovelaceCardConfig {
   entity: string;
   icon?: string;
   name?: string;
+  group?: boolean;
 }
 
 @customElement("smartqasa-light-tile")
@@ -22,6 +23,39 @@ export class LightTile extends LitElement {
   private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
   private _name: string = "Loading...";
   private _stateFmtd: string = "Loading...";
+
+  private _groupDialog:any = {
+    title: this._name,
+    timeout: 60000,
+    content: {
+      type: "custom:auto-entities",
+      card: {
+        type: "custom:layout-card",
+        layout_type: "custom:grid-layout",
+        layout: {
+          "margin": 0,
+          "grid-template-columns": "1fr",
+          "grid-gap": "var(--sq-dialog-grid-gap)"
+        }
+      },
+      card_param: "cards",
+      filter: {
+        include: [
+          {
+            group: this._stateObj?.entity_id,
+            sort: {
+              method: "friendly_name",
+              ignore_case: true
+            },
+            options: {
+              type: "custom:smartqasa-light-tile",
+              group: true
+            }
+          }
+        ]
+      }
+    }
+  }
 
   static styles: CSSResultGroup = [styleTileBase, styleTileState];
 
@@ -85,29 +119,16 @@ export class LightTile extends LitElement {
   private showMoreInfo(e: Event): void {
     e.stopPropagation();
     if (!this._stateObj?.attributes.entity_id) return;
-    const cardModStyles = `
-    ha-card {
-      background: transparent !important;
-    }
-    ha-card > div {
-      margin-top: 0 !important;
-    }
-    h1 {
-      display: none !important;
-    }
-    .card-content state-card-content {
-      display: none !important;
-    }
-    `;
     const data: any = {
       title: this._name,
       timeout: 60000,
       content: {
-        type: "custom:more-info-card",
+        type: "custom:smartqasa-more-info-dialog",
         entity: this._stateObj.entity_id,
-        card_mod: {
-          style: cardModStyles
-        }
+      },
+      dismiss_action: {
+        service: this._config?.group ? "browser_mod.popup" : "none",
+        data: this._groupDialog
       }
     };
     window.browser_mod?.service("popup", data);
@@ -116,38 +137,7 @@ export class LightTile extends LitElement {
   private showGroupEntities(e: Event): void {
     e.stopPropagation();
     if (!this._stateObj?.attributes.entity_id) return;
-    const data:any = {
-      title: this._name,
-      timeout: 60000,
-      content: {
-        type: "custom:auto-entities",
-        card: {
-          type: "custom:layout-card",
-          layout_type: "custom:grid-layout",
-          layout: {
-            "margin": 0,
-            "grid-template-columns": "1fr",
-            "grid-gap": "var(--sq-dialog-grid-gap)"
-          }
-        },
-        card_param: "cards",
-        filter: {
-          include: [
-            {
-              group: this._stateObj.entity_id,
-              sort: {
-                method: "friendly_name",
-                ignore_case: true
-              },
-              options: {
-                type: "custom:smartqasa-light-tile"
-              }
-            }
-          ]
-        }
-      }
-    }
-    window.browser_mod?.service("popup", data);
+    window.browser_mod?.service("popup", this._groupDialog);
   }
 
   getCardSize() {
