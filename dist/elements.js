@@ -1404,6 +1404,7 @@ const dialogTable = {
                             options: {
                                 type: "custom:smartqasa-lock-tile",
                                 group: "lock.all_door_locks",
+                                tile: "lock",
                             },
                         },
                     ],
@@ -1908,13 +1909,15 @@ window.customCards.push({
     description: "A SmartQasa tile for controlling a garage cover entity.",
 });
 
-const showMoreInfo = (config, stateObj, groupTitle) => {
+const showMoreInfo = (config, stateObj, hass) => {
+    if (!stateObj)
+        return;
     let groupConfig = undefined;
     if (config.group) {
         groupConfig = {
             service: "browser_mod.popup",
             data: {
-                title: groupTitle,
+                title: hass.states[config.group]?.attributes?.friendly_name || config.group,
                 timeout: 60000,
                 content: {
                     type: "custom:auto-entities",
@@ -2064,18 +2067,10 @@ let LightTile = class LightTile extends s {
     }
     _showMoreInfo(e) {
         e.stopPropagation();
-        if (!this._config || !this._stateObj)
-            return;
-        showMoreInfo(this._config, this._stateObj, this._config.group
-            ? this._hass.states[this._config.group].attributes?.friendly_name || this._config.group
-            : "");
+        showMoreInfo(this._config, this._stateObj, this._hass);
     }
     _showGroupEntities(e) {
         e.stopPropagation();
-        if (!this._stateObj ||
-            !Array.isArray(this._stateObj.attributes?.entity_id) ||
-            this._stateObj.attributes.entity_id.length === 0)
-            return;
         showGroupEntities(this._config, this._stateObj);
     }
     getCardSize() {
@@ -2239,10 +2234,10 @@ let LockTile = class LockTile extends s {
     }
     render() {
         return x `
-            <div class="container" @click=${this.showMoreInfo}>
+            <div class="container" @click=${this._showMoreInfo}>
                 <div
                     class="icon"
-                    @click=${this.toggleLock}
+                    @click=${this._toggleLock}
                     style="
                         color: rgb(${this._iconColor});
                         background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
@@ -2256,7 +2251,7 @@ let LockTile = class LockTile extends s {
             </div>
         `;
     }
-    toggleLock(e) {
+    _toggleLock(e) {
         e.stopPropagation();
         if (this._stateObj) {
             const state = this._stateObj.state;
@@ -2266,19 +2261,9 @@ let LockTile = class LockTile extends s {
             });
         }
     }
-    showMoreInfo(e) {
+    _showMoreInfo(e) {
         e.stopPropagation();
-        if (!this._stateObj)
-            return;
-        const data = {
-            title: this._name,
-            timeout: 60000,
-            content: {
-                type: "custom:smartqasa-more-info-dialog",
-                entity: this._stateObj.entity_id,
-            },
-        };
-        window.browser_mod?.service("popup", data);
+        showMoreInfo(this._config, this._stateObj, this._hass);
     }
     getCardSize() {
         return 1;

@@ -91,26 +91,11 @@ export class LightTile extends LitElement {
 
     private _showMoreInfo(e: Event): void {
         e.stopPropagation();
-        if (!this._config || !this._stateObj) return;
-
-        showMoreInfo(
-            this._config,
-            this._stateObj,
-            this._config.group
-                ? this._hass.states[this._config.group].attributes?.friendly_name || this._config.group
-                : ""
-        );
+        showMoreInfo(this._config, this._stateObj, this._hass);
     }
 
     private _showGroupEntities(e: Event): void {
         e.stopPropagation();
-        if (
-            !this._stateObj ||
-            !Array.isArray(this._stateObj.attributes?.entity_id) ||
-            this._stateObj.attributes.entity_id.length === 0
-        )
-            return;
-
         showGroupEntities(this._config, this._stateObj);
     }
 

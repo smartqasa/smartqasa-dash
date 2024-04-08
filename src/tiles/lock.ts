@@ -2,6 +2,7 @@ import { CSSResultGroup, html, LitElement, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
+import { showMoreInfo } from "../utils/showMoreInfo";
 
 import styleTileBase from "../styles/tile-base";
 import styleTileState from "../styles/tile-state";
@@ -88,10 +89,10 @@ export class LockTile extends LitElement {
 
     protected render(): TemplateResult {
         return html`
-            <div class="container" @click=${this.showMoreInfo}>
+            <div class="container" @click=${this._showMoreInfo}>
                 <div
                     class="icon"
-                    @click=${this.toggleLock}
+                    @click=${this._toggleLock}
                     style="
                         color: rgb(${this._iconColor});
                         background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
@@ -106,7 +107,7 @@ export class LockTile extends LitElement {
         `;
     }
 
-    private toggleLock(e: Event): void {
+    private _toggleLock(e: Event): void {
         e.stopPropagation();
         if (this._stateObj) {
             const state = this._stateObj.state;
@@ -117,18 +118,9 @@ export class LockTile extends LitElement {
         }
     }
 
-    private showMoreInfo(e: Event): void {
+    private _showMoreInfo(e: Event): void {
         e.stopPropagation();
-        if (!this._stateObj) return;
-        const data: any = {
-            title: this._name,
-            timeout: 60000,
-            content: {
-                type: "custom:smartqasa-more-info-dialog",
-                entity: this._stateObj.entity_id,
-            },
-        };
-        window.browser_mod?.service("popup", data);
+        showMoreInfo(this._config, this._stateObj, this._hass);
     }
 
     getCardSize(): number {

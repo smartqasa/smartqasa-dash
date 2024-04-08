@@ -1,10 +1,12 @@
-export const showMoreInfo = (config: any, stateObj: any, groupTitle: string) => {
+export const showMoreInfo = (config: any, stateObj: any, hass: any) => {
+    if (!stateObj) return;
+
     let groupConfig = undefined;
     if (config.group) {
         groupConfig = {
             service: "browser_mod.popup",
             data: {
-                title: groupTitle,
+                title: hass.states[config.group]?.attributes?.friendly_name || config.group,
                 timeout: 60000,
                 content: {
                     type: "custom:auto-entities",
