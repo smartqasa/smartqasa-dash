@@ -1,6 +1,6 @@
 export const showMoreInfo = (hass: any, config: any) => {
     const entityID = config.entity;
-    const title = config.name;
+    const title = config.name || hass.states[entityID]?.attributes?.friendly_name || entityID;
     const group = config.group;
     const tile = config.tile;
 

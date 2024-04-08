@@ -1910,7 +1910,7 @@ window.customCards.push({
 
 const showMoreInfo = (hass, config) => {
     const entityID = config.entity;
-    const title = config.name;
+    const title = config.name || hass.states[entityID]?.attributes?.friendly_name || entityID;
     const group = config.group;
     const tile = config.tile;
     let groupConfig = undefined;
@@ -1945,7 +1945,7 @@ const showMoreInfo = (hass, config) => {
             },
         };
     }
-    const data = {
+    const dialogConfig = {
         title: title,
         timeout: 60000,
         content: {
@@ -1954,7 +1954,7 @@ const showMoreInfo = (hass, config) => {
         },
         ...(groupConfig && { dismiss_action: groupConfig }),
     };
-    window.browser_mod?.service("popup", data);
+    window.browser_mod?.service("popup", dialogConfig);
 };
 
 let LightTile = class LightTile extends s {
@@ -2059,6 +2059,7 @@ let LightTile = class LightTile extends s {
                             options: {
                                 type: "custom:smartqasa-light-tile",
                                 group: this._stateObj.entity_id,
+                                tile: "light",
                             },
                         },
                     ],
