@@ -1,6 +1,10 @@
 export const showGroupEntities = (stateObj: any, tileType: string) => {
-    console.log(tileType);
-    if (!stateObj || !Array.isArray(stateObj.attributes?.entity_id) || stateObj.attributes.entity_id.length === 0)
+    if (
+        !stateObj ||
+        !Array.isArray(stateObj.attributes?.entity_id) ||
+        stateObj.attributes.entity_id.length === 0 ||
+        !tileType
+    )
         return;
 
     const dialogConfig: any = {

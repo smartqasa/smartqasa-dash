@@ -1961,8 +1961,10 @@ const showMoreInfo = (config, stateObj, hass) => {
 };
 
 const showGroupEntities = (stateObj, tileType) => {
-    console.log(tileType);
-    if (!stateObj || !Array.isArray(stateObj.attributes?.entity_id) || stateObj.attributes.entity_id.length === 0)
+    if (!stateObj ||
+        !Array.isArray(stateObj.attributes?.entity_id) ||
+        stateObj.attributes.entity_id.length === 0 ||
+        !tileType)
         return;
     const dialogConfig = {
         title: stateObj.attributes.friendly_name || stateObj.entity_id,
