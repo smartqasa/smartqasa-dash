@@ -1288,11 +1288,11 @@ const dialogTable = {
                 image: "/local/sq-storage/images/clean_screen.png",
                 card_mod: {
                     style: {
-                        radius: "0px"
-                    }
-                }
-            }
-        }
+                        radius: "0px",
+                    },
+                },
+            },
+        },
     },
     energy_monitor: {
         icon: "hass:transmission-tower",
@@ -1309,20 +1309,17 @@ const dialogTable = {
                     "grid-template-rows": "auto",
                     "grid-gap": "var(--sq-dialog-grid-gap)",
                     "place-content": "center",
-                    "margin": 0
+                    margin: 0,
                 },
                 cards: [
                     {
                         type: "horizontal-stack",
-                        cards: [
-                            { type: "energy-distribution" },
-                            { type: "energy-date-selection" }
-                        ]
+                        cards: [{ type: "energy-distribution" }, { type: "energy-date-selection" }],
                     },
-                    { type: "energy-usage-graph" }
-                ]
-            }
-        }
+                    { type: "energy-usage-graph" },
+                ],
+            },
+        },
     },
     garages: {
         icon: "hass:garage-variant",
@@ -1336,10 +1333,10 @@ const dialogTable = {
                     type: "custom:layout-card",
                     layout_type: "custom:grid-layout",
                     layout: {
-                        "margin": 0,
+                        margin: 0,
                         "grid-template-columns": "1fr",
-                        "grid-gap": "var(--sq-dialog-grid-gap)"
-                    }
+                        "grid-gap": "var(--sq-dialog-grid-gap)",
+                    },
                 },
                 card_param: "cards",
                 filter: {
@@ -1348,16 +1345,17 @@ const dialogTable = {
                             group: "cover.all_garage_doors",
                             sort: {
                                 method: "friendly_name",
-                                ignore_case: true
+                                ignore_case: true,
                             },
                             options: {
-                                type: "custom:smartqasa-garage-tile"
-                            }
-                        }
-                    ]
-                }
-            }
-        }
+                                type: "custom:smartqasa-garage-tile",
+                                group: "cover.all_garage_doors",
+                            },
+                        },
+                    ],
+                },
+            },
+        },
     },
     internet_speed: {
         icon: "hass:gauge",
@@ -1368,17 +1366,14 @@ const dialogTable = {
             timeout: 60000,
             content: {
                 type: "statistics-graph",
-                entities: [
-                    "sensor.speedtest_download",
-                    "sensor.speedtest_upload"
-                ],
+                entities: ["sensor.speedtest_download", "sensor.speedtest_upload"],
                 chart_type: "line",
                 period: "hour",
                 stat_types: "mean",
                 hide_legend: false,
-                days_to_show: 3
-            }
-        }
+                days_to_show: 3,
+            },
+        },
     },
     locks: {
         icon: "hass:lock",
@@ -1392,10 +1387,10 @@ const dialogTable = {
                     type: "custom:layout-card",
                     layout_type: "custom:grid-layout",
                     layout: {
-                        "margin": 0,
+                        margin: 0,
                         "grid-template-columns": "1fr",
-                        "grid-gap": "var(--sq-dialog-grid-gap)"
-                    }
+                        "grid-gap": "var(--sq-dialog-grid-gap)",
+                    },
                 },
                 card_param: "cards",
                 filter: {
@@ -1404,16 +1399,17 @@ const dialogTable = {
                             group: "lock.all_door_locks",
                             sort: {
                                 method: "friendly_name",
-                                ignore_case: true
+                                ignore_case: true,
                             },
                             options: {
-                                type: "custom:smartqasa-lock-tile"
-                            }
-                        }
-                    ]
-                }
-            }
-        }
+                                type: "custom:smartqasa-lock-tile",
+                                group: "lock.all_door_locks",
+                            },
+                        },
+                    ],
+                },
+            },
+        },
     },
     robots: {
         icon: "hass:robot-vacuum-variant",
@@ -1427,10 +1423,10 @@ const dialogTable = {
                     type: "custom:layout-card",
                     layout_type: "custom:grid-layout",
                     layout: {
-                        "margin": 0,
+                        margin: 0,
                         "grid-template-columns": "1fr",
-                        "grid-gap": "var(--sq-dialog-grid-gap)"
-                    }
+                        "grid-gap": "var(--sq-dialog-grid-gap)",
+                    },
                 },
                 card_param: "cards",
                 filter: {
@@ -1439,16 +1435,16 @@ const dialogTable = {
                             domain: "vacuum",
                             sort: {
                                 method: "friendly_name",
-                                ignore_case: true
+                                ignore_case: true,
                             },
                             options: {
-                                type: "custom:smartqasa-robot-tile"
-                            }
-                        }
-                    ]
-                }
-            }
-        }
+                                type: "custom:smartqasa-robot-tile",
+                            },
+                        },
+                    ],
+                },
+            },
+        },
     },
     sensors_doors: {
         icon: "hass:door-open",
@@ -1462,10 +1458,10 @@ const dialogTable = {
                     type: "custom:layout-card",
                     layout_type: "custom:grid-layout",
                     layout: {
-                        "margin": 0,
+                        margin: 0,
                         "grid-template-columns": "1fr",
-                        "grid-gap": "var(--sq-dialog-grid-gap)"
-                    }
+                        "grid-gap": "var(--sq-dialog-grid-gap)",
+                    },
                 },
                 card_param: "cards",
                 filter: {
@@ -1474,16 +1470,16 @@ const dialogTable = {
                             group: "binary_sensor.all_door_sensors",
                             sort: {
                                 method: "friendly_name",
-                                ignore_case: true
+                                ignore_case: true,
                             },
                             options: {
-                                type: "custom:smartqasa-sensor-tile"
-                            }
-                        }
-                    ]
-                }
-            }
-        }
+                                type: "custom:smartqasa-sensor-tile",
+                            },
+                        },
+                    ],
+                },
+            },
+        },
     },
     sensors_windows: {
         icon: "hass:window-open",
@@ -1497,10 +1493,10 @@ const dialogTable = {
                     type: "custom:layout-card",
                     layout_type: "custom:grid-layout",
                     layout: {
-                        "margin": 0,
+                        margin: 0,
                         "grid-template-columns": "1fr",
-                        "grid-gap": "var(--sq-dialog-grid-gap)"
-                    }
+                        "grid-gap": "var(--sq-dialog-grid-gap)",
+                    },
                 },
                 card_param: "cards",
                 filter: {
@@ -1509,16 +1505,16 @@ const dialogTable = {
                             group: "binary_sensor.all_window_sensors",
                             sort: {
                                 method: "friendly_name",
-                                ignore_case: true
+                                ignore_case: true,
                             },
                             options: {
-                                type: "custom:smartqasa-sensor-tile"
-                            }
-                        }
-                    ]
-                }
-            }
-        }
+                                type: "custom:smartqasa-sensor-tile",
+                            },
+                        },
+                    ],
+                },
+            },
+        },
     },
     thermostats: {
         icon: "hass:thermometer-lines",
@@ -1532,10 +1528,10 @@ const dialogTable = {
                     type: "custom:layout-card",
                     layout_type: "custom:grid-layout",
                     layout: {
-                        "margin": 0,
+                        margin: 0,
                         "grid-template-columns": "1fr",
-                        "grid-gap": "var(--sq-dialog-grid-gap)"
-                    }
+                        "grid-gap": "var(--sq-dialog-grid-gap)",
+                    },
                 },
                 card_param: "cards",
                 filter: {
@@ -1544,16 +1540,16 @@ const dialogTable = {
                             domain: "climate",
                             sort: {
                                 method: "friendly_name",
-                                ignore_case: true
+                                ignore_case: true,
                             },
                             options: {
-                                type: "custom:smartqasa-thermostat-tile"
-                            }
-                        }
-                    ]
-                }
-            }
-        }
+                                type: "custom:smartqasa-thermostat-tile",
+                            },
+                        },
+                    ],
+                },
+            },
+        },
     },
 };
 
@@ -1982,19 +1978,20 @@ let LightTile = class LightTile extends s {
         e.stopPropagation();
         if (!this._stateObj)
             return;
-        const data = {
+        let config = {
             title: this._name,
             timeout: 60000,
             content: {
                 type: "custom:smartqasa-more-info-dialog",
                 entity: this._stateObj.entity_id,
             },
-            dismiss_action: {
-                service: this._config?.parent ? "browser_mod.popup" : "none",
+        };
+        if (this._config?.group) {
+            const groupObj = this._hass.states[this._config.group];
+            config.dismiss_action = {
+                service: "browser_mod.popup",
                 data: {
-                    title: this._config?.parent
-                        ? this._hass.states[this._config.parent].attributes.friendly_name
-                        : undefined,
+                    title: groupObj ? groupObj.attributes.friendly_name : this._config.group,
                     timeout: 60000,
                     content: {
                         type: "custom:auto-entities",
@@ -2011,23 +2008,23 @@ let LightTile = class LightTile extends s {
                         filter: {
                             include: [
                                 {
-                                    group: this._config?.parent,
+                                    group: this._config.group,
                                     sort: {
                                         method: "friendly_name",
                                         ignore_case: true,
                                     },
                                     options: {
                                         type: "custom:smartqasa-light-tile",
-                                        parent: this._config?.parent,
+                                        group: this._config.group,
                                     },
                                 },
                             ],
                         },
                     },
                 },
-            },
-        };
-        window.browser_mod?.service("popup", data);
+            };
+        }
+        window.browser_mod?.service("popup", config);
     }
     showGroupEntities(e) {
         e.stopPropagation();
@@ -2060,7 +2057,7 @@ let LightTile = class LightTile extends s {
                             },
                             options: {
                                 type: "custom:smartqasa-light-tile",
-                                parent: this._stateObj.entity_id,
+                                group: this._stateObj.entity_id,
                             },
                         },
                     ],

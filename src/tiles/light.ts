@@ -10,7 +10,7 @@ interface Config extends LovelaceCardConfig {
     entity: string;
     icon?: string;
     name?: string;
-    parent?: string;
+    group?: string;
 }
 
 @customElement("smartqasa-light-tile")
@@ -89,19 +89,22 @@ export class LightTile extends LitElement {
     private showMoreInfo(e: Event): void {
         e.stopPropagation();
         if (!this._stateObj) return;
-        const data: any = {
+
+        let config: any = {
             title: this._name,
             timeout: 60000,
             content: {
                 type: "custom:smartqasa-more-info-dialog",
                 entity: this._stateObj.entity_id,
             },
-            dismiss_action: {
-                service: this._config?.parent ? "browser_mod.popup" : "none",
+        };
+
+        if (this._config?.group) {
+            const groupObj = this._hass.states[this._config.group];
+            config.dismiss_action = {
+                service: "browser_mod.popup",
                 data: {
-                    title: this._config?.parent
-                        ? this._hass.states[this._config.parent].attributes.friendly_name
-                        : undefined,
+                    title: groupObj ? groupObj.attributes.friendly_name : this._config.group,
                     timeout: 60000,
                     content: {
                         type: "custom:auto-entities",
@@ -118,23 +121,24 @@ export class LightTile extends LitElement {
                         filter: {
                             include: [
                                 {
-                                    group: this._config?.parent,
+                                    group: this._config.group,
                                     sort: {
                                         method: "friendly_name",
                                         ignore_case: true,
                                     },
                                     options: {
                                         type: "custom:smartqasa-light-tile",
-                                        parent: this._config?.parent,
+                                        group: this._config.group,
                                     },
                                 },
                             ],
                         },
                     },
                 },
-            },
-        };
-        window.browser_mod?.service("popup", data);
+            };
+        }
+
+        window.browser_mod?.service("popup", config);
     }
 
     private showGroupEntities(e: Event): void {
@@ -171,7 +175,7 @@ export class LightTile extends LitElement {
                             },
                             options: {
                                 type: "custom:smartqasa-light-tile",
-                                parent: this._stateObj.entity_id,
+                                group: this._stateObj.entity_id,
                             },
                         },
                     ],
