@@ -97,10 +97,10 @@ export class ShadeTile extends LitElement {
                     class="icon"
                     @click=${this._toggleEntity}
                     style="
-            color: rgb(${this._iconColor});
-            background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
-            animation: ${this._iconAnimation};
-          "
+                        color: rgb(${this._iconColor});
+                        background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
+                        animation: ${this._iconAnimation};
+                    "
                 >
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
