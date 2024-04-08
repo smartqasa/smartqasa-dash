@@ -13,7 +13,7 @@ interface Config extends LovelaceCardConfig {
     icon?: string;
     name?: string;
     group?: string;
-    tile?: string;
+    tileType?: string;
 }
 
 @customElement("smartqasa-light-tile")
@@ -96,7 +96,7 @@ export class LightTile extends LitElement {
 
     private _showGroupEntities(e: Event): void {
         e.stopPropagation();
-        showGroupEntities(this._config, this._stateObj);
+        showGroupEntities(this._config, this._stateObj, "light");
     }
 
     getCardSize() {

@@ -1949,7 +1949,7 @@ const showMoreInfo = (config, stateObj, hass) => {
         };
     }
     const dialogConfig = {
-        title: stateObj.attributes.friendly_name || stateObj.entity_id,
+        title: stateObj.attributes?.friendly_name || stateObj.entity_id,
         timeout: 60000,
         content: {
             type: "custom:smartqasa-more-info-dialog",
@@ -1960,7 +1960,7 @@ const showMoreInfo = (config, stateObj, hass) => {
     window.browser_mod?.service("popup", dialogConfig);
 };
 
-const showGroupEntities = (config, stateObj) => {
+const showGroupEntities = (config, stateObj, tileType) => {
     if (!stateObj || !Array.isArray(stateObj.attributes?.entity_id) || stateObj.attributes.entity_id.length === 0)
         return;
     const dialogConfig = {
@@ -1987,9 +1987,9 @@ const showGroupEntities = (config, stateObj) => {
                             ignore_case: true,
                         },
                         options: {
-                            type: "custom:smartqasa-light-tile",
+                            type: `custom:smartqasa-${tileType}-tile`,
                             group: stateObj.entity_id,
-                            tile: config.tile,
+                            tileType: tileType,
                         },
                     },
                 ],
@@ -2071,7 +2071,7 @@ let LightTile = class LightTile extends s {
     }
     _showGroupEntities(e) {
         e.stopPropagation();
-        showGroupEntities(this._config, this._stateObj);
+        showGroupEntities(this._config, this._stateObj, "light");
     }
     getCardSize() {
         return 1;

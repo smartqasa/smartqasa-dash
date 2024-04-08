@@ -1,4 +1,4 @@
-export const showGroupEntities = (config: any, stateObj: any) => {
+export const showGroupEntities = (config: any, stateObj: any, tileType: string) => {
     if (!stateObj || !Array.isArray(stateObj.attributes?.entity_id) || stateObj.attributes.entity_id.length === 0)
         return;
 
@@ -26,9 +26,9 @@ export const showGroupEntities = (config: any, stateObj: any) => {
                             ignore_case: true,
                         },
                         options: {
-                            type: "custom:smartqasa-light-tile",
+                            type: `custom:smartqasa-${tileType}-tile`,
                             group: stateObj.entity_id,
-                            tile: config.tile,
+                            tileType: tileType,
                         },
                     },
                 ],

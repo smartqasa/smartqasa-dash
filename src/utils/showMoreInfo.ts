@@ -39,7 +39,7 @@ export const showMoreInfo = (config: any, stateObj: any, hass: any) => {
     }
 
     const dialogConfig = {
-        title: stateObj.attributes.friendly_name || stateObj.entity_id,
+        title: stateObj.attributes?.friendly_name || stateObj.entity_id,
         timeout: 60000,
         content: {
             type: "custom:smartqasa-more-info-dialog",
