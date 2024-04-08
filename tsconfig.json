@@ -1,16 +1,16 @@
 {
-  "compilerOptions": {
-    "esModuleInterop": true,
-    "experimentalDecorators": true,
-    "isolatedModules": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "noEmitOnError": true,
-    "target": "esnext",
-    "resolveJsonModule": true,
-    "strict": true,
-    "useDefineForClassFields": false
-  },
-  "include": ["src/**/*.ts", "custom.d.ts"],
-  "exclude": ["node_modules"]
+    "compilerOptions": {
+        "esModuleInterop": true,
+        "experimentalDecorators": true,
+        "isolatedModules": true,
+        "module": "esnext",
+        "moduleResolution": "node",
+        "noEmitOnError": true,
+        "target": "esnext",
+        "resolveJsonModule": true,
+        "strict": true,
+        "useDefineForClassFields": false
+    },
+    "include": ["src/**/*.ts", "custom.d.ts"],
+    "exclude": ["node_modules"]
 }
