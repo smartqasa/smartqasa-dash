@@ -2,7 +2,6 @@ import { CSSResultGroup, html, LitElement, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
-import { showMoreInfo } from "../utils/showMoreInfo";
 
 import styleTileBase from "../styles/tile-base";
 import styleTileState from "../styles/tile-state";
@@ -44,11 +43,11 @@ export class LightTile extends LitElement {
         if (this._stateObj) {
             const state = this._stateObj.state || "unknown";
             this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:lightbulb";
-            this._iconColor = state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
+            this._iconColor = state == "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
             this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
             this._stateFmtd =
                 this._hass.formatEntityState(this._stateObj) +
-                (state === "on" && this._stateObj.attributes.brightness
+                (state == "on" && this._stateObj.attributes.brightness
                     ? " - " + this._hass.formatEntityAttributeValue(this._stateObj, "brightness")
                     : "");
         } else {
@@ -61,10 +60,10 @@ export class LightTile extends LitElement {
 
     protected render(): TemplateResult {
         return html`
-            <div class="container" @click=${this._showMoreInfo} @contextmenu=${this._showGroupEntities}>
+            <div class="container" @click=${this.showMoreInfo} @contextmenu=${this.showGroupEntities}>
                 <div
                     class="icon"
-                    @click=${this._toggleEntity}
+                    @click=${this.toggleEntity}
                     style="
                         color: rgb(${this._iconColor});
                         background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
@@ -78,7 +77,7 @@ export class LightTile extends LitElement {
         `;
     }
 
-    private _toggleEntity(e: Event): void {
+    private toggleEntity(e: Event): void {
         e.stopPropagation();
         if (this._stateObj) {
             this._hass.callService("light", "toggle", {
@@ -87,12 +86,62 @@ export class LightTile extends LitElement {
         }
     }
 
-    private _showMoreInfo(e: Event): void {
+    private showMoreInfo(e: Event): void {
         e.stopPropagation();
-        showMoreInfo(this._hass, this._config);
+        if (!this._stateObj) return;
+
+        let config: any = {
+            title: this._name,
+            timeout: 60000,
+            content: {
+                type: "custom:smartqasa-more-info-dialog",
+                entity: this._stateObj.entity_id,
+            },
+        };
+
+        if (this._config?.group) {
+            const groupObj = this._hass.states[this._config.group];
+            config.dismiss_action = {
+                service: "browser_mod.popup",
+                data: {
+                    title: groupObj ? groupObj.attributes.friendly_name : this._config.group,
+                    timeout: 60000,
+                    content: {
+                        type: "custom:auto-entities",
+                        card: {
+                            type: "custom:layout-card",
+                            layout_type: "custom:grid-layout",
+                            layout: {
+                                margin: 0,
+                                "grid-template-columns": "1fr",
+                                "grid-gap": "var(--sq-dialog-grid-gap)",
+                            },
+                        },
+                        card_param: "cards",
+                        filter: {
+                            include: [
+                                {
+                                    group: this._config.group,
+                                    sort: {
+                                        method: "friendly_name",
+                                        ignore_case: true,
+                                    },
+                                    options: {
+                                        type: "custom:smartqasa-light-tile",
+                                        group: this._config.group,
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                },
+            };
+        }
+
+        window.browser_mod?.service("popup", config);
     }
 
-    private _showGroupEntities(e: Event): void {
+    private showGroupEntities(e: Event): void {
         e.stopPropagation();
         if (
             !this._stateObj ||
