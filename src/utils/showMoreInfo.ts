@@ -37,7 +37,7 @@ export const showMoreInfo = (hass: any, config: any) => {
         };
     }
 
-    const data = {
+    const dialogConfig = {
         title: title,
         timeout: 60000,
         content: {
@@ -46,5 +46,5 @@ export const showMoreInfo = (hass: any, config: any) => {
         },
         ...(groupConfig && { dismiss_action: groupConfig }),
     };
-    window.browser_mod?.service("popup", data);
+    window.browser_mod?.service("popup", dialogConfig);
 };
