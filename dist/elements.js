@@ -1937,9 +1937,9 @@ const showMoreInfo = (config, stateObj, hass) => {
                                 group: config.group,
                                 sort: { method: "friendly_name", ignore_case: true },
                                 options: {
-                                    type: `custom:smartqasa-${config.tile}-tile`,
+                                    type: `custom:smartqasa-${config.tileType}-tile`,
                                     group: config.group,
-                                    tile: config.tile,
+                                    tileType: config.tileType,
                                 },
                             },
                         ],
@@ -1960,7 +1960,8 @@ const showMoreInfo = (config, stateObj, hass) => {
     window.browser_mod?.service("popup", dialogConfig);
 };
 
-const showGroupEntities = (config, stateObj, tileType) => {
+const showGroupEntities = (stateObj, tileType) => {
+    console.log(tileType);
     if (!stateObj || !Array.isArray(stateObj.attributes?.entity_id) || stateObj.attributes.entity_id.length === 0)
         return;
     const dialogConfig = {
@@ -2071,7 +2072,7 @@ let LightTile = class LightTile extends s {
     }
     _showGroupEntities(e) {
         e.stopPropagation();
-        showGroupEntities(this._config, this._stateObj, "light");
+        showGroupEntities(this._stateObj, "light");
     }
     getCardSize() {
         return 1;

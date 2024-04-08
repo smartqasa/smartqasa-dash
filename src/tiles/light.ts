@@ -96,7 +96,7 @@ export class LightTile extends LitElement {
 
     private _showGroupEntities(e: Event): void {
         e.stopPropagation();
-        showGroupEntities(this._config, this._stateObj, "light");
+        showGroupEntities(this._stateObj, "light");
     }
 
     getCardSize() {
