@@ -26,9 +26,9 @@ export const showMoreInfo = (config: any, stateObj: any, hass: any) => {
                                 group: config.group,
                                 sort: { method: "friendly_name", ignore_case: true },
                                 options: {
-                                    type: `custom:smartqasa-${config.tile}-tile`,
+                                    type: `custom:smartqasa-${config.tileType}-tile`,
                                     group: config.group,
-                                    tile: config.tile,
+                                    tileType: config.tileType,
                                 },
                             },
                         ],
