@@ -96,7 +96,9 @@ export class LightTile extends LitElement {
         showMoreInfo(
             this._config,
             this._stateObj,
-            this._config.group ? this._hass[this._config.group].attributes?.friendly_name || this._config.group : ""
+            this._config.group
+                ? this._hass.states[this._config.group].attributes?.friendly_name || this._config.group
+                : ""
         );
     }
 

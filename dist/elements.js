@@ -2066,7 +2066,9 @@ let LightTile = class LightTile extends s {
         e.stopPropagation();
         if (!this._config || !this._stateObj)
             return;
-        showMoreInfo(this._config, this._stateObj, this._config.group ? this._hass[this._config.group].attributes?.friendly_name || this._config.group : "");
+        showMoreInfo(this._config, this._stateObj, this._config.group
+            ? this._hass.states[this._config.group].attributes?.friendly_name || this._config.group
+            : "");
     }
     _showGroupEntities(e) {
         e.stopPropagation();
