@@ -1908,17 +1908,13 @@ window.customCards.push({
     description: "A SmartQasa tile for controlling a garage cover entity.",
 });
 
-const showMoreInfo = (hass, config) => {
-    const entityID = config.entity;
-    const title = config.name || hass.states[entityID]?.attributes?.friendly_name || entityID;
-    const group = config.group;
-    const tile = config.tile;
+const showMoreInfo = (config, stateObj, groupTitle) => {
     let groupConfig = undefined;
-    if (group) {
+    if (config.group) {
         groupConfig = {
             service: "browser_mod.popup",
             data: {
-                title: hass.states[group]?.attributes?.friendly_name || group,
+                title: groupTitle,
                 timeout: 60000,
                 content: {
                     type: "custom:auto-entities",
@@ -1935,9 +1931,13 @@ const showMoreInfo = (hass, config) => {
                     filter: {
                         include: [
                             {
-                                group: group,
+                                group: config.group,
                                 sort: { method: "friendly_name", ignore_case: true },
-                                options: { type: `custom:smartqasa-${tile}-tile`, group: group, tile: tile },
+                                options: {
+                                    type: `custom:smartqasa-${config.tile}-tile`,
+                                    group: config.group,
+                                    tile: config.tile,
+                                },
                             },
                         ],
                     },
@@ -1946,13 +1946,52 @@ const showMoreInfo = (hass, config) => {
         };
     }
     const dialogConfig = {
-        title: title,
+        title: stateObj.attributes.friendly_name || stateObj.entity_id,
         timeout: 60000,
         content: {
             type: "custom:smartqasa-more-info-dialog",
-            entity: entityID,
+            entity: stateObj.entity_id,
         },
         ...(groupConfig && { dismiss_action: groupConfig }),
+    };
+    window.browser_mod?.service("popup", dialogConfig);
+};
+
+const showGroupEntities = (config, stateObj) => {
+    if (!stateObj || !Array.isArray(stateObj.attributes?.entity_id) || stateObj.attributes.entity_id.length === 0)
+        return;
+    const dialogConfig = {
+        title: stateObj.attributes.friendly_name || stateObj.entity_id,
+        timeout: 60000,
+        content: {
+            type: "custom:auto-entities",
+            card: {
+                type: "custom:layout-card",
+                layout_type: "custom:grid-layout",
+                layout: {
+                    margin: 0,
+                    "grid-template-columns": "1fr",
+                    "grid-gap": "var(--sq-dialog-grid-gap)",
+                },
+            },
+            card_param: "cards",
+            filter: {
+                include: [
+                    {
+                        group: stateObj.entity_id,
+                        sort: {
+                            method: "friendly_name",
+                            ignore_case: true,
+                        },
+                        options: {
+                            type: "custom:smartqasa-light-tile",
+                            group: stateObj.entity_id,
+                            tile: config.tile,
+                        },
+                    },
+                ],
+            },
+        },
     };
     window.browser_mod?.service("popup", dialogConfig);
 };
@@ -1982,7 +2021,7 @@ let LightTile = class LightTile extends s {
         if (this._stateObj) {
             const state = this._stateObj.state || "unknown";
             this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:lightbulb";
-            this._iconColor = state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
+            this._iconColor = state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb, 128, 128, 128)";
             this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
             this._stateFmtd =
                 this._hass.formatEntityState(this._stateObj) +
@@ -2025,7 +2064,9 @@ let LightTile = class LightTile extends s {
     }
     _showMoreInfo(e) {
         e.stopPropagation();
-        showMoreInfo(this._hass, this._config);
+        if (!this._config || !this._stateObj)
+            return;
+        showMoreInfo(this._config, this._stateObj, this._config.group ? this._hass[this._config.group].attributes?.friendly_name || this._config.group : "");
     }
     _showGroupEntities(e) {
         e.stopPropagation();
@@ -2033,40 +2074,7 @@ let LightTile = class LightTile extends s {
             !Array.isArray(this._stateObj.attributes?.entity_id) ||
             this._stateObj.attributes.entity_id.length === 0)
             return;
-        const data = {
-            title: this._stateObj.attributes.friendly_name || this._stateObj.entity_id,
-            timeout: 60000,
-            content: {
-                type: "custom:auto-entities",
-                card: {
-                    type: "custom:layout-card",
-                    layout_type: "custom:grid-layout",
-                    layout: {
-                        margin: 0,
-                        "grid-template-columns": "1fr",
-                        "grid-gap": "var(--sq-dialog-grid-gap)",
-                    },
-                },
-                card_param: "cards",
-                filter: {
-                    include: [
-                        {
-                            group: this._stateObj.entity_id,
-                            sort: {
-                                method: "friendly_name",
-                                ignore_case: true,
-                            },
-                            options: {
-                                type: "custom:smartqasa-light-tile",
-                                group: this._stateObj.entity_id,
-                                tile: "light",
-                            },
-                        },
-                    ],
-                },
-            },
-        };
-        window.browser_mod?.service("popup", data);
+        showGroupEntities(this._config, this._stateObj);
     }
     getCardSize() {
         return 1;

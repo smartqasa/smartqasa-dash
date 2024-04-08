@@ -3,6 +3,7 @@ import { customElement, state } from "lit/decorators.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 import { showMoreInfo } from "../utils/showMoreInfo";
+import { showGroupEntities } from "../utils/showGroupEntities";
 
 import styleTileBase from "../styles/tile-base";
 import styleTileState from "../styles/tile-state";
@@ -45,7 +46,7 @@ export class LightTile extends LitElement {
         if (this._stateObj) {
             const state = this._stateObj.state || "unknown";
             this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:lightbulb";
-            this._iconColor = state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
+            this._iconColor = state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb, 128, 128, 128)";
             this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
             this._stateFmtd =
                 this._hass.formatEntityState(this._stateObj) +
@@ -90,7 +91,13 @@ export class LightTile extends LitElement {
 
     private _showMoreInfo(e: Event): void {
         e.stopPropagation();
-        showMoreInfo(this._hass, this._config);
+        if (!this._config || !this._stateObj) return;
+
+        showMoreInfo(
+            this._config,
+            this._stateObj,
+            this._config.group ? this._hass[this._config.group].attributes?.friendly_name || this._config.group : ""
+        );
     }
 
     private _showGroupEntities(e: Event): void {
@@ -102,40 +109,7 @@ export class LightTile extends LitElement {
         )
             return;
 
-        const data: any = {
-            title: this._stateObj.attributes.friendly_name || this._stateObj.entity_id,
-            timeout: 60000,
-            content: {
-                type: "custom:auto-entities",
-                card: {
-                    type: "custom:layout-card",
-                    layout_type: "custom:grid-layout",
-                    layout: {
-                        margin: 0,
-                        "grid-template-columns": "1fr",
-                        "grid-gap": "var(--sq-dialog-grid-gap)",
-                    },
-                },
-                card_param: "cards",
-                filter: {
-                    include: [
-                        {
-                            group: this._stateObj.entity_id,
-                            sort: {
-                                method: "friendly_name",
-                                ignore_case: true,
-                            },
-                            options: {
-                                type: "custom:smartqasa-light-tile",
-                                group: this._stateObj.entity_id,
-                                tile: "light",
-                            },
-                        },
-                    ],
-                },
-            },
-        };
-        window.browser_mod?.service("popup", data);
+        showGroupEntities(this._config, this._stateObj);
     }
 
     getCardSize() {

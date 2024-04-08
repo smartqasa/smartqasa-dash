@@ -1,15 +1,10 @@
-export const showMoreInfo = (hass: any, config: any) => {
-    const entityID = config.entity;
-    const title = config.name || hass.states[entityID]?.attributes?.friendly_name || entityID;
-    const group = config.group;
-    const tile = config.tile;
-
+export const showMoreInfo = (config: any, stateObj: any, groupTitle: string) => {
     let groupConfig = undefined;
-    if (group) {
+    if (config.group) {
         groupConfig = {
             service: "browser_mod.popup",
             data: {
-                title: hass.states[group]?.attributes?.friendly_name || group,
+                title: groupTitle,
                 timeout: 60000,
                 content: {
                     type: "custom:auto-entities",
@@ -26,9 +21,13 @@ export const showMoreInfo = (hass: any, config: any) => {
                     filter: {
                         include: [
                             {
-                                group: group,
+                                group: config.group,
                                 sort: { method: "friendly_name", ignore_case: true },
-                                options: { type: `custom:smartqasa-${tile}-tile`, group: group, tile: tile },
+                                options: {
+                                    type: `custom:smartqasa-${config.tile}-tile`,
+                                    group: config.group,
+                                    tile: config.tile,
+                                },
                             },
                         ],
                     },
@@ -38,11 +37,11 @@ export const showMoreInfo = (hass: any, config: any) => {
     }
 
     const dialogConfig = {
-        title: title,
+        title: stateObj.attributes.friendly_name || stateObj.entity_id,
         timeout: 60000,
         content: {
             type: "custom:smartqasa-more-info-dialog",
-            entity: entityID,
+            entity: stateObj.entity_id,
         },
         ...(groupConfig && { dismiss_action: groupConfig }),
     };
