@@ -1615,6 +1615,99 @@ window.customCards.push({
     description: "A SmartQasa card for displaying a browser_mod popup dialog.",
 });
 
+const showMoreInfo = (config, stateObj, hass) => {
+    if (!stateObj)
+        return;
+    let groupConfig = undefined;
+    if (config.group) {
+        groupConfig = {
+            service: "browser_mod.popup",
+            data: {
+                title: hass.states[config.group]?.attributes?.friendly_name || config.group,
+                timeout: 60000,
+                content: {
+                    type: "custom:auto-entities",
+                    card: {
+                        type: "custom:layout-card",
+                        layout_type: "custom:grid-layout",
+                        layout: {
+                            margin: 0,
+                            "grid-template-columns": "1fr",
+                            "grid-gap": "var(--sq-dialog-grid-gap)",
+                        },
+                    },
+                    card_param: "cards",
+                    filter: {
+                        include: [
+                            {
+                                group: config.group,
+                                sort: { method: "friendly_name", ignore_case: true },
+                                options: {
+                                    type: `custom:smartqasa-${config.tileType}-tile`,
+                                    group: config.group,
+                                    tileType: config.tileType,
+                                },
+                            },
+                        ],
+                    },
+                },
+            },
+        };
+    }
+    const dialogConfig = {
+        title: stateObj.attributes?.friendly_name || stateObj.entity_id,
+        timeout: 60000,
+        content: {
+            type: "custom:smartqasa-more-info-dialog",
+            entity: stateObj.entity_id,
+        },
+        ...(groupConfig && { dismiss_action: groupConfig }),
+    };
+    window.browser_mod?.service("popup", dialogConfig);
+};
+
+const showGroupEntities = (stateObj, tileType) => {
+    if (!stateObj ||
+        !Array.isArray(stateObj.attributes?.entity_id) ||
+        stateObj.attributes.entity_id.length === 0 ||
+        !tileType)
+        return;
+    const dialogConfig = {
+        title: stateObj.attributes.friendly_name || stateObj.entity_id,
+        timeout: 60000,
+        content: {
+            type: "custom:auto-entities",
+            card: {
+                type: "custom:layout-card",
+                layout_type: "custom:grid-layout",
+                layout: {
+                    margin: 0,
+                    "grid-template-columns": "1fr",
+                    "grid-gap": "var(--sq-dialog-grid-gap)",
+                },
+            },
+            card_param: "cards",
+            filter: {
+                include: [
+                    {
+                        group: stateObj.entity_id,
+                        sort: {
+                            method: "friendly_name",
+                            ignore_case: true,
+                        },
+                        options: {
+                            type: `custom:smartqasa-${tileType}-tile`,
+                            group: stateObj.entity_id,
+                            tileType: tileType,
+                        },
+                    },
+                ],
+            },
+        },
+    };
+    window.browser_mod?.service("popup", dialogConfig);
+};
+
 var styleTileState = i$2 `
     .container {
         grid-template-areas: 'i n' 'i s';
@@ -1646,7 +1739,7 @@ let FanTile = class FanTile extends s {
     }
     static { this.styles = [styleTileBase, styleTileState, styleTileIconSpin]; }
     setConfig(config) {
-        if (!config.entity || config.entity.split('.')[0] != "fan")
+        if (!config.entity || config.entity.split(".")[0] != "fan")
             throw new Error("A valid fan entity is required.");
         this._config = config;
         if (this._hass)
@@ -1664,9 +1757,7 @@ let FanTile = class FanTile extends s {
             if (state == "on" && this._icon == "hass:fan") {
                 if (this._stateObj.attributes.percentage) {
                     const speed = 0.5 + (1 - this._stateObj.attributes.percentage / 100);
-                    const direction = this._stateObj.attributes.direction == "reverse"
-                        ? "reverse"
-                        : "normal";
+                    const direction = this._stateObj.attributes.direction == "reverse" ? "reverse" : "normal";
                     this._iconAnimation = `spin ${speed}s linear infinite ${direction}`;
                 }
                 else {
@@ -1694,21 +1785,21 @@ let FanTile = class FanTile extends s {
     }
     render() {
         return x `
-        <div class="container" @click=${this._showMoreInfo}>
-          <div
-            class="icon"
-            @click=${this._toggleEntity}
-            style="
+            <div class="container" @click=${this._showMoreInfo} @contextmenu=${this._showGroupEntities}>
+                <div
+                    class="icon"
+                    @click=${this._toggleEntity}
+                    style="
               color: rgb(${this._iconColor});
               background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
-              animation: ${this._iconAnimation};"
-          >
-            <ha-icon .icon=${this._icon}></ha-icon>
-          </div>
-          <div class="name">${this._name}</div>
-          <div class="state">${this._stateFmtd}</div>
-        </div>
-    `;
+              animation: ${this._iconAnimation};
+                >
+                    <ha-icon .icon=${this._icon}></ha-icon>
+                </div>
+                <div class="name">${this._name}</div>
+                <div class="state">${this._stateFmtd}</div>
+            </div>
+        `;
     }
     _toggleEntity(e) {
         e.stopPropagation();
@@ -1718,14 +1809,11 @@ let FanTile = class FanTile extends s {
     }
     _showMoreInfo(e) {
         e.stopPropagation();
-        if (this._stateObj) {
-            const event = new CustomEvent("hass-more-info", {
-                bubbles: true,
-                composed: true,
-                detail: { entityId: this._stateObj.entity_id },
-            });
-            this.dispatchEvent(event);
-        }
+        showMoreInfo(this._config, this._stateObj, this._hass);
+    }
+    _showGroupEntities(e) {
+        e.stopPropagation();
+        showGroupEntities(this._stateObj, "fan");
     }
     getCardSize() {
         return 1;
@@ -1908,99 +1996,6 @@ window.customCards.push({
     preview: true,
     description: "A SmartQasa tile for controlling a garage cover entity.",
 });
-
-const showMoreInfo = (config, stateObj, hass) => {
-    if (!stateObj)
-        return;
-    let groupConfig = undefined;
-    if (config.group) {
-        groupConfig = {
-            service: "browser_mod.popup",
-            data: {
-                title: hass.states[config.group]?.attributes?.friendly_name || config.group,
-                timeout: 60000,
-                content: {
-                    type: "custom:auto-entities",
-                    card: {
-                        type: "custom:layout-card",
-                        layout_type: "custom:grid-layout",
-                        layout: {
-                            margin: 0,
-                            "grid-template-columns": "1fr",
-                            "grid-gap": "var(--sq-dialog-grid-gap)",
-                        },
-                    },
-                    card_param: "cards",
-                    filter: {
-                        include: [
-                            {
-                                group: config.group,
-                                sort: { method: "friendly_name", ignore_case: true },
-                                options: {
-                                    type: `custom:smartqasa-${config.tileType}-tile`,
-                                    group: config.group,
-                                    tileType: config.tileType,
-                                },
-                            },
-                        ],
-                    },
-                },
-            },
-        };
-    }
-    const dialogConfig = {
-        title: stateObj.attributes?.friendly_name || stateObj.entity_id,
-        timeout: 60000,
-        content: {
-            type: "custom:smartqasa-more-info-dialog",
-            entity: stateObj.entity_id,
-        },
-        ...(groupConfig && { dismiss_action: groupConfig }),
-    };
-    window.browser_mod?.service("popup", dialogConfig);
-};
-
-const showGroupEntities = (stateObj, tileType) => {
-    if (!stateObj ||
-        !Array.isArray(stateObj.attributes?.entity_id) ||
-        stateObj.attributes.entity_id.length === 0 ||
-        !tileType)
-        return;
-    const dialogConfig = {
-        title: stateObj.attributes.friendly_name || stateObj.entity_id,
-        timeout: 60000,
-        content: {
-            type: "custom:auto-entities",
-            card: {
-                type: "custom:layout-card",
-                layout_type: "custom:grid-layout",
-                layout: {
-                    margin: 0,
-                    "grid-template-columns": "1fr",
-                    "grid-gap": "var(--sq-dialog-grid-gap)",
-                },
-            },
-            card_param: "cards",
-            filter: {
-                include: [
-                    {
-                        group: stateObj.entity_id,
-                        sort: {
-                            method: "friendly_name",
-                            ignore_case: true,
-                        },
-                        options: {
-                            type: `custom:smartqasa-${tileType}-tile`,
-                            group: stateObj.entity_id,
-                            tileType: tileType,
-                        },
-                    },
-                ],
-            },
-        },
-    };
-    window.browser_mod?.service("popup", dialogConfig);
-};
 
 let LightTile = class LightTile extends s {
     constructor() {
@@ -2680,7 +2675,7 @@ let ShadeTile = class ShadeTile extends s {
     }
     static { this.styles = [styleTileBase, styleTileState, styleTileIconBlink]; }
     setConfig(config) {
-        if (!config.entity || config.entity.split('.')[0] != "cover")
+        if (!config.entity || config.entity.split(".")[0] != "cover")
             throw new Error("A valid cover entity is required.");
         this._config = config;
         if (this._hass)
@@ -2725,8 +2720,7 @@ let ShadeTile = class ShadeTile extends s {
             this._stateFmtd =
                 this._hass.formatEntityState(this._stateObj) +
                     (state === "open" && this._stateObj.attributes.current_position
-                        ? " - " +
-                            this._hass.formatEntityAttributeValue(this._stateObj, "current_position")
+                        ? " - " + this._hass.formatEntityAttributeValue(this._stateObj, "current_position")
                         : "");
         }
         else {
@@ -2739,22 +2733,22 @@ let ShadeTile = class ShadeTile extends s {
     }
     render() {
         return x `
-      <div class="container" @click=${this._showMoreInfo}>
-        <div
-          class="icon"
-          @click=${this._toggleEntity}
-          style="
+            <div class="container" @click=${this._showMoreInfo} @contextmenu=${this._showGroupEntities}>
+                <div
+                    class="icon"
+                    @click=${this._toggleEntity}
+                    style="
             color: rgb(${this._iconColor});
             background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
             animation: ${this._iconAnimation};
           "
-        >
-          <ha-icon .icon=${this._icon}></ha-icon>
-        </div>
-        <div class="name">${this._name}</div>
-        <div class="state">${this._stateFmtd}</div>
-      </div>
-    `;
+                >
+                    <ha-icon .icon=${this._icon}></ha-icon>
+                </div>
+                <div class="name">${this._name}</div>
+                <div class="state">${this._stateFmtd}</div>
+            </div>
+        `;
     }
     _toggleEntity(e) {
         e.stopPropagation();
@@ -2780,14 +2774,11 @@ let ShadeTile = class ShadeTile extends s {
     }
     _showMoreInfo(e) {
         e.stopPropagation();
-        if (this._stateObj) {
-            const event = new CustomEvent("hass-more-info", {
-                bubbles: true,
-                composed: true,
-                detail: { entityId: this._stateObj.entity_id },
-            });
-            this.dispatchEvent(event);
-        }
+        showMoreInfo(this._config, this._stateObj, this._hass);
+    }
+    _showGroupEntities(e) {
+        e.stopPropagation();
+        showGroupEntities(this._stateObj, "shade");
     }
     getCardSize() {
         return 1;
