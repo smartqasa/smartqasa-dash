@@ -1937,7 +1937,7 @@ const showMoreInfo = (hass, config) => {
                             {
                                 group: group,
                                 sort: { method: "friendly_name", ignore_case: true },
-                                options: { type: `custom:smartqasa-${tile}-tile`, group: group },
+                                options: { type: `custom:smartqasa-${tile}-tile`, group: group, tile: tile },
                             },
                         ],
                     },
