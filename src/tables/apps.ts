@@ -66,10 +66,10 @@ const appTable: AppTable = {
         uri_scheme: "",
     },
     alexa: {
-        name: "Amazon Music",
+        name: "Alexa",
         app_icon: alexaIcon,
-        launcher: "uri_scheme",
-        package: "",
+        launcher: "package",
+        package: "com.amazon.dee.app",
         uri_scheme: "alexa://",
     },
     allrecipes: {
@@ -180,7 +180,7 @@ const appTable: AppTable = {
     google_chrome: {
         name: "Google Chrome",
         app_icon: googleChromeIcon,
-        launcher: "uri_scheme",
+        launcher: "package",
         package: "com.android.chrome",
         uri_scheme: "googlechrome://",
     },
@@ -320,7 +320,7 @@ const appTable: AppTable = {
     shazam: {
         name: "Shazam",
         app_icon: shazamIcon,
-        launcher: "uri_scheme",
+        launcher: "package",
         package: "com.shazam.android",
         uri_scheme: "shazam://",
     },
