@@ -751,8 +751,6 @@ var accuweatherIcon = "app_icons/c6398f61b62006d6.webp";
 
 var alexaIcon = "app_icons/ac7d873543a99f2b.webp";
 
-var allrecipesIcon = "app_icons/95efca8d7bfa91b4.webp";
-
 var amazonMusicIcon = "app_icons/bc9fbce2e6d159f1.webp";
 
 var amazonShoppingIcon = "app_icons/78dfd5a2ee0e0c76.webp";
@@ -817,6 +815,8 @@ var rachioIcon = "app_icons/bdb033e07cbf2ebc.webp";
 
 var rainbirdIcon = "app_icons/2985d73af4d60b6f.webp";
 
+var reolinkIcon = "app_icons/52c66cf6dd4c16b4.webp";
+
 var ringIcon = "app_icons/05629b1fdf51e8ef.webp";
 
 var rokuIcon = "app_icons/d3e41621bc247c26.webp";
@@ -858,28 +858,21 @@ const appTable = {
         app_icon: alexaIcon,
         launcher: "package",
         package: "com.amazon.dee.app",
-        uri_scheme: "alexa://",
-    },
-    allrecipes: {
-        name: "AllRecipes",
-        app_icon: allrecipesIcon,
-        launcher: "package",
-        package: "com.allrecipes.spinner.free",
-        uri_scheme: "",
+        uri_scheme: "alexa:",
     },
     amazon_music: {
         name: "Amazon Music",
         app_icon: amazonMusicIcon,
         launcher: "uri_scheme",
         package: "com.amazon.mp3",
-        uri_scheme: "amznmp3://",
+        uri_scheme: "amznmp3:",
     },
     amazon_shopping: {
         name: "Amazon Shopping",
         app_icon: amazonShoppingIcon,
         launcher: "uri_scheme",
         package: "com.amazon.windowshop",
-        uri_scheme: "amazon://",
+        uri_scheme: "amazon:",
     },
     amcrest_smart_home: {
         name: "Amcrest Smart Home",
@@ -898,9 +891,9 @@ const appTable = {
     bmw: {
         name: "My BMW",
         app_icon: bmwIcon,
-        launcher: "uri_scheme",
+        launcher: "package",
         package: "de.bmw.connected.mobile20.na",
-        uri_scheme: "bmwconnected://",
+        uri_scheme: "bmwconnected:",
     },
     bond: {
         name: "Bond Home",
@@ -942,21 +935,21 @@ const appTable = {
         app_icon: doordashIcon,
         launcher: "uri_scheme",
         package: "com.dd.dashdash",
-        uri_scheme: "doordash://",
+        uri_scheme: "doordash:",
     },
     eufy_home: {
         name: "Eufy Clean",
         app_icon: eufyHomeIcon,
         launcher: "uri_scheme",
         package: "com.eufylife.smarthome",
-        uri_scheme: "eufyhome://",
+        uri_scheme: "eufyhome:",
     },
     eufy_security: {
         name: "Eufy Security",
         app_icon: eufySecurityIcon,
         launcher: "package",
         package: "com.oceanwing.battery.cam",
-        uri_scheme: "eufysecurity://",
+        uri_scheme: "eufysecurity:",
     },
     google_assistant: {
         name: "Google Assistant",
@@ -975,16 +968,16 @@ const appTable = {
     google_maps: {
         name: "Google Maps",
         app_icon: googleMapsIcon,
-        launcher: "uri_scheme",
+        launcher: "package",
         package: "com.google.android.apps.maps",
-        uri_scheme: "googlemaps://",
+        uri_scheme: "googlemaps:",
     },
     grubhub: {
         name: "Grubhub",
         app_icon: grubhubIcon,
-        launcher: "uri_scheme",
+        launcher: "package",
         package: "com.grubhub.android",
-        uri_scheme: "grubhub://",
+        uri_scheme: "grubhub:",
     },
     home_connect: {
         name: "Home Connect",
@@ -1005,14 +998,14 @@ const appTable = {
         app_icon: huluIcon,
         launcher: "uri_scheme",
         package: "com.hulu.plus",
-        uri_scheme: "hulu://",
+        uri_scheme: "hulu:",
     },
     irobot: {
         name: "iRobot",
         app_icon: irobotIcon,
-        launcher: "uri_scheme",
+        launcher: "package",
         package: "com.irobot.home",
-        uri_scheme: "irobot://",
+        uri_scheme: "irobot:",
     },
     keurig: {
         name: "Keurig",
@@ -1091,12 +1084,19 @@ const appTable = {
         package: "com.rainbird",
         uri_scheme: "",
     },
+    reolink: {
+        name: "Ring",
+        app_icon: reolinkIcon,
+        launcher: "package",
+        package: "com.mcu.reolink",
+        uri_scheme: "reolink:",
+    },
     ring: {
         name: "Ring",
         app_icon: ringIcon,
         launcher: "uri_scheme",
         package: "com.ringapp",
-        uri_scheme: "ring://",
+        uri_scheme: "ring:",
     },
     roku: {
         name: "Roku",
@@ -1117,7 +1117,7 @@ const appTable = {
         app_icon: shazamIcon,
         launcher: "package",
         package: "com.shazam.android",
-        uri_scheme: "shazam://",
+        uri_scheme: "shazam:",
     },
     shipt_shopper: {
         name: "Shipt Shopper",
@@ -1145,42 +1145,42 @@ const appTable = {
         app_icon: sonosIcon,
         launcher: "uri_scheme",
         package: "com.sonos.acr2",
-        uri_scheme: "sonos://",
+        uri_scheme: "sonos:",
     },
     spotify: {
         name: "Spotify",
         app_icon: spotifyIcon,
         launcher: "uri_scheme",
         package: "com.spotify.music",
-        uri_scheme: "spotify://",
+        uri_scheme: "spotify:",
     },
     tuya_smart: {
         name: "Tuya Smart",
         app_icon: tuyaSmartIcon,
         launcher: "uri_scheme",
         package: "com.tuya.smart",
-        uri_scheme: "tuyasmart://",
+        uri_scheme: "tuyasmart:",
     },
     uber_eats: {
         name: "Uber Eats",
         app_icon: uberEatsIcon,
         launcher: "uri_scheme",
         package: "com.ubercab.eats",
-        uri_scheme: "ubereats://",
+        uri_scheme: "ubereats:",
     },
     weather_channel: {
         name: "Weather Channel",
         app_icon: weatherChannelIcon,
-        launcher: "uri_scheme",
+        launcher: "package",
         package: "com.weather.Weather",
-        uri_scheme: "weather://",
+        uri_scheme: "weather:",
     },
     weather_underground: {
         name: "Weather Underground",
         app_icon: weatherUndergroundIcon,
         launcher: "uri_scheme",
         package: "com.wunderground.android.weather",
-        uri_scheme: "wxunderground://",
+        uri_scheme: "wxunderground:",
     },
     yummly: {
         name: "Yummly Recipes",
@@ -1203,29 +1203,36 @@ let AppTile = class AppTile extends s {
         let iconStyle, iconTemplate, name;
         if (this._appObj) {
             if (this._config?.icon) {
-                iconStyle = "color: rgb(var(--sq-inactive-rgb)); background-color: rgba(var(--sq-inactive-rgb), var(--sq-icon-opacity, 0.2));";
+                iconStyle =
+                    "color: rgb(var(--sq-inactive-rgb)); background-color: rgba(var(--sq-inactive-rgb), var(--sq-icon-opacity, 0.2));";
                 iconTemplate = x `<ha-icon .icon=${this._config.icon}></ha-icon>`;
             }
             else if (this._appObj?.app_icon) {
                 iconStyle = "height: 3.8rem; width: 3.8rem; padding: 0;";
-                iconTemplate = x `<img src="/local/community/smartqasa-dash/assets/${this._appObj.app_icon}" alt="App Icon" style="border-radius: 50%;" />`;
+                iconTemplate = x `<img
+                    src="/local/community/smartqasa-dash/assets/${this._appObj.app_icon}"
+                    alt="App Icon"
+                    style="border-radius: 50%;"
+                />`;
             }
             else {
-                iconStyle = "color: rgb(var(--sq-unavailable-rgb)); background-color: rgba(var(--sq-unavailable-rgb), var(--sq-icon-opacity));";
+                iconStyle =
+                    "color: rgb(var(--sq-unavailable-rgb)); background-color: rgba(var(--sq-unavailable-rgb), var(--sq-icon-opacity));";
                 iconTemplate = x `<ha-icon .icon="hass:help-rhombus"></ha-icon>`;
             }
         }
         else {
-            iconStyle = "color: rgb(var(--sq-unavailable-rgb)); background-color: rgba(var(--sq-unavailable-rgb), var(--sq-icon-opacity));";
+            iconStyle =
+                "color: rgb(var(--sq-unavailable-rgb)); background-color: rgba(var(--sq-unavailable-rgb), var(--sq-icon-opacity));";
             iconTemplate = x `<ha-icon .icon="hass:alert-rhombus"></ha-icon>`;
         }
         name = this._config?.name || this._appObj?.name || this._config?.app;
         return x `
-      <div class="container" @click=${this._launchApp}>
-        <div class="icon" style=${iconStyle}>${iconTemplate}</div>
-        <div class="name">${name}</div>
-      </div>
-    `;
+            <div class="container" @click=${this._launchApp}>
+                <div class="icon" style=${iconStyle}>${iconTemplate}</div>
+                <div class="name">${name}</div>
+            </div>
+        `;
     }
     _launchApp(e) {
         e.stopPropagation();
@@ -1241,7 +1248,7 @@ let AppTile = class AppTile extends s {
             }
         }
         else {
-            console.error("Neither URI scheme nor package ID is provided for launching the app.");
+            console.error("Neither URI scheme nor package has been specified.");
         }
     }
     getCardSize() {

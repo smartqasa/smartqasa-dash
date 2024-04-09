@@ -1,6 +1,5 @@
 import accuweatherIcon from "../assets/app_icons/accuweather.webp";
 import alexaIcon from "../assets/app_icons/alexa.webp";
-import allrecipesIcon from "../assets/app_icons/allrecipes.webp";
 import amazonMusicIcon from "../assets/app_icons/amazon_music.webp";
 import amazonShoppingIcon from "../assets/app_icons/amazon_shopping.webp";
 import amcrestSmartHomeIcon from "../assets/app_icons/amcrest_smart_home.webp";
@@ -33,6 +32,7 @@ import pandoraIcon from "../assets/app_icons/pandora.webp";
 import playStoreIcon from "../assets/app_icons/play_store.webp";
 import rachioIcon from "../assets/app_icons/rachio.webp";
 import rainbirdIcon from "../assets/app_icons/rainbird.webp";
+import reolinkIcon from "../assets/app_icons/reolink.webp";
 import ringIcon from "../assets/app_icons/ring.webp";
 import rokuIcon from "../assets/app_icons/roku.webp";
 import senseIcon from "../assets/app_icons/sense.webp";
@@ -71,28 +71,21 @@ const appTable: AppTable = {
         app_icon: alexaIcon,
         launcher: "package",
         package: "com.amazon.dee.app",
-        uri_scheme: "alexa://",
-    },
-    allrecipes: {
-        name: "AllRecipes",
-        app_icon: allrecipesIcon,
-        launcher: "package",
-        package: "com.allrecipes.spinner.free",
-        uri_scheme: "",
+        uri_scheme: "alexa:",
     },
     amazon_music: {
         name: "Amazon Music",
         app_icon: amazonMusicIcon,
         launcher: "uri_scheme",
         package: "com.amazon.mp3",
-        uri_scheme: "amznmp3://",
+        uri_scheme: "amznmp3:",
     },
     amazon_shopping: {
         name: "Amazon Shopping",
         app_icon: amazonShoppingIcon,
         launcher: "uri_scheme",
         package: "com.amazon.windowshop",
-        uri_scheme: "amazon://",
+        uri_scheme: "amazon:",
     },
     amcrest_smart_home: {
         name: "Amcrest Smart Home",
@@ -111,9 +104,9 @@ const appTable: AppTable = {
     bmw: {
         name: "My BMW",
         app_icon: bmwIcon,
-        launcher: "uri_scheme",
+        launcher: "package",
         package: "de.bmw.connected.mobile20.na",
-        uri_scheme: "bmwconnected://",
+        uri_scheme: "bmwconnected:",
     },
     bond: {
         name: "Bond Home",
@@ -155,21 +148,21 @@ const appTable: AppTable = {
         app_icon: doordashIcon,
         launcher: "uri_scheme",
         package: "com.dd.dashdash",
-        uri_scheme: "doordash://",
+        uri_scheme: "doordash:",
     },
     eufy_home: {
         name: "Eufy Clean",
         app_icon: eufyHomeIcon,
         launcher: "uri_scheme",
         package: "com.eufylife.smarthome",
-        uri_scheme: "eufyhome://",
+        uri_scheme: "eufyhome:",
     },
     eufy_security: {
         name: "Eufy Security",
         app_icon: eufySecurityIcon,
         launcher: "package",
         package: "com.oceanwing.battery.cam",
-        uri_scheme: "eufysecurity://",
+        uri_scheme: "eufysecurity:",
     },
     google_assistant: {
         name: "Google Assistant",
@@ -188,16 +181,16 @@ const appTable: AppTable = {
     google_maps: {
         name: "Google Maps",
         app_icon: googleMapsIcon,
-        launcher: "uri_scheme",
+        launcher: "package",
         package: "com.google.android.apps.maps",
-        uri_scheme: "googlemaps://",
+        uri_scheme: "googlemaps:",
     },
     grubhub: {
         name: "Grubhub",
         app_icon: grubhubIcon,
-        launcher: "uri_scheme",
+        launcher: "package",
         package: "com.grubhub.android",
-        uri_scheme: "grubhub://",
+        uri_scheme: "grubhub:",
     },
     home_connect: {
         name: "Home Connect",
@@ -218,14 +211,14 @@ const appTable: AppTable = {
         app_icon: huluIcon,
         launcher: "uri_scheme",
         package: "com.hulu.plus",
-        uri_scheme: "hulu://",
+        uri_scheme: "hulu:",
     },
     irobot: {
         name: "iRobot",
         app_icon: irobotIcon,
-        launcher: "uri_scheme",
+        launcher: "package",
         package: "com.irobot.home",
-        uri_scheme: "irobot://",
+        uri_scheme: "",
     },
     keurig: {
         name: "Keurig",
@@ -304,12 +297,19 @@ const appTable: AppTable = {
         package: "com.rainbird",
         uri_scheme: "",
     },
+    reolink: {
+        name: "Ring",
+        app_icon: reolinkIcon,
+        launcher: "package",
+        package: "com.mcu.reolink",
+        uri_scheme: "reolink:",
+    },
     ring: {
         name: "Ring",
         app_icon: ringIcon,
         launcher: "uri_scheme",
         package: "com.ringapp",
-        uri_scheme: "ring://",
+        uri_scheme: "ring:",
     },
     roku: {
         name: "Roku",
@@ -330,7 +330,7 @@ const appTable: AppTable = {
         app_icon: shazamIcon,
         launcher: "package",
         package: "com.shazam.android",
-        uri_scheme: "shazam://",
+        uri_scheme: "shazam:",
     },
     shipt_shopper: {
         name: "Shipt Shopper",
@@ -358,42 +358,42 @@ const appTable: AppTable = {
         app_icon: sonosIcon,
         launcher: "uri_scheme",
         package: "com.sonos.acr2",
-        uri_scheme: "sonos://",
+        uri_scheme: "sonos:",
     },
     spotify: {
         name: "Spotify",
         app_icon: spotifyIcon,
         launcher: "uri_scheme",
         package: "com.spotify.music",
-        uri_scheme: "spotify://",
+        uri_scheme: "spotify:",
     },
     tuya_smart: {
         name: "Tuya Smart",
         app_icon: tuyaSmartIcon,
         launcher: "uri_scheme",
         package: "com.tuya.smart",
-        uri_scheme: "tuyasmart://",
+        uri_scheme: "tuyasmart:",
     },
     uber_eats: {
         name: "Uber Eats",
         app_icon: uberEatsIcon,
         launcher: "uri_scheme",
         package: "com.ubercab.eats",
-        uri_scheme: "ubereats://",
+        uri_scheme: "ubereats:",
     },
     weather_channel: {
         name: "Weather Channel",
         app_icon: weatherChannelIcon,
-        launcher: "uri_scheme",
+        launcher: "package",
         package: "com.weather.Weather",
-        uri_scheme: "weather://",
+        uri_scheme: "weather:",
     },
     weather_underground: {
         name: "Weather Underground",
         app_icon: weatherUndergroundIcon,
         launcher: "uri_scheme",
         package: "com.wunderground.android.weather",
-        uri_scheme: "wxunderground://",
+        uri_scheme: "wxunderground:",
     },
     yummly: {
         name: "Yummly Recipes",
