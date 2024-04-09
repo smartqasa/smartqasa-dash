@@ -75,52 +75,51 @@ const t=t=>(e,o)=>{void 0!==o?o.addInitializer((()=>{customElements.define(t,e);
  */function r(r){return n({...r,state:!0,attribute:!1})}
 
 var styleChipBasic = i$2 `
-  .container {
-    width: fit-content;
-    place-self: center;
-    display: grid;
-    grid-template-areas: "i t";
-    grid-column-gap: 0.8rem;
-    margin-right: 0.7rem;
-    padding: 1rem;
-    border: var(--sq-card-border);
-    border-radius: var(--sq-chip-border-radius);
-    background-color: var(--sq-card-background-color);
-    cursor: pointer;
-  }
-  .icon {
-    grid-area: i;
-    display: flex;
-    height: 1.8rem;
-    width: 1.8rem;
-    transition: var(--sq-icon-transition, none);
-  }
-  .text {
-    grid-area: t;
-    place-self: center start;
-    text-align: left;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: normal;
-    font-weight: var(--sq-primary-font-weight, 400);
-    font-size: var(--sq-primary-font-size, 1.5rem);
-    color: rgb(var(--sq-primary-font-rgb), 128, 128, 128);
-  }
+    .container {
+        width: fit-content;
+        place-self: center;
+        display: grid;
+        grid-template-areas: "i t";
+        grid-column-gap: 0.8rem;
+        margin-right: 0.7rem;
+        padding: 1rem;
+        border: var(--sq-card-border);
+        border-radius: var(--sq-chip-border-radius);
+        background-color: var(--sq-card-background-color);
+        cursor: pointer;
+    }
+    .icon {
+        grid-area: i;
+        display: flex;
+        height: 1.8rem;
+        width: 1.8rem;
+        transition: var(--sq-icon-transition, none);
+    }
+    .text {
+        grid-area: t;
+        place-self: center start;
+        text-align: left;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: normal;
+        font-weight: var(--sq-primary-font-weight, 400);
+        font-size: var(--sq-primary-font-size, 1.5rem);
+        color: rgb(var(--sq-primary-font-rgb), 128, 128, 128);
+    }
 `;
 
 let SmartQasaMotionChip = class SmartQasaMotionChip extends s {
     static { this.styles = styleChipBasic; }
     setConfig(config) {
-        this._entity = config.entity || undefined;
         this._name = config.name || undefined;
         this._containerStyle = this._name
             ? ""
             : "grid-template-areas: 'i'; grid-column-gap: 0; justify-content: center;";
     }
     set hass(hass) {
-        if (this._entity) {
+        if (this._config && this._config.entity) {
             this._hass = hass;
-            this._stateObj = this._hass?.states[this._entity] || undefined;
+            this._stateObj = this._hass.states[this._config.entity];
             this._updateState();
         }
     }
@@ -128,58 +127,46 @@ let SmartQasaMotionChip = class SmartQasaMotionChip extends s {
         if (this._stateObj) {
             const state = this._stateObj.state || undefined;
             switch (state) {
-                case 'on':
-                    this._icon = 'hass:motion-sensor';
-                    this._iconColor = 'var(--sq-primary-font-rgb, 128, 128, 128)';
+                case "on":
+                    this._icon = "hass:motion-sensor";
+                    this._iconColor = "var(--sq-primary-font-rgb, 128, 128, 128)";
                     break;
-                case 'off':
-                    this._icon = 'hass:motion-sensor-off';
-                    this._iconColor = 'var(--sq-red-rgb, 255, 0, 0)';
+                case "off":
+                    this._icon = "hass:motion-sensor-off";
+                    this._iconColor = "var(--sq-red-rgb, 255, 0, 0)";
                     break;
                 default:
-                    this._icon = 'hass:motion-sensor-off';
-                    this._iconColor = 'var(--sq-unavailable-rgb, 255, 0, 255)';
+                    this._icon = "hass:motion-sensor-off";
+                    this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
                     break;
             }
         }
     }
     render() {
-        if (!this._entity) {
+        if (!this._stateObj) {
             return x ``;
         }
         return x `
-      <div class="container" style="${this._containerStyle}" @click=${this._toggleEntity}>
-        <div class="icon" style="color: rgb(${this._iconColor});">
-          <ha-icon .icon=${this._icon}></ha-icon>
-        </div>
-        ${this._name ? x `<div class="text">${this._name}</div>` : null}
-      </div>
-    `;
+            <div class="container" style="${this._containerStyle}" @click=${this._toggleEntity}>
+                <div class="icon" style="color: rgb(${this._iconColor});">
+                    <ha-icon .icon=${this._icon}></ha-icon>
+                </div>
+                ${this._name ? x `<div class="text">${this._name}</div>` : null}
+            </div>
+        `;
     }
     _toggleEntity(e) {
         e.stopPropagation();
         if (this._stateObj) {
-            this._hass.callService('homeassistant', 'toggle', {
-                entity_id: this._entity,
+            this._hass.callService("homeassistant", "toggle", {
+                entity_id: this._config?.entity,
             });
         }
     }
 };
 __decorate([
     r()
-], SmartQasaMotionChip.prototype, "_containerStyle", void 0);
-__decorate([
-    r()
-], SmartQasaMotionChip.prototype, "_entity", void 0);
-__decorate([
-    r()
-], SmartQasaMotionChip.prototype, "_icon", void 0);
-__decorate([
-    r()
-], SmartQasaMotionChip.prototype, "_iconColor", void 0);
-__decorate([
-    r()
-], SmartQasaMotionChip.prototype, "_name", void 0);
+], SmartQasaMotionChip.prototype, "_config", void 0);
 __decorate([
     r()
 ], SmartQasaMotionChip.prototype, "_stateObj", void 0);
@@ -187,46 +174,46 @@ SmartQasaMotionChip = __decorate([
     t("smartqasa-motion-chip")
 ], SmartQasaMotionChip);
 window.customCards.push({
-    type: 'smartqasa-motion-chip',
-    name: 'SmartQasa Motion Sensor Chip',
+    type: "smartqasa-motion-chip",
+    name: "SmartQasa Motion Sensor Chip",
     preview: true,
-    description: 'A SmartQasa chip for toggling a motion sensor automation entity.',
+    description: "A SmartQasa chip for toggling a motion sensor automation entity.",
 });
 
 var styleChipDouble = i$2 `
-  .container {
-    width: fit-content;
-    place-self: center;
-    display: grid;
-    grid-template-areas: "i1 s i2";
-    grid-column-gap: 1rem;
-    margin-right: 0.7rem;
-    padding: 0.8rem;
-    border: var(--sq-card-border);
-    border-radius: var(--sq-chip-border-radius);
-    background-color: var(--sq-card-background-color);
-    cursor: pointer;
-  }
-  .container::after {
-    content: "";
-    grid-area: s;
-    width: 1px;
-    background-color: rgb(128, 128, 128);
-    margin: auto;
-    height: 90%;
-  }
-  .icon1 {
-    grid-area: i1;
-  }
-  .icon2 {
-    grid-area: i2;
-  }
-  .icon1,
-  .icon2 {
-    display: flex;
-    --mdc-icon-size: 2.2rem;
-    color: rgb(var(--sq-primary-text-rgb));
-  }
+    .container {
+        width: fit-content;
+        place-self: center;
+        display: grid;
+        grid-template-areas: "i1 s i2";
+        grid-column-gap: 1rem;
+        margin-right: 0.7rem;
+        padding: 0.8rem;
+        border: var(--sq-card-border);
+        border-radius: var(--sq-chip-border-radius);
+        background-color: var(--sq-card-background-color);
+        cursor: pointer;
+    }
+    .container::after {
+        content: "";
+        grid-area: s;
+        width: 1px;
+        background-color: rgb(128, 128, 128);
+        margin: auto;
+        height: 90%;
+    }
+    .icon1 {
+        grid-area: i1;
+    }
+    .icon2 {
+        grid-area: i2;
+    }
+    .icon1,
+    .icon2 {
+        display: flex;
+        --mdc-icon-size: 2.2rem;
+        color: rgb(var(--sq-primary-text-rgb));
+    }
 `;
 
 let SmartQasaNavigateChip = class SmartQasaNavigateChip extends s {
@@ -248,39 +235,38 @@ let SmartQasaNavigateChip = class SmartQasaNavigateChip extends s {
         if (!this._areaObjPrev || !this._areaObjNext) {
             return x ``;
         }
-        const iconPrev = 'hass:arrow-left';
-        const iconNext = 'hass:arrow-right';
+        const iconPrev = "hass:arrow-left";
+        const iconNext = "hass:arrow-right";
         return x `
-      <div class="container">
-        <div class="icon1" @click=${this._navigatePrev}>
-          <ha-icon .icon=${iconPrev}></ha-icon>
-        </div>
-        <div class="icon2" @click=${this._navigateNext}>
-          <ha-icon .icon=${iconNext}></ha-icon>
-        </div>
-      </div>
-    `;
+            <div class="container">
+                <div class="icon1" @click=${this._navigatePrev}>
+                    <ha-icon .icon=${iconPrev}></ha-icon>
+                </div>
+                <div class="icon2" @click=${this._navigateNext}>
+                    <ha-icon .icon=${iconNext}></ha-icon>
+                </div>
+            </div>
+        `;
     }
     _navigatePrev(e) {
         e.stopPropagation();
         if (this._areaObjPrev) {
-            window.history.pushState(null, '', `/home-dash/${this._areaPrev}`);
-            window.dispatchEvent(new CustomEvent('location-changed'));
+            window.history.pushState(null, "", `/home-dash/${this._areaPrev}`);
+            window.dispatchEvent(new CustomEvent("location-changed"));
             // Assume browser_mod is correctly typed and included
         }
         else {
-            console.error('Previous area is not found.');
+            console.error("Previous area is not found.");
         }
     }
     _navigateNext(e) {
         e.stopPropagation();
         if (this._areaObjNext) {
-            window.history.pushState(null, '', `/home-dash/${this._areaNext}`);
-            window.dispatchEvent(new CustomEvent('location-changed'));
-            // Assume browser_mod is correctly typed and included
+            window.history.pushState(null, "", `/home-dash/${this._areaNext}`);
+            window.dispatchEvent(new CustomEvent("location-changed"));
         }
         else {
-            console.error('Next area is not found.');
+            console.error("Next area is not found.");
         }
     }
 };
@@ -426,20 +412,20 @@ SmartQasaThermostatChip = __decorate([
 let AreaPicture = class AreaPicture extends s {
     static get styles() {
         return i$2 `
-      :host {
-        display: block;
-      }
-      ha-card {
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-position: center center;
-        border-radius: 4px;
-        border: none;
-        box-shadow: none;
-        background-color: transparent;
-        overflow: hidden;
-      }
-    `;
+            :host {
+                display: block;
+            }
+            ha-card {
+                background-size: cover;
+                background-repeat: no-repeat;
+                background-position: center center;
+                border-radius: 4px;
+                border: none;
+                box-shadow: none;
+                background-color: transparent;
+                overflow: hidden;
+            }
+        `;
     }
     setConfig(config) {
         this._config = config;
@@ -456,11 +442,8 @@ let AreaPicture = class AreaPicture extends s {
             ? `/local/sq-areas/${this._config.picture}`
             : this._areaObj?.picture ?? "/local/sq-storage/images/default.png";
         return x `
-      <ha-card
-        style="background-image: url(${picture}); height: ${height};"
-        class="picture"
-      ></ha-card>
-    `;
+            <ha-card style="background-image: url(${picture}); height: ${height};" class="picture"></ha-card>
+        `;
     }
     getCardSize() {
         return 1;
@@ -496,16 +479,12 @@ let MoreInfoDialog = class MoreInfoDialog extends s {
     }
     render() {
         return x `
-      <div>
-        <div class="card-content">
-          <more-info-content
-            .hass=${this._hass}
-            .stateObj=${this._stateObj}
-            >
-          </more-info-content>
-        </div>
-      </div>
-    `;
+            <div>
+                <div class="card-content">
+                    <more-info-content .hass=${this._hass} .stateObj=${this._stateObj}> </more-info-content>
+                </div>
+            </div>
+        `;
     }
     getCardSize() {
         return 5;
@@ -535,44 +514,41 @@ let SmartQasaTimeDate = class SmartQasaTimeDate extends s {
     }
     static get styles() {
         return i$2 `
-      :host {
-        display: block;
-        padding: 0;
-        background-color: transparent;
-      }
-      .container {
-        display: grid;
-        grid-template-rows: auto auto;
-        padding: 0;
-        border-radius: 0;
-        border: none;
-        box-shadow: none;
-        background-color: transparent;
-        cursor: pointer;
-      }
-      .time,
-      .date {
-        justify-self: start;
-        text-align: left;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-      .time {
-        line-height: var(--sq-title-font-size, 16px);
-        font-size: var(--sq-title-font-size, 16px);
-        font-weight: var(--sq-title-font-weight, 400);
-        color: rgb(var(--sq-title-font-rgb, 0, 0, 0));
-      }
-      .date {
-        font-size: var(--sq-primary-font-size, 14px);
-        font-weight: var(--sq-primary-font-weight, 300);
-        color: rgb(var(--sq-secondary-font-rgb, 128, 128, 128));
-      }
-    `;
-    }
-    setConfig(config) {
-        // Handle configuration setup if necessary
+            :host {
+                display: block;
+                padding: 0;
+                background-color: transparent;
+            }
+            .container {
+                display: grid;
+                grid-template-rows: auto auto;
+                padding: 0;
+                border-radius: 0;
+                border: none;
+                box-shadow: none;
+                background-color: transparent;
+                cursor: pointer;
+            }
+            .time,
+            .date {
+                justify-self: start;
+                text-align: left;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            .time {
+                line-height: var(--sq-title-font-size, 16px);
+                font-size: var(--sq-title-font-size, 16px);
+                font-weight: var(--sq-title-font-weight, 400);
+                color: rgb(var(--sq-title-font-rgb, 0, 0, 0));
+            }
+            .date {
+                font-size: var(--sq-primary-font-size, 14px);
+                font-weight: var(--sq-primary-font-weight, 300);
+                color: rgb(var(--sq-secondary-font-rgb, 128, 128, 128));
+            }
+        `;
     }
     set hass(hass) {
         this._hass = hass;
@@ -583,11 +559,11 @@ let SmartQasaTimeDate = class SmartQasaTimeDate extends s {
     }
     render() {
         return x `
-      <div class="container" @click="${this._handleTap}">
-        <div class="time">${this._time}</div>
-        <div class="date">${this._date}</div>
-      </div>
-    `;
+            <div class="container" @click="${this._handleTap}">
+                <div class="time">${this._time}</div>
+                <div class="date">${this._date}</div>
+            </div>
+        `;
     }
     _handleTap() {
         if (typeof window.fully !== "undefined" && window.fully.startApplication) {
@@ -618,55 +594,55 @@ window.customCards.push({
 });
 
 var styleTileBase = i$2 `
-  .container {
-    display: grid;
-    height: 5.2rem;
-    border: var(--sq-card-border, none);
-    border-radius: 1.5rem;
-    grid-template-areas: "i n";
-    grid-template-columns: auto 1fr;
-    grid-column-gap: 1rem;
-    grid-row-gap: 0.4rem;
-    padding: 1rem;
-    background-color: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
-    cursor: pointer;
-  }
-  .icon {
-    grid-area: i;
-    display: flex;
-    justify-content: center;
-    align-self: center;
-    height: 1.8rem;
-    width: 1.8rem;
-    padding: 1rem;
-    border-radius: 50%;
-    transition: var(--sq-icon-transition, none);
-  }
-  .name {
-    grid-area: n;
-    place-self: center start;
-    max-height: 3.6rem;
-    line-height: 1.2;
-    max-width: 100%;
-    text-align: left;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: normal;
-    font-weight: var(--sq-primary-font-weight, 400);
-    font-size: var(--sq-primary-font-size, 1.5rem);
-    color: rgb(var(--sq-primary-font-rgb), 128, 128, 128);
-  }
+    .container {
+        display: grid;
+        height: 5.2rem;
+        border: var(--sq-card-border, none);
+        border-radius: 1.5rem;
+        grid-template-areas: "i n";
+        grid-template-columns: auto 1fr;
+        grid-column-gap: 1rem;
+        grid-row-gap: 0.4rem;
+        padding: 1rem;
+        background-color: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
+        cursor: pointer;
+    }
+    .icon {
+        grid-area: i;
+        display: flex;
+        justify-content: center;
+        align-self: center;
+        height: 1.8rem;
+        width: 1.8rem;
+        padding: 1rem;
+        border-radius: 50%;
+        transition: var(--sq-icon-transition, none);
+    }
+    .name {
+        grid-area: n;
+        place-self: center start;
+        max-height: 3.6rem;
+        line-height: 1.2;
+        max-width: 100%;
+        text-align: left;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: normal;
+        font-weight: var(--sq-primary-font-weight, 400);
+        font-size: var(--sq-primary-font-size, 1.5rem);
+        color: rgb(var(--sq-primary-font-rgb), 128, 128, 128);
+    }
 `;
 
 var styleTileIconSpin = i$2 `
-  @keyframes spin {
-    from {
-      transform: rotate(0deg);
+    @keyframes spin {
+        from {
+            transform: rotate(0deg);
+        }
+        to {
+            transform: rotate(360deg);
+        }
     }
-    to {
-      transform: rotate(360deg);
-    }
-  }
 `;
 
 let AllOffTile = class AllOffTile extends s {
@@ -714,20 +690,20 @@ let AllOffTile = class AllOffTile extends s {
     }
     render() {
         return x `
-      <div class="container" @click=${this._runRoutine}>
-        <div
-          class="icon"
-          style="
-            color: rgb(${this._iconColor});
-            background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
-            animation: ${this._iconAnimation};
-          "
-        >
-          <ha-icon .icon=${this._icon}></ha-icon>
-        </div>
-        <div class="name">${this._name}</div>
-      </div>
-    `;
+            <div class="container" @click=${this._runRoutine}>
+                <div
+                    class="icon"
+                    style="
+                        color: rgb(${this._iconColor});
+                        background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
+                        animation: ${this._iconAnimation};
+                    "
+                >
+                    <ha-icon .icon=${this._icon}></ha-icon>
+                </div>
+                <div class="name">${this._name}</div>
+            </div>
+        `;
     }
     _runRoutine(e) {
         e.stopPropagation();
@@ -760,18 +736,6 @@ __decorate([
 __decorate([
     r()
 ], AllOffTile.prototype, "_areaObj", void 0);
-__decorate([
-    r()
-], AllOffTile.prototype, "_icon", void 0);
-__decorate([
-    r()
-], AllOffTile.prototype, "_iconAnimation", void 0);
-__decorate([
-    r()
-], AllOffTile.prototype, "_iconColor", void 0);
-__decorate([
-    r()
-], AllOffTile.prototype, "_name", void 0);
 AllOffTile = __decorate([
     t("smartqasa-all-off-tile")
 ], AllOffTile);
@@ -783,6 +747,8 @@ window.customCards.push({
 });
 
 var accuweatherIcon = "app_icons/c6398f61b62006d6.webp";
+
+var alexaIcon = "app_icons/ac7d873543a99f2b.webp";
 
 var allrecipesIcon = "app_icons/95efca8d7bfa91b4.webp";
 
@@ -809,6 +775,8 @@ var chromeIcon = "app_icons/e2355f8b7ea2187d.webp";
 var clockTimerIcon = "app_icons/ce287d0d4033f900.webp";
 
 var doordashIcon = "app_icons/8b89b6f5ec6c9a65.webp";
+
+var eufyHomeIcon = "app_icons/cd5ae376a30ff8c2.webp";
 
 var eufySecurityIcon = "app_icons/f04fb646ab6b01f4.webp";
 
@@ -877,6 +845,13 @@ const appTable = {
         launcher: "package",
         package: "com.accuweather.android",
     },
+    alexa: {
+        name: "Amazon Music",
+        app_icon: alexaIcon,
+        launcher: "uri_scheme",
+        package: "",
+        uri_scheme: "alexa://",
+    },
     allrecipes: {
         name: "AllRecipes",
         app_icon: allrecipesIcon,
@@ -943,27 +918,36 @@ const appTable = {
         name: "Chrome",
         app_icon: chromeIcon,
         launcher: "uri_scheme",
-        uri_scheme: "chrome://",
         package: "com.android.chrome",
+        uri_scheme: "chrome://",
     },
     clock: {
         name: "Clock/Timer",
         app_icon: clockTimerIcon,
-        launcher: "package",
+        launcher: "uri_scheme",
         package: "com.google.android.deskclock",
+        uri_scheme: "clock-worldclock://",
     },
     doordash: {
         name: "Doordash",
         app_icon: doordashIcon,
         launcher: "uri_scheme",
-        uri_scheme: "doordash://",
         package: "com.dd.dashdash",
+        uri_scheme: "doordash://",
+    },
+    eufy_home: {
+        name: "Eufy Clean",
+        app_icon: eufyHomeIcon,
+        launcher: "uri_scheme",
+        package: "com.eufylife.smarthome",
+        uri_scheme: "eufyhome://",
     },
     eufy_security: {
         name: "Eufy Security",
         app_icon: eufySecurityIcon,
         launcher: "package",
         package: "com.oceanwing.battery.cam",
+        uri_scheme: "eufysecurity://",
     },
     grubhub: {
         name: "Grubhub",
@@ -1062,8 +1046,8 @@ const appTable = {
         name: "Ring",
         app_icon: ringIcon,
         launcher: "uri_scheme",
-        uri_scheme: "ring://",
         package: "com.ringapp",
+        uri_scheme: "ring://",
     },
     roku: {
         name: "Roku",
@@ -1080,8 +1064,9 @@ const appTable = {
     shazam: {
         name: "Shazam",
         app_icon: shazamIcon,
-        launcher: "package",
+        launcher: "uri_scheme",
         package: "com.shazam.android",
+        uri_scheme: "shazam://",
     },
     shipt_shopper: {
         name: "Shipt Shopper",
@@ -1105,15 +1090,15 @@ const appTable = {
         name: "Sonos",
         app_icon: sonosIcon,
         launcher: "uri_scheme",
-        uri_scheme: "sonos://",
         package: "com.sonos.acr2",
+        uri_scheme: "sonos://",
     },
     spotify: {
         name: "Spotify",
         app_icon: spotifyIcon,
         launcher: "uri_scheme",
-        uri_scheme: "spotify://",
         package: "com.spotify.music",
+        uri_scheme: "spotify://",
     },
     tuya_smart: {
         name: "Tuya Smart",
@@ -1136,8 +1121,9 @@ const appTable = {
     weather_underground: {
         name: "Weather Underground",
         app_icon: weatherUndergroundIcon,
-        launcher: "package",
+        launcher: "uri_scheme",
         package: "com.wunderground.android.weather",
+        uri_scheme: "wxunderground://",
     },
     yummly: {
         name: "Yummly Recipes",
@@ -1836,11 +1822,11 @@ window.customCards.push({
 });
 
 var styleTileIconBlink = i$2 `
-  @keyframes blink {
-    50% {
-      opacity: 0.25;
+    @keyframes blink {
+        50% {
+            opacity: 0.25;
+        }
     }
-  }
 `;
 
 let GarageTile = class GarageTile extends s {
@@ -1946,21 +1932,6 @@ let GarageTile = class GarageTile extends s {
 __decorate([
     r()
 ], GarageTile.prototype, "_config", void 0);
-__decorate([
-    r()
-], GarageTile.prototype, "_icon", void 0);
-__decorate([
-    r()
-], GarageTile.prototype, "_iconAnimation", void 0);
-__decorate([
-    r()
-], GarageTile.prototype, "_iconColor", void 0);
-__decorate([
-    r()
-], GarageTile.prototype, "_name", void 0);
-__decorate([
-    r()
-], GarageTile.prototype, "_stateFmtd", void 0);
 __decorate([
     r()
 ], GarageTile.prototype, "_stateObj", void 0);
