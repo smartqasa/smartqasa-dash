@@ -14,7 +14,7 @@ import clockTimerIcon from "../assets/app_icons/clock.webp";
 import doordashIcon from "../assets/app_icons/doordash.webp";
 import eufyHomeIcon from "../assets/app_icons/eufy_home.webp";
 import eufySecurityIcon from "../assets/app_icons/eufy_security.webp";
-import googleAssistantIcon from "../assets/app_icons/google_chrome.webp";
+import googleAssistantIcon from "../assets/app_icons/google_assistant.webp";
 import googleChromeIcon from "../assets/app_icons/google_chrome.webp";
 import googleMapsIcon from "../assets/app_icons/google_maps.webp";
 import grubhubIcon from "../assets/app_icons/grubhub.webp";
@@ -25,6 +25,7 @@ import irobotIcon from "../assets/app_icons/irobot.webp";
 import keurigIcon from "../assets/app_icons/keurig.webp";
 import lionchiefIcon from "../assets/app_icons/lionel_chief.webp";
 import lutronIcon from "../assets/app_icons/lutron.webp";
+import lyftIcon from "../assets/app_icons/lyft.webp";
 import myqIcon from "../assets/app_icons/myq.webp";
 import nestIcon from "../assets/app_icons/nest.webp";
 import netflixIcon from "../assets/app_icons/netflix.webp";
@@ -247,6 +248,13 @@ const appTable: AppTable = {
         package: "com.lutron.mmw",
         uri_scheme: "",
     },
+    lyft: {
+        name: "Lyft",
+        app_icon: lyftIcon,
+        launcher: "uri_scheme",
+        package: "me.lyft.android",
+        uri_scheme: "lyft://",
+    },
     myq: {
         name: "MyQ",
         app_icon: myqIcon,
@@ -264,9 +272,9 @@ const appTable: AppTable = {
     netflix: {
         name: "Netflix",
         app_icon: netflixIcon,
-        launcher: "package",
+        launcher: "uri_scheme",
         package: "com.netflix.mediaclient",
-        uri_scheme: "",
+        uri_scheme: "nflx://",
     },
     pandora: {
         name: "Pandora",

@@ -779,6 +779,8 @@ var eufyHomeIcon = "app_icons/cd5ae376a30ff8c2.webp";
 
 var eufySecurityIcon = "app_icons/f04fb646ab6b01f4.webp";
 
+var googleAssistantIcon = "app_icons/55a9c07ecbf045b5.webp";
+
 var googleChromeIcon = "app_icons/e2355f8b7ea2187d.webp";
 
 var googleMapsIcon = "app_icons/a7e2b4978ab707d5.webp";
@@ -798,6 +800,8 @@ var keurigIcon = "app_icons/6919f9f6902faad1.webp";
 var lionchiefIcon = "app_icons/de72bd1dc39aed3c.webp";
 
 var lutronIcon = "app_icons/ef28e1bb6bdd6f4a.webp";
+
+var lyftIcon = "app_icons/cb96a8739fcbc619.webp";
 
 var myqIcon = "app_icons/fd002324ee1e87ca.webp";
 
@@ -956,7 +960,7 @@ const appTable = {
     },
     google_assistant: {
         name: "Google Assistant",
-        app_icon: googleChromeIcon,
+        app_icon: googleAssistantIcon,
         launcher: "uri_scheme",
         package: "com.google.android.apps.googleassistant",
         uri_scheme: "googleassistant://",
@@ -1031,6 +1035,13 @@ const appTable = {
         package: "com.lutron.mmw",
         uri_scheme: "",
     },
+    lyft: {
+        name: "Lyft",
+        app_icon: lyftIcon,
+        launcher: "uri_scheme",
+        package: "me.lyft.android",
+        uri_scheme: "lyft://",
+    },
     myq: {
         name: "MyQ",
         app_icon: myqIcon,
@@ -1048,9 +1059,9 @@ const appTable = {
     netflix: {
         name: "Netflix",
         app_icon: netflixIcon,
-        launcher: "package",
+        launcher: "uri_scheme",
         package: "com.netflix.mediaclient",
-        uri_scheme: "",
+        uri_scheme: "nflx://",
     },
     pandora: {
         name: "Pandora",
