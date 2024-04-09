@@ -43,6 +43,7 @@ import solitaireIcon from "../assets/app_icons/solitaire.webp";
 import sonosIcon from "../assets/app_icons/sonos.webp";
 import spotifyIcon from "../assets/app_icons/spotify.webp";
 import tuyaSmartIcon from "../assets/app_icons/tuya_smart.webp";
+import uberIcon from "../assets/app_icons/uber_eats.webp";
 import uberEatsIcon from "../assets/app_icons/uber_eats.webp";
 import weatherChannelIcon from "../assets/app_icons/weather_channel.webp";
 import weatherUndergroundIcon from "../assets/app_icons/weather_underground.webp";
@@ -227,7 +228,7 @@ const appTable: AppTable = {
         package: "com.keurig.kconnect",
         uri_scheme: "",
     },
-    lionchief: {
+    lionel_chief: {
         name: "LionChief",
         app_icon: lionchiefIcon,
         launcher: "package",
@@ -298,7 +299,7 @@ const appTable: AppTable = {
         uri_scheme: "",
     },
     reolink: {
-        name: "Ring",
+        name: "Reolink",
         app_icon: reolinkIcon,
         launcher: "package",
         package: "com.mcu.reolink",
@@ -328,7 +329,7 @@ const appTable: AppTable = {
     shazam: {
         name: "Shazam",
         app_icon: shazamIcon,
-        launcher: "package",
+        launcher: "uri_scheme",
         package: "com.shazam.android",
         uri_scheme: "shazam:",
     },
@@ -374,6 +375,13 @@ const appTable: AppTable = {
         package: "com.tuya.smart",
         uri_scheme: "tuyasmart:",
     },
+    uber: {
+        name: "Uber",
+        app_icon: uberIcon,
+        launcher: "uri_scheme",
+        package: "com.ubercab",
+        uri_scheme: "uber:",
+    },
     uber_eats: {
         name: "Uber Eats",
         app_icon: uberEatsIcon,
@@ -386,14 +394,14 @@ const appTable: AppTable = {
         app_icon: weatherChannelIcon,
         launcher: "package",
         package: "com.weather.Weather",
-        uri_scheme: "weather:",
+        uri_scheme: "",
     },
     weather_underground: {
         name: "Weather Underground",
         app_icon: weatherUndergroundIcon,
-        launcher: "uri_scheme",
+        launcher: "package",
         package: "com.wunderground.android.weather",
-        uri_scheme: "wxunderground:",
+        uri_scheme: "",
     },
     yummly: {
         name: "Yummly Recipes",
