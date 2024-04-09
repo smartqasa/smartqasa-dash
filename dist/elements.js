@@ -1005,7 +1005,7 @@ const appTable = {
         app_icon: irobotIcon,
         launcher: "package",
         package: "com.irobot.home",
-        uri_scheme: "irobot:",
+        uri_scheme: "",
     },
     keurig: {
         name: "Keurig",
