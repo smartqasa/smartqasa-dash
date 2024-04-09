@@ -961,7 +961,7 @@ const appTable = {
     google_assistant: {
         name: "Google Assistant",
         app_icon: googleAssistantIcon,
-        launcher: "uri_scheme",
+        launcher: "package",
         package: "com.google.android.apps.googleassistant",
         uri_scheme: "googleassistant:",
     },
