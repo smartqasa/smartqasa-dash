@@ -175,7 +175,7 @@ const appTable: AppTable = {
         app_icon: googleAssistantIcon,
         launcher: "uri_scheme",
         package: "com.google.android.apps.googleassistant",
-        uri_scheme: "googlechrome://",
+        uri_scheme: "googleassistant://",
     },
     google_chrome: {
         name: "Google Chrome",
@@ -222,9 +222,9 @@ const appTable: AppTable = {
     irobot: {
         name: "iRobot",
         app_icon: irobotIcon,
-        launcher: "package",
+        launcher: "uri_scheme",
         package: "com.irobot.home",
-        uri_scheme: "",
+        uri_scheme: "irobot://",
     },
     keurig: {
         name: "Keurig",
