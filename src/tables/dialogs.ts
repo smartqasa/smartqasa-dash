@@ -82,6 +82,7 @@ const dialogTable: DialogTable = {
                             options: {
                                 type: "custom:smartqasa-garage-tile",
                                 group: "cover.all_garage_doors",
+                                tileType: "garage",
                             },
                         },
                     ],
@@ -136,7 +137,7 @@ const dialogTable: DialogTable = {
                             options: {
                                 type: "custom:smartqasa-lock-tile",
                                 group: "lock.all_door_locks",
-                                tile: "lock",
+                                tileType: "lock",
                             },
                         },
                     ],

@@ -306,6 +306,57 @@ window.customCards.push({
     description: "A SmartQasa chip for navigating to a previous/next area.",
 });
 
+const showMoreInfo = (config, stateObj, hass) => {
+    if (!stateObj)
+        return;
+    let groupConfig = undefined;
+    if (config.group) {
+        groupConfig = {
+            service: "browser_mod.popup",
+            data: {
+                title: hass.states[config.group]?.attributes?.friendly_name || config.group,
+                timeout: 60000,
+                content: {
+                    type: "custom:auto-entities",
+                    card: {
+                        type: "custom:layout-card",
+                        layout_type: "custom:grid-layout",
+                        layout: {
+                            margin: 0,
+                            "grid-template-columns": "1fr",
+                            "grid-gap": "var(--sq-dialog-grid-gap)",
+                        },
+                    },
+                    card_param: "cards",
+                    filter: {
+                        include: [
+                            {
+                                group: config.group,
+                                sort: { method: "friendly_name", ignore_case: true },
+                                options: {
+                                    type: `custom:smartqasa-${config.tileType}-tile`,
+                                    group: config.group,
+                                    tileType: config.tileType,
+                                },
+                            },
+                        ],
+                    },
+                },
+            },
+        };
+    }
+    const dialogConfig = {
+        title: stateObj.attributes?.friendly_name || stateObj.entity_id,
+        timeout: 60000,
+        content: {
+            type: "custom:smartqasa-more-info-dialog",
+            entity: stateObj.entity_id,
+        },
+        ...(groupConfig && { dismiss_action: groupConfig }),
+    };
+    window.browser_mod?.service("popup", dialogConfig);
+};
+
 let SmartQasaThermostatChip = class SmartQasaThermostatChip extends s {
     constructor() {
         super(...arguments);
@@ -315,6 +366,7 @@ let SmartQasaThermostatChip = class SmartQasaThermostatChip extends s {
     }
     static { this.styles = styleChipBasic; }
     setConfig(config) {
+        this._config = config;
         this._entity = config.entity || undefined;
     }
     set hass(hass) {
@@ -348,45 +400,27 @@ let SmartQasaThermostatChip = class SmartQasaThermostatChip extends s {
             return x ``;
         }
         return x `
-      <div class="container" @click=${this._showDialog}>
-        <div
-          class="icon"
-          id="icon"
-          style="color: rgb(${this._iconColor});"
-        >
-          <ha-icon .icon=${this._icon}></ha-icon>
-        </div>
-        <div class="text">${this._temperature}°</div>
-      </div>
-    `;
+            <div class="container" @click=${this._showMoreInfo}>
+                <div class="icon" id="icon" style="color: rgb(${this._iconColor});">
+                    <ha-icon .icon=${this._icon}></ha-icon>
+                </div>
+                <div class="text">${this._temperature}°</div>
+            </div>
+        `;
     }
-    _showDialog(e) {
+    _showMoreInfo(e) {
         e.stopPropagation();
-        const event = new CustomEvent("hass-more-info", {
-            bubbles: true,
-            composed: true,
-            detail: { entityId: this._entity },
-        });
-        this.dispatchEvent(event);
+        showMoreInfo(this._config, this._stateObj, this._hass);
     }
 };
 __decorate([
     r()
-], SmartQasaThermostatChip.prototype, "_entity", void 0);
-__decorate([
-    r()
-], SmartQasaThermostatChip.prototype, "_icon", void 0);
-__decorate([
-    r()
-], SmartQasaThermostatChip.prototype, "_iconColor", void 0);
+], SmartQasaThermostatChip.prototype, "_config", void 0);
 __decorate([
     r()
 ], SmartQasaThermostatChip.prototype, "_stateObj", void 0);
-__decorate([
-    r()
-], SmartQasaThermostatChip.prototype, "_temperature", void 0);
 SmartQasaThermostatChip = __decorate([
-    t('smartqasa-thermostat-chip')
+    t("smartqasa-thermostat-chip")
 ], SmartQasaThermostatChip);
 
 let AreaPicture = class AreaPicture extends s {
@@ -1350,6 +1384,7 @@ const dialogTable = {
                             options: {
                                 type: "custom:smartqasa-garage-tile",
                                 group: "cover.all_garage_doors",
+                                tileType: "garage",
                             },
                         },
                     ],
@@ -1404,7 +1439,7 @@ const dialogTable = {
                             options: {
                                 type: "custom:smartqasa-lock-tile",
                                 group: "lock.all_door_locks",
-                                tile: "lock",
+                                tileType: "lock",
                             },
                         },
                     ],
@@ -1614,57 +1649,6 @@ window.customCards.push({
     preview: true,
     description: "A SmartQasa card for displaying a browser_mod popup dialog.",
 });
-
-const showMoreInfo = (config, stateObj, hass) => {
-    if (!stateObj)
-        return;
-    let groupConfig = undefined;
-    if (config.group) {
-        groupConfig = {
-            service: "browser_mod.popup",
-            data: {
-                title: hass.states[config.group]?.attributes?.friendly_name || config.group,
-                timeout: 60000,
-                content: {
-                    type: "custom:auto-entities",
-                    card: {
-                        type: "custom:layout-card",
-                        layout_type: "custom:grid-layout",
-                        layout: {
-                            margin: 0,
-                            "grid-template-columns": "1fr",
-                            "grid-gap": "var(--sq-dialog-grid-gap)",
-                        },
-                    },
-                    card_param: "cards",
-                    filter: {
-                        include: [
-                            {
-                                group: config.group,
-                                sort: { method: "friendly_name", ignore_case: true },
-                                options: {
-                                    type: `custom:smartqasa-${config.tileType}-tile`,
-                                    group: config.group,
-                                    tileType: config.tileType,
-                                },
-                            },
-                        ],
-                    },
-                },
-            },
-        };
-    }
-    const dialogConfig = {
-        title: stateObj.attributes?.friendly_name || stateObj.entity_id,
-        timeout: 60000,
-        content: {
-            type: "custom:smartqasa-more-info-dialog",
-            entity: stateObj.entity_id,
-        },
-        ...(groupConfig && { dismiss_action: groupConfig }),
-    };
-    window.browser_mod?.service("popup", dialogConfig);
-};
 
 const showGroupEntities = (stateObj, tileType) => {
     if (!stateObj ||
@@ -2310,7 +2294,7 @@ let RobotTile = class RobotTile extends s {
     }
     static { this.styles = [styleTileBase, styleTileState, styleTileIconBlink]; }
     setConfig(config) {
-        if (!config.entity || config.entity.split('.')[0] != "vacuum")
+        if (!config.entity || config.entity.split(".")[0] != "vacuum")
             throw new Error("A valid robot vacuum entity is required.");
         this._config = config;
         if (this._hass)
@@ -2359,8 +2343,7 @@ let RobotTile = class RobotTile extends s {
             this._stateFmtd =
                 this._hass.formatEntityState(this._stateObj) +
                     (this._stateObj.attributes.battery_level
-                        ? " - " +
-                            this._hass.formatEntityAttributeValue(this._stateObj, "battery_level")
+                        ? " - " + this._hass.formatEntityAttributeValue(this._stateObj, "battery_level")
                         : "");
             this._name = this._config?.icon || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
         }
@@ -2374,40 +2357,35 @@ let RobotTile = class RobotTile extends s {
     }
     render() {
         return x `
-      <div class="container" @click=${this._showMoreInfo}>
-        <div
-          class="icon"
-          @click=${this._toggleVacuum}
-          style="
-            color: rgb(${this._iconColor});
-            background-color: rgba(${this._iconColor}, var(--sq-icon-opacity, 0.2));
-            animation: ${this._iconAnimation};
-          "
-        >
-          <ha-icon .icon=${this._icon}></ha-icon>
-        </div>
-        <div class="name">${this._name}</div>
-        <div class="state">${this._stateFmtd}</div>
-      </div>
-    `;
+            <div class="container" @click=${this._showMoreInfo}>
+                <div
+                    class="icon"
+                    @click=${this._toggleVacuum}
+                    style="
+                        color: rgb(${this._iconColor});
+                        background-color: rgba(${this._iconColor}, var(--sq-icon-opacity, 0.2));
+                        animation: ${this._iconAnimation};
+                    "
+                >
+                    <ha-icon .icon=${this._icon}></ha-icon>
+                </div>
+                <div class="name">${this._name}</div>
+                <div class="state">${this._stateFmtd}</div>
+            </div>
+        `;
     }
     _toggleVacuum(e) {
         e.stopPropagation();
         if (this._stateObj) {
             const state = this._stateObj.state;
-            this._hass.callService("vacuum", ["docked", "idle", "paused"].includes(state) ? "start" : "pause", { entity_id: this._stateObj.entity_id });
+            this._hass.callService("vacuum", ["docked", "idle", "paused"].includes(state) ? "start" : "pause", {
+                entity_id: this._stateObj.entity_id,
+            });
         }
     }
     _showMoreInfo(e) {
         e.stopPropagation();
-        if (this._stateObj) {
-            const event = new CustomEvent("hass-more-info", {
-                bubbles: true,
-                composed: true,
-                detail: { entityId: this._stateObj.entity_id },
-            });
-            this.dispatchEvent(event);
-        }
+        showMoreInfo(this._config, this._stateObj, this._hass);
     }
     getCardSize() {
         return 1;
@@ -2574,7 +2552,7 @@ let SensorTile = class SensorTile extends s {
     }
     static { this.styles = [styleTileBase, styleTileState]; }
     setConfig(config) {
-        if (!config.entity || config.entity.split('.')[0] != "binary_sensor")
+        if (!config.entity || config.entity.split(".")[0] != "binary_sensor")
             throw new Error("A valid binary_sensor entity is required.");
         this._config = config;
         if (this._hass)
@@ -2588,12 +2566,16 @@ let SensorTile = class SensorTile extends s {
     _updateState() {
         if (this._stateObj) {
             if (!this._config?.icon) {
-                this._iconTemplate = x `<ha-state-icon .hass=${this._hass} .stateObj=${this._stateObj}></ha-state-icon>`;
+                this._iconTemplate = x `<ha-state-icon
+                    .hass=${this._hass}
+                    .stateObj=${this._stateObj}
+                ></ha-state-icon>`;
             }
             else {
                 this._iconTemplate = x `<ha-icon .icon=${this._config.icon}></ha-icon>`;
             }
-            this._iconColor = this._stateObj.state === "on" ? "var(--sq-binary_sensor-on-rgb)" : "var(--sq-inactive-rgb)";
+            this._iconColor =
+                this._stateObj.state === "on" ? "var(--sq-binary_sensor-on-rgb)" : "var(--sq-inactive-rgb)";
             this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
             this._stateFmtd = this._hass ? this._hass.formatEntityState(this._stateObj) : "Unknown";
         }
@@ -2606,31 +2588,24 @@ let SensorTile = class SensorTile extends s {
     }
     render() {
         return x `
-      <div class="container" @click=${this._showMoreInfo}>
-        <div
-          class="icon"
-          style="
+            <div class="container" @click=${this._showMoreInfo}>
+                <div
+                    class="icon"
+                    style="
             color: rgb(${this._iconColor});
             background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
           "
-        >
-          ${this._iconTemplate}
-        </div>
-        <div class="name">${this._name}</div>
-        <div class="state">${this._stateFmtd}</div>
-      </div>
-    `;
+                >
+                    ${this._iconTemplate}
+                </div>
+                <div class="name">${this._name}</div>
+                <div class="state">${this._stateFmtd}</div>
+            </div>
+        `;
     }
     _showMoreInfo(e) {
         e.stopPropagation();
-        if (this._stateObj) {
-            const event = new CustomEvent("hass-more-info", {
-                bubbles: true,
-                composed: true,
-                detail: { entityId: this._stateObj.entity_id },
-            });
-            this.dispatchEvent(event);
-        }
+        showMoreInfo(this._config, this._stateObj, this._hass);
     }
     getCardSize() {
         return 1;
@@ -2829,8 +2804,8 @@ let SwitchTile = class SwitchTile extends s {
     }
     static { this.styles = [styleTileBase, styleTileState]; }
     setConfig(config) {
-        const validDomains = ['fan', 'input_boolean', 'light', 'switch'];
-        if (!config.entity || !validDomains.includes(config.entity.split('.')[0])) {
+        const validDomains = ["fan", "input_boolean", "light", "switch"];
+        if (!config.entity || !validDomains.includes(config.entity.split(".")[0])) {
             throw new Error("A valid toggleable entity is required.");
         }
         this._config = config;
@@ -2846,9 +2821,10 @@ let SwitchTile = class SwitchTile extends s {
         if (this._stateObj) {
             const state = this._stateObj.state;
             this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:toggle-switch-variant";
-            this._iconColor = state === "on"
-                ? `var(--sq-switch${this._config?.category ? `-${this._config.category}` : ""}-on-rgb)`
-                : "var(--sq-inactive-rgb)";
+            this._iconColor =
+                state === "on"
+                    ? `var(--sq-switch${this._config?.category ? `-${this._config.category}` : ""}-on-rgb)`
+                    : "var(--sq-inactive-rgb)";
             this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
             this._stateFmtd = this._hass ? this._hass.formatEntityState(this._stateObj) : "Unknown";
         }
@@ -2861,21 +2837,21 @@ let SwitchTile = class SwitchTile extends s {
     }
     render() {
         return x `
-      <div class="container" @click=${this._showMoreInfo}>
-        <div
-          class="icon"
-          @click=${this._toggleEntity}
-          style="
+            <div class="container" @click=${this._showMoreInfo}>
+                <div
+                    class="icon"
+                    @click=${this._toggleEntity}
+                    style="
             color: rgb(${this._iconColor});
             background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
           "
-        >
-          <ha-icon .icon=${this._icon}></ha-icon>
-        </div>
-        <div class="name">${this._name}</div>
-        <div class="state">${this._stateFmtd}</div>
-      </div>
-    `;
+                >
+                    <ha-icon .icon=${this._icon}></ha-icon>
+                </div>
+                <div class="name">${this._name}</div>
+                <div class="state">${this._stateFmtd}</div>
+            </div>
+        `;
     }
     _toggleEntity(e) {
         e.stopPropagation();
@@ -2887,14 +2863,7 @@ let SwitchTile = class SwitchTile extends s {
     }
     _showMoreInfo(e) {
         e.stopPropagation();
-        if (this._stateObj) {
-            const event = new CustomEvent("hass-more-info", {
-                bubbles: true,
-                composed: true,
-                detail: { entityId: this._stateObj.entity_id },
-            });
-            this.dispatchEvent(event);
-        }
+        showMoreInfo(this._config, this._stateObj, this._hass);
     }
     getCardSize() {
         return 1;
@@ -2984,21 +2953,21 @@ let ThermostatTile = class ThermostatTile extends s {
     }
     render() {
         return x `
-      <div class="container" @click=${this._showMoreInfo}>
-        <div
-          class="icon"
-          @click=${this._toggleEntity}
-          style="
-            color: rgb(${this._iconColor});
-            background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
-          "
-        >
-          <ha-icon .icon=${this._icon}></ha-icon>
-        </div>
-        <div class="name">${this._name}</div>
-        <div class="state">${this._stateFmtd}</div>
-      </div>
-    `;
+            <div class="container" @click=${this._showMoreInfo}>
+                <div
+                    class="icon"
+                    @click=${this._toggleEntity}
+                    style="
+                        color: rgb(${this._iconColor});
+                        background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
+                    "
+                >
+                    <ha-icon .icon=${this._icon}></ha-icon>
+                </div>
+                <div class="name">${this._name}</div>
+                <div class="state">${this._stateFmtd}</div>
+            </div>
+        `;
     }
     _toggleEntity(e) {
         e.stopPropagation();
@@ -3008,14 +2977,7 @@ let ThermostatTile = class ThermostatTile extends s {
     }
     _showMoreInfo(e) {
         e.stopPropagation();
-        if (this._stateObj) {
-            const event = new CustomEvent("hass-more-info", {
-                bubbles: true,
-                composed: true,
-                detail: { entityId: this._stateObj.entity_id },
-            });
-            this.dispatchEvent(event);
-        }
+        showMoreInfo(this._config, this._stateObj, this._hass);
     }
     getCardSize() {
         return 1;
