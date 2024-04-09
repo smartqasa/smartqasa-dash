@@ -963,14 +963,14 @@ const appTable = {
         app_icon: googleAssistantIcon,
         launcher: "uri_scheme",
         package: "com.google.android.apps.googleassistant",
-        uri_scheme: "googleassistant://",
+        uri_scheme: "googleassistant:",
     },
     google_chrome: {
         name: "Google Chrome",
         app_icon: googleChromeIcon,
         launcher: "package",
         package: "com.android.chrome",
-        uri_scheme: "googlechrome://",
+        uri_scheme: "googlechrome:",
     },
     google_maps: {
         name: "Google Maps",
@@ -1061,14 +1061,14 @@ const appTable = {
         app_icon: netflixIcon,
         launcher: "uri_scheme",
         package: "com.netflix.mediaclient",
-        uri_scheme: "nflx://",
+        uri_scheme: "nflx:",
     },
     pandora: {
         name: "Pandora",
         app_icon: pandoraIcon,
         launcher: "uri_scheme",
         package: "com.pandora.android",
-        uri_scheme: "pandora://",
+        uri_scheme: "pandora:",
     },
     play_store: {
         name: "Play Store",
