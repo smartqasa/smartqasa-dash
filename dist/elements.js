@@ -2691,6 +2691,7 @@ let ShadeTile = class ShadeTile extends s {
         if (!config.entity || config.entity.split(".")[0] != "cover")
             throw new Error("A valid cover entity is required.");
         this._config = config;
+        this._tilt = this._config.tilt || this._tilt;
         if (this._hass)
             this.hass = this._hass;
     }
@@ -2766,7 +2767,7 @@ let ShadeTile = class ShadeTile extends s {
     _toggleEntity(e) {
         e.stopPropagation();
         if (this._stateObj) {
-            if (this._tilt > 0 && this._tilt <= 100) {
+            if (this._tilt >= 1 && this._tilt <= 100) {
                 if (this._stateObj.attributes.current_position < this._tilt) {
                     this._hass.callService("cover", "set_cover_position", {
                         entity_id: this._stateObj.entity_id,
@@ -2802,25 +2803,7 @@ __decorate([
 ], ShadeTile.prototype, "_config", void 0);
 __decorate([
     r()
-], ShadeTile.prototype, "_icon", void 0);
-__decorate([
-    r()
-], ShadeTile.prototype, "_iconAnimation", void 0);
-__decorate([
-    r()
-], ShadeTile.prototype, "_iconColor", void 0);
-__decorate([
-    r()
-], ShadeTile.prototype, "_name", void 0);
-__decorate([
-    r()
-], ShadeTile.prototype, "_stateFmtd", void 0);
-__decorate([
-    r()
 ], ShadeTile.prototype, "_stateObj", void 0);
-__decorate([
-    r()
-], ShadeTile.prototype, "_tilt", void 0);
 ShadeTile = __decorate([
     t("smartqasa-shade-tile")
 ], ShadeTile);

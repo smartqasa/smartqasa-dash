@@ -20,15 +20,15 @@ interface Config extends LovelaceCardConfig {
 @customElement("smartqasa-shade-tile")
 export class ShadeTile extends LitElement {
     @state() private _config?: Config;
-    @state() private _icon: string = "hass:roller-shade";
-    @state() private _iconAnimation: string = "none";
-    @state() private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
-    @state() private _name: string = "Loading...";
-    @state() private _stateFmtd: string = "Loading...";
     @state() private _stateObj?: HassEntity;
-    @state() private _tilt: number = 100;
 
     private _hass: any;
+    private _icon: string = "hass:roller-shade";
+    private _iconAnimation: string = "none";
+    private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
+    private _name: string = "Loading...";
+    private _stateFmtd: string = "Loading...";
+    private _tilt: number = 100;
 
     static styles: CSSResultGroup = [styleTileBase, styleTileState, styleTileIconBlink];
 
@@ -36,6 +36,7 @@ export class ShadeTile extends LitElement {
         if (!config.entity || config.entity.split(".")[0] != "cover")
             throw new Error("A valid cover entity is required.");
         this._config = config;
+        this._tilt = this._config.tilt || this._tilt;
         if (this._hass) this.hass = this._hass;
     }
 
@@ -113,7 +114,7 @@ export class ShadeTile extends LitElement {
     private _toggleEntity(e: Event): void {
         e.stopPropagation();
         if (this._stateObj) {
-            if (this._tilt > 0 && this._tilt <= 100) {
+            if (this._tilt >= 1 && this._tilt <= 100) {
                 if (this._stateObj.attributes.current_position < this._tilt) {
                     this._hass.callService("cover", "set_cover_position", {
                         entity_id: this._stateObj.entity_id,
