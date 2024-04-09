@@ -550,6 +550,7 @@ let SmartQasaTimeDate = class SmartQasaTimeDate extends s {
             }
         `;
     }
+    setConfig(config) { }
     set hass(hass) {
         this._hass = hass;
         if (this._hass) {

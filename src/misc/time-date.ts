@@ -52,6 +52,8 @@ export class SmartQasaTimeDate extends LitElement {
         `;
     }
 
+    setConfig(config: Config): void {}
+
     set hass(hass: HomeAssistant) {
         this._hass = hass;
         if (this._hass) {
