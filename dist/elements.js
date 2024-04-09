@@ -1854,7 +1854,7 @@ let GarageTile = class GarageTile extends s {
     }
     static { this.styles = [styleTileBase, styleTileState, styleTileIconBlink]; }
     setConfig(config) {
-        if (!config.entity || config.entity.split('.')[0] != "cover")
+        if (!config.entity || config.entity.split(".")[0] != "cover")
             throw new Error("A valid cover entity is required.");
         this._config = config;
         if (this._hass)
@@ -1898,8 +1898,7 @@ let GarageTile = class GarageTile extends s {
             this._stateFmtd =
                 this._hass.formatEntityState(this._stateObj) +
                     (state === "open" && this._stateObj.attributes.current_position
-                        ? " - " +
-                            this._hass.formatEntityAttributeValue(this._stateObj, "current_position")
+                        ? " - " + this._hass.formatEntityAttributeValue(this._stateObj, "current_position")
                         : "");
             this._name = this._config?.icon || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
         }
@@ -1913,22 +1912,22 @@ let GarageTile = class GarageTile extends s {
     }
     render() {
         return x `
-      <div class="container" @click=${this._showMoreInfo}>
-        <div
-          class="icon"
-          @click=${this._toggleEntity}
-          style="
+            <div class="container" @click=${this._showMoreInfo}>
+                <div
+                    class="icon"
+                    @click=${this._toggleEntity}
+                    style="
             color: rgb(${this._iconColor});
             background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
             animation: ${this._iconAnimation};
           "
-        >
-          <ha-icon .icon=${this._icon}></ha-icon>
-        </div>
-        <div class="name">${this._name}</div>
-        <div class="state">${this._stateFmtd}</div>
-      </div>
-    `;
+                >
+                    <ha-icon .icon=${this._icon}></ha-icon>
+                </div>
+                <div class="name">${this._name}</div>
+                <div class="state">${this._stateFmtd}</div>
+            </div>
+        `;
     }
     _toggleEntity(e) {
         e.stopPropagation();
@@ -1938,14 +1937,7 @@ let GarageTile = class GarageTile extends s {
     }
     _showMoreInfo(e) {
         e.stopPropagation();
-        if (this._stateObj) {
-            const event = new CustomEvent("hass-more-info", {
-                bubbles: true,
-                composed: true,
-                detail: { entityId: this._stateObj.entity_id },
-            });
-            this.dispatchEvent(event);
-        }
+        showMoreInfo(this._config, this._stateObj, this._hass);
     }
     getCardSize() {
         return 1;
