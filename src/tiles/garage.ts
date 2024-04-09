@@ -80,7 +80,7 @@ export class GarageTile extends LitElement {
             this._icon = "hass:garage-alert-variant";
             this._iconAnimation = "none";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            this._name = this._name || "Unknown";
+            this._name = this._config?.name || "Unknown";
             this._stateFmtd = "Unavailable";
         }
     }

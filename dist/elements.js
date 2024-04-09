@@ -837,6 +837,8 @@ var spotifyIcon = "app_icons/6a9035b3a3858196.webp";
 
 var tuyaSmartIcon = "app_icons/29030c5e49b1e08e.webp";
 
+var uberIcon = "app_icons/fec8a951e251ea9e.webp";
+
 var uberEatsIcon = "app_icons/1d5583bd9b1fc7ea.webp";
 
 var weatherChannelIcon = "app_icons/a19d116cd9972ad0.webp";
@@ -1163,7 +1165,7 @@ const appTable = {
     },
     uber: {
         name: "Uber",
-        app_icon: uberEatsIcon,
+        app_icon: uberIcon,
         launcher: "uri_scheme",
         package: "com.ubercab",
         uri_scheme: "uber:",
@@ -1964,7 +1966,7 @@ let GarageTile = class GarageTile extends s {
             this._icon = "hass:garage-alert-variant";
             this._iconAnimation = "none";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            this._name = this._name || "Unknown";
+            this._name = this._config?.name || "Unknown";
             this._stateFmtd = "Unavailable";
         }
     }
