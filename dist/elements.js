@@ -343,13 +343,12 @@ const showMoreInfo = (config, stateObj, hass) => {
     window.browser_mod?.service("popup", dialogConfig);
 };
 
-const thermostatIcons = {
-    auto: "hass:thermostat-auto",
-    cool: "hass:snowflake",
-    heat: "hass:fire",
-    heat_cool: "hass:sun-snowflake-variant",
-    off: "hass:power",
-    default: "hass:thermostat-cog",
+const heaterColors = {
+    electric: "var(--sq-climate-heat-rgb, 250, 67, 54)",
+    heating: "var(--sq-climate-heat-rgb, 250, 67, 54)",
+    idle: "var(--sq-primary-font-rgb, 128, 128, 128)",
+    off: "var(--sq-inactive-rgb, 128, 128, 128)",
+    default: "var(--sq-unavailable-rgb, 255, 0, 255)",
 };
 const thermostatColors = {
     cooling: "var(--sq-climate-cool-rgb, 3, 169, 244)",
@@ -358,6 +357,14 @@ const thermostatColors = {
     idle: "var(--sq-primary-font-rgb, 128, 128, 128)",
     off: "var(--sq-inactive-rgb, 128, 128, 128)",
     default: "var(--sq-unavailable-rgb, 255, 0, 255)",
+};
+const thermostatIcons = {
+    auto: "hass:thermostat-auto",
+    cool: "hass:snowflake",
+    heat: "hass:fire",
+    heat_cool: "hass:sun-snowflake-variant",
+    off: "hass:power",
+    default: "hass:thermostat-cog",
 };
 
 let SmartQasaThermostatChip = class SmartQasaThermostatChip extends s {
@@ -2029,6 +2036,91 @@ window.customCards.push({
     name: "SmartQasa Garage Tile",
     preview: true,
     description: "A SmartQasa tile for controlling a garage cover entity.",
+});
+
+let HeaterTile = class HeaterTile extends s {
+    constructor() {
+        super(...arguments);
+        this._icon = "hass:water-thermometer";
+        this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+        this._name = "Loading...";
+        this._stateFmtd = "Loading...";
+    }
+    static { this.styles = [styleTileBase, styleTileState]; }
+    setConfig(config) {
+        if (!config.entity || config.entity.split(".")[0] != "water_heater")
+            throw new Error("A valid water_heater entity is required.");
+        this._config = config;
+        if (this._hass)
+            this.hass = this._hass;
+    }
+    set hass(hass) {
+        this._hass = hass;
+        this._stateObj = this._config?.entity ? this._hass.states[this._config.entity] : undefined;
+        this._updateState();
+    }
+    _updateState() {
+        if (this._stateObj) {
+            const state = this._stateObj.state || "unavailable";
+            this._iconColor = heaterColors[state] || heaterColors.idle;
+            this._stateFmtd = this._hass.formatEntityState(this._stateObj);
+            if (state !== "off" && this._stateObj.attributes.temperature) {
+                this._stateFmtd += ` - ${this._stateObj.attributes.temperature}°`;
+            }
+            this._name = this._config?.icon || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
+        }
+        else {
+            this._iconColor = heaterColors.default;
+            this._name = this._config?.name || "Unknown";
+            this._stateFmtd = "Unavailable";
+        }
+    }
+    render() {
+        return x `
+            <div class="container" @click=${this._showMoreInfo}>
+                <div
+                    class="icon"
+                    @click=${this._toggleEntity}
+                    style="
+                        color: rgb(${this._iconColor});
+                        background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
+                    "
+                >
+                    <ha-icon .icon=${this._icon}></ha-icon>
+                </div>
+                <div class="name">${this._name}</div>
+                <div class="state">${this._stateFmtd}</div>
+            </div>
+        `;
+    }
+    _toggleEntity(e) {
+        e.stopPropagation();
+        if (this._stateObj) {
+            this._hass.callService("water_heater", "toggle", { entity_id: this._stateObj.entity_id });
+        }
+    }
+    _showMoreInfo(e) {
+        e.stopPropagation();
+        showMoreInfo(this._config, this._stateObj, this._hass);
+    }
+    getCardSize() {
+        return 1;
+    }
+};
+__decorate([
+    r()
+], HeaterTile.prototype, "_config", void 0);
+__decorate([
+    r()
+], HeaterTile.prototype, "_stateObj", void 0);
+HeaterTile = __decorate([
+    t("smartqasa-heater-tile")
+], HeaterTile);
+window.customCards.push({
+    type: "smartqasa-heater-tile",
+    name: "SmartQasa Heater Tile",
+    preview: true,
+    description: "A SmartQasa tile for controlling a water heater entity.",
 });
 
 let LightTile = class LightTile extends s {
