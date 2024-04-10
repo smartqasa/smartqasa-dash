@@ -3,6 +3,7 @@ import { customElement, state } from "lit/decorators.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 import { showMoreInfo } from "../utils/showMoreInfo";
+import { thermostatIcons, thermostatColors } from "../utils/const";
 
 import styleChipBasic from "../styles/chip-basic";
 
@@ -37,21 +38,15 @@ export class SmartQasaThermostatChip extends LitElement {
     }
 
     private _updateState(): void {
-        const actionColor: Record<string, string> = {
-            cooling: "var(--sq-climate-cool-rgb, 0, 0, 255)",
-            heating: "var(--sq-climate-heat-rgb, 255, 0, 0)",
-            fan_only: "var(--sq-climate-fan_only-rgb, 0, 255, 0)",
-            idle: "var(--sq-primary-font-rgb, 128, 128, 128)",
-            off: "var(--sq-inactive-rgb, 128, 128, 128)",
-            default: "var(--sq-unavailable-rgb, 255, 0, 255)",
-        };
-
         if (this._stateObj) {
+            const state = this._stateObj.state;
+            this._icon = thermostatIcons[state] || thermostatIcons.default;
             const hvacAction = this._stateObj.attributes.hvac_action;
-            this._iconColor = actionColor[hvacAction] || actionColor.default;
+            this._iconColor = thermostatColors[hvacAction] || thermostatColors.default;
             this._temperature = this._stateObj.attributes.current_temperature || "??";
         } else {
-            this._iconColor = actionColor.default;
+            this._icon = thermostatIcons.default;
+            this._iconColor = thermostatColors.default;
             this._temperature = "??";
         }
     }

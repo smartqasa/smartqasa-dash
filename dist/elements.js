@@ -343,6 +343,23 @@ const showMoreInfo = (config, stateObj, hass) => {
     window.browser_mod?.service("popup", dialogConfig);
 };
 
+const thermostatIcons = {
+    auto: "hass:thermometer-auto",
+    cool: "hass:snowflake-thermometer",
+    heat: "hass:sun-thermometer",
+    heat_cool: "hass:thermometer-lines",
+    off: "hass:thermometer-off",
+    default: "hass:thermometer-alert",
+};
+const thermostatColors = {
+    cooling: "var(--sq-climate-cool-rgb, 0, 0, 255)",
+    heating: "var(--sq-climate-heat-rgb, 255, 0, 0)",
+    fan_only: "var(--sq-climate-fan_only-rgb, 0, 255, 0)",
+    idle: "var(--sq-primary-font-rgb, 128, 128, 128)",
+    off: "var(--sq-inactive-rgb, 128, 128, 128)",
+    default: "var(--sq-unavailable-rgb, 255, 0, 255)",
+};
+
 let SmartQasaThermostatChip = class SmartQasaThermostatChip extends s {
     constructor() {
         super(...arguments);
@@ -363,21 +380,16 @@ let SmartQasaThermostatChip = class SmartQasaThermostatChip extends s {
         }
     }
     _updateState() {
-        const actionColor = {
-            cooling: "var(--sq-climate-cool-rgb, 0, 0, 255)",
-            heating: "var(--sq-climate-heat-rgb, 255, 0, 0)",
-            fan_only: "var(--sq-climate-fan_only-rgb, 0, 255, 0)",
-            idle: "var(--sq-primary-font-rgb, 128, 128, 128)",
-            off: "var(--sq-inactive-rgb, 128, 128, 128)",
-            default: "var(--sq-unavailable-rgb, 255, 0, 255)",
-        };
         if (this._stateObj) {
+            const state = this._stateObj.state;
+            this._icon = thermostatIcons[state] || thermostatIcons.default;
             const hvacAction = this._stateObj.attributes.hvac_action;
-            this._iconColor = actionColor[hvacAction] || actionColor.default;
+            this._iconColor = thermostatColors[hvacAction] || thermostatColors.default;
             this._temperature = this._stateObj.attributes.current_temperature || "??";
         }
         else {
-            this._iconColor = actionColor.default;
+            this._icon = thermostatIcons.default;
+            this._iconColor = thermostatColors.default;
             this._temperature = "??";
         }
     }
@@ -2920,7 +2932,7 @@ window.customCards.push({
 let ThermostatTile = class ThermostatTile extends s {
     constructor() {
         super(...arguments);
-        this._icon = "hass:thermometer-lines";
+        this._icon = "hass:thermometer-alert";
         this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
         this._name = "Loading...";
         this._stateFmtd = "Loading...";
@@ -2928,7 +2940,7 @@ let ThermostatTile = class ThermostatTile extends s {
     static { this.styles = [styleTileBase, styleTileState]; }
     setConfig(config) {
         if (!config.entity || config.entity.split(".")[0] != "climate")
-            throw new Error("A valid climate entity is required.");
+            throw new Error("A valid thermostat climate entity is required.");
         this._config = config;
         if (this._hass)
             this.hass = this._hass;
@@ -2939,23 +2951,18 @@ let ThermostatTile = class ThermostatTile extends s {
         this._updateState();
     }
     _updateState() {
-        const actionColor = {
-            cooling: "var(--sq-climate-cool-rgb, 0, 0, 255)",
-            heating: "var(--sq-climate-heat-rgb, 255, 0, 0)",
-            idle: "var(--sq-primary-font-rgb, 0, 0, 0)",
-            off: "var(--sq-inactive-rgb, 128, 128, 128)",
-        };
         if (this._stateObj) {
             const state = this._stateObj.state || "unavailable";
+            this._icon = thermostatIcons[state] || thermostatIcons.default;
             const hvacAction = this._stateObj.attributes.hvac_action || "idle";
-            if (state == "off") {
-                this._iconColor = actionColor.off;
+            if (state === "off") {
+                this._iconColor = thermostatColors.off;
             }
             else {
-                this._iconColor = actionColor[hvacAction] || actionColor.idle;
+                this._iconColor = thermostatColors[hvacAction] || thermostatColors.idle;
             }
             this._stateFmtd = this._hass.formatEntityState(this._stateObj);
-            if (state != "off") {
+            if (state !== "off") {
                 if (this._stateObj.attributes.current_temperature) {
                     this._stateFmtd += ` - ${this._stateObj.attributes.current_temperature}°`;
                 }
@@ -2966,7 +2973,7 @@ let ThermostatTile = class ThermostatTile extends s {
             this._name = this._config?.icon || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
         }
         else {
-            this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+            this._iconColor = thermostatColors.default;
             this._name = this._config?.name || "Unknown";
             this._stateFmtd = "Unavailable";
         }
@@ -3006,18 +3013,6 @@ let ThermostatTile = class ThermostatTile extends s {
 __decorate([
     r()
 ], ThermostatTile.prototype, "_config", void 0);
-__decorate([
-    r()
-], ThermostatTile.prototype, "_icon", void 0);
-__decorate([
-    r()
-], ThermostatTile.prototype, "_iconColor", void 0);
-__decorate([
-    r()
-], ThermostatTile.prototype, "_name", void 0);
-__decorate([
-    r()
-], ThermostatTile.prototype, "_stateFmtd", void 0);
 __decorate([
     r()
 ], ThermostatTile.prototype, "_stateObj", void 0);
