@@ -59,7 +59,7 @@ export class ThermostatTile extends LitElement {
                     this._stateFmtd += ` / ${this._stateObj.attributes.current_humidity}%`;
                 }
             }
-            this._name = this._config?.icon || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
+            this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
         } else {
             this._iconColor = thermostatColors.default;
             this._name = this._config?.name || "Unknown";
