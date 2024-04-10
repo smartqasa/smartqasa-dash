@@ -8,30 +8,26 @@ import styleTileBase from "../styles/tile-base";
 import styleTileState from "../styles/tile-state";
 
 interface Config extends LovelaceCardConfig {
-    category?: string;
     entity: string;
     icon?: string;
     name?: string;
 }
 
-@customElement("smartqasa-switch-tile")
+@customElement("smartqasa-select-tile")
 export class SwitchTile extends LitElement {
     @state() private _config?: Config;
     @state() private _stateObj?: HassEntity;
 
     private _hass: any;
-    private _icon: string = "hass:toggle-switch-variant";
+    private _icon: string = "hass:form-dropdown";
     private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
     private _name: string = "Loading...";
     private _stateFmtd: string = "Loading...";
-
     static styles: CSSResultGroup = [styleTileBase, styleTileState];
 
     setConfig(config: Config): void {
-        const validDomains = ["fan", "input_boolean", "light", "switch"];
-        if (!config.entity || !validDomains.includes(config.entity.split(".")[0])) {
-            throw new Error("A valid toggleable entity is required.");
-        }
+        if (!config.entity || config.entity.split(".")[0] != "input_select")
+            throw new Error("A valid input_select entity is required.");
         this._config = config;
         if (this._hass) this.hass = this._hass;
     }
@@ -44,14 +40,9 @@ export class SwitchTile extends LitElement {
 
     private _updateState(): void {
         if (this._stateObj) {
-            const state = this._stateObj.state;
-            this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:toggle-switch-variant";
-            this._iconColor =
-                state === "on"
-                    ? `var(--sq-switch${this._config?.category ? `-${this._config.category}` : ""}-on-rgb)`
-                    : "var(--sq-inactive-rgb)";
+            this._icon = this._config?.icon || this._stateObj.attributes.icon || this._icon;
             this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
-            this._stateFmtd = this._hass ? this._hass.formatEntityState(this._stateObj) : "Unknown";
+            this._stateFmtd = this._hass.formatEntityState(this._stateObj) || "Unknown";
         } else {
             this._icon = this._config?.icon || "hass:toggle-switch-variant";
             this._iconColor = "var(--sq-unavailable-rgb)";
@@ -62,10 +53,9 @@ export class SwitchTile extends LitElement {
 
     protected render(): TemplateResult {
         return html`
-            <div class="container" @click=${this._showMoreInfo}>
+            <div class="container" @click=${this._showChoices}>
                 <div
                     class="icon"
-                    @click=${this._toggleEntity}
                     style="
             color: rgb(${this._iconColor});
             background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
@@ -79,16 +69,7 @@ export class SwitchTile extends LitElement {
         `;
     }
 
-    private _toggleEntity(e: Event): void {
-        e.stopPropagation();
-        if (this._stateObj) {
-            this._hass.callService("homeassistant", "toggle", {
-                entity_id: this._stateObj.entity_id,
-            });
-        }
-    }
-
-    private _showMoreInfo(e: Event): void {
+    private _showChoices(e: Event): void {
         e.stopPropagation();
         showMoreInfo(this._config, this._stateObj, this._hass);
     }
@@ -99,8 +80,8 @@ export class SwitchTile extends LitElement {
 }
 
 window.customCards.push({
-    type: "smartqasa-switch-tile",
-    name: "SmartQasa Switch Tile",
+    type: "smartqasa-select-tile",
+    name: "SmartQasa Select Tile",
     preview: true,
-    description: "A SmartQasa tile for toggling an entity.",
+    description: "A SmartQasa tile for displaying an Input Select entity.",
 });

@@ -45,6 +45,7 @@ import "./tiles/light-editor";
 import "./tiles/lock";
 import "./tiles/robot";
 import "./tiles/routine";
+import "./tiles/select";
 import "./tiles/sensor";
 import "./tiles/shade";
 import "./tiles/switch";

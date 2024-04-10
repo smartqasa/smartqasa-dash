@@ -2684,6 +2684,81 @@ window.customCards.push({
     description: "A SmartQasa tile for triggering an automation, scene, or script entity.",
 });
 
+let SwitchTile$1 = class SwitchTile extends s {
+    constructor() {
+        super(...arguments);
+        this._icon = "hass:form-dropdown";
+        this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+        this._name = "Loading...";
+        this._stateFmtd = "Loading...";
+    }
+    static { this.styles = [styleTileBase, styleTileState]; }
+    setConfig(config) {
+        if (!config.entity || config.entity.split(".")[0] != "input_select")
+            throw new Error("A valid input_select entity is required.");
+        this._config = config;
+        if (this._hass)
+            this.hass = this._hass;
+    }
+    set hass(hass) {
+        this._hass = hass;
+        this._stateObj = this._config?.entity ? this._hass.states[this._config.entity] : undefined;
+        this._updateState();
+    }
+    _updateState() {
+        if (this._stateObj) {
+            this._icon = this._config?.icon || this._stateObj.attributes.icon || this._icon;
+            this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
+            this._stateFmtd = this._hass.formatEntityState(this._stateObj) || "Unknown";
+        }
+        else {
+            this._icon = this._config?.icon || "hass:toggle-switch-variant";
+            this._iconColor = "var(--sq-unavailable-rgb)";
+            this._name = this._name || "Unknown";
+            this._stateFmtd = "Unknown";
+        }
+    }
+    render() {
+        return x `
+            <div class="container" @click=${this._showChoices}>
+                <div
+                    class="icon"
+                    style="
+            color: rgb(${this._iconColor});
+            background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
+          "
+                >
+                    <ha-icon .icon=${this._icon}></ha-icon>
+                </div>
+                <div class="name">${this._name}</div>
+                <div class="state">${this._stateFmtd}</div>
+            </div>
+        `;
+    }
+    _showChoices(e) {
+        e.stopPropagation();
+        showMoreInfo(this._config, this._stateObj, this._hass);
+    }
+    getCardSize() {
+        return 1;
+    }
+};
+__decorate([
+    r()
+], SwitchTile$1.prototype, "_config", void 0);
+__decorate([
+    r()
+], SwitchTile$1.prototype, "_stateObj", void 0);
+SwitchTile$1 = __decorate([
+    t("smartqasa-select-tile")
+], SwitchTile$1);
+window.customCards.push({
+    type: "smartqasa-select-tile",
+    name: "SmartQasa Select Tile",
+    preview: true,
+    description: "A SmartQasa tile for displaying an Input Select entity.",
+});
+
 let SensorTile = class SensorTile extends s {
     constructor() {
         super(...arguments);
@@ -2996,18 +3071,6 @@ let SwitchTile = class SwitchTile extends s {
 __decorate([
     r()
 ], SwitchTile.prototype, "_config", void 0);
-__decorate([
-    r()
-], SwitchTile.prototype, "_icon", void 0);
-__decorate([
-    r()
-], SwitchTile.prototype, "_iconColor", void 0);
-__decorate([
-    r()
-], SwitchTile.prototype, "_name", void 0);
-__decorate([
-    r()
-], SwitchTile.prototype, "_stateFmtd", void 0);
 __decorate([
     r()
 ], SwitchTile.prototype, "_stateObj", void 0);
