@@ -340,11 +340,14 @@ function showMoreInfo(config, stateObj, hass) {
             type: "custom:smartqasa-more-info-dialog",
             entity: stateObj.entity_id,
         },
-        ...(config.listType
-            ? {
-                dismiss_action: listDialogConfig(title, config.listType, config.filter, config.tileType),
-            }
-            : {}),
+        ...(config.listType && {
+            dismiss_action: {
+                service: "browser_mod.popup",
+                data: {
+                    ...listDialogConfig(title, config.listType, config.filter, config.tileType),
+                },
+            },
+        }),
     };
     window.browser_mod?.service("popup", dialogConfig);
 }
