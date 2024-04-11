@@ -1459,7 +1459,7 @@ const dialogTable = {
         data: listDialogConfig("Robots", "domain", "vacuum", "robot"),
     },
     rokus: {
-        icon: "hass:cast",
+        icon: "hass:audio-video",
         name: "Roku Players",
         data: listDialogConfig("Rokus", "group", "media_player.all_roku_players", "roku"),
     },
@@ -2339,7 +2339,7 @@ window.customCards.push({
 let RokuTile = class RokuTile extends s {
     constructor() {
         super(...arguments);
-        this._icon = "hass:cast-connected";
+        this._icon = "hass:audio-video";
         this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
         this._name = "Loading...";
         this._stateFmtd = "Loading...";
@@ -2380,11 +2380,11 @@ let RokuTile = class RokuTile extends s {
                     this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
                     break;
             }
-            this._stateFmtd = `${this._hass.formatEntityState(this._stateObj)}${this._stateObj.attributes?.app_name ? ` - ${this._stateObj.attributes.app_name}` : ""}`;
+            this._stateFmtd = `${this._hass.formatEntityState(this._stateObj)}${this._stateObj.attributes?.source ? ` - ${this._stateObj.attributes.source}` : ""}`;
             this._name = this._config?.icon || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
         }
         else {
-            this._icon = "hass:cast-off";
+            this._icon = "hass:audio-video";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
             this._name = this._name || "Unknown";
             this._stateFmtd = "Unavailable";

@@ -71,7 +71,7 @@ const dialogTable: DialogTable = {
         data: listDialogConfig("Robots", "domain", "vacuum", "robot"),
     },
     rokus: {
-        icon: "hass:cast",
+        icon: "hass:audio-video",
         name: "Roku Players",
         data: listDialogConfig("Rokus", "group", "media_player.all_roku_players", "roku"),
     },

@@ -18,7 +18,7 @@ export class RokuTile extends LitElement {
     @state() private _stateObj?: HassEntity;
 
     private _hass: any;
-    private _icon: string = "hass:cast-connected";
+    private _icon: string = "hass:audio-video";
     private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
     private _name: string = "Loading...";
     private _stateFmtd: string = "Loading...";
@@ -62,11 +62,11 @@ export class RokuTile extends LitElement {
                     break;
             }
             this._stateFmtd = `${this._hass.formatEntityState(this._stateObj)}${
-                this._stateObj.attributes?.app_name ? ` - ${this._stateObj.attributes.app_name}` : ""
+                this._stateObj.attributes?.source ? ` - ${this._stateObj.attributes.source}` : ""
             }`;
             this._name = this._config?.icon || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
         } else {
-            this._icon = "hass:cast-off";
+            this._icon = "hass:audio-video";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
             this._name = this._name || "Unknown";
             this._stateFmtd = "Unavailable";
