@@ -2,7 +2,7 @@ import { CSSResultGroup, html, LitElement, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
-import { showMoreInfo } from "../utils/showMoreInfo";
+import { listDialogConfig } from "../utils/listDialogConfig";
 
 import styleTileBase from "../styles/tile-base";
 import styleTileState from "../styles/tile-state";
@@ -101,7 +101,32 @@ export class RokuTile extends LitElement {
 
     private _showMoreInfo(e: Event): void {
         e.stopPropagation();
-        showMoreInfo(this._config, this._stateObj, this._hass);
+        if (!this._config || !this._stateObj) return;
+
+        const dialogConfig = {
+            title: this._stateObj.attributes?.friendly_name || this._stateObj.entity_id,
+            timeout: 60000,
+            content: {
+                type: "custom:roku-card",
+                entity: this._stateObj.entity_id,
+                tv: true,
+            },
+            ...(this._config.dialogTitle && {
+                dismiss_action: {
+                    service: "browser_mod.popup",
+                    data: {
+                        ...listDialogConfig(
+                            this._config.dialogTitle,
+                            this._config.filterType,
+                            this._config.filterValue,
+                            this._config.tileType
+                        ),
+                    },
+                },
+            }),
+        };
+
+        window.browser_mod?.service("popup", dialogConfig);
     }
 
     getCardSize(): number {

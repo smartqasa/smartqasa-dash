@@ -2416,7 +2416,26 @@ let RokuTile = class RokuTile extends s {
     }
     _showMoreInfo(e) {
         e.stopPropagation();
-        showMoreInfo(this._config, this._stateObj, this._hass);
+        if (!this._config || !this._stateObj)
+            return;
+        const dialogConfig = {
+            title: this._stateObj.attributes?.friendly_name || this._stateObj.entity_id,
+            timeout: 60000,
+            content: {
+                type: "custom:roku-card",
+                entity: this._stateObj.entity_id,
+                tv: true,
+            },
+            ...(this._config.dialogTitle && {
+                dismiss_action: {
+                    service: "browser_mod.popup",
+                    data: {
+                        ...listDialogConfig(this._config.dialogTitle, this._config.filterType, this._config.filterValue, this._config.tileType),
+                    },
+                },
+            }),
+        };
+        window.browser_mod?.service("popup", dialogConfig);
     }
     getCardSize() {
         return 1;
