@@ -6,41 +6,38 @@ interface DialogTable {
     };
 }
 
-function _groupListConfig(icon: string, title: string, group: string, tileType: string) {
+// Create common data structure
+function createData(title: string, type: string, criteria: string, tileType: string) {
     return {
-        icon: icon,
-        name: title,
-        data: {
-            title: title,
-            timeout: 60000,
-            content: {
-                type: "custom:auto-entities",
-                card: {
-                    type: "custom:layout-card",
-                    layout_type: "custom:grid-layout",
-                    layout: {
-                        margin: 0,
-                        "grid-template-columns": "1fr",
-                        "grid-gap": "var(--sq-dialog-grid-gap)",
-                    },
+        title: title,
+        timeout: 60000,
+        content: {
+            type: "custom:auto-entities",
+            card: {
+                type: "custom:layout-card",
+                layout_type: "custom:grid-layout",
+                layout: {
+                    margin: 0,
+                    "grid-template-columns": "1fr",
+                    "grid-gap": "var(--sq-dialog-grid-gap)",
                 },
-                card_param: "cards",
-                filter: {
-                    include: [
-                        {
-                            group: group,
-                            sort: {
-                                method: "friendly_name",
-                                ignore_case: true,
-                            },
-                            options: {
-                                type: `custom:smartqasa-${tileType}-tile`,
-                                group: group,
-                                tileType: tileType,
-                            },
+            },
+            card_param: "cards",
+            filter: {
+                include: [
+                    {
+                        [type]: criteria,
+                        sort: {
+                            method: "friendly_name",
+                            ignore_case: true,
                         },
-                    ],
-                },
+                        options: {
+                            type: `custom:smartqasa-${tileType}-tile`,
+                            [type]: criteria,
+                            tileType: tileType,
+                        },
+                    },
+                ],
             },
         },
     };
@@ -93,203 +90,35 @@ const dialogTable: DialogTable = {
             },
         },
     },
-
-    garages: _groupListConfig("hass:garage-variant", "Garage Doors", "cover.all_garage_doors", "garage"),
-
-    internet_speed: {
-        icon: "hass:gauge",
-        name: "Internet Speed",
-        data: {
-            title: "Internet Speed",
-            size: "wide",
-            timeout: 60000,
-            content: {
-                type: "statistics-graph",
-                entities: ["sensor.speedtest_download", "sensor.speedtest_upload"],
-                chart_type: "line",
-                period: "hour",
-                stat_types: "mean",
-                hide_legend: false,
-                days_to_show: 3,
-            },
-        },
+    garages: {
+        icon: "hass:garage-variant",
+        name: "Garage Doors",
+        data: createData("Garage Doors", "group", "cover.all_garage_doors", "garage"),
     },
     locks: {
         icon: "hass:lock",
         name: "Door Locks",
-        data: {
-            title: "Door Locks",
-            timeout: 60000,
-            content: {
-                type: "custom:auto-entities",
-                card: {
-                    type: "custom:layout-card",
-                    layout_type: "custom:grid-layout",
-                    layout: {
-                        margin: 0,
-                        "grid-template-columns": "1fr",
-                        "grid-gap": "var(--sq-dialog-grid-gap)",
-                    },
-                },
-                card_param: "cards",
-                filter: {
-                    include: [
-                        {
-                            group: "lock.all_door_locks",
-                            sort: {
-                                method: "friendly_name",
-                                ignore_case: true,
-                            },
-                            options: {
-                                type: "custom:smartqasa-lock-tile",
-                                group: "lock.all_door_locks",
-                                tileType: "lock",
-                            },
-                        },
-                    ],
-                },
-            },
-        },
+        data: createData("Door Locks", "group", "lock.all_door_locks", "lock"),
     },
     robots: {
         icon: "hass:robot-vacuum-variant",
         name: "Robots",
-        data: {
-            title: "Robots",
-            timeout: 60000,
-            content: {
-                type: "custom:auto-entities",
-                card: {
-                    type: "custom:layout-card",
-                    layout_type: "custom:grid-layout",
-                    layout: {
-                        margin: 0,
-                        "grid-template-columns": "1fr",
-                        "grid-gap": "var(--sq-dialog-grid-gap)",
-                    },
-                },
-                card_param: "cards",
-                filter: {
-                    include: [
-                        {
-                            domain: "vacuum",
-                            sort: {
-                                method: "friendly_name",
-                                ignore_case: true,
-                            },
-                            options: {
-                                type: "custom:smartqasa-robot-tile",
-                            },
-                        },
-                    ],
-                },
-            },
-        },
+        data: createData("Robots", "domain", "vacuum", "robot"),
     },
     sensors_doors: {
         icon: "hass:door-open",
         name: "Door Sensors",
-        data: {
-            title: "Door Sensors",
-            timeout: 60000,
-            content: {
-                type: "custom:auto-entities",
-                card: {
-                    type: "custom:layout-card",
-                    layout_type: "custom:grid-layout",
-                    layout: {
-                        margin: 0,
-                        "grid-template-columns": "1fr",
-                        "grid-gap": "var(--sq-dialog-grid-gap)",
-                    },
-                },
-                card_param: "cards",
-                filter: {
-                    include: [
-                        {
-                            group: "binary_sensor.all_door_sensors",
-                            sort: {
-                                method: "friendly_name",
-                                ignore_case: true,
-                            },
-                            options: {
-                                type: "custom:smartqasa-sensor-tile",
-                            },
-                        },
-                    ],
-                },
-            },
-        },
+        data: createData("Door Sensors", "group", "binary_sensor.all_door_sensors", "sensor"),
     },
     sensors_windows: {
         icon: "hass:window-open",
         name: "Window Sensors",
-        data: {
-            title: "Window Sensors",
-            timeout: 60000,
-            content: {
-                type: "custom:auto-entities",
-                card: {
-                    type: "custom:layout-card",
-                    layout_type: "custom:grid-layout",
-                    layout: {
-                        margin: 0,
-                        "grid-template-columns": "1fr",
-                        "grid-gap": "var(--sq-dialog-grid-gap)",
-                    },
-                },
-                card_param: "cards",
-                filter: {
-                    include: [
-                        {
-                            group: "binary_sensor.all_window_sensors",
-                            sort: {
-                                method: "friendly_name",
-                                ignore_case: true,
-                            },
-                            options: {
-                                type: "custom:smartqasa-sensor-tile",
-                            },
-                        },
-                    ],
-                },
-            },
-        },
+        data: createData("Window Sensors", "group", "binary_sensor.all_window_sensors", "sensor"),
     },
     thermostats: {
-        icon: "hass:thermometer-lines",
+        icon: "hass:thermostat",
         name: "Thermostats",
-        data: {
-            title: "Thermostats",
-            timeout: 60000,
-            content: {
-                type: "custom:auto-entities",
-                card: {
-                    type: "custom:layout-card",
-                    layout_type: "custom:grid-layout",
-                    layout: {
-                        margin: 0,
-                        "grid-template-columns": "1fr",
-                        "grid-gap": "var(--sq-dialog-grid-gap)",
-                    },
-                },
-                card_param: "cards",
-                filter: {
-                    include: [
-                        {
-                            domain: "climate",
-                            sort: {
-                                method: "friendly_name",
-                                ignore_case: true,
-                            },
-                            options: {
-                                type: "custom:smartqasa-thermostat-tile",
-                            },
-                        },
-                    ],
-                },
-            },
-        },
+        data: createData("Thermostats", "domain", "climate", "thermostat"),
     },
 };
 
