@@ -40,11 +40,11 @@ export class SwitchTile extends LitElement {
 
     private _updateState(): void {
         if (this._stateObj) {
-            this._icon = this._config?.icon || this._stateObj.attributes.icon || this._icon;
-            this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
+            this._icon = this._config?.icon || this._stateObj.attributes?.icon || this._icon;
+            this._name = this._config?.name || this._stateObj.attributes?.friendly_name || this._stateObj.entity_id;
             this._stateFmtd = this._hass.formatEntityState(this._stateObj) || "Unknown";
         } else {
-            this._icon = this._config?.icon || "hass:toggle-switch-variant";
+            this._icon = this._config?.icon || this._icon;
             this._iconColor = "var(--sq-unavailable-rgb)";
             this._name = this._name || "Unknown";
             this._stateFmtd = "Unknown";
@@ -58,7 +58,7 @@ export class SwitchTile extends LitElement {
                     class="icon"
                     style="
             color: rgb(${this._iconColor});
-            background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
+            background-color: rgba(${this._iconColor}, var(--sq-icon-opacity, 0.2));
           "
                 >
                     <ha-icon .icon=${this._icon}></ha-icon>

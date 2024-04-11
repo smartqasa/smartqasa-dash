@@ -715,7 +715,7 @@ let AllOffTile = class AllOffTile extends s {
                     class="icon"
                     style="
                         color: rgb(${this._iconColor});
-                        background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
+                        background-color: rgba(${this._iconColor}, var(--sq-icon-opacity, 0.2));
                         animation: ${this._iconAnimation};
                     "
                 >
@@ -1245,13 +1245,13 @@ let AppTile = class AppTile extends s {
             }
             else {
                 iconStyle =
-                    "color: rgb(var(--sq-unavailable-rgb)); background-color: rgba(var(--sq-unavailable-rgb), var(--sq-icon-opacity));";
+                    "color: rgb(var(--sq-unavailable-rgb)); background-color: rgba(var(--sq-unavailable-rgb), var(--sq-icon-opacity, 0.2));";
                 iconTemplate = x `<ha-icon .icon="hass:help-rhombus"></ha-icon>`;
             }
         }
         else {
             iconStyle =
-                "color: rgb(var(--sq-unavailable-rgb)); background-color: rgba(var(--sq-unavailable-rgb), var(--sq-icon-opacity));";
+                "color: rgb(var(--sq-unavailable-rgb)); background-color: rgba(var(--sq-unavailable-rgb), var(--sq-icon-opacity, 0.2));";
             iconTemplate = x `<ha-icon .icon="hass:alert-rhombus"></ha-icon>`;
         }
         name = this._config?.name || this._appObj?.name || this._config?.app;
@@ -1321,7 +1321,7 @@ let AreaTile = class AreaTile extends s {
     }
     _updateArea() {
         if (this._areaObj) {
-            this._icon = this._config?.icon ?? this._areaObj.icon ?? "hass:help-rhombus";
+            this._icon = this._config?.icon ?? this._areaObj.icon ?? this._icon;
             this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
             this._name = this._config?.name ?? this._areaObj.name ?? "Unknown";
         }
@@ -1333,19 +1333,19 @@ let AreaTile = class AreaTile extends s {
     }
     render() {
         return x `
-      <div class="container" @click=${this._navigate}>
-        <div
-          class="icon"
-          style="
-            color: rgb(${this._iconColor});
-            background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
-          "
-        >
-          <ha-icon .icon=${this._icon}></ha-icon>
-        </div>
-        <div class="name">${this._name}</div>
-      </div>
-    `;
+            <div class="container" @click=${this._navigate}>
+                <div
+                    class="icon"
+                    style="
+                        color: rgb(${this._iconColor});
+                        background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
+                    "
+                >
+                    <ha-icon .icon=${this._icon}></ha-icon>
+                </div>
+                <div class="name">${this._name}</div>
+            </div>
+        `;
     }
     _navigate(e) {
         e.stopPropagation();
@@ -1387,6 +1387,45 @@ window.customCards.push({
     description: "A SmartQasa card for navigating to an area panel.",
 });
 
+function _groupListConfig(icon, title, group, tileType) {
+    return {
+        icon: icon,
+        name: title,
+        data: {
+            title: title,
+            timeout: 60000,
+            content: {
+                type: "custom:auto-entities",
+                card: {
+                    type: "custom:layout-card",
+                    layout_type: "custom:grid-layout",
+                    layout: {
+                        margin: 0,
+                        "grid-template-columns": "1fr",
+                        "grid-gap": "var(--sq-dialog-grid-gap)",
+                    },
+                },
+                card_param: "cards",
+                filter: {
+                    include: [
+                        {
+                            group: group,
+                            sort: {
+                                method: "friendly_name",
+                                ignore_case: true,
+                            },
+                            options: {
+                                type: `custom:smartqasa-${tileType}-tile`,
+                                group: group,
+                                tileType: tileType,
+                            },
+                        },
+                    ],
+                },
+            },
+        },
+    };
+}
 const dialogTable = {
     clean_screen: {
         icon: "hass:spray-bottle",
@@ -1434,43 +1473,7 @@ const dialogTable = {
             },
         },
     },
-    garages: {
-        icon: "hass:garage-variant",
-        name: "Garage Doors",
-        data: {
-            title: "Garage Doors",
-            timeout: 60000,
-            content: {
-                type: "custom:auto-entities",
-                card: {
-                    type: "custom:layout-card",
-                    layout_type: "custom:grid-layout",
-                    layout: {
-                        margin: 0,
-                        "grid-template-columns": "1fr",
-                        "grid-gap": "var(--sq-dialog-grid-gap)",
-                    },
-                },
-                card_param: "cards",
-                filter: {
-                    include: [
-                        {
-                            group: "cover.all_garage_doors",
-                            sort: {
-                                method: "friendly_name",
-                                ignore_case: true,
-                            },
-                            options: {
-                                type: "custom:smartqasa-garage-tile",
-                                group: "cover.all_garage_doors",
-                                tileType: "garage",
-                            },
-                        },
-                    ],
-                },
-            },
-        },
-    },
+    garages: _groupListConfig("hass:garage-variant", "Garage Doors", "cover.all_garage_doors", "garage"),
     internet_speed: {
         icon: "hass:gauge",
         name: "Internet Speed",
@@ -1689,19 +1692,19 @@ let DialogTile = class DialogTile extends s {
             name = this._config?.dialog || "";
         }
         return x `
-      <div class="container" @click=${this._showDialog}>
-        <div
-          class="icon"
-          style="
-            color: rgb(${iconColor});
-            background-color: rgba(${iconColor}, var(--sq-icon-opacity, 0.2));
-          "
-        >
-          <ha-icon .icon=${icon}></ha-icon>
-        </div>
-        <div class="name">${name}</div>
-      </div>
-    `;
+            <div class="container" @click=${this._showDialog}>
+                <div
+                    class="icon"
+                    style="
+                        color: rgb(${iconColor});
+                        background-color: rgba(${iconColor}, var(--sq-icon-opacity, 0.2));
+                    "
+                >
+                    <ha-icon .icon=${icon}></ha-icon>
+                </div>
+                <div class="name">${name}</div>
+            </div>
+        `;
     }
     _showDialog(e) {
         e.stopPropagation();
@@ -2083,7 +2086,7 @@ let HeaterTile = class HeaterTile extends s {
                     @click=${this._toggleEntity}
                     style="
                         color: rgb(${this._iconColor});
-                        background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
+                        background-color: rgba(${this._iconColor}, var(--sq-icon-opacity, 0.2));
                     "
                 >
                     <ha-icon .icon=${this._icon}></ha-icon>
@@ -2707,12 +2710,12 @@ let SwitchTile$1 = class SwitchTile extends s {
     }
     _updateState() {
         if (this._stateObj) {
-            this._icon = this._config?.icon || this._stateObj.attributes.icon || this._icon;
-            this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
+            this._icon = this._config?.icon || this._stateObj.attributes?.icon || this._icon;
+            this._name = this._config?.name || this._stateObj.attributes?.friendly_name || this._stateObj.entity_id;
             this._stateFmtd = this._hass.formatEntityState(this._stateObj) || "Unknown";
         }
         else {
-            this._icon = this._config?.icon || "hass:toggle-switch-variant";
+            this._icon = this._config?.icon || this._icon;
             this._iconColor = "var(--sq-unavailable-rgb)";
             this._name = this._name || "Unknown";
             this._stateFmtd = "Unknown";
@@ -2725,7 +2728,7 @@ let SwitchTile$1 = class SwitchTile extends s {
                     class="icon"
                     style="
             color: rgb(${this._iconColor});
-            background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
+            background-color: rgba(${this._iconColor}, var(--sq-icon-opacity, 0.2));
           "
                 >
                     <ha-icon .icon=${this._icon}></ha-icon>
@@ -3141,7 +3144,7 @@ let ThermostatTile = class ThermostatTile extends s {
                     @click=${this._toggleEntity}
                     style="
                         color: rgb(${this._iconColor});
-                        background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
+                        background-color: rgba(${this._iconColor}, var(--sq-icon-opacity, 0.2));
                     "
                 >
                     <ha-icon .icon=${this._icon}></ha-icon>

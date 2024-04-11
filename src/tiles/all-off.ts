@@ -65,7 +65,7 @@ export class AllOffTile extends LitElement {
                     class="icon"
                     style="
                         color: rgb(${this._iconColor});
-                        background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
+                        background-color: rgba(${this._iconColor}, var(--sq-icon-opacity, 0.2));
                         animation: ${this._iconAnimation};
                     "
                 >

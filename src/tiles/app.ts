@@ -40,12 +40,12 @@ export class AppTile extends LitElement {
                 />`;
             } else {
                 iconStyle =
-                    "color: rgb(var(--sq-unavailable-rgb)); background-color: rgba(var(--sq-unavailable-rgb), var(--sq-icon-opacity));";
+                    "color: rgb(var(--sq-unavailable-rgb)); background-color: rgba(var(--sq-unavailable-rgb), var(--sq-icon-opacity, 0.2));";
                 iconTemplate = html`<ha-icon .icon="hass:help-rhombus"></ha-icon>`;
             }
         } else {
             iconStyle =
-                "color: rgb(var(--sq-unavailable-rgb)); background-color: rgba(var(--sq-unavailable-rgb), var(--sq-icon-opacity));";
+                "color: rgb(var(--sq-unavailable-rgb)); background-color: rgba(var(--sq-unavailable-rgb), var(--sq-icon-opacity, 0.2));";
             iconTemplate = html`<ha-icon .icon="hass:alert-rhombus"></ha-icon>`;
         }
         name = this._config?.name || this._appObj?.name || this._config?.app;

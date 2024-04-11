@@ -75,7 +75,7 @@ export class ThermostatTile extends LitElement {
                     @click=${this._toggleEntity}
                     style="
                         color: rgb(${this._iconColor});
-                        background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
+                        background-color: rgba(${this._iconColor}, var(--sq-icon-opacity, 0.2));
                     "
                 >
                     <ha-icon .icon=${this._icon}></ha-icon>
