@@ -1,14 +1,11 @@
-export const showGroupEntities = (stateObj: any, tileType: string) => {
-    if (
-        !stateObj ||
-        !Array.isArray(stateObj.attributes?.entity_id) ||
-        stateObj.attributes.entity_id.length === 0 ||
-        !tileType
-    )
-        return;
-
-    const dialogConfig: any = {
-        title: stateObj.attributes.friendly_name || stateObj.entity_id,
+export const listDialogConfig: any = (
+    title: string,
+    listType: "domain" | "group",
+    filter: string,
+    tileType: string
+) => {
+    return {
+        title: title,
         timeout: 60000,
         content: {
             type: "custom:auto-entities",
@@ -25,14 +22,15 @@ export const showGroupEntities = (stateObj: any, tileType: string) => {
             filter: {
                 include: [
                     {
-                        group: stateObj.entity_id,
+                        [listType]: filter,
                         sort: {
                             method: "friendly_name",
                             ignore_case: true,
                         },
                         options: {
                             type: `custom:smartqasa-${tileType}-tile`,
-                            group: stateObj.entity_id,
+                            listType: listType,
+                            filter: filter,
                             tileType: tileType,
                         },
                     },
@@ -40,6 +38,4 @@ export const showGroupEntities = (stateObj: any, tileType: string) => {
             },
         },
     };
-
-    window.browser_mod?.service("popup", dialogConfig);
 };

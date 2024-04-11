@@ -3,7 +3,7 @@ import { customElement, state } from "lit/decorators.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 import { showMoreInfo } from "../utils/showMoreInfo";
-import { showGroupEntities } from "../utils/showGroupEntities";
+import { showEntitiesList } from "../utils/showEntitiesList";
 
 import styleTileBase from "../styles/tile-base";
 import styleTileState from "../styles/tile-state";
@@ -13,7 +13,8 @@ interface Config extends LovelaceCardConfig {
     entity: string;
     icon?: string;
     name?: string;
-    group?: string;
+    listType?: string;
+    filter?: string;
     tileType?: string;
 }
 
@@ -76,7 +77,7 @@ export class FanTile extends LitElement {
 
     protected render(): TemplateResult {
         return html`
-            <div class="container" @click=${this._showMoreInfo} @contextmenu=${this._showGroupEntities}>
+            <div class="container" @click=${this._showMoreInfo} @contextmenu=${this._showGroupList}>
                 <div
                     class="icon"
                     @click=${this._toggleEntity}
@@ -106,9 +107,20 @@ export class FanTile extends LitElement {
         showMoreInfo(this._config, this._stateObj, this._hass);
     }
 
-    private _showGroupEntities(e: Event): void {
+    private _showGroupList(e: Event): void {
         e.stopPropagation();
-        showGroupEntities(this._stateObj, "fan");
+        if (
+            !this._stateObj ||
+            !Array.isArray(this._stateObj.attributes?.entity_id) ||
+            this._stateObj.attributes.entity_id.length === 0
+        )
+            return;
+        showEntitiesList(
+            this._stateObj.attributes.friendly_name || this._stateObj.entity_id,
+            "group",
+            this._stateObj.entity_id,
+            "fan"
+        );
     }
 
     getCardSize(): number {

@@ -292,56 +292,62 @@ window.customCards.push({
     description: "A SmartQasa chip for navigating to a previous/next area.",
 });
 
-const showMoreInfo = (config, stateObj, hass) => {
-    if (!stateObj)
-        return;
-    let groupConfig = undefined;
-    if (config.group) {
-        groupConfig = {
-            service: "browser_mod.popup",
-            data: {
-                title: hass.states[config.group]?.attributes?.friendly_name || config.group,
-                timeout: 60000,
-                content: {
-                    type: "custom:auto-entities",
-                    card: {
-                        type: "custom:layout-card",
-                        layout_type: "custom:grid-layout",
-                        layout: {
-                            margin: 0,
-                            "grid-template-columns": "1fr",
-                            "grid-gap": "var(--sq-dialog-grid-gap)",
-                        },
-                    },
-                    card_param: "cards",
-                    filter: {
-                        include: [
-                            {
-                                group: config.group,
-                                sort: { method: "friendly_name", ignore_case: true },
-                                options: {
-                                    type: `custom:smartqasa-${config.tileType}-tile`,
-                                    group: config.group,
-                                    tileType: config.tileType,
-                                },
-                            },
-                        ],
-                    },
+const listDialogConfig = (title, listType, filter, tileType) => {
+    return {
+        title: title,
+        timeout: 60000,
+        content: {
+            type: "custom:auto-entities",
+            card: {
+                type: "custom:layout-card",
+                layout_type: "custom:grid-layout",
+                layout: {
+                    margin: 0,
+                    "grid-template-columns": "1fr",
+                    "grid-gap": "var(--sq-dialog-grid-gap)",
                 },
             },
-        };
-    }
+            card_param: "cards",
+            filter: {
+                include: [
+                    {
+                        [listType]: filter,
+                        sort: {
+                            method: "friendly_name",
+                            ignore_case: true,
+                        },
+                        options: {
+                            type: `custom:smartqasa-${tileType}-tile`,
+                            listType: listType,
+                            filter: filter,
+                            tileType: tileType,
+                        },
+                    },
+                ],
+            },
+        },
+    };
+};
+
+function showMoreInfo(config, stateObj, hass) {
+    if (!stateObj)
+        return;
+    const title = config.title || stateObj.attributes?.friendly_name || stateObj.entity_id;
     const dialogConfig = {
-        title: stateObj.attributes?.friendly_name || stateObj.entity_id,
+        title: title,
         timeout: 60000,
         content: {
             type: "custom:smartqasa-more-info-dialog",
             entity: stateObj.entity_id,
         },
-        ...(groupConfig && { dismiss_action: groupConfig }),
+        ...(config.listType
+            ? {
+                dismiss_action: listDialogConfig(title, config.listType, config.filter, config.tileType),
+            }
+            : {}),
     };
     window.browser_mod?.service("popup", dialogConfig);
-};
+}
 
 const heaterColors = {
     electric: "var(--sq-climate-heat-rgb, 250, 67, 54)",
@@ -1387,42 +1393,6 @@ window.customCards.push({
     description: "A SmartQasa card for navigating to an area panel.",
 });
 
-// Create common data structure
-function createData(title, type, criteria, tileType) {
-    return {
-        title: title,
-        timeout: 60000,
-        content: {
-            type: "custom:auto-entities",
-            card: {
-                type: "custom:layout-card",
-                layout_type: "custom:grid-layout",
-                layout: {
-                    margin: 0,
-                    "grid-template-columns": "1fr",
-                    "grid-gap": "var(--sq-dialog-grid-gap)",
-                },
-            },
-            card_param: "cards",
-            filter: {
-                include: [
-                    {
-                        [type]: criteria,
-                        sort: {
-                            method: "friendly_name",
-                            ignore_case: true,
-                        },
-                        options: {
-                            type: `custom:smartqasa-${tileType}-tile`,
-                            [type]: criteria,
-                            tileType: tileType,
-                        },
-                    },
-                ],
-            },
-        },
-    };
-}
 const dialogTable = {
     clean_screen: {
         icon: "hass:spray-bottle",
@@ -1473,32 +1443,32 @@ const dialogTable = {
     garages: {
         icon: "hass:garage-variant",
         name: "Garage Doors",
-        data: createData("Garage Doors", "group", "cover.all_garage_doors", "garage"),
+        data: listDialogConfig("Garage Doors", "group", "cover.all_garage_doors", "garage"),
     },
     locks: {
         icon: "hass:lock",
         name: "Door Locks",
-        data: createData("Door Locks", "group", "lock.all_door_locks", "lock"),
+        data: listDialogConfig("Door Locks", "group", "lock.all_door_locks", "lock"),
     },
     robots: {
         icon: "hass:robot-vacuum-variant",
         name: "Robots",
-        data: createData("Robots", "domain", "vacuum", "robot"),
+        data: listDialogConfig("Robots", "domain", "vacuum", "robot"),
     },
     sensors_doors: {
         icon: "hass:door-open",
         name: "Door Sensors",
-        data: createData("Door Sensors", "group", "binary_sensor.all_door_sensors", "sensor"),
+        data: listDialogConfig("Door Sensors", "group", "binary_sensor.all_door_sensors", "sensor"),
     },
     sensors_windows: {
         icon: "hass:window-open",
         name: "Window Sensors",
-        data: createData("Window Sensors", "group", "binary_sensor.all_window_sensors", "sensor"),
+        data: listDialogConfig("Window Sensors", "group", "binary_sensor.all_window_sensors", "sensor"),
     },
     thermostats: {
         icon: "hass:thermostat",
         name: "Thermostats",
-        data: createData("Thermostats", "domain", "climate", "thermostat"),
+        data: listDialogConfig("Thermostats", "domain", "climate", "thermostat"),
     },
 };
 
@@ -1563,47 +1533,10 @@ window.customCards.push({
     description: "A SmartQasa card for displaying a browser_mod popup dialog.",
 });
 
-const showGroupEntities = (stateObj, tileType) => {
-    if (!stateObj ||
-        !Array.isArray(stateObj.attributes?.entity_id) ||
-        stateObj.attributes.entity_id.length === 0 ||
-        !tileType)
-        return;
-    const dialogConfig = {
-        title: stateObj.attributes.friendly_name || stateObj.entity_id,
-        timeout: 60000,
-        content: {
-            type: "custom:auto-entities",
-            card: {
-                type: "custom:layout-card",
-                layout_type: "custom:grid-layout",
-                layout: {
-                    margin: 0,
-                    "grid-template-columns": "1fr",
-                    "grid-gap": "var(--sq-dialog-grid-gap)",
-                },
-            },
-            card_param: "cards",
-            filter: {
-                include: [
-                    {
-                        group: stateObj.entity_id,
-                        sort: {
-                            method: "friendly_name",
-                            ignore_case: true,
-                        },
-                        options: {
-                            type: `custom:smartqasa-${tileType}-tile`,
-                            group: stateObj.entity_id,
-                            tileType: tileType,
-                        },
-                    },
-                ],
-            },
-        },
-    };
+function showEntitiesList(title, listType, filter, tileType) {
+    const dialogConfig = listDialogConfig(title, listType, filter, tileType);
     window.browser_mod?.service("popup", dialogConfig);
-};
+}
 
 var styleTileState = i$2 `
     .container {
@@ -1682,7 +1615,7 @@ let FanTile = class FanTile extends s {
     }
     render() {
         return x `
-            <div class="container" @click=${this._showMoreInfo} @contextmenu=${this._showGroupEntities}>
+            <div class="container" @click=${this._showMoreInfo} @contextmenu=${this._showGroupList}>
                 <div
                     class="icon"
                     @click=${this._toggleEntity}
@@ -1709,9 +1642,13 @@ let FanTile = class FanTile extends s {
         e.stopPropagation();
         showMoreInfo(this._config, this._stateObj, this._hass);
     }
-    _showGroupEntities(e) {
+    _showGroupList(e) {
         e.stopPropagation();
-        showGroupEntities(this._stateObj, "fan");
+        if (!this._stateObj ||
+            !Array.isArray(this._stateObj.attributes?.entity_id) ||
+            this._stateObj.attributes.entity_id.length === 0)
+            return;
+        showEntitiesList(this._stateObj.attributes.friendly_name || this._stateObj.entity_id, "group", this._stateObj.entity_id, "fan");
     }
     getCardSize() {
         return 1;
@@ -1999,7 +1936,7 @@ let LightTile = class LightTile extends s {
     }
     render() {
         return x `
-            <div class="container" @click=${this._showMoreInfo} @contextmenu=${this._showGroupEntities}>
+            <div class="container" @click=${this._showMoreInfo} @contextmenu=${this._showGroupList}>
                 <div
                     class="icon"
                     @click=${this._toggleEntity}
@@ -2027,9 +1964,13 @@ let LightTile = class LightTile extends s {
         e.stopPropagation();
         showMoreInfo(this._config, this._stateObj, this._hass);
     }
-    _showGroupEntities(e) {
+    _showGroupList(e) {
         e.stopPropagation();
-        showGroupEntities(this._stateObj, "light");
+        if (!this._stateObj ||
+            !Array.isArray(this._stateObj.attributes?.entity_id) ||
+            this._stateObj.attributes.entity_id.length === 0)
+            return;
+        showEntitiesList(this._stateObj.attributes.friendly_name || this._stateObj.entity_id, "group", this._stateObj.entity_id, "light");
     }
     getCardSize() {
         return 1;
@@ -2760,7 +2701,7 @@ let ShadeTile = class ShadeTile extends s {
     }
     render() {
         return x `
-            <div class="container" @click=${this._showMoreInfo} @contextmenu=${this._showGroupEntities}>
+            <div class="container" @click=${this._showMoreInfo} @contextmenu=${this._showGroupList}>
                 <div
                     class="icon"
                     @click=${this._toggleEntity}
@@ -2803,9 +2744,13 @@ let ShadeTile = class ShadeTile extends s {
         e.stopPropagation();
         showMoreInfo(this._config, this._stateObj, this._hass);
     }
-    _showGroupEntities(e) {
+    _showGroupList(e) {
         e.stopPropagation();
-        showGroupEntities(this._stateObj, "shade");
+        if (!this._stateObj ||
+            !Array.isArray(this._stateObj.attributes?.entity_id) ||
+            this._stateObj.attributes.entity_id.length === 0)
+            return;
+        showEntitiesList(this._stateObj.attributes.friendly_name || this._stateObj.entity_id, "group", this._stateObj.entity_id, "shade");
     }
     getCardSize() {
         return 1;
