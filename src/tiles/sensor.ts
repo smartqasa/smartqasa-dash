@@ -17,14 +17,13 @@ interface Config extends LovelaceCardConfig {
 @customElement("smartqasa-sensor-tile")
 export class SensorTile extends LitElement {
     @state() private _config?: Config;
-    @state() private _iconTemplate: any;
-    @state() private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
-    @state() private _name: string = "Loading...";
-    @state() private _stateFmtd: string = "Loading...";
     @state() private _stateObj?: HassEntity;
 
     private _hass: any;
-
+    private _iconTemplate: any;
+    private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
+    private _name: string = "Loading...";
+    private _stateFmtd: string = "Loading...";
     static styles: CSSResultGroup = [styleTileBase, styleTileState];
 
     setConfig(config: Config): void {

@@ -1,7 +1,7 @@
 export const heaterColors: Record<string, string> = {
     electric: "var(--sq-climate-heat-rgb, 250, 67, 54)",
     heating: "var(--sq-climate-heat-rgb, 250, 67, 54)",
-    idle: "var(--sq-primary-font-rgb, 128, 128, 128)",
+    idle: "var(--sq-idle-rgb, 128, 128, 128)",
     off: "var(--sq-inactive-rgb, 128, 128, 128)",
     default: "var(--sq-unavailable-rgb, 255, 0, 255)",
 };
@@ -10,7 +10,7 @@ export const thermostatColors: Record<string, string> = {
     cooling: "var(--sq-climate-cool-rgb, 3, 169, 244)",
     heating: "var(--sq-climate-heat-rgb, 250, 67, 54)",
     fan_only: "var(--sq-climate-fan_only-rgb, 0, 255, 0)",
-    idle: "var(--sq-primary-font-rgb, 128, 128, 128)",
+    idle: "var(--sq-idle-rgb, 128, 128, 128)",
     off: "var(--sq-inactive-rgb, 128, 128, 128)",
     default: "var(--sq-unavailable-rgb, 255, 0, 255)",
 };

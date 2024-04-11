@@ -17,14 +17,14 @@ interface Config extends LovelaceCardConfig {
 @customElement("smartqasa-lock-tile")
 export class LockTile extends LitElement {
     @state() private _config?: Config;
-    @state() private _icon: string = "hass:lock-alert";
-    @state() private _iconAnimation: string = "none";
-    @state() private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
-    @state() private _name: string = "Loading...";
-    @state() private _stateFmtd: string = "Loading...";
     @state() private _stateObj?: HassEntity;
 
     private _hass: any;
+    private _icon: string = "hass:lock-alert";
+    private _iconAnimation: string = "none";
+    private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
+    private _name: string = "Loading...";
+    private _stateFmtd: string = "Loading...";
 
     static styles: CSSResultGroup = [styleTileBase, styleTileState, styleTileIconBlink, styleTileIconSpin];
 

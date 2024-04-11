@@ -2,6 +2,7 @@ import { CSSResultGroup, html, LitElement, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
+import { showMoreInfo } from "../utils/showMoreInfo";
 
 import styleTileBase from "../styles/tile-base";
 import styleTileState from "../styles/tile-state";
@@ -12,15 +13,15 @@ interface Config extends LovelaceCardConfig {
 }
 
 @customElement("smartqasa-roku-tile")
-export class RobotTile extends LitElement {
+export class RokuTile extends LitElement {
     @state() private _config?: Config;
-    @state() private _icon: string = "hass:cast-connected";
-    @state() private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
-    @state() private _name: string = "Loading...";
-    @state() private _stateFmtd: string = "Loading...";
     @state() private _stateObj?: HassEntity;
 
     private _hass: any;
+    private _icon: string = "hass:cast-connected";
+    private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
+    private _name: string = "Loading...";
+    private _stateFmtd: string = "Loading...";
 
     static styles: CSSResultGroup = [styleTileBase, styleTileState];
 
@@ -42,23 +43,27 @@ export class RobotTile extends LitElement {
             const state = this._stateObj.state || "unknown";
             switch (state) {
                 case "idle":
-                    this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+                    this._iconColor = "var(--sq-media_player-idle, 128, 128, 128)";
+                    break;
+                case "standby":
+                    this._iconColor = "var(--sq-media_player-standby-rgb, 128, 128, 128)";
+                    break;
+                case "on":
+                    this._iconColor = "var(--sq-media_player-on-rgb, 128, 128, 128)";
                     break;
                 case "paused":
-                    this._iconColor = "var(--sq-primary-font-rgb, 255, 120, 0)";
+                    this._iconColor = "var(--sq-media_player-paused-rgb, 128, 128, 128)";
                     break;
                 case "playing":
-                    this._iconColor = "var(--sq-garage-opening-rgb, 255, 120, 0)";
+                    this._iconColor = "var(--sq-media_player-playing-rgb, 3, 169, 244)";
                     break;
                 default:
                     this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
                     break;
             }
-            this._stateFmtd =
-                this._hass.formatEntityState(this._stateObj) +
-                (state === "open" && this._stateObj.attributes.current_position
-                    ? " - " + this._hass.formatEntityAttributeValue(this._stateObj, "current_position")
-                    : "");
+            this._stateFmtd = `${this._hass.formatEntityState(this._stateObj)}${
+                this._stateObj.attributes?.app_name ? ` - ${this._stateObj.attributes.app_name}` : ""
+            }`;
             this._name = this._config?.icon || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
         } else {
             this._icon = "hass:cast-off";
@@ -90,20 +95,13 @@ export class RobotTile extends LitElement {
     private _toggleEntity(e: Event): void {
         e.stopPropagation();
         if (this._stateObj) {
-            this._hass.callService("cover", "toggle", { entity_id: this._stateObj.entity_id });
+            this._hass.callService("media_player", "toggle", { entity_id: this._stateObj.entity_id });
         }
     }
 
     private _showMoreInfo(e: Event): void {
         e.stopPropagation();
-        if (this._stateObj) {
-            const event = new CustomEvent("hass-more-info", {
-                bubbles: true,
-                composed: true,
-                detail: { entityId: this._stateObj.entity_id },
-            });
-            this.dispatchEvent(event);
-        }
+        showMoreInfo(this._config, this._stateObj, this._hass);
     }
 
     getCardSize(): number {
@@ -112,8 +110,8 @@ export class RobotTile extends LitElement {
 }
 
 window.customCards.push({
-    type: "smartqasa-robot-tile",
-    name: "SmartQasa Robot Tile",
+    type: "smartqasa-roku-tile",
+    name: "SmartQasa Roku Tile",
     preview: true,
-    description: "A SmartQasa tile for controlling a robot vacuum entity.",
+    description: "A SmartQasa tile for controlling a Roku media_player entity.",
 });

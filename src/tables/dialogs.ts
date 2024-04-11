@@ -70,6 +70,11 @@ const dialogTable: DialogTable = {
         name: "Robots",
         data: listDialogConfig("Robots", "domain", "vacuum", "robot"),
     },
+    rokus: {
+        icon: "hass:cast",
+        name: "Roku Players",
+        data: listDialogConfig("Rokus", "group", "media_player.all_roku_players", "roku"),
+    },
     sensors_doors: {
         icon: "hass:door-open",
         name: "Door Sensors",
@@ -79,6 +84,11 @@ const dialogTable: DialogTable = {
         icon: "hass:window-open",
         name: "Window Sensors",
         data: listDialogConfig("Window Sensors", "group", "binary_sensor.all_window_sensors", "sensor"),
+    },
+    sonos: {
+        icon: "hass:speaker-multiple",
+        name: "Sonos Players",
+        data: listDialogConfig("Sonos Players", "group", "media_player.all_sonos_players", "sonos"),
     },
     thermostats: {
         icon: "hass:thermostat",

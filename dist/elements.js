@@ -355,7 +355,7 @@ function showMoreInfo(config, stateObj, hass) {
 const heaterColors = {
     electric: "var(--sq-climate-heat-rgb, 250, 67, 54)",
     heating: "var(--sq-climate-heat-rgb, 250, 67, 54)",
-    idle: "var(--sq-primary-font-rgb, 128, 128, 128)",
+    idle: "var(--sq-idle-rgb, 128, 128, 128)",
     off: "var(--sq-inactive-rgb, 128, 128, 128)",
     default: "var(--sq-unavailable-rgb, 255, 0, 255)",
 };
@@ -363,7 +363,7 @@ const thermostatColors = {
     cooling: "var(--sq-climate-cool-rgb, 3, 169, 244)",
     heating: "var(--sq-climate-heat-rgb, 250, 67, 54)",
     fan_only: "var(--sq-climate-fan_only-rgb, 0, 255, 0)",
-    idle: "var(--sq-primary-font-rgb, 128, 128, 128)",
+    idle: "var(--sq-idle-rgb, 128, 128, 128)",
     off: "var(--sq-inactive-rgb, 128, 128, 128)",
     default: "var(--sq-unavailable-rgb, 255, 0, 255)",
 };
@@ -1458,6 +1458,11 @@ const dialogTable = {
         name: "Robots",
         data: listDialogConfig("Robots", "domain", "vacuum", "robot"),
     },
+    rokus: {
+        icon: "hass:cast",
+        name: "Roku Players",
+        data: listDialogConfig("Rokus", "group", "media_player.all_roku_players", "roku"),
+    },
     sensors_doors: {
         icon: "hass:door-open",
         name: "Door Sensors",
@@ -1467,6 +1472,11 @@ const dialogTable = {
         icon: "hass:window-open",
         name: "Window Sensors",
         data: listDialogConfig("Window Sensors", "group", "binary_sensor.all_window_sensors", "sensor"),
+    },
+    sonos: {
+        icon: "hass:speaker-multiple",
+        name: "Sonos Players",
+        data: listDialogConfig("Sonos Players", "group", "media_player.all_sonos_players", "sonos"),
     },
     thermostats: {
         icon: "hass:thermostat",
@@ -1651,7 +1661,7 @@ let FanTile = class FanTile extends s {
             !Array.isArray(this._stateObj.attributes?.entity_id) ||
             this._stateObj.attributes.entity_id.length === 0)
             return;
-        showEntitiesList(this._stateObj.attributes.friendly_name || this._stateObj.entity_id, "group", this._stateObj.entity_id, "fan");
+        showEntitiesList(this._stateObj.attributes?.friendly_name || this._stateObj.entity_id, "group", this._stateObj.entity_id, "fan");
     }
     getCardSize() {
         return 1;
@@ -2176,21 +2186,6 @@ __decorate([
 ], LockTile.prototype, "_config", void 0);
 __decorate([
     r()
-], LockTile.prototype, "_icon", void 0);
-__decorate([
-    r()
-], LockTile.prototype, "_iconAnimation", void 0);
-__decorate([
-    r()
-], LockTile.prototype, "_iconColor", void 0);
-__decorate([
-    r()
-], LockTile.prototype, "_name", void 0);
-__decorate([
-    r()
-], LockTile.prototype, "_stateFmtd", void 0);
-__decorate([
-    r()
 ], LockTile.prototype, "_stateObj", void 0);
 LockTile = __decorate([
     t("smartqasa-lock-tile")
@@ -2341,6 +2336,108 @@ window.customCards.push({
     description: "A SmartQasa tile for controlling a robot vacuum entity.",
 });
 
+let RokuTile = class RokuTile extends s {
+    constructor() {
+        super(...arguments);
+        this._icon = "hass:cast-connected";
+        this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+        this._name = "Loading...";
+        this._stateFmtd = "Loading...";
+    }
+    static { this.styles = [styleTileBase, styleTileState]; }
+    setConfig(config) {
+        if (!config.entity || config.entity.split(".")[0] != "media_player")
+            throw new Error("A valid roku media_player entity is required.");
+        this._config = config;
+        if (this._hass)
+            this.hass = this._hass;
+    }
+    set hass(hass) {
+        this._hass = hass;
+        this._stateObj = this._config?.entity ? this._hass.states[this._config.entity] : undefined;
+        this._updateState();
+    }
+    _updateState() {
+        if (this._stateObj) {
+            const state = this._stateObj.state || "unknown";
+            switch (state) {
+                case "idle":
+                    this._iconColor = "var(--sq-media_player-idle, 128, 128, 128)";
+                    break;
+                case "standby":
+                    this._iconColor = "var(--sq-media_player-standby-rgb, 128, 128, 128)";
+                    break;
+                case "on":
+                    this._iconColor = "var(--sq-media_player-on-rgb, 128, 128, 128)";
+                    break;
+                case "paused":
+                    this._iconColor = "var(--sq-media_player-paused-rgb, 128, 128, 128)";
+                    break;
+                case "playing":
+                    this._iconColor = "var(--sq-media_player-playing-rgb, 3, 169, 244)";
+                    break;
+                default:
+                    this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+                    break;
+            }
+            this._stateFmtd = `${this._hass.formatEntityState(this._stateObj)}${this._stateObj.attributes?.app_name ? ` - ${this._stateObj.attributes.app_name}` : ""}`;
+            this._name = this._config?.icon || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
+        }
+        else {
+            this._icon = "hass:cast-off";
+            this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+            this._name = this._name || "Unknown";
+            this._stateFmtd = "Unavailable";
+        }
+    }
+    render() {
+        return x `
+            <div class="container" @click=${this._showMoreInfo}>
+                <div
+                    class="icon"
+                    @click=${this._toggleEntity}
+                    style="
+            color: rgb(${this._iconColor});
+            background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
+          "
+                >
+                    <ha-icon .icon=${this._icon}></ha-icon>
+                </div>
+                <div class="name">${this._name}</div>
+                <div class="state">${this._stateFmtd}</div>
+            </div>
+        `;
+    }
+    _toggleEntity(e) {
+        e.stopPropagation();
+        if (this._stateObj) {
+            this._hass.callService("media_player", "toggle", { entity_id: this._stateObj.entity_id });
+        }
+    }
+    _showMoreInfo(e) {
+        e.stopPropagation();
+        showMoreInfo(this._config, this._stateObj, this._hass);
+    }
+    getCardSize() {
+        return 1;
+    }
+};
+__decorate([
+    r()
+], RokuTile.prototype, "_config", void 0);
+__decorate([
+    r()
+], RokuTile.prototype, "_stateObj", void 0);
+RokuTile = __decorate([
+    t("smartqasa-roku-tile")
+], RokuTile);
+window.customCards.push({
+    type: "smartqasa-roku-tile",
+    name: "SmartQasa Roku Tile",
+    preview: true,
+    description: "A SmartQasa tile for controlling a Roku media_player entity.",
+});
+
 let RoutineTile = class RoutineTile extends s {
     constructor() {
         super(...arguments);
@@ -2353,8 +2450,8 @@ let RoutineTile = class RoutineTile extends s {
     }
     static { this.styles = [styleTileBase, styleTileIconSpin]; }
     setConfig(config) {
-        const validDomains = ['automation', 'scene', 'script'];
-        if (!config.entity || !validDomains.includes(config.entity.split('.')[0])) {
+        const validDomains = ["automation", "scene", "script"];
+        if (!config.entity || !validDomains.includes(config.entity.split(".")[0])) {
             throw new Error("A valid automation, scene, or script entity is required.");
         }
         this._config = config;
@@ -2364,7 +2461,8 @@ let RoutineTile = class RoutineTile extends s {
     set hass(hass) {
         this._hass = hass;
         this._stateObj = this._config?.entity ? this._hass.states[this._config.entity] : undefined;
-        if (this._stateObj?.attributes.icon != this._prevStateIcon || this._stateObj.attributes.friendly_name != this._prevStateName) {
+        if (this._stateObj?.attributes.icon != this._prevStateIcon ||
+            this._stateObj.attributes.friendly_name != this._prevStateName) {
             this._updateState();
             this._prevStateIcon = this._stateObj?.attributes.icon || "";
             this._prevStateName = this._stateObj?.attributes.friendly_name || "";
@@ -2385,21 +2483,21 @@ let RoutineTile = class RoutineTile extends s {
     }
     render() {
         return x `
-      <div class="container" @click=${this._runRoutine}>
-        <div
-          class="icon"
-          @click=${this._runRoutine}
-          style="
-            color: rgb(${this._iconColor});
-            background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
-            animation: ${this._iconAnimation};
-          "
-        >
-          <ha-icon .icon=${this._icon}></ha-icon>
-        </div>
-        <div class="name">${this._name}</div>
-      </div>
-    `;
+            <div class="container" @click=${this._runRoutine}>
+                <div
+                    class="icon"
+                    @click=${this._runRoutine}
+                    style="
+                        color: rgb(${this._iconColor});
+                        background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
+                        animation: ${this._iconAnimation};
+                    "
+                >
+                    <ha-icon .icon=${this._icon}></ha-icon>
+                </div>
+                <div class="name">${this._name}</div>
+            </div>
+        `;
     }
     _runRoutine(e) {
         e.stopPropagation();
@@ -2437,18 +2535,6 @@ let RoutineTile = class RoutineTile extends s {
 __decorate([
     r()
 ], RoutineTile.prototype, "_config", void 0);
-__decorate([
-    r()
-], RoutineTile.prototype, "_icon", void 0);
-__decorate([
-    r()
-], RoutineTile.prototype, "_iconAnimation", void 0);
-__decorate([
-    r()
-], RoutineTile.prototype, "_iconColor", void 0);
-__decorate([
-    r()
-], RoutineTile.prototype, "_name", void 0);
 __decorate([
     r()
 ], RoutineTile.prototype, "_stateObj", void 0);
@@ -2610,18 +2696,6 @@ __decorate([
 ], SensorTile.prototype, "_config", void 0);
 __decorate([
     r()
-], SensorTile.prototype, "_iconTemplate", void 0);
-__decorate([
-    r()
-], SensorTile.prototype, "_iconColor", void 0);
-__decorate([
-    r()
-], SensorTile.prototype, "_name", void 0);
-__decorate([
-    r()
-], SensorTile.prototype, "_stateFmtd", void 0);
-__decorate([
-    r()
 ], SensorTile.prototype, "_stateObj", void 0);
 SensorTile = __decorate([
     t("smartqasa-sensor-tile")
@@ -2753,7 +2827,7 @@ let ShadeTile = class ShadeTile extends s {
             !Array.isArray(this._stateObj.attributes?.entity_id) ||
             this._stateObj.attributes.entity_id.length === 0)
             return;
-        showEntitiesList(this._stateObj.attributes.friendly_name || this._stateObj.entity_id, "group", this._stateObj.entity_id, "shade");
+        showEntitiesList(this._stateObj.attributes?.friendly_name || this._stateObj.entity_id, "group", this._stateObj.entity_id, "shade");
     }
     getCardSize() {
         return 1;

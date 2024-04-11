@@ -116,7 +116,7 @@ export class FanTile extends LitElement {
         )
             return;
         showEntitiesList(
-            this._stateObj.attributes.friendly_name || this._stateObj.entity_id,
+            this._stateObj.attributes?.friendly_name || this._stateObj.entity_id,
             "group",
             this._stateObj.entity_id,
             "fan"
