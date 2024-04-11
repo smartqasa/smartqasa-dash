@@ -292,9 +292,9 @@ window.customCards.push({
     description: "A SmartQasa chip for navigating to a previous/next area.",
 });
 
-const listDialogConfig = (title, listType, filter, tileType) => {
+const listDialogConfig = (dialogTitle, filterType, filterValue, tileType) => {
     return {
-        title: title,
+        title: dialogTitle,
         timeout: 60000,
         content: {
             type: "custom:auto-entities",
@@ -311,15 +311,16 @@ const listDialogConfig = (title, listType, filter, tileType) => {
             filter: {
                 include: [
                     {
-                        [listType]: filter,
+                        [filterType]: filterValue,
                         sort: {
                             method: "friendly_name",
                             ignore_case: true,
                         },
                         options: {
                             type: `custom:smartqasa-${tileType}-tile`,
-                            listType: listType,
-                            filter: filter,
+                            dialogTitle: dialogTitle,
+                            filterType: filterType,
+                            filterValue: filterValue,
                             tileType: tileType,
                         },
                     },
@@ -332,19 +333,18 @@ const listDialogConfig = (title, listType, filter, tileType) => {
 function showMoreInfo(config, stateObj, hass) {
     if (!stateObj)
         return;
-    const title = config.title || stateObj.attributes?.friendly_name || stateObj.entity_id;
     const dialogConfig = {
-        title: title,
+        title: stateObj.attributes?.friendly_name || stateObj.entity_id,
         timeout: 60000,
         content: {
             type: "custom:smartqasa-more-info-dialog",
             entity: stateObj.entity_id,
         },
-        ...(config.listType && {
+        ...(config.dialogTitle && {
             dismiss_action: {
                 service: "browser_mod.popup",
                 data: {
-                    ...listDialogConfig(title, config.listType, config.filter, config.tileType),
+                    ...listDialogConfig(config.dialogTitle, config.filterType, config.filterValue, config.tileType),
                 },
             },
         }),
@@ -1536,8 +1536,8 @@ window.customCards.push({
     description: "A SmartQasa card for displaying a browser_mod popup dialog.",
 });
 
-function showEntitiesList(title, listType, filter, tileType) {
-    const dialogConfig = listDialogConfig(title, listType, filter, tileType);
+function showEntitiesList(dialogTitle, filterType, filterValue, tileType) {
+    const dialogConfig = listDialogConfig(dialogTitle, filterType, filterValue, tileType);
     window.browser_mod?.service("popup", dialogConfig);
 }
 
@@ -1973,7 +1973,7 @@ let LightTile = class LightTile extends s {
             !Array.isArray(this._stateObj.attributes?.entity_id) ||
             this._stateObj.attributes.entity_id.length === 0)
             return;
-        showEntitiesList(this._stateObj.attributes.friendly_name || this._stateObj.entity_id, "group", this._stateObj.entity_id, "light");
+        showEntitiesList(this._stateObj.attributes?.friendly_name || this._stateObj.entity_id, "group", this._stateObj.entity_id, "light");
     }
     getCardSize() {
         return 1;

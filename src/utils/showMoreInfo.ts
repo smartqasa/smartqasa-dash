@@ -3,20 +3,18 @@ import { listDialogConfig } from "./listDialogConfig";
 export function showMoreInfo(config: any, stateObj: any, hass: any) {
     if (!stateObj) return;
 
-    const title = config.title || stateObj.attributes?.friendly_name || stateObj.entity_id;
-
     const dialogConfig = {
-        title: title,
+        title: stateObj.attributes?.friendly_name || stateObj.entity_id,
         timeout: 60000,
         content: {
             type: "custom:smartqasa-more-info-dialog",
             entity: stateObj.entity_id,
         },
-        ...(config.listType && {
+        ...(config.dialogTitle && {
             dismiss_action: {
                 service: "browser_mod.popup",
                 data: {
-                    ...listDialogConfig(title, config.listType, config.filter, config.tileType),
+                    ...listDialogConfig(config.dialogTitle, config.filterType, config.filterValue, config.tileType),
                 },
             },
         }),

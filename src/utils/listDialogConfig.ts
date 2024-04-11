@@ -1,11 +1,11 @@
 export const listDialogConfig: any = (
-    title: string,
-    listType: "domain" | "group",
-    filter: string,
+    dialogTitle: string,
+    filterType: "domain" | "group",
+    filterValue: string,
     tileType: string
 ) => {
     return {
-        title: title,
+        title: dialogTitle,
         timeout: 60000,
         content: {
             type: "custom:auto-entities",
@@ -22,15 +22,16 @@ export const listDialogConfig: any = (
             filter: {
                 include: [
                     {
-                        [listType]: filter,
+                        [filterType]: filterValue,
                         sort: {
                             method: "friendly_name",
                             ignore_case: true,
                         },
                         options: {
                             type: `custom:smartqasa-${tileType}-tile`,
-                            listType: listType,
-                            filter: filter,
+                            dialogTitle: dialogTitle,
+                            filterType: filterType,
+                            filterValue: filterValue,
                             tileType: tileType,
                         },
                     },
