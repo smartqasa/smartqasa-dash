@@ -2039,52 +2039,53 @@ window.customCards.push({
 
 let LightTileEditor = class LightTileEditor extends s {
     setConfig(config) {
-        this._config = config;
+        this._config = { ...config }; // Ensure updates trigger reactivity
     }
     static { this.styles = i$2 `
-    .table {
-      display: table;
-    }
-    .row {
-      display: table-row;
-    }
-    .cell {
-      display: table-cell;
-      padding: 0.5em;
-    }
-  `; }
+        .table {
+            display: table;
+        }
+        .row {
+            display: table-row;
+        }
+        .cell {
+            display: table-cell;
+            padding: 0.5em;
+        }
+    `; }
     render() {
         return x `
       <form class="table">
         <div class="row">
-          <label class="label cell" for="entity">Entity:</label>
+          <label class="cell" for="entity">Entity:</label>
           <input
-              @change="${this.handleChangedEvent}"
-              class="value cell" id="entity" value="${this._config.entity}"></input>
+              @input="${this.handleInputEvent}"
+              class="cell" id="entity" .value="${this._config.entity ?? ""}"></input>
         </div>
         <div class="row">
-          <label class="label cell" for="name">Name</label>
+          <label class="cell" for="name">Name:</label>
           <input
-              @change="${this.handleChangedEvent}"
-              class="value cell" id="name" value="${this._config.name}"></input>
+              @input="${this.handleInputEvent}"
+              class="cell" id="name" .value="${this._config.name ?? ""}"></input>
         </div>
       </form>
-        `;
+    `;
     }
-    handleChangedEvent(changedEvent) {
-        const target = changedEvent.target;
-        // this._config is readonly, copy needed
-        const newConfig = Object.assign({}, this._config);
-        switch (target.id) {
+    handleInputEvent(e) {
+        const input = e.target;
+        switch (input.id) {
             case "entity":
-                newConfig.entity = target.value;
+                this._config.entity = input.value;
                 break;
             case "name":
-                newConfig.name = target.value;
+                this._config.name = input.value;
                 break;
         }
+        this.dispatchConfigChanged();
+    }
+    dispatchConfigChanged() {
         const messageEvent = new CustomEvent("config-changed", {
-            detail: { config: newConfig },
+            detail: { config: this._config },
             bubbles: true,
             composed: true,
         });
