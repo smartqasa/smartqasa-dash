@@ -1448,6 +1448,58 @@ const dialogTable = {
         name: "Garage Doors",
         data: listDialogConfig("Garage Doors", "group", "cover.all_garage_doors", "garage"),
     },
+    location_phase: {
+        icon: "hass:lock",
+        name: "Door Locks",
+        data: {
+            type: "custom:layout-card",
+            layout_type: "custom:grid-layout",
+            layout: {
+                "grid-template-columns": "1fr",
+                "grid-gap": "var(--sq-dialog-grid-gap)",
+                margin: 0,
+            },
+            cards: [
+                {
+                    type: "custom:smartqasa-select-option-tile",
+                    entity: "input_select.location_phase",
+                    trigger: "input_button.location_phase",
+                    option: "Morning",
+                    icon: "mdi:weather-sunset-up",
+                },
+                {
+                    type: "custom:button-card",
+                    template: "select-tile",
+                    variables: {
+                        entity: "input_select.location_phase",
+                        trigger: "input_button.location_phase",
+                        option: "Day",
+                        icon: "mdi:white-balance-sunny",
+                    },
+                },
+                {
+                    type: "custom:button-card",
+                    template: "select-tile",
+                    variables: {
+                        entity: "input_select.location_phase",
+                        trigger: "input_button.location_phase",
+                        option: "Evening",
+                        icon: "mdi:weather-night",
+                    },
+                },
+                {
+                    type: "custom:button-card",
+                    template: "select-tile",
+                    variables: {
+                        entity: "input_select.location_phase",
+                        trigger: "input_button.location_phase",
+                        option: "Night",
+                        icon: "mdi:sleep",
+                    },
+                },
+            ],
+        },
+    },
     locks: {
         icon: "hass:lock",
         name: "Door Locks",
@@ -1917,35 +1969,34 @@ let LightTile = class LightTile extends s {
     }
     static { this.styles = [styleTileBase, styleTileState]; }
     setConfig(config) {
-        if (!config.entity || config.entity.split(".")[0] != "light")
-            throw new Error("A valid light entity is required.");
-        this._config = config;
-        if (this._hass)
-            this.hass = this._hass;
+        this._config = config ? config : undefined;
+        this.updateState();
     }
     set hass(hass) {
-        this._hass = hass;
-        this._stateObj = this._config?.entity ? this._hass.states[this._config.entity] : undefined;
+        this._hass = hass ? hass : undefined;
         this.updateState();
     }
     updateState() {
-        if (this._stateObj) {
-            const state = this._stateObj.state || "unknown";
-            this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:lightbulb";
-            this._iconColor = state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb, 128, 128, 128)";
-            this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
-            this._stateFmtd =
-                this._hass.formatEntityState(this._stateObj) +
-                    (state === "on" && this._stateObj.attributes.brightness
-                        ? " - " + this._hass.formatEntityAttributeValue(this._stateObj, "brightness")
-                        : "");
-        }
-        else {
+        this._stateObj =
+            this._config && this._config.entity.split(".")[0] === "light"
+                ? this._hass.states[this._config.entity]
+                : undefined;
+        if (!this._stateObj) {
             this._icon = this._config?.icon || "hass:lightbulb-alert";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
             this._name = this._config?.name || "Unknown";
-            this._stateFmtd = "Unavailable";
+            this._stateFmtd = "Entity unavailable!";
+            return;
         }
+        const state = this._stateObj.state || "unknown";
+        this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:lightbulb";
+        this._iconColor = state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb, 128, 128, 128)";
+        this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
+        this._stateFmtd =
+            this._hass.formatEntityState(this._stateObj) +
+                (state === "on" && this._stateObj.attributes.brightness
+                    ? " - " + this._hass.formatEntityAttributeValue(this._stateObj, "brightness")
+                    : "");
     }
     render() {
         return x `
@@ -2567,7 +2618,7 @@ window.customCards.push({
     description: "A SmartQasa tile for triggering an automation, scene, or script entity.",
 });
 
-let SwitchTile$1 = class SwitchTile extends s {
+let SelectTile = class SelectTile extends s {
     constructor() {
         super(...arguments);
         this._icon = "hass:form-dropdown";
@@ -2628,13 +2679,13 @@ let SwitchTile$1 = class SwitchTile extends s {
 };
 __decorate([
     r()
-], SwitchTile$1.prototype, "_config", void 0);
+], SelectTile.prototype, "_config", void 0);
 __decorate([
     r()
-], SwitchTile$1.prototype, "_stateObj", void 0);
-SwitchTile$1 = __decorate([
+], SelectTile.prototype, "_stateObj", void 0);
+SelectTile = __decorate([
     t("smartqasa-select-tile")
-], SwitchTile$1);
+], SelectTile);
 window.customCards.push({
     type: "smartqasa-select-tile",
     name: "SmartQasa Select Tile",

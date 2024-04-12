@@ -28,35 +28,38 @@ export class LightTile extends LitElement {
     static styles: CSSResultGroup = [styleTileBase, styleTileState];
 
     setConfig(config: Config): void {
-        if (!config.entity || config.entity.split(".")[0] != "light")
-            throw new Error("A valid light entity is required.");
-        this._config = config;
-        if (this._hass) this.hass = this._hass;
+        this._config = config ? config : undefined;
+        this.updateState();
     }
 
     set hass(hass: HomeAssistant) {
-        this._hass = hass;
-        this._stateObj = this._config?.entity ? this._hass.states[this._config.entity] : undefined;
+        this._hass = hass ? hass : undefined;
         this.updateState();
     }
 
     private updateState(): void {
-        if (this._stateObj) {
-            const state = this._stateObj.state || "unknown";
-            this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:lightbulb";
-            this._iconColor = state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb, 128, 128, 128)";
-            this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
-            this._stateFmtd =
-                this._hass.formatEntityState(this._stateObj) +
-                (state === "on" && this._stateObj.attributes.brightness
-                    ? " - " + this._hass.formatEntityAttributeValue(this._stateObj, "brightness")
-                    : "");
-        } else {
+        this._stateObj =
+            this._config && this._config.entity.split(".")[0] === "light"
+                ? this._hass.states[this._config.entity]
+                : undefined;
+
+        if (!this._stateObj) {
             this._icon = this._config?.icon || "hass:lightbulb-alert";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
             this._name = this._config?.name || "Unknown";
-            this._stateFmtd = "Unavailable";
+            this._stateFmtd = "Entity unavailable!";
+            return;
         }
+
+        const state = this._stateObj.state || "unknown";
+        this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:lightbulb";
+        this._iconColor = state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb, 128, 128, 128)";
+        this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
+        this._stateFmtd =
+            this._hass.formatEntityState(this._stateObj) +
+            (state === "on" && this._stateObj.attributes.brightness
+                ? " - " + this._hass.formatEntityAttributeValue(this._stateObj, "brightness")
+                : "");
     }
 
     protected render(): TemplateResult {

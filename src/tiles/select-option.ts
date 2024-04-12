@@ -14,7 +14,7 @@ interface Config extends LovelaceCardConfig {
 }
 
 @customElement("smartqasa-select-tile")
-export class SelectTile extends LitElement {
+export class SelectOptionTile extends LitElement {
     @state() private _config?: Config;
     @state() private _stateObj?: HassEntity;
 
@@ -80,8 +80,8 @@ export class SelectTile extends LitElement {
 }
 
 window.customCards.push({
-    type: "smartqasa-select-tile",
-    name: "SmartQasa Select Tile",
+    type: "smartqasa-select-option-tile",
+    name: "SmartQasa Select Option Tile",
     preview: true,
-    description: "A SmartQasa tile for displaying an Input Select entity.",
+    description: "A SmartQasa tile for displaying an Option of an Input Select entity.",
 });
