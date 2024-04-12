@@ -38,7 +38,8 @@ export class AreaTile extends LitElement {
     }
 
     set hass(hass: HomeAssistant) {
-        this._hass = hass ? hass : undefined;
+        if (!hass || !this._config?.area) return;
+        this._hass = hass;
         this._updateArea();
     }
 

@@ -32,7 +32,8 @@ export class RoutineTile extends LitElement {
     }
 
     set hass(hass: HomeAssistant) {
-        this._hass = hass ? hass : undefined;
+        if (!hass || !this._config?.entity) return;
+        this._hass = hass;
         this._updateState();
     }
 
