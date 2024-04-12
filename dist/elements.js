@@ -128,7 +128,7 @@ let SmartQasaMotionChip = class SmartQasaMotionChip extends s {
         this._updateState();
     }
     set hass(hass) {
-        if (!hass || !this._config?.entity)
+        if (!this._config?.entity || !hass)
             return;
         this._hass = hass;
         this._updateState();
@@ -403,34 +403,34 @@ let SmartQasaThermostatChip = class SmartQasaThermostatChip extends s {
     }
     static { this.styles = styleChipBasic; }
     setConfig(config) {
-        this._config = config;
-        this._entity = config.entity || undefined;
+        if (!config.entity)
+            return;
+        this._config = { ...config };
+        this._updateState();
     }
     set hass(hass) {
-        if (this._entity) {
-            this._hass = hass;
-            this._stateObj = this._hass?.states[this._entity] || undefined;
-            this._updateState();
-        }
+        if (!this._config?.entity || !hass)
+            return;
+        this._hass = hass;
+        this._updateState();
     }
     _updateState() {
-        if (this._stateObj) {
-            const state = this._stateObj.state;
-            this._icon = thermostatIcons[state] || thermostatIcons.default;
-            const hvacAction = this._stateObj.attributes.hvac_action;
-            this._iconColor = thermostatColors[hvacAction] || thermostatColors.default;
-            this._temperature = this._stateObj.attributes.current_temperature || "??";
-        }
-        else {
+        this._stateObj = this._hass && this._config?.entity ? this._hass.states[this._config.entity] : undefined;
+        if (!this._stateObj) {
             this._icon = thermostatIcons.default;
             this._iconColor = thermostatColors.default;
             this._temperature = "??";
+            return;
         }
+        const state = this._stateObj.state;
+        this._icon = thermostatIcons[state] || thermostatIcons.default;
+        const hvacAction = this._stateObj.attributes.hvac_action;
+        this._iconColor = thermostatColors[hvacAction] || thermostatColors.default;
+        this._temperature = this._stateObj.attributes.current_temperature || "??";
     }
     render() {
-        if (!this._entity) {
+        if (!this._config?.entity)
             return x ``;
-        }
         return x `
             <div class="container" @click=${this._showMoreInfo}>
                 <div class="icon" id="icon" style="color: rgb(${this._iconColor});">
@@ -704,15 +704,15 @@ let AllOffTile = class AllOffTile extends s {
     static { this.styles = [styleTileBase, styleTileIconSpin]; }
     setConfig(config) {
         this._config = { ...config };
-        this._updateArea();
+        this._updateState();
     }
     set hass(hass) {
-        if (!hass || !this._config?.entity)
+        if (!this._config?.area || !hass)
             return;
         this._hass = hass;
-        this._updateArea();
+        this._updateState();
     }
-    _updateArea() {
+    _updateState() {
         if (this._running === true)
             return;
         this._areaObj = this._config?.area ? this._hass?.areas[this._config.area] : undefined;
@@ -1334,15 +1334,15 @@ let AreaTile = class AreaTile extends s {
     static { this.styles = styleTileBase; }
     setConfig(config) {
         this._config = { ...config };
-        this._updateArea();
+        this._updateState();
     }
     set hass(hass) {
-        if (!hass || !this._config?.area)
+        if (!this._config?.area || !hass)
             return;
         this._hass = hass;
-        this._updateArea();
+        this._updateState();
     }
-    _updateArea() {
+    _updateState() {
         this._areaObj = this._config?.area ? this._hass?.areas[this._config.area] : undefined;
         if (!this._areaObj) {
             this._icon = this._config?.icon ?? "hass:alert-rhombus";
@@ -1648,7 +1648,7 @@ let FanTile = class FanTile extends s {
         this._updateState();
     }
     set hass(hass) {
-        if (!hass || !this._config?.entity)
+        if (!this._config?.entity || !hass)
             return;
         this._hass = hass;
         this._updateState();
@@ -1768,7 +1768,7 @@ let GarageTile = class GarageTile extends s {
         this._updateState();
     }
     set hass(hass) {
-        if (!hass || !this._config?.entity)
+        if (!this._config?.entity || !hass)
             return;
         this._hass = hass;
         this._updateState();
@@ -1883,7 +1883,7 @@ let HeaterTile = class HeaterTile extends s {
         this._updateState();
     }
     set hass(hass) {
-        if (!hass || !this._config?.entity)
+        if (!this._config?.entity || !hass)
             return;
         this._hass = hass;
         this._updateState();
@@ -2140,7 +2140,7 @@ let LockTile = class LockTile extends s {
         this._updateState();
     }
     set hass(hass) {
-        if (!hass || !this._config?.entity)
+        if (!this._config?.entity || !hass)
             return;
         this._hass = hass;
         this._updateState();
@@ -2261,7 +2261,7 @@ let RobotTile = class RobotTile extends s {
         this._updateState();
     }
     set hass(hass) {
-        if (!hass || !this._config?.entity)
+        if (!this._config?.entity || !hass)
             return;
         this._hass = hass;
         this._updateState();
@@ -2384,7 +2384,7 @@ let RokuTile = class RokuTile extends s {
         this._updateState();
     }
     set hass(hass) {
-        if (!hass || !this._config?.entity)
+        if (!this._config?.entity || !hass)
             return;
         this._hass = hass;
         this._updateState();
@@ -2508,7 +2508,7 @@ let RoutineTile = class RoutineTile extends s {
         this._updateState();
     }
     set hass(hass) {
-        if (!hass || !this._config?.entity)
+        if (!this._config?.entity || !hass)
             return;
         this._hass = hass;
         this._updateState();
@@ -2617,7 +2617,7 @@ let SelectTile = class SelectTile extends s {
         this._updateState();
     }
     set hass(hass) {
-        if (!hass || !this._config?.entity)
+        if (!this._config?.entity || !hass)
             return;
         this._hass = hass;
         this._updateState();
@@ -2692,7 +2692,7 @@ let SensorTile = class SensorTile extends s {
         this._updateState();
     }
     set hass(hass) {
-        if (!hass || !this._config?.entity)
+        if (!this._config?.entity || !hass)
             return;
         this._hass = hass;
         this._updateState();
@@ -2787,7 +2787,7 @@ let ShadeTile = class ShadeTile extends s {
         this._updateState();
     }
     set hass(hass) {
-        if (!hass || !this._config?.entity)
+        if (!this._config?.entity || !hass)
             return;
         this._hass = hass;
         this._updateState();
@@ -2927,7 +2927,7 @@ let SwitchTile = class SwitchTile extends s {
         this._updateState();
     }
     set hass(hass) {
-        if (!hass || !this._config?.entity)
+        if (!this._config?.entity || !hass)
             return;
         this._hass = hass;
         this._updateState();
@@ -3018,7 +3018,7 @@ let ThermostatTile = class ThermostatTile extends s {
         this._updateState();
     }
     set hass(hass) {
-        if (!hass || !this._config?.entity)
+        if (!this._config?.entity || !hass)
             return;
         this._hass = hass;
         this._updateState();

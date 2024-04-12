@@ -33,7 +33,7 @@ export class RobotTile extends LitElement {
     }
 
     set hass(hass: HomeAssistant) {
-        if (!hass || !this._config?.entity) return;
+        if (!this._config?.entity || !hass) return;
         this._hass = hass;
         this._updateState();
     }

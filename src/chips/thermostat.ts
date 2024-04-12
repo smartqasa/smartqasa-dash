@@ -19,42 +19,41 @@ export class SmartQasaThermostatChip extends LitElement {
     private _hass: any;
     private _icon: string = "hass:thermometer-lines";
     private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
-    private _entity?: string;
     private _temperature: string = "??";
 
     static styles: CSSResult = styleChipBasic;
 
     setConfig(config: Config): void {
-        this._config = config;
-        this._entity = config.entity || undefined;
+        if (!config.entity) return;
+        this._config = { ...config };
+        this._updateState();
     }
 
     set hass(hass: HomeAssistant) {
-        if (this._entity) {
-            this._hass = hass;
-            this._stateObj = this._hass?.states[this._entity] || undefined;
-            this._updateState();
-        }
+        if (!this._config?.entity || !hass) return;
+        this._hass = hass;
+        this._updateState();
     }
 
     private _updateState(): void {
-        if (this._stateObj) {
-            const state = this._stateObj.state;
-            this._icon = thermostatIcons[state] || thermostatIcons.default;
-            const hvacAction = this._stateObj.attributes.hvac_action;
-            this._iconColor = thermostatColors[hvacAction] || thermostatColors.default;
-            this._temperature = this._stateObj.attributes.current_temperature || "??";
-        } else {
+        this._stateObj = this._hass && this._config?.entity ? this._hass.states[this._config.entity] : undefined;
+
+        if (!this._stateObj) {
             this._icon = thermostatIcons.default;
             this._iconColor = thermostatColors.default;
             this._temperature = "??";
+            return;
         }
+
+        const state = this._stateObj.state;
+        this._icon = thermostatIcons[state] || thermostatIcons.default;
+        const hvacAction = this._stateObj.attributes.hvac_action;
+        this._iconColor = thermostatColors[hvacAction] || thermostatColors.default;
+        this._temperature = this._stateObj.attributes.current_temperature || "??";
     }
 
     protected render(): TemplateResult {
-        if (!this._entity) {
-            return html``;
-        }
+        if (!this._config?.entity) return html``;
 
         return html`
             <div class="container" @click=${this._showMoreInfo}>

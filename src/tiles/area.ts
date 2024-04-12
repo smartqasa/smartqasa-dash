@@ -1,6 +1,5 @@
 import { CSSResult, html, LitElement, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
-import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 
 import styleTileBase from "../styles/tile-base";
@@ -34,16 +33,16 @@ export class AreaTile extends LitElement {
 
     setConfig(config: Config): void {
         this._config = { ...config };
-        this._updateArea();
+        this._updateState();
     }
 
     set hass(hass: HomeAssistant) {
-        if (!hass || !this._config?.area) return;
+        if (!this._config?.area || !hass) return;
         this._hass = hass;
-        this._updateArea();
+        this._updateState();
     }
 
-    private _updateArea(): void {
+    private _updateState(): void {
         this._areaObj = this._config?.area ? this._hass?.areas[this._config.area] : undefined;
 
         if (!this._areaObj) {

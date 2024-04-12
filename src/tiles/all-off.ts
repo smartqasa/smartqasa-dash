@@ -27,16 +27,16 @@ export class AllOffTile extends LitElement {
 
     setConfig(config: Config): void {
         this._config = { ...config };
-        this._updateArea();
+        this._updateState();
     }
 
     set hass(hass: HomeAssistant) {
-        if (!hass || !this._config?.entity) return;
+        if (!this._config?.area || !hass) return;
         this._hass = hass;
-        this._updateArea();
+        this._updateState();
     }
 
-    private _updateArea(): void {
+    private _updateState(): void {
         if (this._running === true) return;
 
         this._areaObj = this._config?.area ? this._hass?.areas[this._config.area] : undefined;
