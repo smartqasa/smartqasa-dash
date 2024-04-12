@@ -39,7 +39,7 @@ export class LightTile extends LitElement {
 
     private updateState(): void {
         this._stateObj =
-            this._config && this._config.entity.split(".")[0] === "light"
+            this._config?.entity && this._config.entity.split(".")[0] === "light"
                 ? this._hass?.states[this._config.entity]
                 : undefined;
 
@@ -47,7 +47,7 @@ export class LightTile extends LitElement {
             this._icon = this._config?.icon || "hass:lightbulb-alert";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
             this._name = this._config?.name || "Unknown";
-            this._stateFmtd = "Entity unavailable!";
+            this._stateFmtd = "Invalid entity!";
             return;
         }
 
@@ -65,15 +65,16 @@ export class LightTile extends LitElement {
     protected render(): TemplateResult {
         return html`
             <div class="container" @click=${this._showMoreInfo} @contextmenu=${this._showGroupList}>
-                <button
+                <div
                     class="icon"
                     @click=${this._toggleEntity}
-                    style="color: rgb(${this._iconColor}); background-color: rgba(${this
-                        ._iconColor}, var(--sq-icon-opacity));"
-                    aria-label="Toggle Light"
+                    style="
+                        color: rgb(${this._iconColor});
+                        background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
+                    "
                 >
                     <ha-icon .icon=${this._icon}></ha-icon>
-                </button>
+                </div>
                 <div class="name">${this._name}</div>
                 <div class="state">${this._stateFmtd}</div>
             </div>
