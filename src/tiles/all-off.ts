@@ -78,27 +78,27 @@ export class AllOffTile extends LitElement {
 
     private _runRoutine(e: Event): void {
         e.stopPropagation();
-        if (this._areaObj) {
-            const icon = this._icon;
+        if (!this._areaObj) return;
 
-            this._icon = "hass:rotate-right";
-            this._iconAnimation = "spin 1.0s linear infinite";
-            this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
+        const icon = this._icon;
 
-            this._hass.callService("light", "turn_off", {
-                area_id: this._areaObj.area_id,
-                transition: 2,
-            });
-            this._hass.callService("fan", "turn_off", {
-                area_id: this._areaObj.area_id,
-            });
+        this._icon = "hass:rotate-right";
+        this._iconAnimation = "spin 1.0s linear infinite";
+        this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
 
-            setTimeout(() => {
-                this._icon = icon;
-                this._iconAnimation = "none";
-                this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
-            }, 2000);
-        }
+        this._hass.callService("light", "turn_off", {
+            area_id: this._areaObj.area_id,
+            transition: 2,
+        });
+        this._hass.callService("fan", "turn_off", {
+            area_id: this._areaObj.area_id,
+        });
+
+        setTimeout(() => {
+            this._icon = icon;
+            this._iconAnimation = "none";
+            this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+        }, 2000);
     }
 
     getCardSize(): number {

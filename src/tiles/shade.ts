@@ -115,22 +115,22 @@ export class ShadeTile extends LitElement {
 
     private _toggleEntity(e: Event): void {
         e.stopPropagation();
-        if (this._stateObj) {
-            if (this._tilt >= 1 && this._tilt <= 100) {
-                if (this._stateObj.attributes.current_position !== this._tilt) {
-                    this._hass.callService("cover", "set_cover_position", {
-                        entity_id: this._stateObj.entity_id,
-                        position: this._tilt,
-                    });
-                } else {
-                    this._hass.callService("cover", "set_cover_position", {
-                        entity_id: this._stateObj.entity_id,
-                        position: 0,
-                    });
-                }
+        if (!this._stateObj) return;
+        console.log(this._tilt, this._stateObj);
+        if (this._tilt >= 1 && this._tilt <= 100) {
+            if (this._stateObj.attributes.current_position !== this._tilt) {
+                this._hass.callService("cover", "set_cover_position", {
+                    entity_id: this._stateObj.entity_id,
+                    position: this._tilt,
+                });
             } else {
-                this.hass.callService("cover", "toggle", { entity_id: this._stateObj.entity_id });
+                this._hass.callService("cover", "set_cover_position", {
+                    entity_id: this._stateObj.entity_id,
+                    position: 0,
+                });
             }
+        } else {
+            this.hass.callService("cover", "toggle", { entity_id: this._stateObj.entity_id });
         }
     }
 

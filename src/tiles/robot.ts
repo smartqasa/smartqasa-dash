@@ -114,12 +114,11 @@ export class RobotTile extends LitElement {
 
     private _toggleVacuum(e: Event): void {
         e.stopPropagation();
-        if (this._stateObj) {
-            const state = this._stateObj.state;
-            this._hass.callService("vacuum", ["docked", "idle", "paused"].includes(state) ? "start" : "pause", {
-                entity_id: this._stateObj.entity_id,
-            });
-        }
+        if (!this._stateObj) return;
+        const state = this._stateObj.state;
+        this._hass.callService("vacuum", ["docked", "idle", "paused"].includes(state) ? "start" : "pause", {
+            entity_id: this._stateObj.entity_id,
+        });
     }
 
     private _showMoreInfo(e: Event): void {

@@ -736,24 +736,24 @@ let AllOffTile = class AllOffTile extends s {
     }
     _runRoutine(e) {
         e.stopPropagation();
-        if (this._areaObj) {
-            const icon = this._icon;
-            this._icon = "hass:rotate-right";
-            this._iconAnimation = "spin 1.0s linear infinite";
-            this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
-            this._hass.callService("light", "turn_off", {
-                area_id: this._areaObj.area_id,
-                transition: 2,
-            });
-            this._hass.callService("fan", "turn_off", {
-                area_id: this._areaObj.area_id,
-            });
-            setTimeout(() => {
-                this._icon = icon;
-                this._iconAnimation = "none";
-                this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
-            }, 2000);
-        }
+        if (!this._areaObj)
+            return;
+        const icon = this._icon;
+        this._icon = "hass:rotate-right";
+        this._iconAnimation = "spin 1.0s linear infinite";
+        this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
+        this._hass.callService("light", "turn_off", {
+            area_id: this._areaObj.area_id,
+            transition: 2,
+        });
+        this._hass.callService("fan", "turn_off", {
+            area_id: this._areaObj.area_id,
+        });
+        setTimeout(() => {
+            this._icon = icon;
+            this._iconAnimation = "none";
+            this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+        }, 2000);
     }
     getCardSize() {
         return 1;
@@ -1689,9 +1689,9 @@ let FanTile = class FanTile extends s {
     }
     _toggleEntity(e) {
         e.stopPropagation();
-        if (this._stateObj) {
-            this._hass.callService("fan", "toggle", { entity_id: this._stateObj.entity_id });
-        }
+        if (!this._stateObj)
+            return;
+        this._hass.callService("fan", "toggle", { entity_id: this._stateObj.entity_id });
     }
     _showMoreInfo(e) {
         e.stopPropagation();
@@ -1819,9 +1819,9 @@ let GarageTile = class GarageTile extends s {
     }
     _toggleEntity(e) {
         e.stopPropagation();
-        if (this._stateObj) {
-            this._hass.callService("cover", "toggle", { entity_id: this._stateObj.entity_id });
-        }
+        if (!this._stateObj)
+            return;
+        this._hass.callService("cover", "toggle", { entity_id: this._stateObj.entity_id });
     }
     _showMoreInfo(e) {
         e.stopPropagation();
@@ -1904,9 +1904,9 @@ let HeaterTile = class HeaterTile extends s {
     }
     _toggleEntity(e) {
         e.stopPropagation();
-        if (this._stateObj) {
-            this._hass.callService("water_heater", "toggle", { entity_id: this._stateObj.entity_id });
-        }
+        if (!this._stateObj)
+            return;
+        this._hass.callService("water_heater", "toggle", { entity_id: this._stateObj.entity_id });
     }
     _showMoreInfo(e) {
         e.stopPropagation();
@@ -1991,11 +1991,9 @@ let LightTile = class LightTile extends s {
     }
     _toggleEntity(e) {
         e.stopPropagation();
-        if (this._stateObj) {
-            this._hass.callService("light", "toggle", {
-                entity_id: this._stateObj.entity_id,
-            });
-        }
+        if (!this._stateObj)
+            return;
+        this._hass.callService("light", "toggle", { entity_id: this._stateObj.entity_id });
     }
     _showMoreInfo(e) {
         e.stopPropagation();
@@ -2187,13 +2185,13 @@ let LockTile = class LockTile extends s {
     }
     _toggleLock(e) {
         e.stopPropagation();
-        if (this._stateObj) {
-            const state = this._stateObj.state;
-            this._stateObj.state = state == "locked" ? "unlocking" : "locking";
-            this._hass.callService("lock", state == "locked" ? "unlock" : "lock", {
-                entity_id: this._stateObj.entity_id,
-            });
-        }
+        if (!this._stateObj)
+            return;
+        const state = this._stateObj.state;
+        this._stateObj.state = state == "locked" ? "unlocking" : "locking";
+        this._hass.callService("lock", state == "locked" ? "unlock" : "lock", {
+            entity_id: this._stateObj.entity_id,
+        });
     }
     _showMoreInfo(e) {
         e.stopPropagation();
@@ -2310,12 +2308,12 @@ let RobotTile = class RobotTile extends s {
     }
     _toggleVacuum(e) {
         e.stopPropagation();
-        if (this._stateObj) {
-            const state = this._stateObj.state;
-            this._hass.callService("vacuum", ["docked", "idle", "paused"].includes(state) ? "start" : "pause", {
-                entity_id: this._stateObj.entity_id,
-            });
-        }
+        if (!this._stateObj)
+            return;
+        const state = this._stateObj.state;
+        this._hass.callService("vacuum", ["docked", "idle", "paused"].includes(state) ? "start" : "pause", {
+            entity_id: this._stateObj.entity_id,
+        });
     }
     _showMoreInfo(e) {
         e.stopPropagation();
@@ -2414,9 +2412,9 @@ let RokuTile = class RokuTile extends s {
     }
     _toggleEntity(e) {
         e.stopPropagation();
-        if (this._stateObj) {
-            this._hass.callService("media_player", "toggle", { entity_id: this._stateObj.entity_id });
-        }
+        if (!this._stateObj)
+            return;
+        this._hass.callService("media_player", "toggle", { entity_id: this._stateObj.entity_id });
     }
     _showMoreInfo(e) {
         e.stopPropagation();
@@ -2821,24 +2819,25 @@ let ShadeTile = class ShadeTile extends s {
     }
     _toggleEntity(e) {
         e.stopPropagation();
-        if (this._stateObj) {
-            if (this._tilt >= 1 && this._tilt <= 100) {
-                if (this._stateObj.attributes.current_position !== this._tilt) {
-                    this._hass.callService("cover", "set_cover_position", {
-                        entity_id: this._stateObj.entity_id,
-                        position: this._tilt,
-                    });
-                }
-                else {
-                    this._hass.callService("cover", "set_cover_position", {
-                        entity_id: this._stateObj.entity_id,
-                        position: 0,
-                    });
-                }
+        if (!this._stateObj)
+            return;
+        console.log(this._tilt, this._stateObj);
+        if (this._tilt >= 1 && this._tilt <= 100) {
+            if (this._stateObj.attributes.current_position !== this._tilt) {
+                this._hass.callService("cover", "set_cover_position", {
+                    entity_id: this._stateObj.entity_id,
+                    position: this._tilt,
+                });
             }
             else {
-                this.hass.callService("cover", "toggle", { entity_id: this._stateObj.entity_id });
+                this._hass.callService("cover", "set_cover_position", {
+                    entity_id: this._stateObj.entity_id,
+                    position: 0,
+                });
             }
+        }
+        else {
+            this.hass.callService("cover", "toggle", { entity_id: this._stateObj.entity_id });
         }
     }
     _showMoreInfo(e) {

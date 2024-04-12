@@ -97,9 +97,8 @@ export class RokuTile extends LitElement {
 
     private _toggleEntity(e: Event): void {
         e.stopPropagation();
-        if (this._stateObj) {
-            this._hass.callService("media_player", "toggle", { entity_id: this._stateObj.entity_id });
-        }
+        if (!this._stateObj) return;
+        this._hass.callService("media_player", "toggle", { entity_id: this._stateObj.entity_id });
     }
 
     private _showMoreInfo(e: Event): void {

@@ -111,13 +111,12 @@ export class LockTile extends LitElement {
 
     private _toggleLock(e: Event): void {
         e.stopPropagation();
-        if (this._stateObj) {
-            const state = this._stateObj.state;
-            this._stateObj.state = state == "locked" ? "unlocking" : "locking";
-            this._hass.callService("lock", state == "locked" ? "unlock" : "lock", {
-                entity_id: this._stateObj.entity_id,
-            });
-        }
+        if (!this._stateObj) return;
+        const state = this._stateObj.state;
+        this._stateObj.state = state == "locked" ? "unlocking" : "locking";
+        this._hass.callService("lock", state == "locked" ? "unlock" : "lock", {
+            entity_id: this._stateObj.entity_id,
+        });
     }
 
     private _showMoreInfo(e: Event): void {
