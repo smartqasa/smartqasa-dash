@@ -41,7 +41,7 @@ export class RoutineTile extends LitElement {
 
         const validDomains = ["automation", "scene", "script"];
         this._stateObj =
-            this._config?.entity && !validDomains.includes(this._config.entity.split(".")[0])
+            this._config?.entity && validDomains.includes(this._config.entity.split(".")[0])
                 ? this._hass?.states[this._config.entity]
                 : undefined;
 

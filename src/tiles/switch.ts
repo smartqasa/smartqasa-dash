@@ -45,7 +45,7 @@ export class SwitchTile extends LitElement {
     private _updateState(): void {
         const validDomains = ["fan", "input_boolean", "light", "switch"];
         this._stateObj =
-            this._config?.entity && !validDomains.includes(this._config.entity.split(".")[0])
+            this._config?.entity && validDomains.includes(this._config.entity.split(".")[0])
                 ? this._hass?.states[this._config.entity]
                 : undefined;
 

@@ -2492,7 +2492,7 @@ let RoutineTile = class RoutineTile extends s {
             return;
         const validDomains = ["automation", "scene", "script"];
         this._stateObj =
-            this._config?.entity && !validDomains.includes(this._config.entity.split(".")[0])
+            this._config?.entity && validDomains.includes(this._config.entity.split(".")[0])
                 ? this._hass?.states[this._config.entity]
                 : undefined;
         if (!this._stateObj) {
@@ -2908,7 +2908,7 @@ let SwitchTile = class SwitchTile extends s {
     _updateState() {
         const validDomains = ["fan", "input_boolean", "light", "switch"];
         this._stateObj =
-            this._config?.entity && !validDomains.includes(this._config.entity.split(".")[0])
+            this._config?.entity && validDomains.includes(this._config.entity.split(".")[0])
                 ? this._hass?.states[this._config.entity]
                 : undefined;
         if (!this._stateObj) {
