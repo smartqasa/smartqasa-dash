@@ -40,7 +40,7 @@ export class LightTile extends LitElement {
     private updateState(): void {
         this._stateObj =
             this._config && this._config.entity.split(".")[0] === "light"
-                ? this._hass.states[this._config.entity]
+                ? this._hass?.states[this._config.entity]
                 : undefined;
 
         if (!this._stateObj) {
@@ -65,16 +65,15 @@ export class LightTile extends LitElement {
     protected render(): TemplateResult {
         return html`
             <div class="container" @click=${this._showMoreInfo} @contextmenu=${this._showGroupList}>
-                <div
+                <button
                     class="icon"
                     @click=${this._toggleEntity}
-                    style="
-                        color: rgb(${this._iconColor});
-                        background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
-                    "
+                    style="color: rgb(${this._iconColor}); background-color: rgba(${this
+                        ._iconColor}, var(--sq-icon-opacity));"
+                    aria-label="Toggle Light"
                 >
                     <ha-icon .icon=${this._icon}></ha-icon>
-                </div>
+                </button>
                 <div class="name">${this._name}</div>
                 <div class="state">${this._stateFmtd}</div>
             </div>
