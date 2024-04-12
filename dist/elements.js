@@ -2740,7 +2740,6 @@ let ShadeTile = class ShadeTile extends s {
         this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
         this._name = "Loading...";
         this._stateFmtd = "Loading...";
-        this._tilt = 100;
     }
     static { this.styles = [styleTileBase, styleTileState, styleTileIconBlink]; }
     setConfig(config) {
@@ -2760,7 +2759,7 @@ let ShadeTile = class ShadeTile extends s {
             this._icon = this._config?.icon || "hass:roller-shade";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
             this._name = this._config?.name || "Unknown";
-            this._stateFmtd = "Entity not found!";
+            this._stateFmtd = "Invalid entity!";
             return;
         }
         const state = this._stateObj.state;
@@ -2821,12 +2820,12 @@ let ShadeTile = class ShadeTile extends s {
         e.stopPropagation();
         if (!this._stateObj)
             return;
-        console.log(this._tilt, this._stateObj);
-        if (this._tilt >= 1 && this._tilt <= 100) {
-            if (this._stateObj.attributes.current_position !== this._tilt) {
+        const tilt = this._config?.tilt || 100;
+        if (tilt >= 1 && tilt <= 100) {
+            if (this._stateObj.attributes.current_position !== tilt) {
                 this._hass.callService("cover", "set_cover_position", {
                     entity_id: this._stateObj.entity_id,
-                    position: this._tilt,
+                    position: tilt,
                 });
             }
             else {

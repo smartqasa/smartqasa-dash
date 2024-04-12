@@ -13,9 +13,6 @@ interface Config extends LovelaceCardConfig {
     entity: string;
     name?: string;
     tilt?: number;
-    listType?: string;
-    filter?: string;
-    tileType?: string;
 }
 
 @customElement("smartqasa-shade-tile")
@@ -29,7 +26,6 @@ export class ShadeTile extends LitElement {
     private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
     private _name: string = "Loading...";
     private _stateFmtd: string = "Loading...";
-    private _tilt: number = 100;
 
     static styles: CSSResultGroup = [styleTileBase, styleTileState, styleTileIconBlink];
 
@@ -53,7 +49,7 @@ export class ShadeTile extends LitElement {
             this._icon = this._config?.icon || "hass:roller-shade";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
             this._name = this._config?.name || "Unknown";
-            this._stateFmtd = "Entity not found!";
+            this._stateFmtd = "Invalid entity!";
             return;
         }
 
@@ -116,12 +112,12 @@ export class ShadeTile extends LitElement {
     private _toggleEntity(e: Event): void {
         e.stopPropagation();
         if (!this._stateObj) return;
-        console.log(this._tilt, this._stateObj);
-        if (this._tilt >= 1 && this._tilt <= 100) {
-            if (this._stateObj.attributes.current_position !== this._tilt) {
+        const tilt = this._config?.tilt || 100;
+        if (tilt >= 1 && tilt <= 100) {
+            if (this._stateObj.attributes.current_position !== tilt) {
                 this._hass.callService("cover", "set_cover_position", {
                     entity_id: this._stateObj.entity_id,
-                    position: this._tilt,
+                    position: tilt,
                 });
             } else {
                 this._hass.callService("cover", "set_cover_position", {
