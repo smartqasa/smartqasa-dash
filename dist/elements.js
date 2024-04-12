@@ -1646,7 +1646,7 @@ let FanTile = class FanTile extends s {
             return;
         }
         const state = this._stateObj.state || "unknown";
-        this._icon = this._config?.icon || this._icon;
+        this._icon = this._config?.icon || "hass:fan";
         if (state == "on" && this._icon === "hass:fan") {
             if (this._stateObj.attributes.percentage) {
                 const speed = 0.5 + (1 - this._stateObj.attributes.percentage / 100);
@@ -1962,7 +1962,7 @@ let LightTile = class LightTile extends s {
             return;
         }
         const state = this._stateObj.state || "unknown";
-        this._icon = this._config?.icon || this._stateObj.attributes.icon || this._icon;
+        this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:lightbulb";
         this._iconColor = state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb, 128, 128, 128)";
         this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
         this._stateFmtd =
@@ -2368,6 +2368,7 @@ let RokuTile = class RokuTile extends s {
             this._stateFmtd = "Invalid entity!";
             return;
         }
+        this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:audio-video";
         const state = this._stateObj.state || "unknown";
         switch (state) {
             case "idle":

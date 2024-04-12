@@ -9,6 +9,7 @@ import styleTileState from "../styles/tile-state";
 
 interface Config extends LovelaceCardConfig {
     entity: string;
+    icon?: string;
     name?: string;
 }
 
@@ -49,6 +50,7 @@ export class RokuTile extends LitElement {
             return;
         }
 
+        this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:audio-video";
         const state = this._stateObj.state || "unknown";
         switch (state) {
             case "idle":
