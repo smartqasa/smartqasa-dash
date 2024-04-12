@@ -33,7 +33,7 @@ export class AreaTile extends LitElement {
     static styles: CSSResult = styleTileBase;
 
     setConfig(config: Config): void {
-        this._config = config ? config : undefined;
+        this._config = { ...config };
         this._updateArea();
     }
 

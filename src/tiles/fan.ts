@@ -30,7 +30,7 @@ export class FanTile extends LitElement {
     static styles: CSSResultGroup = [styleTileBase, styleTileState, styleTileIconSpin];
 
     setConfig(config: Config): void {
-        this._config = config ? config : undefined;
+        this._config = { ...config };
         this._updateState();
     }
 

@@ -15,47 +15,43 @@ interface Config extends LovelaceCardConfig {
 export class AllOffTile extends LitElement {
     @state() private _config?: Config;
     @state() private _areaObj?: any;
+    @state() private _running: boolean = false;
 
     private _hass: any;
     private _icon: string = "hass:help-rhombus";
     private _iconAnimation: string = "none";
     private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
     private _name: string = "Loading...";
-    private _prevAreaIcon: string = "";
-    private _prevAreaName: string = "";
 
     static styles: CSSResultGroup = [styleTileBase, styleTileIconSpin];
 
     setConfig(config: Config): void {
-        if (!config.area) throw new Error("A valid area id is required.");
-        this._config = config;
-        if (this._hass) this.hass = this._hass;
+        this._config = { ...config };
+        this._updateArea();
     }
 
     set hass(hass: HomeAssistant) {
-        this._hass = hass;
-        if (this._hass && this._config?.area) {
-            this._areaObj = this._hass.areas[this._config.area] || undefined;
-            if (this._areaObj?.icon != this._prevAreaIcon || this._areaObj?.name != this._prevAreaName) {
-                this._updateArea();
-                this._prevAreaIcon = this._areaObj?.icon || "";
-                this._prevAreaName = this._areaObj?.name || "";
-            }
-        }
+        this._hass = hass ? hass : undefined;
+        this._updateArea();
     }
 
     private _updateArea(): void {
-        if (this._areaObj) {
-            this._icon = this._config?.icon || "hass:power";
-            this._iconAnimation = "none";
-            this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
-            this._name = this._config?.name || this._areaObj.name || this._areaObj.id;
-        } else {
-            this._icon = this._config?._icon || "hass:alert-rhombus";
+        if (this._running === true) return;
+
+        this._areaObj = this._config?.area ? this._hass?.areas[this._config.area] : undefined;
+
+        if (!this._areaObj) {
+            this._icon = this._config?.icon ?? "hass:alert-rhombus";
             this._iconAnimation = "none";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            this._name = this._config?.name || "Unknown";
+            this._name = this._config?.name ?? "Unknown";
+            return;
         }
+
+        this._icon = this._config?.icon || "hass:power";
+        this._iconAnimation = "none";
+        this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+        this._name = this._config?.name || this._areaObj.name || this._areaObj.id;
     }
 
     protected render(): TemplateResult {
@@ -80,8 +76,9 @@ export class AllOffTile extends LitElement {
         e.stopPropagation();
         if (!this._areaObj) return;
 
-        const icon = this._icon;
+        this._running = true;
 
+        const icon = this._icon;
         this._icon = "hass:rotate-right";
         this._iconAnimation = "spin 1.0s linear infinite";
         this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
@@ -98,6 +95,7 @@ export class AllOffTile extends LitElement {
             this._icon = icon;
             this._iconAnimation = "none";
             this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+            this._running = false;
         }, 2000);
     }
 

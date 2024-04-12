@@ -677,45 +677,36 @@ var styleTileIconSpin = i$2 `
 let AllOffTile = class AllOffTile extends s {
     constructor() {
         super(...arguments);
+        this._running = false;
         this._icon = "hass:help-rhombus";
         this._iconAnimation = "none";
         this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
         this._name = "Loading...";
-        this._prevAreaIcon = "";
-        this._prevAreaName = "";
     }
     static { this.styles = [styleTileBase, styleTileIconSpin]; }
     setConfig(config) {
-        if (!config.area)
-            throw new Error("A valid area id is required.");
-        this._config = config;
-        if (this._hass)
-            this.hass = this._hass;
+        this._config = { ...config };
+        this._updateArea();
     }
     set hass(hass) {
-        this._hass = hass;
-        if (this._hass && this._config?.area) {
-            this._areaObj = this._hass.areas[this._config.area] || undefined;
-            if (this._areaObj?.icon != this._prevAreaIcon || this._areaObj?.name != this._prevAreaName) {
-                this._updateArea();
-                this._prevAreaIcon = this._areaObj?.icon || "";
-                this._prevAreaName = this._areaObj?.name || "";
-            }
-        }
+        this._hass = hass ? hass : undefined;
+        this._updateArea();
     }
     _updateArea() {
-        if (this._areaObj) {
-            this._icon = this._config?.icon || "hass:power";
-            this._iconAnimation = "none";
-            this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
-            this._name = this._config?.name || this._areaObj.name || this._areaObj.id;
-        }
-        else {
-            this._icon = this._config?._icon || "hass:alert-rhombus";
+        if (this._running === true)
+            return;
+        this._areaObj = this._config?.area ? this._hass?.areas[this._config.area] : undefined;
+        if (!this._areaObj) {
+            this._icon = this._config?.icon ?? "hass:alert-rhombus";
             this._iconAnimation = "none";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            this._name = this._config?.name || "Unknown";
+            this._name = this._config?.name ?? "Unknown";
+            return;
         }
+        this._icon = this._config?.icon || "hass:power";
+        this._iconAnimation = "none";
+        this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+        this._name = this._config?.name || this._areaObj.name || this._areaObj.id;
     }
     render() {
         return x `
@@ -738,6 +729,7 @@ let AllOffTile = class AllOffTile extends s {
         e.stopPropagation();
         if (!this._areaObj)
             return;
+        this._running = true;
         const icon = this._icon;
         this._icon = "hass:rotate-right";
         this._iconAnimation = "spin 1.0s linear infinite";
@@ -753,6 +745,7 @@ let AllOffTile = class AllOffTile extends s {
             this._icon = icon;
             this._iconAnimation = "none";
             this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+            this._running = false;
         }, 2000);
     }
     getCardSize() {
@@ -765,6 +758,9 @@ __decorate([
 __decorate([
     r()
 ], AllOffTile.prototype, "_areaObj", void 0);
+__decorate([
+    r()
+], AllOffTile.prototype, "_running", void 0);
 AllOffTile = __decorate([
     t("smartqasa-all-off-tile")
 ], AllOffTile);
@@ -1233,7 +1229,7 @@ let AppTile = class AppTile extends s {
     setConfig(config) {
         if (!config.app)
             throw new Error("A valid app must be specified.");
-        this._config = config;
+        this._config = { ...config };
         this._appObj = appTable[config.app] || undefined;
     }
     render() {
@@ -1317,7 +1313,7 @@ let AreaTile = class AreaTile extends s {
     }
     static { this.styles = styleTileBase; }
     setConfig(config) {
-        this._config = config ? config : undefined;
+        this._config = { ...config };
         this._updateArea();
     }
     set hass(hass) {
@@ -1533,7 +1529,7 @@ let DialogTile = class DialogTile extends s {
     }
     static { this.styles = styleTileBase; }
     setConfig(config) {
-        this._config = config ? config : undefined;
+        this._config = { ...config };
         this._updateState();
     }
     _updateState() {
@@ -1626,7 +1622,7 @@ let FanTile = class FanTile extends s {
     }
     static { this.styles = [styleTileBase, styleTileState, styleTileIconSpin]; }
     setConfig(config) {
-        this._config = config ? config : undefined;
+        this._config = { ...config };
         this._updateState();
     }
     set hass(hass) {
@@ -1744,7 +1740,7 @@ let GarageTile = class GarageTile extends s {
     }
     static { this.styles = [styleTileBase, styleTileState, styleTileIconBlink]; }
     setConfig(config) {
-        this._config = config ? config : undefined;
+        this._config = { ...config };
         this._updateState();
     }
     set hass(hass) {
@@ -1857,7 +1853,7 @@ let HeaterTile = class HeaterTile extends s {
     }
     static { this.styles = [styleTileBase, styleTileState]; }
     setConfig(config) {
-        this._config = config ? config : undefined;
+        this._config = { ...config };
         this._updateState();
     }
     set hass(hass) {
@@ -1942,7 +1938,7 @@ let LightTile = class LightTile extends s {
     }
     static { this.styles = [styleTileBase, styleTileState]; }
     setConfig(config) {
-        this._config = config ? config : undefined;
+        this._config = { ...config };
         this._updateState();
     }
     set hass(hass) {
@@ -2110,7 +2106,7 @@ let LockTile = class LockTile extends s {
     }
     static { this.styles = [styleTileBase, styleTileState, styleTileIconBlink, styleTileIconSpin]; }
     setConfig(config) {
-        this._config = config ? config : undefined;
+        this._config = { ...config };
         this._updateState();
     }
     set hass(hass) {
@@ -2229,7 +2225,7 @@ let RobotTile = class RobotTile extends s {
     }
     static { this.styles = [styleTileBase, styleTileState, styleTileIconBlink]; }
     setConfig(config) {
-        this._config = config ? config : undefined;
+        this._config = { ...config };
         this._updateState();
     }
     set hass(hass) {
@@ -2350,7 +2346,7 @@ let RokuTile = class RokuTile extends s {
     }
     static { this.styles = [styleTileBase, styleTileState]; }
     setConfig(config) {
-        this._config = config ? config : undefined;
+        this._config = { ...config };
         this._updateState();
     }
     set hass(hass) {
@@ -2472,7 +2468,7 @@ let RoutineTile = class RoutineTile extends s {
     }
     static { this.styles = [styleTileBase, styleTileIconSpin]; }
     setConfig(config) {
-        this._config = config ? config : undefined;
+        this._config = { ...config };
         this._updateState();
     }
     set hass(hass) {
@@ -2579,7 +2575,7 @@ let SelectTile = class SelectTile extends s {
     }
     static { this.styles = [styleTileBase, styleTileState]; }
     setConfig(config) {
-        this._config = config ? config : undefined;
+        this._config = { ...config };
         this._updateState();
     }
     set hass(hass) {
@@ -2652,7 +2648,7 @@ let SensorTile = class SensorTile extends s {
     }
     static { this.styles = [styleTileBase, styleTileState]; }
     setConfig(config) {
-        this._config = config ? config : undefined;
+        this._config = { ...config };
         this._updateState();
     }
     set hass(hass) {
@@ -2745,7 +2741,7 @@ let ShadeTile = class ShadeTile extends s {
     }
     static { this.styles = [styleTileBase, styleTileState, styleTileIconBlink]; }
     setConfig(config) {
-        this._config = config ? config : undefined;
+        this._config = { ...config };
         this._updateState();
     }
     set hass(hass) {
@@ -2883,7 +2879,7 @@ let SwitchTile = class SwitchTile extends s {
     }
     static { this.styles = [styleTileBase, styleTileState]; }
     setConfig(config) {
-        this._config = config ? config : undefined;
+        this._config = { ...config };
         this._updateState();
     }
     set hass(hass) {
@@ -2972,7 +2968,7 @@ let ThermostatTile = class ThermostatTile extends s {
     }
     static { this.styles = [styleTileBase, styleTileState]; }
     setConfig(config) {
-        this._config = config ? config : undefined;
+        this._config = { ...config };
         this._updateState();
     }
     set hass(hass) {

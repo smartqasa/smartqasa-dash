@@ -20,7 +20,7 @@ export class AppTile extends LitElement {
 
     setConfig(config: Config): void {
         if (!config.app) throw new Error("A valid app must be specified.");
-        this._config = config;
+        this._config = { ...config };
         this._appObj = appTable[config.app] || undefined;
     }
 

@@ -30,7 +30,7 @@ export class ShadeTile extends LitElement {
     static styles: CSSResultGroup = [styleTileBase, styleTileState, styleTileIconBlink];
 
     setConfig(config: Config): void {
-        this._config = config ? config : undefined;
+        this._config = { ...config };
         this._updateState();
     }
 
