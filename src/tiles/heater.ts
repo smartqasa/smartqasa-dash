@@ -27,33 +27,37 @@ export class HeaterTile extends LitElement {
     static styles: CSSResultGroup = [styleTileBase, styleTileState];
 
     setConfig(config: Config): void {
-        if (!config.entity || config.entity.split(".")[0] != "water_heater")
-            throw new Error("A valid water_heater entity is required.");
-        this._config = config;
-        if (this._hass) this.hass = this._hass;
+        this._config = config ? config : undefined;
+        this._updateState();
     }
 
     set hass(hass: HomeAssistant) {
-        this._hass = hass;
-        this._stateObj = this._config?.entity ? this._hass.states[this._config.entity] : undefined;
+        this._hass = hass ? hass : undefined;
         this._updateState();
     }
 
     private _updateState(): void {
-        if (this._stateObj) {
-            const state = this._stateObj.state || "unavailable";
-            this._iconColor = heaterColors[state] || heaterColors.idle;
+        this._stateObj =
+            this._config?.entity && this._config.entity.split(".")[0] === "water_heater"
+                ? this._hass?.states[this._config.entity]
+                : undefined;
 
-            this._stateFmtd = this._hass.formatEntityState(this._stateObj);
-            if (state !== "off" && this._stateObj.attributes.temperature) {
-                this._stateFmtd += ` - ${this._stateObj.attributes.temperature}°`;
-            }
-            this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
-        } else {
-            this._iconColor = heaterColors.default;
+        if (!this._stateObj) {
+            this._icon = this._config?.icon || "hass:water-thermometer";
+            this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
             this._name = this._config?.name || "Unknown";
-            this._stateFmtd = "Unavailable";
+            this._stateFmtd = "Invalid entity!";
+            return;
         }
+
+        const state = this._stateObj.state || "unavailable";
+        this._iconColor = heaterColors[state] || heaterColors.idle;
+
+        this._stateFmtd = this._hass.formatEntityState(this._stateObj);
+        if (state !== "off" && this._stateObj.attributes.temperature) {
+            this._stateFmtd += ` - ${this._stateObj.attributes.temperature}°`;
+        }
+        this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
     }
 
     protected render(): TemplateResult {

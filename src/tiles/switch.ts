@@ -43,21 +43,28 @@ export class SwitchTile extends LitElement {
     }
 
     private _updateState(): void {
-        if (this._stateObj) {
-            const state = this._stateObj.state;
-            this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:toggle-switch-variant";
-            this._iconColor =
-                state === "on"
-                    ? `var(--sq-switch${this._config?.category ? `-${this._config.category}` : ""}-on-rgb)`
-                    : "var(--sq-inactive-rgb)";
-            this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
-            this._stateFmtd = this._hass ? this._hass.formatEntityState(this._stateObj) : "Unknown";
-        } else {
+        const validDomains = ["fan", "input_boolean", "light", "switch"];
+        this._stateObj =
+            this._config?.entity && !validDomains.includes(this._config.entity.split(".")[0])
+                ? this._hass?.states[this._config.entity]
+                : undefined;
+
+        if (!this._stateObj) {
             this._icon = this._config?.icon || "hass:toggle-switch-variant";
-            this._iconColor = "var(--sq-unavailable-rgb)";
-            this._name = this._name || "Unknown";
-            this._stateFmtd = "Unknown";
+            this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+            this._name = this._config?.name || "Unknown";
+            this._stateFmtd = "Invalid entity!";
+            return;
         }
+
+        const state = this._stateObj.state;
+        this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:toggle-switch-variant";
+        this._iconColor =
+            state === "on"
+                ? `var(--sq-switch${this._config?.category ? `-${this._config.category}` : ""}-on-rgb)`
+                : "var(--sq-inactive-rgb)";
+        this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
+        this._stateFmtd = this._hass ? this._hass.formatEntityState(this._stateObj) : "Unknown";
     }
 
     protected render(): TemplateResult {

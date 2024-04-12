@@ -1,4 +1,4 @@
-var version = "1.1.36";
+var version = "1.1.40";
 
 /******************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -1626,7 +1626,7 @@ var styleTileState = i$2 `
 let FanTile = class FanTile extends s {
     constructor() {
         super(...arguments);
-        this._icon = "hass:fan-alert";
+        this._icon = "hass:fan";
         this._iconAnimation = "none";
         this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
         this._name = "Loading...";
@@ -1634,49 +1634,47 @@ let FanTile = class FanTile extends s {
     }
     static { this.styles = [styleTileBase, styleTileState, styleTileIconSpin]; }
     setConfig(config) {
-        if (!config.entity || config.entity.split(".")[0] != "fan")
-            throw new Error("A valid fan entity is required.");
-        this._config = config;
-        if (this._hass)
-            this.hass = this._hass;
+        this._config = config ? config : undefined;
+        this._updateState();
     }
     set hass(hass) {
-        this._hass = hass;
-        this._stateObj = this._config?.entity ? this._hass?.states[this._config.entity] : undefined;
+        this._hass = hass ? hass : undefined;
         this._updateState();
     }
     _updateState() {
-        if (this._stateObj) {
-            const state = this._stateObj.state || "unknown";
-            this._icon = this._config?.icon || "hass:fan";
-            if (state == "on" && this._icon == "hass:fan") {
-                if (this._stateObj.attributes.percentage) {
-                    const speed = 0.5 + (1 - this._stateObj.attributes.percentage / 100);
-                    const direction = this._stateObj.attributes.direction == "reverse" ? "reverse" : "normal";
-                    this._iconAnimation = `spin ${speed}s linear infinite ${direction}`;
-                }
-                else {
-                    this._iconAnimation = `spin 0.5s linear infinite normal`;
-                }
+        this._stateObj =
+            this._config?.entity && this._config.entity.split(".")[0] === "fan"
+                ? this._hass?.states[this._config.entity]
+                : undefined;
+        if (!this._stateObj) {
+            this._icon = this._config?.icon || "hass:fan-alert";
+            this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+            this._name = this._config?.name || "Unknown";
+            this._stateFmtd = "Invalid entity!";
+            return;
+        }
+        const state = this._stateObj.state || "unknown";
+        this._icon = this._config?.icon || this._icon;
+        if (state == "on" && this._icon === "hass:fan") {
+            if (this._stateObj.attributes.percentage) {
+                const speed = 0.5 + (1 - this._stateObj.attributes.percentage / 100);
+                const direction = this._stateObj.attributes.direction == "reverse" ? "reverse" : "normal";
+                this._iconAnimation = `spin ${speed}s linear infinite ${direction}`;
             }
             else {
-                this._iconAnimation = "none";
+                this._iconAnimation = `spin 0.5s linear infinite normal`;
             }
-            this._iconColor = state == "on" ? "var(--sq-fan-on-rgb)" : "var(--sq-inactive-rgb)";
-            this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
-            this._stateFmtd =
-                this._hass.formatEntityState(this._stateObj) +
-                    (state == "on" && this._stateObj.attributes.percentage
-                        ? " - " + this._hass.formatEntityAttributeValue(this._stateObj, "percentage")
-                        : "");
         }
         else {
-            this._icon = this._config?._icon || "hass:fan-alert";
             this._iconAnimation = "none";
-            this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            this._name = this._config?._name || "Unknown";
-            this._stateFmtd = "Unavailable";
         }
+        this._iconColor = state == "on" ? "var(--sq-fan-on-rgb)" : "var(--sq-inactive-rgb)";
+        this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
+        this._stateFmtd =
+            this._hass.formatEntityState(this._stateObj) +
+                (state == "on" && this._stateObj.attributes.percentage
+                    ? " - " + this._hass.formatEntityAttributeValue(this._stateObj, "percentage")
+                    : "");
     }
     render() {
         return x `
@@ -1724,21 +1722,6 @@ __decorate([
 ], FanTile.prototype, "_config", void 0);
 __decorate([
     r()
-], FanTile.prototype, "_icon", void 0);
-__decorate([
-    r()
-], FanTile.prototype, "_iconAnimation", void 0);
-__decorate([
-    r()
-], FanTile.prototype, "_iconColor", void 0);
-__decorate([
-    r()
-], FanTile.prototype, "_name", void 0);
-__decorate([
-    r()
-], FanTile.prototype, "_stateFmtd", void 0);
-__decorate([
-    r()
 ], FanTile.prototype, "_stateObj", void 0);
 FanTile = __decorate([
     t("smartqasa-fan-tile")
@@ -1769,61 +1752,59 @@ let GarageTile = class GarageTile extends s {
     }
     static { this.styles = [styleTileBase, styleTileState, styleTileIconBlink]; }
     setConfig(config) {
-        if (!config.entity || config.entity.split(".")[0] != "cover")
-            throw new Error("A valid cover entity is required.");
-        this._config = config;
-        if (this._hass)
-            this.hass = this._hass;
+        this._config = config ? config : undefined;
+        this._updateState();
     }
     set hass(hass) {
-        this._hass = hass;
-        this._stateObj = this._config?.entity ? this._hass.states[this._config.entity] : undefined;
+        this._hass = hass ? hass : undefined;
         this._updateState();
     }
     _updateState() {
-        if (this._stateObj) {
-            const state = this._stateObj.state || "unknown";
-            switch (state) {
-                case "closed":
-                    this._icon = "hass:garage-variant";
-                    this._iconAnimation = "none";
-                    this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
-                    break;
-                case "opening":
-                    this._icon = "hass:arrow-up-box";
-                    this._iconAnimation = "blink 2.0s linear infinite";
-                    this._iconColor = "var(--sq-garage-opening-rgb, 255, 120, 0)";
-                    break;
-                case "open":
-                    this._icon = "hass:garage-open-variant";
-                    this._iconAnimation = "none";
-                    this._iconColor = "var(--sq-garage-open-rgb, 255, 120, 0)";
-                    break;
-                case "closing":
-                    this._icon = "hass:arrow-down-box";
-                    this._iconAnimation = "blink 2.0s linear infinite";
-                    this._iconColor = "var(--sq-garage-closing-rgb, 255, 120, 0)";
-                    break;
-                default:
-                    this._icon = "hass:garage-alert-variant";
-                    this._iconAnimation = "none";
-                    this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-                    break;
-            }
-            this._stateFmtd =
-                this._hass.formatEntityState(this._stateObj) +
-                    (state === "open" && this._stateObj.attributes.current_position
-                        ? " - " + this._hass.formatEntityAttributeValue(this._stateObj, "current_position")
-                        : "");
-            this._name = this._config?.icon || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
-        }
-        else {
-            this._icon = "hass:garage-alert-variant";
-            this._iconAnimation = "none";
+        this._stateObj =
+            this._config?.entity && this._config.entity.split(".")[0] === "cover"
+                ? this._hass?.states[this._config.entity]
+                : undefined;
+        if (!this._stateObj) {
+            this._icon = this._config?.icon || "hass:garage-alert-variant";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
             this._name = this._config?.name || "Unknown";
-            this._stateFmtd = "Unavailable";
+            this._stateFmtd = "Invalid entity!";
+            return;
         }
+        const state = this._stateObj.state || "unknown";
+        switch (state) {
+            case "closed":
+                this._icon = "hass:garage-variant";
+                this._iconAnimation = "none";
+                this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+                break;
+            case "opening":
+                this._icon = "hass:arrow-up-box";
+                this._iconAnimation = "blink 2.0s linear infinite";
+                this._iconColor = "var(--sq-garage-opening-rgb, 255, 120, 0)";
+                break;
+            case "open":
+                this._icon = "hass:garage-open-variant";
+                this._iconAnimation = "none";
+                this._iconColor = "var(--sq-garage-open-rgb, 255, 120, 0)";
+                break;
+            case "closing":
+                this._icon = "hass:arrow-down-box";
+                this._iconAnimation = "blink 2.0s linear infinite";
+                this._iconColor = "var(--sq-garage-closing-rgb, 255, 120, 0)";
+                break;
+            default:
+                this._icon = "hass:garage-alert-variant";
+                this._iconAnimation = "none";
+                this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+                break;
+        }
+        this._stateFmtd =
+            this._hass.formatEntityState(this._stateObj) +
+                (state === "open" && this._stateObj.attributes.current_position
+                    ? " - " + this._hass.formatEntityAttributeValue(this._stateObj, "current_position")
+                    : "");
+        this._name = this._config?.icon || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
     }
     render() {
         return x `
@@ -1884,32 +1865,32 @@ let HeaterTile = class HeaterTile extends s {
     }
     static { this.styles = [styleTileBase, styleTileState]; }
     setConfig(config) {
-        if (!config.entity || config.entity.split(".")[0] != "water_heater")
-            throw new Error("A valid water_heater entity is required.");
-        this._config = config;
-        if (this._hass)
-            this.hass = this._hass;
+        this._config = config ? config : undefined;
+        this._updateState();
     }
     set hass(hass) {
-        this._hass = hass;
-        this._stateObj = this._config?.entity ? this._hass.states[this._config.entity] : undefined;
+        this._hass = hass ? hass : undefined;
         this._updateState();
     }
     _updateState() {
-        if (this._stateObj) {
-            const state = this._stateObj.state || "unavailable";
-            this._iconColor = heaterColors[state] || heaterColors.idle;
-            this._stateFmtd = this._hass.formatEntityState(this._stateObj);
-            if (state !== "off" && this._stateObj.attributes.temperature) {
-                this._stateFmtd += ` - ${this._stateObj.attributes.temperature}°`;
-            }
-            this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
-        }
-        else {
-            this._iconColor = heaterColors.default;
+        this._stateObj =
+            this._config?.entity && this._config.entity.split(".")[0] === "water_heater"
+                ? this._hass?.states[this._config.entity]
+                : undefined;
+        if (!this._stateObj) {
+            this._icon = this._config?.icon || "hass:water-thermometer";
+            this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
             this._name = this._config?.name || "Unknown";
-            this._stateFmtd = "Unavailable";
+            this._stateFmtd = "Invalid entity!";
+            return;
         }
+        const state = this._stateObj.state || "unavailable";
+        this._iconColor = heaterColors[state] || heaterColors.idle;
+        this._stateFmtd = this._hass.formatEntityState(this._stateObj);
+        if (state !== "off" && this._stateObj.attributes.temperature) {
+            this._stateFmtd += ` - ${this._stateObj.attributes.temperature}°`;
+        }
+        this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
     }
     render() {
         return x `
@@ -1962,7 +1943,7 @@ window.customCards.push({
 let LightTile = class LightTile extends s {
     constructor() {
         super(...arguments);
-        this._icon = "hass:lightbulb-alert";
+        this._icon = "hass:lightbulb";
         this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
         this._name = "Loading...";
         this._stateFmtd = "Loading...";
@@ -1970,13 +1951,13 @@ let LightTile = class LightTile extends s {
     static { this.styles = [styleTileBase, styleTileState]; }
     setConfig(config) {
         this._config = config ? config : undefined;
-        this.updateState();
+        this._updateState();
     }
     set hass(hass) {
         this._hass = hass ? hass : undefined;
-        this.updateState();
+        this._updateState();
     }
-    updateState() {
+    _updateState() {
         this._stateObj =
             this._config?.entity && this._config.entity.split(".")[0] === "light"
                 ? this._hass?.states[this._config.entity]
@@ -1989,7 +1970,7 @@ let LightTile = class LightTile extends s {
             return;
         }
         const state = this._stateObj.state || "unknown";
-        this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:lightbulb";
+        this._icon = this._config?.icon || this._stateObj.attributes.icon || this._icon;
         this._iconColor = state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb, 128, 128, 128)";
         this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
         this._stateFmtd =
@@ -2130,7 +2111,7 @@ LightTileEditor = __decorate([
 let LockTile = class LockTile extends s {
     constructor() {
         super(...arguments);
-        this._icon = "hass:lock-alert";
+        this._icon = "hass:lock";
         this._iconAnimation = "none";
         this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
         this._name = "Loading...";
@@ -2138,62 +2119,60 @@ let LockTile = class LockTile extends s {
     }
     static { this.styles = [styleTileBase, styleTileState, styleTileIconBlink, styleTileIconSpin]; }
     setConfig(config) {
-        if (!config.entity || config.entity.split(".")[0] != "lock")
-            throw new Error("A valid lock entity is required.");
-        this._config = config;
-        if (this._hass)
-            this.hass = this._hass;
+        this._config = config ? config : undefined;
+        this._updateState();
     }
     set hass(hass) {
-        this._hass = hass;
-        this._stateObj = this._config?.entity ? this._hass?.states[this._config.entity] : undefined;
-        this.updateState();
+        this._hass = hass ? hass : undefined;
+        this._updateState();
     }
-    updateState() {
-        if (this._stateObj) {
-            const state = this._stateObj.state || "unknown";
-            switch (state) {
-                case "locked":
-                    this._icon = "hass:lock";
-                    this._iconAnimation = "none";
-                    this._iconColor = "var(--sq-inactive-rgb)";
-                    break;
-                case "unlocking":
-                    this._icon = "hass:rotate-right";
-                    this._iconAnimation = "spin 1.0s linear infinite";
-                    this._iconColor = "var(--sq-inactive-rgb)";
-                    break;
-                case "unlocked":
-                    this._icon = "hass:lock-open";
-                    this._iconAnimation = "none";
-                    this._iconColor = "var(--sq-lock-unlocked-rgb)";
-                    break;
-                case "locking":
-                    this._icon = "hass:rotate-right";
-                    this._iconAnimation = "spin 1.0s linear infinite";
-                    this._iconColor = "var(--sq-lock-unlocked-rgb)";
-                    break;
-                case "jammed":
-                    this._icon = "hass:lock-open";
-                    this._iconAnimation = "blink 1.0s linear infinite";
-                    this._iconColor = "var(--sq-lock-jammed-rgb, 255, 0, 0)";
-                    break;
-                default:
-                    this._icon = "hass:lock-alert";
-                    this._iconAnimation = "none";
-                    this._iconColor = "var(--sq-unavailable-rgb)";
-                    break;
-            }
-            this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
-            this._stateFmtd = this._hass.formatEntityState(this._stateObj);
-        }
-        else {
-            this._icon = "hass:lock-alert";
-            this._iconAnimation = "none";
-            this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 0)";
+    _updateState() {
+        this._stateObj =
+            this._config?.entity && this._config.entity.split(".")[0] === "lock"
+                ? this._hass?.states[this._config.entity]
+                : undefined;
+        if (!this._stateObj) {
+            this._icon = this._config?.icon || "hass:lock-alert";
+            this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
             this._name = this._config?.name || "Unknown";
-            this._stateFmtd = "Unavailable";
+            this._stateFmtd = "Invalid entity!";
+            return;
         }
+        const state = this._stateObj.state || "unknown";
+        switch (state) {
+            case "locked":
+                this._icon = "hass:lock";
+                this._iconAnimation = "none";
+                this._iconColor = "var(--sq-inactive-rgb)";
+                break;
+            case "unlocking":
+                this._icon = "hass:rotate-right";
+                this._iconAnimation = "spin 1.0s linear infinite";
+                this._iconColor = "var(--sq-inactive-rgb)";
+                break;
+            case "unlocked":
+                this._icon = "hass:lock-open";
+                this._iconAnimation = "none";
+                this._iconColor = "var(--sq-lock-unlocked-rgb)";
+                break;
+            case "locking":
+                this._icon = "hass:rotate-right";
+                this._iconAnimation = "spin 1.0s linear infinite";
+                this._iconColor = "var(--sq-lock-unlocked-rgb)";
+                break;
+            case "jammed":
+                this._icon = "hass:lock-open";
+                this._iconAnimation = "blink 1.0s linear infinite";
+                this._iconColor = "var(--sq-lock-jammed-rgb, 255, 0, 0)";
+                break;
+            default:
+                this._icon = "hass:lock-alert";
+                this._iconAnimation = "none";
+                this._iconColor = "var(--sq-unavailable-rgb)";
+                break;
+        }
+        this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
+        this._stateFmtd = this._hass.formatEntityState(this._stateObj);
     }
     render() {
         return x `
@@ -2259,66 +2238,64 @@ let RobotTile = class RobotTile extends s {
     }
     static { this.styles = [styleTileBase, styleTileState, styleTileIconBlink]; }
     setConfig(config) {
-        if (!config.entity || config.entity.split(".")[0] != "vacuum")
-            throw new Error("A valid robot vacuum entity is required.");
-        this._config = config;
-        if (this._hass)
-            this.hass = this._hass;
+        this._config = config ? config : undefined;
+        this._updateState();
     }
     set hass(hass) {
-        this._hass = hass;
-        this._stateObj = this._config?.entity ? this._hass.states[this._config.entity] : undefined;
+        this._hass = hass ? hass : undefined;
         this._updateState();
     }
     _updateState() {
-        if (this._stateObj) {
-            const state = this._stateObj.state || "unknown";
-            switch (state) {
-                case "cleaning":
-                    this._icon = "hass:robot-vacuum-variant";
-                    this._iconAnimation = "none";
-                    this._iconColor = "var(--sq-vacuum-cleaning-rgb, 0, 150, 136)";
-                    break;
-                case "docked":
-                    this._icon = "hass:robot-vacuum-variant";
-                    this._iconAnimation = "none";
-                    this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
-                    break;
-                case "idle":
-                    this._icon = "hass:robot-vacuum-variant";
-                    this._iconAnimation = "blink 2.0s linear infinite";
-                    this._iconColor = "var(--sq-vacuum-idle-rgb, 190, 75, 85)";
-                    break;
-                case "paused":
-                    this._icon = "hass:robot-vacuum-variant";
-                    this._iconAnimation = "blink 2.0s linear infinite";
-                    this._iconColor = "var(--sq-vacuum-paused-rgb, 190, 75, 85)";
-                    break;
-                case "returning":
-                    this._icon = "hass:robot-vacuum-variant";
-                    this._iconAnimation = "blink 2.0s linear infinite";
-                    this._iconColor = "var(--sq-vacuum-returning-rgb, 0, 150, 136)";
-                    break;
-                default:
-                    this._icon = "hass:robot-vacuum-variant-alert";
-                    this._iconAnimation = "none";
-                    this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-                    break;
-            }
-            this._stateFmtd =
-                this._hass.formatEntityState(this._stateObj) +
-                    (this._stateObj.attributes.battery_level
-                        ? " - " + this._hass.formatEntityAttributeValue(this._stateObj, "battery_level")
-                        : "");
-            this._name = this._config?.icon || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
-        }
-        else {
-            this._icon = "hass:robot-vacuum-variant-alert";
-            this._iconAnimation = "none";
+        this._stateObj =
+            this._config?.entity && this._config.entity.split(".")[0] === "vacuum"
+                ? this._hass?.states[this._config.entity]
+                : undefined;
+        if (!this._stateObj) {
+            this._icon = this._config?.icon || "hass:robot-vacuum-variant-alert";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            this._name = this._name || "Unknown";
-            this._stateFmtd = "Unavailable";
+            this._name = this._config?.name || "Unknown";
+            this._stateFmtd = "Invalid entity!";
+            return;
         }
+        const state = this._stateObj.state || "unknown";
+        switch (state) {
+            case "cleaning":
+                this._icon = "hass:robot-vacuum-variant";
+                this._iconAnimation = "none";
+                this._iconColor = "var(--sq-vacuum-cleaning-rgb, 0, 150, 136)";
+                break;
+            case "docked":
+                this._icon = "hass:robot-vacuum-variant";
+                this._iconAnimation = "none";
+                this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+                break;
+            case "idle":
+                this._icon = "hass:robot-vacuum-variant";
+                this._iconAnimation = "blink 2.0s linear infinite";
+                this._iconColor = "var(--sq-vacuum-idle-rgb, 190, 75, 85)";
+                break;
+            case "paused":
+                this._icon = "hass:robot-vacuum-variant";
+                this._iconAnimation = "blink 2.0s linear infinite";
+                this._iconColor = "var(--sq-vacuum-paused-rgb, 190, 75, 85)";
+                break;
+            case "returning":
+                this._icon = "hass:robot-vacuum-variant";
+                this._iconAnimation = "blink 2.0s linear infinite";
+                this._iconColor = "var(--sq-vacuum-returning-rgb, 0, 150, 136)";
+                break;
+            default:
+                this._icon = "hass:robot-vacuum-variant-alert";
+                this._iconAnimation = "none";
+                this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+                break;
+        }
+        this._stateFmtd =
+            this._hass.formatEntityState(this._stateObj) +
+                (this._stateObj.attributes.battery_level
+                    ? " - " + this._hass.formatEntityAttributeValue(this._stateObj, "battery_level")
+                    : "");
+        this._name = this._config?.icon || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
     }
     render() {
         return x `
@@ -2361,21 +2338,6 @@ __decorate([
 ], RobotTile.prototype, "_config", void 0);
 __decorate([
     r()
-], RobotTile.prototype, "_icon", void 0);
-__decorate([
-    r()
-], RobotTile.prototype, "_iconAnimation", void 0);
-__decorate([
-    r()
-], RobotTile.prototype, "_iconColor", void 0);
-__decorate([
-    r()
-], RobotTile.prototype, "_name", void 0);
-__decorate([
-    r()
-], RobotTile.prototype, "_stateFmtd", void 0);
-__decorate([
-    r()
 ], RobotTile.prototype, "_stateObj", void 0);
 RobotTile = __decorate([
     t("smartqasa-robot-tile")
@@ -2397,49 +2359,48 @@ let RokuTile = class RokuTile extends s {
     }
     static { this.styles = [styleTileBase, styleTileState]; }
     setConfig(config) {
-        if (!config.entity || config.entity.split(".")[0] != "media_player")
-            throw new Error("A valid roku media_player entity is required.");
-        this._config = config;
-        if (this._hass)
-            this.hass = this._hass;
+        this._config = config ? config : undefined;
+        this._updateState();
     }
     set hass(hass) {
-        this._hass = hass;
-        this._stateObj = this._config?.entity ? this._hass.states[this._config.entity] : undefined;
+        this._hass = hass ? hass : undefined;
         this._updateState();
     }
     _updateState() {
-        if (this._stateObj) {
-            const state = this._stateObj.state || "unknown";
-            switch (state) {
-                case "idle":
-                    this._iconColor = "var(--sq-media_player-idle, 128, 128, 128)";
-                    break;
-                case "standby":
-                    this._iconColor = "var(--sq-media_player-standby-rgb, 128, 128, 128)";
-                    break;
-                case "on":
-                    this._iconColor = "var(--sq-media_player-on-rgb, 128, 128, 128)";
-                    break;
-                case "paused":
-                    this._iconColor = "var(--sq-media_player-paused-rgb, 128, 128, 128)";
-                    break;
-                case "playing":
-                    this._iconColor = "var(--sq-media_player-playing-rgb, 3, 169, 244)";
-                    break;
-                default:
-                    this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-                    break;
-            }
-            this._stateFmtd = `${this._hass.formatEntityState(this._stateObj)}${this._stateObj.attributes?.source ? ` - ${this._stateObj.attributes.source}` : ""}`;
-            this._name = this._config?.icon || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
-        }
-        else {
-            this._icon = "hass:audio-video";
+        this._stateObj =
+            this._config?.entity && this._config.entity.split(".")[0] === "media_player"
+                ? this._hass?.states[this._config.entity]
+                : undefined;
+        if (!this._stateObj) {
+            this._icon = this._config?.icon || "hass:lightbulb-alert";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            this._name = this._name || "Unknown";
-            this._stateFmtd = "Unavailable";
+            this._name = this._config?.name || "Unknown";
+            this._stateFmtd = "Invalid entity!";
+            return;
         }
+        const state = this._stateObj.state || "unknown";
+        switch (state) {
+            case "idle":
+                this._iconColor = "var(--sq-media_player-idle, 128, 128, 128)";
+                break;
+            case "standby":
+                this._iconColor = "var(--sq-media_player-standby-rgb, 128, 128, 128)";
+                break;
+            case "on":
+                this._iconColor = "var(--sq-media_player-on-rgb, 128, 128, 128)";
+                break;
+            case "paused":
+                this._iconColor = "var(--sq-media_player-paused-rgb, 128, 128, 128)";
+                break;
+            case "playing":
+                this._iconColor = "var(--sq-media_player-playing-rgb, 3, 169, 244)";
+                break;
+            default:
+                this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+                break;
+        }
+        this._stateFmtd = `${this._hass.formatEntityState(this._stateObj)}${this._stateObj.attributes?.source ? ` - ${this._stateObj.attributes.source}` : ""}`;
+        this._name = this._config?.icon || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
     }
     render() {
         return x `
@@ -2511,45 +2472,38 @@ window.customCards.push({
 let RoutineTile = class RoutineTile extends s {
     constructor() {
         super(...arguments);
+        this._running = false;
         this._icon = "hass:help-rhombus";
         this._iconAnimation = "none";
         this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
         this._name = "Loading...";
-        this._prevStateIcon = "";
-        this._prevStateName = "";
     }
     static { this.styles = [styleTileBase, styleTileIconSpin]; }
     setConfig(config) {
-        const validDomains = ["automation", "scene", "script"];
-        if (!config.entity || !validDomains.includes(config.entity.split(".")[0])) {
-            throw new Error("A valid automation, scene, or script entity is required.");
-        }
-        this._config = config;
-        if (this._hass)
-            this.hass = this._hass;
+        this._config = config ? config : undefined;
+        this._updateState();
     }
     set hass(hass) {
-        this._hass = hass;
-        this._stateObj = this._config?.entity ? this._hass.states[this._config.entity] : undefined;
-        if (this._stateObj?.attributes.icon != this._prevStateIcon ||
-            this._stateObj.attributes.friendly_name != this._prevStateName) {
-            this._updateState();
-            this._prevStateIcon = this._stateObj?.attributes.icon || "";
-            this._prevStateName = this._stateObj?.attributes.friendly_name || "";
-        }
+        this._hass = hass ? hass : undefined;
+        this._updateState();
     }
     _updateState() {
-        if (this._stateObj) {
-            this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:help-circle";
-            this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
-            this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
-        }
-        else {
+        if (this._running === true)
+            return;
+        const validDomains = ["automation", "scene", "script"];
+        this._stateObj =
+            this._config?.entity && !validDomains.includes(this._config.entity.split(".")[0])
+                ? this._hass?.states[this._config.entity]
+                : undefined;
+        if (!this._stateObj) {
             this._icon = this._config?.icon || "hass:alert-rhombus";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            this._iconAnimation = "none";
             this._name = this._config?.name || "Unknown";
+            return;
         }
+        this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:help-circle";
+        this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+        this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
     }
     render() {
         return x `
@@ -2571,32 +2525,34 @@ let RoutineTile = class RoutineTile extends s {
     }
     _runRoutine(e) {
         e.stopPropagation();
-        if (this._stateObj) {
-            let icon = this._icon;
-            this._icon = "hass:rotate-right";
-            this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
-            this._iconAnimation = "spin 1.0s linear infinite";
-            const domain = this._stateObj.entity_id.split(".")[0];
-            switch (domain) {
-                case "script":
-                    this._hass.callService("script", "turn_on", { entity_id: this._stateObj.entity_id });
-                    break;
-                case "scene":
-                    this._hass.callService("scene", "turn_on", { entity_id: this._stateObj.entity_id });
-                    break;
-                case "automation":
-                    this._hass.callService("automation", "trigger", { entity_id: this._stateObj.entity_id });
-                    break;
-                default:
-                    console.error("Unsupported entity domain:", domain);
-                    return;
-            }
-            setTimeout(() => {
-                this._icon = icon;
-                this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
-                this._iconAnimation = "none";
-            }, 2000);
+        if (!this._stateObj)
+            return;
+        this._running = true;
+        let icon = this._icon;
+        this._icon = "hass:rotate-right";
+        this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
+        this._iconAnimation = "spin 1.0s linear infinite";
+        const domain = this._stateObj.entity_id.split(".")[0];
+        switch (domain) {
+            case "script":
+                this._hass.callService("script", "turn_on", { entity_id: this._stateObj.entity_id });
+                break;
+            case "scene":
+                this._hass.callService("scene", "turn_on", { entity_id: this._stateObj.entity_id });
+                break;
+            case "automation":
+                this._hass.callService("automation", "trigger", { entity_id: this._stateObj.entity_id });
+                break;
+            default:
+                console.error("Unsupported entity domain:", domain);
+                return;
         }
+        setTimeout(() => {
+            this._icon = icon;
+            this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+            this._iconAnimation = "none";
+            this._running = false;
+        }, 2000);
     }
     getCardSize() {
         return 1;
@@ -2608,6 +2564,9 @@ __decorate([
 __decorate([
     r()
 ], RoutineTile.prototype, "_stateObj", void 0);
+__decorate([
+    r()
+], RoutineTile.prototype, "_running", void 0);
 RoutineTile = __decorate([
     t("smartqasa-routine-tile")
 ], RoutineTile);
@@ -2702,18 +2661,25 @@ let SensorTile = class SensorTile extends s {
     }
     static { this.styles = [styleTileBase, styleTileState]; }
     setConfig(config) {
-        if (!config.entity || config.entity.split(".")[0] != "binary_sensor")
-            throw new Error("A valid binary_sensor entity is required.");
-        this._config = config;
-        if (this._hass)
-            this.hass = this._hass;
+        this._config = config ? config : undefined;
+        this._updateState();
     }
     set hass(hass) {
-        this._hass = hass;
-        this._stateObj = this._config?.entity ? this._hass.states[this._config.entity] : undefined;
+        this._hass = hass ? hass : undefined;
         this._updateState();
     }
     _updateState() {
+        this._stateObj =
+            this._config?.entity && this._config.entity.split(".")[0] === "binary_sensor"
+                ? this._hass?.states[this._config.entity]
+                : undefined;
+        if (!this._stateObj) {
+            this._iconTemplate = x `<ha-icon .icon="hass:leak"></ha-icon>`;
+            this._iconColor = "var(--sq-unavailable-rgb)";
+            this._name = this._name || "Unknown";
+            this._stateFmtd = "Invalid entity!";
+            return;
+        }
         if (this._stateObj) {
             if (!this._config?.icon) {
                 this._iconTemplate = x `<ha-state-icon
@@ -2789,62 +2755,59 @@ let ShadeTile = class ShadeTile extends s {
     }
     static { this.styles = [styleTileBase, styleTileState, styleTileIconBlink]; }
     setConfig(config) {
-        if (!config.entity || config.entity.split(".")[0] != "cover")
-            throw new Error("A valid cover entity is required.");
-        this._config = config;
-        this._tilt = this._config.tilt || this._tilt;
-        if (this._hass)
-            this.hass = this._hass;
+        this._config = config ? config : undefined;
+        this._updateState();
     }
     set hass(hass) {
-        this._hass = hass;
-        this._stateObj = this._config?.entity ? this._hass.states[this._config.entity] : undefined;
+        this._hass = hass ? hass : undefined;
         this._updateState();
     }
     _updateState() {
-        if (this._stateObj) {
-            const state = this._stateObj.state;
-            switch (state) {
-                case "closed":
-                    this._icon = "hass:roller-shade-closed";
-                    this._iconAnimation = "none";
-                    this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
-                    break;
-                case "opening":
-                    this._icon = "hass:arrow-up-box";
-                    this._iconAnimation = "blink 2.0s linear infinite";
-                    this._iconColor = "var(--sq-shade-opening-rgb, 146, 107, 199)";
-                    break;
-                case "open":
-                    this._icon = "hass:roller-shade";
-                    this._iconAnimation = "none";
-                    this._iconColor = "var(--sq-shade-open-rgb, 146, 107, 199)";
-                    break;
-                case "closing":
-                    this._icon = "hass:arrow-down-box";
-                    this._iconAnimation = "blink 2.0s linear infinite";
-                    this._iconColor = "var(--sq-shade-closing-rgb, 146, 107, 199)";
-                    break;
-                default:
-                    this._icon = "hass:alert-rhombus";
-                    this._iconAnimation = "none";
-                    this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-                    break;
-            }
-            this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
-            this._stateFmtd =
-                this._hass.formatEntityState(this._stateObj) +
-                    (state === "open" && this._stateObj.attributes.current_position
-                        ? " - " + this._hass.formatEntityAttributeValue(this._stateObj, "current_position")
-                        : "");
-        }
-        else {
-            this._icon = "hass:roller-shade";
+        this._stateObj =
+            this._config?.entity && this._config.entity.split(".")[0] === "cover"
+                ? this._hass?.states[this._config.entity]
+                : undefined;
+        if (!this._stateObj) {
+            this._icon = this._config?.icon || "hass:roller-shade";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            this._iconAnimation = "none";
             this._name = this._config?.name || "Unknown";
-            this._stateFmtd = "Unknown";
+            this._stateFmtd = "Entity not found!";
+            return;
         }
+        const state = this._stateObj.state;
+        switch (state) {
+            case "closed":
+                this._icon = "hass:roller-shade-closed";
+                this._iconAnimation = "none";
+                this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+                break;
+            case "opening":
+                this._icon = "hass:arrow-up-box";
+                this._iconAnimation = "blink 2.0s linear infinite";
+                this._iconColor = "var(--sq-shade-opening-rgb, 146, 107, 199)";
+                break;
+            case "open":
+                this._icon = "hass:roller-shade";
+                this._iconAnimation = "none";
+                this._iconColor = "var(--sq-shade-open-rgb, 146, 107, 199)";
+                break;
+            case "closing":
+                this._icon = "hass:arrow-down-box";
+                this._iconAnimation = "blink 2.0s linear infinite";
+                this._iconColor = "var(--sq-shade-closing-rgb, 146, 107, 199)";
+                break;
+            default:
+                this._icon = "hass:alert-rhombus";
+                this._iconAnimation = "none";
+                this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+                break;
+        }
+        this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
+        this._stateFmtd =
+            this._hass.formatEntityState(this._stateObj) +
+                (state === "open" && this._stateObj.attributes.current_position
+                    ? " - " + this._hass.formatEntityAttributeValue(this._stateObj, "current_position")
+                    : "");
     }
     render() {
         return x `
@@ -2943,22 +2906,26 @@ let SwitchTile = class SwitchTile extends s {
         this._updateState();
     }
     _updateState() {
-        if (this._stateObj) {
-            const state = this._stateObj.state;
-            this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:toggle-switch-variant";
-            this._iconColor =
-                state === "on"
-                    ? `var(--sq-switch${this._config?.category ? `-${this._config.category}` : ""}-on-rgb)`
-                    : "var(--sq-inactive-rgb)";
-            this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
-            this._stateFmtd = this._hass ? this._hass.formatEntityState(this._stateObj) : "Unknown";
-        }
-        else {
+        const validDomains = ["fan", "input_boolean", "light", "switch"];
+        this._stateObj =
+            this._config?.entity && !validDomains.includes(this._config.entity.split(".")[0])
+                ? this._hass?.states[this._config.entity]
+                : undefined;
+        if (!this._stateObj) {
             this._icon = this._config?.icon || "hass:toggle-switch-variant";
-            this._iconColor = "var(--sq-unavailable-rgb)";
-            this._name = this._name || "Unknown";
-            this._stateFmtd = "Unknown";
+            this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+            this._name = this._config?.name || "Unknown";
+            this._stateFmtd = "Invalid entity!";
+            return;
         }
+        const state = this._stateObj.state;
+        this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:toggle-switch-variant";
+        this._iconColor =
+            state === "on"
+                ? `var(--sq-switch${this._config?.category ? `-${this._config.category}` : ""}-on-rgb)`
+                : "var(--sq-inactive-rgb)";
+        this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
+        this._stateFmtd = this._hass ? this._hass.formatEntityState(this._stateObj) : "Unknown";
     }
     render() {
         return x `
@@ -3013,51 +2980,51 @@ window.customCards.push({
 let ThermostatTile = class ThermostatTile extends s {
     constructor() {
         super(...arguments);
-        this._icon = "hass:thermometer-alert";
+        this._icon = "hass:thermostat";
         this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
         this._name = "Loading...";
         this._stateFmtd = "Loading...";
     }
     static { this.styles = [styleTileBase, styleTileState]; }
     setConfig(config) {
-        if (!config.entity || config.entity.split(".")[0] != "climate")
-            throw new Error("A valid thermostat climate entity is required.");
-        this._config = config;
-        if (this._hass)
-            this.hass = this._hass;
+        this._config = config ? config : undefined;
+        this._updateState();
     }
     set hass(hass) {
-        this._hass = hass;
-        this._stateObj = this._config?.entity ? this._hass.states[this._config.entity] : undefined;
+        this._hass = hass ? hass : undefined;
         this._updateState();
     }
     _updateState() {
-        if (this._stateObj) {
-            const state = this._stateObj.state || "unavailable";
-            this._icon = thermostatIcons[state] || thermostatIcons.default;
-            const hvacAction = this._stateObj.attributes.hvac_action || "idle";
-            if (state === "off") {
-                this._iconColor = thermostatColors.off;
-            }
-            else {
-                this._iconColor = thermostatColors[hvacAction] || thermostatColors.idle;
-            }
-            this._stateFmtd = this._hass.formatEntityState(this._stateObj);
-            if (state !== "off") {
-                if (this._stateObj.attributes.current_temperature) {
-                    this._stateFmtd += ` - ${this._stateObj.attributes.current_temperature}°`;
-                }
-                if (this._stateObj.attributes.current_humidity) {
-                    this._stateFmtd += ` / ${this._stateObj.attributes.current_humidity}%`;
-                }
-            }
-            this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
-        }
-        else {
+        this._stateObj =
+            this._config?.entity && this._config.entity.split(".")[0] === "climate"
+                ? this._hass?.states[this._config.entity]
+                : undefined;
+        if (!this._stateObj) {
+            this._icon = this._config?.icon || "hass:thermostat";
             this._iconColor = thermostatColors.default;
             this._name = this._config?.name || "Unknown";
-            this._stateFmtd = "Unavailable";
+            this._stateFmtd = "Invalid entity!";
+            return;
         }
+        const state = this._stateObj.state || "unavailable";
+        this._icon = thermostatIcons[state] || thermostatIcons.default;
+        const hvacAction = this._stateObj.attributes.hvac_action || "idle";
+        if (state === "off") {
+            this._iconColor = thermostatColors.off;
+        }
+        else {
+            this._iconColor = thermostatColors[hvacAction] || thermostatColors.idle;
+        }
+        this._stateFmtd = this._hass.formatEntityState(this._stateObj);
+        if (state !== "off") {
+            if (this._stateObj.attributes.current_temperature) {
+                this._stateFmtd += ` - ${this._stateObj.attributes.current_temperature}°`;
+            }
+            if (this._stateObj.attributes.current_humidity) {
+                this._stateFmtd += ` / ${this._stateObj.attributes.current_humidity}%`;
+            }
+        }
+        this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
     }
     render() {
         return x `

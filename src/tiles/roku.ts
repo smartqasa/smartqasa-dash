@@ -26,51 +26,54 @@ export class RokuTile extends LitElement {
     static styles: CSSResultGroup = [styleTileBase, styleTileState];
 
     setConfig(config: Config): void {
-        if (!config.entity || config.entity.split(".")[0] != "media_player")
-            throw new Error("A valid roku media_player entity is required.");
-        this._config = config;
-        if (this._hass) this.hass = this._hass;
+        this._config = config ? config : undefined;
+        this._updateState();
     }
 
     set hass(hass: HomeAssistant) {
-        this._hass = hass;
-        this._stateObj = this._config?.entity ? this._hass.states[this._config.entity] : undefined;
+        this._hass = hass ? hass : undefined;
         this._updateState();
     }
 
     private _updateState(): void {
-        if (this._stateObj) {
-            const state = this._stateObj.state || "unknown";
-            switch (state) {
-                case "idle":
-                    this._iconColor = "var(--sq-media_player-idle, 128, 128, 128)";
-                    break;
-                case "standby":
-                    this._iconColor = "var(--sq-media_player-standby-rgb, 128, 128, 128)";
-                    break;
-                case "on":
-                    this._iconColor = "var(--sq-media_player-on-rgb, 128, 128, 128)";
-                    break;
-                case "paused":
-                    this._iconColor = "var(--sq-media_player-paused-rgb, 128, 128, 128)";
-                    break;
-                case "playing":
-                    this._iconColor = "var(--sq-media_player-playing-rgb, 3, 169, 244)";
-                    break;
-                default:
-                    this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-                    break;
-            }
-            this._stateFmtd = `${this._hass.formatEntityState(this._stateObj)}${
-                this._stateObj.attributes?.source ? ` - ${this._stateObj.attributes.source}` : ""
-            }`;
-            this._name = this._config?.icon || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
-        } else {
-            this._icon = "hass:audio-video";
+        this._stateObj =
+            this._config?.entity && this._config.entity.split(".")[0] === "media_player"
+                ? this._hass?.states[this._config.entity]
+                : undefined;
+
+        if (!this._stateObj) {
+            this._icon = this._config?.icon || "hass:lightbulb-alert";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            this._name = this._name || "Unknown";
-            this._stateFmtd = "Unavailable";
+            this._name = this._config?.name || "Unknown";
+            this._stateFmtd = "Invalid entity!";
+            return;
         }
+
+        const state = this._stateObj.state || "unknown";
+        switch (state) {
+            case "idle":
+                this._iconColor = "var(--sq-media_player-idle, 128, 128, 128)";
+                break;
+            case "standby":
+                this._iconColor = "var(--sq-media_player-standby-rgb, 128, 128, 128)";
+                break;
+            case "on":
+                this._iconColor = "var(--sq-media_player-on-rgb, 128, 128, 128)";
+                break;
+            case "paused":
+                this._iconColor = "var(--sq-media_player-paused-rgb, 128, 128, 128)";
+                break;
+            case "playing":
+                this._iconColor = "var(--sq-media_player-playing-rgb, 3, 169, 244)";
+                break;
+            default:
+                this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+                break;
+        }
+        this._stateFmtd = `${this._hass.formatEntityState(this._stateObj)}${
+            this._stateObj.attributes?.source ? ` - ${this._stateObj.attributes.source}` : ""
+        }`;
+        this._name = this._config?.icon || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
     }
 
     protected render(): TemplateResult {

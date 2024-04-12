@@ -27,19 +27,29 @@ export class SensorTile extends LitElement {
     static styles: CSSResultGroup = [styleTileBase, styleTileState];
 
     setConfig(config: Config): void {
-        if (!config.entity || config.entity.split(".")[0] != "binary_sensor")
-            throw new Error("A valid binary_sensor entity is required.");
-        this._config = config;
-        if (this._hass) this.hass = this._hass;
+        this._config = config ? config : undefined;
+        this._updateState();
     }
 
     set hass(hass: HomeAssistant) {
-        this._hass = hass;
-        this._stateObj = this._config?.entity ? this._hass.states[this._config.entity] : undefined;
+        this._hass = hass ? hass : undefined;
         this._updateState();
     }
 
     private _updateState(): void {
+        this._stateObj =
+            this._config?.entity && this._config.entity.split(".")[0] === "binary_sensor"
+                ? this._hass?.states[this._config.entity]
+                : undefined;
+
+        if (!this._stateObj) {
+            this._iconTemplate = html`<ha-icon .icon="hass:leak"></ha-icon>`;
+            this._iconColor = "var(--sq-unavailable-rgb)";
+            this._name = this._name || "Unknown";
+            this._stateFmtd = "Invalid entity!";
+            return;
+        }
+
         if (this._stateObj) {
             if (!this._config?.icon) {
                 this._iconTemplate = html`<ha-state-icon

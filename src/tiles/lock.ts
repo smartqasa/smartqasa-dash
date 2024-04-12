@@ -20,7 +20,7 @@ export class LockTile extends LitElement {
     @state() private _stateObj?: HassEntity;
 
     private _hass: any;
-    private _icon: string = "hass:lock-alert";
+    private _icon: string = "hass:lock";
     private _iconAnimation: string = "none";
     private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
     private _name: string = "Loading...";
@@ -29,62 +29,64 @@ export class LockTile extends LitElement {
     static styles: CSSResultGroup = [styleTileBase, styleTileState, styleTileIconBlink, styleTileIconSpin];
 
     setConfig(config: Config): void {
-        if (!config.entity || config.entity.split(".")[0] != "lock")
-            throw new Error("A valid lock entity is required.");
-        this._config = config;
-        if (this._hass) this.hass = this._hass;
+        this._config = config ? config : undefined;
+        this._updateState();
     }
 
     set hass(hass: HomeAssistant) {
-        this._hass = hass;
-        this._stateObj = this._config?.entity ? this._hass?.states[this._config.entity] : undefined;
-        this.updateState();
+        this._hass = hass ? hass : undefined;
+        this._updateState();
     }
 
-    private updateState(): void {
-        if (this._stateObj) {
-            const state = this._stateObj.state || "unknown";
-            switch (state) {
-                case "locked":
-                    this._icon = "hass:lock";
-                    this._iconAnimation = "none";
-                    this._iconColor = "var(--sq-inactive-rgb)";
-                    break;
-                case "unlocking":
-                    this._icon = "hass:rotate-right";
-                    this._iconAnimation = "spin 1.0s linear infinite";
-                    this._iconColor = "var(--sq-inactive-rgb)";
-                    break;
-                case "unlocked":
-                    this._icon = "hass:lock-open";
-                    this._iconAnimation = "none";
-                    this._iconColor = "var(--sq-lock-unlocked-rgb)";
-                    break;
-                case "locking":
-                    this._icon = "hass:rotate-right";
-                    this._iconAnimation = "spin 1.0s linear infinite";
-                    this._iconColor = "var(--sq-lock-unlocked-rgb)";
-                    break;
-                case "jammed":
-                    this._icon = "hass:lock-open";
-                    this._iconAnimation = "blink 1.0s linear infinite";
-                    this._iconColor = "var(--sq-lock-jammed-rgb, 255, 0, 0)";
-                    break;
-                default:
-                    this._icon = "hass:lock-alert";
-                    this._iconAnimation = "none";
-                    this._iconColor = "var(--sq-unavailable-rgb)";
-                    break;
-            }
-            this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
-            this._stateFmtd = this._hass.formatEntityState(this._stateObj);
-        } else {
-            this._icon = "hass:lock-alert";
-            this._iconAnimation = "none";
-            this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 0)";
+    private _updateState(): void {
+        this._stateObj =
+            this._config?.entity && this._config.entity.split(".")[0] === "lock"
+                ? this._hass?.states[this._config.entity]
+                : undefined;
+
+        if (!this._stateObj) {
+            this._icon = this._config?.icon || "hass:lock-alert";
+            this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
             this._name = this._config?.name || "Unknown";
-            this._stateFmtd = "Unavailable";
+            this._stateFmtd = "Invalid entity!";
+            return;
         }
+
+        const state = this._stateObj.state || "unknown";
+        switch (state) {
+            case "locked":
+                this._icon = "hass:lock";
+                this._iconAnimation = "none";
+                this._iconColor = "var(--sq-inactive-rgb)";
+                break;
+            case "unlocking":
+                this._icon = "hass:rotate-right";
+                this._iconAnimation = "spin 1.0s linear infinite";
+                this._iconColor = "var(--sq-inactive-rgb)";
+                break;
+            case "unlocked":
+                this._icon = "hass:lock-open";
+                this._iconAnimation = "none";
+                this._iconColor = "var(--sq-lock-unlocked-rgb)";
+                break;
+            case "locking":
+                this._icon = "hass:rotate-right";
+                this._iconAnimation = "spin 1.0s linear infinite";
+                this._iconColor = "var(--sq-lock-unlocked-rgb)";
+                break;
+            case "jammed":
+                this._icon = "hass:lock-open";
+                this._iconAnimation = "blink 1.0s linear infinite";
+                this._iconColor = "var(--sq-lock-jammed-rgb, 255, 0, 0)";
+                break;
+            default:
+                this._icon = "hass:lock-alert";
+                this._iconAnimation = "none";
+                this._iconColor = "var(--sq-unavailable-rgb)";
+                break;
+        }
+        this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
+        this._stateFmtd = this._hass.formatEntityState(this._stateObj);
     }
 
     protected render(): TemplateResult {

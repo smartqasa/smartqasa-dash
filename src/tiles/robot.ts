@@ -16,78 +16,80 @@ interface Config extends LovelaceCardConfig {
 @customElement("smartqasa-robot-tile")
 export class RobotTile extends LitElement {
     @state() private _config?: Config;
-    @state() private _icon: string = "hass:robot-vacuum-variant";
-    @state() private _iconAnimation: string = "none";
-    @state() private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
-    @state() private _name: string = "Loading...";
-    @state() private _stateFmtd: string = "Loading...";
     @state() private _stateObj?: HassEntity;
 
     private _hass: any;
+    private _icon: string = "hass:robot-vacuum-variant";
+    private _iconAnimation: string = "none";
+    private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
+    private _name: string = "Loading...";
+    private _stateFmtd: string = "Loading...";
 
     static styles: CSSResultGroup = [styleTileBase, styleTileState, styleTileIconBlink];
 
     setConfig(config: Config): void {
-        if (!config.entity || config.entity.split(".")[0] != "vacuum")
-            throw new Error("A valid robot vacuum entity is required.");
-        this._config = config;
-        if (this._hass) this.hass = this._hass;
+        this._config = config ? config : undefined;
+        this._updateState();
     }
 
     set hass(hass: HomeAssistant) {
-        this._hass = hass;
-        this._stateObj = this._config?.entity ? this._hass.states[this._config.entity] : undefined;
+        this._hass = hass ? hass : undefined;
         this._updateState();
     }
 
     private _updateState(): void {
-        if (this._stateObj) {
-            const state = this._stateObj.state || "unknown";
-            switch (state) {
-                case "cleaning":
-                    this._icon = "hass:robot-vacuum-variant";
-                    this._iconAnimation = "none";
-                    this._iconColor = "var(--sq-vacuum-cleaning-rgb, 0, 150, 136)";
-                    break;
-                case "docked":
-                    this._icon = "hass:robot-vacuum-variant";
-                    this._iconAnimation = "none";
-                    this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
-                    break;
-                case "idle":
-                    this._icon = "hass:robot-vacuum-variant";
-                    this._iconAnimation = "blink 2.0s linear infinite";
-                    this._iconColor = "var(--sq-vacuum-idle-rgb, 190, 75, 85)";
-                    break;
-                case "paused":
-                    this._icon = "hass:robot-vacuum-variant";
-                    this._iconAnimation = "blink 2.0s linear infinite";
-                    this._iconColor = "var(--sq-vacuum-paused-rgb, 190, 75, 85)";
-                    break;
-                case "returning":
-                    this._icon = "hass:robot-vacuum-variant";
-                    this._iconAnimation = "blink 2.0s linear infinite";
-                    this._iconColor = "var(--sq-vacuum-returning-rgb, 0, 150, 136)";
-                    break;
-                default:
-                    this._icon = "hass:robot-vacuum-variant-alert";
-                    this._iconAnimation = "none";
-                    this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-                    break;
-            }
-            this._stateFmtd =
-                this._hass.formatEntityState(this._stateObj) +
-                (this._stateObj.attributes.battery_level
-                    ? " - " + this._hass.formatEntityAttributeValue(this._stateObj, "battery_level")
-                    : "");
-            this._name = this._config?.icon || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
-        } else {
-            this._icon = "hass:robot-vacuum-variant-alert";
-            this._iconAnimation = "none";
+        this._stateObj =
+            this._config?.entity && this._config.entity.split(".")[0] === "vacuum"
+                ? this._hass?.states[this._config.entity]
+                : undefined;
+
+        if (!this._stateObj) {
+            this._icon = this._config?.icon || "hass:robot-vacuum-variant-alert";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            this._name = this._name || "Unknown";
-            this._stateFmtd = "Unavailable";
+            this._name = this._config?.name || "Unknown";
+            this._stateFmtd = "Invalid entity!";
+            return;
         }
+
+        const state = this._stateObj.state || "unknown";
+        switch (state) {
+            case "cleaning":
+                this._icon = "hass:robot-vacuum-variant";
+                this._iconAnimation = "none";
+                this._iconColor = "var(--sq-vacuum-cleaning-rgb, 0, 150, 136)";
+                break;
+            case "docked":
+                this._icon = "hass:robot-vacuum-variant";
+                this._iconAnimation = "none";
+                this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+                break;
+            case "idle":
+                this._icon = "hass:robot-vacuum-variant";
+                this._iconAnimation = "blink 2.0s linear infinite";
+                this._iconColor = "var(--sq-vacuum-idle-rgb, 190, 75, 85)";
+                break;
+            case "paused":
+                this._icon = "hass:robot-vacuum-variant";
+                this._iconAnimation = "blink 2.0s linear infinite";
+                this._iconColor = "var(--sq-vacuum-paused-rgb, 190, 75, 85)";
+                break;
+            case "returning":
+                this._icon = "hass:robot-vacuum-variant";
+                this._iconAnimation = "blink 2.0s linear infinite";
+                this._iconColor = "var(--sq-vacuum-returning-rgb, 0, 150, 136)";
+                break;
+            default:
+                this._icon = "hass:robot-vacuum-variant-alert";
+                this._iconAnimation = "none";
+                this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+                break;
+        }
+        this._stateFmtd =
+            this._hass.formatEntityState(this._stateObj) +
+            (this._stateObj.attributes.battery_level
+                ? " - " + this._hass.formatEntityAttributeValue(this._stateObj, "battery_level")
+                : "");
+        this._name = this._config?.icon || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
     }
 
     protected render(): TemplateResult {

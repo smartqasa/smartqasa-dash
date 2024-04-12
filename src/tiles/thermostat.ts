@@ -19,7 +19,7 @@ export class ThermostatTile extends LitElement {
     @state() private _stateObj?: HassEntity;
 
     private _hass: any;
-    private _icon: string = "hass:thermometer-alert";
+    private _icon: string = "hass:thermostat";
     private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
     private _name: string = "Loading...";
     private _stateFmtd: string = "Loading...";
@@ -27,44 +27,48 @@ export class ThermostatTile extends LitElement {
     static styles: CSSResultGroup = [styleTileBase, styleTileState];
 
     setConfig(config: Config): void {
-        if (!config.entity || config.entity.split(".")[0] != "climate")
-            throw new Error("A valid thermostat climate entity is required.");
-        this._config = config;
-        if (this._hass) this.hass = this._hass;
+        this._config = config ? config : undefined;
+        this._updateState();
     }
 
     set hass(hass: HomeAssistant) {
-        this._hass = hass;
-        this._stateObj = this._config?.entity ? this._hass.states[this._config.entity] : undefined;
+        this._hass = hass ? hass : undefined;
         this._updateState();
     }
 
     private _updateState(): void {
-        if (this._stateObj) {
-            const state = this._stateObj.state || "unavailable";
-            this._icon = thermostatIcons[state] || thermostatIcons.default;
-            const hvacAction = this._stateObj.attributes.hvac_action || "idle";
-            if (state === "off") {
-                this._iconColor = thermostatColors.off;
-            } else {
-                this._iconColor = thermostatColors[hvacAction] || thermostatColors.idle;
-            }
+        this._stateObj =
+            this._config?.entity && this._config.entity.split(".")[0] === "climate"
+                ? this._hass?.states[this._config.entity]
+                : undefined;
 
-            this._stateFmtd = this._hass.formatEntityState(this._stateObj);
-            if (state !== "off") {
-                if (this._stateObj.attributes.current_temperature) {
-                    this._stateFmtd += ` - ${this._stateObj.attributes.current_temperature}°`;
-                }
-                if (this._stateObj.attributes.current_humidity) {
-                    this._stateFmtd += ` / ${this._stateObj.attributes.current_humidity}%`;
-                }
-            }
-            this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
-        } else {
+        if (!this._stateObj) {
+            this._icon = this._config?.icon || "hass:thermostat";
             this._iconColor = thermostatColors.default;
             this._name = this._config?.name || "Unknown";
-            this._stateFmtd = "Unavailable";
+            this._stateFmtd = "Invalid entity!";
+            return;
         }
+
+        const state = this._stateObj.state || "unavailable";
+        this._icon = thermostatIcons[state] || thermostatIcons.default;
+        const hvacAction = this._stateObj.attributes.hvac_action || "idle";
+        if (state === "off") {
+            this._iconColor = thermostatColors.off;
+        } else {
+            this._iconColor = thermostatColors[hvacAction] || thermostatColors.idle;
+        }
+
+        this._stateFmtd = this._hass.formatEntityState(this._stateObj);
+        if (state !== "off") {
+            if (this._stateObj.attributes.current_temperature) {
+                this._stateFmtd += ` - ${this._stateObj.attributes.current_temperature}°`;
+            }
+            if (this._stateObj.attributes.current_humidity) {
+                this._stateFmtd += ` / ${this._stateObj.attributes.current_humidity}%`;
+            }
+        }
+        this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
     }
 
     protected render(): TemplateResult {

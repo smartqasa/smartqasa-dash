@@ -16,50 +16,45 @@ interface Config extends LovelaceCardConfig {
 export class RoutineTile extends LitElement {
     @state() private _config?: Config;
     @state() private _stateObj?: HassEntity;
+    @state() private _running: boolean = false;
 
     private _hass: any;
     private _icon: string = "hass:help-rhombus";
     private _iconAnimation: string = "none";
     private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
     private _name: string = "Loading...";
-    private _prevStateIcon: string = "";
-    private _prevStateName: string = "";
 
     static styles: CSSResultGroup = [styleTileBase, styleTileIconSpin];
 
     setConfig(config: Config): void {
-        const validDomains = ["automation", "scene", "script"];
-        if (!config.entity || !validDomains.includes(config.entity.split(".")[0])) {
-            throw new Error("A valid automation, scene, or script entity is required.");
-        }
-        this._config = config;
-        if (this._hass) this.hass = this._hass;
+        this._config = config ? config : undefined;
+        this._updateState();
     }
 
     set hass(hass: HomeAssistant) {
-        this._hass = hass;
-        this._stateObj = this._config?.entity ? this._hass.states[this._config.entity] : undefined;
-        if (
-            this._stateObj?.attributes.icon != this._prevStateIcon ||
-            this._stateObj.attributes.friendly_name != this._prevStateName
-        ) {
-            this._updateState();
-            this._prevStateIcon = this._stateObj?.attributes.icon || "";
-            this._prevStateName = this._stateObj?.attributes.friendly_name || "";
-        }
+        this._hass = hass ? hass : undefined;
+        this._updateState();
     }
 
     private _updateState(): void {
-        if (this._stateObj) {
-            this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:help-circle";
-            this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
-            this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
-        } else {
+        if (this._running === true) return;
+
+        const validDomains = ["automation", "scene", "script"];
+        this._stateObj =
+            this._config?.entity && !validDomains.includes(this._config.entity.split(".")[0])
+                ? this._hass?.states[this._config.entity]
+                : undefined;
+
+        if (!this._stateObj) {
             this._icon = this._config?.icon || "hass:alert-rhombus";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            this._iconAnimation = "none";
             this._name = this._config?.name || "Unknown";
+            return;
         }
+
+        this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:help-circle";
+        this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+        this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
     }
 
     render(): TemplateResult {
@@ -84,34 +79,36 @@ export class RoutineTile extends LitElement {
     private _runRoutine(e: Event): void {
         e.stopPropagation();
 
-        if (this._stateObj) {
-            let icon = this._icon;
-            this._icon = "hass:rotate-right";
-            this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
-            this._iconAnimation = "spin 1.0s linear infinite";
+        if (!this._stateObj) return;
 
-            const domain = this._stateObj.entity_id.split(".")[0];
-            switch (domain) {
-                case "script":
-                    this._hass.callService("script", "turn_on", { entity_id: this._stateObj.entity_id });
-                    break;
-                case "scene":
-                    this._hass.callService("scene", "turn_on", { entity_id: this._stateObj.entity_id });
-                    break;
-                case "automation":
-                    this._hass.callService("automation", "trigger", { entity_id: this._stateObj.entity_id });
-                    break;
-                default:
-                    console.error("Unsupported entity domain:", domain);
-                    return;
-            }
+        this._running = true;
+        let icon = this._icon;
+        this._icon = "hass:rotate-right";
+        this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
+        this._iconAnimation = "spin 1.0s linear infinite";
 
-            setTimeout(() => {
-                this._icon = icon;
-                this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
-                this._iconAnimation = "none";
-            }, 2000);
+        const domain = this._stateObj.entity_id.split(".")[0];
+        switch (domain) {
+            case "script":
+                this._hass.callService("script", "turn_on", { entity_id: this._stateObj.entity_id });
+                break;
+            case "scene":
+                this._hass.callService("scene", "turn_on", { entity_id: this._stateObj.entity_id });
+                break;
+            case "automation":
+                this._hass.callService("automation", "trigger", { entity_id: this._stateObj.entity_id });
+                break;
+            default:
+                console.error("Unsupported entity domain:", domain);
+                return;
         }
+
+        setTimeout(() => {
+            this._icon = icon;
+            this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+            this._iconAnimation = "none";
+            this._running = false;
+        }, 2000);
     }
 
     getCardSize(): number {

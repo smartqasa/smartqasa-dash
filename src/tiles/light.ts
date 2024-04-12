@@ -20,7 +20,7 @@ export class LightTile extends LitElement {
     @state() private _stateObj?: HassEntity;
 
     private _hass: any;
-    private _icon: string = "hass:lightbulb-alert";
+    private _icon: string = "hass:lightbulb";
     private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
     private _name: string = "Loading...";
     private _stateFmtd: string = "Loading...";
@@ -29,15 +29,15 @@ export class LightTile extends LitElement {
 
     setConfig(config: Config): void {
         this._config = config ? config : undefined;
-        this.updateState();
+        this._updateState();
     }
 
     set hass(hass: HomeAssistant) {
         this._hass = hass ? hass : undefined;
-        this.updateState();
+        this._updateState();
     }
 
-    private updateState(): void {
+    private _updateState(): void {
         this._stateObj =
             this._config?.entity && this._config.entity.split(".")[0] === "light"
                 ? this._hass?.states[this._config.entity]
@@ -52,7 +52,7 @@ export class LightTile extends LitElement {
         }
 
         const state = this._stateObj.state || "unknown";
-        this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:lightbulb";
+        this._icon = this._config?.icon || this._stateObj.attributes.icon || this._icon;
         this._iconColor = state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb, 128, 128, 128)";
         this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
         this._stateFmtd =
