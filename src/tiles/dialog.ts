@@ -17,38 +17,45 @@ export class DialogTile extends LitElement {
     @state() private _config?: Config;
     @state() private _dialogObj?: any;
 
+    private _icon: string = "hass:help-rhombus";
+    private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
+    private _name: string = "Loading...";
+
     static styles: CSSResult = styleTileBase;
 
     setConfig(config: Config): void {
-        if (!config.dialog) throw new Error("A valid dialog must be specified.");
-        this._config = config;
-        this._dialogObj = dialogTable[config.dialog] || undefined;
+        this._config = config ? config : undefined;
+        this._updateState();
+    }
+
+    private _updateState(): void {
+        this._dialogObj = this._config ? dialogTable[this._config.dialog] : undefined;
+
+        if (!this._dialogObj) {
+            this._icon = this._config?.icon || "hass:help-rhombus";
+            this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+            this._name = this._config?.name || "Unknown";
+            return;
+        }
+
+        this._icon = this._config?.icon || this._dialogObj.icon;
+        this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+        this._name = this._config?.name || this._dialogObj.name;
     }
 
     protected render(): TemplateResult {
-        let icon: string, iconColor: string, name: string;
-        if (this._dialogObj) {
-            icon = this._config?.icon || this._dialogObj.icon;
-            iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
-            name = this._config?.name || this._dialogObj.name;
-        } else {
-            icon = this._config?.icon || "hass:help-rhombus";
-            iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            name = this._config?.dialog || "";
-        }
-
         return html`
             <div class="container" @click=${this._showDialog}>
                 <div
                     class="icon"
                     style="
-                        color: rgb(${iconColor});
-                        background-color: rgba(${iconColor}, var(--sq-icon-opacity, 0.2));
+                        color: rgb(${this._iconColor});
+                        background-color: rgba(${this._iconColor}, var(--sq-icon-opacity, 0.2));
                     "
                 >
-                    <ha-icon .icon=${icon}></ha-icon>
+                    <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
-                <div class="name">${name}</div>
+                <div class="name">${this._name}</div>
             </div>
         `;
     }

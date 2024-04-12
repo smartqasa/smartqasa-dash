@@ -24,36 +24,37 @@ interface AreaEntry {
 export class AreaTile extends LitElement {
     @state() private _config?: Config;
     @state() private _areaObj?: AreaEntry;
-    @state() private _icon: string = "hass:help-rhombus";
-    @state() private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
-    @state() private _name: string = "Loading...";
 
     private _hass: any;
+    private _icon: string = "hass:help-rhombus";
+    private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
+    private _name: string = "Loading...";
 
     static styles: CSSResult = styleTileBase;
 
     setConfig(config: Config): void {
-        if (!config.area) throw new Error("A valid area is required.");
-        this._config = config;
-        if (this._hass) this.hass = this._hass;
+        this._config = config ? config : undefined;
+        this._updateArea();
     }
 
     set hass(hass: HomeAssistant) {
-        this._hass = hass;
-        this._areaObj = this._config?.area ? this._hass?.areas[this._config.area] : undefined;
+        this._hass = hass ? hass : undefined;
         this._updateArea();
     }
 
     private _updateArea(): void {
-        if (this._areaObj) {
-            this._icon = (this._config?.icon as string) ?? this._areaObj.icon ?? this._icon;
-            this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
-            this._name = (this._config?.name as string) ?? this._areaObj.name ?? "Unknown";
-        } else {
+        this._areaObj = this._config?.area ? this._hass?.areas[this._config.area] : undefined;
+
+        if (!this._areaObj) {
             this._icon = this._config?.icon ?? "hass:alert-rhombus";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
             this._name = this._config?.name ?? "Unknown";
+            return;
         }
+
+        this._icon = (this._config?.icon as string) ?? this._areaObj.icon ?? this._icon;
+        this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+        this._name = (this._config?.name as string) ?? this._areaObj.name ?? "Unknown";
     }
 
     render(): TemplateResult {

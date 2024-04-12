@@ -28,17 +28,12 @@ export class SwitchTile extends LitElement {
     static styles: CSSResultGroup = [styleTileBase, styleTileState];
 
     setConfig(config: Config): void {
-        const validDomains = ["fan", "input_boolean", "light", "switch"];
-        if (!config.entity || !validDomains.includes(config.entity.split(".")[0])) {
-            throw new Error("A valid toggleable entity is required.");
-        }
-        this._config = config;
-        if (this._hass) this.hass = this._hass;
+        this._config = config ? config : undefined;
+        this._updateState();
     }
 
     set hass(hass: HomeAssistant) {
-        this._hass = hass;
-        this._stateObj = this._config?.entity ? this._hass.states[this._config.entity] : undefined;
+        this._hass = hass ? hass : undefined;
         this._updateState();
     }
 

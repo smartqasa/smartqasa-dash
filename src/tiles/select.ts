@@ -23,32 +23,36 @@ export class SelectTile extends LitElement {
     private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
     private _name: string = "Loading...";
     private _stateFmtd: string = "Loading...";
+
     static styles: CSSResultGroup = [styleTileBase, styleTileState];
 
     setConfig(config: Config): void {
-        if (!config.entity || config.entity.split(".")[0] != "input_select")
-            throw new Error("A valid input_select entity is required.");
-        this._config = config;
-        if (this._hass) this.hass = this._hass;
+        this._config = config ? config : undefined;
+        this._updateState();
     }
 
     set hass(hass: HomeAssistant) {
-        this._hass = hass;
-        this._stateObj = this._config?.entity ? this._hass.states[this._config.entity] : undefined;
+        this._hass = hass ? hass : undefined;
         this._updateState();
     }
 
     private _updateState(): void {
-        if (this._stateObj) {
-            this._icon = this._config?.icon || this._stateObj.attributes?.icon || this._icon;
-            this._name = this._config?.name || this._stateObj.attributes?.friendly_name || this._stateObj.entity_id;
-            this._stateFmtd = this._hass.formatEntityState(this._stateObj) || "Unknown";
-        } else {
-            this._icon = this._config?.icon || this._icon;
-            this._iconColor = "var(--sq-unavailable-rgb)";
-            this._name = this._name || "Unknown";
-            this._stateFmtd = "Unknown";
+        this._stateObj =
+            this._config?.entity && this._config.entity.split(".")[0] === "input_select"
+                ? this._hass?.states[this._config.entity]
+                : undefined;
+
+        if (!this._stateObj) {
+            this._icon = this._config?.icon || "hass:form-dropdown";
+            this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+            this._name = this._config?.name || "Unknown";
+            this._stateFmtd = "Invalid entity!";
+            return;
         }
+
+        this._icon = this._config?.icon || this._stateObj.attributes?.icon || this._icon;
+        this._name = this._config?.name || this._stateObj.attributes?.friendly_name || this._stateObj.entity_id;
+        this._stateFmtd = this._hass.formatEntityState(this._stateObj) || "Unknown";
     }
 
     protected render(): TemplateResult {

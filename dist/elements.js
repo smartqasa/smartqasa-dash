@@ -1317,28 +1317,24 @@ let AreaTile = class AreaTile extends s {
     }
     static { this.styles = styleTileBase; }
     setConfig(config) {
-        if (!config.area)
-            throw new Error("A valid area is required.");
-        this._config = config;
-        if (this._hass)
-            this.hass = this._hass;
+        this._config = config ? config : undefined;
+        this._updateArea();
     }
     set hass(hass) {
-        this._hass = hass;
-        this._areaObj = this._config?.area ? this._hass?.areas[this._config.area] : undefined;
+        this._hass = hass ? hass : undefined;
         this._updateArea();
     }
     _updateArea() {
-        if (this._areaObj) {
-            this._icon = this._config?.icon ?? this._areaObj.icon ?? this._icon;
-            this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
-            this._name = this._config?.name ?? this._areaObj.name ?? "Unknown";
-        }
-        else {
+        this._areaObj = this._config?.area ? this._hass?.areas[this._config.area] : undefined;
+        if (!this._areaObj) {
             this._icon = this._config?.icon ?? "hass:alert-rhombus";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
             this._name = this._config?.name ?? "Unknown";
+            return;
         }
+        this._icon = this._config?.icon ?? this._areaObj.icon ?? this._icon;
+        this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+        this._name = this._config?.name ?? this._areaObj.name ?? "Unknown";
     }
     render() {
         return x `
@@ -1377,15 +1373,6 @@ __decorate([
 __decorate([
     r()
 ], AreaTile.prototype, "_areaObj", void 0);
-__decorate([
-    r()
-], AreaTile.prototype, "_icon", void 0);
-__decorate([
-    r()
-], AreaTile.prototype, "_iconColor", void 0);
-__decorate([
-    r()
-], AreaTile.prototype, "_name", void 0);
 AreaTile = __decorate([
     t("smartqasa-area-tile")
 ], AreaTile);
@@ -1538,37 +1525,42 @@ const dialogTable = {
 };
 
 let DialogTile = class DialogTile extends s {
+    constructor() {
+        super(...arguments);
+        this._icon = "hass:help-rhombus";
+        this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+        this._name = "Loading...";
+    }
     static { this.styles = styleTileBase; }
     setConfig(config) {
-        if (!config.dialog)
-            throw new Error("A valid dialog must be specified.");
-        this._config = config;
-        this._dialogObj = dialogTable[config.dialog] || undefined;
+        this._config = config ? config : undefined;
+        this._updateState();
+    }
+    _updateState() {
+        this._dialogObj = this._config ? dialogTable[this._config.dialog] : undefined;
+        if (!this._dialogObj) {
+            this._icon = this._config?.icon || "hass:help-rhombus";
+            this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+            this._name = this._config?.name || "Unknown";
+            return;
+        }
+        this._icon = this._config?.icon || this._dialogObj.icon;
+        this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+        this._name = this._config?.name || this._dialogObj.name;
     }
     render() {
-        let icon, iconColor, name;
-        if (this._dialogObj) {
-            icon = this._config?.icon || this._dialogObj.icon;
-            iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
-            name = this._config?.name || this._dialogObj.name;
-        }
-        else {
-            icon = this._config?.icon || "hass:help-rhombus";
-            iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            name = this._config?.dialog || "";
-        }
         return x `
             <div class="container" @click=${this._showDialog}>
                 <div
                     class="icon"
                     style="
-                        color: rgb(${iconColor});
-                        background-color: rgba(${iconColor}, var(--sq-icon-opacity, 0.2));
+                        color: rgb(${this._iconColor});
+                        background-color: rgba(${this._iconColor}, var(--sq-icon-opacity, 0.2));
                     "
                 >
-                    <ha-icon .icon=${icon}></ha-icon>
+                    <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
-                <div class="name">${name}</div>
+                <div class="name">${this._name}</div>
             </div>
         `;
     }
@@ -2587,29 +2579,28 @@ let SelectTile = class SelectTile extends s {
     }
     static { this.styles = [styleTileBase, styleTileState]; }
     setConfig(config) {
-        if (!config.entity || config.entity.split(".")[0] != "input_select")
-            throw new Error("A valid input_select entity is required.");
-        this._config = config;
-        if (this._hass)
-            this.hass = this._hass;
+        this._config = config ? config : undefined;
+        this._updateState();
     }
     set hass(hass) {
-        this._hass = hass;
-        this._stateObj = this._config?.entity ? this._hass.states[this._config.entity] : undefined;
+        this._hass = hass ? hass : undefined;
         this._updateState();
     }
     _updateState() {
-        if (this._stateObj) {
-            this._icon = this._config?.icon || this._stateObj.attributes?.icon || this._icon;
-            this._name = this._config?.name || this._stateObj.attributes?.friendly_name || this._stateObj.entity_id;
-            this._stateFmtd = this._hass.formatEntityState(this._stateObj) || "Unknown";
+        this._stateObj =
+            this._config?.entity && this._config.entity.split(".")[0] === "input_select"
+                ? this._hass?.states[this._config.entity]
+                : undefined;
+        if (!this._stateObj) {
+            this._icon = this._config?.icon || "hass:form-dropdown";
+            this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+            this._name = this._config?.name || "Unknown";
+            this._stateFmtd = "Invalid entity!";
+            return;
         }
-        else {
-            this._icon = this._config?.icon || this._icon;
-            this._iconColor = "var(--sq-unavailable-rgb)";
-            this._name = this._name || "Unknown";
-            this._stateFmtd = "Unknown";
-        }
+        this._icon = this._config?.icon || this._stateObj.attributes?.icon || this._icon;
+        this._name = this._config?.name || this._stateObj.attributes?.friendly_name || this._stateObj.entity_id;
+        this._stateFmtd = this._hass.formatEntityState(this._stateObj) || "Unknown";
     }
     render() {
         return x `
@@ -2892,17 +2883,11 @@ let SwitchTile = class SwitchTile extends s {
     }
     static { this.styles = [styleTileBase, styleTileState]; }
     setConfig(config) {
-        const validDomains = ["fan", "input_boolean", "light", "switch"];
-        if (!config.entity || !validDomains.includes(config.entity.split(".")[0])) {
-            throw new Error("A valid toggleable entity is required.");
-        }
-        this._config = config;
-        if (this._hass)
-            this.hass = this._hass;
+        this._config = config ? config : undefined;
+        this._updateState();
     }
     set hass(hass) {
-        this._hass = hass;
-        this._stateObj = this._config?.entity ? this._hass.states[this._config.entity] : undefined;
+        this._hass = hass ? hass : undefined;
         this._updateState();
     }
     _updateState() {
