@@ -1,8 +1,8 @@
 import { CSSResult, html, LitElement, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
+import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
-import { styleMap } from "lit/directives/style-map.js"; // Ensure styleMap is imported
 
 import styleChipBasic from "../styles/chip-basic";
 
@@ -36,7 +36,7 @@ export class SmartQasaMotionChip extends LitElement {
     }
 
     private _updateState(): void {
-        this._stateObj = this._config?.entity ? this._hass.states[this._config.entity] : undefined;
+        this._stateObj = this._hass && this._config?.entity ? this._hass.states[this._config.entity] : undefined;
 
         if (!this._stateObj) return;
 
@@ -85,11 +85,8 @@ export class SmartQasaMotionChip extends LitElement {
 
     private _toggleEntity(e: Event): void {
         e.stopPropagation();
-        if (this._stateObj) {
-            this._hass.callService("homeassistant", "toggle", {
-                entity_id: this._config?.entity,
-            });
-        }
+        if (!this._stateObj) return;
+        this._hass.callService("homeassistant", "toggle", { entity_id: this._config?.entity });
     }
 }
 

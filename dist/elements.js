@@ -134,7 +134,7 @@ let SmartQasaMotionChip = class SmartQasaMotionChip extends s {
         this._updateState();
     }
     _updateState() {
-        this._stateObj = this._config?.entity ? this._hass.states[this._config.entity] : undefined;
+        this._stateObj = this._hass && this._config?.entity ? this._hass.states[this._config.entity] : undefined;
         if (!this._stateObj)
             return;
         const state = this._stateObj.state || undefined;
@@ -177,11 +177,9 @@ let SmartQasaMotionChip = class SmartQasaMotionChip extends s {
     }
     _toggleEntity(e) {
         e.stopPropagation();
-        if (this._stateObj) {
-            this._hass.callService("homeassistant", "toggle", {
-                entity_id: this._config?.entity,
-            });
-        }
+        if (!this._stateObj)
+            return;
+        this._hass.callService("homeassistant", "toggle", { entity_id: this._config?.entity });
     }
 };
 __decorate([
