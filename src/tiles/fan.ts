@@ -1,5 +1,6 @@
 import { CSSResultGroup, html, LitElement, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
+import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 import { showMoreInfo } from "../utils/showMoreInfo";
@@ -77,16 +78,18 @@ export class FanTile extends LitElement {
     }
 
     protected render(): TemplateResult {
+        const iconStyles = {
+            color: `rgb(${this._iconColor})`,
+            backgroundColor: `rgba(${this._iconColor}, var(--sq-icon-opacity))`,
+            animation: this._iconAnimation,
+        };
+
         return html`
             <div class="container" @click=${this._showMoreInfo} @contextmenu=${this._showGroupList}>
                 <div
                     class="icon"
                     @click=${this._toggleEntity}
-                    style="
-                        color: rgb(${this._iconColor});
-                        background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
-                        animation: ${this._iconAnimation};
-                    "
+                    style="${styleMap(iconStyles)}
                 >
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>

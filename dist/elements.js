@@ -1326,10 +1326,11 @@ let AreaTile = class AreaTile extends s {
     constructor() {
         super(...arguments);
         this._icon = "hass:help-rhombus";
+        this._iconAnimation = "none";
         this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
         this._name = "Loading...";
     }
-    static { this.styles = styleTileBase; }
+    static { this.styles = [styleTileBase, styleTileIconSpin]; }
     setConfig(config) {
         this._config = { ...config };
         this._updateState();
@@ -1353,14 +1354,16 @@ let AreaTile = class AreaTile extends s {
         this._name = this._config?.name ?? this._areaObj.name ?? "Unknown";
     }
     render() {
+        const iconStyles = {
+            color: `rgb(${this._iconColor})`,
+            backgroundColor: `rgba(${this._iconColor}, var(--sq-icon-opacity))`,
+            animation: this._iconAnimation,
+        };
         return x `
             <div class="container" @click=${this._navigate}>
                 <div
                     class="icon"
-                    style="
-                        color: rgb(${this._iconColor});
-                        background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
-                    "
+                    style="${o(iconStyles)}
                 >
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
@@ -1370,14 +1373,20 @@ let AreaTile = class AreaTile extends s {
     }
     _navigate(e) {
         e.stopPropagation();
-        if (this._areaObj) {
-            window.history.pushState(null, "", `/home-dash/${this._areaObj.area_id}`);
-            window.dispatchEvent(new CustomEvent("location-changed"));
-            window.browser_mod?.service("close_popup", {});
-        }
-        else {
-            console.error("Area is not found.");
-        }
+        if (!this._areaObj)
+            return;
+        const icon = this._icon;
+        this._icon = "hass:rotate-right";
+        this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
+        this._iconAnimation = "spin 1.0s linear infinite";
+        window.history.pushState(null, "", `/home-dash/${this._areaObj.area_id}`);
+        window.dispatchEvent(new CustomEvent("location-changed"));
+        setTimeout(() => {
+            this._icon = icon;
+            this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+            this._iconAnimation = "none";
+        }, 2000);
+        window.browser_mod?.service("close_popup", {});
     }
     getCardSize() {
         return 1;
@@ -1687,16 +1696,17 @@ let FanTile = class FanTile extends s {
                     : "");
     }
     render() {
+        const iconStyles = {
+            color: `rgb(${this._iconColor})`,
+            backgroundColor: `rgba(${this._iconColor}, var(--sq-icon-opacity))`,
+            animation: this._iconAnimation,
+        };
         return x `
             <div class="container" @click=${this._showMoreInfo} @contextmenu=${this._showGroupList}>
                 <div
                     class="icon"
                     @click=${this._toggleEntity}
-                    style="
-                        color: rgb(${this._iconColor});
-                        background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
-                        animation: ${this._iconAnimation};
-                    "
+                    style="${o(iconStyles)}
                 >
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
@@ -1958,6 +1968,7 @@ let LightTile = class LightTile extends s {
     constructor() {
         super(...arguments);
         this._icon = "hass:lightbulb";
+        this._iconAnimation = "none";
         this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
         this._name = "Loading...";
         this._stateFmtd = "Loading...";
@@ -1996,15 +2007,17 @@ let LightTile = class LightTile extends s {
                     : "");
     }
     render() {
+        const iconStyles = {
+            color: `rgb(${this._iconColor})`,
+            backgroundColor: `rgba(${this._iconColor}, var(--sq-icon-opacity))`,
+            animation: this._iconAnimation,
+        };
         return x `
             <div class="container" @click=${this._showMoreInfo} @contextmenu=${this._showGroupList}>
                 <div
                     class="icon"
                     @click=${this._toggleEntity}
-                    style="
-                        color: rgb(${this._iconColor});
-                        background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
-                    "
+                    style="${o(iconStyles)}
                 >
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
@@ -2168,7 +2181,7 @@ let LockTile = class LockTile extends s {
             case "unlocking":
                 this._icon = "hass:rotate-right";
                 this._iconAnimation = "spin 1.0s linear infinite";
-                this._iconColor = "var(--sq-inactive-rgb)";
+                this._iconColor = "var(--sq-lock-unlocking-rgb)";
                 break;
             case "unlocked":
                 this._icon = "hass:lock-open";
@@ -2178,7 +2191,7 @@ let LockTile = class LockTile extends s {
             case "locking":
                 this._icon = "hass:rotate-right";
                 this._iconAnimation = "spin 1.0s linear infinite";
-                this._iconColor = "var(--sq-lock-unlocked-rgb)";
+                this._iconColor = "var(--sq-lock-locking-rgb)";
                 break;
             case "jammed":
                 this._icon = "hass:lock-open";
@@ -2202,7 +2215,7 @@ let LockTile = class LockTile extends s {
         };
         return x `
             <div class="container" @click=${this._showMoreInfo}>
-                <div class="icon" @click=${this._toggleLock} style="${o(iconStyles)}">
+                <div class="icon" @click=${this._toggleEntity} style="${o(iconStyles)}">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
                 <div class="name">${this._name}</div>
@@ -2210,7 +2223,7 @@ let LockTile = class LockTile extends s {
             </div>
         `;
     }
-    _toggleLock(e) {
+    _toggleEntity(e) {
         e.stopPropagation();
         if (!this._stateObj)
             return;
@@ -2557,7 +2570,7 @@ let RoutineTile = class RoutineTile extends s {
         if (!this._stateObj)
             return;
         this._running = true;
-        let icon = this._icon;
+        const icon = this._icon;
         this._icon = "hass:rotate-right";
         this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
         this._iconAnimation = "spin 1.0s linear infinite";

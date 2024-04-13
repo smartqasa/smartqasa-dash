@@ -67,7 +67,7 @@ export class LockTile extends LitElement {
             case "unlocking":
                 this._icon = "hass:rotate-right";
                 this._iconAnimation = "spin 1.0s linear infinite";
-                this._iconColor = "var(--sq-inactive-rgb)";
+                this._iconColor = "var(--sq-lock-unlocking-rgb)";
                 break;
             case "unlocked":
                 this._icon = "hass:lock-open";
@@ -77,7 +77,7 @@ export class LockTile extends LitElement {
             case "locking":
                 this._icon = "hass:rotate-right";
                 this._iconAnimation = "spin 1.0s linear infinite";
-                this._iconColor = "var(--sq-lock-unlocked-rgb)";
+                this._iconColor = "var(--sq-lock-locking-rgb)";
                 break;
             case "jammed":
                 this._icon = "hass:lock-open";
@@ -103,7 +103,7 @@ export class LockTile extends LitElement {
 
         return html`
             <div class="container" @click=${this._showMoreInfo}>
-                <div class="icon" @click=${this._toggleLock} style="${styleMap(iconStyles)}">
+                <div class="icon" @click=${this._toggleEntity} style="${styleMap(iconStyles)}">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
                 <div class="name">${this._name}</div>
@@ -112,7 +112,7 @@ export class LockTile extends LitElement {
         `;
     }
 
-    private _toggleLock(e: Event): void {
+    private _toggleEntity(e: Event): void {
         e.stopPropagation();
         if (!this._stateObj) return;
 

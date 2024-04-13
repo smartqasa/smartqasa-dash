@@ -78,11 +78,11 @@ export class RoutineTile extends LitElement {
 
     private _runRoutine(e: Event): void {
         e.stopPropagation();
-
         if (!this._stateObj) return;
 
         this._running = true;
-        let icon = this._icon;
+        const icon = this._icon;
+
         this._icon = "hass:rotate-right";
         this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
         this._iconAnimation = "spin 1.0s linear infinite";

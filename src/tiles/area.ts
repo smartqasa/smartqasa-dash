@@ -1,8 +1,10 @@
-import { CSSResult, html, LitElement, TemplateResult } from "lit";
+import { CSSResultGroup, html, LitElement, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
+import { styleMap } from "lit/directives/style-map.js";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 
 import styleTileBase from "../styles/tile-base";
+import styleTileIconSpin from "../styles/tile-icon-spin";
 
 interface Config extends LovelaceCardConfig {
     area: string;
@@ -26,10 +28,11 @@ export class AreaTile extends LitElement {
 
     private _hass: any;
     private _icon: string = "hass:help-rhombus";
+    private _iconAnimation: string = "none";
     private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
     private _name: string = "Loading...";
 
-    static styles: CSSResult = styleTileBase;
+    static styles: CSSResultGroup = [styleTileBase, styleTileIconSpin];
 
     setConfig(config: Config): void {
         this._config = { ...config };
@@ -58,14 +61,17 @@ export class AreaTile extends LitElement {
     }
 
     render(): TemplateResult {
+        const iconStyles = {
+            color: `rgb(${this._iconColor})`,
+            backgroundColor: `rgba(${this._iconColor}, var(--sq-icon-opacity))`,
+            animation: this._iconAnimation,
+        };
+
         return html`
             <div class="container" @click=${this._navigate}>
                 <div
                     class="icon"
-                    style="
-                        color: rgb(${this._iconColor});
-                        background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
-                    "
+                    style="${styleMap(iconStyles)}
                 >
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
@@ -76,13 +82,24 @@ export class AreaTile extends LitElement {
 
     private _navigate(e: Event): void {
         e.stopPropagation();
-        if (this._areaObj) {
-            window.history.pushState(null, "", `/home-dash/${this._areaObj.area_id}`);
-            window.dispatchEvent(new CustomEvent("location-changed"));
-            window.browser_mod?.service("close_popup", {});
-        } else {
-            console.error("Area is not found.");
-        }
+        if (!this._areaObj) return;
+
+        const icon = this._icon;
+
+        this._icon = "hass:rotate-right";
+        this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
+        this._iconAnimation = "spin 1.0s linear infinite";
+
+        window.history.pushState(null, "", `/home-dash/${this._areaObj.area_id}`);
+        window.dispatchEvent(new CustomEvent("location-changed"));
+
+        setTimeout(() => {
+            this._icon = icon;
+            this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+            this._iconAnimation = "none";
+        }, 2000);
+
+        window.browser_mod?.service("close_popup", {});
     }
 
     getCardSize(): number {
