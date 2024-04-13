@@ -127,7 +127,7 @@ export class LockTile extends LitElement {
 
         setTimeout(() => {
             this._actuating = false;
-        }, 2000);
+        }, 500);
     }
 
     private _showMoreInfo(e: Event): void {

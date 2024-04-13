@@ -2223,7 +2223,7 @@ let LockTile = class LockTile extends s {
         });
         setTimeout(() => {
             this._actuating = false;
-        }, 2000);
+        }, 500);
     }
     _showMoreInfo(e) {
         e.stopPropagation();
