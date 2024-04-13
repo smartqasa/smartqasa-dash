@@ -1,5 +1,6 @@
 import { CSSResultGroup, html, LitElement, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
+import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 import { showMoreInfo } from "../utils/showMoreInfo";
@@ -94,17 +95,15 @@ export class RobotTile extends LitElement {
     }
 
     protected render(): TemplateResult {
+        const iconStyles = {
+            color: `rgb(${this._iconColor})`,
+            backgroundColor: `rgba(${this._iconColor}, var(--sq-icon-opacity))`,
+            animation: this._iconAnimation,
+        };
+
         return html`
             <div class="container" @click=${this._showMoreInfo}>
-                <div
-                    class="icon"
-                    @click=${this._toggleVacuum}
-                    style="
-                        color: rgb(${this._iconColor});
-                        background-color: rgba(${this._iconColor}, var(--sq-icon-opacity, 0.2));
-                        animation: ${this._iconAnimation};
-                    "
-                >
+                <div class="icon" @click=${this._toggleEntity} style="${styleMap(iconStyles)}">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
                 <div class="name">${this._name}</div>
@@ -113,7 +112,7 @@ export class RobotTile extends LitElement {
         `;
     }
 
-    private _toggleVacuum(e: Event): void {
+    private _toggleEntity(e: Event): void {
         e.stopPropagation();
         if (!this._stateObj) return;
         const state = this._stateObj.state;

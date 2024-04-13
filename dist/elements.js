@@ -1,4 +1,4 @@
-var version = "1.1.46";
+var version = "1.1.48";
 
 /******************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -1361,10 +1361,7 @@ let AreaTile = class AreaTile extends s {
         };
         return x `
             <div class="container" @click=${this._navigate}>
-                <div
-                    class="icon"
-                    style="${o(iconStyles)}
-                >
+                <div class="icon" style="${o(iconStyles)}">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
                 <div class="name">${this._name}</div>
@@ -1377,14 +1374,14 @@ let AreaTile = class AreaTile extends s {
             return;
         const icon = this._icon;
         this._icon = "hass:rotate-right";
-        this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
         this._iconAnimation = "spin 1.0s linear infinite";
+        this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
         window.history.pushState(null, "", `/home-dash/${this._areaObj.area_id}`);
         window.dispatchEvent(new CustomEvent("location-changed"));
         setTimeout(() => {
             this._icon = icon;
-            this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
             this._iconAnimation = "none";
+            this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
         }, 2000);
         window.browser_mod?.service("close_popup", {});
     }
@@ -1703,11 +1700,7 @@ let FanTile = class FanTile extends s {
         };
         return x `
             <div class="container" @click=${this._showMoreInfo} @contextmenu=${this._showGroupList}>
-                <div
-                    class="icon"
-                    @click=${this._toggleEntity}
-                    style="${o(iconStyles)}
-                >
+                <div class="icon" @click=${this._toggleEntity} style="${o(iconStyles)}">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
                 <div class="name">${this._name}</div>
@@ -1829,17 +1822,14 @@ let GarageTile = class GarageTile extends s {
         this._name = this._config?.icon || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
     }
     render() {
+        const iconStyles = {
+            color: `rgb(${this._iconColor})`,
+            backgroundColor: `rgba(${this._iconColor}, var(--sq-icon-opacity))`,
+            animation: this._iconAnimation,
+        };
         return x `
             <div class="container" @click=${this._showMoreInfo}>
-                <div
-                    class="icon"
-                    @click=${this._toggleEntity}
-                    style="
-            color: rgb(${this._iconColor});
-            background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
-            animation: ${this._iconAnimation};
-          "
-                >
+                <div class="icon" @click=${this._toggleEntity} style="${o(iconStyles)}">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
                 <div class="name">${this._name}</div>
@@ -1881,6 +1871,7 @@ let HeaterTile = class HeaterTile extends s {
     constructor() {
         super(...arguments);
         this._icon = "hass:water-thermometer";
+        this._iconAnimation = "none";
         this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
         this._name = "Loading...";
         this._stateFmtd = "Loading...";
@@ -1917,16 +1908,14 @@ let HeaterTile = class HeaterTile extends s {
         this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
     }
     render() {
+        const iconStyles = {
+            color: `rgb(${this._iconColor})`,
+            backgroundColor: `rgba(${this._iconColor}, var(--sq-icon-opacity))`,
+            animation: this._iconAnimation,
+        };
         return x `
             <div class="container" @click=${this._showMoreInfo}>
-                <div
-                    class="icon"
-                    @click=${this._toggleEntity}
-                    style="
-                        color: rgb(${this._iconColor});
-                        background-color: rgba(${this._iconColor}, var(--sq-icon-opacity, 0.2));
-                    "
-                >
+                <div class="icon" @click=${this._toggleEntity} style="${o(iconStyles)}">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
                 <div class="name">${this._name}</div>
@@ -2014,11 +2003,7 @@ let LightTile = class LightTile extends s {
         };
         return x `
             <div class="container" @click=${this._showMoreInfo} @contextmenu=${this._showGroupList}>
-                <div
-                    class="icon"
-                    @click=${this._toggleEntity}
-                    style="${o(iconStyles)}
-                >
+                <div class="icon" @click=${this._toggleEntity} style="${o(iconStyles)}">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
                 <div class="name">${this._name}</div>
@@ -2338,17 +2323,14 @@ let RobotTile = class RobotTile extends s {
         this._name = this._config?.icon || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
     }
     render() {
+        const iconStyles = {
+            color: `rgb(${this._iconColor})`,
+            backgroundColor: `rgba(${this._iconColor}, var(--sq-icon-opacity))`,
+            animation: this._iconAnimation,
+        };
         return x `
             <div class="container" @click=${this._showMoreInfo}>
-                <div
-                    class="icon"
-                    @click=${this._toggleVacuum}
-                    style="
-                        color: rgb(${this._iconColor});
-                        background-color: rgba(${this._iconColor}, var(--sq-icon-opacity, 0.2));
-                        animation: ${this._iconAnimation};
-                    "
-                >
+                <div class="icon" @click=${this._toggleEntity} style="${o(iconStyles)}">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
                 <div class="name">${this._name}</div>
@@ -2356,7 +2338,7 @@ let RobotTile = class RobotTile extends s {
             </div>
         `;
     }
-    _toggleVacuum(e) {
+    _toggleEntity(e) {
         e.stopPropagation();
         if (!this._stateObj)
             return;
@@ -2393,6 +2375,7 @@ let RokuTile = class RokuTile extends s {
     constructor() {
         super(...arguments);
         this._icon = "hass:audio-video";
+        this._iconAnimation = "none";
         this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
         this._name = "Loading...";
         this._stateFmtd = "Loading...";
@@ -2446,15 +2429,17 @@ let RokuTile = class RokuTile extends s {
         this._name = this._config?.icon || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
     }
     render() {
+        const iconStyles = {
+            color: `rgb(${this._iconColor})`,
+            backgroundColor: `rgba(${this._iconColor}, var(--sq-icon-opacity))`,
+            animation: this._iconAnimation,
+        };
         return x `
             <div class="container" @click=${this._showMoreInfo}>
                 <div
                     class="icon"
                     @click=${this._toggleEntity}
-                    style="
-            color: rgb(${this._iconColor});
-            background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
-          "
+                    style="${o(iconStyles)}
                 >
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>

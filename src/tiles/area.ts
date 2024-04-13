@@ -69,10 +69,7 @@ export class AreaTile extends LitElement {
 
         return html`
             <div class="container" @click=${this._navigate}>
-                <div
-                    class="icon"
-                    style="${styleMap(iconStyles)}
-                >
+                <div class="icon" style="${styleMap(iconStyles)}">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
                 <div class="name">${this._name}</div>
@@ -87,16 +84,16 @@ export class AreaTile extends LitElement {
         const icon = this._icon;
 
         this._icon = "hass:rotate-right";
-        this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
         this._iconAnimation = "spin 1.0s linear infinite";
+        this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
 
         window.history.pushState(null, "", `/home-dash/${this._areaObj.area_id}`);
         window.dispatchEvent(new CustomEvent("location-changed"));
 
         setTimeout(() => {
             this._icon = icon;
-            this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
             this._iconAnimation = "none";
+            this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
         }, 2000);
 
         window.browser_mod?.service("close_popup", {});
