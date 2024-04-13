@@ -1,5 +1,6 @@
 import { CSSResultGroup, html, LitElement, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
+import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 import { showMoreInfo } from "../utils/showMoreInfo";
@@ -18,6 +19,7 @@ interface Config extends LovelaceCardConfig {
 export class LockTile extends LitElement {
     @state() private _config?: Config;
     @state() private _stateObj?: HassEntity;
+    @state() private _actuating: boolean = false;
 
     private _hass: any;
     private _icon: string = "hass:lock";
@@ -40,6 +42,8 @@ export class LockTile extends LitElement {
     }
 
     private _updateState(): void {
+        if (this._actuating === true) return;
+
         this._stateObj =
             this._config?.entity && this._config.entity.split(".")[0] === "lock"
                 ? this._hass?.states[this._config.entity]
@@ -91,17 +95,14 @@ export class LockTile extends LitElement {
     }
 
     protected render(): TemplateResult {
+        const iconStyles = {
+            color: this._iconColor,
+            backgroundColor: `rgba(${this._iconColor}, var(--sq-icon-opacity))`,
+            animation: this._iconAnimation,
+        };
         return html`
             <div class="container" @click=${this._showMoreInfo}>
-                <div
-                    class="icon"
-                    @click=${this._toggleLock}
-                    style="
-                        color: rgb(${this._iconColor});
-                        background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
-                        animation: ${this._iconAnimation};
-                    "
-                >
+                <div class="icon" @click=${this._toggleLock} style="${styleMap(iconStyles)}">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
                 <div class="name">${this._name}</div>
@@ -113,11 +114,18 @@ export class LockTile extends LitElement {
     private _toggleLock(e: Event): void {
         e.stopPropagation();
         if (!this._stateObj) return;
+
         const state = this._stateObj.state;
         this._stateObj.state = state == "locked" ? "unlocking" : "locking";
+        this._actuating = true;
+
         this._hass.callService("lock", state == "locked" ? "unlock" : "lock", {
             entity_id: this._stateObj.entity_id,
         });
+
+        setTimeout(() => {
+            this._actuating = false;
+        }, 2000);
     }
 
     private _showMoreInfo(e: Event): void {

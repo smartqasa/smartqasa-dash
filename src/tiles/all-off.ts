@@ -1,5 +1,6 @@
 import { CSSResultGroup, LitElement, html, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
+import { styleMap } from "lit/directives/style-map.js";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 
 import styleTileBase from "../styles/tile-base";
@@ -56,16 +57,14 @@ export class AllOffTile extends LitElement {
     }
 
     protected render(): TemplateResult {
+        const iconStyles = {
+            color: this._iconColor,
+            backgroundColor: `rgba(${this._iconColor}, var(--sq-icon-opacity))`,
+            animation: this._iconAnimation,
+        };
         return html`
             <div class="container" @click=${this._runRoutine}>
-                <div
-                    class="icon"
-                    style="
-                        color: rgb(${this._iconColor});
-                        background-color: rgba(${this._iconColor}, var(--sq-icon-opacity, 0.2));
-                        animation: ${this._iconAnimation};
-                    "
-                >
+                <div class="icon" style="${styleMap(iconStyles)}">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
                 <div class="name">${this._name}</div>

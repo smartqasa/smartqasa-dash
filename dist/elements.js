@@ -729,16 +729,14 @@ let AllOffTile = class AllOffTile extends s {
         this._name = this._config?.name || this._areaObj.name || this._areaObj.id;
     }
     render() {
+        const iconStyles = {
+            color: this._iconColor,
+            backgroundColor: `rgba(${this._iconColor}, var(--sq-icon-opacity))`,
+            animation: this._iconAnimation,
+        };
         return x `
             <div class="container" @click=${this._runRoutine}>
-                <div
-                    class="icon"
-                    style="
-                        color: rgb(${this._iconColor});
-                        background-color: rgba(${this._iconColor}, var(--sq-icon-opacity, 0.2));
-                        animation: ${this._iconAnimation};
-                    "
-                >
+                <div class="icon" style="${o(iconStyles)}">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
                 <div class="name">${this._name}</div>
@@ -2128,6 +2126,7 @@ LightTileEditor = __decorate([
 let LockTile = class LockTile extends s {
     constructor() {
         super(...arguments);
+        this._actuating = false;
         this._icon = "hass:lock";
         this._iconAnimation = "none";
         this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
@@ -2146,6 +2145,8 @@ let LockTile = class LockTile extends s {
         this._updateState();
     }
     _updateState() {
+        if (this._actuating === true)
+            return;
         this._stateObj =
             this._config?.entity && this._config.entity.split(".")[0] === "lock"
                 ? this._hass?.states[this._config.entity]
@@ -2194,17 +2195,14 @@ let LockTile = class LockTile extends s {
         this._stateFmtd = this._hass.formatEntityState(this._stateObj);
     }
     render() {
+        const iconStyles = {
+            color: this._iconColor,
+            backgroundColor: `rgba(${this._iconColor}, var(--sq-icon-opacity))`,
+            animation: this._iconAnimation,
+        };
         return x `
             <div class="container" @click=${this._showMoreInfo}>
-                <div
-                    class="icon"
-                    @click=${this._toggleLock}
-                    style="
-                        color: rgb(${this._iconColor});
-                        background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
-                        animation: ${this._iconAnimation};
-                    "
-                >
+                <div class="icon" @click=${this._toggleLock} style="${o(iconStyles)}">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
                 <div class="name">${this._name}</div>
@@ -2218,9 +2216,13 @@ let LockTile = class LockTile extends s {
             return;
         const state = this._stateObj.state;
         this._stateObj.state = state == "locked" ? "unlocking" : "locking";
+        this._actuating = true;
         this._hass.callService("lock", state == "locked" ? "unlock" : "lock", {
             entity_id: this._stateObj.entity_id,
         });
+        setTimeout(() => {
+            this._actuating = false;
+        }, 2000);
     }
     _showMoreInfo(e) {
         e.stopPropagation();
@@ -2236,6 +2238,9 @@ __decorate([
 __decorate([
     r()
 ], LockTile.prototype, "_stateObj", void 0);
+__decorate([
+    r()
+], LockTile.prototype, "_actuating", void 0);
 LockTile = __decorate([
     t$1("smartqasa-lock-tile")
 ], LockTile);
@@ -2532,17 +2537,14 @@ let RoutineTile = class RoutineTile extends s {
         this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
     }
     render() {
+        const iconStyles = {
+            color: this._iconColor,
+            backgroundColor: `rgba(${this._iconColor}, var(--sq-icon-opacity))`,
+            animation: this._iconAnimation,
+        };
         return x `
             <div class="container" @click=${this._runRoutine}>
-                <div
-                    class="icon"
-                    @click=${this._runRoutine}
-                    style="
-                        color: rgb(${this._iconColor});
-                        background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
-                        animation: ${this._iconAnimation};
-                    "
-                >
+                <div class="icon" @click=${this._runRoutine} style="${o(iconStyles)}">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
                 <div class="name">${this._name}</div>
