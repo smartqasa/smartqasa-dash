@@ -42,12 +42,12 @@ export class LockTile extends LitElement {
     }
 
     private _updateState(): void {
-        if (this._actuating === true) return;
-
-        this._stateObj =
-            this._config?.entity && this._config.entity.split(".")[0] === "lock"
-                ? this._hass?.states[this._config.entity]
-                : undefined;
+        if (this._actuating === false) {
+            this._stateObj =
+                this._config?.entity && this._config.entity.split(".")[0] === "lock"
+                    ? this._hass?.states[this._config.entity]
+                    : undefined;
+        }
 
         if (!this._stateObj) {
             this._icon = this._config?.icon || "hass:lock-alert";
@@ -96,10 +96,11 @@ export class LockTile extends LitElement {
 
     protected render(): TemplateResult {
         const iconStyles = {
-            color: this._iconColor,
+            color: `rgb(${this._iconColor})`,
             backgroundColor: `rgba(${this._iconColor}, var(--sq-icon-opacity))`,
             animation: this._iconAnimation,
         };
+
         return html`
             <div class="container" @click=${this._showMoreInfo}>
                 <div class="icon" @click=${this._toggleLock} style="${styleMap(iconStyles)}">
@@ -117,6 +118,7 @@ export class LockTile extends LitElement {
 
         const state = this._stateObj.state;
         this._stateObj.state = state == "locked" ? "unlocking" : "locking";
+        this._updateState();
         this._actuating = true;
 
         this._hass.callService("lock", state == "locked" ? "unlock" : "lock", {

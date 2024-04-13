@@ -61,10 +61,11 @@ export class RoutineTile extends LitElement {
 
     render(): TemplateResult {
         const iconStyles = {
-            color: this._iconColor,
+            color: `rgb(${this._iconColor})`,
             backgroundColor: `rgba(${this._iconColor}, var(--sq-icon-opacity))`,
             animation: this._iconAnimation,
         };
+
         return html`
             <div class="container" @click=${this._runRoutine}>
                 <div class="icon" @click=${this._runRoutine} style="${styleMap(iconStyles)}">

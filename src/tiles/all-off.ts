@@ -58,10 +58,11 @@ export class AllOffTile extends LitElement {
 
     protected render(): TemplateResult {
         const iconStyles = {
-            color: this._iconColor,
+            color: `rgb(${this._iconColor})`,
             backgroundColor: `rgba(${this._iconColor}, var(--sq-icon-opacity))`,
             animation: this._iconAnimation,
         };
+
         return html`
             <div class="container" @click=${this._runRoutine}>
                 <div class="icon" style="${styleMap(iconStyles)}">

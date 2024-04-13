@@ -730,7 +730,7 @@ let AllOffTile = class AllOffTile extends s {
     }
     render() {
         const iconStyles = {
-            color: this._iconColor,
+            color: `rgb(${this._iconColor})`,
             backgroundColor: `rgba(${this._iconColor}, var(--sq-icon-opacity))`,
             animation: this._iconAnimation,
         };
@@ -2145,12 +2145,12 @@ let LockTile = class LockTile extends s {
         this._updateState();
     }
     _updateState() {
-        if (this._actuating === true)
-            return;
-        this._stateObj =
-            this._config?.entity && this._config.entity.split(".")[0] === "lock"
-                ? this._hass?.states[this._config.entity]
-                : undefined;
+        if (this._actuating === false) {
+            this._stateObj =
+                this._config?.entity && this._config.entity.split(".")[0] === "lock"
+                    ? this._hass?.states[this._config.entity]
+                    : undefined;
+        }
         if (!this._stateObj) {
             this._icon = this._config?.icon || "hass:lock-alert";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
@@ -2196,7 +2196,7 @@ let LockTile = class LockTile extends s {
     }
     render() {
         const iconStyles = {
-            color: this._iconColor,
+            color: `rgb(${this._iconColor})`,
             backgroundColor: `rgba(${this._iconColor}, var(--sq-icon-opacity))`,
             animation: this._iconAnimation,
         };
@@ -2216,6 +2216,7 @@ let LockTile = class LockTile extends s {
             return;
         const state = this._stateObj.state;
         this._stateObj.state = state == "locked" ? "unlocking" : "locking";
+        this._updateState();
         this._actuating = true;
         this._hass.callService("lock", state == "locked" ? "unlock" : "lock", {
             entity_id: this._stateObj.entity_id,
@@ -2538,7 +2539,7 @@ let RoutineTile = class RoutineTile extends s {
     }
     render() {
         const iconStyles = {
-            color: this._iconColor,
+            color: `rgb(${this._iconColor})`,
             backgroundColor: `rgba(${this._iconColor}, var(--sq-icon-opacity))`,
             animation: this._iconAnimation,
         };
