@@ -566,11 +566,20 @@ let FooterStrip = class FooterStrip extends s {
     }
     renderButton(id, icon, name, methodName) {
         return x `
-            <div class="button" @click="${() => this[methodName]()}">
+            <div class="button" @click="${(e) => this.handleAction(e, methodName)}">
                 <ha-icon .icon=${icon}></ha-icon>
                 <span>${name}</span>
             </div>
         `;
+    }
+    handleAction(e, methodName) {
+        e.stopPropagation();
+        if (typeof this[methodName] === "function") {
+            this[methodName]();
+        }
+        else {
+            console.error(`Method not found: ${methodName}`);
+        }
     }
     handleHome() {
         const basePath = window.smartqasa.homePath;
@@ -578,8 +587,34 @@ let FooterStrip = class FooterStrip extends s {
         window.history.pushState(null, "", `/home-dash/${path}`);
         window.dispatchEvent(new CustomEvent("location-changed"));
     }
-    handleAreas() {
-        console.log("Areas action");
+    async handleAreas() {
+        try {
+            const response = await fetch("/config/sq-custom/areas.json");
+            const areas = await response.json();
+            const cards = areas.map((area) => ({
+                type: "custom:smartqasa-area-tile",
+                area: area,
+            }));
+            console.log(areas);
+            const dialogConfig = {
+                title: "Areas",
+                timeout: 60000,
+                content: {
+                    type: "custom:layout-card",
+                    layout_type: "custom:grid-layout",
+                    layout: {
+                        margin: 0,
+                        "grid-template-columns": "1fr",
+                        "grid-gap": "var(--sq-dialog-grid-gap)",
+                    },
+                    cards: cards,
+                },
+            };
+            console.log(dialogConfig); // Now you would handle showing this dialog as needed.
+        }
+        catch (error) {
+            console.error("Failed to load areas:", error);
+        }
     }
     handleEntertain() {
         console.log("Entertain action");

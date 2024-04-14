@@ -75,11 +75,20 @@ class FooterStrip extends LitElement implements ActionHandlers {
 
     private renderButton(id: string, icon: string, name: string, methodName: keyof ActionHandlers): TemplateResult {
         return html`
-            <div class="button" @click="${() => this[methodName]()}">
+            <div class="button" @click="${(e: Event) => this.handleAction(e, methodName)}">
                 <ha-icon .icon=${icon}></ha-icon>
                 <span>${name}</span>
             </div>
         `;
+    }
+
+    private handleAction(e: Event, methodName: keyof ActionHandlers): void {
+        e.stopPropagation();
+        if (typeof this[methodName] === "function") {
+            this[methodName]();
+        } else {
+            console.error(`Method not found: ${methodName}`);
+        }
     }
 
     handleHome(): void {
@@ -88,9 +97,37 @@ class FooterStrip extends LitElement implements ActionHandlers {
         window.history.pushState(null, "", `/home-dash/${path}`);
         window.dispatchEvent(new CustomEvent("location-changed"));
     }
-    handleAreas(): void {
-        console.log("Areas action");
+
+    async handleAreas(): Promise<void> {
+        try {
+            const response = await fetch("/config/sq-custom/areas.json");
+            const areas = await response.json();
+            const cards = areas.map((area: any) => ({
+                type: "custom:smartqasa-area-tile",
+                area: area,
+            }));
+            console.log(areas);
+            const dialogConfig = {
+                title: "Areas",
+                timeout: 60000,
+                content: {
+                    type: "custom:layout-card",
+                    layout_type: "custom:grid-layout",
+                    layout: {
+                        margin: 0,
+                        "grid-template-columns": "1fr",
+                        "grid-gap": "var(--sq-dialog-grid-gap)",
+                    },
+                    cards: cards,
+                },
+            };
+
+            console.log(dialogConfig); // Now you would handle showing this dialog as needed.
+        } catch (error) {
+            console.error("Failed to load areas:", error);
+        }
     }
+
     handleEntertain(): void {
         console.log("Entertain action");
     }
