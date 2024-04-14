@@ -515,7 +515,8 @@ let NavigateStrip = class NavigateStrip extends s {
     static { this.styles = i$4 `
         :host {
             display: block;
-            align-self: end;
+            width: 100%;
+            place-self: center;
             margin: 5px 0;
             padding: 0;
             border: none;
@@ -528,6 +529,14 @@ let NavigateStrip = class NavigateStrip extends s {
             grid-template-areas: "home areas entertain menu";
             grid-template-columns: repeat(4, max-content);
             grid-column-gap: 5vw;
+            justify-content: center;
+        }
+        .button {
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
         }
     `; }
     setConfig(config) {
@@ -548,9 +557,8 @@ let NavigateStrip = class NavigateStrip extends s {
         `;
     }
     renderButton(id, icon, name) {
-        console.log(`Rendering button: ${name}`);
         return x `
-            <div class="icon" @click="${() => this.handleAction(id)}">
+            <div class="button" @click="${this.handleAction(id)}">
                 <ha-icon .icon=${icon}></ha-icon>
                 <span>${name}</span>
             </div>
@@ -565,13 +573,13 @@ __decorate([
     r()
 ], NavigateStrip.prototype, "_config", void 0);
 NavigateStrip = __decorate([
-    t$1("smartqasa-navigation-strip")
+    t$1("smartqasa-footer-strip")
 ], NavigateStrip);
 window.customCards.push({
-    type: "smartqasa-navigation-strip",
-    name: "SmartQasa Navigation Strip",
+    type: "smartqasa-footer-strip",
+    name: "SmartQasa Footer Strip",
     preview: true,
-    description: "A SmartQasa tile for displaying the footer navigation strip.",
+    description: "A SmartQasa tile for displaying the panel footer strip.",
 });
 
 let MoreInfoDialog = class MoreInfoDialog extends s {

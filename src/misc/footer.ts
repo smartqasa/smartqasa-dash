@@ -4,7 +4,7 @@ import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 
 interface Config extends LovelaceCardConfig {}
 
-@customElement("smartqasa-navigation-strip")
+@customElement("smartqasa-footer-strip")
 class NavigateStrip extends LitElement {
     @state() private _config?: Config;
 
@@ -13,7 +13,8 @@ class NavigateStrip extends LitElement {
     static styles: CSSResultGroup = css`
         :host {
             display: block;
-            align-self: end;
+            width: 100%;
+            place-self: center;
             margin: 5px 0;
             padding: 0;
             border: none;
@@ -26,6 +27,14 @@ class NavigateStrip extends LitElement {
             grid-template-areas: "home areas entertain menu";
             grid-template-columns: repeat(4, max-content);
             grid-column-gap: 5vw;
+            justify-content: center;
+        }
+        .button {
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
         }
     `;
 
@@ -50,9 +59,8 @@ class NavigateStrip extends LitElement {
     }
 
     private renderButton(id: string, icon: string, name: string): TemplateResult {
-        console.log(`Rendering button: ${name}`);
         return html`
-            <div class="icon" @click="${() => this.handleAction(id)}">
+            <div class="button" @click="${this.handleAction(id)}">
                 <ha-icon .icon=${icon}></ha-icon>
                 <span>${name}</span>
             </div>
@@ -66,8 +74,8 @@ class NavigateStrip extends LitElement {
 }
 
 window.customCards.push({
-    type: "smartqasa-navigation-strip",
-    name: "SmartQasa Navigation Strip",
+    type: "smartqasa-footer-strip",
+    name: "SmartQasa Footer Strip",
     preview: true,
-    description: "A SmartQasa tile for displaying the footer navigation strip.",
+    description: "A SmartQasa tile for displaying the panel footer strip.",
 });
