@@ -535,10 +535,10 @@ let NavigateStrip = class NavigateStrip extends s {
             padding: 1rem;
             display: flex;
             align-items: center;
-            font-size: 1.5rem;
+            font-size: var(--sq-primary-font-size, 1.5rem);
+            font-weight: var(--sq-primary-font-weight, 400);
             color: rgb(var(--sq-secondary-font-rgb));
             cursor: pointer;
-            transition: background-color 0.3s;
         }
         .icon {
             height: 1.8rem;
