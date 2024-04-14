@@ -573,7 +573,10 @@ let FooterStrip = class FooterStrip extends s {
         `;
     }
     handleHome() {
-        console.log("Home action");
+        const basePath = window.smartqasa.homePath;
+        const path = location.href.endsWith("/" + basePath) ? "home" : basePath;
+        window.history.pushState(null, "", `/home-dash/${path}`);
+        window.dispatchEvent(new CustomEvent("location-changed"));
     }
     handleAreas() {
         console.log("Areas action");
@@ -3192,11 +3195,7 @@ window.customCards.push({
 });
 
 window.smartqasa = window.smartqasa || {};
-if (typeof window.screen.width === "number") {
-    window.smartqasa.deviceType = window.screen.width < 600 ? "phone" : "tablet";
-}
-else {
-    window.smartqasa.deviceType = "tablet";
-}
+window.smartqasa.deviceType = window.screen.width < 600 ? "phone" : "tablet";
+window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();
 window.customCards = window.customCards ?? [];
 console.info(`%c SmartQasa ⏏ ${version} `, "background-color: #0000ff; color: #ffffff; font-weight: 700;");

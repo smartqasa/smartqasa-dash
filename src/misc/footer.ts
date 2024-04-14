@@ -83,7 +83,10 @@ class FooterStrip extends LitElement implements ActionHandlers {
     }
 
     handleHome(): void {
-        console.log("Home action");
+        const basePath = window.smartqasa.homePath;
+        const path = location.href.endsWith("/" + basePath) ? "home" : basePath;
+        window.history.pushState(null, "", `/home-dash/${path}`);
+        window.dispatchEvent(new CustomEvent("location-changed"));
     }
     handleAreas(): void {
         console.log("Areas action");

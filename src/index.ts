@@ -9,16 +9,16 @@ declare global {
         fully?: {
             startApplication: (packageName: string) => void;
         };
-        smartqasa: { deviceType?: string };
+        smartqasa: {
+            deviceType?: string;
+            homePath?: string;
+        };
     }
 }
 
 window.smartqasa = window.smartqasa || {};
-if (typeof window.screen.width === "number") {
-    window.smartqasa.deviceType = window.screen.width < 600 ? "phone" : "tablet";
-} else {
-    window.smartqasa.deviceType = "tablet";
-}
+window.smartqasa.deviceType = window.screen.width < 600 ? "phone" : "tablet";
+window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();
 
 window.customCards = window.customCards ?? [];
 
