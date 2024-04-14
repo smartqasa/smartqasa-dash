@@ -1,8 +1,15 @@
 import { LitElement, html, css, CSSResultGroup, TemplateResult } from "lit";
-import { customElement, property } from "lit/decorators.js";
+import { customElement, state } from "lit/decorators.js";
+import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
+
+interface Config extends LovelaceCardConfig {}
 
 @customElement("smartqasa-navigation-strip")
 class NavigateStrip extends LitElement {
+    @state() private _config?: Config;
+
+    private _hass: any;
+
     static styles: CSSResultGroup = css`
         :host {
             display: block;
@@ -21,6 +28,14 @@ class NavigateStrip extends LitElement {
             grid-column-gap: 5vw;
         }
     `;
+
+    setConfig(config: Config): void {
+        this._config = { ...config };
+    }
+
+    set hass(hass: HomeAssistant) {
+        this._hass = hass;
+    }
 
     protected render(): TemplateResult {
         console.log("Rendering main grid");

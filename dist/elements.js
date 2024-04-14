@@ -530,6 +530,12 @@ let NavigateStrip = class NavigateStrip extends s {
             grid-column-gap: 5vw;
         }
     `; }
+    setConfig(config) {
+        this._config = { ...config };
+    }
+    set hass(hass) {
+        this._hass = hass;
+    }
     render() {
         console.log("Rendering main grid");
         return x `
@@ -555,6 +561,9 @@ let NavigateStrip = class NavigateStrip extends s {
         console.log(`Action for ${id}`);
     }
 };
+__decorate([
+    r()
+], NavigateStrip.prototype, "_config", void 0);
 NavigateStrip = __decorate([
     t$1("smartqasa-navigation-strip")
 ], NavigateStrip);
