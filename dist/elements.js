@@ -556,6 +556,12 @@ let NavigateStrip = class NavigateStrip extends s {
 NavigateStrip = __decorate([
     t$1("smartqasa-navigate-strip")
 ], NavigateStrip);
+window.customCards.push({
+    type: "smartqasa-navgigation-strip",
+    name: "SmartQasa Navigation Strip",
+    preview: true,
+    description: "A SmartQasa tile for displaying the footer navigation strip.",
+});
 
 let MoreInfoDialog = class MoreInfoDialog extends s {
     setConfig(config) {
@@ -2014,7 +2020,7 @@ let LightTile = class LightTile extends s {
         this._updateState();
     }
     set hass(hass) {
-        if (!hass || !this._config?.entity)
+        if (!this._config?.entity || !hass)
             return;
         this._hass = hass;
         this._updateState();

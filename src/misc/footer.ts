@@ -47,3 +47,10 @@ class NavigateStrip extends LitElement {
         console.log(`Action for ${id}`);
     }
 }
+
+window.customCards.push({
+    type: "smartqasa-navgigation-strip",
+    name: "SmartQasa Navigation Strip",
+    preview: true,
+    description: "A SmartQasa tile for displaying the footer navigation strip.",
+});
