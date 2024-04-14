@@ -34,12 +34,14 @@ class NavigateStrip extends LitElement {
             display: flex;
             align-items: center;
             font-size: 1.5rem;
+            color: rgb(var(--sq-secondary-font-rgb));
             cursor: pointer;
             transition: background-color 0.3s;
         }
         .icon {
             height: 1.8rem;
             width: 1.8rem;
+            margin-right: 0.5rem;
         }
     `;
 
