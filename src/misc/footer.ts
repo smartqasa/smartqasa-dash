@@ -41,7 +41,7 @@ class NavigateStrip extends LitElement {
         .icon {
             height: 1.8rem;
             width: 1.8rem;
-            margin-right: 0.5rem;
+            margin-right: 1rem;
         }
     `;
 
@@ -66,7 +66,7 @@ class NavigateStrip extends LitElement {
 
     private renderButton(id: string, icon: string, name: string): TemplateResult {
         return html`
-            <div class="button" @click="${this.handleAction(id)}">
+            <div class="button" @click="${() => this.handleAction(id)}">
                 <ha-icon .icon=${icon}></ha-icon>
                 <span>${name}</span>
             </div>
