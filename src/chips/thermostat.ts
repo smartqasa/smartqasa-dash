@@ -12,7 +12,7 @@ interface Config extends LovelaceCardConfig {
 }
 
 @customElement("smartqasa-thermostat-chip")
-export class SmartQasaThermostatChip extends LitElement {
+export class ThermostatChip extends LitElement {
     @state() private _config?: Config;
     @state() private _stateObj?: HassEntity;
 

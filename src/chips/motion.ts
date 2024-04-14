@@ -12,7 +12,7 @@ interface Config extends LovelaceCardConfig {
 }
 
 @customElement("smartqasa-motion-chip")
-export class SmartQasaMotionChip extends LitElement {
+export class MotionChip extends LitElement {
     @state() private _config?: Config;
     @state() private _stateObj?: HassEntity;
 

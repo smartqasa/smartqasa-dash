@@ -121,7 +121,7 @@ var styleChipBasic = i$4 `
     }
 `;
 
-let SmartQasaMotionChip = class SmartQasaMotionChip extends s {
+let MotionChip = class MotionChip extends s {
     static { this.styles = styleChipBasic; }
     setConfig(config) {
         this._config = { ...config };
@@ -184,13 +184,13 @@ let SmartQasaMotionChip = class SmartQasaMotionChip extends s {
 };
 __decorate([
     r()
-], SmartQasaMotionChip.prototype, "_config", void 0);
+], MotionChip.prototype, "_config", void 0);
 __decorate([
     r()
-], SmartQasaMotionChip.prototype, "_stateObj", void 0);
-SmartQasaMotionChip = __decorate([
+], MotionChip.prototype, "_stateObj", void 0);
+MotionChip = __decorate([
     t$1("smartqasa-motion-chip")
-], SmartQasaMotionChip);
+], MotionChip);
 window.customCards.push({
     type: "smartqasa-motion-chip",
     name: "SmartQasa Motion Sensor Chip",
@@ -234,7 +234,7 @@ var styleChipDouble = i$4 `
     }
 `;
 
-let SmartQasaNavigateChip = class SmartQasaNavigateChip extends s {
+let NavigateChip = class NavigateChip extends s {
     static { this.styles = styleChipDouble; }
     setConfig(config) {
         this._areaPrev = config.area_prev || undefined;
@@ -290,19 +290,19 @@ let SmartQasaNavigateChip = class SmartQasaNavigateChip extends s {
 };
 __decorate([
     r()
-], SmartQasaNavigateChip.prototype, "_areaPrev", void 0);
+], NavigateChip.prototype, "_areaPrev", void 0);
 __decorate([
     r()
-], SmartQasaNavigateChip.prototype, "_areaNext", void 0);
+], NavigateChip.prototype, "_areaNext", void 0);
 __decorate([
     r()
-], SmartQasaNavigateChip.prototype, "_areaObjPrev", void 0);
+], NavigateChip.prototype, "_areaObjPrev", void 0);
 __decorate([
     r()
-], SmartQasaNavigateChip.prototype, "_areaObjNext", void 0);
-SmartQasaNavigateChip = __decorate([
+], NavigateChip.prototype, "_areaObjNext", void 0);
+NavigateChip = __decorate([
     t$1("smartqasa-navigate-chip")
-], SmartQasaNavigateChip);
+], NavigateChip);
 window.customCards.push({
     type: "smartqasa-navigate-chip",
     name: "SmartQasa Navigate Chip",
@@ -394,7 +394,7 @@ const thermostatIcons = {
     default: "hass:thermostat-cog",
 };
 
-let SmartQasaThermostatChip = class SmartQasaThermostatChip extends s {
+let ThermostatChip = class ThermostatChip extends s {
     constructor() {
         super(...arguments);
         this._icon = "hass:thermometer-lines";
@@ -447,13 +447,13 @@ let SmartQasaThermostatChip = class SmartQasaThermostatChip extends s {
 };
 __decorate([
     r()
-], SmartQasaThermostatChip.prototype, "_config", void 0);
+], ThermostatChip.prototype, "_config", void 0);
 __decorate([
     r()
-], SmartQasaThermostatChip.prototype, "_stateObj", void 0);
-SmartQasaThermostatChip = __decorate([
+], ThermostatChip.prototype, "_stateObj", void 0);
+ThermostatChip = __decorate([
     t$1("smartqasa-thermostat-chip")
-], SmartQasaThermostatChip);
+], ThermostatChip);
 
 let AreaPicture = class AreaPicture extends s {
     static get styles() {
@@ -510,6 +510,55 @@ window.customCards.push({
     preview: true,
     description: "A SmartQasa card for rendering an area picture.",
 });
+
+let NavigateStrip = class NavigateStrip extends s {
+    static { this.styles = i$4 `
+        :host {
+            display: block;
+            align-self: end;
+            margin: 5px 0;
+            padding: 0;
+            border: none;
+            border-radius: 0;
+            box-shadow: none;
+            background-color: transparent;
+        }
+        .grid {
+            display: grid;
+            grid-template-areas: "home areas entertain menu";
+            grid-template-columns: repeat(4, max-content);
+            grid-column-gap: 5vw;
+        }
+    `; }
+    render() {
+        return x `
+            <div class="grid">
+                ${this.renderButton("home", "mdi:home", "Home")}
+                ${this.renderButton("areas", "mdi:view-dashboard", "Areas")}
+                ${this.renderButton("entertain", "mdi:music", "Entertainment")}
+                ${this.renderButton("menu", "mdi:menu", "Menu")}
+            </div>
+        `;
+    }
+    renderButton(id, icon, name) {
+        return x `
+            <div class="icon" @click="${() => this.handleAction(id)}">
+                <ha-icon .icon=${icon}></ha-icon>
+                <span>${name}</span>
+            </div>
+        `;
+    }
+    handleAction(id) {
+        // Define action handling logic here based on the `id`
+        console.log(`Action for ${id}`);
+    }
+};
+__decorate([
+    n$1({ type: Object })
+], NavigateStrip.prototype, "config", void 0);
+NavigateStrip = __decorate([
+    t$1("smartqasa-navigate-chip")
+], NavigateStrip);
 
 let MoreInfoDialog = class MoreInfoDialog extends s {
     setConfig(config) {

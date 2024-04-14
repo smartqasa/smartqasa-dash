@@ -10,7 +10,7 @@ interface Config extends LovelaceCardConfig {
 }
 
 @customElement("smartqasa-navigate-chip")
-export class SmartQasaNavigateChip extends LitElement {
+export class NavigateChip extends LitElement {
     @state() private _areaPrev?: string;
     @state() private _areaNext?: string;
     @state() private _areaObjPrev?: string;
