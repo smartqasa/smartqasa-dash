@@ -13,7 +13,7 @@ interface ActionConfig {
     data?: any;
 }
 
-@customElement("smartqasa-navigate-chip")
+@customElement("smartqasa-navigate-strip")
 class NavigateStrip extends LitElement {
     @property({ type: Object }) config?: CardConfig;
 
@@ -39,10 +39,10 @@ class NavigateStrip extends LitElement {
     protected render(): TemplateResult {
         return html`
             <div class="grid">
-                ${this.renderButton("home", "mdi:home", "Home")}
-                ${this.renderButton("areas", "mdi:view-dashboard", "Areas")}
-                ${this.renderButton("entertain", "mdi:music", "Entertainment")}
-                ${this.renderButton("menu", "mdi:menu", "Menu")}
+                ${this.renderButton("home", "hass:home", "Home")}
+                ${this.renderButton("areas", "hass:view-dashboard", "Areas")}
+                ${this.renderButton("entertain", "hass:music", "Entertainment")}
+                ${this.renderButton("menu", "hass:menu", "Menu")}
             </div>
         `;
     }

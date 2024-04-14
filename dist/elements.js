@@ -533,10 +533,10 @@ let NavigateStrip = class NavigateStrip extends s {
     render() {
         return x `
             <div class="grid">
-                ${this.renderButton("home", "mdi:home", "Home")}
-                ${this.renderButton("areas", "mdi:view-dashboard", "Areas")}
-                ${this.renderButton("entertain", "mdi:music", "Entertainment")}
-                ${this.renderButton("menu", "mdi:menu", "Menu")}
+                ${this.renderButton("home", "hass:home", "Home")}
+                ${this.renderButton("areas", "hass:view-dashboard", "Areas")}
+                ${this.renderButton("entertain", "hass:music", "Entertainment")}
+                ${this.renderButton("menu", "hass:menu", "Menu")}
             </div>
         `;
     }
@@ -557,7 +557,7 @@ __decorate([
     n$1({ type: Object })
 ], NavigateStrip.prototype, "config", void 0);
 NavigateStrip = __decorate([
-    t$1("smartqasa-navigate-chip")
+    t$1("smartqasa-navigate-strip")
 ], NavigateStrip);
 
 let MoreInfoDialog = class MoreInfoDialog extends s {
