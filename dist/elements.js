@@ -516,7 +516,6 @@ let NavigateStrip = class NavigateStrip extends s {
         :host {
             display: block;
             width: 100%;
-            place-self: center;
             margin: 5px 0;
             padding: 0;
             border: none;
@@ -532,9 +531,10 @@ let NavigateStrip = class NavigateStrip extends s {
             justify-content: center;
         }
         .button {
-            padding: 1rem;
             display: flex;
+            padding: 1rem;
             align-items: center;
+            column-gap: 1rem;
             font-size: var(--sq-primary-font-size, 1.5rem);
             font-weight: var(--sq-primary-font-weight, 400);
             color: rgb(var(--sq-secondary-font-rgb));
@@ -543,7 +543,6 @@ let NavigateStrip = class NavigateStrip extends s {
         .icon {
             height: 1.8rem;
             width: 1.8rem;
-            margin-right: 1rem;
         }
     `; }
     setConfig(config) {
