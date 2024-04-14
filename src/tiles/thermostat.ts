@@ -2,7 +2,7 @@ import { CSSResultGroup, html, LitElement, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
-import { showMoreInfo } from "../utils/showMoreInfo";
+import { moreInfoDialog } from "../utils/moreInfoDialog";
 import { thermostatIcons, thermostatColors } from "../utils/const";
 
 import styleTileBase from "../styles/tile-base";
@@ -20,7 +20,7 @@ export class ThermostatTile extends LitElement {
 
     private _hass: any;
     private _icon: string = "hass:thermostat";
-    private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
+    private _iconColor: string = "var(--sq-inactive-rgb)";
     private _name: string = "Loading...";
     private _stateFmtd: string = "Loading...";
 
@@ -28,16 +28,16 @@ export class ThermostatTile extends LitElement {
 
     setConfig(config: Config): void {
         this._config = { ...config };
-        this._updateState();
+        this.updateState();
     }
 
     set hass(hass: HomeAssistant) {
         if (!this._config?.entity || !hass) return;
         this._hass = hass;
-        this._updateState();
+        this.updateState();
     }
 
-    private _updateState(): void {
+    private updateState(): void {
         this._stateObj =
             this._config?.entity && this._config.entity.split(".")[0] === "climate"
                 ? this._hass?.states[this._config.entity]
@@ -74,10 +74,10 @@ export class ThermostatTile extends LitElement {
 
     protected render(): TemplateResult {
         return html`
-            <div class="container" @click=${this._showMoreInfo}>
+            <div class="container" @click=${this.showMoreInfo}>
                 <div
                     class="icon"
-                    @click=${this._toggleEntity}
+                    @click=${this.toggleEntity}
                     style="
                         color: rgb(${this._iconColor});
                         background-color: rgba(${this._iconColor}, var(--sq-icon-opacity, 0.2));
@@ -91,16 +91,16 @@ export class ThermostatTile extends LitElement {
         `;
     }
 
-    private _toggleEntity(e: Event): void {
+    private toggleEntity(e: Event): void {
         e.stopPropagation();
         if (this._stateObj) {
             this._hass.callService("climate", "toggle", { entity_id: this._stateObj.entity_id });
         }
     }
 
-    private _showMoreInfo(e: Event): void {
+    private showMoreInfo(e: Event): void {
         e.stopPropagation();
-        showMoreInfo(this._config, this._stateObj, this._hass);
+        moreInfoDialog(this._config, this._stateObj, this._hass);
     }
 
     getCardSize(): number {

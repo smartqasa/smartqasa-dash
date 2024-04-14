@@ -18,7 +18,7 @@ export class DialogTile extends LitElement {
     @state() private _dialogObj?: any;
 
     private _icon: string = "hass:help-rhombus";
-    private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
+    private _iconColor: string = "var(--sq-inactive-rgb)";
     private _name: string = "Loading...";
 
     static styles: CSSResult = styleTileBase;
@@ -39,13 +39,13 @@ export class DialogTile extends LitElement {
         }
 
         this._icon = this._config?.icon || this._dialogObj.icon;
-        this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+        this._iconColor = "var(--sq-inactive-rgb)";
         this._name = this._config?.name || this._dialogObj.name;
     }
 
     protected render(): TemplateResult {
         return html`
-            <div class="container" @click=${this._showDialog}>
+            <div class="container" @click=${this.showDialog}>
                 <div
                     class="icon"
                     style="
@@ -60,7 +60,7 @@ export class DialogTile extends LitElement {
         `;
     }
 
-    private _showDialog(e: Event): void {
+    private showDialog(e: Event): void {
         e.stopPropagation();
         if (!this._dialogObj) return;
         window.browser_mod?.service("popup", this._dialogObj.data);

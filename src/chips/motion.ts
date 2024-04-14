@@ -26,16 +26,16 @@ export class MotionChip extends LitElement {
 
     setConfig(config: Config): void {
         this._config = { ...config };
-        this._updateState();
+        this.updateState();
     }
 
     set hass(hass: HomeAssistant) {
         if (!this._config?.entity || !hass) return;
         this._hass = hass;
-        this._updateState();
+        this.updateState();
     }
 
-    private _updateState(): void {
+    private updateState(): void {
         this._stateObj = this._hass && this._config?.entity ? this._hass.states[this._config.entity] : undefined;
 
         if (!this._stateObj) return;
@@ -44,7 +44,7 @@ export class MotionChip extends LitElement {
         switch (state) {
             case "on":
                 this._icon = "hass:motion-sensor";
-                this._iconColor = "var(--sq-primary-font-rgb, 128, 128, 128)";
+                this._iconColor = "var(--sq-primary-font-rgb)";
                 break;
             case "off":
                 this._icon = "hass:motion-sensor-off";
@@ -74,7 +74,7 @@ export class MotionChip extends LitElement {
         };
 
         return html`
-            <div class="container" style="${styleMap(this._containerStyle)}" @click=${this._toggleEntity}>
+            <div class="container" style="${styleMap(this._containerStyle)}" @click=${this.toggleEntity}>
                 <div class="icon" style="${styleMap(iconStyles)}">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
@@ -83,7 +83,7 @@ export class MotionChip extends LitElement {
         `;
     }
 
-    private _toggleEntity(e: Event): void {
+    private toggleEntity(e: Event): void {
         e.stopPropagation();
         if (!this._stateObj) return;
         this._hass.callService("homeassistant", "toggle", { entity_id: this._config?.entity });

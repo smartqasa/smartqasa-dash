@@ -3,8 +3,8 @@ import { customElement, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
-import { showMoreInfo } from "../utils/showMoreInfo";
-import { showEntitiesList } from "../utils/showEntitiesList";
+import { moreInfoDialog } from "../utils/moreInfoDialog";
+import { entityListDialog } from "../utils/entityListDialog";
 
 import styleTileBase from "../styles/tile-base";
 import styleTileState from "../styles/tile-state";
@@ -23,7 +23,7 @@ export class LightTile extends LitElement {
     private _hass: any;
     private _icon: string = "hass:lightbulb";
     private _iconAnimation: string = "none";
-    private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
+    private _iconColor: string = "var(--sq-inactive-rgb)";
     private _name: string = "Loading...";
     private _stateFmtd: string = "Loading...";
 
@@ -31,16 +31,16 @@ export class LightTile extends LitElement {
 
     setConfig(config: Config): void {
         this._config = { ...config };
-        this._updateState();
+        this.updateState();
     }
 
     set hass(hass: HomeAssistant) {
         if (!this._config?.entity || !hass) return;
         this._hass = hass;
-        this._updateState();
+        this.updateState();
     }
 
-    private _updateState(): void {
+    private updateState(): void {
         this._stateObj =
             this._config?.entity && this._config.entity.split(".")[0] === "light"
                 ? this._hass?.states[this._config.entity]
@@ -56,7 +56,7 @@ export class LightTile extends LitElement {
 
         const state = this._stateObj.state || "unknown";
         this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:lightbulb";
-        this._iconColor = state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb, 128, 128, 128)";
+        this._iconColor = state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
         this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
         this._stateFmtd =
             this._hass.formatEntityState(this._stateObj) +
@@ -73,8 +73,8 @@ export class LightTile extends LitElement {
         };
 
         return html`
-            <div class="container" @click=${this._showMoreInfo} @contextmenu=${this._showGroupList}>
-                <div class="icon" @click=${this._toggleEntity} style="${styleMap(iconStyles)}">
+            <div class="container" @click=${this.showMoreInfo} @contextmenu=${this.showEntityList}>
+                <div class="icon" @click=${this.toggleEntity} style="${styleMap(iconStyles)}">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
                 <div class="name">${this._name}</div>
@@ -83,19 +83,19 @@ export class LightTile extends LitElement {
         `;
     }
 
-    private _toggleEntity(e: Event): void {
+    private toggleEntity(e: Event): void {
         e.stopPropagation();
         if (!this._stateObj) return;
 
         this._hass.callService("light", "toggle", { entity_id: this._stateObj.entity_id });
     }
 
-    private _showMoreInfo(e: Event): void {
+    private showMoreInfo(e: Event): void {
         e.stopPropagation();
-        showMoreInfo(this._config, this._stateObj, this._hass);
+        moreInfoDialog(this._config, this._stateObj, this._hass);
     }
 
-    private _showGroupList(e: Event): void {
+    private showEntityList(e: Event): void {
         e.stopPropagation();
         if (
             !this._stateObj ||
@@ -103,7 +103,7 @@ export class LightTile extends LitElement {
             this._stateObj.attributes.entity_id.length === 0
         )
             return;
-        showEntitiesList(
+        entityListDialog(
             this._stateObj.attributes?.friendly_name || this._stateObj.entity_id,
             "group",
             this._stateObj.entity_id,

@@ -29,7 +29,7 @@ export class AreaTile extends LitElement {
     private _hass: any;
     private _icon: string = "hass:help-rhombus";
     private _iconAnimation: string = "none";
-    private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
+    private _iconColor: string = "var(--sq-inactive-rgb)";
     private _name: string = "Loading...";
 
     static styles: CSSResultGroup = [styleTileBase, styleTileIconSpin];
@@ -56,7 +56,7 @@ export class AreaTile extends LitElement {
         }
 
         this._icon = (this._config?.icon as string) ?? this._areaObj.icon ?? this._icon;
-        this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+        this._iconColor = "var(--sq-inactive-rgb)";
         this._name = (this._config?.name as string) ?? this._areaObj.name ?? "Unknown";
     }
 
@@ -68,7 +68,7 @@ export class AreaTile extends LitElement {
         };
 
         return html`
-            <div class="container" @click=${this._navigate}>
+            <div class="container" @click=${this.navigateToArea}>
                 <div class="icon" style="${styleMap(iconStyles)}">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
@@ -77,7 +77,7 @@ export class AreaTile extends LitElement {
         `;
     }
 
-    private _navigate(e: Event): void {
+    private navigateToArea(e: Event): void {
         e.stopPropagation();
         if (!this._areaObj) return;
 
@@ -93,7 +93,7 @@ export class AreaTile extends LitElement {
         setTimeout(() => {
             this._icon = icon;
             this._iconAnimation = "none";
-            this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+            this._iconColor = "var(--sq-inactive-rgb)";
         }, 2000);
 
         window.browser_mod?.service("close_popup", {});

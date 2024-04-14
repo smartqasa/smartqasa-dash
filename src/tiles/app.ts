@@ -51,14 +51,14 @@ export class AppTile extends LitElement {
         name = this._config?.name || this._appObj?.name || this._config?.app;
 
         return html`
-            <div class="container" @click=${this._launchApp}>
+            <div class="container" @click=${this.launchApp}>
                 <div class="icon" style=${iconStyle}>${iconTemplate}</div>
                 <div class="name">${name}</div>
             </div>
         `;
     }
 
-    private _launchApp(e: Event): void {
+    private launchApp(e: Event): void {
         e.stopPropagation();
 
         if (this._appObj.launcher == "uri_scheme" && this._appObj.uri_scheme) {

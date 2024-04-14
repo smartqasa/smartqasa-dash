@@ -2,7 +2,7 @@ import { CSSResultGroup, html, LitElement, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
-import { showMoreInfo } from "../utils/showMoreInfo";
+import { moreInfoDialog } from "../utils/moreInfoDialog";
 
 import styleTileBase from "../styles/tile-base";
 import styleTileState from "../styles/tile-state";
@@ -20,7 +20,7 @@ export class SelectTile extends LitElement {
 
     private _hass: any;
     private _icon: string = "hass:form-dropdown";
-    private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
+    private _iconColor: string = "var(--sq-inactive-rgb)";
     private _name: string = "Loading...";
     private _stateFmtd: string = "Loading...";
 
@@ -28,16 +28,16 @@ export class SelectTile extends LitElement {
 
     setConfig(config: Config): void {
         this._config = { ...config };
-        this._updateState();
+        this.updateState();
     }
 
     set hass(hass: HomeAssistant) {
         if (!this._config?.entity || !hass) return;
         this._hass = hass;
-        this._updateState();
+        this.updateState();
     }
 
-    private _updateState(): void {
+    private updateState(): void {
         this._stateObj =
             this._config?.entity && this._config.entity.split(".")[0] === "input_select"
                 ? this._hass?.states[this._config.entity]
@@ -58,7 +58,7 @@ export class SelectTile extends LitElement {
 
     protected render(): TemplateResult {
         return html`
-            <div class="container" @click=${this._showChoices}>
+            <div class="container" @click=${this.showChoices}>
                 <div
                     class="icon"
                     style="
@@ -74,9 +74,9 @@ export class SelectTile extends LitElement {
         `;
     }
 
-    private _showChoices(e: Event): void {
+    private showChoices(e: Event): void {
         e.stopPropagation();
-        showMoreInfo(this._config, this._stateObj, this._hass);
+        moreInfoDialog(this._config, this._stateObj, this._hass);
     }
 
     getCardSize(): number {

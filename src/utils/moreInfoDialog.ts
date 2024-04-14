@@ -1,6 +1,6 @@
 import { listDialogConfig } from "./listDialogConfig";
 
-export function showMoreInfo(config: any, stateObj: any, hass: any) {
+export function moreInfoDialog(config: any, stateObj: any, hass: any) {
     if (!stateObj) return;
 
     const dialogConfig = {

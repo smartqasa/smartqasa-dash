@@ -47,7 +47,7 @@ export class SmartQasaTimeDate extends LitElement {
             .date {
                 font-size: var(--sq-primary-font-size, 14px);
                 font-weight: var(--sq-primary-font-weight, 300);
-                color: rgb(var(--sq-secondary-font-rgb, 128, 128, 128));
+                color: rgb(var(--sq-secondary-font-rgb));
             }
         `;
     }
@@ -64,14 +64,14 @@ export class SmartQasaTimeDate extends LitElement {
 
     render(): TemplateResult {
         return html`
-            <div class="container" @click="${this._handleTap}">
+            <div class="container" @click="${this.handleTap}">
                 <div class="time">${this._time}</div>
                 <div class="date">${this._date}</div>
             </div>
         `;
     }
 
-    private _handleTap(): void {
+    private handleTap(): void {
         if (typeof window.fully !== "undefined" && window.fully.startApplication) {
             window.fully.startApplication("com.google.android.deskclock");
         } else {

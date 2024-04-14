@@ -3,7 +3,7 @@ import { customElement, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
-import { showMoreInfo } from "../utils/showMoreInfo";
+import { moreInfoDialog } from "../utils/moreInfoDialog";
 
 import styleTileBase from "../styles/tile-base";
 import styleTileState from "../styles/tile-state";
@@ -22,7 +22,7 @@ export class GarageTile extends LitElement {
     private _hass: any;
     private _icon: string = "hass:garage-variant";
     private _iconAnimation: string = "none";
-    private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
+    private _iconColor: string = "var(--sq-inactive-rgb)";
     private _name: string = "Loading...";
     private _stateFmtd: string = "Loading...";
 
@@ -58,7 +58,7 @@ export class GarageTile extends LitElement {
             case "closed":
                 this._icon = "hass:garage-variant";
                 this._iconAnimation = "none";
-                this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+                this._iconColor = "var(--sq-inactive-rgb)";
                 break;
             case "opening":
                 this._icon = "hass:arrow-up-box";
@@ -97,8 +97,8 @@ export class GarageTile extends LitElement {
         };
 
         return html`
-            <div class="container" @click=${this._showMoreInfo}>
-                <div class="icon" @click=${this._toggleEntity} style="${styleMap(iconStyles)}">
+            <div class="container" @click=${this.showMoreInfo}>
+                <div class="icon" @click=${this.toggleEntity} style="${styleMap(iconStyles)}">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
                 <div class="name">${this._name}</div>
@@ -107,15 +107,15 @@ export class GarageTile extends LitElement {
         `;
     }
 
-    private _toggleEntity(e: Event): void {
+    private toggleEntity(e: Event): void {
         e.stopPropagation();
         if (!this._stateObj) return;
         this._hass.callService("cover", "toggle", { entity_id: this._stateObj.entity_id });
     }
 
-    private _showMoreInfo(e: Event): void {
+    private showMoreInfo(e: Event): void {
         e.stopPropagation();
-        showMoreInfo(this._config, this._stateObj, this._hass);
+        moreInfoDialog(this._config, this._stateObj, this._hass);
     }
 
     getCardSize(): number {

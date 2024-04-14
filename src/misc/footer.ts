@@ -4,8 +4,15 @@ import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 
 interface Config extends LovelaceCardConfig {}
 
+interface ActionHandlers {
+    handleHome: () => void;
+    handleAreas: () => void;
+    handleEntertain: () => void;
+    handleMenu: () => void;
+}
+
 @customElement("smartqasa-footer-strip")
-class NavigateStrip extends LitElement {
+class FooterStrip extends LitElement implements ActionHandlers {
     @state() private _config?: Config;
 
     private _hass: any;
@@ -32,7 +39,7 @@ class NavigateStrip extends LitElement {
             display: flex;
             padding: 1rem;
             align-items: center;
-            column-gap: 1rem;
+            column-gap: 0.5rem;
             font-size: var(--sq-primary-font-size, 1.5rem);
             font-weight: var(--sq-primary-font-weight, 400);
             color: rgb(var(--sq-secondary-font-rgb));
@@ -41,6 +48,9 @@ class NavigateStrip extends LitElement {
         .icon {
             height: 1.8rem;
             width: 1.8rem;
+        }
+        .hidden {
+            display: none;
         }
     `;
 
@@ -55,26 +65,34 @@ class NavigateStrip extends LitElement {
     protected render(): TemplateResult {
         return html`
             <div class="grid">
-                ${this.renderButton("home", "hass:home", "Home")}
-                ${this.renderButton("areas", "hass:view-dashboard", "Areas")}
-                ${this.renderButton("entertain", "hass:music", "Entertainment")}
-                ${this.renderButton("menu", "hass:menu", "Menu")}
+                ${this.renderButton("home", "hass:home", "Home", "handleHome")}
+                ${this.renderButton("areas", "hass:view-dashboard", "Areas", "handleAreas")}
+                ${this.renderButton("entertain", "hass:music", "Entertainment", "handleEntertain")}
+                ${this.renderButton("menu", "hass:menu", "Menu", "handleMenu")}
             </div>
         `;
     }
 
-    private renderButton(id: string, icon: string, name: string): TemplateResult {
+    private renderButton(id: string, icon: string, name: string, methodName: keyof ActionHandlers): TemplateResult {
         return html`
-            <div class="button" @click="${() => this.handleAction(id)}">
+            <div class="button" @click="${() => this[methodName]()}">
                 <ha-icon .icon=${icon}></ha-icon>
                 <span>${name}</span>
             </div>
         `;
     }
 
-    private handleAction(id: string): void {
-        // Define action handling logic here based on the `id`
-        console.log(`Action for ${id}`);
+    handleHome(): void {
+        console.log("Home action");
+    }
+    handleAreas(): void {
+        console.log("Areas action");
+    }
+    handleEntertain(): void {
+        console.log("Entertain action");
+    }
+    handleMenu(): void {
+        console.log("Menu action");
     }
 }
 

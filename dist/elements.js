@@ -125,15 +125,15 @@ let MotionChip = class MotionChip extends s {
     static { this.styles = styleChipBasic; }
     setConfig(config) {
         this._config = { ...config };
-        this._updateState();
+        this.updateState();
     }
     set hass(hass) {
         if (!this._config?.entity || !hass)
             return;
         this._hass = hass;
-        this._updateState();
+        this.updateState();
     }
-    _updateState() {
+    updateState() {
         this._stateObj = this._hass && this._config?.entity ? this._hass.states[this._config.entity] : undefined;
         if (!this._stateObj)
             return;
@@ -141,7 +141,7 @@ let MotionChip = class MotionChip extends s {
         switch (state) {
             case "on":
                 this._icon = "hass:motion-sensor";
-                this._iconColor = "var(--sq-primary-font-rgb, 128, 128, 128)";
+                this._iconColor = "var(--sq-primary-font-rgb)";
                 break;
             case "off":
                 this._icon = "hass:motion-sensor-off";
@@ -167,7 +167,7 @@ let MotionChip = class MotionChip extends s {
             color: `rgb(${this._iconColor})`,
         };
         return x `
-            <div class="container" style="${o(this._containerStyle)}" @click=${this._toggleEntity}>
+            <div class="container" style="${o(this._containerStyle)}" @click=${this.toggleEntity}>
                 <div class="icon" style="${o(iconStyles)}">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
@@ -175,7 +175,7 @@ let MotionChip = class MotionChip extends s {
             </div>
         `;
     }
-    _toggleEntity(e) {
+    toggleEntity(e) {
         e.stopPropagation();
         if (!this._stateObj)
             return;
@@ -348,7 +348,7 @@ const listDialogConfig = (dialogTitle, filterType, filterValue, tileType) => {
     };
 };
 
-function showMoreInfo(config, stateObj, hass) {
+function moreInfoDialog(config, stateObj, hass) {
     if (!stateObj)
         return;
     const dialogConfig = {
@@ -398,7 +398,7 @@ let ThermostatChip = class ThermostatChip extends s {
     constructor() {
         super(...arguments);
         this._icon = "hass:thermometer-lines";
-        this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+        this._iconColor = "var(--sq-inactive-rgb)";
         this._temperature = "??";
     }
     static { this.styles = styleChipBasic; }
@@ -406,15 +406,15 @@ let ThermostatChip = class ThermostatChip extends s {
         if (!config.entity)
             return;
         this._config = { ...config };
-        this._updateState();
+        this.updateState();
     }
     set hass(hass) {
         if (!this._config?.entity || !hass)
             return;
         this._hass = hass;
-        this._updateState();
+        this.updateState();
     }
-    _updateState() {
+    updateState() {
         this._stateObj = this._hass && this._config?.entity ? this._hass.states[this._config.entity] : undefined;
         if (!this._stateObj) {
             this._icon = thermostatIcons.default;
@@ -432,7 +432,7 @@ let ThermostatChip = class ThermostatChip extends s {
         if (!this._config?.entity)
             return x ``;
         return x `
-            <div class="container" @click=${this._showMoreInfo}>
+            <div class="container" @click=${this.showMoreInfo}>
                 <div class="icon" id="icon" style="color: rgb(${this._iconColor});">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
@@ -440,9 +440,9 @@ let ThermostatChip = class ThermostatChip extends s {
             </div>
         `;
     }
-    _showMoreInfo(e) {
+    showMoreInfo(e) {
         e.stopPropagation();
-        showMoreInfo(this._config, this._stateObj, this._hass);
+        moreInfoDialog(this._config, this._stateObj, this._hass);
     }
 };
 __decorate([
@@ -511,7 +511,7 @@ window.customCards.push({
     description: "A SmartQasa card for rendering an area picture.",
 });
 
-let NavigateStrip = class NavigateStrip extends s {
+let FooterStrip = class FooterStrip extends s {
     static { this.styles = i$4 `
         :host {
             display: block;
@@ -534,7 +534,7 @@ let NavigateStrip = class NavigateStrip extends s {
             display: flex;
             padding: 1rem;
             align-items: center;
-            column-gap: 1rem;
+            column-gap: 0.5rem;
             font-size: var(--sq-primary-font-size, 1.5rem);
             font-weight: var(--sq-primary-font-weight, 400);
             color: rgb(var(--sq-secondary-font-rgb));
@@ -543,6 +543,9 @@ let NavigateStrip = class NavigateStrip extends s {
         .icon {
             height: 1.8rem;
             width: 1.8rem;
+        }
+        .hidden {
+            display: none;
         }
     `; }
     setConfig(config) {
@@ -554,32 +557,40 @@ let NavigateStrip = class NavigateStrip extends s {
     render() {
         return x `
             <div class="grid">
-                ${this.renderButton("home", "hass:home", "Home")}
-                ${this.renderButton("areas", "hass:view-dashboard", "Areas")}
-                ${this.renderButton("entertain", "hass:music", "Entertainment")}
-                ${this.renderButton("menu", "hass:menu", "Menu")}
+                ${this.renderButton("home", "hass:home", "Home", "handleHome")}
+                ${this.renderButton("areas", "hass:view-dashboard", "Areas", "handleAreas")}
+                ${this.renderButton("entertain", "hass:music", "Entertainment", "handleEntertain")}
+                ${this.renderButton("menu", "hass:menu", "Menu", "handleMenu")}
             </div>
         `;
     }
-    renderButton(id, icon, name) {
+    renderButton(id, icon, name, methodName) {
         return x `
-            <div class="button" @click="${() => this.handleAction(id)}">
+            <div class="button" @click="${() => this[methodName]()}">
                 <ha-icon .icon=${icon}></ha-icon>
                 <span>${name}</span>
             </div>
         `;
     }
-    handleAction(id) {
-        // Define action handling logic here based on the `id`
-        console.log(`Action for ${id}`);
+    handleHome() {
+        console.log("Home action");
+    }
+    handleAreas() {
+        console.log("Areas action");
+    }
+    handleEntertain() {
+        console.log("Entertain action");
+    }
+    handleMenu() {
+        console.log("Menu action");
     }
 };
 __decorate([
     r()
-], NavigateStrip.prototype, "_config", void 0);
-NavigateStrip = __decorate([
+], FooterStrip.prototype, "_config", void 0);
+FooterStrip = __decorate([
     t$1("smartqasa-footer-strip")
-], NavigateStrip);
+], FooterStrip);
 window.customCards.push({
     type: "smartqasa-footer-strip",
     name: "SmartQasa Footer Strip",
@@ -668,7 +679,7 @@ let SmartQasaTimeDate = class SmartQasaTimeDate extends s {
             .date {
                 font-size: var(--sq-primary-font-size, 14px);
                 font-weight: var(--sq-primary-font-weight, 300);
-                color: rgb(var(--sq-secondary-font-rgb, 128, 128, 128));
+                color: rgb(var(--sq-secondary-font-rgb));
             }
         `;
     }
@@ -682,13 +693,13 @@ let SmartQasaTimeDate = class SmartQasaTimeDate extends s {
     }
     render() {
         return x `
-            <div class="container" @click="${this._handleTap}">
+            <div class="container" @click="${this.handleTap}">
                 <div class="time">${this._time}</div>
                 <div class="date">${this._date}</div>
             </div>
         `;
     }
-    _handleTap() {
+    handleTap() {
         if (typeof window.fully !== "undefined" && window.fully.startApplication) {
             window.fully.startApplication("com.google.android.deskclock");
         }
@@ -774,21 +785,21 @@ let AllOffTile = class AllOffTile extends s {
         this._running = false;
         this._icon = "hass:help-rhombus";
         this._iconAnimation = "none";
-        this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+        this._iconColor = "var(--sq-inactive-rgb)";
         this._name = "Loading...";
     }
     static { this.styles = [styleTileBase, styleTileIconSpin]; }
     setConfig(config) {
         this._config = { ...config };
-        this._updateState();
+        this.updateState();
     }
     set hass(hass) {
         if (!this._config?.area || !hass)
             return;
         this._hass = hass;
-        this._updateState();
+        this.updateState();
     }
-    _updateState() {
+    updateState() {
         if (this._running === true)
             return;
         this._areaObj = this._config?.area ? this._hass?.areas[this._config.area] : undefined;
@@ -801,7 +812,7 @@ let AllOffTile = class AllOffTile extends s {
         }
         this._icon = this._config?.icon || "hass:power";
         this._iconAnimation = "none";
-        this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+        this._iconColor = "var(--sq-inactive-rgb)";
         this._name = this._config?.name || this._areaObj.name || this._areaObj.id;
     }
     render() {
@@ -811,7 +822,7 @@ let AllOffTile = class AllOffTile extends s {
             animation: this._iconAnimation,
         };
         return x `
-            <div class="container" @click=${this._runRoutine}>
+            <div class="container" @click=${this.runRoutine}>
                 <div class="icon" style="${o(iconStyles)}">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
@@ -819,7 +830,7 @@ let AllOffTile = class AllOffTile extends s {
             </div>
         `;
     }
-    _runRoutine(e) {
+    runRoutine(e) {
         e.stopPropagation();
         if (!this._areaObj)
             return;
@@ -838,7 +849,7 @@ let AllOffTile = class AllOffTile extends s {
         setTimeout(() => {
             this._icon = icon;
             this._iconAnimation = "none";
-            this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+            this._iconColor = "var(--sq-inactive-rgb)";
             this._running = false;
         }, 2000);
     }
@@ -1355,13 +1366,13 @@ let AppTile = class AppTile extends s {
         }
         name = this._config?.name || this._appObj?.name || this._config?.app;
         return x `
-            <div class="container" @click=${this._launchApp}>
+            <div class="container" @click=${this.launchApp}>
                 <div class="icon" style=${iconStyle}>${iconTemplate}</div>
                 <div class="name">${name}</div>
             </div>
         `;
     }
-    _launchApp(e) {
+    launchApp(e) {
         e.stopPropagation();
         if (this._appObj.launcher == "uri_scheme" && this._appObj.uri_scheme) {
             window.location.href = this._appObj.uri_scheme;
@@ -1403,7 +1414,7 @@ let AreaTile = class AreaTile extends s {
         super(...arguments);
         this._icon = "hass:help-rhombus";
         this._iconAnimation = "none";
-        this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+        this._iconColor = "var(--sq-inactive-rgb)";
         this._name = "Loading...";
     }
     static { this.styles = [styleTileBase, styleTileIconSpin]; }
@@ -1426,7 +1437,7 @@ let AreaTile = class AreaTile extends s {
             return;
         }
         this._icon = this._config?.icon ?? this._areaObj.icon ?? this._icon;
-        this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+        this._iconColor = "var(--sq-inactive-rgb)";
         this._name = this._config?.name ?? this._areaObj.name ?? "Unknown";
     }
     render() {
@@ -1436,7 +1447,7 @@ let AreaTile = class AreaTile extends s {
             animation: this._iconAnimation,
         };
         return x `
-            <div class="container" @click=${this._navigate}>
+            <div class="container" @click=${this.navigateToArea}>
                 <div class="icon" style="${o(iconStyles)}">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
@@ -1444,7 +1455,7 @@ let AreaTile = class AreaTile extends s {
             </div>
         `;
     }
-    _navigate(e) {
+    navigateToArea(e) {
         e.stopPropagation();
         if (!this._areaObj)
             return;
@@ -1457,7 +1468,7 @@ let AreaTile = class AreaTile extends s {
         setTimeout(() => {
             this._icon = icon;
             this._iconAnimation = "none";
-            this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+            this._iconColor = "var(--sq-inactive-rgb)";
         }, 2000);
         window.browser_mod?.service("close_popup", {});
     }
@@ -1626,7 +1637,7 @@ let DialogTile = class DialogTile extends s {
     constructor() {
         super(...arguments);
         this._icon = "hass:help-rhombus";
-        this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+        this._iconColor = "var(--sq-inactive-rgb)";
         this._name = "Loading...";
     }
     static { this.styles = styleTileBase; }
@@ -1643,12 +1654,12 @@ let DialogTile = class DialogTile extends s {
             return;
         }
         this._icon = this._config?.icon || this._dialogObj.icon;
-        this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+        this._iconColor = "var(--sq-inactive-rgb)";
         this._name = this._config?.name || this._dialogObj.name;
     }
     render() {
         return x `
-            <div class="container" @click=${this._showDialog}>
+            <div class="container" @click=${this.showDialog}>
                 <div
                     class="icon"
                     style="
@@ -1662,7 +1673,7 @@ let DialogTile = class DialogTile extends s {
             </div>
         `;
     }
-    _showDialog(e) {
+    showDialog(e) {
         e.stopPropagation();
         if (!this._dialogObj)
             return;
@@ -1688,7 +1699,7 @@ window.customCards.push({
     description: "A SmartQasa card for displaying a browser_mod popup dialog.",
 });
 
-function showEntitiesList(dialogTitle, filterType, filterValue, tileType) {
+function entityListDialog(dialogTitle, filterType, filterValue, tileType) {
     const dialogConfig = listDialogConfig(dialogTitle, filterType, filterValue, tileType);
     window.browser_mod?.service("popup", dialogConfig);
 }
@@ -1718,7 +1729,7 @@ let FanTile = class FanTile extends s {
         super(...arguments);
         this._icon = "hass:fan";
         this._iconAnimation = "none";
-        this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+        this._iconColor = "var(--sq-inactive-rgb)";
         this._name = "Loading...";
         this._stateFmtd = "Loading...";
     }
@@ -1775,8 +1786,8 @@ let FanTile = class FanTile extends s {
             animation: this._iconAnimation,
         };
         return x `
-            <div class="container" @click=${this._showMoreInfo} @contextmenu=${this._showGroupList}>
-                <div class="icon" @click=${this._toggleEntity} style="${o(iconStyles)}">
+            <div class="container" @click=${this.showMoreInfo} @contextmenu=${this.showEntityList}>
+                <div class="icon" @click=${this.toggleEntity} style="${o(iconStyles)}">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
                 <div class="name">${this._name}</div>
@@ -1784,23 +1795,23 @@ let FanTile = class FanTile extends s {
             </div>
         `;
     }
-    _toggleEntity(e) {
+    toggleEntity(e) {
         e.stopPropagation();
         if (!this._stateObj)
             return;
         this._hass.callService("fan", "toggle", { entity_id: this._stateObj.entity_id });
     }
-    _showMoreInfo(e) {
+    showMoreInfo(e) {
         e.stopPropagation();
-        showMoreInfo(this._config, this._stateObj, this._hass);
+        moreInfoDialog(this._config, this._stateObj, this._hass);
     }
-    _showGroupList(e) {
+    showEntityList(e) {
         e.stopPropagation();
         if (!this._stateObj ||
             !Array.isArray(this._stateObj.attributes?.entity_id) ||
             this._stateObj.attributes.entity_id.length === 0)
             return;
-        showEntitiesList(this._stateObj.attributes?.friendly_name || this._stateObj.entity_id, "group", this._stateObj.entity_id, "fan");
+        entityListDialog(this._stateObj.attributes?.friendly_name || this._stateObj.entity_id, "group", this._stateObj.entity_id, "fan");
     }
     getCardSize() {
         return 1;
@@ -1835,7 +1846,7 @@ let GarageTile = class GarageTile extends s {
         super(...arguments);
         this._icon = "hass:garage-variant";
         this._iconAnimation = "none";
-        this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+        this._iconColor = "var(--sq-inactive-rgb)";
         this._name = "Loading...";
         this._stateFmtd = "Loading...";
     }
@@ -1867,7 +1878,7 @@ let GarageTile = class GarageTile extends s {
             case "closed":
                 this._icon = "hass:garage-variant";
                 this._iconAnimation = "none";
-                this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+                this._iconColor = "var(--sq-inactive-rgb)";
                 break;
             case "opening":
                 this._icon = "hass:arrow-up-box";
@@ -1904,8 +1915,8 @@ let GarageTile = class GarageTile extends s {
             animation: this._iconAnimation,
         };
         return x `
-            <div class="container" @click=${this._showMoreInfo}>
-                <div class="icon" @click=${this._toggleEntity} style="${o(iconStyles)}">
+            <div class="container" @click=${this.showMoreInfo}>
+                <div class="icon" @click=${this.toggleEntity} style="${o(iconStyles)}">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
                 <div class="name">${this._name}</div>
@@ -1913,15 +1924,15 @@ let GarageTile = class GarageTile extends s {
             </div>
         `;
     }
-    _toggleEntity(e) {
+    toggleEntity(e) {
         e.stopPropagation();
         if (!this._stateObj)
             return;
         this._hass.callService("cover", "toggle", { entity_id: this._stateObj.entity_id });
     }
-    _showMoreInfo(e) {
+    showMoreInfo(e) {
         e.stopPropagation();
-        showMoreInfo(this._config, this._stateObj, this._hass);
+        moreInfoDialog(this._config, this._stateObj, this._hass);
     }
     getCardSize() {
         return 1;
@@ -1948,7 +1959,7 @@ let HeaterTile = class HeaterTile extends s {
         super(...arguments);
         this._icon = "hass:water-thermometer";
         this._iconAnimation = "none";
-        this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+        this._iconColor = "var(--sq-inactive-rgb)";
         this._name = "Loading...";
         this._stateFmtd = "Loading...";
     }
@@ -1990,8 +2001,8 @@ let HeaterTile = class HeaterTile extends s {
             animation: this._iconAnimation,
         };
         return x `
-            <div class="container" @click=${this._showMoreInfo}>
-                <div class="icon" @click=${this._toggleEntity} style="${o(iconStyles)}">
+            <div class="container" @click=${this.showMoreInfo}>
+                <div class="icon" @click=${this.toggleEntity} style="${o(iconStyles)}">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
                 <div class="name">${this._name}</div>
@@ -1999,15 +2010,15 @@ let HeaterTile = class HeaterTile extends s {
             </div>
         `;
     }
-    _toggleEntity(e) {
+    toggleEntity(e) {
         e.stopPropagation();
         if (!this._stateObj)
             return;
         this._hass.callService("water_heater", "toggle", { entity_id: this._stateObj.entity_id });
     }
-    _showMoreInfo(e) {
+    showMoreInfo(e) {
         e.stopPropagation();
-        showMoreInfo(this._config, this._stateObj, this._hass);
+        moreInfoDialog(this._config, this._stateObj, this._hass);
     }
     getCardSize() {
         return 1;
@@ -2034,22 +2045,22 @@ let LightTile = class LightTile extends s {
         super(...arguments);
         this._icon = "hass:lightbulb";
         this._iconAnimation = "none";
-        this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+        this._iconColor = "var(--sq-inactive-rgb)";
         this._name = "Loading...";
         this._stateFmtd = "Loading...";
     }
     static { this.styles = [styleTileBase, styleTileState]; }
     setConfig(config) {
         this._config = { ...config };
-        this._updateState();
+        this.updateState();
     }
     set hass(hass) {
         if (!this._config?.entity || !hass)
             return;
         this._hass = hass;
-        this._updateState();
+        this.updateState();
     }
-    _updateState() {
+    updateState() {
         this._stateObj =
             this._config?.entity && this._config.entity.split(".")[0] === "light"
                 ? this._hass?.states[this._config.entity]
@@ -2063,7 +2074,7 @@ let LightTile = class LightTile extends s {
         }
         const state = this._stateObj.state || "unknown";
         this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:lightbulb";
-        this._iconColor = state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb, 128, 128, 128)";
+        this._iconColor = state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
         this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
         this._stateFmtd =
             this._hass.formatEntityState(this._stateObj) +
@@ -2078,8 +2089,8 @@ let LightTile = class LightTile extends s {
             animation: this._iconAnimation,
         };
         return x `
-            <div class="container" @click=${this._showMoreInfo} @contextmenu=${this._showGroupList}>
-                <div class="icon" @click=${this._toggleEntity} style="${o(iconStyles)}">
+            <div class="container" @click=${this.showMoreInfo} @contextmenu=${this.showEntityList}>
+                <div class="icon" @click=${this.toggleEntity} style="${o(iconStyles)}">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
                 <div class="name">${this._name}</div>
@@ -2087,23 +2098,23 @@ let LightTile = class LightTile extends s {
             </div>
         `;
     }
-    _toggleEntity(e) {
+    toggleEntity(e) {
         e.stopPropagation();
         if (!this._stateObj)
             return;
         this._hass.callService("light", "toggle", { entity_id: this._stateObj.entity_id });
     }
-    _showMoreInfo(e) {
+    showMoreInfo(e) {
         e.stopPropagation();
-        showMoreInfo(this._config, this._stateObj, this._hass);
+        moreInfoDialog(this._config, this._stateObj, this._hass);
     }
-    _showGroupList(e) {
+    showEntityList(e) {
         e.stopPropagation();
         if (!this._stateObj ||
             !Array.isArray(this._stateObj.attributes?.entity_id) ||
             this._stateObj.attributes.entity_id.length === 0)
             return;
-        showEntitiesList(this._stateObj.attributes?.friendly_name || this._stateObj.entity_id, "group", this._stateObj.entity_id, "light");
+        entityListDialog(this._stateObj.attributes?.friendly_name || this._stateObj.entity_id, "group", this._stateObj.entity_id, "light");
     }
     getCardSize() {
         return 1;
@@ -2203,22 +2214,22 @@ let LockTile = class LockTile extends s {
         this._actuating = false;
         this._icon = "hass:lock";
         this._iconAnimation = "none";
-        this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+        this._iconColor = "var(--sq-inactive-rgb)";
         this._name = "Loading...";
         this._stateFmtd = "Loading...";
     }
     static { this.styles = [styleTileBase, styleTileState, styleTileIconBlink, styleTileIconSpin]; }
     setConfig(config) {
         this._config = { ...config };
-        this._updateState();
+        this.updateState();
     }
     set hass(hass) {
         if (!this._config?.entity || !hass)
             return;
         this._hass = hass;
-        this._updateState();
+        this.updateState();
     }
-    _updateState() {
+    updateState() {
         if (this._actuating === false) {
             this._stateObj =
                 this._config?.entity && this._config.entity.split(".")[0] === "lock"
@@ -2275,8 +2286,8 @@ let LockTile = class LockTile extends s {
             animation: this._iconAnimation,
         };
         return x `
-            <div class="container" @click=${this._showMoreInfo}>
-                <div class="icon" @click=${this._toggleEntity} style="${o(iconStyles)}">
+            <div class="container" @click=${this.showMoreInfo}>
+                <div class="icon" @click=${this.toggleEntity} style="${o(iconStyles)}">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
                 <div class="name">${this._name}</div>
@@ -2284,13 +2295,13 @@ let LockTile = class LockTile extends s {
             </div>
         `;
     }
-    _toggleEntity(e) {
+    toggleEntity(e) {
         e.stopPropagation();
         if (!this._stateObj)
             return;
         const state = this._stateObj.state;
         this._stateObj.state = state == "locked" ? "unlocking" : "locking";
-        this._updateState();
+        this.updateState();
         this._actuating = true;
         this._hass.callService("lock", state == "locked" ? "unlock" : "lock", {
             entity_id: this._stateObj.entity_id,
@@ -2299,9 +2310,9 @@ let LockTile = class LockTile extends s {
             this._actuating = false;
         }, 500);
     }
-    _showMoreInfo(e) {
+    showMoreInfo(e) {
         e.stopPropagation();
-        showMoreInfo(this._config, this._stateObj, this._hass);
+        moreInfoDialog(this._config, this._stateObj, this._hass);
     }
     getCardSize() {
         return 1;
@@ -2331,22 +2342,22 @@ let RobotTile = class RobotTile extends s {
         super(...arguments);
         this._icon = "hass:robot-vacuum-variant";
         this._iconAnimation = "none";
-        this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+        this._iconColor = "var(--sq-inactive-rgb)";
         this._name = "Loading...";
         this._stateFmtd = "Loading...";
     }
     static { this.styles = [styleTileBase, styleTileState, styleTileIconBlink]; }
     setConfig(config) {
         this._config = { ...config };
-        this._updateState();
+        this.updateState();
     }
     set hass(hass) {
         if (!this._config?.entity || !hass)
             return;
         this._hass = hass;
-        this._updateState();
+        this.updateState();
     }
-    _updateState() {
+    updateState() {
         this._stateObj =
             this._config?.entity && this._config.entity.split(".")[0] === "vacuum"
                 ? this._hass?.states[this._config.entity]
@@ -2368,7 +2379,7 @@ let RobotTile = class RobotTile extends s {
             case "docked":
                 this._icon = "hass:robot-vacuum-variant";
                 this._iconAnimation = "none";
-                this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+                this._iconColor = "var(--sq-inactive-rgb)";
                 break;
             case "idle":
                 this._icon = "hass:robot-vacuum-variant";
@@ -2405,8 +2416,8 @@ let RobotTile = class RobotTile extends s {
             animation: this._iconAnimation,
         };
         return x `
-            <div class="container" @click=${this._showMoreInfo}>
-                <div class="icon" @click=${this._toggleEntity} style="${o(iconStyles)}">
+            <div class="container" @click=${this.showMoreInfo}>
+                <div class="icon" @click=${this.toggleEntity} style="${o(iconStyles)}">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
                 <div class="name">${this._name}</div>
@@ -2414,7 +2425,7 @@ let RobotTile = class RobotTile extends s {
             </div>
         `;
     }
-    _toggleEntity(e) {
+    toggleEntity(e) {
         e.stopPropagation();
         if (!this._stateObj)
             return;
@@ -2423,9 +2434,9 @@ let RobotTile = class RobotTile extends s {
             entity_id: this._stateObj.entity_id,
         });
     }
-    _showMoreInfo(e) {
+    showMoreInfo(e) {
         e.stopPropagation();
-        showMoreInfo(this._config, this._stateObj, this._hass);
+        moreInfoDialog(this._config, this._stateObj, this._hass);
     }
     getCardSize() {
         return 1;
@@ -2452,22 +2463,22 @@ let RokuTile = class RokuTile extends s {
         super(...arguments);
         this._icon = "hass:audio-video";
         this._iconAnimation = "none";
-        this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+        this._iconColor = "var(--sq-inactive-rgb)";
         this._name = "Loading...";
         this._stateFmtd = "Loading...";
     }
     static { this.styles = [styleTileBase, styleTileState]; }
     setConfig(config) {
         this._config = { ...config };
-        this._updateState();
+        this.updateState();
     }
     set hass(hass) {
         if (!this._config?.entity || !hass)
             return;
         this._hass = hass;
-        this._updateState();
+        this.updateState();
     }
-    _updateState() {
+    updateState() {
         this._stateObj =
             this._config?.entity && this._config.entity.split(".")[0] === "media_player"
                 ? this._hass?.states[this._config.entity]
@@ -2483,16 +2494,16 @@ let RokuTile = class RokuTile extends s {
         const state = this._stateObj.state || "unknown";
         switch (state) {
             case "idle":
-                this._iconColor = "var(--sq-media_player-idle, 128, 128, 128)";
+                this._iconColor = "var(--sq-media_player-idle)";
                 break;
             case "standby":
-                this._iconColor = "var(--sq-media_player-standby-rgb, 128, 128, 128)";
+                this._iconColor = "var(--sq-media_player-standby-rgb)";
                 break;
             case "on":
-                this._iconColor = "var(--sq-media_player-on-rgb, 128, 128, 128)";
+                this._iconColor = "var(--sq-media_player-on-rgb)";
                 break;
             case "paused":
-                this._iconColor = "var(--sq-media_player-paused-rgb, 128, 128, 128)";
+                this._iconColor = "var(--sq-media_player-paused-rgb)";
                 break;
             case "playing":
                 this._iconColor = "var(--sq-media_player-playing-rgb, 3, 169, 244)";
@@ -2511,10 +2522,10 @@ let RokuTile = class RokuTile extends s {
             animation: this._iconAnimation,
         };
         return x `
-            <div class="container" @click=${this._showMoreInfo}>
+            <div class="container" @click=${this.showMoreInfo}>
                 <div
                     class="icon"
-                    @click=${this._toggleEntity}
+                    @click=${this.toggleEntity}
                     style="${o(iconStyles)}
                 >
                     <ha-icon .icon=${this._icon}></ha-icon>
@@ -2524,13 +2535,13 @@ let RokuTile = class RokuTile extends s {
             </div>
         `;
     }
-    _toggleEntity(e) {
+    toggleEntity(e) {
         e.stopPropagation();
         if (!this._stateObj)
             return;
         this._hass.callService("media_player", "toggle", { entity_id: this._stateObj.entity_id });
     }
-    _showMoreInfo(e) {
+    showMoreInfo(e) {
         e.stopPropagation();
         if (!this._config || !this._stateObj)
             return;
@@ -2579,21 +2590,21 @@ let RoutineTile = class RoutineTile extends s {
         this._running = false;
         this._icon = "hass:help-rhombus";
         this._iconAnimation = "none";
-        this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+        this._iconColor = "var(--sq-inactive-rgb)";
         this._name = "Loading...";
     }
     static { this.styles = [styleTileBase, styleTileIconSpin]; }
     setConfig(config) {
         this._config = { ...config };
-        this._updateState();
+        this.updateState();
     }
     set hass(hass) {
         if (!this._config?.entity || !hass)
             return;
         this._hass = hass;
-        this._updateState();
+        this.updateState();
     }
-    _updateState() {
+    updateState() {
         if (this._running === true)
             return;
         const validDomains = ["automation", "scene", "script"];
@@ -2608,7 +2619,7 @@ let RoutineTile = class RoutineTile extends s {
             return;
         }
         this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:help-circle";
-        this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+        this._iconColor = "var(--sq-inactive-rgb)";
         this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
     }
     render() {
@@ -2618,15 +2629,15 @@ let RoutineTile = class RoutineTile extends s {
             animation: this._iconAnimation,
         };
         return x `
-            <div class="container" @click=${this._runRoutine}>
-                <div class="icon" @click=${this._runRoutine} style="${o(iconStyles)}">
+            <div class="container" @click=${this.runRoutine}>
+                <div class="icon" style="${o(iconStyles)}">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
                 <div class="name">${this._name}</div>
             </div>
         `;
     }
-    _runRoutine(e) {
+    runRoutine(e) {
         e.stopPropagation();
         if (!this._stateObj)
             return;
@@ -2652,7 +2663,7 @@ let RoutineTile = class RoutineTile extends s {
         }
         setTimeout(() => {
             this._icon = icon;
-            this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+            this._iconColor = "var(--sq-inactive-rgb)";
             this._iconAnimation = "none";
             this._running = false;
         }, 2000);
@@ -2684,22 +2695,22 @@ let SelectTile = class SelectTile extends s {
     constructor() {
         super(...arguments);
         this._icon = "hass:form-dropdown";
-        this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+        this._iconColor = "var(--sq-inactive-rgb)";
         this._name = "Loading...";
         this._stateFmtd = "Loading...";
     }
     static { this.styles = [styleTileBase, styleTileState]; }
     setConfig(config) {
         this._config = { ...config };
-        this._updateState();
+        this.updateState();
     }
     set hass(hass) {
         if (!this._config?.entity || !hass)
             return;
         this._hass = hass;
-        this._updateState();
+        this.updateState();
     }
-    _updateState() {
+    updateState() {
         this._stateObj =
             this._config?.entity && this._config.entity.split(".")[0] === "input_select"
                 ? this._hass?.states[this._config.entity]
@@ -2717,7 +2728,7 @@ let SelectTile = class SelectTile extends s {
     }
     render() {
         return x `
-            <div class="container" @click=${this._showChoices}>
+            <div class="container" @click=${this.showChoices}>
                 <div
                     class="icon"
                     style="
@@ -2732,9 +2743,9 @@ let SelectTile = class SelectTile extends s {
             </div>
         `;
     }
-    _showChoices(e) {
+    showChoices(e) {
         e.stopPropagation();
-        showMoreInfo(this._config, this._stateObj, this._hass);
+        moreInfoDialog(this._config, this._stateObj, this._hass);
     }
     getCardSize() {
         return 1;
@@ -2759,22 +2770,22 @@ window.customCards.push({
 let SensorTile = class SensorTile extends s {
     constructor() {
         super(...arguments);
-        this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+        this._iconColor = "var(--sq-inactive-rgb)";
         this._name = "Loading...";
         this._stateFmtd = "Loading...";
     }
     static { this.styles = [styleTileBase, styleTileState]; }
     setConfig(config) {
         this._config = { ...config };
-        this._updateState();
+        this.updateState();
     }
     set hass(hass) {
         if (!this._config?.entity || !hass)
             return;
         this._hass = hass;
-        this._updateState();
+        this.updateState();
     }
-    _updateState() {
+    updateState() {
         this._stateObj =
             this._config?.entity && this._config.entity.split(".")[0] === "binary_sensor"
                 ? this._hass?.states[this._config.entity]
@@ -2810,7 +2821,7 @@ let SensorTile = class SensorTile extends s {
     }
     render() {
         return x `
-            <div class="container" @click=${this._showMoreInfo}>
+            <div class="container" @click=${this.showMoreInfo}>
                 <div
                     class="icon"
                     style="
@@ -2825,9 +2836,9 @@ let SensorTile = class SensorTile extends s {
             </div>
         `;
     }
-    _showMoreInfo(e) {
+    showMoreInfo(e) {
         e.stopPropagation();
-        showMoreInfo(this._config, this._stateObj, this._hass);
+        moreInfoDialog(this._config, this._stateObj, this._hass);
     }
     getCardSize() {
         return 1;
@@ -2854,22 +2865,22 @@ let ShadeTile = class ShadeTile extends s {
         super(...arguments);
         this._icon = "hass:roller-shade";
         this._iconAnimation = "none";
-        this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+        this._iconColor = "var(--sq-inactive-rgb)";
         this._name = "Loading...";
         this._stateFmtd = "Loading...";
     }
     static { this.styles = [styleTileBase, styleTileState, styleTileIconBlink]; }
     setConfig(config) {
         this._config = { ...config };
-        this._updateState();
+        this.updateState();
     }
     set hass(hass) {
         if (!this._config?.entity || !hass)
             return;
         this._hass = hass;
-        this._updateState();
+        this.updateState();
     }
-    _updateState() {
+    updateState() {
         this._stateObj =
             this._config?.entity && this._config.entity.split(".")[0] === "cover"
                 ? this._hass?.states[this._config.entity]
@@ -2886,7 +2897,7 @@ let ShadeTile = class ShadeTile extends s {
             case "closed":
                 this._icon = "hass:roller-shade-closed";
                 this._iconAnimation = "none";
-                this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+                this._iconColor = "var(--sq-inactive-rgb)";
                 break;
             case "opening":
                 this._icon = "hass:arrow-up-box";
@@ -2918,10 +2929,10 @@ let ShadeTile = class ShadeTile extends s {
     }
     render() {
         return x `
-            <div class="container" @click=${this._showMoreInfo} @contextmenu=${this._showGroupList}>
+            <div class="container" @click=${this.showMoreInfo} @contextmenu=${this.showGroupList}>
                 <div
                     class="icon"
-                    @click=${this._toggleEntity}
+                    @click=${this.toggleEntity}
                     style="
                         color: rgb(${this._iconColor});
                         background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
@@ -2935,7 +2946,7 @@ let ShadeTile = class ShadeTile extends s {
             </div>
         `;
     }
-    _toggleEntity(e) {
+    toggleEntity(e) {
         e.stopPropagation();
         if (!this._stateObj)
             return;
@@ -2958,17 +2969,17 @@ let ShadeTile = class ShadeTile extends s {
             this.hass.callService("cover", "toggle", { entity_id: this._stateObj.entity_id });
         }
     }
-    _showMoreInfo(e) {
+    showMoreInfo(e) {
         e.stopPropagation();
-        showMoreInfo(this._config, this._stateObj, this._hass);
+        moreInfoDialog(this._config, this._stateObj, this._hass);
     }
-    _showGroupList(e) {
+    showGroupList(e) {
         e.stopPropagation();
         if (!this._stateObj ||
             !Array.isArray(this._stateObj.attributes?.entity_id) ||
             this._stateObj.attributes.entity_id.length === 0)
             return;
-        showEntitiesList(this._stateObj.attributes?.friendly_name || this._stateObj.entity_id, "group", this._stateObj.entity_id, "shade");
+        entityListDialog(this._stateObj.attributes?.friendly_name || this._stateObj.entity_id, "group", this._stateObj.entity_id, "shade");
     }
     getCardSize() {
         return 1;
@@ -2994,22 +3005,22 @@ let SwitchTile = class SwitchTile extends s {
     constructor() {
         super(...arguments);
         this._icon = "hass:toggle-switch-variant";
-        this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+        this._iconColor = "var(--sq-inactive-rgb)";
         this._name = "Loading...";
         this._stateFmtd = "Loading...";
     }
     static { this.styles = [styleTileBase, styleTileState]; }
     setConfig(config) {
         this._config = { ...config };
-        this._updateState();
+        this.updateState();
     }
     set hass(hass) {
         if (!this._config?.entity || !hass)
             return;
         this._hass = hass;
-        this._updateState();
+        this.updateState();
     }
-    _updateState() {
+    updateState() {
         const validDomains = ["fan", "input_boolean", "light", "switch"];
         this._stateObj =
             this._config?.entity && validDomains.includes(this._config.entity.split(".")[0])
@@ -3033,10 +3044,10 @@ let SwitchTile = class SwitchTile extends s {
     }
     render() {
         return x `
-            <div class="container" @click=${this._showMoreInfo}>
+            <div class="container" @click=${this.showMoreInfo}>
                 <div
                     class="icon"
-                    @click=${this._toggleEntity}
+                    @click=${this.toggleEntity}
                     style="
             color: rgb(${this._iconColor});
             background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
@@ -3049,7 +3060,7 @@ let SwitchTile = class SwitchTile extends s {
             </div>
         `;
     }
-    _toggleEntity(e) {
+    toggleEntity(e) {
         e.stopPropagation();
         if (this._stateObj) {
             this._hass.callService("homeassistant", "toggle", {
@@ -3057,9 +3068,9 @@ let SwitchTile = class SwitchTile extends s {
             });
         }
     }
-    _showMoreInfo(e) {
+    showMoreInfo(e) {
         e.stopPropagation();
-        showMoreInfo(this._config, this._stateObj, this._hass);
+        moreInfoDialog(this._config, this._stateObj, this._hass);
     }
     getCardSize() {
         return 1;
@@ -3085,22 +3096,22 @@ let ThermostatTile = class ThermostatTile extends s {
     constructor() {
         super(...arguments);
         this._icon = "hass:thermostat";
-        this._iconColor = "var(--sq-inactive-rgb, 128, 128, 128)";
+        this._iconColor = "var(--sq-inactive-rgb)";
         this._name = "Loading...";
         this._stateFmtd = "Loading...";
     }
     static { this.styles = [styleTileBase, styleTileState]; }
     setConfig(config) {
         this._config = { ...config };
-        this._updateState();
+        this.updateState();
     }
     set hass(hass) {
         if (!this._config?.entity || !hass)
             return;
         this._hass = hass;
-        this._updateState();
+        this.updateState();
     }
-    _updateState() {
+    updateState() {
         this._stateObj =
             this._config?.entity && this._config.entity.split(".")[0] === "climate"
                 ? this._hass?.states[this._config.entity]
@@ -3134,10 +3145,10 @@ let ThermostatTile = class ThermostatTile extends s {
     }
     render() {
         return x `
-            <div class="container" @click=${this._showMoreInfo}>
+            <div class="container" @click=${this.showMoreInfo}>
                 <div
                     class="icon"
-                    @click=${this._toggleEntity}
+                    @click=${this.toggleEntity}
                     style="
                         color: rgb(${this._iconColor});
                         background-color: rgba(${this._iconColor}, var(--sq-icon-opacity, 0.2));
@@ -3150,15 +3161,15 @@ let ThermostatTile = class ThermostatTile extends s {
             </div>
         `;
     }
-    _toggleEntity(e) {
+    toggleEntity(e) {
         e.stopPropagation();
         if (this._stateObj) {
             this._hass.callService("climate", "toggle", { entity_id: this._stateObj.entity_id });
         }
     }
-    _showMoreInfo(e) {
+    showMoreInfo(e) {
         e.stopPropagation();
-        showMoreInfo(this._config, this._stateObj, this._hass);
+        moreInfoDialog(this._config, this._stateObj, this._hass);
     }
     getCardSize() {
         return 1;

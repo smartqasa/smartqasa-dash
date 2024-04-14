@@ -3,8 +3,8 @@ import { customElement, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
-import { showMoreInfo } from "../utils/showMoreInfo";
-import { showEntitiesList } from "../utils/showEntitiesList";
+import { moreInfoDialog } from "../utils/moreInfoDialog";
+import { entityListDialog } from "../utils/entityListDialog";
 
 import styleTileBase from "../styles/tile-base";
 import styleTileState from "../styles/tile-state";
@@ -24,7 +24,7 @@ export class FanTile extends LitElement {
     private _hass: any;
     private _icon: string = "hass:fan";
     private _iconAnimation: string = "none";
-    private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
+    private _iconColor: string = "var(--sq-inactive-rgb)";
     private _name: string = "Loading...";
     private _stateFmtd: string = "Loading...";
 
@@ -85,8 +85,8 @@ export class FanTile extends LitElement {
         };
 
         return html`
-            <div class="container" @click=${this._showMoreInfo} @contextmenu=${this._showGroupList}>
-                <div class="icon" @click=${this._toggleEntity} style="${styleMap(iconStyles)}">
+            <div class="container" @click=${this.showMoreInfo} @contextmenu=${this.showEntityList}>
+                <div class="icon" @click=${this.toggleEntity} style="${styleMap(iconStyles)}">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
                 <div class="name">${this._name}</div>
@@ -95,18 +95,18 @@ export class FanTile extends LitElement {
         `;
     }
 
-    private _toggleEntity(e: Event): void {
+    private toggleEntity(e: Event): void {
         e.stopPropagation();
         if (!this._stateObj) return;
         this._hass.callService("fan", "toggle", { entity_id: this._stateObj.entity_id });
     }
 
-    private _showMoreInfo(e: Event): void {
+    private showMoreInfo(e: Event): void {
         e.stopPropagation();
-        showMoreInfo(this._config, this._stateObj, this._hass);
+        moreInfoDialog(this._config, this._stateObj, this._hass);
     }
 
-    private _showGroupList(e: Event): void {
+    private showEntityList(e: Event): void {
         e.stopPropagation();
         if (
             !this._stateObj ||
@@ -114,7 +114,7 @@ export class FanTile extends LitElement {
             this._stateObj.attributes.entity_id.length === 0
         )
             return;
-        showEntitiesList(
+        entityListDialog(
             this._stateObj.attributes?.friendly_name || this._stateObj.entity_id,
             "group",
             this._stateObj.entity_id,

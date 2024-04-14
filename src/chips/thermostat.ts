@@ -2,7 +2,7 @@ import { CSSResult, html, LitElement, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
-import { showMoreInfo } from "../utils/showMoreInfo";
+import { moreInfoDialog } from "../utils/moreInfoDialog";
 import { thermostatIcons, thermostatColors } from "../utils/const";
 
 import styleChipBasic from "../styles/chip-basic";
@@ -18,7 +18,7 @@ export class ThermostatChip extends LitElement {
 
     private _hass: any;
     private _icon: string = "hass:thermometer-lines";
-    private _iconColor: string = "var(--sq-inactive-rgb, 128, 128, 128)";
+    private _iconColor: string = "var(--sq-inactive-rgb)";
     private _temperature: string = "??";
 
     static styles: CSSResult = styleChipBasic;
@@ -26,16 +26,16 @@ export class ThermostatChip extends LitElement {
     setConfig(config: Config): void {
         if (!config.entity) return;
         this._config = { ...config };
-        this._updateState();
+        this.updateState();
     }
 
     set hass(hass: HomeAssistant) {
         if (!this._config?.entity || !hass) return;
         this._hass = hass;
-        this._updateState();
+        this.updateState();
     }
 
-    private _updateState(): void {
+    private updateState(): void {
         this._stateObj = this._hass && this._config?.entity ? this._hass.states[this._config.entity] : undefined;
 
         if (!this._stateObj) {
@@ -56,7 +56,7 @@ export class ThermostatChip extends LitElement {
         if (!this._config?.entity) return html``;
 
         return html`
-            <div class="container" @click=${this._showMoreInfo}>
+            <div class="container" @click=${this.showMoreInfo}>
                 <div class="icon" id="icon" style="color: rgb(${this._iconColor});">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
@@ -65,8 +65,8 @@ export class ThermostatChip extends LitElement {
         `;
     }
 
-    private _showMoreInfo(e: Event): void {
+    private showMoreInfo(e: Event): void {
         e.stopPropagation();
-        showMoreInfo(this._config, this._stateObj, this._hass);
+        moreInfoDialog(this._config, this._stateObj, this._hass);
     }
 }
