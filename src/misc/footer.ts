@@ -52,7 +52,6 @@ class NavigateStrip extends LitElement {
     }
 
     protected render(): TemplateResult {
-        console.log("Rendering main grid");
         return html`
             <div class="grid">
                 ${this.renderButton("home", "hass:home", "Home")}

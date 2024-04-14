@@ -551,7 +551,6 @@ let NavigateStrip = class NavigateStrip extends s {
         this._hass = hass;
     }
     render() {
-        console.log("Rendering main grid");
         return x `
             <div class="grid">
                 ${this.renderButton("home", "hass:home", "Home")}
