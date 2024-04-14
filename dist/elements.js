@@ -535,8 +535,13 @@ let NavigateStrip = class NavigateStrip extends s {
             padding: 1rem;
             display: flex;
             align-items: center;
+            font-size: 1.5rem;
             cursor: pointer;
             transition: background-color 0.3s;
+        }
+        .icon {
+            height: 1.8rem;
+            width: 1.8rem;
         }
     `; }
     setConfig(config) {
