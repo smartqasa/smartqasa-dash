@@ -531,6 +531,7 @@ let NavigateStrip = class NavigateStrip extends s {
         }
     `; }
     render() {
+        console.log("Rendering main grid");
         return x `
             <div class="grid">
                 ${this.renderButton("home", "hass:home", "Home")}
@@ -541,6 +542,7 @@ let NavigateStrip = class NavigateStrip extends s {
         `;
     }
     renderButton(id, icon, name) {
+        console.log(`Rendering button: ${name}`);
         return x `
             <div class="icon" @click="${() => this.handleAction(id)}">
                 <ha-icon .icon=${icon}></ha-icon>

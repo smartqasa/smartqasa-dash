@@ -23,6 +23,7 @@ class NavigateStrip extends LitElement {
     `;
 
     protected render(): TemplateResult {
+        console.log("Rendering main grid");
         return html`
             <div class="grid">
                 ${this.renderButton("home", "hass:home", "Home")}
@@ -34,6 +35,7 @@ class NavigateStrip extends LitElement {
     }
 
     private renderButton(id: string, icon: string, name: string): TemplateResult {
+        console.log(`Rendering button: ${name}`);
         return html`
             <div class="icon" @click="${() => this.handleAction(id)}">
                 <ha-icon .icon=${icon}></ha-icon>
