@@ -556,10 +556,10 @@ let NavigateStrip = class NavigateStrip extends s {
     }
 };
 NavigateStrip = __decorate([
-    t$1("smartqasa-navigate-strip")
+    t$1("smartqasa-navigation-strip")
 ], NavigateStrip);
 window.customCards.push({
-    type: "smartqasa-navgigation-strip",
+    type: "smartqasa-navigation-strip",
     name: "SmartQasa Navigation Strip",
     preview: true,
     description: "A SmartQasa tile for displaying the footer navigation strip.",

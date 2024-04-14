@@ -1,7 +1,7 @@
 import { LitElement, html, css, CSSResultGroup, TemplateResult } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
-@customElement("smartqasa-navigate-strip")
+@customElement("smartqasa-navigation-strip")
 class NavigateStrip extends LitElement {
     static styles: CSSResultGroup = css`
         :host {
@@ -51,7 +51,7 @@ class NavigateStrip extends LitElement {
 }
 
 window.customCards.push({
-    type: "smartqasa-navgigation-strip",
+    type: "smartqasa-navigation-strip",
     name: "SmartQasa Navigation Strip",
     preview: true,
     description: "A SmartQasa tile for displaying the footer navigation strip.",
