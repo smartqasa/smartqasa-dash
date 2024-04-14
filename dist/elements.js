@@ -1,4 +1,4 @@
-var version = "1.1.48";
+var version = "1.1.49";
 
 /******************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -553,9 +553,6 @@ let NavigateStrip = class NavigateStrip extends s {
         console.log(`Action for ${id}`);
     }
 };
-__decorate([
-    n$1({ type: Object })
-], NavigateStrip.prototype, "config", void 0);
 NavigateStrip = __decorate([
     t$1("smartqasa-navigate-strip")
 ], NavigateStrip);

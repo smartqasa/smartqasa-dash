@@ -1,22 +1,8 @@
 import { LitElement, html, css, CSSResultGroup, TemplateResult } from "lit";
 import { customElement, property } from "lit/decorators.js";
 
-interface CardConfig {
-    icon: string;
-    name: string;
-    action: ActionConfig;
-}
-
-interface ActionConfig {
-    type: string;
-    service?: string;
-    data?: any;
-}
-
 @customElement("smartqasa-navigate-strip")
 class NavigateStrip extends LitElement {
-    @property({ type: Object }) config?: CardConfig;
-
     static styles: CSSResultGroup = css`
         :host {
             display: block;
