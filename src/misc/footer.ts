@@ -147,11 +147,25 @@ class FooterStrip extends LitElement implements ActionHandlers {
         const tvSoundObj = this._config.tv_sound ? this._hass.states[this._config.tv_sound] : undefined;
         const audioObj = this._config.audio ? this._hass.states[this._config.audio] : undefined;
 
+        const tvTitleCard = tvStreamObj
+            ? {
+                  type: "custom:smartqasa-title-card",
+                  text: tvStreamObj.attributes.friendly_name || "TV",
+              }
+            : undefined;
+
         const tvStreamCard = tvStreamObj
             ? {
                   type: "custom:roku-card",
                   entity: tvStreamObj.entity_id,
                   tv: true,
+              }
+            : undefined;
+
+        const audioTitleCard = audioObj
+            ? {
+                  type: "custom:smartqasa-title-card",
+                  text: audioObj.attributes.friendly_name || "Audio",
               }
             : undefined;
 
@@ -166,7 +180,6 @@ class FooterStrip extends LitElement implements ActionHandlers {
               }
             : undefined;
 
-        let gridTemplateAreas = '"message"';
         let gridTemplateColumns = "auto";
         let cards: any = [];
 

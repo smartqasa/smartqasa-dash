@@ -614,11 +614,23 @@ let FooterStrip = class FooterStrip extends s {
         const tvStreamObj = this._config.tv_stream ? this._hass.states[this._config.tv_stream] : undefined;
         this._config.tv_sound ? this._hass.states[this._config.tv_sound] : undefined;
         const audioObj = this._config.audio ? this._hass.states[this._config.audio] : undefined;
+        tvStreamObj
+            ? {
+                type: "custom:smartqasa-title-card",
+                text: tvStreamObj.attributes.friendly_name || "TV",
+            }
+            : undefined;
         const tvStreamCard = tvStreamObj
             ? {
                 type: "custom:roku-card",
                 entity: tvStreamObj.entity_id,
                 tv: true,
+            }
+            : undefined;
+        audioObj
+            ? {
+                type: "custom:smartqasa-title-card",
+                text: audioObj.attributes.friendly_name || "Audio",
             }
             : undefined;
         const audioCard = audioObj
