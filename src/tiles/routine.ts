@@ -4,8 +4,7 @@ import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 
-import styleTileBase from "../styles/tile-base";
-import styleTileIconSpin from "../styles/tile-icon-spin";
+import { styleTileBase, styleTileIconSpin } from "../styles/tile";
 
 interface Config extends LovelaceCardConfig {
     entity: string;

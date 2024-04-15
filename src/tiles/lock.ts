@@ -5,10 +5,7 @@ import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 import { moreInfoDialog } from "../utils/moreInfoDialog";
 
-import styleTileBase from "../styles/tile-base";
-import styleTileState from "../styles/tile-state";
-import styleTileIconBlink from "../styles/tile-icon-blink";
-import styleTileIconSpin from "../styles/tile-icon-spin";
+import { styleTileBase, styleTileState, styleTileIconBlink, styleTileIconSpin } from "../styles/tile";
 
 interface Config extends LovelaceCardConfig {
     entity: string;

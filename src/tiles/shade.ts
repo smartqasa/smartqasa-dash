@@ -5,9 +5,7 @@ import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 import { moreInfoDialog } from "../utils/moreInfoDialog";
 import { entityListDialog } from "../utils/entityListDialog";
 
-import styleTileBase from "../styles/tile-base";
-import styleTileState from "../styles/tile-state";
-import styleTileIconBlink from "../styles/tile-icon-blink";
+import { styleTileBase, styleTileState, styleTileIconBlink } from "../styles/tile";
 
 interface Config extends LovelaceCardConfig {
     entity: string;

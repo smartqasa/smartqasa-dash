@@ -759,7 +759,7 @@ window.customCards.push({
     description: "A SmartQasa card for rendering the time and date.",
 });
 
-var styleTileBase = i$4 `
+const styleTileBase = i$4 `
     .container {
         display: grid;
         height: 5.2rem;
@@ -799,8 +799,33 @@ var styleTileBase = i$4 `
         color: rgb(var(--sq-primary-font-rgb), 128, 128, 128);
     }
 `;
-
-var styleTileIconSpin = i$4 `
+const styleTileState = i$4 `
+    .container {
+        grid-template-areas: "i n" "i s";
+        grid-row-gap: 0.3rem;
+    }
+    .name {
+        place-self: end start;
+    }
+    .state {
+        grid-area: s;
+        align-self: start;
+        text-align: left;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        font-weight: var(--sq-secondary-font-weight, 300);
+        font-size: var(--sq-secondary-font-size, 1rem);
+        color: rgb(var(--sq-secondary-font-rgb, 0, 0, 0));
+    }
+`;
+const styleTileIconBlink = i$4 `
+    @keyframes blink {
+        50% {
+            opacity: 0.25;
+        }
+    }
+`;
+const styleTileIconSpin = i$4 `
     @keyframes spin {
         from {
             transform: rotate(0deg);
@@ -1736,26 +1761,6 @@ function entityListDialog(dialogTitle, filterType, filterValue, tileType) {
     window.browser_mod?.service("popup", dialogConfig);
 }
 
-var styleTileState = i$4 `
-    .container {
-        grid-template-areas: 'i n' 'i s';
-        grid-row-gap: 0.3rem;
-    }
-    .name {
-        place-self: end start;
-    }
-    .state {
-        grid-area: s;
-        align-self: start;
-        text-align: left;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        font-weight: var(--sq-secondary-font-weight, 300);
-        font-size: var(--sq-secondary-font-size, 1.0rem);
-        color: rgb(var(--sq-secondary-font-rgb, 0, 0, 0));
-    }
-`;
-
 let FanTile = class FanTile extends s {
     constructor() {
         super(...arguments);
@@ -1864,14 +1869,6 @@ window.customCards.push({
     preview: true,
     description: "A SmartQasa tile for controlling a fan entity.",
 });
-
-var styleTileIconBlink = i$4 `
-    @keyframes blink {
-        50% {
-            opacity: 0.25;
-        }
-    }
-`;
 
 let GarageTile = class GarageTile extends s {
     constructor() {

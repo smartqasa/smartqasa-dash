@@ -3,8 +3,7 @@ import { customElement, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 
-import styleTileBase from "../styles/tile-base";
-import styleTileIconSpin from "../styles/tile-icon-spin";
+import { styleTileBase, styleTileIconSpin } from "../styles/tile";
 
 interface Config extends LovelaceCardConfig {
     area: string;

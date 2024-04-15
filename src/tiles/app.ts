@@ -2,7 +2,7 @@ import { CSSResultGroup, html, LitElement, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { LovelaceCardConfig } from "custom-card-helpers";
 
-import styleTileBase from "../styles/tile-base";
+import { styleTileBase } from "../styles/tile";
 import appTable from "../tables/apps";
 
 interface Config extends LovelaceCardConfig {
