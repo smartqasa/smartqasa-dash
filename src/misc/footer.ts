@@ -177,21 +177,38 @@ class FooterStrip extends LitElement implements ActionHandlers {
                   mediaBrowserShowTitleForThumbnailIcons: true,
                   showVolumeUpAndDownButtons: true,
                   sections: ["player", "volumes", "groups", "grouping", "media browser"],
+                  heightPercentage: 91.5,
               }
             : undefined;
+
+        const appListTitle =
+            videoPlayerObj || audioPlayerObj
+                ? {
+                      type: "custom:smartqasa-title-card",
+                      title: audioPlayerObj.attributes.friendly_name || "Audio",
+                  }
+                : undefined;
+
+        const appListCard =
+            videoPlayerObj || audioPlayerObj
+                ? {
+                      type: "vertical-stack",
+                      cards: [],
+                  }
+                : undefined;
 
         let gridTemplateColumns = "auto";
         let cards: any = [];
 
         if (videoPlayerObj && audioPlayerObj) {
-            gridTemplateColumns = "340px 420px";
-            cards = [videoPlayerTitle, audioPlayerTitle, videoPlayerCard, audioPlayerCard];
+            gridTemplateColumns = "340px 420px 250px";
+            cards = [videoPlayerTitle, audioPlayerTitle, appListTitle, videoPlayerCard, audioPlayerCard, appListCard];
         } else if (!videoPlayerObj && audioPlayerObj) {
-            gridTemplateColumns = "420px auto";
-            cards = [audioPlayerCard];
+            gridTemplateColumns = "420px 250px";
+            cards = [audioPlayerTitle, audioPlayerCard, audioPlayerCard, appListCard];
         } else if (videoPlayerObj && !audioPlayerObj) {
-            gridTemplateColumns = "340px auto";
-            cards = [videoPlayerCard];
+            gridTemplateColumns = "340px 250px";
+            cards = [videoPlayerTitle, videoPlayerCard, audioPlayerCard, appListCard];
         }
 
         const dialogConfig = {

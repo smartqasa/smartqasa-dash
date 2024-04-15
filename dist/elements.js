@@ -641,6 +641,7 @@ let FooterStrip = class FooterStrip extends s {
                 mediaBrowserShowTitleForThumbnailIcons: true,
                 showVolumeUpAndDownButtons: true,
                 sections: ["player", "volumes", "groups", "grouping", "media browser"],
+                heightPercentage: 91.5,
             }
             : undefined;
         let gridTemplateColumns = "auto";
