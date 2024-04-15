@@ -675,8 +675,8 @@ window.customCards.push({
 let SmartQasaTimeDate = class SmartQasaTimeDate extends s {
     constructor() {
         super(...arguments);
-        this._time = "loading";
-        this._date = "loading";
+        this._time = "Loading...";
+        this._date = "Loading...";
     }
     static get styles() {
         return i$4 `
@@ -718,6 +718,8 @@ let SmartQasaTimeDate = class SmartQasaTimeDate extends s {
     }
     setConfig(config) { }
     set hass(hass) {
+        if (!hass)
+            return;
         this._hass = hass;
         if (this._hass) {
             this._time = this._hass.states["sensor.current_time"].state || "unavailable";
@@ -2728,6 +2730,7 @@ let SelectTile = class SelectTile extends s {
     constructor() {
         super(...arguments);
         this._icon = "hass:form-dropdown";
+        this._iconAnimation = "none";
         this._iconColor = "var(--sq-inactive-rgb)";
         this._name = "Loading...";
         this._stateFmtd = "Loading...";
@@ -2755,20 +2758,19 @@ let SelectTile = class SelectTile extends s {
             this._stateFmtd = "Invalid entity!";
             return;
         }
-        this._icon = this._config?.icon || this._stateObj.attributes?.icon || this._icon;
+        this._icon = this._config?.icon || this._stateObj.attributes?.icon || "hass:form-dropdown";
         this._name = this._config?.name || this._stateObj.attributes?.friendly_name || this._stateObj.entity_id;
         this._stateFmtd = this._hass.formatEntityState(this._stateObj) || "Unknown";
     }
     render() {
+        const iconStyles = {
+            color: `rgb(${this._iconColor})`,
+            backgroundColor: `rgba(${this._iconColor}, var(--sq-icon-opacity))`,
+            animation: this._iconAnimation,
+        };
         return x `
-            <div class="container" @click=${this.showChoices}>
-                <div
-                    class="icon"
-                    style="
-            color: rgb(${this._iconColor});
-            background-color: rgba(${this._iconColor}, var(--sq-icon-opacity, 0.2));
-          "
-                >
+            <div class="container" @click=${this.showOptions}>
+                <div class="icon" style="${o(iconStyles)}">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
                 <div class="name">${this._name}</div>
@@ -2776,9 +2778,29 @@ let SelectTile = class SelectTile extends s {
             </div>
         `;
     }
-    showChoices(e) {
+    showOptions(e) {
         e.stopPropagation();
-        moreInfoDialog(this._config, this._stateObj, this._hass);
+        if (!this._stateObj)
+            return;
+        const cards = this._stateObj.attributes.options.map((option) => ({
+            type: "custom:smartqasa-options-tile",
+            option: option,
+        }));
+        const dialogConfig = {
+            title: this._stateObj.attributes.friendly_name || this._stateObj.entity_id,
+            timeout: 60000,
+            content: {
+                type: "custom:layout-card",
+                layout_type: "custom:grid-layout",
+                layout: {
+                    margin: 0,
+                    "grid-template-columns": "1fr",
+                    "grid-gap": "var(--sq-dialog-grid-gap)",
+                },
+                cards: cards,
+            },
+        };
+        window.browser_mod?.service("popup", dialogConfig);
     }
     getCardSize() {
         return 1;
@@ -3095,11 +3117,11 @@ let SwitchTile = class SwitchTile extends s {
     }
     toggleEntity(e) {
         e.stopPropagation();
-        if (this._stateObj) {
-            this._hass.callService("homeassistant", "toggle", {
-                entity_id: this._stateObj.entity_id,
-            });
-        }
+        if (!this._stateObj)
+            return;
+        this._hass.callService("homeassistant", "toggle", {
+            entity_id: this._stateObj.entity_id,
+        });
     }
     showMoreInfo(e) {
         e.stopPropagation();
