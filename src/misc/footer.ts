@@ -71,11 +71,8 @@ class FooterStrip extends LitElement implements ActionHandlers {
     }
 
     set hass(hass: any) {
+        if (!hass) return;
         this._hass = hass;
-        this._areas = Object.values<Area>(this._hass.areas).filter(
-            (area) => area && area.labels && area.labels.includes("visible")
-        );
-        console.log(this._areas);
     }
 
     protected render(): TemplateResult {
@@ -115,6 +112,9 @@ class FooterStrip extends LitElement implements ActionHandlers {
     }
 
     async handleAreas(): Promise<void> {
+        this._areas = Object.values<Area>(this._hass.areas).filter(
+            (area) => area && area.labels && area.labels.includes("visible")
+        );
         const cards = this._areas?.map((area) => ({
             type: "custom:smartqasa-area-tile",
             area: area.area_id,
