@@ -9,6 +9,7 @@ import styleTileState from "../styles/tile-state";
 
 interface Config extends LovelaceCardConfig {
     entity: string;
+    trigger?: string;
     icon?: string;
     name?: string;
 }
@@ -86,6 +87,7 @@ export class SelectTile extends LitElement {
             type: "custom:smartqasa-option-tile",
             entity: this._stateObj?.entity_id,
             option: option,
+            trigger: this._config?.trigger || null,
         }));
         const dialogConfig = {
             title: this._stateObj.attributes.friendly_name || this._stateObj.entity_id,

@@ -2438,6 +2438,11 @@ let OptionTile = class OptionTile extends s {
             entity_id: this._stateObj.entity_id,
             option: this._config?.option,
         });
+        if (this._config?.trigger && this._config.trigger.split(".")[0] === "input_button") {
+            this._hass.callService("input_button", "press", {
+                entity_id: this._config.trigger,
+            });
+        }
         setTimeout(() => {
             this._running = false;
             window.browser_mod?.service("close_popup", {});
@@ -2883,6 +2888,7 @@ let SelectTile = class SelectTile extends s {
             type: "custom:smartqasa-option-tile",
             entity: this._stateObj?.entity_id,
             option: option,
+            trigger: this._config?.trigger || null,
         }));
         const dialogConfig = {
             title: this._stateObj.attributes.friendly_name || this._stateObj.entity_id,
