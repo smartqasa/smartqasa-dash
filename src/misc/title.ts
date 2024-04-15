@@ -14,7 +14,6 @@ export class TitleCard extends LitElement {
         return css`
             :host {
                 display: block;
-                height: min-content
                 padding: 0.7rem;
                 border: var(--sq-card-border, none);
                 border-radius: 1.5rem;
