@@ -32,6 +32,7 @@ import "./misc/area-picture";
 import "./misc/footer";
 import "./misc/more-info";
 import "./misc/time-date";
+import "./misc/title";
 
 // Tiles
 import "./tiles/all-off";

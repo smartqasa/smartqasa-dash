@@ -822,6 +822,52 @@ window.customCards.push({
     description: "A SmartQasa card for rendering the time and date.",
 });
 
+let TitleCard = class TitleCard extends s {
+    static get styles() {
+        return i$4 `
+            :host {
+                display: block;
+                padding: 1rem;
+                border: var(--sq-card-border, none);
+                border-radius: 1.5rem;
+                background-color: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
+            }
+            .title {
+                justify-self: center;
+                text-align: center;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                font-size: var(--sq-primary-font-size, 1.5rem);
+                font-weight: var(--sq-primary-font-weight, 400);
+                color: rgb(var(--sq-primary-font-rgb));
+            }
+        `;
+    }
+    setConfig(config) {
+        this._config = { ...config };
+        this._config.title = this._config.title || "Title";
+    }
+    render() {
+        return x ` <div class="title">${this._config?.title}</div> `;
+    }
+    getCardSize() {
+        return 1;
+    }
+};
+__decorate([
+    r()
+], TitleCard.prototype, "_config", void 0);
+TitleCard = __decorate([
+    t$1("smartqasa-title-card")
+], TitleCard);
+window.customCards.push({
+    type: "smartqasa-title-card",
+    name: "SmartQasa Title Card",
+    preview: true,
+    description: "A SmartQasa card for rendering text in a title.",
+});
+
 const styleTileBase = i$4 `
     .container {
         display: grid;
