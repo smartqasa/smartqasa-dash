@@ -611,32 +611,32 @@ let FooterStrip = class FooterStrip extends s {
         if (!this._config)
             return;
         window.smartqasa.deviceType;
-        const tvStreamObj = this._config.tv_stream ? this._hass.states[this._config.tv_stream] : undefined;
-        this._config.tv_sound ? this._hass.states[this._config.tv_sound] : undefined;
-        const audioStreamObj = this._config.audio ? this._hass.states[this._config.audio] : undefined;
-        const tvStreamTitle = tvStreamObj
+        const videoPlayerObj = this._config.video_player ? this._hass.states[this._config.video_player] : undefined;
+        this._config.video_sound ? this._hass.states[this._config.video_sound] : undefined;
+        const audioPlayerObj = this._config.audio_player ? this._hass.states[this._config.audio_player] : undefined;
+        const videoPlayerTitle = videoPlayerObj
             ? {
                 type: "custom:smartqasa-title-card",
-                text: tvStreamObj.attributes.friendly_name || "TV",
+                title: videoPlayerObj.attributes.friendly_name || "TV",
             }
             : undefined;
-        const tvStreamCard = tvStreamObj
+        const videoPlayerCard = videoPlayerObj
             ? {
                 type: "custom:roku-card",
-                entity: tvStreamObj.entity_id,
+                entity: videoPlayerObj.entity_id,
                 tv: true,
             }
             : undefined;
-        audioStreamObj
+        const audioPlayerTitle = audioPlayerObj
             ? {
                 type: "custom:smartqasa-title-card",
-                text: audioStreamObj.attributes.friendly_name || "Audio",
+                title: audioPlayerObj.attributes.friendly_name || "Audio",
             }
             : undefined;
-        const audioCard = audioStreamObj
+        const audioPlayerCard = audioPlayerObj
             ? {
                 type: "custom:sonos-card",
-                entityId: audioStreamObj.entity_id,
+                entityId: audioPlayerObj.entity_id,
                 mediaBrowserItemsPerRow: 3,
                 mediaBrowserShowTitleForThumbnailIcons: true,
                 showVolumeUpAndDownButtons: true,
@@ -645,17 +645,17 @@ let FooterStrip = class FooterStrip extends s {
             : undefined;
         let gridTemplateColumns = "auto";
         let cards = [];
-        if (tvStreamObj && audioStreamObj) {
+        if (videoPlayerObj && audioPlayerObj) {
             gridTemplateColumns = "340px 420px";
-            cards = [tvStreamTitle, tvStreamCard, audioCard];
+            cards = [videoPlayerTitle, audioPlayerTitle, videoPlayerCard, audioPlayerCard];
         }
-        else if (!tvStreamObj && audioStreamObj) {
+        else if (!videoPlayerObj && audioPlayerObj) {
             gridTemplateColumns = "420px auto";
-            cards = [audioCard];
+            cards = [audioPlayerCard];
         }
-        else if (tvStreamObj && !audioStreamObj) {
+        else if (videoPlayerObj && !audioPlayerObj) {
             gridTemplateColumns = "340px auto";
-            cards = [tvStreamCard];
+            cards = [videoPlayerCard];
         }
         const dialogConfig = {
             title: "Entertainment",
@@ -828,6 +828,7 @@ let TitleCard = class TitleCard extends s {
         return i$4 `
             :host {
                 display: block;
+                height: min-content
                 padding: 0.7rem;
                 border: var(--sq-card-border, none);
                 border-radius: 1.5rem;

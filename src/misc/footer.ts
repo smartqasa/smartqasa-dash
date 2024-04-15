@@ -3,9 +3,9 @@ import { customElement, state } from "lit/decorators.js";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 
 interface Config extends LovelaceCardConfig {
-    audio: string;
-    tv_stream: string;
-    tv_sound: string;
+    audio_player: string;
+    video_player: string;
+    video_sound: string;
 }
 
 interface ExtendedHomeAssistant extends HomeAssistant {
@@ -143,36 +143,36 @@ class FooterStrip extends LitElement implements ActionHandlers {
         if (!this._config) return;
 
         const deviceType = window.smartqasa.deviceType;
-        const tvStreamObj = this._config.tv_stream ? this._hass.states[this._config.tv_stream] : undefined;
-        const tvSoundObj = this._config.tv_sound ? this._hass.states[this._config.tv_sound] : undefined;
-        const audioStreamObj = this._config.audio ? this._hass.states[this._config.audio] : undefined;
+        const videoPlayerObj = this._config.video_player ? this._hass.states[this._config.video_player] : undefined;
+        const videoSoundObj = this._config.video_sound ? this._hass.states[this._config.video_sound] : undefined;
+        const audioPlayerObj = this._config.audio_player ? this._hass.states[this._config.audio_player] : undefined;
 
-        const tvStreamTitle = tvStreamObj
+        const videoPlayerTitle = videoPlayerObj
             ? {
                   type: "custom:smartqasa-title-card",
-                  text: tvStreamObj.attributes.friendly_name || "TV",
+                  title: videoPlayerObj.attributes.friendly_name || "TV",
               }
             : undefined;
 
-        const tvStreamCard = tvStreamObj
+        const videoPlayerCard = videoPlayerObj
             ? {
                   type: "custom:roku-card",
-                  entity: tvStreamObj.entity_id,
+                  entity: videoPlayerObj.entity_id,
                   tv: true,
               }
             : undefined;
 
-        const audioStreamTitle = audioStreamObj
+        const audioPlayerTitle = audioPlayerObj
             ? {
                   type: "custom:smartqasa-title-card",
-                  text: audioStreamObj.attributes.friendly_name || "Audio",
+                  title: audioPlayerObj.attributes.friendly_name || "Audio",
               }
             : undefined;
 
-        const audioCard = audioStreamObj
+        const audioPlayerCard = audioPlayerObj
             ? {
                   type: "custom:sonos-card",
-                  entityId: audioStreamObj.entity_id,
+                  entityId: audioPlayerObj.entity_id,
                   mediaBrowserItemsPerRow: 3,
                   mediaBrowserShowTitleForThumbnailIcons: true,
                   showVolumeUpAndDownButtons: true,
@@ -183,15 +183,15 @@ class FooterStrip extends LitElement implements ActionHandlers {
         let gridTemplateColumns = "auto";
         let cards: any = [];
 
-        if (tvStreamObj && audioStreamObj) {
+        if (videoPlayerObj && audioPlayerObj) {
             gridTemplateColumns = "340px 420px";
-            cards = [tvStreamTitle, tvStreamCard, audioCard];
-        } else if (!tvStreamObj && audioStreamObj) {
+            cards = [videoPlayerTitle, audioPlayerTitle, videoPlayerCard, audioPlayerCard];
+        } else if (!videoPlayerObj && audioPlayerObj) {
             gridTemplateColumns = "420px auto";
-            cards = [audioCard];
-        } else if (tvStreamObj && !audioStreamObj) {
+            cards = [audioPlayerCard];
+        } else if (videoPlayerObj && !audioPlayerObj) {
             gridTemplateColumns = "340px auto";
-            cards = [tvStreamCard];
+            cards = [videoPlayerCard];
         }
 
         const dialogConfig = {
