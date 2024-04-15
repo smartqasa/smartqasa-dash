@@ -1,5 +1,6 @@
 import { CSSResultGroup, html, LitElement, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
+import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 import { moreInfoDialog } from "../utils/moreInfoDialog";
@@ -20,6 +21,7 @@ export class SensorTile extends LitElement {
 
     private _hass: any;
     private _iconTemplate: any;
+    private _iconAnimation: string = "none";
     private _iconColor: string = "var(--sq-inactive-rgb)";
     private _name: string = "Loading...";
     private _stateFmtd: string = "Loading...";
@@ -72,17 +74,15 @@ export class SensorTile extends LitElement {
     }
 
     protected render(): TemplateResult {
+        const iconStyles = {
+            color: `rgb(${this._iconColor})`,
+            backgroundColor: `rgba(${this._iconColor}, var(--sq-icon-opacity))`,
+            animation: this._iconAnimation,
+        };
+
         return html`
             <div class="container" @click=${this.showMoreInfo}>
-                <div
-                    class="icon"
-                    style="
-            color: rgb(${this._iconColor});
-            background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
-          "
-                >
-                    ${this._iconTemplate}
-                </div>
+                <div class="icon" style="${styleMap(iconStyles)}">${this._iconTemplate}</div>
                 <div class="name">${this._name}</div>
                 <div class="state">${this._stateFmtd}</div>
             </div>

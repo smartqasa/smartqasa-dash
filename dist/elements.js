@@ -2927,6 +2927,7 @@ window.customCards.push({
 let SensorTile = class SensorTile extends s {
     constructor() {
         super(...arguments);
+        this._iconAnimation = "none";
         this._iconColor = "var(--sq-inactive-rgb)";
         this._name = "Loading...";
         this._stateFmtd = "Loading...";
@@ -2977,17 +2978,14 @@ let SensorTile = class SensorTile extends s {
         }
     }
     render() {
+        const iconStyles = {
+            color: `rgb(${this._iconColor})`,
+            backgroundColor: `rgba(${this._iconColor}, var(--sq-icon-opacity))`,
+            animation: this._iconAnimation,
+        };
         return x `
             <div class="container" @click=${this.showMoreInfo}>
-                <div
-                    class="icon"
-                    style="
-            color: rgb(${this._iconColor});
-            background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
-          "
-                >
-                    ${this._iconTemplate}
-                </div>
+                <div class="icon" style="${o(iconStyles)}">${this._iconTemplate}</div>
                 <div class="name">${this._name}</div>
                 <div class="state">${this._stateFmtd}</div>
             </div>
