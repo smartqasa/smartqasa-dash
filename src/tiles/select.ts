@@ -80,7 +80,8 @@ export class SelectTile extends LitElement {
         if (!this._stateObj) return;
 
         const cards = this._stateObj.attributes.options.map((option: string) => ({
-            type: "custom:smartqasa-options-tile",
+            type: "custom:smartqasa-option-tile",
+            entity: this._stateObj?.entity_id,
             option: option,
         }));
         const dialogConfig = {

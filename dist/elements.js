@@ -2783,7 +2783,8 @@ let SelectTile = class SelectTile extends s {
         if (!this._stateObj)
             return;
         const cards = this._stateObj.attributes.options.map((option) => ({
-            type: "custom:smartqasa-options-tile",
+            type: "custom:smartqasa-option-tile",
+            entity: this._stateObj?.entity_id,
             option: option,
         }));
         const dialogConfig = {
