@@ -2395,7 +2395,7 @@ let OptionTile = class OptionTile extends s {
     updateState() {
         if (this._running === true)
             return;
-        this._stateObj = this._config?.entity ? this._hass.states[this._config.entity] : undefined;
+        this._stateObj = this._config?.entity ? this._hass?.states[this._config.entity] : undefined;
         if (!this._stateObj) {
             this._icon = this._config?.icon || this._icon;
             this._iconColor = "var(--sq-unavailable-rgb)";

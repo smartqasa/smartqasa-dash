@@ -8,9 +8,9 @@ import styleTileBase from "../styles/tile-base";
 
 interface Config extends LovelaceCardConfig {
     entity: string;
+    option: string;
     icon?: string;
     name?: string;
-    option: string;
 }
 
 @customElement("smartqasa-option-tile")
@@ -40,7 +40,7 @@ export class OptionTile extends LitElement {
     private updateState(): void {
         if (this._running === true) return;
 
-        this._stateObj = this._config?.entity ? this._hass.states[this._config.entity] : undefined;
+        this._stateObj = this._config?.entity ? this._hass?.states[this._config.entity] : undefined;
 
         if (!this._stateObj) {
             this._icon = this._config?.icon || this._icon;
