@@ -2823,7 +2823,7 @@ window.customCards.push({
 });
 
 function selectOptionDialog(config, stateObj) {
-    if (!config || !stateObj)
+    if (!stateObj)
         return;
     const cards = stateObj.attributes.options.map((option) => ({
         type: "custom:smartqasa-option-tile",
