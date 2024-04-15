@@ -550,7 +550,7 @@ let FooterStrip = class FooterStrip extends s {
     }
     set hass(hass) {
         this._hass = hass;
-        this._areas = Object.values(hass.areas).filter((area) => hass.area.labels && hass.area.labels.includes("visible"));
+        this._areas = Object.values(this._hass.areas).filter((area) => area && area.labels && area.labels.includes("visible"));
         console.log(this._areas);
     }
     render() {

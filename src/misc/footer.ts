@@ -72,8 +72,8 @@ class FooterStrip extends LitElement implements ActionHandlers {
 
     set hass(hass: any) {
         this._hass = hass;
-        this._areas = Object.values<Area>(hass.areas).filter(
-            (area) => hass.area.labels && hass.area.labels.includes("visible")
+        this._areas = Object.values<Area>(this._hass.areas).filter(
+            (area) => area && area.labels && area.labels.includes("visible")
         );
         console.log(this._areas);
     }
