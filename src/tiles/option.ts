@@ -9,8 +9,6 @@ import styleTileBase from "../styles/tile-base";
 interface Config extends LovelaceCardConfig {
     entity: string;
     option: string;
-    icon?: string;
-    name?: string;
 }
 
 @customElement("smartqasa-option-tile")
@@ -43,19 +41,20 @@ export class OptionTile extends LitElement {
         this._stateObj = this._config?.entity ? this._hass?.states[this._config.entity] : undefined;
 
         if (!this._stateObj) {
-            this._icon = this._config?.icon || this._icon;
+            this._icon = "hass:form-dropdown";
+            this._iconAnimation = "none";
             this._iconColor = "var(--sq-unavailable-rgb)";
-            this._name = this._name || "Unknown";
+            this._name = this._config?.option || "Unknown";
             return;
         }
 
-        this._icon = this._config?.icon || this._stateObj.attributes?.icon || "hass:form-dropdown";
+        this._icon = "hass:form-dropdown";
         this._iconAnimation = "none";
         this._iconColor =
             this._stateObj.state === this._config?.option
                 ? "var(--sq-rgb-blue, 25, 125, 255)"
                 : "var(--sq-inactive-rgb)";
-        this._name = this._config?.name || this._stateObj.attributes?.friendly_name || this._stateObj.entity_id;
+        this._name = this._config?.option || "Unknown";
     }
 
     protected render(): TemplateResult {
