@@ -147,26 +147,38 @@ class FooterStrip extends LitElement implements ActionHandlers {
         const tvSoundObj = this._config.tv_sound ? this._hass.states[this._config.tv_sound] : undefined;
         const audioObj = this._config.audio ? this._hass.states[this._config.audio] : undefined;
 
+        const tvStreamCard = tvStreamObj
+            ? {
+                  type: "custom:roku-card",
+                  entity: tvStreamObj.entity_id,
+                  tv: true,
+              }
+            : undefined;
+
+        const audioCard = audioObj
+            ? {
+                  type: "custom:sonos-card",
+                  entityId: audioObj.entity_id,
+                  mediaBrowserItemsPerRow: 3,
+                  mediaBrowserShowTitleForThumbnailIcons: true,
+                  showVolumeUpAndDownButtons: true,
+                  sections: ["player", "volumes", "groups", "grouping", "media browser"],
+              }
+            : undefined;
+
         let gridTemplateAreas = '"message"';
         let gridTemplateColumns = "auto";
+        let cards: any = [];
+
         if (tvStreamObj && audioObj) {
-            gridTemplateAreas =
-                deviceType === "phone"
-                    ? '"rk-title" "rk-card" "sn-title" "sn-card" "ap-title" "ap-card"'
-                    : '"rk-title sn-title ap-title" "rk-card sn-card ap-card"';
-            gridTemplateColumns = deviceType === "phone" ? "95%" : "340px 420px auto";
+            gridTemplateColumns = "340px 420px auto";
+            cards = [tvStreamCard, audioCard];
         } else if (!tvStreamObj && audioObj) {
-            gridTemplateAreas =
-                deviceType === "phone"
-                    ? '"sn-title" "sn-card" "ap-title" "ap-card"'
-                    : '"sn-title ap-title" "sn-card ap-card"';
-            gridTemplateColumns = deviceType === "phone" ? "95%" : "420px auto";
+            gridTemplateColumns = "420px auto";
+            cards = [audioCard];
         } else if (tvStreamObj && !audioObj) {
-            gridTemplateAreas =
-                deviceType === "phone"
-                    ? '"rk-title" "rk-card" "ap-title" "ap-card"'
-                    : '"rk-title ap-title" "rk-card ap-card"';
-            gridTemplateColumns = deviceType === "phone" ? "95%" : "340px auto";
+            gridTemplateColumns = "340px auto";
+            cards = [tvStreamCard];
         }
 
         const dialogConfig = {
@@ -179,19 +191,8 @@ class FooterStrip extends LitElement implements ActionHandlers {
                     margin: 0,
                     "grid-template-columns": gridTemplateColumns,
                     "grid-gap": "var(--sq-dialog-grid-gap)",
-                    "grid-template-areas": gridTemplateAreas,
                 },
-                cards: [
-                    {
-                        type: "custom:roku-card",
-                        entity: tvStreamObj.entity_id,
-                        tv: true,
-                    },
-                    {
-                        type: "custom:sonos-card",
-                        entity: audioObj.entity_id,
-                    },
-                ],
+                cards: cards,
             },
         };
 
