@@ -666,6 +666,7 @@ let FooterStrip = class FooterStrip extends s {
                 layout: {
                     margin: 0,
                     "grid-template-columns": gridTemplateColumns,
+                    "grid-template-rows": "max-content max-content",
                     "grid-gap": "var(--sq-dialog-grid-gap)",
                 },
                 cards: cards,
@@ -827,10 +828,11 @@ let TitleCard = class TitleCard extends s {
         return i$4 `
             :host {
                 display: block;
-                padding: 1rem;
+                padding: 0.7rem;
                 border: var(--sq-card-border, none);
                 border-radius: 1.5rem;
                 background-color: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
+                box-sizing: border-box;
             }
             .title {
                 justify-self: center;

@@ -203,6 +203,7 @@ class FooterStrip extends LitElement implements ActionHandlers {
                 layout: {
                     margin: 0,
                     "grid-template-columns": gridTemplateColumns,
+                    "grid-template-rows": "max-content max-content",
                     "grid-gap": "var(--sq-dialog-grid-gap)",
                 },
                 cards: cards,

@@ -14,10 +14,11 @@ export class TitleCard extends LitElement {
         return css`
             :host {
                 display: block;
-                padding: 1rem;
+                padding: 0.7rem;
                 border: var(--sq-card-border, none);
                 border-radius: 1.5rem;
                 background-color: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
+                box-sizing: border-box;
             }
             .title {
                 justify-self: center;
