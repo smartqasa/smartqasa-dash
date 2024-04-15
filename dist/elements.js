@@ -1,4 +1,4 @@
-var version = "1.1.52";
+var version = "1.1.53";
 
 /******************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -586,12 +586,27 @@ let FooterStrip = class FooterStrip extends s {
         window.history.pushState(null, "", `/home-dash/${path}`);
         window.dispatchEvent(new CustomEvent("location-changed"));
     }
-    async handleAreas() {
+    handleAreas() {
         this._areas = Object.values(this._hass.areas).filter((area) => area && area.labels && area.labels.includes("visible"));
-        this._areas?.map((area) => ({
+        const cards = this._areas?.map((area) => ({
             type: "custom:smartqasa-area-tile",
             area: area.area_id,
         }));
+        const dialogConfig = {
+            title: "Areas",
+            timeout: 60000,
+            content: {
+                type: "custom:layout-card",
+                layout_type: "custom:grid-layout",
+                layout: {
+                    margin: 0,
+                    "grid-template-columns": "1fr",
+                    "grid-gap": "var(--sq-dialog-grid-gap)",
+                },
+                cards: cards,
+            },
+        };
+        window.browser_mod?.service("popup", dialogConfig);
     }
     handleEntertain() {
         console.log("Entertain action");

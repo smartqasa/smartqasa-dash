@@ -111,7 +111,7 @@ class FooterStrip extends LitElement implements ActionHandlers {
         window.dispatchEvent(new CustomEvent("location-changed"));
     }
 
-    async handleAreas(): Promise<void> {
+    handleAreas(): void {
         this._areas = Object.values<Area>(this._hass.areas).filter(
             (area) => area && area.labels && area.labels.includes("visible")
         );
@@ -133,6 +133,8 @@ class FooterStrip extends LitElement implements ActionHandlers {
                 cards: cards,
             },
         };
+
+        window.browser_mod?.service("popup", dialogConfig);
     }
 
     handleEntertain(): void {
