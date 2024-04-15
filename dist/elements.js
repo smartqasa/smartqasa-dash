@@ -613,8 +613,8 @@ let FooterStrip = class FooterStrip extends s {
         window.smartqasa.deviceType;
         const tvStreamObj = this._config.tv_stream ? this._hass.states[this._config.tv_stream] : undefined;
         this._config.tv_sound ? this._hass.states[this._config.tv_sound] : undefined;
-        const audioObj = this._config.audio ? this._hass.states[this._config.audio] : undefined;
-        tvStreamObj
+        const audioStreamObj = this._config.audio ? this._hass.states[this._config.audio] : undefined;
+        const tvStreamTitle = tvStreamObj
             ? {
                 type: "custom:smartqasa-title-card",
                 text: tvStreamObj.attributes.friendly_name || "TV",
@@ -627,16 +627,16 @@ let FooterStrip = class FooterStrip extends s {
                 tv: true,
             }
             : undefined;
-        audioObj
+        audioStreamObj
             ? {
                 type: "custom:smartqasa-title-card",
-                text: audioObj.attributes.friendly_name || "Audio",
+                text: audioStreamObj.attributes.friendly_name || "Audio",
             }
             : undefined;
-        const audioCard = audioObj
+        const audioCard = audioStreamObj
             ? {
                 type: "custom:sonos-card",
-                entityId: audioObj.entity_id,
+                entityId: audioStreamObj.entity_id,
                 mediaBrowserItemsPerRow: 3,
                 mediaBrowserShowTitleForThumbnailIcons: true,
                 showVolumeUpAndDownButtons: true,
@@ -645,15 +645,15 @@ let FooterStrip = class FooterStrip extends s {
             : undefined;
         let gridTemplateColumns = "auto";
         let cards = [];
-        if (tvStreamObj && audioObj) {
-            gridTemplateColumns = "340px 420px auto";
-            cards = [tvStreamCard, audioCard];
+        if (tvStreamObj && audioStreamObj) {
+            gridTemplateColumns = "340px 420px";
+            cards = [tvStreamTitle, tvStreamCard, audioCard];
         }
-        else if (!tvStreamObj && audioObj) {
+        else if (!tvStreamObj && audioStreamObj) {
             gridTemplateColumns = "420px auto";
             cards = [audioCard];
         }
-        else if (tvStreamObj && !audioObj) {
+        else if (tvStreamObj && !audioStreamObj) {
             gridTemplateColumns = "340px auto";
             cards = [tvStreamCard];
         }
