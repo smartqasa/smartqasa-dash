@@ -3,7 +3,7 @@ import { customElement, state } from "lit/decorators.js";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 
 interface Config extends LovelaceCardConfig {
-    speakers: string;
+    audio: string;
     tv_stream: string;
     tv_sound: string;
 }
@@ -145,23 +145,23 @@ class FooterStrip extends LitElement implements ActionHandlers {
         const deviceType = window.smartqasa.deviceType;
         const tvStreamObj = this._config.tv_stream ? this._hass.states[this._config.tv_stream] : undefined;
         const tvSoundObj = this._config.tv_sound ? this._hass.states[this._config.tv_sound] : undefined;
-        const speakerObj = this._config.speaker ? this._hass.states[this._config.speaker] : undefined;
+        const audioObj = this._config.audio ? this._hass.states[this._config.audio] : undefined;
 
         let gridTemplateAreas = '"message"';
         let gridTemplateColumns = "auto";
-        if (tvStreamObj && speakerObj) {
+        if (tvStreamObj && audioObj) {
             gridTemplateAreas =
                 deviceType === "phone"
                     ? '"rk-title" "rk-card" "sn-title" "sn-card" "ap-title" "ap-card"'
                     : '"rk-title sn-title ap-title" "rk-card sn-card ap-card"';
             gridTemplateColumns = deviceType === "phone" ? "95%" : "340px 420px auto";
-        } else if (!tvStreamObj && speakerObj) {
+        } else if (!tvStreamObj && audioObj) {
             gridTemplateAreas =
                 deviceType === "phone"
                     ? '"sn-title" "sn-card" "ap-title" "ap-card"'
                     : '"sn-title ap-title" "sn-card ap-card"';
             gridTemplateColumns = deviceType === "phone" ? "95%" : "420px auto";
-        } else if (tvStreamObj && !speakerObj) {
+        } else if (tvStreamObj && !audioObj) {
             gridTemplateAreas =
                 deviceType === "phone"
                     ? '"rk-title" "rk-card" "ap-title" "ap-card"'
@@ -189,7 +189,7 @@ class FooterStrip extends LitElement implements ActionHandlers {
                     },
                     {
                         type: "custom:sonos-card",
-                        entity: speakerObj.entity_id,
+                        entity: audioObj.entity_id,
                     },
                 ],
             },
