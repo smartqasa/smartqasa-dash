@@ -4,6 +4,14 @@ import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 
 interface Config extends LovelaceCardConfig {}
 
+interface AreaEntry {
+    area_id: string;
+    icon: string;
+    name: string;
+    picture: string;
+    labels: string[];
+}
+
 interface ActionHandlers {
     handleHome: () => void;
     handleAreas: () => void;
@@ -14,6 +22,7 @@ interface ActionHandlers {
 @customElement("smartqasa-footer-strip")
 class FooterStrip extends LitElement implements ActionHandlers {
     @state() private _config?: Config;
+    @state() private _areas?: any;
 
     private _hass: any;
 
@@ -49,17 +58,16 @@ class FooterStrip extends LitElement implements ActionHandlers {
             height: 1.8rem;
             width: 1.8rem;
         }
-        .hidden {
-            display: none;
-        }
     `;
 
     setConfig(config: Config): void {
         this._config = { ...config };
     }
 
-    set hass(hass: HomeAssistant) {
-        this._hass = hass;
+    set hass(hass: any) {
+        if (!hass) return;
+        this._areas = hass.areas;
+        console.log(this._areas);
     }
 
     protected render(): TemplateResult {
@@ -99,38 +107,27 @@ class FooterStrip extends LitElement implements ActionHandlers {
     }
 
     async handleAreas(): Promise<void> {
-        try {
-            const response = await fetch("/config/sq-custom/areas.json");
-            const areas = await response.json();
-            const cards = areas.map((area: any) => ({
-                type: "custom:smartqasa-area-tile",
-                area: area,
-            }));
-            console.log(areas);
-            const dialogConfig = {
-                title: "Areas",
-                timeout: 60000,
-                content: {
-                    type: "custom:layout-card",
-                    layout_type: "custom:grid-layout",
-                    layout: {
-                        margin: 0,
-                        "grid-template-columns": "1fr",
-                        "grid-gap": "var(--sq-dialog-grid-gap)",
-                    },
-                    cards: cards,
+        const cards: any[] = [];
+        const dialogConfig = {
+            title: "Areas",
+            timeout: 60000,
+            content: {
+                type: "custom:layout-card",
+                layout_type: "custom:grid-layout",
+                layout: {
+                    margin: 0,
+                    "grid-template-columns": "1fr",
+                    "grid-gap": "var(--sq-dialog-grid-gap)",
                 },
-            };
-
-            console.log(dialogConfig); // Now you would handle showing this dialog as needed.
-        } catch (error) {
-            console.error("Failed to load areas:", error);
-        }
+                cards: cards,
+            },
+        };
     }
 
     handleEntertain(): void {
         console.log("Entertain action");
     }
+
     handleMenu(): void {
         console.log("Menu action");
     }

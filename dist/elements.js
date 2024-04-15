@@ -544,15 +544,15 @@ let FooterStrip = class FooterStrip extends s {
             height: 1.8rem;
             width: 1.8rem;
         }
-        .hidden {
-            display: none;
-        }
     `; }
     setConfig(config) {
         this._config = { ...config };
     }
     set hass(hass) {
-        this._hass = hass;
+        if (!hass)
+            return;
+        this._areas = hass.areas;
+        console.log(this._areas);
     }
     render() {
         return x `
@@ -588,33 +588,6 @@ let FooterStrip = class FooterStrip extends s {
         window.dispatchEvent(new CustomEvent("location-changed"));
     }
     async handleAreas() {
-        try {
-            const response = await fetch("/config/sq-custom/areas.json");
-            const areas = await response.json();
-            const cards = areas.map((area) => ({
-                type: "custom:smartqasa-area-tile",
-                area: area,
-            }));
-            console.log(areas);
-            const dialogConfig = {
-                title: "Areas",
-                timeout: 60000,
-                content: {
-                    type: "custom:layout-card",
-                    layout_type: "custom:grid-layout",
-                    layout: {
-                        margin: 0,
-                        "grid-template-columns": "1fr",
-                        "grid-gap": "var(--sq-dialog-grid-gap)",
-                    },
-                    cards: cards,
-                },
-            };
-            console.log(dialogConfig); // Now you would handle showing this dialog as needed.
-        }
-        catch (error) {
-            console.error("Failed to load areas:", error);
-        }
     }
     handleEntertain() {
         console.log("Entertain action");
@@ -626,6 +599,9 @@ let FooterStrip = class FooterStrip extends s {
 __decorate([
     r()
 ], FooterStrip.prototype, "_config", void 0);
+__decorate([
+    r()
+], FooterStrip.prototype, "_areas", void 0);
 FooterStrip = __decorate([
     t$1("smartqasa-footer-strip")
 ], FooterStrip);
