@@ -17,7 +17,7 @@ export class MotionChip extends LitElement {
     @state() private _stateObj?: HassEntity;
 
     private _hass: any;
-    private _containerStyle!: any; // Change type to any for styleMap compatibility
+    private _containerStyle!: any;
     private _icon!: string;
     private _iconColor!: string;
     private _name?: string;
@@ -65,9 +65,7 @@ export class MotionChip extends LitElement {
     }
 
     protected render(): TemplateResult {
-        if (!this._stateObj) {
-            return html``;
-        }
+        if (!this._config?.entity) return html``;
 
         const iconStyles = {
             color: `rgb(${this._iconColor})`,

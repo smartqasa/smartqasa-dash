@@ -16,14 +16,13 @@ export class MoreInfoDialog extends LitElement {
     private _hass: any;
 
     setConfig(config: Config): void {
-        if (!config.entity) throw new Error("A valid entity is required.");
-        this._config = config;
-        if (this._hass) this.hass = this._hass;
+        this._config = { ...config };
     }
 
     set hass(hass: HomeAssistant) {
+        if (!this._config?.entity || !hass) return;
         this._hass = hass;
-        this._stateObj = this._config?.entity ? this._hass.states[this._config.entity] : undefined;
+        this._stateObj = this._config?.entity ? this._hass?.states[this._config.entity] : undefined;
     }
 
     protected render(): TemplateResult {
