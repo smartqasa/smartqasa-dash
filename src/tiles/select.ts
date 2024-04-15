@@ -3,6 +3,7 @@ import { customElement, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
+import { selectOptionDialog } from "../utils/selectOptionDialog";
 
 import styleTileBase from "../styles/tile-base";
 import styleTileState from "../styles/tile-state";
@@ -81,30 +82,7 @@ export class SelectTile extends LitElement {
 
     private showOptions(e: Event): void {
         e.stopPropagation();
-        if (!this._stateObj) return;
-
-        const cards = this._stateObj.attributes.options.map((option: string) => ({
-            type: "custom:smartqasa-option-tile",
-            entity: this._stateObj?.entity_id,
-            option: option,
-            trigger: this._config?.trigger || null,
-        }));
-        const dialogConfig = {
-            title: this._stateObj.attributes.friendly_name || this._stateObj.entity_id,
-            timeout: 60000,
-            content: {
-                type: "custom:layout-card",
-                layout_type: "custom:grid-layout",
-                layout: {
-                    margin: 0,
-                    "grid-template-columns": "1fr",
-                    "grid-gap": "var(--sq-dialog-grid-gap)",
-                },
-                cards: cards,
-            },
-        };
-
-        window.browser_mod?.service("popup", dialogConfig);
+        selectOptionDialog(this._config, this._stateObj);
     }
 
     getCardSize(): number {

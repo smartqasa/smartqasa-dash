@@ -133,7 +133,7 @@ export class ShadeTile extends LitElement {
 
     private showMoreInfo(e: Event): void {
         e.stopPropagation();
-        moreInfoDialog(this._config, this._stateObj, this._hass);
+        moreInfoDialog(this._config, this._stateObj);
     }
 
     private showGroupList(e: Event): void {

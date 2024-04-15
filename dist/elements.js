@@ -348,7 +348,7 @@ const listDialogConfig = (dialogTitle, filterType, filterValue, tileType) => {
     };
 };
 
-function moreInfoDialog(config, stateObj, hass) {
+function moreInfoDialog(config, stateObj) {
     if (!stateObj)
         return;
     const dialogConfig = {
@@ -442,7 +442,7 @@ let ThermostatChip = class ThermostatChip extends s {
     }
     showMoreInfo(e) {
         e.stopPropagation();
-        moreInfoDialog(this._config, this._stateObj, this._hass);
+        moreInfoDialog(this._config, this._stateObj);
     }
 };
 __decorate([
@@ -1838,7 +1838,7 @@ let FanTile = class FanTile extends s {
     }
     showMoreInfo(e) {
         e.stopPropagation();
-        moreInfoDialog(this._config, this._stateObj, this._hass);
+        moreInfoDialog(this._config, this._stateObj);
     }
     showEntityList(e) {
         e.stopPropagation();
@@ -1967,7 +1967,7 @@ let GarageTile = class GarageTile extends s {
     }
     showMoreInfo(e) {
         e.stopPropagation();
-        moreInfoDialog(this._config, this._stateObj, this._hass);
+        moreInfoDialog(this._config, this._stateObj);
     }
     getCardSize() {
         return 1;
@@ -2053,7 +2053,7 @@ let HeaterTile = class HeaterTile extends s {
     }
     showMoreInfo(e) {
         e.stopPropagation();
-        moreInfoDialog(this._config, this._stateObj, this._hass);
+        moreInfoDialog(this._config, this._stateObj);
     }
     getCardSize() {
         return 1;
@@ -2141,7 +2141,7 @@ let LightTile = class LightTile extends s {
     }
     showMoreInfo(e) {
         e.stopPropagation();
-        moreInfoDialog(this._config, this._stateObj, this._hass);
+        moreInfoDialog(this._config, this._stateObj);
     }
     showEntityList(e) {
         e.stopPropagation();
@@ -2347,7 +2347,7 @@ let LockTile = class LockTile extends s {
     }
     showMoreInfo(e) {
         e.stopPropagation();
-        moreInfoDialog(this._config, this._stateObj, this._hass);
+        moreInfoDialog(this._config, this._stateObj);
     }
     getCardSize() {
         return 1;
@@ -2570,7 +2570,7 @@ let RobotTile = class RobotTile extends s {
     }
     showMoreInfo(e) {
         e.stopPropagation();
-        moreInfoDialog(this._config, this._stateObj, this._hass);
+        moreInfoDialog(this._config, this._stateObj);
     }
     getCardSize() {
         return 1;
@@ -2825,6 +2825,32 @@ window.customCards.push({
     description: "A SmartQasa tile for triggering an automation, scene, or script entity.",
 });
 
+function selectOptionDialog(config, stateObj) {
+    if (stateObj)
+        return;
+    const cards = stateObj.attributes.options.map((option) => ({
+        type: "custom:smartqasa-option-tile",
+        entity: stateObj?.entity_id,
+        option: option,
+        trigger: config?.trigger || null,
+    }));
+    const dialogConfig = {
+        title: stateObj.attributes.friendly_name || stateObj.entity_id,
+        timeout: 60000,
+        content: {
+            type: "custom:layout-card",
+            layout_type: "custom:grid-layout",
+            layout: {
+                margin: 0,
+                "grid-template-columns": "1fr",
+                "grid-gap": "var(--sq-dialog-grid-gap)",
+            },
+            cards: cards,
+        },
+    };
+    window.browser_mod?.service("popup", dialogConfig);
+}
+
 let SelectTile = class SelectTile extends s {
     constructor() {
         super(...arguments);
@@ -2882,29 +2908,7 @@ let SelectTile = class SelectTile extends s {
     }
     showOptions(e) {
         e.stopPropagation();
-        if (!this._stateObj)
-            return;
-        const cards = this._stateObj.attributes.options.map((option) => ({
-            type: "custom:smartqasa-option-tile",
-            entity: this._stateObj?.entity_id,
-            option: option,
-            trigger: this._config?.trigger || null,
-        }));
-        const dialogConfig = {
-            title: this._stateObj.attributes.friendly_name || this._stateObj.entity_id,
-            timeout: 60000,
-            content: {
-                type: "custom:layout-card",
-                layout_type: "custom:grid-layout",
-                layout: {
-                    margin: 0,
-                    "grid-template-columns": "1fr",
-                    "grid-gap": "var(--sq-dialog-grid-gap)",
-                },
-                cards: cards,
-            },
-        };
-        window.browser_mod?.service("popup", dialogConfig);
+        selectOptionDialog(this._config, this._stateObj);
     }
     getCardSize() {
         return 1;
@@ -2997,7 +3001,7 @@ let SensorTile = class SensorTile extends s {
     }
     showMoreInfo(e) {
         e.stopPropagation();
-        moreInfoDialog(this._config, this._stateObj, this._hass);
+        moreInfoDialog(this._config, this._stateObj);
     }
     getCardSize() {
         return 1;
@@ -3130,7 +3134,7 @@ let ShadeTile = class ShadeTile extends s {
     }
     showMoreInfo(e) {
         e.stopPropagation();
-        moreInfoDialog(this._config, this._stateObj, this._hass);
+        moreInfoDialog(this._config, this._stateObj);
     }
     showGroupList(e) {
         e.stopPropagation();
@@ -3229,7 +3233,7 @@ let SwitchTile = class SwitchTile extends s {
     }
     showMoreInfo(e) {
         e.stopPropagation();
-        moreInfoDialog(this._config, this._stateObj, this._hass);
+        moreInfoDialog(this._config, this._stateObj);
     }
     getCardSize() {
         return 1;
@@ -3328,7 +3332,7 @@ let ThermostatTile = class ThermostatTile extends s {
     }
     showMoreInfo(e) {
         e.stopPropagation();
-        moreInfoDialog(this._config, this._stateObj, this._hass);
+        moreInfoDialog(this._config, this._stateObj);
     }
     getCardSize() {
         return 1;
