@@ -2372,6 +2372,99 @@ window.customCards.push({
     description: "A SmartQasa tile for controlling a lock entity.",
 });
 
+let OptionTile = class OptionTile extends s {
+    constructor() {
+        super(...arguments);
+        this._running = false;
+        this._icon = "hass:form-dropdown";
+        this._iconAnimation = "none";
+        this._iconColor = "var(--sq-inactive-rgb)";
+        this._name = "Loading...";
+    }
+    static { this.styles = [styleTileBase]; }
+    setConfig(config) {
+        this._config = { ...config };
+        this.updateState();
+    }
+    set hass(hass) {
+        if (!this._config?.entity || !hass)
+            return;
+        this._hass = hass;
+        this.updateState();
+    }
+    updateState() {
+        if (this._running === true)
+            return;
+        this._stateObj = this._config?.entity ? this._hass.states[this._config.entity] : undefined;
+        if (!this._stateObj) {
+            this._icon = this._config?.icon || this._icon;
+            this._iconColor = "var(--sq-unavailable-rgb)";
+            this._name = this._name || "Unknown";
+            return;
+        }
+        this._icon = this._config?.icon || this._stateObj.attributes?.icon || "hass:form-dropdown";
+        this._iconAnimation = "none";
+        this._iconColor =
+            this._stateObj.state === this._config?.option
+                ? "var(--sq-rgb-blue, 25, 125, 255)"
+                : "var(--sq-inactive-rgb)";
+        this._name = this._config?.name || this._stateObj.attributes?.friendly_name || this._stateObj.entity_id;
+    }
+    render() {
+        const iconStyles = {
+            color: `rgb(${this._iconColor})`,
+            backgroundColor: `rgba(${this._iconColor}, var(--sq-icon-opacity))`,
+            animation: this._iconAnimation,
+        };
+        return x `
+            <div class="container" @click=${this.selectOption}>
+                <div class="icon" style="${o(iconStyles)}">
+                    <ha-icon .icon=${this._icon}></ha-icon>
+                </div>
+                <div class="name">${this._name}</div>
+            </div>
+        `;
+    }
+    selectOption(e) {
+        e.stopPropagation();
+        if (!this._stateObj)
+            return;
+        this._running = true;
+        this._icon = "hass:rotate-right";
+        this._iconAnimation = "spin 1.0s linear infinite";
+        this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
+        this._hass.callService("input_select", "select_option", {
+            entity_id: this._stateObj.entity_id,
+            option: this._config?.option,
+        });
+        setTimeout(() => {
+            this._running = false;
+            window.browser_mod?.service("close_popup", {});
+        }, 2000);
+    }
+    getCardSize() {
+        return 1;
+    }
+};
+__decorate([
+    r()
+], OptionTile.prototype, "_config", void 0);
+__decorate([
+    r()
+], OptionTile.prototype, "_stateObj", void 0);
+__decorate([
+    r()
+], OptionTile.prototype, "_running", void 0);
+OptionTile = __decorate([
+    t$1("smartqasa-option-tile")
+], OptionTile);
+window.customCards.push({
+    type: "smartqasa-option-tile",
+    name: "SmartQasa Option Tile",
+    preview: true,
+    description: "A SmartQasa tile for displaying an Option of an Input Select entity.",
+});
+
 let RobotTile = class RobotTile extends s {
     constructor() {
         super(...arguments);
@@ -2753,12 +2846,15 @@ let SelectTile = class SelectTile extends s {
                 : undefined;
         if (!this._stateObj) {
             this._icon = this._config?.icon || "hass:form-dropdown";
+            this._iconAnimation = "none";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
             this._name = this._config?.name || "Unknown";
             this._stateFmtd = "Invalid entity!";
             return;
         }
         this._icon = this._config?.icon || this._stateObj.attributes?.icon || "hass:form-dropdown";
+        this._iconAnimation = "none";
+        this._iconColor = "var(--sq-inactive-rgb)";
         this._name = this._config?.name || this._stateObj.attributes?.friendly_name || this._stateObj.entity_id;
         this._stateFmtd = this._hass.formatEntityState(this._stateObj) || "Unknown";
     }

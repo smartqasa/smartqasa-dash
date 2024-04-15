@@ -44,6 +44,7 @@ import "./tiles/heater";
 import "./tiles/light";
 import "./tiles/light-editor";
 import "./tiles/lock";
+import "./tiles/option";
 import "./tiles/robot";
 import "./tiles/roku";
 import "./tiles/routine";

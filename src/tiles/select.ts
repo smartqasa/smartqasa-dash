@@ -46,6 +46,7 @@ export class SelectTile extends LitElement {
 
         if (!this._stateObj) {
             this._icon = this._config?.icon || "hass:form-dropdown";
+            this._iconAnimation = "none";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
             this._name = this._config?.name || "Unknown";
             this._stateFmtd = "Invalid entity!";
@@ -53,6 +54,8 @@ export class SelectTile extends LitElement {
         }
 
         this._icon = this._config?.icon || this._stateObj.attributes?.icon || "hass:form-dropdown";
+        this._iconAnimation = "none";
+        this._iconColor = "var(--sq-inactive-rgb)";
         this._name = this._config?.name || this._stateObj.attributes?.friendly_name || this._stateObj.entity_id;
         this._stateFmtd = this._hass.formatEntityState(this._stateObj) || "Unknown";
     }
