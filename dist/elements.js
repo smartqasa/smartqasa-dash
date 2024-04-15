@@ -549,9 +549,8 @@ let FooterStrip = class FooterStrip extends s {
         this._config = { ...config };
     }
     set hass(hass) {
-        if (!hass)
-            return;
-        this._areas = hass.areas;
+        this._hass = hass;
+        this._areas = Object.values(hass.areas).filter((area) => hass.area.labels && hass.area.labels.includes("visible"));
         console.log(this._areas);
     }
     render() {
@@ -588,6 +587,10 @@ let FooterStrip = class FooterStrip extends s {
         window.dispatchEvent(new CustomEvent("location-changed"));
     }
     async handleAreas() {
+        this._areas?.map((area) => ({
+            type: "custom:smartqasa-area-tile",
+            area: area.area_id,
+        }));
     }
     handleEntertain() {
         console.log("Entertain action");

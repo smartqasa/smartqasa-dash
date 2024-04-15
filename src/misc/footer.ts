@@ -4,12 +4,18 @@ import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 
 interface Config extends LovelaceCardConfig {}
 
-interface AreaEntry {
+interface ExtendedHomeAssistant extends HomeAssistant {
+    areas: Record<string, Area>;
+}
+
+interface Area {
     area_id: string;
+    aliases: string[];
+    floor_id: string;
     icon: string;
+    labels: string[];
     name: string;
     picture: string;
-    labels: string[];
 }
 
 interface ActionHandlers {
@@ -22,7 +28,7 @@ interface ActionHandlers {
 @customElement("smartqasa-footer-strip")
 class FooterStrip extends LitElement implements ActionHandlers {
     @state() private _config?: Config;
-    @state() private _areas?: any;
+    @state() private _areas?: Area[];
 
     private _hass: any;
 
@@ -65,8 +71,10 @@ class FooterStrip extends LitElement implements ActionHandlers {
     }
 
     set hass(hass: any) {
-        if (!hass) return;
-        this._areas = hass.areas;
+        this._hass = hass;
+        this._areas = Object.values<Area>(hass.areas).filter(
+            (area) => hass.area.labels && hass.area.labels.includes("visible")
+        );
         console.log(this._areas);
     }
 
@@ -107,7 +115,10 @@ class FooterStrip extends LitElement implements ActionHandlers {
     }
 
     async handleAreas(): Promise<void> {
-        const cards: any[] = [];
+        const cards = this._areas?.map((area) => ({
+            type: "custom:smartqasa-area-tile",
+            area: area.area_id,
+        }));
         const dialogConfig = {
             title: "Areas",
             timeout: 60000,
