@@ -586,7 +586,7 @@ let FooterStrip = class FooterStrip extends s {
         window.dispatchEvent(new CustomEvent("location-changed"));
     }
     handleAreas() {
-        this._areas = Object.values(this._hass.areas).filter((area) => area && area.labels && area.labels.includes("visible"));
+        this._areas = Object.values(this._hass.areas).filter((area) => area?.labels.includes("visible"));
         const cards = this._areas?.map((area) => ({
             type: "custom:smartqasa-area-tile",
             area: area.area_id,
@@ -608,7 +608,61 @@ let FooterStrip = class FooterStrip extends s {
         window.browser_mod?.service("popup", dialogConfig);
     }
     handleEntertain() {
-        console.log("Entertain action");
+        if (!this._config)
+            return;
+        const deviceType = window.smartqasa.deviceType;
+        const tvStreamObj = this._config.tv_stream ? this._hass.states[this._config.tv_stream] : undefined;
+        this._config.tv_sound ? this._hass.states[this._config.tv_sound] : undefined;
+        const speakerObj = this._config.speaker ? this._hass.states[this._config.speaker] : undefined;
+        let gridTemplateAreas = '"message"';
+        let gridTemplateColumns = "auto";
+        if (tvStreamObj && speakerObj) {
+            gridTemplateAreas =
+                deviceType === "phone"
+                    ? '"rk-title" "rk-card" "sn-title" "sn-card" "ap-title" "ap-card"'
+                    : '"rk-title sn-title ap-title" "rk-card sn-card ap-card"';
+            gridTemplateColumns = deviceType === "phone" ? "95%" : "340px 420px auto";
+        }
+        else if (!tvStreamObj && speakerObj) {
+            gridTemplateAreas =
+                deviceType === "phone"
+                    ? '"sn-title" "sn-card" "ap-title" "ap-card"'
+                    : '"sn-title ap-title" "sn-card ap-card"';
+            gridTemplateColumns = deviceType === "phone" ? "95%" : "420px auto";
+        }
+        else if (tvStreamObj && !speakerObj) {
+            gridTemplateAreas =
+                deviceType === "phone"
+                    ? '"rk-title" "rk-card" "ap-title" "ap-card"'
+                    : '"rk-title ap-title" "rk-card ap-card"';
+            gridTemplateColumns = deviceType === "phone" ? "95%" : "340px auto";
+        }
+        const dialogConfig = {
+            title: "Entertainment",
+            timeout: 300000,
+            content: {
+                type: "custom:layout-card",
+                layout_type: "custom:grid-layout",
+                layout: {
+                    margin: 0,
+                    "grid-template-columns": gridTemplateColumns,
+                    "grid-gap": "var(--sq-dialog-grid-gap)",
+                    "grid-template-areas": gridTemplateAreas,
+                },
+                cards: [
+                    {
+                        type: "custom:roku-card",
+                        entity: tvStreamObj.entity_id,
+                        tv: true,
+                    },
+                    {
+                        type: "custom:sonos-card",
+                        entity: speakerObj.entity_id,
+                    },
+                ],
+            },
+        };
+        window.browser_mod?.service("popup", dialogConfig);
     }
     handleMenu() {
         console.log("Menu action");
