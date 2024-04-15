@@ -5,6 +5,7 @@ import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 
 import styleTileBase from "../styles/tile-base";
+import styleTileIconSpin from "../styles/tile-icon-spin";
 
 interface Config extends LovelaceCardConfig {
     entity: string;
@@ -22,7 +23,7 @@ export class OptionTile extends LitElement {
     private _iconAnimation: string = "none";
     private _iconColor: string = "var(--sq-inactive-rgb)";
     private _name: string = "Loading...";
-    static styles: CSSResultGroup = [styleTileBase];
+    static styles: CSSResultGroup = [styleTileBase, styleTileIconSpin];
 
     setConfig(config: Config): void {
         this._config = { ...config };

@@ -2381,7 +2381,7 @@ let OptionTile = class OptionTile extends s {
         this._iconColor = "var(--sq-inactive-rgb)";
         this._name = "Loading...";
     }
-    static { this.styles = [styleTileBase]; }
+    static { this.styles = [styleTileBase, styleTileIconSpin]; }
     setConfig(config) {
         this._config = { ...config };
         this.updateState();
