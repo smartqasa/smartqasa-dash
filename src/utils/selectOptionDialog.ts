@@ -1,5 +1,5 @@
 export function selectOptionDialog(config: any, stateObj: any) {
-    if (stateObj) return;
+    if (!config || !stateObj) return;
 
     const cards = stateObj.attributes.options.map((option: string) => ({
         type: "custom:smartqasa-option-tile",
