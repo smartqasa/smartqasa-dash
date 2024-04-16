@@ -1,5 +1,3 @@
-import * as fs from 'fs/promises';
-
 var version = "1.1.55";
 
 /******************************************************************************
@@ -4362,7 +4360,7 @@ var jsYaml = {
 
 async function loadYamlAsJson(yamlFilePath) {
     try {
-        const fileContents = await fs.readFile(yamlFilePath, "utf8");
+        const fileContents = "/config/sq-custom/elements/lists/entertain.yaml";
         const yamlContent = jsYaml.load(fileContents);
         console.log("YAML content loaded and parsed:", yamlContent);
         return yamlContent;
@@ -4477,7 +4475,7 @@ let FooterStrip = class FooterStrip extends s {
         const videoPlayerObj = this._config.video_player ? this._hass.states[this._config.video_player] : undefined;
         this._config.video_sound ? this._hass.states[this._config.video_sound] : undefined;
         const audioPlayerObj = this._config.audio_player ? this._hass.states[this._config.audio_player] : undefined;
-        const appListCards = loadYamlAsJson("/config/sq-custom/elements/lists/entertain.yaml");
+        const appListCards = loadYamlAsJson();
         const videoPlayerTitle = videoPlayerObj
             ? {
                 type: "custom:smartqasa-title-card",
