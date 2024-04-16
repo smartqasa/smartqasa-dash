@@ -1,4 +1,4 @@
-import { loadYamlAsJson } from "../utils/loadYamlAsJson";
+import { loadYamlAsJson } from "../utils/load-yaml-as-json";
 
 export async function entertainDialog(config: any, hass: any): Promise<void> {
     if (!config || !hass) return;

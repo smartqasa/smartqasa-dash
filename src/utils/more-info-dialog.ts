@@ -1,4 +1,4 @@
-import { listDialogConfig } from "./listDialogConfig";
+import { listDialogConfig } from "./list-dialog-config";
 
 export function moreInfoDialog(config: any, stateObj: any) {
     if (!stateObj) return;

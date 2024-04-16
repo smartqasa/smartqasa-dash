@@ -2,7 +2,7 @@ import { CSSResult, html, LitElement, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
-import { moreInfoDialog } from "../utils/moreInfoDialog";
+import { moreInfoDialog } from "../utils/more-info-dialog";
 import { thermostatIcons, thermostatColors } from "../utils/const";
 
 import { chipBasicStyle } from "../styles/chip";

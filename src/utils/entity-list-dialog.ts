@@ -1,4 +1,4 @@
-import { listDialogConfig } from "./listDialogConfig";
+import { listDialogConfig } from "./list-dialog-config";
 
 export function entityListDialog(
     dialogTitle: string,

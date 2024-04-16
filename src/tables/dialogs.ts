@@ -1,4 +1,4 @@
-import { listDialogConfig } from "../utils/listDialogConfig";
+import { listDialogConfig } from "../utils/list-dialog-config";
 import { listDialogStyle } from "../styles/dialog";
 
 interface DialogTable {

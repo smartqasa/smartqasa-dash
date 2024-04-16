@@ -1,4 +1,4 @@
-import { loadYamlAsJson } from "../utils/loadYamlAsJson";
+import { loadYamlAsJson } from "../utils/load-yaml-as-json";
 
 export async function menuDialog(menu_tab?: number): Promise<void> {
     function createAttributes(icon: string, label: string) {

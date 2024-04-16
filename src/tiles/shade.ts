@@ -2,8 +2,8 @@ import { CSSResultGroup, html, LitElement, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
-import { moreInfoDialog } from "../utils/moreInfoDialog";
-import { entityListDialog } from "../utils/entityListDialog";
+import { moreInfoDialog } from "../utils/more-info-dialog";
+import { entityListDialog } from "../utils/entity-list-dialog";
 
 import { tileBaseStyle, tileStateStyle, tileIconBlinkStyle } from "../styles/tile";
 
