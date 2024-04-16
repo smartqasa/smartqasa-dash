@@ -197,9 +197,9 @@ class FooterStrip extends LitElement implements ActionHandlers {
                       type: "custom:layout-card",
                       layout_type: "custom:vertical-layout",
                       layout: {
-                          height: "auto",
+                          height: "448px",
                           margin: 0,
-                          padding: 0,
+                          "grid-gap": "var(--sq-dialog-grid-gap)",
                       },
                       cards: appListCards,
                   }
