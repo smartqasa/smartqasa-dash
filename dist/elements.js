@@ -6783,7 +6783,7 @@ let RokuTile = class RokuTile extends s {
                 ? this._hass?.states[this._config.entity]
                 : undefined;
         if (!this._stateObj) {
-            this._icon = this._config?.icon || "hass:lightbulb-alert";
+            this._icon = this._config?.icon || "hass:audio-video-off";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
             this._name = this._config?.name || "Unknown";
             this._stateFmtd = "Invalid entity!";
@@ -6812,7 +6812,7 @@ let RokuTile = class RokuTile extends s {
                 break;
         }
         this._stateFmtd = `${this._hass.formatEntityState(this._stateObj)}${this._stateObj.attributes?.source ? ` - ${this._stateObj.attributes.source}` : ""}`;
-        this._name = this._config?.icon || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
+        this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
     }
     render() {
         const iconStyles = {
