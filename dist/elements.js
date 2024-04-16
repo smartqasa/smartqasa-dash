@@ -4546,6 +4546,7 @@ let FooterStrip = class FooterStrip extends s {
         }
         const dialogConfig = {
             title: "Entertainment",
+            size: "fullscreen",
             timeout: 300000,
             content: {
                 type: "custom:layout-card",

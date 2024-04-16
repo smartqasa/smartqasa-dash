@@ -222,6 +222,7 @@ class FooterStrip extends LitElement implements ActionHandlers {
 
         const dialogConfig = {
             title: "Entertainment",
+            size: "fullscreen",
             timeout: 300000,
             content: {
                 type: "custom:layout-card",
