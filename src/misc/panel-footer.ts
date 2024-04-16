@@ -35,7 +35,6 @@ interface ActionHandlers {
 @customElement("smartqasa-panel-footer")
 class PanelFooter extends LitElement implements ActionHandlers {
     @state() private _config?: Config;
-    @state() private _areas?: Area[];
 
     private _hass: any;
 
@@ -52,15 +51,16 @@ class PanelFooter extends LitElement implements ActionHandlers {
         }
         .grid {
             display: grid;
-            grid-template-areas: "home areas entertain menu";
-            grid-template-columns: repeat(4, max-content);
-            grid-column-gap: 5vw;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            grid-gap: 5vw;
             justify-content: center;
+            align-items: center;
         }
         .button {
             display: flex;
             padding: 1rem;
             align-items: center;
+            justify-content: center;
             column-gap: 0.5rem;
             font-size: var(--sq-primary-font-size, 1.5rem);
             font-weight: var(--sq-primary-font-weight, 400);
@@ -85,19 +85,19 @@ class PanelFooter extends LitElement implements ActionHandlers {
     protected render(): TemplateResult {
         return html`
             <div class="grid">
-                ${this.renderButton("home", "hass:home", "Home", "handleHome")}
-                ${this.renderButton("areas", "hass:view-dashboard", "Areas", "handleAreas")}
-                ${this.renderButton("entertain", "hass:music", "Entertainment", "handleEntertain")}
-                ${this.renderButton("menu", "hass:menu", "Menu", "handleMenu")}
+                ${this.renderButton("hass:home", "Home", "handleHome")}
+                ${this.renderButton("hass:view-dashboard", "Areas", "handleAreas")}
+                ${this.renderButton("hass:music", "Entertainment", "handleEntertain")}
+                ${this.renderButton("hass:menu", "Menu", "handleMenu")}
             </div>
         `;
     }
 
-    private renderButton(id: string, icon: string, name: string, methodName: keyof ActionHandlers): TemplateResult {
+    private renderButton(icon: string, name: string, methodName: keyof ActionHandlers): TemplateResult {
         return html`
             <div class="button" @click="${(e: Event) => this.handleAction(e, methodName)}">
                 <ha-icon .icon=${icon}></ha-icon>
-                <span>${name}</span>
+                ${window.smartqasa.deviceType !== "phone" ? html`<span>${name}</span>` : ""}
             </div>
         `;
     }

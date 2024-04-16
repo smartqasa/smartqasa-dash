@@ -69,7 +69,7 @@ export async function entertainDialog(config: any, hass: any): Promise<void> {
     let cards: any = [];
 
     if (window.smartqasa.deviceType === "phone") {
-        gridTemplateColumns = "auto";
+        gridTemplateColumns = "95%";
         if (videoPlayerObj && audioPlayerObj) {
             cards = [videoPlayerTitle, videoPlayerCard, audioPlayerTitle, audioPlayerCard, appListTitle, appListCard];
         } else if (!videoPlayerObj && audioPlayerObj) {

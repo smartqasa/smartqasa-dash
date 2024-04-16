@@ -4466,7 +4466,7 @@ async function entertainDialog(config, hass) {
     let gridTemplateColumns = "auto";
     let cards = [];
     if (window.smartqasa.deviceType === "phone") {
-        gridTemplateColumns = "auto";
+        gridTemplateColumns = "95%";
         if (videoPlayerObj && audioPlayerObj) {
             cards = [videoPlayerTitle, videoPlayerCard, audioPlayerTitle, audioPlayerCard, appListTitle, appListCard];
         }
@@ -4691,15 +4691,16 @@ let PanelFooter = class PanelFooter extends s {
         }
         .grid {
             display: grid;
-            grid-template-areas: "home areas entertain menu";
-            grid-template-columns: repeat(4, max-content);
-            grid-column-gap: 5vw;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            grid-gap: 5vw;
             justify-content: center;
+            align-items: center;
         }
         .button {
             display: flex;
             padding: 1rem;
             align-items: center;
+            justify-content: center;
             column-gap: 0.5rem;
             font-size: var(--sq-primary-font-size, 1.5rem);
             font-weight: var(--sq-primary-font-weight, 400);
@@ -4722,18 +4723,18 @@ let PanelFooter = class PanelFooter extends s {
     render() {
         return x `
             <div class="grid">
-                ${this.renderButton("home", "hass:home", "Home", "handleHome")}
-                ${this.renderButton("areas", "hass:view-dashboard", "Areas", "handleAreas")}
-                ${this.renderButton("entertain", "hass:music", "Entertainment", "handleEntertain")}
-                ${this.renderButton("menu", "hass:menu", "Menu", "handleMenu")}
+                ${this.renderButton("hass:home", "Home", "handleHome")}
+                ${this.renderButton("hass:view-dashboard", "Areas", "handleAreas")}
+                ${this.renderButton("hass:music", "Entertainment", "handleEntertain")}
+                ${this.renderButton("hass:menu", "Menu", "handleMenu")}
             </div>
         `;
     }
-    renderButton(id, icon, name, methodName) {
+    renderButton(icon, name, methodName) {
         return x `
             <div class="button" @click="${(e) => this.handleAction(e, methodName)}">
                 <ha-icon .icon=${icon}></ha-icon>
-                <span>${name}</span>
+                ${window.smartqasa.deviceType !== "phone" ? x `<span>${name}</span>` : ""}
             </div>
         `;
     }
@@ -4765,9 +4766,6 @@ let PanelFooter = class PanelFooter extends s {
 __decorate([
     r()
 ], PanelFooter.prototype, "_config", void 0);
-__decorate([
-    r()
-], PanelFooter.prototype, "_areas", void 0);
 PanelFooter = __decorate([
     t$1("smartqasa-panel-footer")
 ], PanelFooter);
