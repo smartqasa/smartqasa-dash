@@ -148,7 +148,6 @@ class FooterStrip extends LitElement implements ActionHandlers {
         const videoSoundObj = this._config.video_sound ? this._hass.states[this._config.video_sound] : undefined;
         const audioPlayerObj = this._config.audio_player ? this._hass.states[this._config.audio_player] : undefined;
         const appListCards = await loadYamlAsJson("/local/smartqasa/lists/entertain.yaml");
-        if (appListCards === "fail") return;
 
         const videoPlayerTitle = videoPlayerObj
             ? {
@@ -176,7 +175,7 @@ class FooterStrip extends LitElement implements ActionHandlers {
             ? {
                   type: "custom:sonos-card",
                   entityId: audioPlayerObj.entity_id,
-                  heightPercentage: 91,
+                  heightPercentage: 89,
                   mediaBrowserItemsPerRow: 3,
                   mediaBrowserShowTitleForThumbnailIcons: true,
                   showVolumeUpAndDownButtons: true,
@@ -209,15 +208,40 @@ class FooterStrip extends LitElement implements ActionHandlers {
         let gridTemplateColumns = "auto";
         let cards: any = [];
 
-        if (videoPlayerObj && audioPlayerObj) {
-            gridTemplateColumns = "340px 420px 250px";
-            cards = [videoPlayerTitle, audioPlayerTitle, appListTitle, videoPlayerCard, audioPlayerCard, appListCard];
-        } else if (!videoPlayerObj && audioPlayerObj) {
-            gridTemplateColumns = "420px 250px";
-            cards = [audioPlayerTitle, audioPlayerCard, audioPlayerCard, appListCard];
-        } else if (videoPlayerObj && !audioPlayerObj) {
-            gridTemplateColumns = "340px 250px";
-            cards = [videoPlayerTitle, videoPlayerCard, audioPlayerCard, appListCard];
+        if (window.smartqasa.deviceType === "phone") {
+            gridTemplateColumns = "auto";
+            if (videoPlayerObj && audioPlayerObj) {
+                cards = [
+                    videoPlayerTitle,
+                    videoPlayerCard,
+                    audioPlayerTitle,
+                    audioPlayerCard,
+                    appListTitle,
+                    appListCard,
+                ];
+            } else if (!videoPlayerObj && audioPlayerObj) {
+                cards = [audioPlayerTitle, audioPlayerCard, appListTitle, appListCard];
+            } else if (videoPlayerObj && !audioPlayerObj) {
+                cards = [videoPlayerTitle, videoPlayerCard, appListTitle, appListCard];
+            }
+        } else {
+            if (videoPlayerObj && audioPlayerObj) {
+                gridTemplateColumns = "340px 420px 250px";
+                cards = [
+                    videoPlayerTitle,
+                    audioPlayerTitle,
+                    appListTitle,
+                    videoPlayerCard,
+                    audioPlayerCard,
+                    appListCard,
+                ];
+            } else if (!videoPlayerObj && audioPlayerObj) {
+                gridTemplateColumns = "420px 250px";
+                cards = [audioPlayerTitle, audioPlayerCard, audioPlayerCard, appListCard];
+            } else if (videoPlayerObj && !audioPlayerObj) {
+                gridTemplateColumns = "340px 250px";
+                cards = [videoPlayerTitle, videoPlayerCard, audioPlayerCard, appListCard];
+            }
         }
 
         const dialogConfig = {
@@ -229,6 +253,7 @@ class FooterStrip extends LitElement implements ActionHandlers {
                 layout_type: "custom:grid-layout",
                 layout: {
                     margin: 0,
+                    "place-content": "center",
                     "grid-template-columns": gridTemplateColumns,
                     "grid-template-rows": "max-content 448px",
                     "grid-gap": "var(--sq-dialog-grid-gap)",
@@ -240,8 +265,186 @@ class FooterStrip extends LitElement implements ActionHandlers {
         window.browser_mod?.service("popup", dialogConfig);
     }
 
-    handleMenu(): void {
-        console.log("Menu action");
+    async handleMenu(): Promise<void> {
+        if (!this._config) return;
+
+        function createAttributes(icon: string, label: string) {
+            return {
+                icon: window.smartqasa.deviceType === "phone" ? icon : null,
+                label: window.smartqasa.deviceType === "tablet" ? label : null,
+            };
+        }
+
+        const layout = {
+            margin: 0,
+            card_margin: 0,
+            padding: "10px 0 0 0",
+            "grid-template-columns":
+                window.smartqasa.deviceType === "phone"
+                    ? "repeat(2, var(--sq-tile-width-phone))"
+                    : "repeat(3, var(--sq-tile-width-tablet))",
+            "grid-gap": "var(--sq-dialog-grid-gap)",
+        };
+
+        const favoMenuTiles = await loadYamlAsJson("/local/smartqasa/menus/favorites.yaml");
+        const funcMenuTiles = await loadYamlAsJson("/local/smartqasa/menus/functions.yaml");
+        const applMenuTiles = await loadYamlAsJson("/local/smartqasa/menus/functions.yaml");
+        const utilMenuTiles = [
+            {
+                type: "custom:smartqasa-dialog-tile",
+                dialog: "clean_screen",
+            },
+            {
+                type: "custom:button-card",
+                template: "themes-tile",
+            },
+            {
+                type: "custom:button-card",
+                template: "tablet-refresh-tile",
+            },
+            {
+                type: "custom:button-card",
+                template: "clear-cache-tile",
+            },
+            {
+                type: "custom:button-card",
+                template: "speedtest-tile",
+            },
+            {
+                type: "custom:restriction-card",
+                condition: {
+                    entity: "input_boolean.admin_mode",
+                    value: "off",
+                },
+                restrictions: {
+                    block: {
+                        condition: {
+                            entity: "input_boolean.admin_mode",
+                            value: "off",
+                        },
+                    },
+                },
+                card: {
+                    type: "custom:button-card",
+                    template: "system-reboot-tile",
+                },
+            },
+            {
+                type: "custom:restriction-card",
+                condition: {
+                    entity: "input_boolean.admin_mode",
+                    value: "off",
+                },
+                restrictions: {
+                    block: {
+                        condition: {
+                            entity: "input_boolean.admin_mode",
+                            value: "off",
+                        },
+                    },
+                },
+                card: {
+                    type: "custom:button-card",
+                    template: "system-power-down-tile",
+                },
+            },
+            {
+                type: "custom:restriction-card",
+                condition: {
+                    entity: "input_boolean.admin_mode",
+                    value: "off",
+                },
+                restrictions: {
+                    block: {
+                        condition: {
+                            entity: "input_boolean.admin_mode",
+                            value: "off",
+                        },
+                    },
+                },
+                card: {
+                    type: "custom:smartqasa-app-tile",
+                    app: "play_store",
+                    icon: "mdi:store",
+                },
+            },
+            {
+                type: "custom:button-card",
+                template: "admin-mode-tile",
+            },
+            {
+                type: "custom:button-card",
+                template: "about-tile",
+            },
+        ];
+
+        const dialogConfig = {
+            title: "Menu",
+            timeout: 60000,
+            content: {
+                type: "custom:tabbed-card",
+                options: {
+                    defaultTabIndex: 0,
+                },
+                styles: {
+                    "--mdc-tab-height": "45px",
+                    "--mdc-typography-button-font-size": "var(--sq-primary-font-size)",
+                    "--mdc-typography-button-font-weight": "var(--sq-primary-font-weight)",
+                    "--mdc-typography-button-text-transform": "none",
+                    "--mdc-theme-primary": "rgb(var(--sq-primary-font-rgb))",
+                    "--mdc-tab-color-default": "rgb(var(--sq-inactive-rgb))",
+                    "--mdc-tab-text-label-color-default": "rgb(var(--sq-inactive-rgb))",
+                },
+                tabs: [
+                    {
+                        attributes: createAttributes("hass:star", "Favorites"),
+                        card: {
+                            type: "custom:layout-card",
+                            layout_type: "custom:grid-layout",
+                            layout: layout,
+                            cards: favoMenuTiles,
+                        },
+                    },
+                    {
+                        attributes: {
+                            icon: window.smartqasa.deviceType === "phone" ? "hass:function-variant" : null,
+                            label: window.smartqasa.deviceType === "tablet" ? "Functions" : null,
+                        },
+                        card: {
+                            type: "custom:layout-card",
+                            layout_type: "custom:grid-layout",
+                            layout: layout,
+                            cards: funcMenuTiles,
+                        },
+                    },
+                    {
+                        attributes: {
+                            icon: "[[[ return smartqasa.deviceType === 'phone' ? 'hass:exit-to-app' : null ]]]",
+                            label: "[[[ return smartqasa.deviceType === 'tablet' ? 'Apps' : null ]]]",
+                        },
+                        card: {
+                            type: "custom:layout-card",
+                            layout_type: "custom:grid-layout",
+                            layout: layout,
+                            cards: applMenuTiles,
+                        },
+                    },
+                    {
+                        attributes: {
+                            icon: window.smartqasa.deviceType === "phone" ? "hass:cog-outline" : null,
+                            label: window.smartqasa.deviceType === "tablet" ? "Utilities" : null,
+                        },
+                        card: {
+                            type: "custom:layout-card",
+                            layout_type: "custom:grid-layout",
+                            layout: layout,
+                            cards: utilMenuTiles,
+                        },
+                    },
+                ],
+            },
+        };
+        window.browser_mod?.service("popup", dialogConfig);
     }
 }
 

@@ -5,13 +5,19 @@ export async function loadYamlAsJson(yamlFilePath: string) {
         const response = await fetch(yamlFilePath);
         if (!response.ok) {
             console.error(`HTTP error! Status: ${response.status}`);
-            return "fail";
+            return {
+                type: "custom:smartqasa-title-card",
+                title: "Missing file.",
+            };
         }
         const yamlContent = await response.text();
         const jsonContent = yaml.load(yamlContent);
         return jsonContent;
     } catch (e) {
         console.error("Error fetching and parsing YAML file:", e);
-        return "fail";
+        return {
+            type: "custom:smartqasa-title-card",
+            title: "Missing file.",
+        };
     }
 }
