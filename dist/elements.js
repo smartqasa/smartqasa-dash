@@ -4956,7 +4956,6 @@ const tileBaseStyle = i$5 `
     .container {
         display: grid;
         height: 5.2rem;
-        max-width: 19rem;
         border: var(--sq-card-border, none);
         border-radius: 1.5rem;
         grid-template-areas: "i n";
@@ -5835,10 +5834,10 @@ const dialogTable = {
         name: "Robots",
         data: listDialogConfig("Robots", "domain", "vacuum", "robot"),
     },
-    rokus: {
+    roku_players: {
         icon: "hass:audio-video",
         name: "Roku Players",
-        data: listDialogConfig("Rokus", "group", "media_player.all_roku_players", "roku"),
+        data: listDialogConfig("Roku Players", "group", "media_player.all_roku_players", "roku"),
     },
     sensors_doors: {
         icon: "hass:door-open",
@@ -5850,7 +5849,7 @@ const dialogTable = {
         name: "Window Sensors",
         data: listDialogConfig("Window Sensors", "group", "binary_sensor.all_window_sensors", "sensor"),
     },
-    sonos: {
+    sonos_players: {
         icon: "hass:speaker-multiple",
         name: "Sonos Players",
         data: listDialogConfig("Sonos Players", "group", "media_player.all_sonos_players", "sonos"),
