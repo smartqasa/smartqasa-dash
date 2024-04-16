@@ -5,7 +5,7 @@ import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 import { moreInfoDialog } from "../utils/moreInfoDialog";
 
-import { styleTileBase, styleTileState, styleTileIconBlink, styleTileIconSpin } from "../styles/tile";
+import { tileBaseStyle, tileStateStyle, tileIconBlinkStyle, tileIconSpinStyle } from "../styles/tile";
 
 interface Config extends LovelaceCardConfig {
     entity: string;
@@ -25,7 +25,7 @@ export class LockTile extends LitElement {
     private _name: string = "Loading...";
     private _stateFmtd: string = "Loading...";
 
-    static styles: CSSResultGroup = [styleTileBase, styleTileState, styleTileIconBlink, styleTileIconSpin];
+    static styles: CSSResultGroup = [tileBaseStyle, tileStateStyle, tileIconBlinkStyle, tileIconSpinStyle];
 
     setConfig(config: Config): void {
         this._config = { ...config };

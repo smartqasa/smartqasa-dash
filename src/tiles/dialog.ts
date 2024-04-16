@@ -2,7 +2,7 @@ import { CSSResult, LitElement, html, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { LovelaceCardConfig } from "custom-card-helpers";
 
-import { styleTileBase } from "../styles/tile";
+import { tileBaseStyle } from "../styles/tile";
 
 import dialogTable from "../tables/dialogs";
 
@@ -21,7 +21,7 @@ export class DialogTile extends LitElement {
     private _iconColor: string = "var(--sq-inactive-rgb)";
     private _name: string = "Loading...";
 
-    static styles: CSSResult = styleTileBase;
+    static styles: CSSResult = tileBaseStyle;
 
     setConfig(config: Config): void {
         this._config = { ...config };

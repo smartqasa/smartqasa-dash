@@ -4,7 +4,7 @@ import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 
-import styleChipBasic from "../styles/chip-basic";
+import { chipBasicStyle } from "../styles/chip";
 
 interface Config extends LovelaceCardConfig {
     entity?: string;
@@ -22,7 +22,7 @@ export class MotionChip extends LitElement {
     private _iconColor!: string;
     private _name?: string;
 
-    static styles: CSSResult = styleChipBasic;
+    static styles: CSSResult = chipBasicStyle;
 
     setConfig(config: Config): void {
         this._config = { ...config };

@@ -5,7 +5,7 @@ import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 import { selectOptionDialog } from "../utils/selectOptionDialog";
 
-import { styleTileBase, styleTileState } from "../styles/tile";
+import { tileBaseStyle, tileStateStyle } from "../styles/tile";
 
 interface Config extends LovelaceCardConfig {
     entity: string;
@@ -26,7 +26,7 @@ export class SelectTile extends LitElement {
     private _name: string = "Loading...";
     private _stateFmtd: string = "Loading...";
 
-    static styles: CSSResultGroup = [styleTileBase, styleTileState];
+    static styles: CSSResultGroup = [tileBaseStyle, tileStateStyle];
 
     setConfig(config: Config): void {
         this._config = { ...config };

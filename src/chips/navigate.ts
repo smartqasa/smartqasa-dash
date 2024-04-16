@@ -2,7 +2,7 @@ import { CSSResult, html, LitElement, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 
-import styleChipDouble from "../styles/chip-double";
+import { chipDoubleStyle } from "../styles/chip";
 
 interface Config extends LovelaceCardConfig {
     area_prev?: string;
@@ -18,7 +18,7 @@ export class NavigateChip extends LitElement {
 
     private _hass: any;
 
-    static styles: CSSResult = styleChipDouble;
+    static styles: CSSResult = chipDoubleStyle;
 
     public setConfig(config: Config): void {
         this._areaPrev = config.area_prev || undefined;

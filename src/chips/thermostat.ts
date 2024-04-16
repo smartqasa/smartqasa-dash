@@ -5,7 +5,7 @@ import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 import { moreInfoDialog } from "../utils/moreInfoDialog";
 import { thermostatIcons, thermostatColors } from "../utils/const";
 
-import styleChipBasic from "../styles/chip-basic";
+import { chipBasicStyle } from "../styles/chip";
 
 interface Config extends LovelaceCardConfig {
     entity?: string;
@@ -21,7 +21,7 @@ export class ThermostatChip extends LitElement {
     private _iconColor: string = "var(--sq-inactive-rgb)";
     private _temperature: string = "??";
 
-    static styles: CSSResult = styleChipBasic;
+    static styles: CSSResult = chipBasicStyle;
 
     setConfig(config: Config): void {
         if (!config.entity) return;

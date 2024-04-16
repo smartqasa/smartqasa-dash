@@ -5,7 +5,7 @@ import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 import { moreInfoDialog } from "../utils/moreInfoDialog";
 import { thermostatIcons, thermostatColors } from "../utils/const";
 
-import { styleTileBase, styleTileState } from "../styles/tile";
+import { tileBaseStyle, tileStateStyle } from "../styles/tile";
 
 interface Config extends LovelaceCardConfig {
     entity: string;
@@ -23,7 +23,7 @@ export class ThermostatTile extends LitElement {
     private _name: string = "Loading...";
     private _stateFmtd: string = "Loading...";
 
-    static styles: CSSResultGroup = [styleTileBase, styleTileState];
+    static styles: CSSResultGroup = [tileBaseStyle, tileStateStyle];
 
     setConfig(config: Config): void {
         this._config = { ...config };

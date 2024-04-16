@@ -1,6 +1,6 @@
 import { css } from "lit";
 
-export const styleTileBase = css`
+export const tileBaseStyle = css`
     .container {
         display: grid;
         height: 5.2rem;
@@ -41,7 +41,7 @@ export const styleTileBase = css`
     }
 `;
 
-export const styleTileState = css`
+export const tileStateStyle = css`
     .container {
         grid-template-areas: "i n" "i s";
         grid-row-gap: 0.3rem;
@@ -61,7 +61,7 @@ export const styleTileState = css`
     }
 `;
 
-export const styleTileIconBlink = css`
+export const tileIconBlinkStyle = css`
     @keyframes blink {
         50% {
             opacity: 0.25;
@@ -69,7 +69,7 @@ export const styleTileIconBlink = css`
     }
 `;
 
-export const styleTileIconSpin = css`
+export const tileIconSpinStyle = css`
     @keyframes spin {
         from {
             transform: rotate(0deg);

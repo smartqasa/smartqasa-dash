@@ -6,7 +6,7 @@ import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 import { moreInfoDialog } from "../utils/moreInfoDialog";
 import { entityListDialog } from "../utils/entityListDialog";
 
-import { styleTileBase, styleTileState, styleTileIconSpin } from "../styles/tile";
+import { tileBaseStyle, tileStateStyle, tileIconSpinStyle } from "../styles/tile";
 
 interface Config extends LovelaceCardConfig {
     entity: string;
@@ -26,7 +26,7 @@ export class FanTile extends LitElement {
     private _name: string = "Loading...";
     private _stateFmtd: string = "Loading...";
 
-    static styles: CSSResultGroup = [styleTileBase, styleTileState, styleTileIconSpin];
+    static styles: CSSResultGroup = [tileBaseStyle, tileStateStyle, tileIconSpinStyle];
 
     setConfig(config: Config): void {
         this._config = { ...config };

@@ -60,58 +60,7 @@ const dialogTable: DialogTable = {
         name: "Garage Doors",
         data: listDialogConfig("Garage Doors", "group", "cover.all_garage_doors", "garage"),
     },
-    location_phase: {
-        icon: "hass:lock",
-        name: "Door Locks",
-        data: {
-            type: "custom:layout-card",
-            layout_type: "custom:grid-layout",
-            layout: {
-                "grid-template-columns": "1fr",
-                "grid-gap": "var(--sq-dialog-grid-gap)",
-                margin: 0,
-            },
-            cards: [
-                {
-                    type: "custom:smartqasa-select-option-tile",
-                    entity: "input_select.location_phase",
-                    trigger: "input_button.location_phase",
-                    option: "Morning",
-                    icon: "mdi:weather-sunset-up",
-                },
-                {
-                    type: "custom:button-card",
-                    template: "select-tile",
-                    variables: {
-                        entity: "input_select.location_phase",
-                        trigger: "input_button.location_phase",
-                        option: "Day",
-                        icon: "mdi:white-balance-sunny",
-                    },
-                },
-                {
-                    type: "custom:button-card",
-                    template: "select-tile",
-                    variables: {
-                        entity: "input_select.location_phase",
-                        trigger: "input_button.location_phase",
-                        option: "Evening",
-                        icon: "mdi:weather-night",
-                    },
-                },
-                {
-                    type: "custom:button-card",
-                    template: "select-tile",
-                    variables: {
-                        entity: "input_select.location_phase",
-                        trigger: "input_button.location_phase",
-                        option: "Night",
-                        icon: "mdi:sleep",
-                    },
-                },
-            ],
-        },
-    },
+
     locks: {
         icon: "hass:lock",
         name: "Door Locks",
@@ -142,6 +91,49 @@ const dialogTable: DialogTable = {
         name: "Sonos Players",
         data: listDialogConfig("Sonos Players", "group", "media_player.all_sonos_players", "sonos"),
     },
+    display_theme: {
+        icon: "hass:compare",
+        name: "Dispaly Theme",
+        data: {
+            type: "custom:layout-card",
+            layout_type: "custom:grid-layout",
+            layout: {
+                "grid-template-columns": "1fr",
+                "grid-gap": "var(--sq-dialog-grid-gap)",
+                margin: 0,
+            },
+            cards: [
+                {
+                    type: "custom:smartqasa-theme-tile",
+                    entity: "input_select.location_phase",
+                    trigger: "input_button.location_phase",
+                    option: "Morning",
+                    icon: "mdi:weather-sunset-up",
+                },
+                {
+                    type: "custom:smartqasa-theme-tile",
+                    template: "select-tile",
+                    variables: {
+                        entity: "input_select.location_phase",
+                        trigger: "input_button.location_phase",
+                        option: "Day",
+                        icon: "mdi:white-balance-sunny",
+                    },
+                },
+                {
+                    type: "custom:smartqasa-theme-tile",
+                    template: "select-tile",
+                    variables: {
+                        entity: "input_select.location_phase",
+                        trigger: "input_button.location_phase",
+                        option: "Evening",
+                        icon: "mdi:weather-night",
+                    },
+                },
+            ],
+        },
+    },
+
     thermostats: {
         icon: "hass:thermostat",
         name: "Thermostats",

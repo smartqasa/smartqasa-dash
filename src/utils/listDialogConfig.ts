@@ -1,3 +1,5 @@
+import { listDialogStyle } from "../styles/dialog";
+
 export const listDialogConfig: any = (
     dialogTitle: string,
     filterType: "domain" | "group",
@@ -12,11 +14,7 @@ export const listDialogConfig: any = (
             card: {
                 type: "custom:layout-card",
                 layout_type: "custom:grid-layout",
-                layout: {
-                    margin: 0,
-                    "grid-template-columns": "1fr",
-                    "grid-gap": "var(--sq-dialog-grid-gap)",
-                },
+                layout: listDialogStyle,
             },
             card_param: "cards",
             filter: {

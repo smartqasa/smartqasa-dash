@@ -3,7 +3,7 @@ import { customElement, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 
-import { styleTileBase, styleTileIconSpin } from "../styles/tile";
+import { tileBaseStyle, tileIconSpinStyle } from "../styles/tile";
 
 interface Config extends LovelaceCardConfig {
     icon: string;
@@ -20,7 +20,7 @@ export class ThemeTile extends LitElement {
     private _iconAnimation: string = "none";
     private _iconColor: string = "var(--sq-inactive-rgb)";
     private _name: string = "Loading...";
-    static styles: CSSResultGroup = [styleTileBase, styleTileIconSpin];
+    static styles: CSSResultGroup = [tileBaseStyle, tileIconSpinStyle];
 
     setConfig(config: Config): void {
         this._config = { ...config };
