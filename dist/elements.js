@@ -4732,10 +4732,7 @@ let FooterStrip = class FooterStrip extends s {
                         },
                     },
                     {
-                        attributes: {
-                            icon: window.smartqasa.deviceType === "phone" ? "hass:function-variant" : null,
-                            label: window.smartqasa.deviceType === "tablet" ? "Functions" : null,
-                        },
+                        attributes: createAttributes("hass:function", "Functions"),
                         card: {
                             type: "custom:layout-card",
                             layout_type: "custom:grid-layout",
@@ -4744,10 +4741,7 @@ let FooterStrip = class FooterStrip extends s {
                         },
                     },
                     {
-                        attributes: {
-                            icon: "[[[ return smartqasa.deviceType === 'phone' ? 'hass:exit-to-app' : null ]]]",
-                            label: "[[[ return smartqasa.deviceType === 'tablet' ? 'Apps' : null ]]]",
-                        },
+                        attributes: createAttributes("hass:exit-to-apps", "Applications"),
                         card: {
                             type: "custom:layout-card",
                             layout_type: "custom:grid-layout",
@@ -4756,10 +4750,7 @@ let FooterStrip = class FooterStrip extends s {
                         },
                     },
                     {
-                        attributes: {
-                            icon: window.smartqasa.deviceType === "phone" ? "hass:cog-outline" : null,
-                            label: window.smartqasa.deviceType === "tablet" ? "Utilities" : null,
-                        },
+                        attributes: createAttributes("hass:cog-outline", "Utilities"),
                         card: {
                             type: "custom:layout-card",
                             layout_type: "custom:grid-layout",
