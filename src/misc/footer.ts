@@ -180,7 +180,7 @@ class FooterStrip extends LitElement implements ActionHandlers {
                   mediaBrowserShowTitleForThumbnailIcons: true,
                   showVolumeUpAndDownButtons: true,
                   sections: ["player", "volumes", "groups", "grouping", "media browser"],
-                  heightPercentage: 91.5,
+                  heightPercentage: "auto",
               }
             : undefined;
 
@@ -223,7 +223,7 @@ class FooterStrip extends LitElement implements ActionHandlers {
                 layout: {
                     margin: 0,
                     "grid-template-columns": gridTemplateColumns,
-                    "grid-template-rows": "max-content min-content",
+                    "grid-template-rows": "max-content 448px",
                     "grid-gap": "var(--sq-dialog-grid-gap)",
                 },
                 cards: cards,
