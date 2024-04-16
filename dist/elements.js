@@ -4539,11 +4539,11 @@ async function menuDialog(menu_tab) {
             menu_tab: 3,
         },
         {
-            type: "custom:button-card",
-            template: "tablet-refresh-tile",
+            type: "custom:smartqasa-routine-tile",
+            entity: "script.system_tablet_reload",
         },
         {
-            type: "custom:button-card",
+            type: "custom:smartqasa-routine-tile",
             template: "clear-cache-tile",
         },
         {
@@ -6793,7 +6793,7 @@ let RokuTile = class RokuTile extends s {
         const state = this._stateObj.state || "unknown";
         switch (state) {
             case "idle":
-                this._iconColor = "var(--sq-media_player-idle)";
+                this._iconColor = "var(--sq-media_player-idle-rgb)";
                 break;
             case "standby":
                 this._iconColor = "var(--sq-media_player-standby-rgb)";

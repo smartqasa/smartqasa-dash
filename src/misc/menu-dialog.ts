@@ -30,11 +30,11 @@ export async function menuDialog(menu_tab?: number): Promise<void> {
             menu_tab: 3,
         },
         {
-            type: "custom:button-card",
-            template: "tablet-refresh-tile",
+            type: "custom:smartqasa-routine-tile",
+            entity: "script.system_tablet_reload",
         },
         {
-            type: "custom:button-card",
+            type: "custom:smartqasa-routine-tile",
             template: "clear-cache-tile",
         },
         {

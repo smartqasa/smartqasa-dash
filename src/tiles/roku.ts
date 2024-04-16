@@ -56,7 +56,7 @@ export class RokuTile extends LitElement {
         const state = this._stateObj.state || "unknown";
         switch (state) {
             case "idle":
-                this._iconColor = "var(--sq-media_player-idle)";
+                this._iconColor = "var(--sq-media_player-idle-rgb)";
                 break;
             case "standby":
                 this._iconColor = "var(--sq-media_player-standby-rgb)";
