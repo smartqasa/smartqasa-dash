@@ -5771,29 +5771,34 @@ const dialogTable = {
         icon: "hass:compare",
         name: "Dispaly Themes",
         data: {
-            type: "custom:layout-card",
-            layout_type: "custom:grid-layout",
-            layout: listDialogStyle,
-            cards: [
-                {
-                    type: "custom:smartqasa-theme-tile",
-                    mode: "light",
-                    icon: "hass:brightness-7",
-                    name: "Light",
-                },
-                {
-                    type: "custom:smartqasa-theme-tile",
-                    mode: "dark",
-                    icon: "hass:weather-night",
-                    name: "Dark",
-                },
-                {
-                    type: "custom:smartqasa-theme-tile",
-                    mode: "auto",
-                    icon: "hass:theme-light-dark",
-                    name: "Auto",
-                },
-            ],
+            title: "Display Themes",
+            size: "fullscreen",
+            timeout: 60000,
+            content: {
+                type: "custom:layout-card",
+                layout_type: "custom:grid-layout",
+                layout: listDialogStyle,
+                cards: [
+                    {
+                        type: "custom:smartqasa-theme-tile",
+                        mode: "light",
+                        icon: "hass:brightness-7",
+                        name: "Light",
+                    },
+                    {
+                        type: "custom:smartqasa-theme-tile",
+                        mode: "dark",
+                        icon: "hass:weather-night",
+                        name: "Dark",
+                    },
+                    {
+                        type: "custom:smartqasa-theme-tile",
+                        mode: "auto",
+                        icon: "hass:theme-light-dark",
+                        name: "Auto",
+                    },
+                ],
+            },
         },
     },
     energy_monitor: {

@@ -29,35 +29,42 @@ const dialogTable: DialogTable = {
             },
         },
     },
+
     display_themes: {
         icon: "hass:compare",
         name: "Dispaly Themes",
         data: {
-            type: "custom:layout-card",
-            layout_type: "custom:grid-layout",
-            layout: listDialogStyle,
-            cards: [
-                {
-                    type: "custom:smartqasa-theme-tile",
-                    mode: "light",
-                    icon: "hass:brightness-7",
-                    name: "Light",
-                },
-                {
-                    type: "custom:smartqasa-theme-tile",
-                    mode: "dark",
-                    icon: "hass:weather-night",
-                    name: "Dark",
-                },
-                {
-                    type: "custom:smartqasa-theme-tile",
-                    mode: "auto",
-                    icon: "hass:theme-light-dark",
-                    name: "Auto",
-                },
-            ],
+            title: "Display Themes",
+            size: "fullscreen",
+            timeout: 60000,
+            content: {
+                type: "custom:layout-card",
+                layout_type: "custom:grid-layout",
+                layout: listDialogStyle,
+                cards: [
+                    {
+                        type: "custom:smartqasa-theme-tile",
+                        mode: "light",
+                        icon: "hass:brightness-7",
+                        name: "Light",
+                    },
+                    {
+                        type: "custom:smartqasa-theme-tile",
+                        mode: "dark",
+                        icon: "hass:weather-night",
+                        name: "Dark",
+                    },
+                    {
+                        type: "custom:smartqasa-theme-tile",
+                        mode: "auto",
+                        icon: "hass:theme-light-dark",
+                        name: "Auto",
+                    },
+                ],
+            },
         },
     },
+
     energy_monitor: {
         icon: "hass:transmission-tower",
         name: "Energy Monitor",
@@ -85,6 +92,7 @@ const dialogTable: DialogTable = {
             },
         },
     },
+
     garages: {
         icon: "hass:garage-variant",
         name: "Garage Doors",
@@ -96,31 +104,37 @@ const dialogTable: DialogTable = {
         name: "Door Locks",
         data: listDialogConfig("Door Locks", "group", "lock.all_door_locks", "lock"),
     },
+
     robots: {
         icon: "hass:robot-vacuum-variant",
         name: "Robots",
         data: listDialogConfig("Robots", "domain", "vacuum", "robot"),
     },
+
     rokus: {
         icon: "hass:audio-video",
         name: "Roku Players",
         data: listDialogConfig("Rokus", "group", "media_player.all_roku_players", "roku"),
     },
+
     sensors_doors: {
         icon: "hass:door-open",
         name: "Door Sensors",
         data: listDialogConfig("Door Sensors", "group", "binary_sensor.all_door_sensors", "sensor"),
     },
+
     sensors_windows: {
         icon: "hass:window-open",
         name: "Window Sensors",
         data: listDialogConfig("Window Sensors", "group", "binary_sensor.all_window_sensors", "sensor"),
     },
+
     sonos: {
         icon: "hass:speaker-multiple",
         name: "Sonos Players",
         data: listDialogConfig("Sonos Players", "group", "media_player.all_sonos_players", "sonos"),
     },
+
     thermostats: {
         icon: "hass:thermostat",
         name: "Thermostats",
