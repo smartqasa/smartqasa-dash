@@ -4382,7 +4382,7 @@ async function loadYamlAsJson(yamlFilePath) {
     }
 }
 
-let FooterStrip = class FooterStrip extends s {
+let PanelFooter = class PanelFooter extends s {
     static { this.styles = i$5 `
         :host {
             display: block;
@@ -4624,7 +4624,7 @@ let FooterStrip = class FooterStrip extends s {
             },
             {
                 type: "custom:smartqasa-dialog-tile",
-                template: "display_themes",
+                dialog: "display_themes",
             },
             {
                 type: "custom:button-card",
@@ -4767,16 +4767,16 @@ let FooterStrip = class FooterStrip extends s {
 };
 __decorate([
     r()
-], FooterStrip.prototype, "_config", void 0);
+], PanelFooter.prototype, "_config", void 0);
 __decorate([
     r()
-], FooterStrip.prototype, "_areas", void 0);
-FooterStrip = __decorate([
-    t$1("smartqasa-footer-strip")
-], FooterStrip);
+], PanelFooter.prototype, "_areas", void 0);
+PanelFooter = __decorate([
+    t$1("smartqasa-panel-footer")
+], PanelFooter);
 window.customCards.push({
-    type: "smartqasa-footer-strip",
-    name: "SmartQasa Footer Strip",
+    type: "smartqasa-panel-footer",
+    name: "SmartQasa Panel Footer",
     preview: true,
     description: "A SmartQasa tile for displaying the panel footer strip.",
 });
