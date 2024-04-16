@@ -51,7 +51,7 @@ class PanelFooter extends LitElement implements ActionHandlers {
         }
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            grid-template-columns: repeat(4, min-content);
             grid-gap: 5vw;
             justify-content: center;
             align-items: center;
