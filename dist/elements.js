@@ -4505,6 +4505,7 @@ let FooterStrip = class FooterStrip extends s {
             ? {
                 type: "custom:sonos-card",
                 entityId: audioPlayerObj.entity_id,
+                heightPercentage: 91,
                 mediaBrowserItemsPerRow: 3,
                 mediaBrowserShowTitleForThumbnailIcons: true,
                 showVolumeUpAndDownButtons: true,
@@ -4520,7 +4521,7 @@ let FooterStrip = class FooterStrip extends s {
         const appListCard = videoPlayerObj || audioPlayerObj
             ? {
                 type: "custom:layout-card",
-                layout_type: "custom:vertical-layout",
+                layout_type: "custom:grid-layout",
                 layout: {
                     height: "448px",
                     margin: 0,
