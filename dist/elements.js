@@ -7456,7 +7456,7 @@ let ThemeTile = class ThemeTile extends s {
             animation: this._iconAnimation,
         };
         return x `
-            <div class="container" @click=${this.selectmode}>
+            <div class="container" @click=${this.selectMode}>
                 <div class="icon" style="${o(iconStyles)}">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
@@ -7464,7 +7464,7 @@ let ThemeTile = class ThemeTile extends s {
             </div>
         `;
     }
-    selectmode(e) {
+    selectMode(e) {
         e.stopPropagation();
         if (!this._config)
             return;

@@ -20,6 +20,7 @@ export class ThemeTile extends LitElement {
     private _iconAnimation: string = "none";
     private _iconColor: string = "var(--sq-inactive-rgb)";
     private _name: string = "Loading...";
+
     static styles: CSSResultGroup = [tileBaseStyle, tileIconSpinStyle];
 
     setConfig(config: Config): void {
@@ -51,7 +52,7 @@ export class ThemeTile extends LitElement {
         };
 
         return html`
-            <div class="container" @click=${this.selectmode}>
+            <div class="container" @click=${this.selectMode}>
                 <div class="icon" style="${styleMap(iconStyles)}">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
@@ -60,7 +61,7 @@ export class ThemeTile extends LitElement {
         `;
     }
 
-    private selectmode(e: Event): void {
+    private selectMode(e: Event): void {
         e.stopPropagation();
         if (!this._config) return;
 
