@@ -147,7 +147,7 @@ class FooterStrip extends LitElement implements ActionHandlers {
         const videoPlayerObj = this._config.video_player ? this._hass.states[this._config.video_player] : undefined;
         const videoSoundObj = this._config.video_sound ? this._hass.states[this._config.video_sound] : undefined;
         const audioPlayerObj = this._config.audio_player ? this._hass.states[this._config.audio_player] : undefined;
-        const appListCards = loadYamlAsJson("/config/sq-custom/elements/lists/entertain.yaml");
+        const appListCards = loadYamlAsJson("/local/sq-custom/lists/entertain.yaml");
 
         const videoPlayerTitle = videoPlayerObj
             ? {
