@@ -4509,7 +4509,6 @@ let FooterStrip = class FooterStrip extends s {
                 mediaBrowserShowTitleForThumbnailIcons: true,
                 showVolumeUpAndDownButtons: true,
                 sections: ["player", "volumes", "groups", "grouping", "media browser"],
-                heightPercentage: "auto",
             }
             : undefined;
         const appListTitle = videoPlayerObj || audioPlayerObj
@@ -4520,7 +4519,13 @@ let FooterStrip = class FooterStrip extends s {
             : undefined;
         const appListCard = videoPlayerObj || audioPlayerObj
             ? {
-                type: "vertical-stack",
+                type: "custom:layout-card",
+                layout_type: "custom:vertical-layout",
+                layout: {
+                    height: "auto",
+                    margin: 0,
+                    padding: 0,
+                },
                 cards: appListCards,
             }
             : undefined;

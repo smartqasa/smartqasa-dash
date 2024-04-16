@@ -180,7 +180,6 @@ class FooterStrip extends LitElement implements ActionHandlers {
                   mediaBrowserShowTitleForThumbnailIcons: true,
                   showVolumeUpAndDownButtons: true,
                   sections: ["player", "volumes", "groups", "grouping", "media browser"],
-                  heightPercentage: "auto",
               }
             : undefined;
 
@@ -195,7 +194,13 @@ class FooterStrip extends LitElement implements ActionHandlers {
         const appListCard =
             videoPlayerObj || audioPlayerObj
                 ? {
-                      type: "vertical-stack",
+                      type: "custom:layout-card",
+                      layout_type: "custom:vertical-layout",
+                      layout: {
+                          height: "auto",
+                          margin: 0,
+                          padding: 0,
+                      },
                       cards: appListCards,
                   }
                 : undefined;
