@@ -140,14 +140,15 @@ class FooterStrip extends LitElement implements ActionHandlers {
         window.browser_mod?.service("popup", dialogConfig);
     }
 
-    handleEntertain(): void {
+    async handleEntertain(): Promise<void> {
         if (!this._config) return;
 
         const deviceType = window.smartqasa.deviceType;
         const videoPlayerObj = this._config.video_player ? this._hass.states[this._config.video_player] : undefined;
         const videoSoundObj = this._config.video_sound ? this._hass.states[this._config.video_sound] : undefined;
         const audioPlayerObj = this._config.audio_player ? this._hass.states[this._config.audio_player] : undefined;
-        const appListCards = loadYamlAsJson("/local/sq-custom/lists/entertain.yaml");
+        const appListCards = await loadYamlAsJson("/local/sq-custom/lists/entertain.yaml");
+        console.log(appListCards);
 
         const videoPlayerTitle = videoPlayerObj
             ? {
