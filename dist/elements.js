@@ -4479,7 +4479,7 @@ let FooterStrip = class FooterStrip extends s {
         const videoPlayerObj = this._config.video_player ? this._hass.states[this._config.video_player] : undefined;
         this._config.video_sound ? this._hass.states[this._config.video_sound] : undefined;
         const audioPlayerObj = this._config.audio_player ? this._hass.states[this._config.audio_player] : undefined;
-        const appListCards = await loadYamlAsJson("local/smartqasa/lists/entertain.yaml");
+        const appListCards = await loadYamlAsJson("/local/smartqasa/lists/entertain.yaml");
         if (appListCards === "fail")
             return;
         const videoPlayerTitle = videoPlayerObj
