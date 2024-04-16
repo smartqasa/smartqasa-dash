@@ -527,7 +527,7 @@ function areasDialog(hass) {
             layout_type: "custom:grid-layout",
             layout: {
                 margin: 0,
-                "grid-template-columns": window.smartqasa.deviceType === "phone" ? "repeat(2, 1fr)" : "repeat(3, 1fr)",
+                "grid-template-columns": window.smartqasa.deviceType === "phone" ? "repeat(2, auto)" : "repeat(3, auto)",
                 "grid-gap": "var(--sq-dialog-grid-gap)",
             },
             cards: cards,
@@ -4522,9 +4522,7 @@ async function menuDialog(menu_tab) {
         margin: 0,
         card_margin: 0,
         padding: "10px 0 0 0",
-        "grid-template-columns": window.smartqasa.deviceType === "phone"
-            ? "repeat(2, var(--sq-tile-width-phone))"
-            : "repeat(3, var(--sq-tile-width-tablet))",
+        "grid-template-columns": window.smartqasa.deviceType === "phone" ? "repeat(2, auto)" : "repeat(3, auto)",
         "grid-gap": "var(--sq-dialog-grid-gap)",
     };
     const favoMenuTiles = await loadYamlAsJson("/local/smartqasa/menus/favorites.yaml");
@@ -4960,6 +4958,7 @@ const tileBaseStyle = i$5 `
     .container {
         display: grid;
         height: 5.2rem;
+        max-width: 19rem;
         border: var(--sq-card-border, none);
         border-radius: 1.5rem;
         grid-template-areas: "i n";
