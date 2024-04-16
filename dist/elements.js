@@ -4363,7 +4363,7 @@ async function loadYamlAsJson(yamlFilePath) {
         const response = await fetch(yamlFilePath);
         if (!response.ok) {
             console.error(`HTTP error! Status: ${response.status}`);
-            return;
+            return "fail";
         }
         const yamlContent = await response.text();
         const jsonContent = jsYaml.load(yamlContent);
@@ -4371,7 +4371,7 @@ async function loadYamlAsJson(yamlFilePath) {
     }
     catch (e) {
         console.error("Error fetching and parsing YAML file:", e);
-        return null;
+        return "fail";
     }
 }
 
@@ -4479,7 +4479,9 @@ let FooterStrip = class FooterStrip extends s {
         const videoPlayerObj = this._config.video_player ? this._hass.states[this._config.video_player] : undefined;
         this._config.video_sound ? this._hass.states[this._config.video_sound] : undefined;
         const audioPlayerObj = this._config.audio_player ? this._hass.states[this._config.audio_player] : undefined;
-        const appListCards = await loadYamlAsJson("/local/sq-custom/lists/entertain.yaml");
+        const appListCards = await loadYamlAsJson("/config/sq-custom/elements/lists/entertain.yaml");
+        if (appListCards === "fail")
+            return;
         console.log(appListCards);
         const videoPlayerTitle = videoPlayerObj
             ? {
@@ -4546,7 +4548,7 @@ let FooterStrip = class FooterStrip extends s {
                 layout: {
                     margin: 0,
                     "grid-template-columns": gridTemplateColumns,
-                    "grid-template-rows": "max-content max-content",
+                    "grid-template-rows": "max-content min-content",
                     "grid-gap": "var(--sq-dialog-grid-gap)",
                 },
                 cards: cards,
