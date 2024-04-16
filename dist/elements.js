@@ -1,4 +1,4 @@
-var version = "1.1.58";
+var version = "1.1.59";
 
 /******************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -4483,6 +4483,7 @@ async function entertainDialog(config, hass) {
             type: "custom:layout-card",
             layout_type: "custom:grid-layout",
             layout: {
+                height: "480px",
                 margin: 0,
                 "grid-gap": "var(--sq-dialog-grid-gap)",
             },
@@ -4525,6 +4526,7 @@ async function entertainDialog(config, hass) {
             type: "custom:layout-card",
             layout_type: "custom:grid-layout",
             layout: {
+                height: "482px",
                 margin: 0,
                 "place-content": "center",
                 "grid-template-columns": gridTemplateColumns,
