@@ -4483,7 +4483,6 @@ async function entertainDialog(config, hass) {
             type: "custom:layout-card",
             layout_type: "custom:grid-layout",
             layout: {
-                height: "448px",
                 margin: 0,
                 "grid-gap": "var(--sq-dialog-grid-gap)",
             },
@@ -4529,7 +4528,7 @@ async function entertainDialog(config, hass) {
                 margin: 0,
                 "place-content": "center",
                 "grid-template-columns": gridTemplateColumns,
-                "grid-template-rows": "max-content 448px",
+                "grid-template-rows": "max-content 480px",
                 "grid-gap": "var(--sq-dialog-grid-gap)",
             },
             cards: cards,
