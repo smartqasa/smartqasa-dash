@@ -1,5 +1,3 @@
-import fs from 'fs/promises';
-
 var version = "1.1.55";
 
 /******************************************************************************
@@ -4360,6 +4358,7 @@ var jsYaml = {
 	safeDump: safeDump
 };
 
+const fs = require("fs").promises;
 async function loadYamlAsJson(yamlFilePath) {
     try {
         const fileContents = await fs.readFile(yamlFilePath, "utf8");

@@ -1,5 +1,5 @@
-import fs from "fs/promises";
 import yaml from "js-yaml";
+const fs = require("fs").promises;
 
 export async function loadYamlAsJson(yamlFilePath: string) {
     try {
