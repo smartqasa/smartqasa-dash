@@ -8,7 +8,7 @@ import { tileBaseStyle, tileIconSpinStyle } from "../styles/tile";
 interface Config extends LovelaceCardConfig {
     icon: string;
     name: string;
-    option: string;
+    mode: string;
 }
 
 @customElement("smartqasa-theme-tile")
@@ -38,7 +38,7 @@ export class ThemeTile extends LitElement {
         this._icon = this._config.icon || "hass:compare";
         this._iconAnimation = "none";
         this._iconColor = "var(--sq-inactive-rgb)";
-        this._name = this._config.name || this._config.option || "Unknown";
+        this._name = this._config.name || this._config.mode || "Unknown";
     }
 
     protected render(): TemplateResult {
@@ -51,7 +51,7 @@ export class ThemeTile extends LitElement {
         };
 
         return html`
-            <div class="container" @click=${this.selectOption}>
+            <div class="container" @click=${this.selectmode}>
                 <div class="icon" style="${styleMap(iconStyles)}">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
@@ -60,7 +60,7 @@ export class ThemeTile extends LitElement {
         `;
     }
 
-    private selectOption(e: Event): void {
+    private selectmode(e: Event): void {
         e.stopPropagation();
         if (!this._config) return;
 
@@ -69,7 +69,7 @@ export class ThemeTile extends LitElement {
         this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
 
         this._hass.callService("browser_mod", "set_theme", {
-            dark: this._config.option,
+            dark: this._config.mode,
         });
 
         setTimeout(() => {

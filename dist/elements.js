@@ -1,4 +1,4 @@
-var version = "1.1.56";
+var version = "1.1.57";
 
 /******************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -7445,7 +7445,7 @@ let ThemeTile = class ThemeTile extends s {
         this._icon = this._config.icon || "hass:compare";
         this._iconAnimation = "none";
         this._iconColor = "var(--sq-inactive-rgb)";
-        this._name = this._config.name || this._config.option || "Unknown";
+        this._name = this._config.name || this._config.mode || "Unknown";
     }
     render() {
         if (!this._config)
@@ -7456,7 +7456,7 @@ let ThemeTile = class ThemeTile extends s {
             animation: this._iconAnimation,
         };
         return x `
-            <div class="container" @click=${this.selectOption}>
+            <div class="container" @click=${this.selectmode}>
                 <div class="icon" style="${o(iconStyles)}">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
@@ -7464,7 +7464,7 @@ let ThemeTile = class ThemeTile extends s {
             </div>
         `;
     }
-    selectOption(e) {
+    selectmode(e) {
         e.stopPropagation();
         if (!this._config)
             return;
@@ -7472,7 +7472,7 @@ let ThemeTile = class ThemeTile extends s {
         this._iconAnimation = "spin 1.0s linear infinite";
         this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
         this._hass.callService("browser_mod", "set_theme", {
-            dark: this._config.option,
+            dark: this._config.mode,
         });
         setTimeout(() => {
             window.browser_mod?.service("close_popup", {});
