@@ -187,7 +187,7 @@ class FooterStrip extends LitElement implements ActionHandlers {
             videoPlayerObj || audioPlayerObj
                 ? {
                       type: "custom:smartqasa-title-card",
-                      title: audioPlayerObj.attributes.friendly_name || "Apps",
+                      title: "Apps",
                   }
                 : undefined;
 
