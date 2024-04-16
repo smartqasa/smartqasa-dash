@@ -4412,7 +4412,7 @@ async function entertainDialog(config, hass) {
         return;
     window.smartqasa.deviceType;
     const videoPlayerObj = config.video_player ? hass.states[config.video_player] : undefined;
-    config.video_sound ? hass.states[config.video_sound] : undefined;
+    const videoSoundObj = config.video_sound ? hass.states[config.video_sound] : undefined;
     const audioPlayerObj = config.audio_player ? hass.states[config.audio_player] : undefined;
     const appListCards = await loadYamlAsJson("/local/smartqasa/lists/entertain.yaml");
     const videoPlayerTitle = videoPlayerObj
@@ -4426,6 +4426,33 @@ async function entertainDialog(config, hass) {
             type: "custom:roku-card",
             entity: videoPlayerObj.entity_id,
             tv: true,
+            volume_mute: {
+                tap_action: {
+                    action: "call-service",
+                    service: "script.system_toggle_volume_muted",
+                    service_data: {
+                        entity_id: videoSoundObj.entity_id || videoPlayerObj.entity_id,
+                    },
+                },
+            },
+            volume_down: {
+                tap_action: {
+                    action: "call-service",
+                    service: "media_player.volume_down",
+                    service_data: {
+                        entity_id: videoSoundObj.entity_id || videoPlayerObj.entity_id,
+                    },
+                },
+            },
+            volume_up: {
+                tap_action: {
+                    action: "call-service",
+                    service: "media_player.volume_up",
+                    service_data: {
+                        entity_id: videoSoundObj.entity_id || videoPlayerObj.entity_id,
+                    },
+                },
+            },
         }
         : undefined;
     const audioPlayerTitle = audioPlayerObj
@@ -4438,7 +4465,7 @@ async function entertainDialog(config, hass) {
         ? {
             type: "custom:sonos-card",
             entityId: audioPlayerObj.entity_id,
-            heightPercentage: 89,
+            heightPercentage: 88,
             mediaBrowserItemsPerRow: 3,
             mediaBrowserShowTitleForThumbnailIcons: true,
             showVolumeUpAndDownButtons: true,
