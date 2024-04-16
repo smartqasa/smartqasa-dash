@@ -35,7 +35,6 @@ const dialogTable: DialogTable = {
         name: "Dispaly Themes",
         data: {
             title: "Display Themes",
-            size: "fullscreen",
             timeout: 60000,
             content: {
                 type: "custom:layout-card",

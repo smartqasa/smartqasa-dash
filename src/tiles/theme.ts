@@ -37,7 +37,7 @@ export class ThemeTile extends LitElement {
 
         this._icon = this._config.icon || "hass:compare";
         this._iconAnimation = "none";
-        this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
+        this._iconColor = "var(--sq-inactive-rgb)";
         this._name = this._config.name || this._config.option || "Unknown";
     }
 
