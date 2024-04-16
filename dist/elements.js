@@ -7468,12 +7468,14 @@ let ThemeTile = class ThemeTile extends s {
         e.stopPropagation();
         if (!this._config)
             return;
+        console.log("Before", this._config.mode);
         this._icon = "hass:rotate-right";
         this._iconAnimation = "spin 1.0s linear infinite";
         this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
         this._hass.callService("browser_mod", "set_theme", {
             dark: this._config.mode,
         });
+        console.log("After", this._config.mode);
         setTimeout(() => {
             window.browser_mod?.service("close_popup", {});
         }, 2000);
