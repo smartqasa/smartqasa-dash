@@ -1,6 +1,6 @@
 import fs from 'fs/promises';
 
-var version = "1.1.54";
+var version = "1.1.55";
 
 /******************************************************************************
 Copyright (c) Microsoft Corporation.
