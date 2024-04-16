@@ -7424,6 +7424,7 @@ window.customCards.push({
 let ThemeTile = class ThemeTile extends s {
     constructor() {
         super(...arguments);
+        this._running = false;
         this._icon = "hass:compare";
         this._iconAnimation = "none";
         this._iconColor = "var(--sq-inactive-rgb)";
@@ -7440,7 +7441,7 @@ let ThemeTile = class ThemeTile extends s {
         this._hass = hass;
     }
     updateState() {
-        if (!this._config)
+        if (!this._config || this._running === true)
             return;
         this._icon = this._config.icon || "hass:compare";
         this._iconAnimation = "none";
@@ -7468,17 +7469,15 @@ let ThemeTile = class ThemeTile extends s {
         e.stopPropagation();
         if (!this._config)
             return;
-        console.log("Before", this._config.mode);
+        this._running = true;
         this._icon = "hass:rotate-right";
         this._iconAnimation = "spin 1.0s linear infinite";
         this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
-        this._hass.callService("browser_mod", "set_theme", {
-            dark: this._config.mode,
-        });
-        console.log("After", this._config.mode);
+        window.browser_mod?.service("set_theme", { dark: this._config.mode });
         setTimeout(() => {
+            this._running = false;
             window.browser_mod?.service("close_popup", {});
-        }, 2000);
+        }, 1000);
     }
     getCardSize() {
         return 1;
@@ -7487,6 +7486,9 @@ let ThemeTile = class ThemeTile extends s {
 __decorate([
     r()
 ], ThemeTile.prototype, "_config", void 0);
+__decorate([
+    r()
+], ThemeTile.prototype, "_running", void 0);
 ThemeTile = __decorate([
     t$1("smartqasa-theme-tile")
 ], ThemeTile);

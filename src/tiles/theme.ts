@@ -14,6 +14,7 @@ interface Config extends LovelaceCardConfig {
 @customElement("smartqasa-theme-tile")
 export class ThemeTile extends LitElement {
     @state() private _config?: Config;
+    @state() private _running: boolean = false;
 
     private _hass: any;
     private _icon: string = "hass:compare";
@@ -34,7 +35,7 @@ export class ThemeTile extends LitElement {
     }
 
     private updateState(): void {
-        if (!this._config) return;
+        if (!this._config || this._running === true) return;
 
         this._icon = this._config.icon || "hass:compare";
         this._iconAnimation = "none";
@@ -65,21 +66,17 @@ export class ThemeTile extends LitElement {
         e.stopPropagation();
         if (!this._config) return;
 
-        console.log("Before", this._config.mode);
-
+        this._running = true;
         this._icon = "hass:rotate-right";
         this._iconAnimation = "spin 1.0s linear infinite";
         this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
 
-        this._hass.callService("browser_mod", "set_theme", {
-            dark: this._config.mode,
-        });
-
-        console.log("After", this._config.mode);
+        window.browser_mod?.service("set_theme", { dark: this._config.mode });
 
         setTimeout(() => {
+            this._running = false;
             window.browser_mod?.service("close_popup", {});
-        }, 2000);
+        }, 1000);
     }
 
     getCardSize(): number {
