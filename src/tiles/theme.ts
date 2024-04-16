@@ -1,7 +1,7 @@
 import { CSSResultGroup, html, LitElement, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
-import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
+import { LovelaceCardConfig } from "custom-card-helpers";
 
 import { tileBaseStyle, tileIconSpinStyle } from "../styles/tile";
 
@@ -16,7 +16,6 @@ export class ThemeTile extends LitElement {
     @state() private _config?: Config;
     @state() private _running: boolean = false;
 
-    private _hass: any;
     private _icon: string = "hass:compare";
     private _iconAnimation: string = "none";
     private _iconColor: string = "var(--sq-inactive-rgb)";
@@ -27,11 +26,6 @@ export class ThemeTile extends LitElement {
     setConfig(config: Config): void {
         this._config = { ...config };
         this.updateState();
-    }
-
-    set hass(hass: HomeAssistant) {
-        if (!this._config || !hass) return;
-        this._hass = hass;
     }
 
     private updateState(): void {
@@ -75,6 +69,7 @@ export class ThemeTile extends LitElement {
 
         setTimeout(() => {
             this._running = false;
+            this.updateState();
             window.browser_mod?.service("close_popup", {});
         }, 1000);
     }

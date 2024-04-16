@@ -80,8 +80,6 @@ export class RoutineTile extends LitElement {
         if (!this._stateObj) return;
 
         this._running = true;
-        const icon = this._icon;
-
         this._icon = "hass:rotate-right";
         this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
         this._iconAnimation = "spin 1.0s linear infinite";
@@ -103,10 +101,8 @@ export class RoutineTile extends LitElement {
         }
 
         setTimeout(() => {
-            this._icon = icon;
-            this._iconColor = "var(--sq-inactive-rgb)";
-            this._iconAnimation = "none";
             this._running = false;
+            this.updateState();
         }, 2000);
     }
 

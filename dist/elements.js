@@ -6948,7 +6948,6 @@ let RoutineTile = class RoutineTile extends s {
         if (!this._stateObj)
             return;
         this._running = true;
-        const icon = this._icon;
         this._icon = "hass:rotate-right";
         this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
         this._iconAnimation = "spin 1.0s linear infinite";
@@ -6968,10 +6967,8 @@ let RoutineTile = class RoutineTile extends s {
                 return;
         }
         setTimeout(() => {
-            this._icon = icon;
-            this._iconColor = "var(--sq-inactive-rgb)";
-            this._iconAnimation = "none";
             this._running = false;
+            this.updateState();
         }, 2000);
     }
     getCardSize() {
@@ -7435,11 +7432,6 @@ let ThemeTile = class ThemeTile extends s {
         this._config = { ...config };
         this.updateState();
     }
-    set hass(hass) {
-        if (!this._config || !hass)
-            return;
-        this._hass = hass;
-    }
     updateState() {
         if (!this._config || this._running === true)
             return;
@@ -7476,6 +7468,7 @@ let ThemeTile = class ThemeTile extends s {
         window.browser_mod?.service("set_theme", { dark: this._config.mode });
         setTimeout(() => {
             this._running = false;
+            this.updateState();
             window.browser_mod?.service("close_popup", {});
         }, 1000);
     }
