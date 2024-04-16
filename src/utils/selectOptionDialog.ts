@@ -1,3 +1,5 @@
+import { listDialogStyle } from "../styles/dialog";
+
 export function selectOptionDialog(config: any, stateObj: any) {
     if (!stateObj) return;
 
@@ -7,17 +9,14 @@ export function selectOptionDialog(config: any, stateObj: any) {
         option: option,
         trigger: config?.trigger || null,
     }));
+
     const dialogConfig = {
         title: stateObj.attributes.friendly_name || stateObj.entity_id,
         timeout: 60000,
         content: {
             type: "custom:layout-card",
             layout_type: "custom:grid-layout",
-            layout: {
-                margin: 0,
-                "grid-template-columns": "1fr",
-                "grid-gap": "var(--sq-dialog-grid-gap)",
-            },
+            layout: listDialogStyle,
             cards: cards,
         },
     };

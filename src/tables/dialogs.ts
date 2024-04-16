@@ -1,4 +1,5 @@
 import { listDialogConfig } from "../utils/listDialogConfig";
+import { listDialogStyle } from "../styles/dialog";
 
 interface DialogTable {
     [key: string]: {
@@ -26,6 +27,35 @@ const dialogTable: DialogTable = {
                     },
                 },
             },
+        },
+    },
+    display_themes: {
+        icon: "hass:compare",
+        name: "Dispaly Themes",
+        data: {
+            type: "custom:layout-card",
+            layout_type: "custom:grid-layout",
+            layout: listDialogStyle,
+            cards: [
+                {
+                    type: "custom:smartqasa-theme-tile",
+                    mode: "light",
+                    icon: "hass:brightness-7",
+                    name: "Light",
+                },
+                {
+                    type: "custom:smartqasa-theme-tile",
+                    mode: "dark",
+                    icon: "hass:weather-night",
+                    name: "Dark",
+                },
+                {
+                    type: "custom:smartqasa-theme-tile",
+                    mode: "auto",
+                    icon: "hass:theme-light-dark",
+                    name: "Auto",
+                },
+            ],
         },
     },
     energy_monitor: {
@@ -91,49 +121,6 @@ const dialogTable: DialogTable = {
         name: "Sonos Players",
         data: listDialogConfig("Sonos Players", "group", "media_player.all_sonos_players", "sonos"),
     },
-    display_theme: {
-        icon: "hass:compare",
-        name: "Dispaly Theme",
-        data: {
-            type: "custom:layout-card",
-            layout_type: "custom:grid-layout",
-            layout: {
-                "grid-template-columns": "1fr",
-                "grid-gap": "var(--sq-dialog-grid-gap)",
-                margin: 0,
-            },
-            cards: [
-                {
-                    type: "custom:smartqasa-theme-tile",
-                    entity: "input_select.location_phase",
-                    trigger: "input_button.location_phase",
-                    option: "Morning",
-                    icon: "mdi:weather-sunset-up",
-                },
-                {
-                    type: "custom:smartqasa-theme-tile",
-                    template: "select-tile",
-                    variables: {
-                        entity: "input_select.location_phase",
-                        trigger: "input_button.location_phase",
-                        option: "Day",
-                        icon: "mdi:white-balance-sunny",
-                    },
-                },
-                {
-                    type: "custom:smartqasa-theme-tile",
-                    template: "select-tile",
-                    variables: {
-                        entity: "input_select.location_phase",
-                        trigger: "input_button.location_phase",
-                        option: "Evening",
-                        icon: "mdi:weather-night",
-                    },
-                },
-            ],
-        },
-    },
-
     thermostats: {
         icon: "hass:thermostat",
         name: "Thermostats",
