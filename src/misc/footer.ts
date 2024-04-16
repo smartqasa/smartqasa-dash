@@ -1,6 +1,7 @@
 import { LitElement, html, css, CSSResultGroup, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
+import { loadYamlAsJson } from "../utils/loadYamlAsJson";
 
 interface Config extends LovelaceCardConfig {
     audio_player: string;
@@ -146,6 +147,7 @@ class FooterStrip extends LitElement implements ActionHandlers {
         const videoPlayerObj = this._config.video_player ? this._hass.states[this._config.video_player] : undefined;
         const videoSoundObj = this._config.video_sound ? this._hass.states[this._config.video_sound] : undefined;
         const audioPlayerObj = this._config.audio_player ? this._hass.states[this._config.audio_player] : undefined;
+        const appListData = loadYamlAsJson("/config/sq-custom/elements/lists/entertain.yaml");
 
         const videoPlayerTitle = videoPlayerObj
             ? {
@@ -185,7 +187,7 @@ class FooterStrip extends LitElement implements ActionHandlers {
             videoPlayerObj || audioPlayerObj
                 ? {
                       type: "custom:smartqasa-title-card",
-                      title: audioPlayerObj.attributes.friendly_name || "Audio",
+                      title: audioPlayerObj.attributes.friendly_name || "Apps",
                   }
                 : undefined;
 
@@ -193,7 +195,7 @@ class FooterStrip extends LitElement implements ActionHandlers {
             videoPlayerObj || audioPlayerObj
                 ? {
                       type: "vertical-stack",
-                      cards: [],
+                      cards: [appListData],
                   }
                 : undefined;
 
