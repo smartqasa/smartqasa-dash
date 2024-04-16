@@ -53,6 +53,7 @@ import "./tiles/select";
 import "./tiles/sensor";
 import "./tiles/shade";
 import "./tiles/switch";
+import "./tiles/theme";
 import "./tiles/thermostat";
 
 console.info(`%c SmartQasa ⏏ ${version} `, "background-color: #0000ff; color: #ffffff; font-weight: 700;");

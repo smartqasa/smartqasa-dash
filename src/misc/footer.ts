@@ -295,8 +295,8 @@ class FooterStrip extends LitElement implements ActionHandlers {
                 dialog: "clean_screen",
             },
             {
-                type: "custom:button-card",
-                template: "themes-tile",
+                type: "custom:smartqasa-dialog-tile",
+                template: "display_themes",
             },
             {
                 type: "custom:button-card",

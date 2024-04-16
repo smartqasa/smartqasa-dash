@@ -4622,8 +4622,8 @@ let FooterStrip = class FooterStrip extends s {
                 dialog: "clean_screen",
             },
             {
-                type: "custom:button-card",
-                template: "themes-tile",
+                type: "custom:smartqasa-dialog-tile",
+                template: "display_themes",
             },
             {
                 type: "custom:button-card",
@@ -7442,6 +7442,80 @@ window.customCards.push({
     name: "SmartQasa Switch Tile",
     preview: true,
     description: "A SmartQasa tile for toggling an entity.",
+});
+
+let ThemeTile = class ThemeTile extends s {
+    constructor() {
+        super(...arguments);
+        this._icon = "hass:compare";
+        this._iconAnimation = "none";
+        this._iconColor = "var(--sq-inactive-rgb)";
+        this._name = "Loading...";
+    }
+    static { this.styles = [styleTileBase, styleTileIconSpin]; }
+    setConfig(config) {
+        this._config = { ...config };
+        this.updateState();
+    }
+    set hass(hass) {
+        if (!this._config || !hass)
+            return;
+        this._hass = hass;
+    }
+    updateState() {
+        if (!this._config)
+            return;
+        this._icon = this._config.icon || "hass:compare";
+        this._iconAnimation = "none";
+        this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
+        this._name = this._config.name || this._config.option || "Unknown";
+    }
+    render() {
+        if (!this._config)
+            return x ``;
+        const iconStyles = {
+            color: `rgb(${this._iconColor})`,
+            backgroundColor: `rgba(${this._iconColor}, var(--sq-icon-opacity))`,
+            animation: this._iconAnimation,
+        };
+        return x `
+            <div class="container" @click=${this.selectOption}>
+                <div class="icon" style="${o(iconStyles)}">
+                    <ha-icon .icon=${this._icon}></ha-icon>
+                </div>
+                <div class="name">${this._name}</div>
+            </div>
+        `;
+    }
+    selectOption(e) {
+        e.stopPropagation();
+        if (!this._config)
+            return;
+        this._icon = "hass:rotate-right";
+        this._iconAnimation = "spin 1.0s linear infinite";
+        this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
+        this._hass.callService("browser_mod", "set_theme", {
+            dark: this._config.option,
+        });
+        setTimeout(() => {
+            window.browser_mod?.service("close_popup", {});
+        }, 2000);
+    }
+    getCardSize() {
+        return 1;
+    }
+};
+__decorate([
+    r()
+], ThemeTile.prototype, "_config", void 0);
+ThemeTile = __decorate([
+    t$1("smartqasa-theme-tile")
+], ThemeTile);
+window.customCards.push({
+    type: "smartqasa-theme-tile",
+    name: "SmartQasa Theme Tile",
+    preview: true,
+    description: "A SmartQasa tile for setting the display theme.",
 });
 
 let ThermostatTile = class ThermostatTile extends s {
