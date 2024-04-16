@@ -6822,11 +6822,7 @@ let RokuTile = class RokuTile extends s {
         };
         return x `
             <div class="container" @click=${this.showMoreInfo}>
-                <div
-                    class="icon"
-                    @click=${this.toggleEntity}
-                    style="${o(iconStyles)}
-                >
+                <div class="icon" @click=${this.toggleEntity} style="${o(iconStyles)}">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
                 <div class="name">${this._name}</div>
