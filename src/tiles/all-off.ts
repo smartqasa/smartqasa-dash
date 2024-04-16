@@ -77,9 +77,6 @@ export class AllOffTile extends LitElement {
         if (!this._areaObj) return;
 
         this._running = true;
-
-        const icon = this._icon;
-
         this._icon = "hass:rotate-right";
         this._iconAnimation = "spin 1.0s linear infinite";
         this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
@@ -93,10 +90,8 @@ export class AllOffTile extends LitElement {
         });
 
         setTimeout(() => {
-            this._icon = icon;
-            this._iconAnimation = "none";
-            this._iconColor = "var(--sq-inactive-rgb)";
             this._running = false;
+            this.updateState();
         }, 2000);
     }
 

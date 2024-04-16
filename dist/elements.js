@@ -5089,7 +5089,6 @@ let AllOffTile = class AllOffTile extends s {
         if (!this._areaObj)
             return;
         this._running = true;
-        const icon = this._icon;
         this._icon = "hass:rotate-right";
         this._iconAnimation = "spin 1.0s linear infinite";
         this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
@@ -5101,10 +5100,8 @@ let AllOffTile = class AllOffTile extends s {
             area_id: this._areaObj.area_id,
         });
         setTimeout(() => {
-            this._icon = icon;
-            this._iconAnimation = "none";
-            this._iconColor = "var(--sq-inactive-rgb)";
             this._running = false;
+            this.updateState();
         }, 2000);
     }
     getCardSize() {
@@ -6920,11 +6917,13 @@ let RoutineTile = class RoutineTile extends s {
                 : undefined;
         if (!this._stateObj) {
             this._icon = this._config?.icon || "hass:alert-rhombus";
+            this._iconAnimation = "none";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
             this._name = this._config?.name || "Unknown";
             return;
         }
         this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:help-circle";
+        this._iconAnimation = "none";
         this._iconColor = "var(--sq-inactive-rgb)";
         this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
     }
@@ -7421,9 +7420,7 @@ window.customCards.push({
 let ThemeTile = class ThemeTile extends s {
     constructor() {
         super(...arguments);
-        this._running = false;
         this._icon = "hass:compare";
-        this._iconAnimation = "none";
         this._iconColor = "var(--sq-inactive-rgb)";
         this._name = "Loading...";
     }
@@ -7433,12 +7430,9 @@ let ThemeTile = class ThemeTile extends s {
         this.updateState();
     }
     updateState() {
-        if (!this._config || this._running === true)
-            return;
-        this._icon = this._config.icon || "hass:compare";
-        this._iconAnimation = "none";
-        this._iconColor = "var(--sq-inactive-rgb)";
-        this._name = this._config.name || this._config.mode || "Unknown";
+        this._icon = this._config?.icon || "hass:compare";
+        this._iconColor = this._config?.mode ? "var(--sq-inactive-rgb)" : "var(--sq-unavailable-rgb, 255, 0, 255)";
+        this._name = this._config?.name || this._config?.mode || "Unknown";
     }
     render() {
         if (!this._config)
@@ -7446,7 +7440,6 @@ let ThemeTile = class ThemeTile extends s {
         const iconStyles = {
             color: `rgb(${this._iconColor})`,
             backgroundColor: `rgba(${this._iconColor}, var(--sq-icon-opacity))`,
-            animation: this._iconAnimation,
         };
         return x `
             <div class="container" @click=${this.selectMode}>
@@ -7461,16 +7454,8 @@ let ThemeTile = class ThemeTile extends s {
         e.stopPropagation();
         if (!this._config)
             return;
-        this._running = true;
-        this._icon = "hass:rotate-right";
-        this._iconAnimation = "spin 1.0s linear infinite";
-        this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
         window.browser_mod?.service("set_theme", { dark: this._config.mode });
-        setTimeout(() => {
-            this._running = false;
-            this.updateState();
-            window.browser_mod?.service("close_popup", {});
-        }, 1000);
+        window.browser_mod?.service("close_popup", {});
     }
     getCardSize() {
         return 1;
@@ -7479,9 +7464,6 @@ let ThemeTile = class ThemeTile extends s {
 __decorate([
     r()
 ], ThemeTile.prototype, "_config", void 0);
-__decorate([
-    r()
-], ThemeTile.prototype, "_running", void 0);
 ThemeTile = __decorate([
     t$1("smartqasa-theme-tile")
 ], ThemeTile);

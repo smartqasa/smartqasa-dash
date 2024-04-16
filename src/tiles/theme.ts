@@ -14,10 +14,8 @@ interface Config extends LovelaceCardConfig {
 @customElement("smartqasa-theme-tile")
 export class ThemeTile extends LitElement {
     @state() private _config?: Config;
-    @state() private _running: boolean = false;
 
     private _icon: string = "hass:compare";
-    private _iconAnimation: string = "none";
     private _iconColor: string = "var(--sq-inactive-rgb)";
     private _name: string = "Loading...";
 
@@ -29,12 +27,9 @@ export class ThemeTile extends LitElement {
     }
 
     private updateState(): void {
-        if (!this._config || this._running === true) return;
-
-        this._icon = this._config.icon || "hass:compare";
-        this._iconAnimation = "none";
-        this._iconColor = "var(--sq-inactive-rgb)";
-        this._name = this._config.name || this._config.mode || "Unknown";
+        this._icon = this._config?.icon || "hass:compare";
+        this._iconColor = this._config?.mode ? "var(--sq-inactive-rgb)" : "var(--sq-unavailable-rgb, 255, 0, 255)";
+        this._name = this._config?.name || this._config?.mode || "Unknown";
     }
 
     protected render(): TemplateResult {
@@ -43,7 +38,6 @@ export class ThemeTile extends LitElement {
         const iconStyles = {
             color: `rgb(${this._iconColor})`,
             backgroundColor: `rgba(${this._iconColor}, var(--sq-icon-opacity))`,
-            animation: this._iconAnimation,
         };
 
         return html`
@@ -60,18 +54,8 @@ export class ThemeTile extends LitElement {
         e.stopPropagation();
         if (!this._config) return;
 
-        this._running = true;
-        this._icon = "hass:rotate-right";
-        this._iconAnimation = "spin 1.0s linear infinite";
-        this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
-
         window.browser_mod?.service("set_theme", { dark: this._config.mode });
-
-        setTimeout(() => {
-            this._running = false;
-            this.updateState();
-            window.browser_mod?.service("close_popup", {});
-        }, 1000);
+        window.browser_mod?.service("close_popup", {});
     }
 
     getCardSize(): number {
