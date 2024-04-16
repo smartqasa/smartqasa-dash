@@ -288,7 +288,7 @@ class FooterStrip extends LitElement implements ActionHandlers {
 
         const favoMenuTiles = await loadYamlAsJson("/local/smartqasa/menus/favorites.yaml");
         const funcMenuTiles = await loadYamlAsJson("/local/smartqasa/menus/functions.yaml");
-        const applMenuTiles = await loadYamlAsJson("/local/smartqasa/menus/functions.yaml");
+        const applMenuTiles = await loadYamlAsJson("/local/smartqasa/menus/applications.yaml");
         const utilMenuTiles = [
             {
                 type: "custom:smartqasa-dialog-tile",
