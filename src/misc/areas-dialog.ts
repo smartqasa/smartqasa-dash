@@ -26,7 +26,8 @@ export function areasDialog(hass: any): void {
             layout_type: "custom:grid-layout",
             layout: {
                 margin: 0,
-                "grid-template-columns": window.smartqasa.deviceType === "phone" ? "repeat(2, 1fr)" : "repeat(3, 1fr)",
+                "grid-template-columns":
+                    window.smartqasa.deviceType === "phone" ? "repeat(2, auto)" : "repeat(3, auto)",
                 "grid-gap": "var(--sq-dialog-grid-gap)",
             },
             cards: cards,

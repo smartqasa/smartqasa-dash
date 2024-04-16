@@ -4,6 +4,7 @@ export const tileBaseStyle = css`
     .container {
         display: grid;
         height: 5.2rem;
+        max_width: 19rem;
         border: var(--sq-card-border, none);
         border-radius: 1.5rem;
         grid-template-areas: "i n";
