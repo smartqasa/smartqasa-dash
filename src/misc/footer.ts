@@ -195,7 +195,7 @@ class FooterStrip extends LitElement implements ActionHandlers {
             videoPlayerObj || audioPlayerObj
                 ? {
                       type: "vertical-stack",
-                      cards: [appListCards],
+                      cards: appListCards,
                   }
                 : undefined;
 

@@ -4522,7 +4522,7 @@ let FooterStrip = class FooterStrip extends s {
         const appListCard = videoPlayerObj || audioPlayerObj
             ? {
                 type: "vertical-stack",
-                cards: [appListCards],
+                cards: appListCards,
             }
             : undefined;
         let gridTemplateColumns = "auto";
