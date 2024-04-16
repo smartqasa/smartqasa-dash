@@ -30,8 +30,8 @@ interface ActionHandlers {
     handleMenu: () => void;
 }
 
-@customElement("smartqasa-footer-strip")
-class FooterStrip extends LitElement implements ActionHandlers {
+@customElement("smartqasa-panel-footer")
+class PanelFooter extends LitElement implements ActionHandlers {
     @state() private _config?: Config;
     @state() private _areas?: Area[];
 
@@ -296,7 +296,7 @@ class FooterStrip extends LitElement implements ActionHandlers {
             },
             {
                 type: "custom:smartqasa-dialog-tile",
-                template: "display_themes",
+                dialog: "display_themes",
             },
             {
                 type: "custom:button-card",
@@ -440,8 +440,8 @@ class FooterStrip extends LitElement implements ActionHandlers {
 }
 
 window.customCards.push({
-    type: "smartqasa-footer-strip",
-    name: "SmartQasa Footer Strip",
+    type: "smartqasa-panel-footer",
+    name: "SmartQasa Panel Footer",
     preview: true,
     description: "A SmartQasa tile for displaying the panel footer strip.",
 });

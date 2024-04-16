@@ -29,7 +29,7 @@ import "./chips/thermostat";
 
 // Misc
 import "./misc/area-picture";
-import "./misc/footer";
+import "./misc/panel-footer";
 import "./misc/more-info";
 import "./misc/time-date";
 import "./misc/title";
