@@ -126,7 +126,7 @@ const chipDoubleStyle = i$5 `
         place-self: center;
         display: grid;
         grid-template-areas: "i1 s i2";
-        grid-column-gap: 1rem;
+        grid-column-gap: 0.7rem;
         margin-right: 0.7rem;
         padding: 0.2rem;
         border: var(--sq-card-border);
