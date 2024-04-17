@@ -41,7 +41,7 @@ export class GarageTile extends LitElement {
     }
 
     private updateState(): void {
-        if (!this._stateObj) {
+        if (!this._entity || !this._stateObj) {
             this._icon = this._config?.icon || "hass:garage-alert-variant";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
             this._name = this._config?.name || "Unknown";

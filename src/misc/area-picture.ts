@@ -1,5 +1,6 @@
 import { css, CSSResultGroup, html, LitElement, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
+import { HassArea } from "../types";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 
 interface Config extends LovelaceCardConfig {
@@ -7,19 +8,10 @@ interface Config extends LovelaceCardConfig {
     picture?: string;
 }
 
-interface AreaEntry {
-    [key: string]: {
-        area_id: string;
-        icon: string;
-        name: string;
-        picture: string;
-    };
-}
-
 @customElement("smartqasa-area-picture")
 export class AreaPicture extends LitElement {
     @state() private _config?: Config;
-    @state() private _areaObj?: AreaEntry;
+    @state() private _areaObj?: HassArea;
 
     private _hass: any;
 

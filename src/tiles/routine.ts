@@ -45,13 +45,7 @@ export class RoutineTile extends LitElement {
     private updateState(): void {
         if (this._waiting === true) return;
 
-        const validDomains = ["automation", "scene", "script"];
-        this._stateObj =
-            this._config?.entity && validDomains.includes(this._config.entity.split(".")[0])
-                ? this._hass?.states[this._config.entity]
-                : undefined;
-
-        if (!this._stateObj) {
+        if (!this._entity || !this._stateObj) {
             this._icon = this._config?.icon || "hass:alert-rhombus";
             this._iconAnimation = "none";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";

@@ -43,7 +43,7 @@ export class LockTile extends LitElement {
     private updateState(): void {
         if (this._waiting === true) return;
 
-        if (!this._stateObj) {
+        if (!this._entity || !this._stateObj) {
             this._icon = this._config?.icon || "hass:lock-alert";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
             this._name = this._config?.name || "Unknown";

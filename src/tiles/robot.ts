@@ -41,7 +41,7 @@ export class RobotTile extends LitElement {
     }
 
     private updateState(): void {
-        if (!this._stateObj) {
+        if (!this._entity || !this._stateObj) {
             this._icon = this._config?.icon || "hass:robot-vacuum-variant-alert";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
             this._name = this._config?.name || "Unknown";

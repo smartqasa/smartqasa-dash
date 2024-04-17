@@ -13,16 +13,18 @@ export class MoreInfoDialog extends LitElement {
     @state() private _config?: Config;
     @state() private _stateObj?: HassEntity;
 
+    private _entity?: string;
     private _hass: any;
 
     setConfig(config: Config): void {
         this._config = { ...config };
+        this._entity = this._config?.entity;
     }
 
     set hass(hass: HomeAssistant) {
-        if (!this._config?.entity || !hass) return;
+        if (!this._entity || !hass) return;
         this._hass = hass;
-        this._stateObj = this._config?.entity ? this._hass?.states[this._config.entity] : undefined;
+        this._stateObj = this._hass?.states[this._entity];
     }
 
     protected render(): TemplateResult {

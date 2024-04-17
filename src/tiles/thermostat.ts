@@ -1,5 +1,6 @@
 import { CSSResultGroup, html, LitElement, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
+import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 import { moreInfoDialog } from "../utils/more-info-dialog";
@@ -17,8 +18,10 @@ export class ThermostatTile extends LitElement {
     @state() private _config?: Config;
     @state() private _stateObj?: HassEntity;
 
+    private _entity?: string;
     private _hass: any;
     private _icon: string = "hass:thermostat";
+    private _iconAnimation: string = "none";
     private _iconColor: string = "var(--sq-inactive-rgb)";
     private _name: string = "Loading...";
     private _stateFmtd: string = "Loading...";
@@ -27,22 +30,19 @@ export class ThermostatTile extends LitElement {
 
     setConfig(config: Config): void {
         this._config = { ...config };
+        this._entity = this._config.entity?.startsWith("climate.") ? this._config.entity : undefined;
         this.updateState();
     }
 
     set hass(hass: HomeAssistant) {
-        if (!this._config?.entity || !hass) return;
+        if (!this._entity || !hass) return;
         this._hass = hass;
+        this._stateObj = this._hass?.states[this._entity];
         this.updateState();
     }
 
     private updateState(): void {
-        this._stateObj =
-            this._config?.entity && this._config.entity.split(".")[0] === "climate"
-                ? this._hass?.states[this._config.entity]
-                : undefined;
-
-        if (!this._stateObj) {
+        if (!this._entity || !this._stateObj) {
             this._icon = this._config?.icon || "hass:thermostat";
             this._iconColor = thermostatColors.default;
             this._name = this._config?.name || "Unknown";
@@ -68,20 +68,19 @@ export class ThermostatTile extends LitElement {
                 this._stateFmtd += ` / ${this._stateObj.attributes.current_humidity}%`;
             }
         }
-        this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
+        this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._entity || "Unknown";
     }
 
     protected render(): TemplateResult {
+        const iconStyles = {
+            color: `rgb(${this._iconColor})`,
+            backgroundColor: `rgba(${this._iconColor}, var(--sq-icon-opacity))`,
+            animation: this._iconAnimation,
+        };
+
         return html`
             <div class="container" @click=${this.showMoreInfo}>
-                <div
-                    class="icon"
-                    @click=${this.toggleEntity}
-                    style="
-                        color: rgb(${this._iconColor});
-                        background-color: rgba(${this._iconColor}, var(--sq-icon-opacity, 0.2));
-                    "
-                >
+                <div class="icon" @click=${this.toggleEntity} style="${styleMap(iconStyles)}">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
                 <div class="name">${this._name}</div>

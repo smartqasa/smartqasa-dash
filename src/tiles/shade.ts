@@ -18,6 +18,7 @@ export class ShadeTile extends LitElement {
     @state() private _config?: Config;
     @state() private _stateObj?: HassEntity;
 
+    private _entity?: string;
     private _hass: any;
     private _icon: string = "hass:roller-shade";
     private _iconAnimation: string = "none";
@@ -29,22 +30,19 @@ export class ShadeTile extends LitElement {
 
     setConfig(config: Config): void {
         this._config = { ...config };
+        this._entity = this._config.entity?.startsWith("cover.") ? this._config.entity : undefined;
         this.updateState();
     }
 
     set hass(hass: HomeAssistant) {
-        if (!this._config?.entity || !hass) return;
+        if (!this._entity || !hass) return;
         this._hass = hass;
+        this._stateObj = this._hass?.states[this._entity];
         this.updateState();
     }
 
     private updateState(): void {
-        this._stateObj =
-            this._config?.entity && this._config.entity.split(".")[0] === "cover"
-                ? this._hass?.states[this._config.entity]
-                : undefined;
-
-        if (!this._stateObj) {
+        if (!this._entity || !this._stateObj) {
             this._icon = this._config?.icon || "hass:roller-shade";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
             this._name = this._config?.name || "Unknown";
@@ -80,7 +78,7 @@ export class ShadeTile extends LitElement {
                 this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
                 break;
         }
-        this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
+        this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._entity || "Unknown";
         this._stateFmtd =
             this._hass.formatEntityState(this._stateObj) +
             (state === "open" && this._stateObj.attributes.current_position
@@ -115,17 +113,17 @@ export class ShadeTile extends LitElement {
         if (tilt >= 1 && tilt <= 100) {
             if (this._stateObj.attributes.current_position !== tilt) {
                 this._hass.callService("cover", "set_cover_position", {
-                    entity_id: this._stateObj.entity_id,
+                    entity_id: this._entity,
                     position: tilt,
                 });
             } else {
                 this._hass.callService("cover", "set_cover_position", {
-                    entity_id: this._stateObj.entity_id,
+                    entity_id: this._entity,
                     position: 0,
                 });
             }
         } else {
-            this.hass.callService("cover", "toggle", { entity_id: this._stateObj.entity_id });
+            this.hass.callService("cover", "toggle", { entity_id: this._entity });
         }
     }
 
@@ -143,9 +141,9 @@ export class ShadeTile extends LitElement {
         )
             return;
         entityListDialog(
-            this._stateObj.attributes?.friendly_name || this._stateObj.entity_id,
+            this._stateObj.attributes?.friendly_name || this._entity || "Unknown",
             "group",
-            this._stateObj.entity_id,
+            this._entity,
             "shade"
         );
     }

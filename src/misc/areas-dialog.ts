@@ -1,17 +1,9 @@
-interface Area {
-    area_id: string;
-    aliases: string[];
-    floor_id: string;
-    icon: string;
-    labels: string[];
-    name: string;
-    picture: string;
-}
+import { HassArea } from "../types";
 
 export function areasDialog(hass: any): void {
     if (!hass) return;
 
-    const areas = Object.values<Area>(hass.areas).filter((area) => area?.labels.includes("visible"));
+    const areas = Object.values<HassArea>(hass.areas).filter((area) => area?.labels.includes("visible"));
 
     const cards = areas?.map((area) => ({
         type: "custom:smartqasa-area-tile",

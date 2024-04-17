@@ -16,6 +16,7 @@ export class ThermostatChip extends LitElement {
     @state() private _config?: Config;
     @state() private _stateObj?: HassEntity;
 
+    private _entity?: string;
     private _hass: any;
     private _icon: string = "hass:thermometer-lines";
     private _iconColor: string = "var(--sq-inactive-rgb)";
@@ -24,21 +25,21 @@ export class ThermostatChip extends LitElement {
     static styles: CSSResult = chipBasicStyle;
 
     setConfig(config: Config): void {
-        if (!config.entity) return;
+        if (!config?.entity) return;
         this._config = { ...config };
+        this._entity = this._config.entity?.startsWith("climate.") ? this._config.entity : undefined;
         this.updateState();
     }
 
     set hass(hass: HomeAssistant) {
-        if (!this._config?.entity || !hass) return;
+        if (!this._entity || !hass) return;
         this._hass = hass;
+        this._stateObj = this._hass?.states[this._entity];
         this.updateState();
     }
 
     private updateState(): void {
-        this._stateObj = this._hass && this._config?.entity ? this._hass.states[this._config.entity] : undefined;
-
-        if (!this._stateObj) {
+        if (!this._entity || !this._stateObj) {
             this._icon = thermostatIcons.default;
             this._iconColor = thermostatColors.default;
             this._temperature = "??";
@@ -53,7 +54,7 @@ export class ThermostatChip extends LitElement {
     }
 
     protected render(): TemplateResult {
-        if (!this._config?.entity) return html``;
+        if (!this._entity) return html``;
 
         return html`
             <div class="container" @click=${this.showMoreInfo}>

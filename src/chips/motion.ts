@@ -16,6 +16,7 @@ export class MotionChip extends LitElement {
     @state() private _config?: Config;
     @state() private _stateObj?: HassEntity;
 
+    private _entity?: string;
     private _hass: any;
     private _containerStyle!: any;
     private _icon!: string;
@@ -25,20 +26,21 @@ export class MotionChip extends LitElement {
     static styles: CSSResult = chipBasicStyle;
 
     setConfig(config: Config): void {
+        if (!config?.entity) return;
         this._config = { ...config };
+        this._entity = this._config.entity?.startsWith("automation.") ? this._config.entity : undefined;
         this.updateState();
     }
 
     set hass(hass: HomeAssistant) {
-        if (!this._config?.entity || !hass) return;
+        if (!this._entity || !hass) return;
         this._hass = hass;
+        this._stateObj = this._hass?.states[this._entity];
         this.updateState();
     }
 
     private updateState(): void {
-        this._stateObj = this._hass && this._config?.entity ? this._hass.states[this._config.entity] : undefined;
-
-        if (!this._stateObj) return;
+        if (!this._entity || !this._stateObj) return;
 
         const state = this._stateObj.state || undefined;
         switch (state) {
@@ -65,7 +67,7 @@ export class MotionChip extends LitElement {
     }
 
     protected render(): TemplateResult {
-        if (!this._config?.entity) return html``;
+        if (!this._entity) return html``;
 
         const iconStyles = {
             color: `rgb(${this._iconColor})`,

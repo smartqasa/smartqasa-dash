@@ -81,12 +81,13 @@ export class AreaTile extends LitElement {
         this._iconAnimation = "spin 1.0s linear infinite";
         this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
 
+        window.history.pushState(null, "", `/home-dash/${this._area}`);
+        window.dispatchEvent(new CustomEvent("location-changed"));
+
         setTimeout(() => {
-            window.history.pushState(null, "", `/home-dash/${this._area}`);
-            window.dispatchEvent(new CustomEvent("location-changed"));
             this._waiting = false;
             window.browser_mod?.service("close_popup", {});
-        }, 1000);
+        }, 500);
     }
 
     getCardSize(): number {

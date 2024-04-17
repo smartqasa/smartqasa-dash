@@ -19,6 +19,7 @@ export class SelectTile extends LitElement {
     @state() private _config?: Config;
     @state() private _stateObj?: HassEntity;
 
+    private _entity?: string;
     private _hass: any;
     private _icon: string = "hass:form-dropdown";
     private _iconAnimation: string = "none";
@@ -30,22 +31,19 @@ export class SelectTile extends LitElement {
 
     setConfig(config: Config): void {
         this._config = { ...config };
+        this._entity = this._config.entity?.startsWith("input_select.") ? this._config.entity : undefined;
         this.updateState();
     }
 
     set hass(hass: HomeAssistant) {
-        if (!this._config?.entity || !hass) return;
+        if (!this._entity || !hass) return;
         this._hass = hass;
+        this._stateObj = this._hass?.states[this._entity];
         this.updateState();
     }
 
     private updateState(): void {
-        this._stateObj =
-            this._config?.entity && this._config.entity.split(".")[0] === "input_select"
-                ? this._hass?.states[this._config.entity]
-                : undefined;
-
-        if (!this._stateObj) {
+        if (!this._entity || !this._stateObj) {
             this._icon = this._config?.icon || "hass:form-dropdown";
             this._iconAnimation = "none";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
@@ -57,7 +55,7 @@ export class SelectTile extends LitElement {
         this._icon = this._config?.icon || this._stateObj.attributes?.icon || "hass:form-dropdown";
         this._iconAnimation = "none";
         this._iconColor = "var(--sq-inactive-rgb)";
-        this._name = this._config?.name || this._stateObj.attributes?.friendly_name || this._stateObj.entity_id;
+        this._name = this._config?.name || this._stateObj.attributes?.friendly_name || this._entity || "Unknown";
         this._stateFmtd = this._hass.formatEntityState(this._stateObj) || "Unknown";
     }
 

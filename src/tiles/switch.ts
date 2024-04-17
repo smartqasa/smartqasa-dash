@@ -18,6 +18,7 @@ export class SwitchTile extends LitElement {
     @state() private _config?: Config;
     @state() private _stateObj?: HassEntity;
 
+    private _entity?: string;
     private _hass: any;
     private _icon: string = "hass:toggle-switch-variant";
     private _iconColor: string = "var(--sq-inactive-rgb)";
@@ -28,23 +29,21 @@ export class SwitchTile extends LitElement {
 
     setConfig(config: Config): void {
         this._config = { ...config };
+        this._entity = ["fan", "input_boolean", "light", "switch"].includes(this._config.entity?.split(".")[0])
+            ? this._config.entity
+            : undefined;
         this.updateState();
     }
 
     set hass(hass: HomeAssistant) {
-        if (!this._config?.entity || !hass) return;
+        if (!this._entity || !hass) return;
         this._hass = hass;
+        this._stateObj = this._hass?.states[this._entity];
         this.updateState();
     }
 
     private updateState(): void {
-        const validDomains = ["fan", "input_boolean", "light", "switch"];
-        this._stateObj =
-            this._config?.entity && validDomains.includes(this._config.entity.split(".")[0])
-                ? this._hass?.states[this._config.entity]
-                : undefined;
-
-        if (!this._stateObj) {
+        if (!this._entity || !this._stateObj) {
             this._icon = this._config?.icon || "hass:toggle-switch-variant";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
             this._name = this._config?.name || "Unknown";
@@ -85,7 +84,7 @@ export class SwitchTile extends LitElement {
         e.stopPropagation();
         if (!this._stateObj) return;
         this._hass.callService("homeassistant", "toggle", {
-            entity_id: this._stateObj.entity_id,
+            entity_id: this._entity,
         });
     }
 

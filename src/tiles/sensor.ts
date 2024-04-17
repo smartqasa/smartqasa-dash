@@ -19,6 +19,7 @@ export class SensorTile extends LitElement {
     @state() private _config?: Config;
     @state() private _stateObj?: HassEntity;
 
+    private _entity?: string;
     private _hass: any;
     private _iconTemplate: any;
     private _iconAnimation: string = "none";
@@ -29,22 +30,19 @@ export class SensorTile extends LitElement {
 
     setConfig(config: Config): void {
         this._config = { ...config };
+        this._entity = this._config.entity?.startsWith("binary_sensor.") ? this._config.entity : undefined;
         this.updateState();
     }
 
     set hass(hass: HomeAssistant) {
-        if (!this._config?.entity || !hass) return;
+        if (!this._entity || !hass) return;
         this._hass = hass;
+        this._stateObj = this._hass?.states[this._entity];
         this.updateState();
     }
 
     private updateState(): void {
-        this._stateObj =
-            this._config?.entity && this._config.entity.split(".")[0] === "binary_sensor"
-                ? this._hass?.states[this._config.entity]
-                : undefined;
-
-        if (!this._stateObj) {
+        if (!this._entity || !this._stateObj) {
             this._iconTemplate = html`<ha-icon .icon="hass:leak"></ha-icon>`;
             this._iconColor = "var(--sq-unavailable-rgb)";
             this._name = this._name || "Unknown";
@@ -63,7 +61,7 @@ export class SensorTile extends LitElement {
             }
             this._iconColor =
                 this._stateObj.state === "on" ? "var(--sq-binary_sensor-on-rgb)" : "var(--sq-inactive-rgb)";
-            this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
+            this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._entity || "Unknown";
             this._stateFmtd = this._hass ? this._hass.formatEntityState(this._stateObj) : "Unknown";
         } else {
             this._iconTemplate = html`<ha-icon .icon="hass:leak"></ha-icon>`;
