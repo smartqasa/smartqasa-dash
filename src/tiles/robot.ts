@@ -17,6 +17,7 @@ export class RobotTile extends LitElement {
     @state() private _config?: Config;
     @state() private _stateObj?: HassEntity;
 
+    private _entity?: string;
     private _hass: any;
     private _icon: string = "hass:robot-vacuum-variant";
     private _iconAnimation: string = "none";
@@ -28,21 +29,18 @@ export class RobotTile extends LitElement {
 
     setConfig(config: Config): void {
         this._config = { ...config };
+        this._entity = this._config.entity?.startsWith("vacuum.") ? this._config.entity : undefined;
         this.updateState();
     }
 
     set hass(hass: HomeAssistant) {
-        if (!this._config?.entity || !hass) return;
+        if (!this._entity || !hass) return;
         this._hass = hass;
+        this._stateObj = this._hass?.states[this._entity];
         this.updateState();
     }
 
     private updateState(): void {
-        this._stateObj =
-            this._config?.entity && this._config.entity.split(".")[0] === "vacuum"
-                ? this._hass?.states[this._config.entity]
-                : undefined;
-
         if (!this._stateObj) {
             this._icon = this._config?.icon || "hass:robot-vacuum-variant-alert";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
@@ -89,7 +87,7 @@ export class RobotTile extends LitElement {
             (this._stateObj.attributes.battery_level
                 ? " - " + this._hass.formatEntityAttributeValue(this._stateObj, "battery_level")
                 : "");
-        this._name = this._config?.icon || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
+        this._name = this._config?.icon || this._stateObj.attributes.friendly_name || this._entity || "Unknown";
     }
 
     protected render(): TemplateResult {
@@ -115,7 +113,7 @@ export class RobotTile extends LitElement {
         if (!this._stateObj) return;
         const state = this._stateObj.state;
         this._hass.callService("vacuum", ["docked", "idle", "paused"].includes(state) ? "start" : "pause", {
-            entity_id: this._stateObj.entity_id,
+            entity_id: this._entity,
         });
     }
 

@@ -18,6 +18,7 @@ export class HeaterTile extends LitElement {
     @state() private _config?: Config;
     @state() private _stateObj?: HassEntity;
 
+    private _entity?: string;
     private _hass: any;
     private _icon: string = "hass:water-thermometer";
     private _iconAnimation: string = "none";
@@ -29,21 +30,18 @@ export class HeaterTile extends LitElement {
 
     setConfig(config: Config): void {
         this._config = { ...config };
-        this._updateState();
+        this._entity = this._config.entity?.startsWith("water_heater.") ? this._config.entity : undefined;
+        this.updateState();
     }
 
     set hass(hass: HomeAssistant) {
-        if (!this._config?.entity || !hass) return;
+        if (!this._entity || !hass) return;
         this._hass = hass;
-        this._updateState();
+        this._stateObj = this._hass?.states[this._entity];
+        this.updateState();
     }
 
-    private _updateState(): void {
-        this._stateObj =
-            this._config?.entity && this._config.entity.split(".")[0] === "water_heater"
-                ? this._hass?.states[this._config.entity]
-                : undefined;
-
+    private updateState(): void {
         if (!this._stateObj) {
             this._icon = this._config?.icon || "hass:water-thermometer";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
@@ -52,7 +50,7 @@ export class HeaterTile extends LitElement {
             return;
         }
 
-        const state = this._stateObj.state || "unavailable";
+        const state = this._stateObj.state || "unknown";
         this._iconColor = heaterColors[state] || heaterColors.idle;
 
         this._stateFmtd = this._hass.formatEntityState(this._stateObj);

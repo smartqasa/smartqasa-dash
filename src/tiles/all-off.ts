@@ -1,6 +1,7 @@
 import { CSSResultGroup, LitElement, html, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
+import { HassArea } from "../types";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 
 import { tileBaseStyle, tileIconSpinStyle } from "../styles/tile";
@@ -14,8 +15,8 @@ interface Config extends LovelaceCardConfig {
 @customElement("smartqasa-all-off-tile")
 export class AllOffTile extends LitElement {
     @state() private _config?: Config;
-    @state() private _areaObj?: any;
-    @state() private _running: boolean = false;
+    @state() private _areaObj?: HassArea;
+    @state() private _waiting: boolean = false;
 
     private _area?: string;
     private _hass: any;
@@ -28,7 +29,7 @@ export class AllOffTile extends LitElement {
 
     setConfig(config: Config): void {
         this._config = { ...config };
-        this._area = this._config?.entity;
+        this._area = this._config?.area;
         this.updateState();
     }
 
@@ -40,7 +41,7 @@ export class AllOffTile extends LitElement {
     }
 
     private updateState(): void {
-        if (this._running === true) return;
+        if (this._waiting === true) return;
 
         if (!this._areaObj) {
             this._icon = this._config?.icon ?? "hass:alert-rhombus";
@@ -53,7 +54,7 @@ export class AllOffTile extends LitElement {
         this._icon = this._config?.icon || "hass:power";
         this._iconAnimation = "none";
         this._iconColor = "var(--sq-inactive-rgb)";
-        this._name = this._config?.name || this._areaObj.name || this._areaObj.id;
+        this._name = this._config?.name || this._areaObj.name || this._area || "Unknown";
     }
 
     protected render(): TemplateResult {
@@ -77,21 +78,21 @@ export class AllOffTile extends LitElement {
         e.stopPropagation();
         if (!this._areaObj) return;
 
-        this._running = true;
+        this._waiting = true;
         this._icon = "hass:rotate-right";
         this._iconAnimation = "spin 1.0s linear infinite";
         this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
 
         this._hass.callService("light", "turn_off", {
-            area_id: this._areaObj.area_id,
+            area_id: this._area,
             transition: 2,
         });
         this._hass.callService("fan", "turn_off", {
-            area_id: this._areaObj.area_id,
+            area_id: this._area,
         });
 
         setTimeout(() => {
-            this._running = false;
+            this._waiting = false;
             this.updateState();
         }, 2000);
     }

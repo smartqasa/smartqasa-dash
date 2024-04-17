@@ -5058,7 +5058,7 @@ const tileIconSpinStyle = i$5 `
 let AllOffTile = class AllOffTile extends s {
     constructor() {
         super(...arguments);
-        this._running = false;
+        this._waiting = false;
         this._icon = "hass:help-rhombus";
         this._iconAnimation = "none";
         this._iconColor = "var(--sq-inactive-rgb)";
@@ -5067,7 +5067,7 @@ let AllOffTile = class AllOffTile extends s {
     static { this.styles = [tileBaseStyle, tileIconSpinStyle]; }
     setConfig(config) {
         this._config = { ...config };
-        this._area = this._config?.entity;
+        this._area = this._config?.area;
         this.updateState();
     }
     set hass(hass) {
@@ -5078,7 +5078,7 @@ let AllOffTile = class AllOffTile extends s {
         this.updateState();
     }
     updateState() {
-        if (this._running === true)
+        if (this._waiting === true)
             return;
         if (!this._areaObj) {
             this._icon = this._config?.icon ?? "hass:alert-rhombus";
@@ -5090,7 +5090,7 @@ let AllOffTile = class AllOffTile extends s {
         this._icon = this._config?.icon || "hass:power";
         this._iconAnimation = "none";
         this._iconColor = "var(--sq-inactive-rgb)";
-        this._name = this._config?.name || this._areaObj.name || this._areaObj.id;
+        this._name = this._config?.name || this._areaObj.name || this._area || "Unknown";
     }
     render() {
         const iconStyles = {
@@ -5111,19 +5111,19 @@ let AllOffTile = class AllOffTile extends s {
         e.stopPropagation();
         if (!this._areaObj)
             return;
-        this._running = true;
+        this._waiting = true;
         this._icon = "hass:rotate-right";
         this._iconAnimation = "spin 1.0s linear infinite";
         this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
         this._hass.callService("light", "turn_off", {
-            area_id: this._areaObj.area_id,
+            area_id: this._area,
             transition: 2,
         });
         this._hass.callService("fan", "turn_off", {
-            area_id: this._areaObj.area_id,
+            area_id: this._area,
         });
         setTimeout(() => {
-            this._running = false;
+            this._waiting = false;
             this.updateState();
         }, 2000);
     }
@@ -5139,7 +5139,7 @@ __decorate([
 ], AllOffTile.prototype, "_areaObj", void 0);
 __decorate([
     r()
-], AllOffTile.prototype, "_running", void 0);
+], AllOffTile.prototype, "_waiting", void 0);
 AllOffTile = __decorate([
     t$1("smartqasa-all-off-tile")
 ], AllOffTile);
@@ -5694,7 +5694,7 @@ let AreaTile = class AreaTile extends s {
     static { this.styles = [tileBaseStyle, tileIconSpinStyle]; }
     setConfig(config) {
         this._config = { ...config };
-        this._area = this._config?.entity;
+        this._area = this._config?.area;
         this.updateState();
     }
     set hass(hass) {
@@ -5711,9 +5711,9 @@ let AreaTile = class AreaTile extends s {
             this._name = this._config?.name ?? "Unknown";
             return;
         }
-        this._icon = this._config?.icon ?? this._areaObj.icon ?? this._icon;
+        this._icon = this._config?.icon || this._areaObj.icon || "hass:help-rhombus";
         this._iconColor = "var(--sq-inactive-rgb)";
-        this._name = this._config?.name ?? this._areaObj.name ?? "Unknown";
+        this._name = this._config?.name || this._areaObj.name || this._area || "Unknown";
     }
     render() {
         const iconStyles = {
@@ -5734,18 +5734,15 @@ let AreaTile = class AreaTile extends s {
         e.stopPropagation();
         if (!this._areaObj)
             return;
-        const icon = this._icon;
+        this._icon;
         this._icon = "hass:rotate-right";
         this._iconAnimation = "spin 1.0s linear infinite";
         this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
-        window.history.pushState(null, "", `/home-dash/${this._areaObj.area_id}`);
-        window.dispatchEvent(new CustomEvent("location-changed"));
         setTimeout(() => {
-            this._icon = icon;
-            this._iconAnimation = "none";
-            this._iconColor = "var(--sq-inactive-rgb)";
-        }, 2000);
-        window.browser_mod?.service("close_popup", {});
+            window.history.pushState(null, "", `/home-dash/${this._area}`);
+            window.dispatchEvent(new CustomEvent("location-changed"));
+            window.browser_mod?.service("close_popup", {});
+        }, 1000);
     }
     getCardSize() {
         return 1;
@@ -6097,19 +6094,17 @@ let GarageTile = class GarageTile extends s {
     static { this.styles = [tileBaseStyle, tileStateStyle, tileIconBlinkStyle]; }
     setConfig(config) {
         this._config = { ...config };
-        this._updateState();
+        this._entity = this._config.entity?.startsWith("cover.") ? this._config.entity : undefined;
+        this.updateState();
     }
     set hass(hass) {
-        if (!this._config?.entity || !hass)
+        if (!this._entity || !hass)
             return;
         this._hass = hass;
-        this._updateState();
+        this._stateObj = this._hass?.states[this._entity];
+        this.updateState();
     }
-    _updateState() {
-        this._stateObj =
-            this._config?.entity && this._config.entity.split(".")[0] === "cover"
-                ? this._hass?.states[this._config.entity]
-                : undefined;
+    updateState() {
         if (!this._stateObj) {
             this._icon = this._config?.icon || "hass:garage-alert-variant";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
@@ -6150,7 +6145,7 @@ let GarageTile = class GarageTile extends s {
                 (state === "open" && this._stateObj.attributes.current_position
                     ? " - " + this._hass.formatEntityAttributeValue(this._stateObj, "current_position")
                     : "");
-        this._name = this._config?.icon || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
+        this._name = this._config?.icon || this._stateObj.attributes.friendly_name || "Unknown";
     }
     render() {
         const iconStyles = {
@@ -6172,7 +6167,7 @@ let GarageTile = class GarageTile extends s {
         e.stopPropagation();
         if (!this._stateObj)
             return;
-        this._hass.callService("cover", "toggle", { entity_id: this._stateObj.entity_id });
+        this._hass.callService("cover", "toggle", { entity_id: this._entity });
     }
     showMoreInfo(e) {
         e.stopPropagation();
@@ -6210,19 +6205,17 @@ let HeaterTile = class HeaterTile extends s {
     static { this.styles = [tileBaseStyle, tileStateStyle]; }
     setConfig(config) {
         this._config = { ...config };
-        this._updateState();
+        this._entity = this._config.entity?.startsWith("water_heater.") ? this._config.entity : undefined;
+        this.updateState();
     }
     set hass(hass) {
-        if (!this._config?.entity || !hass)
+        if (!this._entity || !hass)
             return;
         this._hass = hass;
-        this._updateState();
+        this._stateObj = this._hass?.states[this._entity];
+        this.updateState();
     }
-    _updateState() {
-        this._stateObj =
-            this._config?.entity && this._config.entity.split(".")[0] === "water_heater"
-                ? this._hass?.states[this._config.entity]
-                : undefined;
+    updateState() {
         if (!this._stateObj) {
             this._icon = this._config?.icon || "hass:water-thermometer";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
@@ -6230,7 +6223,7 @@ let HeaterTile = class HeaterTile extends s {
             this._stateFmtd = "Invalid entity!";
             return;
         }
-        const state = this._stateObj.state || "unavailable";
+        const state = this._stateObj.state || "unknown";
         this._iconColor = heaterColors[state] || heaterColors.idle;
         this._stateFmtd = this._hass.formatEntityState(this._stateObj);
         if (state !== "off" && this._stateObj.attributes.temperature) {
@@ -6689,19 +6682,17 @@ let RobotTile = class RobotTile extends s {
     static { this.styles = [tileBaseStyle, tileStateStyle, tileIconBlinkStyle]; }
     setConfig(config) {
         this._config = { ...config };
+        this._entity = this._config.entity?.startsWith("vacuum.") ? this._config.entity : undefined;
         this.updateState();
     }
     set hass(hass) {
-        if (!this._config?.entity || !hass)
+        if (!this._entity || !hass)
             return;
         this._hass = hass;
+        this._stateObj = this._hass?.states[this._entity];
         this.updateState();
     }
     updateState() {
-        this._stateObj =
-            this._config?.entity && this._config.entity.split(".")[0] === "vacuum"
-                ? this._hass?.states[this._config.entity]
-                : undefined;
         if (!this._stateObj) {
             this._icon = this._config?.icon || "hass:robot-vacuum-variant-alert";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
@@ -6747,7 +6738,7 @@ let RobotTile = class RobotTile extends s {
                 (this._stateObj.attributes.battery_level
                     ? " - " + this._hass.formatEntityAttributeValue(this._stateObj, "battery_level")
                     : "");
-        this._name = this._config?.icon || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
+        this._name = this._config?.icon || this._stateObj.attributes.friendly_name || this._entity || "Unknown";
     }
     render() {
         const iconStyles = {
@@ -6771,7 +6762,7 @@ let RobotTile = class RobotTile extends s {
             return;
         const state = this._stateObj.state;
         this._hass.callService("vacuum", ["docked", "idle", "paused"].includes(state) ? "start" : "pause", {
-            entity_id: this._stateObj.entity_id,
+            entity_id: this._entity,
         });
     }
     showMoreInfo(e) {
@@ -6810,19 +6801,17 @@ let RokuTile = class RokuTile extends s {
     static { this.styles = [tileBaseStyle, tileStateStyle]; }
     setConfig(config) {
         this._config = { ...config };
+        this._entity = this._config.entity?.startsWith("media_player.") ? this._config.entity : undefined;
         this.updateState();
     }
     set hass(hass) {
-        if (!this._config?.entity || !hass)
+        if (!this._entity || !hass)
             return;
         this._hass = hass;
+        this._stateObj = this._hass?.states[this._entity];
         this.updateState();
     }
     updateState() {
-        this._stateObj =
-            this._config?.entity && this._config.entity.split(".")[0] === "media_player"
-                ? this._hass?.states[this._config.entity]
-                : undefined;
         if (!this._stateObj) {
             this._icon = this._config?.icon || "hass:audio-video-off";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
@@ -6853,7 +6842,7 @@ let RokuTile = class RokuTile extends s {
                 break;
         }
         this._stateFmtd = `${this._hass.formatEntityState(this._stateObj)}${this._stateObj.attributes?.source ? ` - ${this._stateObj.attributes.source}` : ""}`;
-        this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
+        this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._entity || "Unknown";
     }
     render() {
         const iconStyles = {
@@ -6875,18 +6864,18 @@ let RokuTile = class RokuTile extends s {
         e.stopPropagation();
         if (!this._stateObj)
             return;
-        this._hass.callService("media_player", "toggle", { entity_id: this._stateObj.entity_id });
+        this._hass.callService("media_player", "toggle", { entity_id: this._entity });
     }
     showMoreInfo(e) {
         e.stopPropagation();
         if (!this._config || !this._stateObj)
             return;
         const dialogConfig = {
-            title: this._stateObj.attributes?.friendly_name || this._stateObj.entity_id,
+            title: this._stateObj.attributes?.friendly_name || this._entity || "Unknown",
             timeout: 60000,
             content: {
                 type: "custom:roku-card",
-                entity: this._stateObj.entity_id,
+                entity: this._entity,
                 tv: true,
             },
             ...(this._config.dialogTitle && {

@@ -1,6 +1,7 @@
 import { CSSResultGroup, html, LitElement, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
+import { HassArea } from "../types";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 
 import { tileBaseStyle, tileIconSpinStyle } from "../styles/tile";
@@ -11,19 +12,10 @@ interface Config extends LovelaceCardConfig {
     name?: string;
 }
 
-interface AreaEntry {
-    [key: string]: {
-        area_id: string;
-        icon: string;
-        name: string;
-        picture: string;
-    };
-}
-
 @customElement("smartqasa-area-tile")
 export class AreaTile extends LitElement {
     @state() private _config?: Config;
-    @state() private _areaObj?: AreaEntry;
+    @state() private _areaObj?: HassArea;
 
     private _area: any;
     private _hass: any;
@@ -36,7 +28,7 @@ export class AreaTile extends LitElement {
 
     setConfig(config: Config): void {
         this._config = { ...config };
-        this._area = this._config?.entity;
+        this._area = this._config?.area;
         this.updateState();
     }
 
@@ -55,9 +47,9 @@ export class AreaTile extends LitElement {
             return;
         }
 
-        this._icon = (this._config?.icon as string) ?? this._areaObj.icon ?? this._icon;
+        this._icon = this._config?.icon || this._areaObj.icon || "hass:help-rhombus";
         this._iconColor = "var(--sq-inactive-rgb)";
-        this._name = (this._config?.name as string) ?? this._areaObj.name ?? "Unknown";
+        this._name = this._config?.name || this._areaObj.name || this._area || "Unknown";
     }
 
     render(): TemplateResult {
@@ -87,16 +79,11 @@ export class AreaTile extends LitElement {
         this._iconAnimation = "spin 1.0s linear infinite";
         this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
 
-        window.history.pushState(null, "", `/home-dash/${this._areaObj.area_id}`);
-        window.dispatchEvent(new CustomEvent("location-changed"));
-
         setTimeout(() => {
-            this._icon = icon;
-            this._iconAnimation = "none";
-            this._iconColor = "var(--sq-inactive-rgb)";
-        }, 2000);
-
-        window.browser_mod?.service("close_popup", {});
+            window.history.pushState(null, "", `/home-dash/${this._area}`);
+            window.dispatchEvent(new CustomEvent("location-changed"));
+            window.browser_mod?.service("close_popup", {});
+        }, 1000);
     }
 
     getCardSize(): number {

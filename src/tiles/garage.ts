@@ -17,6 +17,7 @@ export class GarageTile extends LitElement {
     @state() private _config?: Config;
     @state() private _stateObj?: HassEntity;
 
+    private _entity?: string;
     private _hass: any;
     private _icon: string = "hass:garage-variant";
     private _iconAnimation: string = "none";
@@ -28,21 +29,18 @@ export class GarageTile extends LitElement {
 
     setConfig(config: Config): void {
         this._config = { ...config };
-        this._updateState();
+        this._entity = this._config.entity?.startsWith("cover.") ? this._config.entity : undefined;
+        this.updateState();
     }
 
     set hass(hass: HomeAssistant) {
-        if (!this._config?.entity || !hass) return;
+        if (!this._entity || !hass) return;
         this._hass = hass;
-        this._updateState();
+        this._stateObj = this._hass?.states[this._entity];
+        this.updateState();
     }
 
-    private _updateState(): void {
-        this._stateObj =
-            this._config?.entity && this._config.entity.split(".")[0] === "cover"
-                ? this._hass?.states[this._config.entity]
-                : undefined;
-
+    private updateState(): void {
         if (!this._stateObj) {
             this._icon = this._config?.icon || "hass:garage-alert-variant";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
@@ -84,7 +82,7 @@ export class GarageTile extends LitElement {
             (state === "open" && this._stateObj.attributes.current_position
                 ? " - " + this._hass.formatEntityAttributeValue(this._stateObj, "current_position")
                 : "");
-        this._name = this._config?.icon || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
+        this._name = this._config?.icon || this._stateObj.attributes.friendly_name || "Unknown";
     }
 
     protected render(): TemplateResult {
@@ -108,7 +106,7 @@ export class GarageTile extends LitElement {
     private toggleEntity(e: Event): void {
         e.stopPropagation();
         if (!this._stateObj) return;
-        this._hass.callService("cover", "toggle", { entity_id: this._stateObj.entity_id });
+        this._hass.callService("cover", "toggle", { entity_id: this._entity });
     }
 
     private showMoreInfo(e: Event): void {

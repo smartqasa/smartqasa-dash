@@ -18,6 +18,7 @@ export class RokuTile extends LitElement {
     @state() private _config?: Config;
     @state() private _stateObj?: HassEntity;
 
+    private _entity?: string;
     private _hass: any;
     private _icon: string = "hass:audio-video";
     private _iconAnimation: string = "none";
@@ -29,21 +30,18 @@ export class RokuTile extends LitElement {
 
     setConfig(config: Config): void {
         this._config = { ...config };
+        this._entity = this._config.entity?.startsWith("media_player.") ? this._config.entity : undefined;
         this.updateState();
     }
 
     set hass(hass: HomeAssistant) {
-        if (!this._config?.entity || !hass) return;
+        if (!this._entity || !hass) return;
         this._hass = hass;
+        this._stateObj = this._hass?.states[this._entity];
         this.updateState();
     }
 
     private updateState(): void {
-        this._stateObj =
-            this._config?.entity && this._config.entity.split(".")[0] === "media_player"
-                ? this._hass?.states[this._config.entity]
-                : undefined;
-
         if (!this._stateObj) {
             this._icon = this._config?.icon || "hass:audio-video-off";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
@@ -77,7 +75,7 @@ export class RokuTile extends LitElement {
         this._stateFmtd = `${this._hass.formatEntityState(this._stateObj)}${
             this._stateObj.attributes?.source ? ` - ${this._stateObj.attributes.source}` : ""
         }`;
-        this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
+        this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._entity || "Unknown";
     }
 
     protected render(): TemplateResult {
@@ -101,7 +99,7 @@ export class RokuTile extends LitElement {
     private toggleEntity(e: Event): void {
         e.stopPropagation();
         if (!this._stateObj) return;
-        this._hass.callService("media_player", "toggle", { entity_id: this._stateObj.entity_id });
+        this._hass.callService("media_player", "toggle", { entity_id: this._entity });
     }
 
     private showMoreInfo(e: Event): void {
@@ -109,11 +107,11 @@ export class RokuTile extends LitElement {
         if (!this._config || !this._stateObj) return;
 
         const dialogConfig = {
-            title: this._stateObj.attributes?.friendly_name || this._stateObj.entity_id,
+            title: this._stateObj.attributes?.friendly_name || this._entity || "Unknown",
             timeout: 60000,
             content: {
                 type: "custom:roku-card",
-                entity: this._stateObj.entity_id,
+                entity: this._entity,
                 tv: true,
             },
             ...(this._config.dialogTitle && {
