@@ -1,4 +1,4 @@
-var version = "1.1.65";
+var version = "1.1.66";
 
 /******************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -93,7 +93,7 @@ const chipBasicStyle = i$5 `
         place-self: center;
         display: grid;
         grid-template-areas: "i t";
-        grid-column-gap: 0.8rem;
+        grid-column-gap: 0.5rem;
         margin-right: 0.7rem;
         padding: 1rem;
         border: var(--sq-card-border);
@@ -4542,7 +4542,7 @@ async function entertainDialog(config, hass) {
     window.browser_mod?.service("popup", dialogConfig);
 }
 
-async function menuDialog(menu_tab) {
+async function menuConfig(menu_tab) {
     function createAttributes(icon, label) {
         return {
             icon: window.smartqasa.deviceType === "phone" ? icon : null,
@@ -4650,7 +4650,7 @@ async function menuDialog(menu_tab) {
             template: "about-tile",
         },
     ];
-    const dialogConfig = {
+    const menuConfig = {
         title: "Menu",
         timeout: 120000,
         content: {
@@ -4707,7 +4707,7 @@ async function menuDialog(menu_tab) {
             ],
         },
     };
-    window.browser_mod?.service("popup", dialogConfig);
+    return menuConfig;
 }
 
 let PanelFooter = class PanelFooter extends s {
@@ -4793,7 +4793,7 @@ let PanelFooter = class PanelFooter extends s {
         entertainDialog(this._config, this._hass);
     }
     handleMenu() {
-        menuDialog(0);
+        window.browser_mod?.service("popup", menuConfig(0));
     }
 };
 __decorate([
@@ -5956,9 +5956,15 @@ let DialogTile = class DialogTile extends s {
     }
     showDialog(e) {
         e.stopPropagation();
-        if (!this._dialogObj)
+        if (!this._dialogObj || !this._config)
             return;
-        window.browser_mod?.service("popup", this._dialogObj.data);
+        let dialogConfig = { ...this._dialogObj.data };
+        const menuTab = this._config.menu_tab ?? -1;
+        if (menuTab >= 0 && menuTab <= 3) {
+            const dismissConfig = menuConfig(menuTab);
+            dialogConfig = { ...dialogConfig, ...dismissConfig };
+        }
+        window.browser_mod?.service("popup", dialogConfig);
     }
     getCardSize() {
         return 1;
