@@ -16,6 +16,7 @@ interface Config extends LovelaceCardConfig {
 export class AreaTile extends LitElement {
     @state() private _config?: Config;
     @state() private _areaObj?: HassArea;
+    @state() private _waiting: boolean = false;
 
     private _area: any;
     private _hass: any;
@@ -40,6 +41,8 @@ export class AreaTile extends LitElement {
     }
 
     private updateState(): void {
+        if (this._waiting === true) return;
+
         if (!this._areaObj) {
             this._icon = this._config?.icon ?? "hass:alert-rhombus";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
@@ -52,7 +55,7 @@ export class AreaTile extends LitElement {
         this._name = this._config?.name || this._areaObj.name || this._area || "Unknown";
     }
 
-    render(): TemplateResult {
+    protected render(): TemplateResult {
         const iconStyles = {
             color: `rgb(${this._iconColor})`,
             backgroundColor: `rgba(${this._iconColor}, var(--sq-icon-opacity))`,
@@ -73,8 +76,7 @@ export class AreaTile extends LitElement {
         e.stopPropagation();
         if (!this._areaObj) return;
 
-        const icon = this._icon;
-
+        this._waiting = true;
         this._icon = "hass:rotate-right";
         this._iconAnimation = "spin 1.0s linear infinite";
         this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
@@ -82,6 +84,7 @@ export class AreaTile extends LitElement {
         setTimeout(() => {
             window.history.pushState(null, "", `/home-dash/${this._area}`);
             window.dispatchEvent(new CustomEvent("location-changed"));
+            this._waiting = false;
             window.browser_mod?.service("close_popup", {});
         }, 1000);
     }

@@ -5686,6 +5686,7 @@ window.customCards.push({
 let AreaTile = class AreaTile extends s {
     constructor() {
         super(...arguments);
+        this._waiting = false;
         this._icon = "hass:help-rhombus";
         this._iconAnimation = "none";
         this._iconColor = "var(--sq-inactive-rgb)";
@@ -5705,6 +5706,8 @@ let AreaTile = class AreaTile extends s {
         this.updateState();
     }
     updateState() {
+        if (this._waiting === true)
+            return;
         if (!this._areaObj) {
             this._icon = this._config?.icon ?? "hass:alert-rhombus";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
@@ -5734,13 +5737,14 @@ let AreaTile = class AreaTile extends s {
         e.stopPropagation();
         if (!this._areaObj)
             return;
-        this._icon;
+        this._waiting = true;
         this._icon = "hass:rotate-right";
         this._iconAnimation = "spin 1.0s linear infinite";
         this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
         setTimeout(() => {
             window.history.pushState(null, "", `/home-dash/${this._area}`);
             window.dispatchEvent(new CustomEvent("location-changed"));
+            this._waiting = false;
             window.browser_mod?.service("close_popup", {});
         }, 1000);
     }
@@ -5754,6 +5758,9 @@ __decorate([
 __decorate([
     r()
 ], AreaTile.prototype, "_areaObj", void 0);
+__decorate([
+    r()
+], AreaTile.prototype, "_waiting", void 0);
 AreaTile = __decorate([
     t$1("smartqasa-area-tile")
 ], AreaTile);
