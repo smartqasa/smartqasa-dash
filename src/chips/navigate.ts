@@ -40,8 +40,8 @@ export class NavigateChip extends LitElement {
             return html``;
         }
 
-        const iconPrev = "hass:arrow-left";
-        const iconNext = "hass:arrow-right";
+        const iconPrev = "hass:menu-left";
+        const iconNext = "hass:menu-right";
 
         return html`
             <div class="container">

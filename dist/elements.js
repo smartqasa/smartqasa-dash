@@ -254,8 +254,8 @@ let NavigateChip = class NavigateChip extends s {
         if (!this._areaObjPrev || !this._areaObjNext) {
             return x ``;
         }
-        const iconPrev = "hass:arrow-left";
-        const iconNext = "hass:arrow-right";
+        const iconPrev = "hass:menu-left";
+        const iconNext = "hass:menu-right";
         return x `
             <div class="container">
                 <div class="icon1" @click=${this._navigatePrev}>
