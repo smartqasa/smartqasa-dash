@@ -242,13 +242,11 @@ let NavigateChip = class NavigateChip extends s {
         this._areaNext = config.area_next || undefined;
     }
     set hass(hass) {
-        if (this._areaPrev && this._areaNext) {
-            this._hass = hass;
-            if (this._hass?.areas) {
-                this._areaObjPrev = this._hass.areas[this._areaPrev];
-                this._areaObjNext = this._hass.areas[this._areaNext];
-            }
-        }
+        if (!this._areaPrev || !this._areaNext || !hass)
+            return;
+        this._hass = hass;
+        this._areaObjPrev = this._hass.areas[this._areaPrev];
+        this._areaObjNext = this._hass.areas[this._areaNext];
     }
     render() {
         if (!this._areaObjPrev || !this._areaObjNext) {

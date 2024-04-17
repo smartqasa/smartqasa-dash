@@ -1,5 +1,6 @@
 import { CSSResult, html, LitElement, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
+import { HassArea } from "../types";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 
 import { chipDoubleStyle } from "../styles/chip";
@@ -13,8 +14,8 @@ interface Config extends LovelaceCardConfig {
 export class NavigateChip extends LitElement {
     @state() private _areaPrev?: string;
     @state() private _areaNext?: string;
-    @state() private _areaObjPrev?: string;
-    @state() private _areaObjNext?: string;
+    @state() private _areaObjPrev?: HassArea;
+    @state() private _areaObjNext?: HassArea;
 
     private _hass: any;
 
@@ -26,13 +27,10 @@ export class NavigateChip extends LitElement {
     }
 
     set hass(hass: HomeAssistant) {
-        if (this._areaPrev && this._areaNext) {
-            this._hass = hass;
-            if (this._hass?.areas) {
-                this._areaObjPrev = this._hass.areas[this._areaPrev];
-                this._areaObjNext = this._hass.areas[this._areaNext];
-            }
-        }
+        if (!this._areaPrev || !this._areaNext || !hass) return;
+        this._hass = hass;
+        this._areaObjPrev = this._hass.areas[this._areaPrev];
+        this._areaObjNext = this._hass.areas[this._areaNext];
     }
 
     protected render(): TemplateResult {
