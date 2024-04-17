@@ -4575,7 +4575,7 @@ async function menuDialog(menu_tab) {
         },
         {
             type: "custom:smartqasa-dialog-tile",
-            dialog: "speedtest_tile",
+            dialog: "speed_test",
         },
         {
             type: "custom:restriction-card",

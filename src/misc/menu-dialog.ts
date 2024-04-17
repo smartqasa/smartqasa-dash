@@ -39,7 +39,7 @@ export async function menuDialog(menu_tab?: number): Promise<void> {
         },
         {
             type: "custom:smartqasa-dialog-tile",
-            dialog: "speedtest_tile",
+            dialog: "speed_test",
         },
         {
             type: "custom:restriction-card",
