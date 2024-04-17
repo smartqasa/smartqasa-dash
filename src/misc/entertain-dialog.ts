@@ -62,7 +62,7 @@ export async function entertainDialog(config: any, hass: any): Promise<void> {
         ? {
               type: "custom:sonos-card",
               entityId: audioPlayerObj.entity_id,
-              heightPercentage: 88,
+              heightPercentage: 87,
               mediaBrowserItemsPerRow: 3,
               mediaBrowserShowTitleForThumbnailIcons: true,
               showVolumeUpAndDownButtons: true,
@@ -125,7 +125,6 @@ export async function entertainDialog(config: any, hass: any): Promise<void> {
             type: "custom:layout-card",
             layout_type: "custom:grid-layout",
             layout: {
-                height: "482px",
                 margin: 0,
                 "place-content": "center",
                 "grid-template-columns": gridTemplateColumns,

@@ -4465,7 +4465,7 @@ async function entertainDialog(config, hass) {
         ? {
             type: "custom:sonos-card",
             entityId: audioPlayerObj.entity_id,
-            heightPercentage: 88,
+            heightPercentage: 87,
             mediaBrowserItemsPerRow: 3,
             mediaBrowserShowTitleForThumbnailIcons: true,
             showVolumeUpAndDownButtons: true,
@@ -4526,7 +4526,6 @@ async function entertainDialog(config, hass) {
             type: "custom:layout-card",
             layout_type: "custom:grid-layout",
             layout: {
-                height: "482px",
                 margin: 0,
                 "place-content": "center",
                 "grid-template-columns": gridTemplateColumns,
