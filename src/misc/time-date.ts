@@ -11,8 +11,6 @@ export class SmartQasaTimeDate extends LitElement {
     @state() private _time: string = "Loading...";
     @state() private _date: string = "Loading...";
 
-    private _hass: any;
-
     static get styles(): CSSResultGroup {
         return css`
             :host {
@@ -55,12 +53,8 @@ export class SmartQasaTimeDate extends LitElement {
     setConfig(config: Config): void {}
 
     set hass(hass: HomeAssistant) {
-        if (!hass) return;
-        this._hass = hass;
-        if (this._hass) {
-            this._time = this._hass.states["sensor.current_time"].state || "unavailable";
-            this._date = this._hass.states["sensor.current_date"].state || "unavailable";
-        }
+        this._time = hass?.states["sensor.current_time"]?.state || "Loading...";
+        this._date = hass?.states["sensor.current_date"]?.state || "Loading...";
     }
 
     render(): TemplateResult {

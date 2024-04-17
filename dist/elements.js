@@ -4888,13 +4888,8 @@ let SmartQasaTimeDate = class SmartQasaTimeDate extends s {
     }
     setConfig(config) { }
     set hass(hass) {
-        if (!hass)
-            return;
-        this._hass = hass;
-        if (this._hass) {
-            this._time = this._hass.states["sensor.current_time"].state || "unavailable";
-            this._date = this._hass.states["sensor.current_date"].state || "unavailable";
-        }
+        this._time = hass?.states["sensor.current_time"]?.state || "Loading...";
+        this._date = hass?.states["sensor.current_date"]?.state || "Loading...";
     }
     render() {
         return x `
