@@ -4650,7 +4650,7 @@ async function menuConfig(menu_tab) {
             template: "about-tile",
         },
     ];
-    const dialogConfig = {
+    return {
         title: "Menu",
         timeout: 120000,
         content: {
@@ -4707,8 +4707,6 @@ async function menuConfig(menu_tab) {
             ],
         },
     };
-    console.log("In function", dialogConfig);
-    return dialogConfig;
 }
 
 let PanelFooter = class PanelFooter extends s {
