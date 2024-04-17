@@ -1,4 +1,4 @@
-var version = "1.1.67";
+var version = "1.1.68";
 
 /******************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -4791,10 +4791,14 @@ let PanelFooter = class PanelFooter extends s {
     handleEntertain() {
         entertainDialog(this._config, this._hass);
     }
-    handleMenu() {
-        const dialogConfig = menuConfig(0);
-        console.log("In Footer", dialogConfig);
-        window.browser_mod?.service("popup", dialogConfig);
+    async handleMenu() {
+        try {
+            const dialogConfig = await menuConfig(0);
+            window.browser_mod?.service("popup", dialogConfig);
+        }
+        catch (error) {
+            console.error("Error loading menu configuration", error);
+        }
     }
 };
 __decorate([
@@ -5955,15 +5959,20 @@ let DialogTile = class DialogTile extends s {
             </div>
         `;
     }
-    showDialog(e) {
+    async showDialog(e) {
         e.stopPropagation();
         if (!this._dialogObj || !this._config)
             return;
         let dialogConfig = { ...this._dialogObj.data };
-        const menuTab = this._config.menu_tab ?? -1;
-        if (menuTab >= 0 && menuTab <= 3) {
-            const dismissConfig = menuConfig(menuTab);
-            dialogConfig = { ...dialogConfig, ...dismissConfig };
+        const menuTab = this._config.menu_tab;
+        if (menuTab !== undefined && menuTab >= 0 && menuTab <= 3) {
+            try {
+                const dismissConfig = await menuConfig(menuTab);
+                dialogConfig = { ...dialogConfig, ...dismissConfig };
+            }
+            catch (error) {
+                console.error("Error loading menu configuration", error);
+            }
         }
         window.browser_mod?.service("popup", dialogConfig);
     }
