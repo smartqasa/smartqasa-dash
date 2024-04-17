@@ -6297,6 +6297,7 @@ let LightTile = class LightTile extends s {
     setConfig(config) {
         this._config = { ...config };
         this._entity = this._config.entity.split(".")[0] === "light" ? this._config.entity : undefined;
+        this.updateState();
     }
     set hass(hass) {
         if (!this._entity || !hass)

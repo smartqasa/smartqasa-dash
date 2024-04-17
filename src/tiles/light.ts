@@ -32,6 +32,7 @@ export class LightTile extends LitElement {
     setConfig(config: Config): void {
         this._config = { ...config };
         this._entity = this._config.entity.split(".")[0] === "light" ? this._config.entity : undefined;
+        this.updateState();
     }
 
     set hass(hass: HomeAssistant) {
