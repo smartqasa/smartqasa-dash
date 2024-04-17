@@ -126,10 +126,13 @@ class PanelFooter extends LitElement implements ActionHandlers {
         entertainDialog(this._config, this._hass);
     }
 
-    handleMenu(): void {
-        const dialogConfig = menuConfig(0);
-        console.log("In Footer", dialogConfig);
-        window.browser_mod?.service("popup", dialogConfig);
+    async handleMenu(): Promise<void> {
+        try {
+            const dialogConfig = await menuConfig(0);
+            window.browser_mod?.service("popup", dialogConfig);
+        } catch (error) {
+            console.error("Error loading menu configuration", error);
+        }
     }
 }
 

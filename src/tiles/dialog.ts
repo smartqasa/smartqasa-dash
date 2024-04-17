@@ -62,16 +62,20 @@ export class DialogTile extends LitElement {
         `;
     }
 
-    private showDialog(e: Event): void {
+    private async showDialog(e: Event): Promise<void> {
         e.stopPropagation();
         if (!this._dialogObj || !this._config) return;
 
         let dialogConfig = { ...this._dialogObj.data };
-        const menuTab = this._config.menu_tab ?? -1;
 
-        if (menuTab >= 0 && menuTab <= 3) {
-            const dismissConfig = menuConfig(menuTab);
-            dialogConfig = { ...dialogConfig, ...dismissConfig };
+        const menuTab = this._config.menu_tab;
+        if (menuTab !== undefined && menuTab >= 0 && menuTab <= 3) {
+            try {
+                const dismissConfig = await menuConfig(menuTab);
+                dialogConfig = { ...dialogConfig, ...dismissConfig };
+            } catch (error) {
+                console.error("Error loading menu configuration", error);
+            }
         }
 
         window.browser_mod?.service("popup", dialogConfig);
