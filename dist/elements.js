@@ -1,4 +1,4 @@
-var version = "1.1.68";
+var version = "1.1.69";
 
 /******************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -5967,8 +5967,11 @@ let DialogTile = class DialogTile extends s {
         const menuTab = this._config.menu_tab;
         if (menuTab !== undefined && menuTab >= 0 && menuTab <= 3) {
             try {
-                const dismissConfig = await menuConfig(menuTab);
-                dialogConfig = { ...dialogConfig, ...dismissConfig };
+                const dismissData = await menuConfig(menuTab);
+                dialogConfig.dismiss_action = {
+                    service: "browser_mod.popup",
+                    data: dismissData,
+                };
             }
             catch (error) {
                 console.error("Error loading menu configuration", error);
