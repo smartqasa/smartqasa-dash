@@ -42,7 +42,7 @@ export const chipDoubleStyle = css`
         grid-template-areas: "i1 s i2";
         grid-column-gap: 1rem;
         margin-right: 0.7rem;
-        padding: 0.8rem;
+        padding: 0.4rem;
         border: var(--sq-card-border);
         border-radius: var(--sq-chip-border-radius);
         background-color: var(--sq-card-background-color);
@@ -65,7 +65,7 @@ export const chipDoubleStyle = css`
     .icon1,
     .icon2 {
         display: flex;
-        --mdc-icon-size: 2.2rem;
+        --mdc-icon-size: 3rem;
         color: rgb(var(--sq-primary-text-rgb));
     }
 `;
