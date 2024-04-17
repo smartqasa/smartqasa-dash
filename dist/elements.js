@@ -6296,19 +6296,16 @@ let LightTile = class LightTile extends s {
     static { this.styles = [tileBaseStyle, tileStateStyle]; }
     setConfig(config) {
         this._config = { ...config };
-        this.updateState();
+        this._entity = this._config.entity.split(".")[0] === "light" ? this._config.entity : undefined;
     }
     set hass(hass) {
-        if (!this._config?.entity || !hass)
+        if (!this._entity || !hass)
             return;
         this._hass = hass;
+        this._stateObj = this._hass?.states[this._entity];
         this.updateState();
     }
     updateState() {
-        this._stateObj =
-            this._config?.entity && this._config.entity.split(".")[0] === "light"
-                ? this._hass?.states[this._config.entity]
-                : undefined;
         if (!this._stateObj) {
             this._icon = this._config?.icon || "hass:lightbulb-alert";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
@@ -6346,7 +6343,7 @@ let LightTile = class LightTile extends s {
         e.stopPropagation();
         if (!this._stateObj)
             return;
-        this._hass.callService("light", "toggle", { entity_id: this._stateObj.entity_id });
+        this._hass.callService("light", "toggle", { entity_id: this._entity });
     }
     showMoreInfo(e) {
         e.stopPropagation();
@@ -6358,7 +6355,7 @@ let LightTile = class LightTile extends s {
             !Array.isArray(this._stateObj.attributes?.entity_id) ||
             this._stateObj.attributes.entity_id.length === 0)
             return;
-        entityListDialog(this._stateObj.attributes?.friendly_name || this._stateObj.entity_id, "group", this._stateObj.entity_id, "light");
+        entityListDialog(this._stateObj.attributes?.friendly_name || "Unknown", "group", this._stateObj.entity_id, "light");
     }
     getCardSize() {
         return 1;

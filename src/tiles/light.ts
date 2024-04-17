@@ -19,6 +19,7 @@ export class LightTile extends LitElement {
     @state() private _config?: Config;
     @state() private _stateObj?: HassEntity;
 
+    private _entity?: string;
     private _hass: any;
     private _icon: string = "hass:lightbulb";
     private _iconAnimation: string = "none";
@@ -30,21 +31,17 @@ export class LightTile extends LitElement {
 
     setConfig(config: Config): void {
         this._config = { ...config };
-        this.updateState();
+        this._entity = this._config.entity.split(".")[0] === "light" ? this._config.entity : undefined;
     }
 
     set hass(hass: HomeAssistant) {
-        if (!this._config?.entity || !hass) return;
+        if (!this._entity || !hass) return;
         this._hass = hass;
+        this._stateObj = this._hass?.states[this._entity];
         this.updateState();
     }
 
     private updateState(): void {
-        this._stateObj =
-            this._config?.entity && this._config.entity.split(".")[0] === "light"
-                ? this._hass?.states[this._config.entity]
-                : undefined;
-
         if (!this._stateObj) {
             this._icon = this._config?.icon || "hass:lightbulb-alert";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
@@ -86,7 +83,7 @@ export class LightTile extends LitElement {
         e.stopPropagation();
         if (!this._stateObj) return;
 
-        this._hass.callService("light", "toggle", { entity_id: this._stateObj.entity_id });
+        this._hass.callService("light", "toggle", { entity_id: this._entity });
     }
 
     private showMoreInfo(e: Event): void {
@@ -103,7 +100,7 @@ export class LightTile extends LitElement {
         )
             return;
         entityListDialog(
-            this._stateObj.attributes?.friendly_name || this._stateObj.entity_id,
+            this._stateObj.attributes?.friendly_name || "Unknown",
             "group",
             this._stateObj.entity_id,
             "light"
