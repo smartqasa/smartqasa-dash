@@ -4650,7 +4650,7 @@ async function menuConfig(menu_tab) {
             template: "about-tile",
         },
     ];
-    const menuConfig = {
+    const dialogConfig = {
         title: "Menu",
         timeout: 120000,
         content: {
@@ -4707,7 +4707,8 @@ async function menuConfig(menu_tab) {
             ],
         },
     };
-    return menuConfig;
+    console.log("In function", dialogConfig);
+    return dialogConfig;
 }
 
 let PanelFooter = class PanelFooter extends s {
@@ -4793,7 +4794,9 @@ let PanelFooter = class PanelFooter extends s {
         entertainDialog(this._config, this._hass);
     }
     handleMenu() {
-        window.browser_mod?.service("popup", menuConfig(0));
+        const dialogConfig = menuConfig(0);
+        console.log("In Footer", dialogConfig);
+        window.browser_mod?.service("popup", dialogConfig);
     }
 };
 __decorate([

@@ -112,7 +112,7 @@ export async function menuConfig(menu_tab?: number): Promise<any> {
         },
     ];
 
-    const menuConfig = {
+    const dialogConfig = {
         title: "Menu",
         timeout: 120000,
         content: {
@@ -169,6 +169,7 @@ export async function menuConfig(menu_tab?: number): Promise<any> {
             ],
         },
     };
+    console.log("In function", dialogConfig);
 
-    return menuConfig;
+    return dialogConfig;
 }

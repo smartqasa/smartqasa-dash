@@ -127,7 +127,9 @@ class PanelFooter extends LitElement implements ActionHandlers {
     }
 
     handleMenu(): void {
-        window.browser_mod?.service("popup", menuConfig(0));
+        const dialogConfig = menuConfig(0);
+        console.log("In Footer", dialogConfig);
+        window.browser_mod?.service("popup", dialogConfig);
     }
 }
 
