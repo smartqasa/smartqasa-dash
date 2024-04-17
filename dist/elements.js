@@ -1,4 +1,4 @@
-var version = "1.1.59";
+var version = "1.1.64";
 
 /******************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -128,7 +128,7 @@ const chipDoubleStyle = i$5 `
         grid-template-areas: "i1 s i2";
         grid-column-gap: 1rem;
         margin-right: 0.7rem;
-        padding: 0.4rem;
+        padding: 0.2rem;
         border: var(--sq-card-border);
         border-radius: var(--sq-chip-border-radius);
         background-color: var(--sq-card-background-color);
@@ -151,7 +151,7 @@ const chipDoubleStyle = i$5 `
     .icon1,
     .icon2 {
         display: flex;
-        --mdc-icon-size: 3rem;
+        --mdc-icon-size: 3.4rem;
         color: rgb(var(--sq-primary-text-rgb));
     }
 `;
