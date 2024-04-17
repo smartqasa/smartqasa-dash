@@ -128,6 +128,25 @@ const dialogTable: DialogTable = {
         data: listDialogConfig("Window Sensors", "group", "binary_sensor.all_window_sensors", "sensor"),
     },
 
+    speed_test: {
+        icon: "hass:spray-bottle",
+        name: "Speed Test",
+        data: {
+            title: "Speed Test",
+            size: "fullscreen",
+            timeout: 60000,
+            content: {
+                type: "statistics-graph",
+                entities: ["sensor.speedtest_download", "sensor.speedtest_upload"],
+                chart_type: "line",
+                period: "hour",
+                stat_types: ["mean"],
+                hide_legend: false,
+                days_to_show: 3,
+            },
+        },
+    },
+
     sonos_players: {
         icon: "hass:speaker-multiple",
         name: "Sonos Players",

@@ -38,8 +38,8 @@ export async function menuDialog(menu_tab?: number): Promise<void> {
             template: "clear-cache-tile",
         },
         {
-            type: "custom:button-card",
-            template: "speedtest-tile",
+            type: "custom:smartqasa-dialog-tile",
+            dialog: "speedtest_tile",
         },
         {
             type: "custom:restriction-card",
