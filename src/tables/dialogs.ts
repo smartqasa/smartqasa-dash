@@ -133,7 +133,7 @@ const dialogTable: DialogTable = {
         name: "Speed Test",
         data: {
             title: "Speed Test",
-            size: "fullscreen",
+            size: "wide",
             timeout: 60000,
             content: {
                 type: "statistics-graph",

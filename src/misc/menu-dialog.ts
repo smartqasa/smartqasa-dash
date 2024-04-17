@@ -11,8 +11,8 @@ export async function menuDialog(menu_tab?: number): Promise<void> {
     const layout = {
         margin: 0,
         card_margin: 0,
-        padding: "10px 0 0 0",
-        "grid-template-columns": window.smartqasa.deviceType === "phone" ? "repeat(2, auto)" : "repeat(3, auto)",
+        padding: "1rem 0 0 0",
+        "grid-template-columns": window.smartqasa.deviceType === "phone" ? "repeat(2, 1fr)" : "repeat(3, 1fr)",
         "grid-gap": "var(--sq-dialog-grid-gap)",
     };
 
