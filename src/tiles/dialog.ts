@@ -1,15 +1,18 @@
 import { CSSResult, LitElement, html, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { LovelaceCardConfig } from "custom-card-helpers";
+import { menuDialog } from "../misc/menu-dialog";
 
 import { tileBaseStyle } from "../styles/tile";
 
 import dialogTable from "../tables/dialogs";
+import { menuConfig } from "../misc/menu-config";
 
 interface Config extends LovelaceCardConfig {
     dialog: string;
     icon?: string;
     name?: string;
+    menu_tab?: number;
 }
 
 @customElement("smartqasa-dialog-tile")
@@ -61,8 +64,17 @@ export class DialogTile extends LitElement {
 
     private showDialog(e: Event): void {
         e.stopPropagation();
-        if (!this._dialogObj) return;
-        window.browser_mod?.service("popup", this._dialogObj.data);
+        if (!this._dialogObj || !this._config) return;
+
+        let dialogConfig = { ...this._dialogObj.data };
+        const menuTab = this._config.menu_tab ?? -1;
+
+        if (menuTab >= 0 && menuTab <= 3) {
+            const dismissConfig = menuConfig(menuTab);
+            dialogConfig = { ...dialogConfig, ...dismissConfig };
+        }
+
+        window.browser_mod?.service("popup", dialogConfig);
     }
 
     getCardSize(): number {

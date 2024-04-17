@@ -3,7 +3,7 @@ import { customElement, state } from "lit/decorators.js";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 import { areasDialog } from "./areas-dialog";
 import { entertainDialog } from "./entertain-dialog";
-import { menuDialog } from "./menu-dialog";
+import { menuConfig } from "./menu-config";
 
 interface Config extends LovelaceCardConfig {
     audio_player: string;
@@ -127,7 +127,7 @@ class PanelFooter extends LitElement implements ActionHandlers {
     }
 
     handleMenu(): void {
-        menuDialog(0);
+        window.browser_mod?.service("popup", menuConfig(0));
     }
 }
 
