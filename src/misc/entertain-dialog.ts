@@ -62,7 +62,7 @@ export async function entertainDialog(config: any, hass: any): Promise<void> {
         ? {
               type: "custom:sonos-card",
               entityId: audioPlayerObj.entity_id,
-              heightPercentage: 87,
+              heightPercentage: 86,
               mediaBrowserItemsPerRow: 3,
               mediaBrowserShowTitleForThumbnailIcons: true,
               showVolumeUpAndDownButtons: true,
@@ -106,13 +106,13 @@ export async function entertainDialog(config: any, hass: any): Promise<void> {
         }
     } else {
         if (videoPlayerObj && audioPlayerObj) {
-            gridTemplateColumns = "340px 420px 250px";
+            gridTemplateColumns = "340px 420px 260px";
             cards = [videoPlayerTitle, audioPlayerTitle, appListTitle, videoPlayerCard, audioPlayerCard, appListCard];
         } else if (!videoPlayerObj && audioPlayerObj) {
-            gridTemplateColumns = "420px 250px";
+            gridTemplateColumns = "420px 260px";
             cards = [audioPlayerTitle, audioPlayerCard, audioPlayerCard, appListCard];
         } else if (videoPlayerObj && !audioPlayerObj) {
-            gridTemplateColumns = "340px 250px";
+            gridTemplateColumns = "340px 260px";
             cards = [videoPlayerTitle, videoPlayerCard, audioPlayerCard, appListCard];
         }
     }
