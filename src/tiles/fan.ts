@@ -19,6 +19,7 @@ export class FanTile extends LitElement {
     @state() private _config?: Config;
     @state() private _stateObj?: HassEntity;
 
+    private _entity?: string;
     private _hass: any;
     private _icon: string = "hass:fan";
     private _iconAnimation: string = "none";
@@ -30,21 +31,18 @@ export class FanTile extends LitElement {
 
     setConfig(config: Config): void {
         this._config = { ...config };
-        this._updateState();
+        this._entity = this._config.entity?.startsWith("fan.") ? this._config.entity : undefined;
+        this.updateState();
     }
 
     set hass(hass: HomeAssistant) {
-        if (!this._config?.entity || !hass) return;
+        if (!this._entity || !hass) return;
         this._hass = hass;
-        this._updateState();
+        this._stateObj = this._hass?.states[this._entity];
+        this.updateState();
     }
 
-    private _updateState(): void {
-        this._stateObj =
-            this._config?.entity && this._config.entity.split(".")[0] === "fan"
-                ? this._hass?.states[this._config.entity]
-                : undefined;
-
+    private updateState(): void {
         if (!this._stateObj) {
             this._icon = this._config?.icon || "hass:fan-alert";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
@@ -67,7 +65,7 @@ export class FanTile extends LitElement {
             this._iconAnimation = "none";
         }
         this._iconColor = state == "on" ? "var(--sq-fan-on-rgb)" : "var(--sq-inactive-rgb)";
-        this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
+        this._name = this._config?.name || this._stateObj.attributes.friendly_name || "Unknown";
         this._stateFmtd =
             this._hass.formatEntityState(this._stateObj) +
             (state == "on" && this._stateObj.attributes.percentage
@@ -96,7 +94,7 @@ export class FanTile extends LitElement {
     private toggleEntity(e: Event): void {
         e.stopPropagation();
         if (!this._stateObj) return;
-        this._hass.callService("fan", "toggle", { entity_id: this._stateObj.entity_id });
+        this._hass.callService("fan", "toggle", { entity_id: this._entity });
     }
 
     private showMoreInfo(e: Event): void {
@@ -112,12 +110,7 @@ export class FanTile extends LitElement {
             this._stateObj.attributes.entity_id.length === 0
         )
             return;
-        entityListDialog(
-            this._stateObj.attributes?.friendly_name || this._stateObj.entity_id,
-            "group",
-            this._stateObj.entity_id,
-            "fan"
-        );
+        entityListDialog(this._stateObj.attributes?.friendly_name || "Unknown", "group", this._entity, "fan");
     }
 
     getCardSize(): number {

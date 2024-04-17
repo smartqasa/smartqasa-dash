@@ -16,8 +16,9 @@ interface Config extends LovelaceCardConfig {
 export class LockTile extends LitElement {
     @state() private _config?: Config;
     @state() private _stateObj?: HassEntity;
-    @state() private _actuating: boolean = false;
+    @state() private _waiting: boolean = false;
 
+    private _entity?: string;
     private _hass: any;
     private _icon: string = "hass:lock";
     private _iconAnimation: string = "none";
@@ -29,22 +30,18 @@ export class LockTile extends LitElement {
 
     setConfig(config: Config): void {
         this._config = { ...config };
+        this._entity = this._config.entity?.startsWith("lock.") ? this._config.entity : undefined;
         this.updateState();
     }
 
     set hass(hass: HomeAssistant) {
-        if (!this._config?.entity || !hass) return;
+        if (!this._entity || !hass) return;
         this._hass = hass;
+        this._stateObj = this._hass?.states[this._entity];
         this.updateState();
     }
-
     private updateState(): void {
-        if (this._actuating === false) {
-            this._stateObj =
-                this._config?.entity && this._config.entity.split(".")[0] === "lock"
-                    ? this._hass?.states[this._config.entity]
-                    : undefined;
-        }
+        if (this._waiting === true) return;
 
         if (!this._stateObj) {
             this._icon = this._config?.icon || "hass:lock-alert";
@@ -87,7 +84,7 @@ export class LockTile extends LitElement {
                 this._iconColor = "var(--sq-unavailable-rgb)";
                 break;
         }
-        this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
+        this._name = this._config?.name || this._stateObj.attributes.friendly_name || "Unknown";
         this._stateFmtd = this._hass.formatEntityState(this._stateObj);
     }
 
@@ -116,14 +113,15 @@ export class LockTile extends LitElement {
         const state = this._stateObj.state;
         this._stateObj.state = state == "locked" ? "unlocking" : "locking";
         this.updateState();
-        this._actuating = true;
+        this._waiting = true;
 
         this._hass.callService("lock", state == "locked" ? "unlock" : "lock", {
-            entity_id: this._stateObj.entity_id,
+            entity_id: this._entity,
         });
 
         setTimeout(() => {
-            this._actuating = false;
+            this._waiting = false;
+            this.updateState();
         }, 500);
     }
 

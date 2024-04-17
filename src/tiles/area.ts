@@ -25,6 +25,7 @@ export class AreaTile extends LitElement {
     @state() private _config?: Config;
     @state() private _areaObj?: AreaEntry;
 
+    private _area: any;
     private _hass: any;
     private _icon: string = "hass:help-rhombus";
     private _iconAnimation: string = "none";
@@ -35,18 +36,18 @@ export class AreaTile extends LitElement {
 
     setConfig(config: Config): void {
         this._config = { ...config };
-        this._updateState();
+        this._area = this._config?.entity;
+        this.updateState();
     }
 
     set hass(hass: HomeAssistant) {
-        if (!this._config?.area || !hass) return;
+        if (!this._area || !hass) return;
         this._hass = hass;
-        this._updateState();
+        this._areaObj = this._hass?.areas[this._area];
+        this.updateState();
     }
 
-    private _updateState(): void {
-        this._areaObj = this._config?.area ? this._hass?.areas[this._config.area] : undefined;
-
+    private updateState(): void {
         if (!this._areaObj) {
             this._icon = this._config?.icon ?? "hass:alert-rhombus";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";

@@ -25,12 +25,11 @@ export class DialogTile extends LitElement {
 
     setConfig(config: Config): void {
         this._config = { ...config };
+        this._dialogObj = this._config ? dialogTable[this._config.dialog] : undefined;
         this._updateState();
     }
 
     private _updateState(): void {
-        this._dialogObj = this._config ? dialogTable[this._config.dialog] : undefined;
-
         if (!this._dialogObj) {
             this._icon = this._config?.icon || "hass:help-rhombus";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";

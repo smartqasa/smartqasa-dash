@@ -5067,18 +5067,19 @@ let AllOffTile = class AllOffTile extends s {
     static { this.styles = [tileBaseStyle, tileIconSpinStyle]; }
     setConfig(config) {
         this._config = { ...config };
+        this._area = this._config?.entity;
         this.updateState();
     }
     set hass(hass) {
-        if (!this._config?.area || !hass)
+        if (!this._area || !hass)
             return;
         this._hass = hass;
+        this._areaObj = this._hass?.areas[this._area];
         this.updateState();
     }
     updateState() {
         if (this._running === true)
             return;
-        this._areaObj = this._config?.area ? this._hass?.areas[this._config.area] : undefined;
         if (!this._areaObj) {
             this._icon = this._config?.icon ?? "hass:alert-rhombus";
             this._iconAnimation = "none";
@@ -5693,16 +5694,17 @@ let AreaTile = class AreaTile extends s {
     static { this.styles = [tileBaseStyle, tileIconSpinStyle]; }
     setConfig(config) {
         this._config = { ...config };
-        this._updateState();
+        this._area = this._config?.entity;
+        this.updateState();
     }
     set hass(hass) {
-        if (!this._config?.area || !hass)
+        if (!this._area || !hass)
             return;
         this._hass = hass;
-        this._updateState();
+        this._areaObj = this._hass?.areas[this._area];
+        this.updateState();
     }
-    _updateState() {
-        this._areaObj = this._config?.area ? this._hass?.areas[this._config.area] : undefined;
+    updateState() {
         if (!this._areaObj) {
             this._icon = this._config?.icon ?? "hass:alert-rhombus";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
@@ -5915,10 +5917,10 @@ let DialogTile = class DialogTile extends s {
     static { this.styles = tileBaseStyle; }
     setConfig(config) {
         this._config = { ...config };
+        this._dialogObj = this._config ? dialogTable[this._config.dialog] : undefined;
         this._updateState();
     }
     _updateState() {
-        this._dialogObj = this._config ? dialogTable[this._config.dialog] : undefined;
         if (!this._dialogObj) {
             this._icon = this._config?.icon || "hass:help-rhombus";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
@@ -5988,19 +5990,17 @@ let FanTile = class FanTile extends s {
     static { this.styles = [tileBaseStyle, tileStateStyle, tileIconSpinStyle]; }
     setConfig(config) {
         this._config = { ...config };
-        this._updateState();
+        this._entity = this._config.entity?.startsWith("fan.") ? this._config.entity : undefined;
+        this.updateState();
     }
     set hass(hass) {
-        if (!this._config?.entity || !hass)
+        if (!this._entity || !hass)
             return;
         this._hass = hass;
-        this._updateState();
+        this._stateObj = this._hass?.states[this._entity];
+        this.updateState();
     }
-    _updateState() {
-        this._stateObj =
-            this._config?.entity && this._config.entity.split(".")[0] === "fan"
-                ? this._hass?.states[this._config.entity]
-                : undefined;
+    updateState() {
         if (!this._stateObj) {
             this._icon = this._config?.icon || "hass:fan-alert";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
@@ -6024,7 +6024,7 @@ let FanTile = class FanTile extends s {
             this._iconAnimation = "none";
         }
         this._iconColor = state == "on" ? "var(--sq-fan-on-rgb)" : "var(--sq-inactive-rgb)";
-        this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
+        this._name = this._config?.name || this._stateObj.attributes.friendly_name || "Unknown";
         this._stateFmtd =
             this._hass.formatEntityState(this._stateObj) +
                 (state == "on" && this._stateObj.attributes.percentage
@@ -6051,7 +6051,7 @@ let FanTile = class FanTile extends s {
         e.stopPropagation();
         if (!this._stateObj)
             return;
-        this._hass.callService("fan", "toggle", { entity_id: this._stateObj.entity_id });
+        this._hass.callService("fan", "toggle", { entity_id: this._entity });
     }
     showMoreInfo(e) {
         e.stopPropagation();
@@ -6063,7 +6063,7 @@ let FanTile = class FanTile extends s {
             !Array.isArray(this._stateObj.attributes?.entity_id) ||
             this._stateObj.attributes.entity_id.length === 0)
             return;
-        entityListDialog(this._stateObj.attributes?.friendly_name || this._stateObj.entity_id, "group", this._stateObj.entity_id, "fan");
+        entityListDialog(this._stateObj.attributes?.friendly_name || "Unknown", "group", this._entity, "fan");
     }
     getCardSize() {
         return 1;
@@ -6296,7 +6296,7 @@ let LightTile = class LightTile extends s {
     static { this.styles = [tileBaseStyle, tileStateStyle]; }
     setConfig(config) {
         this._config = { ...config };
-        this._entity = this._config.entity?.split(".")[0] === "light" ? this._config.entity : undefined;
+        this._entity = this._config.entity?.startsWith("light.") ? this._config.entity : undefined;
         this.updateState();
     }
     set hass(hass) {
@@ -6317,7 +6317,7 @@ let LightTile = class LightTile extends s {
         const state = this._stateObj.state || "unknown";
         this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:lightbulb";
         this._iconColor = state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
-        this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
+        this._name = this._config?.name || this._stateObj.attributes.friendly_name || "Unknown";
         this._stateFmtd =
             this._hass.formatEntityState(this._stateObj) +
                 (state === "on" && this._stateObj.attributes.brightness
@@ -6356,7 +6356,7 @@ let LightTile = class LightTile extends s {
             !Array.isArray(this._stateObj.attributes?.entity_id) ||
             this._stateObj.attributes.entity_id.length === 0)
             return;
-        entityListDialog(this._stateObj.attributes?.friendly_name || "Unknown", "group", this._stateObj.entity_id, "light");
+        entityListDialog(this._stateObj.attributes?.friendly_name || "Unknown", "group", this._entity, "light");
     }
     getCardSize() {
         return 1;
@@ -6453,7 +6453,7 @@ LightTileEditor = __decorate([
 let LockTile = class LockTile extends s {
     constructor() {
         super(...arguments);
-        this._actuating = false;
+        this._waiting = false;
         this._icon = "hass:lock";
         this._iconAnimation = "none";
         this._iconColor = "var(--sq-inactive-rgb)";
@@ -6463,21 +6463,19 @@ let LockTile = class LockTile extends s {
     static { this.styles = [tileBaseStyle, tileStateStyle, tileIconBlinkStyle, tileIconSpinStyle]; }
     setConfig(config) {
         this._config = { ...config };
+        this._entity = this._config.entity?.startsWith("lock.") ? this._config.entity : undefined;
         this.updateState();
     }
     set hass(hass) {
-        if (!this._config?.entity || !hass)
+        if (!this._entity || !hass)
             return;
         this._hass = hass;
+        this._stateObj = this._hass?.states[this._entity];
         this.updateState();
     }
     updateState() {
-        if (this._actuating === false) {
-            this._stateObj =
-                this._config?.entity && this._config.entity.split(".")[0] === "lock"
-                    ? this._hass?.states[this._config.entity]
-                    : undefined;
-        }
+        if (this._waiting === true)
+            return;
         if (!this._stateObj) {
             this._icon = this._config?.icon || "hass:lock-alert";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
@@ -6518,7 +6516,7 @@ let LockTile = class LockTile extends s {
                 this._iconColor = "var(--sq-unavailable-rgb)";
                 break;
         }
-        this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
+        this._name = this._config?.name || this._stateObj.attributes.friendly_name || "Unknown";
         this._stateFmtd = this._hass.formatEntityState(this._stateObj);
     }
     render() {
@@ -6544,12 +6542,13 @@ let LockTile = class LockTile extends s {
         const state = this._stateObj.state;
         this._stateObj.state = state == "locked" ? "unlocking" : "locking";
         this.updateState();
-        this._actuating = true;
+        this._waiting = true;
         this._hass.callService("lock", state == "locked" ? "unlock" : "lock", {
-            entity_id: this._stateObj.entity_id,
+            entity_id: this._entity,
         });
         setTimeout(() => {
-            this._actuating = false;
+            this._waiting = false;
+            this.updateState();
         }, 500);
     }
     showMoreInfo(e) {
@@ -6568,7 +6567,7 @@ __decorate([
 ], LockTile.prototype, "_stateObj", void 0);
 __decorate([
     r()
-], LockTile.prototype, "_actuating", void 0);
+], LockTile.prototype, "_waiting", void 0);
 LockTile = __decorate([
     t$1("smartqasa-lock-tile")
 ], LockTile);
@@ -6924,7 +6923,7 @@ window.customCards.push({
 let RoutineTile = class RoutineTile extends s {
     constructor() {
         super(...arguments);
-        this._running = false;
+        this._waiting = false;
         this._icon = "hass:help-rhombus";
         this._iconAnimation = "none";
         this._iconColor = "var(--sq-inactive-rgb)";
@@ -6933,16 +6932,20 @@ let RoutineTile = class RoutineTile extends s {
     static { this.styles = [tileBaseStyle, tileIconSpinStyle]; }
     setConfig(config) {
         this._config = { ...config };
+        this._entity = ["automation", "scene", "script"].includes(this._config.entity?.split(".")[0])
+            ? this._config.entity
+            : undefined;
         this.updateState();
     }
     set hass(hass) {
-        if (!this._config?.entity || !hass)
+        if (!this._entity || !hass)
             return;
         this._hass = hass;
+        this._stateObj = this._hass?.states[this._entity];
         this.updateState();
     }
     updateState() {
-        if (this._running === true)
+        if (this._waiting === true)
             return;
         const validDomains = ["automation", "scene", "script"];
         this._stateObj =
@@ -6980,7 +6983,7 @@ let RoutineTile = class RoutineTile extends s {
         e.stopPropagation();
         if (!this._stateObj)
             return;
-        this._running = true;
+        this._waiting = true;
         this._icon = "hass:rotate-right";
         this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
         this._iconAnimation = "spin 1.0s linear infinite";
@@ -7000,7 +7003,7 @@ let RoutineTile = class RoutineTile extends s {
                 return;
         }
         setTimeout(() => {
-            this._running = false;
+            this._waiting = false;
             this.updateState();
         }, 2000);
     }
@@ -7016,7 +7019,7 @@ __decorate([
 ], RoutineTile.prototype, "_stateObj", void 0);
 __decorate([
     r()
-], RoutineTile.prototype, "_running", void 0);
+], RoutineTile.prototype, "_waiting", void 0);
 RoutineTile = __decorate([
     t$1("smartqasa-routine-tile")
 ], RoutineTile);

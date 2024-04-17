@@ -16,8 +16,9 @@ interface Config extends LovelaceCardConfig {
 export class RoutineTile extends LitElement {
     @state() private _config?: Config;
     @state() private _stateObj?: HassEntity;
-    @state() private _running: boolean = false;
+    @state() private _waiting: boolean = false;
 
+    private _entity?: string;
     private _hass: any;
     private _icon: string = "hass:help-rhombus";
     private _iconAnimation: string = "none";
@@ -28,17 +29,21 @@ export class RoutineTile extends LitElement {
 
     setConfig(config: Config): void {
         this._config = { ...config };
+        this._entity = ["automation", "scene", "script"].includes(this._config.entity?.split(".")[0])
+            ? this._config.entity
+            : undefined;
         this.updateState();
     }
 
     set hass(hass: HomeAssistant) {
-        if (!this._config?.entity || !hass) return;
+        if (!this._entity || !hass) return;
         this._hass = hass;
+        this._stateObj = this._hass?.states[this._entity];
         this.updateState();
     }
 
     private updateState(): void {
-        if (this._running === true) return;
+        if (this._waiting === true) return;
 
         const validDomains = ["automation", "scene", "script"];
         this._stateObj =
@@ -81,7 +86,7 @@ export class RoutineTile extends LitElement {
         e.stopPropagation();
         if (!this._stateObj) return;
 
-        this._running = true;
+        this._waiting = true;
         this._icon = "hass:rotate-right";
         this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
         this._iconAnimation = "spin 1.0s linear infinite";
@@ -103,7 +108,7 @@ export class RoutineTile extends LitElement {
         }
 
         setTimeout(() => {
-            this._running = false;
+            this._waiting = false;
             this.updateState();
         }, 2000);
     }

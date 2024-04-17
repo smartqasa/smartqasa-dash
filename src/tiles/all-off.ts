@@ -17,6 +17,7 @@ export class AllOffTile extends LitElement {
     @state() private _areaObj?: any;
     @state() private _running: boolean = false;
 
+    private _area?: string;
     private _hass: any;
     private _icon: string = "hass:help-rhombus";
     private _iconAnimation: string = "none";
@@ -27,19 +28,19 @@ export class AllOffTile extends LitElement {
 
     setConfig(config: Config): void {
         this._config = { ...config };
+        this._area = this._config?.entity;
         this.updateState();
     }
 
     set hass(hass: HomeAssistant) {
-        if (!this._config?.area || !hass) return;
+        if (!this._area || !hass) return;
         this._hass = hass;
+        this._areaObj = this._hass?.areas[this._area];
         this.updateState();
     }
 
     private updateState(): void {
         if (this._running === true) return;
-
-        this._areaObj = this._config?.area ? this._hass?.areas[this._config.area] : undefined;
 
         if (!this._areaObj) {
             this._icon = this._config?.icon ?? "hass:alert-rhombus";

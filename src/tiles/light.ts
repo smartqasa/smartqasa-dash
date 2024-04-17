@@ -31,7 +31,7 @@ export class LightTile extends LitElement {
 
     setConfig(config: Config): void {
         this._config = { ...config };
-        this._entity = this._config.entity?.split(".")[0] === "light" ? this._config.entity : undefined;
+        this._entity = this._config.entity?.startsWith("light.") ? this._config.entity : undefined;
         this.updateState();
     }
 
@@ -54,7 +54,7 @@ export class LightTile extends LitElement {
         const state = this._stateObj.state || "unknown";
         this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:lightbulb";
         this._iconColor = state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
-        this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
+        this._name = this._config?.name || this._stateObj.attributes.friendly_name || "Unknown";
         this._stateFmtd =
             this._hass.formatEntityState(this._stateObj) +
             (state === "on" && this._stateObj.attributes.brightness
@@ -100,12 +100,7 @@ export class LightTile extends LitElement {
             this._stateObj.attributes.entity_id.length === 0
         )
             return;
-        entityListDialog(
-            this._stateObj.attributes?.friendly_name || "Unknown",
-            "group",
-            this._stateObj.entity_id,
-            "light"
-        );
+        entityListDialog(this._stateObj.attributes?.friendly_name || "Unknown", "group", this._entity, "light");
     }
 
     getCardSize() {
