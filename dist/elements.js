@@ -1,4 +1,4 @@
-var version = "1.1.69";
+var version = "1.1.70";
 
 /******************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -4565,6 +4565,7 @@ async function menuConfig(menu_tab) {
         {
             type: "custom:smartqasa-dialog-tile",
             dialog: "clean_screen",
+            menu_tab: 3,
         },
         {
             type: "custom:smartqasa-dialog-tile",
@@ -4582,6 +4583,7 @@ async function menuConfig(menu_tab) {
         {
             type: "custom:smartqasa-dialog-tile",
             dialog: "speed_test",
+            menu_tab: 3,
         },
         {
             type: "custom:restriction-card",

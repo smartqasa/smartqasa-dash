@@ -26,6 +26,7 @@ export async function menuConfig(menu_tab?: number): Promise<any> {
         {
             type: "custom:smartqasa-dialog-tile",
             dialog: "clean_screen",
+            menu_tab: 3,
         },
         {
             type: "custom:smartqasa-dialog-tile",
@@ -43,6 +44,7 @@ export async function menuConfig(menu_tab?: number): Promise<any> {
         {
             type: "custom:smartqasa-dialog-tile",
             dialog: "speed_test",
+            menu_tab: 3,
         },
         {
             type: "custom:restriction-card",
