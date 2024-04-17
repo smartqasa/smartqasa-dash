@@ -487,7 +487,7 @@ let AreaPicture = class AreaPicture extends s {
     render() {
         const height = window.smartqasa.deviceType == "phone" ? "15vh" : "20vh";
         const picture = this._config?.picture
-            ? `/local/sq-areas/${this._config.picture}`
+            ? `/local/smartqasa/images/${this._config.picture}`
             : this._areaObj?.picture ?? "/local/sq-storage/images/default.png";
         return x `
             <ha-card style="background-image: url(${picture}); height: ${height};" class="picture"></ha-card>

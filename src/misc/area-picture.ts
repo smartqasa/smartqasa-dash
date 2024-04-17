@@ -47,7 +47,7 @@ export class AreaPicture extends LitElement {
         const height = window.smartqasa.deviceType == "phone" ? "15vh" : "20vh";
 
         const picture = this._config?.picture
-            ? `/local/sq-areas/${this._config.picture}`
+            ? `/local/smartqasa/images/${this._config.picture}`
             : this._areaObj?.picture ?? "/local/sq-storage/images/default.png";
 
         return html`
