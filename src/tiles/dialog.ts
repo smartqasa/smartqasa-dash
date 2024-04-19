@@ -1,12 +1,10 @@
 import { CSSResult, LitElement, html, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { LovelaceCardConfig } from "custom-card-helpers";
-import { menuDialog } from "../misc/menu-dialog";
-
-import { tileBaseStyle } from "../styles/tile";
-
 import dialogTable from "../tables/dialogs";
 import { menuConfig } from "../misc/menu-config";
+
+import { tileBaseStyle } from "../styles/tile";
 
 interface Config extends LovelaceCardConfig {
     dialog: string;
