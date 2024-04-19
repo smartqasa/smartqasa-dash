@@ -6324,7 +6324,7 @@ let LightTile = class LightTile extends s {
         this.updateState();
     }
     set hass(hass) {
-        if (!this._entity || !hass)
+        if (!this._entity || !hass || hass.states[this._entity] === this._stateObj)
             return;
         this._hass = hass;
         this._stateObj = this._hass?.states[this._entity];
