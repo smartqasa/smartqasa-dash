@@ -18,6 +18,7 @@ export class OptionTile extends LitElement {
     @state() private _stateObj?: HassEntity;
     @state() private _running: boolean = false;
 
+    private _entity?: string;
     private _hass: any;
     private _icon: string = "hass:form-dropdown";
     private _iconAnimation: string = "none";
@@ -27,19 +28,19 @@ export class OptionTile extends LitElement {
 
     setConfig(config: Config): void {
         this._config = { ...config };
+        this._entity = this._config.entity?.startsWith("input_select.") ? this._config.entity : undefined;
         this.updateState();
     }
 
     set hass(hass: HomeAssistant) {
-        if (!this._config?.entity || !hass) return;
+        if (!hass || !this._entity || hass.states[this._entity] === this._stateObj) return;
         this._hass = hass;
+        this._stateObj = this._hass?.states[this._entity];
         this.updateState();
     }
 
     private updateState(): void {
         if (this._running === true) return;
-
-        this._stateObj = this._config?.entity ? this._hass?.states[this._config.entity] : undefined;
 
         if (!this._stateObj) {
             this._icon = "hass:form-dropdown";
@@ -85,7 +86,7 @@ export class OptionTile extends LitElement {
         this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
 
         this._hass.callService("input_select", "select_option", {
-            entity_id: this._stateObj.entity_id,
+            entity_id: this._entity,
             option: this._config?.option,
         });
         if (this._config?.trigger && this._config.trigger.split(".")[0] === "input_button") {
