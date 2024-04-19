@@ -1,4 +1,4 @@
-var version = "1.1.70";
+var version = "1.1.71";
 
 /******************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -169,7 +169,7 @@ let MotionChip = class MotionChip extends s {
         if (!hass || !this._entity || hass.states[this._entity] === this._stateObj)
             return;
         this._hass = hass;
-        this._stateObj = this._hass?.states[this._entity];
+        this._stateObj = hass.states[this._entity];
         this.updateState();
     }
     updateState() {
@@ -414,7 +414,7 @@ let ThermostatChip = class ThermostatChip extends s {
         if (!hass || !this._entity || hass.states[this._entity] === this._stateObj)
             return;
         this._hass = hass;
-        this._stateObj = this._hass?.states[this._entity];
+        this._stateObj = hass.states[this._entity];
         this.updateState();
     }
     updateState() {
@@ -5081,10 +5081,10 @@ let AllOffTile = class AllOffTile extends s {
         this.updateState();
     }
     set hass(hass) {
-        if (!this._area || !hass)
+        if (!hass || !this._area || hass.areas[this._area] === this._areaObj)
             return;
         this._hass = hass;
-        this._areaObj = this._hass?.areas[this._area];
+        this._areaObj = hass.areas[this._area];
         this.updateState();
     }
     updateState() {
@@ -5709,10 +5709,10 @@ let AreaTile = class AreaTile extends s {
         this.updateState();
     }
     set hass(hass) {
-        if (!this._area || !hass)
+        if (!hass || !this._area || hass.areas[this._area] === this._areaObj)
             return;
         this._hass = hass;
-        this._areaObj = this._hass?.areas[this._area];
+        this._areaObj = hass.areas[this._area];
         this.updateState();
     }
     updateState() {
@@ -6025,7 +6025,7 @@ let FanTile = class FanTile extends s {
         if (!hass || !this._entity || hass.states[this._entity] === this._stateObj)
             return;
         this._hass = hass;
-        this._stateObj = this._hass?.states[this._entity];
+        this._stateObj = hass.states[this._entity];
         this.updateState();
     }
     updateState() {
@@ -6132,7 +6132,7 @@ let GarageTile = class GarageTile extends s {
         if (!hass || !this._entity || hass.states[this._entity] === this._stateObj)
             return;
         this._hass = hass;
-        this._stateObj = this._hass?.states[this._entity];
+        this._stateObj = hass.states[this._entity];
         this.updateState();
     }
     updateState() {
@@ -6243,7 +6243,7 @@ let HeaterTile = class HeaterTile extends s {
         if (!hass || !this._entity || hass.states[this._entity] === this._stateObj)
             return;
         this._hass = hass;
-        this._stateObj = this._hass?.states[this._entity];
+        this._stateObj = hass.states[this._entity];
         this.updateState();
     }
     updateState() {
@@ -6327,7 +6327,7 @@ let LightTile = class LightTile extends s {
         if (!hass || !this._entity || hass.states[this._entity] === this._stateObj)
             return;
         this._hass = hass;
-        this._stateObj = this._hass?.states[this._entity];
+        this._stateObj = hass.states[this._entity];
         this.updateState();
     }
     updateState() {
@@ -6494,7 +6494,7 @@ let LockTile = class LockTile extends s {
         if (!hass || !this._entity || hass.states[this._entity] === this._stateObj)
             return;
         this._hass = hass;
-        this._stateObj = this._hass?.states[this._entity];
+        this._stateObj = hass.states[this._entity];
         this.updateState();
     }
     updateState() {
@@ -6621,7 +6621,7 @@ let OptionTile = class OptionTile extends s {
         if (!hass || !this._entity || hass.states[this._entity] === this._stateObj)
             return;
         this._hass = hass;
-        this._stateObj = this._hass?.states[this._entity];
+        this._stateObj = hass.states[this._entity];
         this.updateState();
     }
     updateState() {
@@ -6721,7 +6721,7 @@ let RobotTile = class RobotTile extends s {
         if (!hass || !this._entity || hass.states[this._entity] === this._stateObj)
             return;
         this._hass = hass;
-        this._stateObj = this._hass?.states[this._entity];
+        this._stateObj = hass.states[this._entity];
         this.updateState();
     }
     updateState() {
@@ -6840,7 +6840,7 @@ let RokuTile = class RokuTile extends s {
         if (!hass || !this._entity || hass.states[this._entity] === this._stateObj)
             return;
         this._hass = hass;
-        this._stateObj = this._hass?.states[this._entity];
+        this._stateObj = hass.states[this._entity];
         this.updateState();
     }
     updateState() {
@@ -6962,7 +6962,7 @@ let RoutineTile = class RoutineTile extends s {
         if (!hass || !this._entity || hass.states[this._entity] === this._stateObj)
             return;
         this._hass = hass;
-        this._stateObj = this._hass?.states[this._entity];
+        this._stateObj = hass.states[this._entity];
         this.updateState();
     }
     updateState() {
@@ -7084,10 +7084,10 @@ let SelectTile = class SelectTile extends s {
         this.updateState();
     }
     set hass(hass) {
-        if (!this._entity || !hass)
+        if (!hass || !this._entity || hass.states[this._entity] === this._stateObj)
             return;
         this._hass = hass;
-        this._stateObj = this._hass?.states[this._entity];
+        this._stateObj = hass.states[this._entity];
         this.updateState();
     }
     updateState() {
@@ -7163,7 +7163,7 @@ let SensorTile = class SensorTile extends s {
         if (!hass || !this._entity || hass.states[this._entity] === this._stateObj)
             return;
         this._hass = hass;
-        this._stateObj = this._hass?.states[this._entity];
+        this._stateObj = hass.states[this._entity];
         this.updateState();
     }
     updateState() {
@@ -7253,7 +7253,7 @@ let ShadeTile = class ShadeTile extends s {
         if (!hass || !this._entity || hass.states[this._entity] === this._stateObj)
             return;
         this._hass = hass;
-        this._stateObj = this._hass?.states[this._entity];
+        this._stateObj = hass.states[this._entity];
         this.updateState();
     }
     updateState() {
@@ -7393,7 +7393,7 @@ let SwitchTile = class SwitchTile extends s {
         if (!hass || !this._entity || hass.states[this._entity] === this._stateObj)
             return;
         this._hass = hass;
-        this._stateObj = this._hass?.states[this._entity];
+        this._stateObj = hass.states[this._entity];
         this.updateState();
     }
     updateState() {
@@ -7539,7 +7539,7 @@ let ThermostatTile = class ThermostatTile extends s {
         if (!hass || !this._entity || hass.states[this._entity] === this._stateObj)
             return;
         this._hass = hass;
-        this._stateObj = this._hass?.states[this._entity];
+        this._stateObj = hass.states[this._entity];
         this.updateState();
     }
     updateState() {
