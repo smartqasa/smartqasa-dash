@@ -42,7 +42,7 @@ export class OptionTile extends LitElement {
     }
 
     private updateState(): void {
-        if (this._running === true) return;
+        if (!this._config || this._running === true) return;
 
         if (!this._stateObj) {
             this._icon = "hass:form-dropdown";
@@ -53,13 +53,12 @@ export class OptionTile extends LitElement {
         }
 
         if (this._entity === "input_select.location_phase") {
-            this._icon = phaseIcons[this._stateObj.state] || phaseIcons.default;
+            this._icon = phaseIcons[this._config.option] || phaseIcons.default;
         } else if (this._entity === "input_select.location_mode") {
-            this._icon = modeIcons[this._stateObj.state] || modeIcons.default;
+            this._icon = modeIcons[this._config.option] || modeIcons.default;
         } else {
             this._icon = this._config?.icon || this._stateObj.attributes?.icon || "hass:form-dropdown";
         }
-
         this._iconAnimation = "none";
         this._iconColor =
             this._stateObj.state === this._config?.option
