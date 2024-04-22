@@ -6661,17 +6661,20 @@ let OptionTile = class OptionTile extends s {
         e.stopPropagation();
         if (!this._stateObj)
             return;
+        const entity = this._stateObj.entity_id;
+        const option = this._config?.option;
+        const trigger = this._config?.trigger;
         this._running = true;
         this._icon = "hass:rotate-right";
         this._iconAnimation = "spin 1.0s linear infinite";
         this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
         this._hass.callService("input_select", "select_option", {
-            entity_id: this._entity,
-            option: this._config?.option,
+            entity_id: entity,
+            option: option,
         });
-        if (this._config?.trigger?.startsWith("input_button.")) {
+        if (trigger?.startsWith("input_button.")) {
             this._hass.callService("input_button", "press", {
-                entity_id: this._config.trigger,
+                entity_id: trigger,
             });
         }
         setTimeout(() => {
