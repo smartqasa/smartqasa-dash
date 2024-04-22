@@ -6750,7 +6750,15 @@ let OptionTile = class OptionTile extends s {
             this._name = this._config?.option || "Unknown";
             return;
         }
-        this._icon = "hass:form-dropdown";
+        if (this._entity === "input_select.location_phase") {
+            this._icon = phaseIcons[this._stateObj.state] || phaseIcons.default;
+        }
+        else if (this._entity === "input_select.location_mode") {
+            this._icon = modeIcons[this._stateObj.state] || modeIcons.default;
+        }
+        else {
+            this._icon = this._config?.icon || this._stateObj.attributes?.icon || "hass:form-dropdown";
+        }
         this._iconAnimation = "none";
         this._iconColor =
             this._stateObj.state === this._config?.option
