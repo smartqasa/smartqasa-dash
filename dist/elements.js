@@ -6657,7 +6657,7 @@ let OptionTile = class OptionTile extends s {
             </div>
         `;
     }
-    async selectOption(e) {
+    selectOption(e) {
         e.stopPropagation();
         if (!this._stateObj)
             return;
@@ -6665,28 +6665,14 @@ let OptionTile = class OptionTile extends s {
         this._icon = "hass:rotate-right";
         this._iconAnimation = "spin 1.0s linear infinite";
         this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
-        try {
-            await this._hass.callService("input_select", "select_option", {
-                entity_id: this._entity,
-                option: this._config?.option,
-            });
-        }
-        catch (error) {
-            console.error("Input Select / Select Option service call failed:", error);
-        }
+        this._hass.callService("input_select", "select_option", {
+            entity_id: this._entity,
+            option: this._config?.option,
+        });
         if (this._config?.trigger?.startsWith("input_button.")) {
-            try {
-                await this._hass.callService("input_select", "select_option", {
-                    entity_id: this._entity,
-                    option: this._config?.option,
-                });
-                await this._hass.callService("input_button", "press", {
-                    entity_id: this._config.trigger,
-                });
-            }
-            catch (error) {
-                console.error("Input Button / Press service call failed:", error);
-            }
+            this._hass.callService("input_button", "press", {
+                entity_id: "input_button.location_phase",
+            });
         }
         setTimeout(() => {
             this._running = false;
