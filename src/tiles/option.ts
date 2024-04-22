@@ -111,13 +111,21 @@ export class OptionTile extends LitElement {
             this._running = false;
             const menuTab = this._config?.menu_tab;
             if (menuTab !== undefined && menuTab >= 0 && menuTab <= 3) {
-                const dialogConfig = { ...menuConfig(menuTab) };
-                console.log(dialogConfig);
-                window.browser_mod?.service("popup", dialogConfig);
+                this.showMenu(menuTab);
             } else {
                 window.browser_mod?.service("close_popup", {});
             }
         }, 1000);
+    }
+
+    private async showMenu(menuTab: number): Promise<void> {
+        try {
+            const dialogConfig = await menuConfig(menuTab);
+            window.browser_mod?.service("popup", dialogConfig);
+        } catch (e) {
+            window.browser_mod?.service("close_popup", {});
+            console.error("Error opening menu dialog", e);
+        }
     }
 
     getCardSize(): number {
