@@ -8,6 +8,7 @@ export function selectOptionDialog(config: any, stateObj: any) {
         entity: stateObj?.entity_id,
         option: option,
         trigger: config?.trigger,
+        menu_tab: config?.menu_tab,
     }));
 
     const dialogConfig = {

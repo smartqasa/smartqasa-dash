@@ -3,6 +3,7 @@ import { customElement, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
+import { menuConfig } from "../misc/menu-config";
 import { phaseIcons, modeIcons } from "../utils/const";
 
 import { tileBaseStyle, tileIconSpinStyle } from "../styles/tile";
@@ -11,6 +12,7 @@ interface Config extends LovelaceCardConfig {
     entity: string;
     option: string;
     trigger?: string;
+    menu_tab?: number;
 }
 
 @customElement("smartqasa-option-tile")
@@ -107,7 +109,13 @@ export class OptionTile extends LitElement {
 
         setTimeout(() => {
             this._running = false;
-            window.browser_mod?.service("close_popup", {});
+            const menuTab = this._config?.menu_tab;
+            if (menuTab !== undefined && menuTab >= 0 && menuTab <= 3) {
+                const dialogConfig = menuConfig(menuTab);
+                window.browser_mod?.service("popup", dialogConfig);
+            } else {
+                window.browser_mod?.service("close_popup", {});
+            }
         }, 1000);
     }
 

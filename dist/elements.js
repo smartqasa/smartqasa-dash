@@ -334,6 +334,7 @@ function selectOptionDialog(config, stateObj) {
         entity: stateObj?.entity_id,
         option: option,
         trigger: config?.trigger,
+        menu_tab: config?.menu_tab,
     }));
     const dialogConfig = {
         title: stateObj.attributes.friendly_name || stateObj.entity_id,
@@ -6932,7 +6933,14 @@ let OptionTile = class OptionTile extends s {
         }
         setTimeout(() => {
             this._running = false;
-            window.browser_mod?.service("close_popup", {});
+            const menuTab = this._config?.menu_tab;
+            if (menuTab !== undefined && menuTab >= 0 && menuTab <= 3) {
+                const dialogConfig = menuConfig(menuTab);
+                window.browser_mod?.service("popup", dialogConfig);
+            }
+            else {
+                window.browser_mod?.service("close_popup", {});
+            }
         }, 1000);
     }
     getCardSize() {
