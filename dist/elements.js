@@ -6935,7 +6935,8 @@ let OptionTile = class OptionTile extends s {
             this._running = false;
             const menuTab = this._config?.menu_tab;
             if (menuTab !== undefined && menuTab >= 0 && menuTab <= 3) {
-                const dialogConfig = menuConfig(menuTab);
+                const dialogConfig = { ...menuConfig(menuTab) };
+                console.log(dialogConfig);
                 window.browser_mod?.service("popup", dialogConfig);
             }
             else {
