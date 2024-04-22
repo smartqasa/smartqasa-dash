@@ -1,4 +1,4 @@
-var version = "1.1.71";
+var version = "1.1.73";
 
 /******************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -4414,7 +4414,7 @@ async function loadYamlAsJson(yamlFilePath) {
 async function entertainDialog(config, hass) {
     if (!config || !hass)
         return;
-    window.smartqasa.deviceType;
+    const deviceType = window.smartqasa.deviceType || "phone";
     const videoPlayerObj = config.video_player ? hass.states[config.video_player] : undefined;
     const videoSoundObj = config.video_sound ? hass.states[config.video_sound] : undefined;
     const audioPlayerObj = config.audio_player ? hass.states[config.audio_player] : undefined;
@@ -4496,7 +4496,7 @@ async function entertainDialog(config, hass) {
         : undefined;
     let gridTemplateColumns = "auto";
     let cards = [];
-    if (window.smartqasa.deviceType === "phone") {
+    if (deviceType === "phone") {
         gridTemplateColumns = "95%";
         if (videoPlayerObj && audioPlayerObj) {
             cards = [videoPlayerTitle, videoPlayerCard, audioPlayerTitle, audioPlayerCard, appListTitle, appListCard];
@@ -6669,7 +6669,8 @@ let OptionTile = class OptionTile extends s {
             entity_id: this._entity,
             option: this._config?.option,
         });
-        if (this._config?.trigger && this._config.trigger.split(".")[0] === "input_button") {
+        console.log(`Selected option: ${this._config?.trigger}`);
+        if (this._config?.trigger?.startsWith("input_button.")) {
             this._hass.callService("input_button", "press", {
                 entity_id: this._config.trigger,
             });
