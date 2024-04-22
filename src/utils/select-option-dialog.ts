@@ -7,7 +7,7 @@ export function selectOptionDialog(config: any, stateObj: any) {
         type: "custom:smartqasa-option-tile",
         entity: stateObj?.entity_id,
         option: option,
-        trigger: config?.trigger || null,
+        trigger: config?.trigger || "",
     }));
 
     const dialogConfig = {

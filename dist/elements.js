@@ -6661,6 +6661,7 @@ let OptionTile = class OptionTile extends s {
         e.stopPropagation();
         if (!this._stateObj)
             return;
+        console.log(this._config);
         const entity = this._stateObj.entity_id;
         const option = this._config?.option;
         const trigger = this._config?.trigger;
@@ -6672,7 +6673,7 @@ let OptionTile = class OptionTile extends s {
             entity_id: entity,
             option: option,
         });
-        if (trigger?.startsWith("input_button.")) {
+        if (trigger && trigger.startsWith("input_button.")) {
             this._hass.callService("input_button", "press", {
                 entity_id: trigger,
             });
@@ -7056,7 +7057,7 @@ function selectOptionDialog(config, stateObj) {
         type: "custom:smartqasa-option-tile",
         entity: stateObj?.entity_id,
         option: option,
-        trigger: config?.trigger || null,
+        trigger: config?.trigger || "",
     }));
     const dialogConfig = {
         title: stateObj.attributes.friendly_name || stateObj.entity_id,

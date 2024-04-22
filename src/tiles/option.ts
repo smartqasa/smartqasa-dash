@@ -79,6 +79,9 @@ export class OptionTile extends LitElement {
     private selectOption(e: Event): void {
         e.stopPropagation();
         if (!this._stateObj) return;
+
+        console.log(this._config);
+
         const entity = this._stateObj.entity_id;
         const option = this._config?.option;
         const trigger = this._config?.trigger;
@@ -92,7 +95,7 @@ export class OptionTile extends LitElement {
             entity_id: entity,
             option: option,
         });
-        if (trigger?.startsWith("input_button.")) {
+        if (trigger && trigger.startsWith("input_button.")) {
             this._hass.callService("input_button", "press", {
                 entity_id: trigger,
             });
