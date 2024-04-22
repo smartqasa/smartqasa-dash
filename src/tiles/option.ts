@@ -25,6 +25,7 @@ export class OptionTile extends LitElement {
     private _iconAnimation: string = "none";
     private _iconColor: string = "var(--sq-inactive-rgb)";
     private _name: string = "Loading...";
+
     static styles: CSSResultGroup = [tileBaseStyle, tileIconSpinStyle];
 
     setConfig(config: Config): void {
