@@ -18,11 +18,11 @@ export function areasDialog(hass: any): void {
             layout_type: "custom:grid-layout",
             layout: {
                 margin: 0,
-                gridTemplateColumns:
+                "grid-template-columns":
                     window.smartqasa.deviceType === "phone"
                         ? "repeat(2, 1fr)"
                         : "repeat(3, var(--sq-tile-width-tablet, 20rem))",
-                gap: "var(--sq-dialog-grid-gap)",
+                "grid-gap": "var(--sq-dialog-grid-gap)",
             },
             cards: cards,
         },

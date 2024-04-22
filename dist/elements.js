@@ -575,7 +575,6 @@ ThermostatChip$1 = __decorate([
 let ThermostatChip = class ThermostatChip extends s {
     constructor() {
         super(...arguments);
-        this._icon = "hass:rhombus-question";
         this._iconColor = "var(--sq-inactive-rgb)";
         this._temperature = "??";
     }
@@ -590,17 +589,16 @@ let ThermostatChip = class ThermostatChip extends s {
     set hass(hass) {
         if (!hass || !this._entity || hass.states[this._entity] === this._stateObj)
             return;
+        this._hass = hass;
         this._stateObj = hass.states[this._entity];
         this.updateState();
     }
     updateState() {
         if (!this._entity || !this._stateObj) {
-            this._icon = "hass:rhombus-alert";
             this._iconColor = "var(--sq-unavailable-rgb)";
             this._temperature = "??";
             return;
         }
-        this._icon = this._stateObj.attributes.icon || "hass:rhombus-alert";
         this._iconColor = "var(--sq-primary-text-rgb)";
         this._temperature = this._stateObj.attributes.temperature || "??";
     }
@@ -613,7 +611,7 @@ let ThermostatChip = class ThermostatChip extends s {
         return x `
             <div class="container" style="${o(containerStyle)}" @click=${this.showMoreInfo}>
                 <div class="icon" style="color: rgb(${this._iconColor});">
-                    <ha-icon .icon=${this._icon}></ha-icon>
+                    <ha-state-icon .hass=${this._hass} .stateObj=${this._stateObj}></ha-state-icon>
                 </div>
                 <div class="text">${this._temperature}°</div>
             </div>
@@ -706,10 +704,10 @@ function areasDialog(hass) {
             layout_type: "custom:grid-layout",
             layout: {
                 margin: 0,
-                gridTemplateColumns: window.smartqasa.deviceType === "phone"
+                "grid-template-columns": window.smartqasa.deviceType === "phone"
                     ? "repeat(2, 1fr)"
                     : "repeat(3, var(--sq-tile-width-tablet, 20rem))",
-                gap: "var(--sq-dialog-grid-gap)",
+                "grid-gap": "var(--sq-dialog-grid-gap)",
             },
             cards: cards,
         },
