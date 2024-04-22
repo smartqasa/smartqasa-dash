@@ -506,7 +506,7 @@ function moreInfoDialog(config, stateObj) {
     window.browser_mod?.service("popup", dialogConfig);
 }
 
-let ThermostatChip = class ThermostatChip extends s {
+let ThermostatChip$1 = class ThermostatChip extends s {
     constructor() {
         super(...arguments);
         this._icon = "hass:thermometer-lines";
@@ -563,12 +563,74 @@ let ThermostatChip = class ThermostatChip extends s {
 };
 __decorate([
     r()
+], ThermostatChip$1.prototype, "_config", void 0);
+__decorate([
+    r()
+], ThermostatChip$1.prototype, "_stateObj", void 0);
+ThermostatChip$1 = __decorate([
+    t$1("smartqasa-thermostat-chip")
+], ThermostatChip$1);
+
+let ThermostatChip = class ThermostatChip extends s {
+    constructor() {
+        super(...arguments);
+        this._icon = "hass:rhombus-question";
+        this._iconColor = "var(--sq-inactive-rgb)";
+        this._temperature = "??";
+    }
+    static { this.styles = [chipBaseStyle, chipTextStyle]; }
+    setConfig(config) {
+        if (!config?.entity)
+            return;
+        this._config = { ...config };
+        this._entity = this._config.entity?.startsWith("weather.") ? this._config.entity : undefined;
+        this.updateState();
+    }
+    set hass(hass) {
+        if (!hass || !this._entity || hass.states[this._entity] === this._stateObj)
+            return;
+        this._stateObj = hass.states[this._entity];
+        this.updateState();
+    }
+    updateState() {
+        if (!this._entity || !this._stateObj) {
+            this._icon = "hass:rhombus-alert";
+            this._iconColor = "var(--sq-unavailable-rgb)";
+            this._temperature = "??";
+            return;
+        }
+        this._icon = this._stateObj.attributes.icon || "hass:rhombus-alert";
+        this._iconColor = "var(--sq-primary-text-rgb)";
+        this._temperature = this._stateObj.attributes.temperature || "??";
+    }
+    render() {
+        if (!this._entity)
+            return x ``;
+        const containerStyle = {
+            marginLeft: "0.7rem",
+        };
+        return x `
+            <div class="container" style="${o(containerStyle)}" @click=${this.showMoreInfo}>
+                <div class="icon" style="color: rgb(${this._iconColor});">
+                    <ha-icon .icon=${this._icon}></ha-icon>
+                </div>
+                <div class="text">${this._temperature}°</div>
+            </div>
+        `;
+    }
+    showMoreInfo(e) {
+        e.stopPropagation();
+        moreInfoDialog(this._config, this._stateObj);
+    }
+};
+__decorate([
+    r()
 ], ThermostatChip.prototype, "_config", void 0);
 __decorate([
     r()
 ], ThermostatChip.prototype, "_stateObj", void 0);
 ThermostatChip = __decorate([
-    t$1("smartqasa-thermostat-chip")
+    t$1("smartqasa-weather-chip")
 ], ThermostatChip);
 
 let AreaPicture = class AreaPicture extends s {
@@ -6033,6 +6095,79 @@ const dialogTable = {
         name: "Thermostats",
         data: listDialogConfig("Thermostats", "domain", "climate", "thermostat"),
     },
+    weather: {
+        icon: "hass:sun-wireless",
+        name: "Speed Test",
+        data: {
+            title: "Weather",
+            size: "wide",
+            timeout: 60000,
+            content: {
+                type: "custom:layout-card",
+                layout_type: "custom:grid-layout",
+                layout: {
+                    place_content: "center",
+                    place_self: "center",
+                    grid_template_columns: "446px 454px",
+                    grid_gap: "var(--sq-dialog-grid-gap)",
+                },
+                cards: [
+                    {
+                        type: "vertical-stack",
+                        cards: [
+                            {
+                                type: "custom:gap-card",
+                                height: 15,
+                            },
+                            {
+                                type: "weather-forecast",
+                                entity: "weather.forecast_home",
+                                forecast_type: "hourly",
+                                name: "Forecast",
+                                show_current: true,
+                                show_forecast: true,
+                                secondary_info_attribute: "wind_speed",
+                            },
+                            {
+                                type: "weather-forecast",
+                                entity: "weather.forecast_home",
+                                forecast_type: "daily",
+                                show_current: false,
+                                show_forecast: true,
+                            },
+                            {
+                                type: "horizontal-stack",
+                                cards: "load from /config/sq-custom/elements/lists/weather.yaml", // This needs to be handled programmatically to include the file content.
+                            },
+                        ],
+                    },
+                    {
+                        type: "vertical-stack",
+                        cards: [
+                            {
+                                type: "custom:gap-card",
+                                height: 15,
+                            },
+                            {
+                                type: "custom:weather-radar-card",
+                                frame_count: 10,
+                                show_marker: true,
+                                show_range: true,
+                                show_zoom: true,
+                                show_recenter: true,
+                                show_playback: true,
+                                zoom_level: 20,
+                                square_map: true,
+                                show_scale: true,
+                                extra_labels: true,
+                                map_style: "Voyager",
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+    },
 };
 
 let DialogTile = class DialogTile extends s {
@@ -6802,7 +6937,7 @@ let OptionTile = class OptionTile extends s {
         setTimeout(() => {
             this._running = false;
             window.browser_mod?.service("close_popup", {});
-        }, 2000);
+        }, 1000);
     }
     getCardSize() {
         return 1;

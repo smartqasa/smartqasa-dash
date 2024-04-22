@@ -108,7 +108,7 @@ export class OptionTile extends LitElement {
         setTimeout(() => {
             this._running = false;
             window.browser_mod?.service("close_popup", {});
-        }, 2000);
+        }, 1000);
     }
 
     getCardSize(): number {

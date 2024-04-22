@@ -158,6 +158,80 @@ const dialogTable: DialogTable = {
         name: "Thermostats",
         data: listDialogConfig("Thermostats", "domain", "climate", "thermostat"),
     },
+
+    weather: {
+        icon: "hass:sun-wireless",
+        name: "Speed Test",
+        data: {
+            title: "Weather",
+            size: "wide",
+            timeout: 60000,
+            content: {
+                type: "custom:layout-card",
+                layout_type: "custom:grid-layout",
+                layout: {
+                    place_content: "center",
+                    place_self: "center",
+                    grid_template_columns: "446px 454px",
+                    grid_gap: "var(--sq-dialog-grid-gap)",
+                },
+                cards: [
+                    {
+                        type: "vertical-stack",
+                        cards: [
+                            {
+                                type: "custom:gap-card",
+                                height: 15,
+                            },
+                            {
+                                type: "weather-forecast",
+                                entity: "weather.forecast_home",
+                                forecast_type: "hourly",
+                                name: "Forecast",
+                                show_current: true,
+                                show_forecast: true,
+                                secondary_info_attribute: "wind_speed",
+                            },
+                            {
+                                type: "weather-forecast",
+                                entity: "weather.forecast_home",
+                                forecast_type: "daily",
+                                show_current: false,
+                                show_forecast: true,
+                            },
+                            {
+                                type: "horizontal-stack",
+                                cards: "load from /config/sq-custom/elements/lists/weather.yaml", // This needs to be handled programmatically to include the file content.
+                            },
+                        ],
+                    },
+                    {
+                        type: "vertical-stack",
+                        cards: [
+                            {
+                                type: "custom:gap-card",
+                                height: 15,
+                            },
+                            {
+                                type: "custom:weather-radar-card",
+                                frame_count: 10,
+                                show_marker: true,
+                                show_range: true,
+                                show_zoom: true,
+                                show_recenter: true,
+                                show_playback: true,
+                                zoom_level: 20,
+                                square_map: true,
+                                show_scale: true,
+                                extra_labels: true,
+                                map_style: "Voyager",
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+    },
 };
 
 export default dialogTable;

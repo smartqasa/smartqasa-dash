@@ -27,6 +27,7 @@ import "./chips/motion";
 import "./chips/navigate";
 import "./chips/select";
 import "./chips/thermostat";
+import "./chips/weather";
 
 // Misc
 import "./misc/area-picture";
