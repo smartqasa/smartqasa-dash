@@ -129,7 +129,7 @@ const dialogTable: DialogTable = {
     },
 
     speed_test: {
-        icon: "hass:spray-bottle",
+        icon: "hass:gauge",
         name: "Speed Test",
         data: {
             title: "Speed Test",
@@ -161,10 +161,10 @@ const dialogTable: DialogTable = {
 
     weather: {
         icon: "hass:sun-wireless",
-        name: "Speed Test",
+        name: "Weather",
         data: {
             title: "Weather",
-            size: "wide",
+            size: "fullscreen",
             timeout: 60000,
             content: {
                 type: "custom:layout-card",
@@ -198,10 +198,6 @@ const dialogTable: DialogTable = {
                                 forecast_type: "daily",
                                 show_current: false,
                                 show_forecast: true,
-                            },
-                            {
-                                type: "horizontal-stack",
-                                cards: "load from /config/sq-custom/elements/lists/weather.yaml", // This needs to be handled programmatically to include the file content.
                             },
                         ],
                     },

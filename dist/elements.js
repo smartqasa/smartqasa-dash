@@ -6068,7 +6068,7 @@ const dialogTable = {
         data: listDialogConfig("Window Sensors", "group", "binary_sensor.all_window_sensors", "sensor"),
     },
     speed_test: {
-        icon: "hass:spray-bottle",
+        icon: "hass:gauge",
         name: "Speed Test",
         data: {
             title: "Speed Test",
@@ -6097,10 +6097,10 @@ const dialogTable = {
     },
     weather: {
         icon: "hass:sun-wireless",
-        name: "Speed Test",
+        name: "Weather",
         data: {
             title: "Weather",
-            size: "wide",
+            size: "fullscreen",
             timeout: 60000,
             content: {
                 type: "custom:layout-card",
@@ -6134,10 +6134,6 @@ const dialogTable = {
                                 forecast_type: "daily",
                                 show_current: false,
                                 show_forecast: true,
-                            },
-                            {
-                                type: "horizontal-stack",
-                                cards: "load from /config/sq-custom/elements/lists/weather.yaml", // This needs to be handled programmatically to include the file content.
                             },
                         ],
                     },
