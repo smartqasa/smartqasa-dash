@@ -6,6 +6,23 @@ export const heaterColors: Record<string, string> = {
     default: "var(--sq-unavailable-rgb, 255, 0, 255)",
 };
 
+export const modeIcons: Record<string, string> = {
+    Home: "hass:home-account",
+    Away: "hass:map-marker-radius",
+    Guest: "hass:account-multiple",
+    Entertain: "hass:glass-cocktail",
+    Vacation: "hass:airplane",
+    default: "hass:help-rhombus",
+};
+
+export const phaseIcons: Record<string, string> = {
+    Morning: "hass:weather-sunset-up",
+    Day: "hass:white-balance-sunny",
+    Evening: "hass:weather-night",
+    Night: "hass:sleep",
+    default: "hass:help-rhombus",
+};
+
 export const thermostatColors: Record<string, string> = {
     cooling: "var(--sq-climate-cool-rgb, 3, 169, 244)",
     heating: "var(--sq-climate-heat-rgb, 250, 67, 54)",

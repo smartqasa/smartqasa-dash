@@ -1,5 +1,6 @@
 import { CSSResult, html, LitElement, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
+import { styleMap } from "lit/directives/style-map.js";
 import { HassArea } from "../types";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 
@@ -37,12 +38,14 @@ export class NavigateChip extends LitElement {
         if (!this._areaObjPrev || !this._areaObjNext) {
             return html``;
         }
-
+        const containerStyle = {
+            marginRight: "0.7rem",
+        };
         const iconPrev = "hass:menu-left";
         const iconNext = "hass:menu-right";
 
         return html`
-            <div class="container">
+            <div class="container" style="${styleMap(containerStyle)}">
                 <div class="icon1" @click=${this._navigatePrev}>
                     <ha-icon .icon=${iconPrev}></ha-icon>
                 </div>

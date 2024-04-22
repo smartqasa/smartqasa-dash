@@ -87,18 +87,18 @@ const t={ATTRIBUTE:1,CHILD:2,PROPERTY:3,BOOLEAN_ATTRIBUTE:4,EVENT:5,ELEMENT:6},e
  * SPDX-License-Identifier: BSD-3-Clause
  */const n="important",i$1=" !"+n,o=e(class extends i$2{constructor(t$1){if(super(t$1),t$1.type!==t.ATTRIBUTE||"style"!==t$1.name||t$1.strings?.length>2)throw Error("The `styleMap` directive must be used in the `style` attribute and must be the only part in the attribute.")}render(t){return Object.keys(t).reduce(((e,r)=>{const s=t[r];return null==s?e:e+`${r=r.includes("-")?r:r.replace(/(?:^(webkit|moz|ms|o)|)(?=[A-Z])/g,"-$&").toLowerCase()}:${s};`}),"")}update(e,[r]){const{style:s}=e.element;if(void 0===this.ft)return this.ft=new Set(Object.keys(r)),this.render(r);for(const t of this.ft)null==r[t]&&(this.ft.delete(t),t.includes("-")?s.removeProperty(t):s[t]=null);for(const t in r){const e=r[t];if(null!=e){this.ft.add(t);const r="string"==typeof e&&e.endsWith(i$1);t.includes("-")||r?s.setProperty(t,r?e.slice(0,-11):e,r?n:""):s[t]=e;}}return w}});
 
-const chipBasicStyle = i$5 `
+const chipBaseStyle = i$5 `
     .container {
         width: fit-content;
         place-self: center;
         display: grid;
-        grid-template-areas: "i t";
-        grid-column-gap: 0.5rem;
+        grid-template-areas: "i";
         margin-right: 0.7rem;
         padding: 1rem;
         border: var(--sq-card-border);
         border-radius: var(--sq-chip-border-radius);
         background-color: var(--sq-card-background-color);
+        transition: var(--sq-icon-transition, none);
         cursor: pointer;
     }
     .icon {
@@ -107,6 +107,13 @@ const chipBasicStyle = i$5 `
         height: 1.8rem;
         width: 1.8rem;
         transition: var(--sq-icon-transition, none);
+        color: rgb(var(--sq-primary-text-rgb));
+    }
+`;
+const chipTextStyle = i$5 `
+    .container {
+        grid-template-areas: "i t";
+        grid-column-gap: 0.5rem;
     }
     .text {
         grid-area: t;
@@ -157,7 +164,7 @@ const chipDoubleStyle = i$5 `
 `;
 
 let MotionChip = class MotionChip extends s {
-    static { this.styles = chipBasicStyle; }
+    static { this.styles = [chipBaseStyle, chipTextStyle]; }
     setConfig(config) {
         if (!config?.entity)
             return;
@@ -191,20 +198,21 @@ let MotionChip = class MotionChip extends s {
                 break;
         }
         this._name = this._config?.name || "";
-        this._containerStyle = {
-            gridTemplateAreas: this._name ? "'i t'" : "'i'",
-            gridColumnGap: this._name ? "10px" : "0",
-            justifyContent: this._name ? "start" : "center",
-        };
     }
     render() {
         if (!this._entity)
             return x ``;
+        const containerStyle = {
+            marginRight: "0.7rem",
+            gridTemplateAreas: this._name ? "'i t'" : "'i'",
+            gridColumnGap: this._name ? "10px" : "0",
+            justifyContent: this._name ? "start" : "center",
+        };
         const iconStyles = {
             color: `rgb(${this._iconColor})`,
         };
         return x `
-            <div class="container" style="${o(this._containerStyle)}" @click=${this.toggleEntity}>
+            <div class="container" style="${o(containerStyle)}" @click=${this.toggleEntity}>
                 <div class="icon" style="${o(iconStyles)}">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
@@ -216,7 +224,7 @@ let MotionChip = class MotionChip extends s {
         e.stopPropagation();
         if (!this._stateObj)
             return;
-        this._hass.callService("homeassistant", "toggle", { entity_id: this._config?.entity });
+        this._hass.callService("homeassistant", "toggle", { entity_id: this._entity });
     }
 };
 __decorate([
@@ -252,10 +260,13 @@ let NavigateChip = class NavigateChip extends s {
         if (!this._areaObjPrev || !this._areaObjNext) {
             return x ``;
         }
+        const containerStyle = {
+            marginRight: "0.7rem",
+        };
         const iconPrev = "hass:menu-left";
         const iconNext = "hass:menu-right";
         return x `
-            <div class="container">
+            <div class="container" style="${o(containerStyle)}">
                 <div class="icon1" @click=${this._navigatePrev}>
                     <ha-icon .icon=${iconPrev}></ha-icon>
                 </div>
@@ -315,6 +326,130 @@ const listDialogStyle = {
     "grid-gap": "var(--sq-dialog-grid-gap)",
 };
 
+function selectOptionDialog(config, stateObj) {
+    if (!stateObj)
+        return;
+    const cards = stateObj.attributes.options.map((option) => ({
+        type: "custom:smartqasa-option-tile",
+        entity: stateObj?.entity_id,
+        option: option,
+        trigger: config?.trigger,
+    }));
+    const dialogConfig = {
+        title: stateObj.attributes.friendly_name || stateObj.entity_id,
+        timeout: 60000,
+        content: {
+            type: "custom:layout-card",
+            layout_type: "custom:grid-layout",
+            layout: listDialogStyle,
+            cards: cards,
+        },
+    };
+    window.browser_mod?.service("popup", dialogConfig);
+}
+
+const heaterColors = {
+    electric: "var(--sq-climate-heat-rgb, 250, 67, 54)",
+    heating: "var(--sq-climate-heat-rgb, 250, 67, 54)",
+    idle: "var(--sq-idle-rgb, 128, 128, 128)",
+    off: "var(--sq-inactive-rgb, 128, 128, 128)",
+    default: "var(--sq-unavailable-rgb, 255, 0, 255)",
+};
+const modeIcons = {
+    Home: "hass:home-account",
+    Away: "hass:map-marker-radius",
+    Guest: "hass:account-multiple",
+    Entertain: "hass:glass-cocktail",
+    Vacation: "hass:airplane",
+    default: "hass:help-rhombus",
+};
+const phaseIcons = {
+    Morning: "hass:weather-sunset-up",
+    Day: "hass:white-balance-sunny",
+    Evening: "hass:weather-night",
+    Night: "hass:sleep",
+    default: "hass:help-rhombus",
+};
+const thermostatColors = {
+    cooling: "var(--sq-climate-cool-rgb, 3, 169, 244)",
+    heating: "var(--sq-climate-heat-rgb, 250, 67, 54)",
+    fan_only: "var(--sq-climate-fan_only-rgb, 0, 255, 0)",
+    idle: "var(--sq-idle-rgb, 128, 128, 128)",
+    off: "var(--sq-inactive-rgb, 128, 128, 128)",
+    default: "var(--sq-unavailable-rgb, 255, 0, 255)",
+};
+const thermostatIcons = {
+    auto: "hass:thermostat-auto",
+    cool: "hass:snowflake",
+    heat: "hass:fire",
+    heat_cool: "hass:sun-snowflake-variant",
+    off: "hass:power",
+    default: "hass:thermostat-cog",
+};
+
+let SelectChip = class SelectChip extends s {
+    static { this.styles = chipBaseStyle; }
+    setConfig(config) {
+        if (!config?.entity)
+            return;
+        this._config = { ...config };
+        this._entity = this._config.entity?.startsWith("input_select.") ? this._config.entity : undefined;
+        this.updateState();
+    }
+    set hass(hass) {
+        if (!hass || !this._entity || hass.states[this._entity] === this._stateObj)
+            return;
+        this._stateObj = hass.states[this._entity];
+        this.updateState();
+    }
+    updateState() {
+        if (!this._entity || !this._stateObj)
+            return;
+        if (this._entity === "input_select.location_phase") {
+            this._icon = phaseIcons[this._stateObj.state] || phaseIcons.default;
+        }
+        else if (this._entity === "input_select.location_mode") {
+            this._icon = modeIcons[this._stateObj.state] || modeIcons.default;
+        }
+        else {
+            this._icon = this._config?.icon || this._stateObj.attributes?.icon || "hass:form-dropdown";
+        }
+    }
+    render() {
+        if (!this._entity)
+            return x ``;
+        const containerStyle = {
+            marginLeft: "0.7rem",
+        };
+        return x `
+            <div class="container" style="${o(containerStyle)}" @click=${this.showOptions}>
+                <div class="icon">
+                    <ha-icon .icon=${this._icon}></ha-icon>
+                </div>
+            </div>
+        `;
+    }
+    showOptions(e) {
+        e.stopPropagation();
+        selectOptionDialog(this._config, this._stateObj);
+    }
+};
+__decorate([
+    r()
+], SelectChip.prototype, "_config", void 0);
+__decorate([
+    r()
+], SelectChip.prototype, "_stateObj", void 0);
+SelectChip = __decorate([
+    t$1("smartqasa-select-chip")
+], SelectChip);
+window.customCards.push({
+    type: "smartqasa-select-chip",
+    name: "SmartQasa Input Select Chip",
+    preview: true,
+    description: "A SmartQasa chip for selecting an option for a input_select entity.",
+});
+
 const listDialogConfig = (dialogTitle, filterType, filterValue, tileType) => {
     return {
         title: dialogTitle,
@@ -371,30 +506,6 @@ function moreInfoDialog(config, stateObj) {
     window.browser_mod?.service("popup", dialogConfig);
 }
 
-const heaterColors = {
-    electric: "var(--sq-climate-heat-rgb, 250, 67, 54)",
-    heating: "var(--sq-climate-heat-rgb, 250, 67, 54)",
-    idle: "var(--sq-idle-rgb, 128, 128, 128)",
-    off: "var(--sq-inactive-rgb, 128, 128, 128)",
-    default: "var(--sq-unavailable-rgb, 255, 0, 255)",
-};
-const thermostatColors = {
-    cooling: "var(--sq-climate-cool-rgb, 3, 169, 244)",
-    heating: "var(--sq-climate-heat-rgb, 250, 67, 54)",
-    fan_only: "var(--sq-climate-fan_only-rgb, 0, 255, 0)",
-    idle: "var(--sq-idle-rgb, 128, 128, 128)",
-    off: "var(--sq-inactive-rgb, 128, 128, 128)",
-    default: "var(--sq-unavailable-rgb, 255, 0, 255)",
-};
-const thermostatIcons = {
-    auto: "hass:thermostat-auto",
-    cool: "hass:snowflake",
-    heat: "hass:fire",
-    heat_cool: "hass:sun-snowflake-variant",
-    off: "hass:power",
-    default: "hass:thermostat-cog",
-};
-
 let ThermostatChip = class ThermostatChip extends s {
     constructor() {
         super(...arguments);
@@ -402,7 +513,7 @@ let ThermostatChip = class ThermostatChip extends s {
         this._iconColor = "var(--sq-inactive-rgb)";
         this._temperature = "??";
     }
-    static { this.styles = chipBasicStyle; }
+    static { this.styles = [chipBaseStyle, chipTextStyle]; }
     setConfig(config) {
         if (!config?.entity)
             return;
@@ -433,8 +544,11 @@ let ThermostatChip = class ThermostatChip extends s {
     render() {
         if (!this._entity)
             return x ``;
+        const containerStyle = {
+            marginRight: "0.7rem",
+        };
         return x `
-            <div class="container" @click=${this.showMoreInfo}>
+            <div class="container" style="${o(containerStyle)}" @click=${this.showMoreInfo}>
                 <div class="icon" id="icon" style="color: rgb(${this._iconColor});">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
@@ -529,10 +643,10 @@ function areasDialog(hass) {
             layout_type: "custom:grid-layout",
             layout: {
                 margin: 0,
-                "grid-template-columns": window.smartqasa.deviceType === "phone"
+                gridTemplateColumns: window.smartqasa.deviceType === "phone"
                     ? "repeat(2, 1fr)"
                     : "repeat(3, var(--sq-tile-width-tablet, 20rem))",
-                "grid-gap": "var(--sq-dialog-grid-gap)",
+                gap: "var(--sq-dialog-grid-gap)",
             },
             cards: cards,
         },
@@ -5000,6 +5114,7 @@ const tileBaseStyle = i$5 `
         grid-row-gap: 0.4rem;
         padding: 1rem;
         background-color: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
+        transition: var(--sq-icon-transition, none);
         cursor: pointer;
     }
     .icon {
@@ -5011,7 +5126,6 @@ const tileBaseStyle = i$5 `
         width: 1.8rem;
         padding: 1rem;
         border-radius: 50%;
-        transition: var(--sq-icon-transition, none);
     }
     .name {
         grid-area: n;
@@ -6324,8 +6438,10 @@ let LightTile = class LightTile extends s {
         this.updateState();
     }
     set hass(hass) {
-        if (!hass || !this._entity || hass.states[this._entity] === this._stateObj)
+        if (!hass || !this._entity || hass.states[this._entity] === this._stateObj) {
+            this._stateObj = undefined;
             return;
+        }
         this._hass = hass;
         this._stateObj = hass.states[this._entity];
         this.updateState();
@@ -6659,20 +6775,17 @@ let OptionTile = class OptionTile extends s {
     }
     selectOption(e) {
         e.stopPropagation();
-        if (!this._stateObj)
+        if (!this._config || !this._stateObj)
             return;
-        console.log(this._config);
-        const entity = this._stateObj.entity_id;
-        const option = this._config?.option;
-        const trigger = this._config?.trigger;
         this._running = true;
         this._icon = "hass:rotate-right";
         this._iconAnimation = "spin 1.0s linear infinite";
         this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
         this._hass.callService("input_select", "select_option", {
-            entity_id: entity,
-            option: option,
+            entity_id: this._entity,
+            option: this._config.option,
         });
+        const trigger = this._config.trigger;
         if (trigger && trigger.startsWith("input_button.")) {
             this._hass.callService("input_button", "press", {
                 entity_id: trigger,
@@ -7049,28 +7162,6 @@ window.customCards.push({
     preview: true,
     description: "A SmartQasa tile for triggering an automation, scene, or script entity.",
 });
-
-function selectOptionDialog(config, stateObj) {
-    if (!stateObj)
-        return;
-    const cards = stateObj.attributes.options.map((option) => ({
-        type: "custom:smartqasa-option-tile",
-        entity: stateObj?.entity_id,
-        option: option,
-        trigger: config?.trigger || "",
-    }));
-    const dialogConfig = {
-        title: stateObj.attributes.friendly_name || stateObj.entity_id,
-        timeout: 60000,
-        content: {
-            type: "custom:layout-card",
-            layout_type: "custom:grid-layout",
-            layout: listDialogStyle,
-            cards: cards,
-        },
-    };
-    window.browser_mod?.service("popup", dialogConfig);
-}
 
 let SelectTile = class SelectTile extends s {
     constructor() {

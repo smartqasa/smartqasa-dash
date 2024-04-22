@@ -1,17 +1,17 @@
 import { css } from "lit";
 
-export const chipBasicStyle = css`
+export const chipBaseStyle = css`
     .container {
         width: fit-content;
         place-self: center;
         display: grid;
-        grid-template-areas: "i t";
-        grid-column-gap: 0.5rem;
+        grid-template-areas: "i";
         margin-right: 0.7rem;
         padding: 1rem;
         border: var(--sq-card-border);
         border-radius: var(--sq-chip-border-radius);
         background-color: var(--sq-card-background-color);
+        transition: var(--sq-icon-transition, none);
         cursor: pointer;
     }
     .icon {
@@ -20,6 +20,14 @@ export const chipBasicStyle = css`
         height: 1.8rem;
         width: 1.8rem;
         transition: var(--sq-icon-transition, none);
+        color: rgb(var(--sq-primary-text-rgb));
+    }
+`;
+
+export const chipTextStyle = css`
+    .container {
+        grid-template-areas: "i t";
+        grid-column-gap: 0.5rem;
     }
     .text {
         grid-area: t;

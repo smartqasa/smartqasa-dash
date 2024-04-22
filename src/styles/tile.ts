@@ -12,6 +12,7 @@ export const tileBaseStyle = css`
         grid-row-gap: 0.4rem;
         padding: 1rem;
         background-color: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
+        transition: var(--sq-icon-transition, none);
         cursor: pointer;
     }
     .icon {
@@ -23,7 +24,6 @@ export const tileBaseStyle = css`
         width: 1.8rem;
         padding: 1rem;
         border-radius: 50%;
-        transition: var(--sq-icon-transition, none);
     }
     .name {
         grid-area: n;

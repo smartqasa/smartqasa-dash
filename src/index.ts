@@ -25,6 +25,7 @@ window.customCards = window.customCards ?? [];
 // Chips
 import "./chips/motion";
 import "./chips/navigate";
+import "./chips/select";
 import "./chips/thermostat";
 
 // Misc

@@ -36,7 +36,10 @@ export class LightTile extends LitElement {
     }
 
     set hass(hass: HomeAssistant) {
-        if (!hass || !this._entity || hass.states[this._entity] === this._stateObj) return;
+        if (!hass || !this._entity || hass.states[this._entity] === this._stateObj) {
+            this._stateObj = undefined;
+            return;
+        }
         this._hass = hass;
         this._stateObj = hass.states[this._entity];
         this.updateState();

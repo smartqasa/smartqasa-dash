@@ -1,11 +1,12 @@
-import { CSSResult, html, LitElement, TemplateResult } from "lit";
+import { CSSResultGroup, html, LitElement, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
+import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 import { moreInfoDialog } from "../utils/more-info-dialog";
 import { thermostatIcons, thermostatColors } from "../utils/const";
 
-import { chipBasicStyle } from "../styles/chip";
+import { chipBaseStyle, chipTextStyle } from "../styles/chip";
 
 interface Config extends LovelaceCardConfig {
     entity?: string;
@@ -22,7 +23,7 @@ export class ThermostatChip extends LitElement {
     private _iconColor: string = "var(--sq-inactive-rgb)";
     private _temperature: string = "??";
 
-    static styles: CSSResult = chipBasicStyle;
+    static styles: CSSResultGroup = [chipBaseStyle, chipTextStyle];
 
     setConfig(config: Config): void {
         if (!config?.entity) return;
@@ -56,8 +57,12 @@ export class ThermostatChip extends LitElement {
     protected render(): TemplateResult {
         if (!this._entity) return html``;
 
+        const containerStyle = {
+            marginRight: "0.7rem",
+        };
+
         return html`
-            <div class="container" @click=${this.showMoreInfo}>
+            <div class="container" style="${styleMap(containerStyle)}" @click=${this.showMoreInfo}>
                 <div class="icon" id="icon" style="color: rgb(${this._iconColor});">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>

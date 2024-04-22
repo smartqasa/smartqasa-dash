@@ -1,10 +1,10 @@
-import { CSSResult, html, LitElement, TemplateResult } from "lit";
+import { CSSResultGroup, html, LitElement, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 
-import { chipBasicStyle } from "../styles/chip";
+import { chipBaseStyle, chipTextStyle } from "../styles/chip";
 
 interface Config extends LovelaceCardConfig {
     entity?: string;
@@ -18,12 +18,11 @@ export class MotionChip extends LitElement {
 
     private _entity?: string;
     private _hass: any;
-    private _containerStyle!: any;
     private _icon!: string;
     private _iconColor!: string;
     private _name?: string;
 
-    static styles: CSSResult = chipBasicStyle;
+    static styles: CSSResultGroup = [chipBaseStyle, chipTextStyle];
 
     setConfig(config: Config): void {
         if (!config?.entity) return;
@@ -59,22 +58,24 @@ export class MotionChip extends LitElement {
         }
 
         this._name = this._config?.name || "";
-        this._containerStyle = {
-            gridTemplateAreas: this._name ? "'i t'" : "'i'",
-            gridColumnGap: this._name ? "10px" : "0",
-            justifyContent: this._name ? "start" : "center",
-        };
     }
 
     protected render(): TemplateResult {
         if (!this._entity) return html``;
+
+        const containerStyle = {
+            marginRight: "0.7rem",
+            gridTemplateAreas: this._name ? "'i t'" : "'i'",
+            gridColumnGap: this._name ? "10px" : "0",
+            justifyContent: this._name ? "start" : "center",
+        };
 
         const iconStyles = {
             color: `rgb(${this._iconColor})`,
         };
 
         return html`
-            <div class="container" style="${styleMap(this._containerStyle)}" @click=${this.toggleEntity}>
+            <div class="container" style="${styleMap(containerStyle)}" @click=${this.toggleEntity}>
                 <div class="icon" style="${styleMap(iconStyles)}">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
@@ -86,7 +87,7 @@ export class MotionChip extends LitElement {
     private toggleEntity(e: Event): void {
         e.stopPropagation();
         if (!this._stateObj) return;
-        this._hass.callService("homeassistant", "toggle", { entity_id: this._config?.entity });
+        this._hass.callService("homeassistant", "toggle", { entity_id: this._entity });
     }
 }
 

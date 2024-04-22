@@ -78,13 +78,7 @@ export class OptionTile extends LitElement {
 
     private selectOption(e: Event): void {
         e.stopPropagation();
-        if (!this._stateObj) return;
-
-        console.log(this._config);
-
-        const entity = this._stateObj.entity_id;
-        const option = this._config?.option;
-        const trigger = this._config?.trigger;
+        if (!this._config || !this._stateObj) return;
 
         this._running = true;
         this._icon = "hass:rotate-right";
@@ -92,9 +86,11 @@ export class OptionTile extends LitElement {
         this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
 
         this._hass.callService("input_select", "select_option", {
-            entity_id: entity,
-            option: option,
+            entity_id: this._entity,
+            option: this._config.option,
         });
+
+        const trigger = this._config.trigger;
         if (trigger && trigger.startsWith("input_button.")) {
             this._hass.callService("input_button", "press", {
                 entity_id: trigger,
