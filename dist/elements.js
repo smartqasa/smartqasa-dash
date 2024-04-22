@@ -6106,10 +6106,10 @@ const dialogTable = {
                 type: "custom:layout-card",
                 layout_type: "custom:grid-layout",
                 layout: {
-                    place_content: "center",
-                    place_self: "center",
-                    grid_template_columns: "446px 454px",
-                    grid_gap: "var(--sq-dialog-grid-gap)",
+                    "place-content": "center",
+                    "place-self": "center",
+                    "grid-template-columns": "446px 454px",
+                    "grid-gap": "var(--sq-dialog-grid-gap)",
                 },
                 cards: [
                     {
