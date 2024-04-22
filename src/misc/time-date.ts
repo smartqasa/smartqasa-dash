@@ -2,10 +2,6 @@ import { CSSResultGroup, LitElement, html, css, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { HomeAssistant } from "custom-card-helpers";
 
-interface Config {
-    // Configuration interface, define any expected properties
-}
-
 @customElement("smartqasa-time-date")
 export class SmartQasaTimeDate extends LitElement {
     @state() private _time: string = "Loading...";
@@ -50,7 +46,7 @@ export class SmartQasaTimeDate extends LitElement {
         `;
     }
 
-    setConfig(config: Config): void {}
+    setConfig(config: any): void {}
 
     set hass(hass: HomeAssistant) {
         this._time = hass?.states["sensor.current_time"]?.state || "Loading...";

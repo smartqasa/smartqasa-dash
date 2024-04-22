@@ -3,7 +3,7 @@ import { loadYamlAsJson } from "../utils/load-yaml-as-json";
 export async function entertainDialog(config: any, hass: any): Promise<void> {
     if (!config || !hass) return;
 
-    const deviceType = window.smartqasa.deviceType;
+    const deviceType = window.smartqasa.deviceType || "phone";
     const videoPlayerObj = config.video_player ? hass.states[config.video_player] : undefined;
     const videoSoundObj = config.video_sound ? hass.states[config.video_sound] : undefined;
     const audioPlayerObj = config.audio_player ? hass.states[config.audio_player] : undefined;
@@ -95,7 +95,7 @@ export async function entertainDialog(config: any, hass: any): Promise<void> {
     let gridTemplateColumns = "auto";
     let cards: any = [];
 
-    if (window.smartqasa.deviceType === "phone") {
+    if (deviceType === "phone") {
         gridTemplateColumns = "95%";
         if (videoPlayerObj && audioPlayerObj) {
             cards = [videoPlayerTitle, videoPlayerCard, audioPlayerTitle, audioPlayerCard, appListTitle, appListCard];

@@ -89,7 +89,8 @@ export class OptionTile extends LitElement {
             entity_id: this._entity,
             option: this._config?.option,
         });
-        if (this._config?.trigger && this._config.trigger.split(".")[0] === "input_button") {
+        console.log(`Selected option: ${this._config?.trigger}`);
+        if (this._config?.trigger?.startsWith("input_button.")) {
             this._hass.callService("input_button", "press", {
                 entity_id: this._config.trigger,
             });
