@@ -91,7 +91,7 @@ export class OptionTile extends LitElement {
         });
         if (this._config?.trigger?.startsWith("input_button.")) {
             this._hass.callService("input_button", "press", {
-                entity_id: "input_button.location_phase",
+                entity_id: this._config.trigger,
             });
         }
 
