@@ -70,3 +70,9 @@ export class ThermostatChip extends LitElement {
         moreInfoDialog(this._config, this._stateObj);
     }
 }
+window.customCards.push({
+    type: "smartqasa-weather-chip",
+    name: "SmartQasa Weather Chip",
+    preview: true,
+    description: "A SmartQasa chip for displaying the weather.",
+});

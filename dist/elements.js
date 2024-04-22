@@ -631,6 +631,12 @@ __decorate([
 ThermostatChip = __decorate([
     t$1("smartqasa-weather-chip")
 ], ThermostatChip);
+window.customCards.push({
+    type: "smartqasa-weather-chip",
+    name: "SmartQasa Weather Chip",
+    preview: true,
+    description: "A SmartQasa chip for displaying the weather.",
+});
 
 let AreaPicture = class AreaPicture extends s {
     static get styles() {
