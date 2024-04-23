@@ -27,7 +27,6 @@ export class SequencerTile extends LitElement {
     private _iconAnimation: string = "none";
     private _iconColor: string = "var(--sq-inactive-rgb)";
     private _name: string = "Loading...";
-    private _stateFmtd: string = "Loading...";
 
     static styles: CSSResultGroup = [tileBaseStyle, tileStateStyle, tileIconSpinStyle];
 
@@ -54,8 +53,7 @@ export class SequencerTile extends LitElement {
             this._icon = this._config?.icon || "hass:alert-rhombus";
             this._iconAnimation = "none";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            this._name = this._sequenceObj.name || "Unknown";
-            this._stateFmtd = "Invalid!";
+            this._name = "Unknown";
             return;
         }
 
@@ -63,7 +61,6 @@ export class SequencerTile extends LitElement {
         this._iconAnimation = "none";
         this._iconColor = this._sequenceObj.iconRGB || "var(--sq-inactive-rgb)";
         this._name = this._sequenceObj.name || "Unknown";
-        this._stateFmtd = this._hass ? this._hass.formatEntityState(this._stateObj) : "Unknown";
     }
 
     render(): TemplateResult {
@@ -75,20 +72,12 @@ export class SequencerTile extends LitElement {
 
         return html`
             <div class="container" @click=${this.runRoutine}>
-                <div class="icon" style="${styleMap(iconStyles)}" @click=${this.toggleEntity}>
+                <div class="icon" style="${styleMap(iconStyles)}">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
                 <div class="name">${this._name}</div>
-                <div class="state">${this._stateFmtd}</div>
             </div>
         `;
-    }
-
-    private toggleEntity(e: Event): void {
-        e.stopPropagation();
-        if (!this._stateObj) return;
-
-        this._hass.callService("homeassistant", "toggle", { entity_id: this._entity });
     }
 
     private runRoutine(e: Event): void {
