@@ -406,6 +406,7 @@ let DialogChip = class DialogChip extends s {
         this._dialog = this._config.dialog;
         this._dialogObj = this._dialog ? dialogTable[this._dialog] : undefined;
         const data = this._dialogObj.data || null;
+        console.log(data);
         if (typeof data !== "string")
             return;
         const parts = data.split(",");
