@@ -3,7 +3,7 @@ import { customElement, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
-import { sequenceTable } from "../tables/light-sequences";
+import { sequenceTable } from "../tables/pool-light-sequences";
 
 import { tileBaseStyle, tileIconSpinStyle } from "../styles/tile";
 
@@ -12,8 +12,8 @@ interface Config extends LovelaceCardConfig {
     entity: string;
 }
 
-@customElement("smartqasa-pool-sequencer-tile")
-export class PoolSequencerTile extends LitElement {
+@customElement("smartqasa-pool-light-sequencer-tile")
+export class PoolLightSequencerTile extends LitElement {
     @state() private _config?: Config;
     @state() private _stateObj?: HassEntity;
     @state() private _running: boolean = false;
@@ -100,10 +100,3 @@ export class PoolSequencerTile extends LitElement {
         return 1;
     }
 }
-
-window.customCards.push({
-    type: "smartqasa-sequence-tile",
-    name: "SmartQasa Light Sequencer Tile",
-    preview: true,
-    description: "A SmartQasa tile for controlling Light Sequence entities.",
-});

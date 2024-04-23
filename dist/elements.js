@@ -7692,7 +7692,7 @@ let PoolLightTile = class PoolLightTile extends s {
         if (!this._stateObj)
             return;
         const cards = Object.keys(sequenceTable).map((key) => ({
-            type: "custom:smartqasa-pool-sequencer-tile",
+            type: "custom:smartqasa-pool-light-sequencer-tile",
             entity: this._entity,
             sequence: key,
         }));
@@ -7728,7 +7728,7 @@ window.customCards.push({
     description: "A SmartQasa tile for controlling a pool color light or switch entity.",
 });
 
-let PoolSequencerTile = class PoolSequencerTile extends s {
+let PoolLightSequencerTile = class PoolLightSequencerTile extends s {
     constructor() {
         super(...arguments);
         this._running = false;
@@ -7804,22 +7804,16 @@ let PoolSequencerTile = class PoolSequencerTile extends s {
 };
 __decorate([
     r()
-], PoolSequencerTile.prototype, "_config", void 0);
+], PoolLightSequencerTile.prototype, "_config", void 0);
 __decorate([
     r()
-], PoolSequencerTile.prototype, "_stateObj", void 0);
+], PoolLightSequencerTile.prototype, "_stateObj", void 0);
 __decorate([
     r()
-], PoolSequencerTile.prototype, "_running", void 0);
-PoolSequencerTile = __decorate([
-    t$1("smartqasa-pool-sequencer-tile")
-], PoolSequencerTile);
-window.customCards.push({
-    type: "smartqasa-sequence-tile",
-    name: "SmartQasa Light Sequencer Tile",
-    preview: true,
-    description: "A SmartQasa tile for controlling Light Sequence entities.",
-});
+], PoolLightSequencerTile.prototype, "_running", void 0);
+PoolLightSequencerTile = __decorate([
+    t$1("smartqasa-pool-light-sequencer-tile")
+], PoolLightSequencerTile);
 
 let ShadeTile = class ShadeTile extends s {
     constructor() {

@@ -54,7 +54,7 @@ import "./tiles/routine";
 import "./tiles/select";
 import "./tiles/sensor";
 import "./tiles/pool-light";
-import "./tiles/pool-sequencer";
+import "./tiles/pool-light-sequencer";
 import "./tiles/shade";
 import "./tiles/switch";
 import "./tiles/theme";

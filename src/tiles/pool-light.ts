@@ -3,7 +3,7 @@ import { customElement, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
-import { sequenceTable } from "../tables/light-sequences";
+import { sequenceTable } from "../tables/pool-light-sequences";
 import { gridDialogStyle } from "../styles/dialog";
 
 import { tileBaseStyle, tileStateStyle } from "../styles/tile";
@@ -95,7 +95,7 @@ export class PoolLightTile extends LitElement {
         if (!this._stateObj) return;
 
         const cards = Object.keys(sequenceTable).map((key) => ({
-            type: "custom:smartqasa-pool-sequencer-tile",
+            type: "custom:smartqasa-pool-light-sequencer-tile",
             entity: this._entity,
             sequence: key,
         }));
