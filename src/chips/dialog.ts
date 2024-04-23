@@ -24,11 +24,11 @@ export class DialogChip extends LitElement {
 
     setConfig(config: Config): void {
         this._config = { ...config };
-        this._dialog = this._config.dialog;
+        this._dialog = this._config.dialog || "";
         this._dialogObj = this._dialog ? dialogTable[this._dialog] : undefined;
 
-        const data = this._dialogObj.data || null;
-        console.log(data);
+        const data: string = this._dialogObj.data || "";
+        console.log(this._dialog, this._dialogObj, data);
         if (typeof data !== "string") return;
 
         const parts = data.split(",");
