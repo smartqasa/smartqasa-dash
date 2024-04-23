@@ -49,7 +49,7 @@ export class DialogChip extends LitElement {
 
         return html`
             <div class="container" style="margin-left: 0.7rem;" @click=${this.showDialog}>
-                <div class="icon" style="color: var(--sq-rgb-orange);">
+                <div class="icon" style="color: rgb(var(--sq-rgb-orange));">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
             </div>
