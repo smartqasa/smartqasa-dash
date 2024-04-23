@@ -100,10 +100,9 @@ export class SequencerTile extends LitElement {
         this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
         this._iconAnimation = "spin 1.0s linear infinite";
 
-        this._hass.callService("script", "turn_on", {
-            entity_id: "script.system_color_light_sequence_selector",
+        this._hass.callService("script.system_color_light_sequence_selector", {
             entity: this._entity,
-            count: this._config.count,
+            count: this._sequenceObj.count,
         });
 
         setTimeout(() => {
