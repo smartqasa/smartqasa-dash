@@ -27,6 +27,7 @@ export class SequencerTile extends LitElement {
     private _iconAnimation: string = "none";
     private _iconColor: string = "var(--sq-inactive-rgb)";
     private _name: string = "Loading...";
+    private _stateFmtd: string = "Loading...";
 
     static styles: CSSResultGroup = [tileBaseStyle, tileStateStyle, tileIconSpinStyle];
 
@@ -53,14 +54,16 @@ export class SequencerTile extends LitElement {
             this._icon = this._config?.icon || "hass:alert-rhombus";
             this._iconAnimation = "none";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            this._name = this._config?.name || "Unknown";
+            this._name = this._sequenceObj.name || "Unknown";
+            this._stateFmtd = "Invalid!";
             return;
         }
 
         this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:help-circle";
         this._iconAnimation = "none";
-        this._iconColor = "var(--sq-inactive-rgb)";
-        this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._entity;
+        this._iconColor = this._sequenceObj.iconRGB || "var(--sq-inactive-rgb)";
+        this._name = this._sequenceObj.name || "Unknown";
+        this._stateFmtd = this._hass ? this._hass.formatEntityState(this._stateObj) : "Unknown";
     }
 
     render(): TemplateResult {
@@ -76,6 +79,7 @@ export class SequencerTile extends LitElement {
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
                 <div class="name">${this._name}</div>
+                <div class="state">${this._stateFmtd}</div>
             </div>
         `;
     }
