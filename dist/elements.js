@@ -74,18 +74,254 @@ const t$1=t=>(e,o)=>{void 0!==o?o.addInitializer((()=>{customElements.define(t,e
  * SPDX-License-Identifier: BSD-3-Clause
  */function r(r){return n$1({...r,state:!0,attribute:!1})}
 
-/**
- * @license
- * Copyright 2017 Google LLC
- * SPDX-License-Identifier: BSD-3-Clause
- */
-const t={ATTRIBUTE:1,CHILD:2,PROPERTY:3,BOOLEAN_ATTRIBUTE:4,EVENT:5,ELEMENT:6},e=t=>(...e)=>({_$litDirective$:t,values:e});let i$2 = class i{constructor(t){}get _$AU(){return this._$AM._$AU}_$AT(t,e,i){this._$Ct=t,this._$AM=e,this._$Ci=i;}_$AS(t,e){return this.update(t,e)}update(t,e){return this.render(...e)}};
+const listDialogStyle = {
+    margin: "0",
+    "grid-template-columns": "1fr",
+    "grid-gap": "var(--sq-dialog-grid-gap)",
+};
 
-/**
- * @license
- * Copyright 2018 Google LLC
- * SPDX-License-Identifier: BSD-3-Clause
- */const n="important",i$1=" !"+n,o=e(class extends i$2{constructor(t$1){if(super(t$1),t$1.type!==t.ATTRIBUTE||"style"!==t$1.name||t$1.strings?.length>2)throw Error("The `styleMap` directive must be used in the `style` attribute and must be the only part in the attribute.")}render(t){return Object.keys(t).reduce(((e,r)=>{const s=t[r];return null==s?e:e+`${r=r.includes("-")?r:r.replace(/(?:^(webkit|moz|ms|o)|)(?=[A-Z])/g,"-$&").toLowerCase()}:${s};`}),"")}update(e,[r]){const{style:s}=e.element;if(void 0===this.ft)return this.ft=new Set(Object.keys(r)),this.render(r);for(const t of this.ft)null==r[t]&&(this.ft.delete(t),t.includes("-")?s.removeProperty(t):s[t]=null);for(const t in r){const e=r[t];if(null!=e){this.ft.add(t);const r="string"==typeof e&&e.endsWith(i$1);t.includes("-")||r?s.setProperty(t,r?e.slice(0,-11):e,r?n:""):s[t]=e;}}return w}});
+const listDialogConfig = (dialogTitle, filterType, filterValue, tileType) => {
+    return {
+        title: dialogTitle,
+        timeout: 60000,
+        content: {
+            type: "custom:auto-entities",
+            card: {
+                type: "custom:layout-card",
+                layout_type: "custom:grid-layout",
+                layout: listDialogStyle,
+            },
+            card_param: "cards",
+            filter: {
+                include: [
+                    {
+                        [filterType]: filterValue,
+                        sort: {
+                            method: "friendly_name",
+                            ignore_case: true,
+                        },
+                        options: {
+                            type: `custom:smartqasa-${tileType}-tile`,
+                            dialogTitle: dialogTitle,
+                            filterType: filterType,
+                            filterValue: filterValue,
+                            tileType: tileType,
+                        },
+                    },
+                ],
+            },
+        },
+    };
+};
+
+const dialogTable = {
+    clean_screen: {
+        icon: "hass:spray-bottle",
+        name: "Clean Screen",
+        data: {
+            title: "Clean Screen",
+            size: "fullscreen",
+            timeout: 30000,
+            dismissable: false,
+            content: {
+                type: "picture",
+                image: "/local/sq-storage/images/clean_screen.png",
+                card_mod: {
+                    style: {
+                        radius: "0px",
+                    },
+                },
+            },
+        },
+    },
+    display_themes: {
+        icon: "hass:compare",
+        name: "Dispaly Themes",
+        data: {
+            title: "Display Themes",
+            timeout: 60000,
+            content: {
+                type: "custom:layout-card",
+                layout_type: "custom:grid-layout",
+                layout: listDialogStyle,
+                cards: [
+                    {
+                        type: "custom:smartqasa-theme-tile",
+                        mode: "light",
+                        icon: "hass:brightness-7",
+                        name: "Light",
+                    },
+                    {
+                        type: "custom:smartqasa-theme-tile",
+                        mode: "dark",
+                        icon: "hass:weather-night",
+                        name: "Dark",
+                    },
+                    {
+                        type: "custom:smartqasa-theme-tile",
+                        mode: "auto",
+                        icon: "hass:theme-light-dark",
+                        name: "Auto",
+                    },
+                ],
+            },
+        },
+    },
+    energy_monitor: {
+        icon: "hass:transmission-tower",
+        name: "Energy Monitor",
+        data: {
+            title: "Energy Monitor",
+            size: "fullscreen",
+            timeout: 120000,
+            content: {
+                type: "custom:layout-card",
+                layout_type: "custom:grid-layout",
+                layout: {
+                    "grid-template-columns": "90vw",
+                    "grid-template-rows": "auto",
+                    "grid-gap": "var(--sq-dialog-grid-gap)",
+                    "place-content": "center",
+                    margin: 0,
+                },
+                cards: [
+                    {
+                        type: "horizontal-stack",
+                        cards: [{ type: "energy-distribution" }, { type: "energy-date-selection" }],
+                    },
+                    { type: "energy-usage-graph" },
+                ],
+            },
+        },
+    },
+    garages: {
+        icon: "hass:garage-open-variant",
+        name: "Garage Doors",
+        data: listDialogConfig("Garage Doors", "group", "cover.all_garage_doors", "garage"),
+    },
+    locks: {
+        icon: "hass:lock-open",
+        name: "Door Locks",
+        data: listDialogConfig("Door Locks", "group", "lock.all_door_locks", "lock"),
+    },
+    robots: {
+        icon: "hass:robot-vacuum-variant",
+        name: "Robots",
+        data: listDialogConfig("Robots", "domain", "vacuum", "robot"),
+    },
+    roku_players: {
+        icon: "hass:audio-video",
+        name: "Roku Players",
+        data: listDialogConfig("Roku Players", "group", "media_player.all_roku_players", "roku"),
+    },
+    sensors_doors: {
+        icon: "hass:door-open",
+        name: "Door Sensors",
+        data: listDialogConfig("Door Sensors", "group", "binary_sensor.all_door_sensors", "sensor"),
+    },
+    sensors_windows: {
+        icon: "hass:window-open",
+        name: "Window Sensors",
+        data: listDialogConfig("Window Sensors", "group", "binary_sensor.all_window_sensors", "sensor"),
+    },
+    speed_test: {
+        icon: "hass:gauge",
+        name: "Speed Test",
+        data: {
+            title: "Speed Test",
+            size: "wide",
+            timeout: 60000,
+            content: {
+                type: "statistics-graph",
+                entities: ["sensor.speedtest_download", "sensor.speedtest_upload"],
+                chart_type: "line",
+                period: "hour",
+                stat_types: ["mean"],
+                hide_legend: false,
+                days_to_show: 3,
+            },
+        },
+    },
+    sonos_players: {
+        icon: "hass:speaker-multiple",
+        name: "Sonos Players",
+        data: listDialogConfig("Sonos Players", "group", "media_player.all_sonos_players", "sonos"),
+    },
+    thermostats: {
+        icon: "hass:thermostat",
+        name: "Thermostats",
+        data: listDialogConfig("Thermostats", "domain", "climate", "thermostat"),
+    },
+    weather: {
+        icon: "hass:sun-wireless",
+        name: "Weather",
+        data: {
+            title: "Weather",
+            size: "fullscreen",
+            timeout: 60000,
+            content: {
+                type: "custom:layout-card",
+                layout_type: "custom:grid-layout",
+                layout: {
+                    "place-content": "center",
+                    "place-self": "center",
+                    "grid-template-columns": "446px 454px",
+                    "grid-gap": "var(--sq-dialog-grid-gap)",
+                },
+                cards: [
+                    {
+                        type: "vertical-stack",
+                        cards: [
+                            {
+                                type: "custom:gap-card",
+                                height: 15,
+                            },
+                            {
+                                type: "weather-forecast",
+                                entity: "weather.forecast_home",
+                                forecast_type: "hourly",
+                                name: "Forecast",
+                                show_current: true,
+                                show_forecast: true,
+                                secondary_info_attribute: "wind_speed",
+                            },
+                            {
+                                type: "weather-forecast",
+                                entity: "weather.forecast_home",
+                                forecast_type: "daily",
+                                show_current: false,
+                                show_forecast: true,
+                            },
+                        ],
+                    },
+                    {
+                        type: "vertical-stack",
+                        cards: [
+                            {
+                                type: "custom:gap-card",
+                                height: 15,
+                            },
+                            {
+                                type: "custom:weather-radar-card",
+                                frame_count: 10,
+                                show_marker: true,
+                                show_range: true,
+                                show_zoom: true,
+                                show_recenter: true,
+                                show_playback: true,
+                                zoom_level: 20,
+                                square_map: true,
+                                show_scale: true,
+                                extra_labels: true,
+                                map_style: "Voyager",
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+    },
+};
 
 const chipBaseStyle = i$5 `
     .container {
@@ -162,6 +398,79 @@ const chipDoubleStyle = i$5 `
         color: rgb(var(--sq-primary-text-rgb));
     }
 `;
+
+let DialogChip = class DialogChip extends s {
+    static { this.styles = chipBaseStyle; }
+    setConfig(config) {
+        this._config = { ...config };
+        this._dialog = this._config.dialog;
+        this._dialogObj = this._dialog ? dialogTable[this._dialog] : undefined;
+        if (!this._dialogObj)
+            return;
+        const data = this._dialogObj.data;
+        const parts = data.split(",");
+        this._entity = parts[2].trim().replace(/^"|"$/g, "");
+        this._icon = this._dialogObj.icon;
+    }
+    set hass(hass) {
+        if (!hass || !this._entity || hass.states[this._entity] === this._stateObj)
+            return;
+        this._stateObj = hass.states[this._entity];
+    }
+    render() {
+        if (!this._stateObj)
+            return x ``;
+        const state = this._stateObj.state;
+        if ((this._dialog === "garages" && state === "closed") ||
+            (this._dialog === "locks" && state === "locked") ||
+            (this._dialog === "sensors_doors" && state === "off") ||
+            (this._dialog === "sensors_windows" && state === "off"))
+            return x ``;
+        return x `
+            <div class="container" style="margin-left: 0.7rem;" @click=${this.showDialog}>
+                <div class="icon" style="color: var(--sq-orange-rgb);">
+                    <ha-icon .icon=${this._icon}></ha-icon>
+                </div>
+            </div>
+        `;
+    }
+    showDialog(e) {
+        e.stopPropagation();
+        const dialogConfig = { ...this._dialogObj.data };
+        window.browser_mod?.service("popup", dialogConfig);
+    }
+};
+__decorate([
+    r()
+], DialogChip.prototype, "_config", void 0);
+__decorate([
+    r()
+], DialogChip.prototype, "_dialogObj", void 0);
+__decorate([
+    r()
+], DialogChip.prototype, "_stateObj", void 0);
+DialogChip = __decorate([
+    t$1("smartqasa-dialog-chip")
+], DialogChip);
+window.customCards.push({
+    type: "smartqasa-dialog-chip",
+    name: "SmartQasa Dialog Chip",
+    preview: true,
+    description: "A SmartQasa chip for dialog.",
+});
+
+/**
+ * @license
+ * Copyright 2017 Google LLC
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+const t={ATTRIBUTE:1,CHILD:2,PROPERTY:3,BOOLEAN_ATTRIBUTE:4,EVENT:5,ELEMENT:6},e=t=>(...e)=>({_$litDirective$:t,values:e});let i$2 = class i{constructor(t){}get _$AU(){return this._$AM._$AU}_$AT(t,e,i){this._$Ct=t,this._$AM=e,this._$Ci=i;}_$AS(t,e){return this.update(t,e)}update(t,e){return this.render(...e)}};
+
+/**
+ * @license
+ * Copyright 2018 Google LLC
+ * SPDX-License-Identifier: BSD-3-Clause
+ */const n="important",i$1=" !"+n,o=e(class extends i$2{constructor(t$1){if(super(t$1),t$1.type!==t.ATTRIBUTE||"style"!==t$1.name||t$1.strings?.length>2)throw Error("The `styleMap` directive must be used in the `style` attribute and must be the only part in the attribute.")}render(t){return Object.keys(t).reduce(((e,r)=>{const s=t[r];return null==s?e:e+`${r=r.includes("-")?r:r.replace(/(?:^(webkit|moz|ms|o)|)(?=[A-Z])/g,"-$&").toLowerCase()}:${s};`}),"")}update(e,[r]){const{style:s}=e.element;if(void 0===this.ft)return this.ft=new Set(Object.keys(r)),this.render(r);for(const t of this.ft)null==r[t]&&(this.ft.delete(t),t.includes("-")?s.removeProperty(t):s[t]=null);for(const t in r){const e=r[t];if(null!=e){this.ft.add(t);const r="string"==typeof e&&e.endsWith(i$1);t.includes("-")||r?s.setProperty(t,r?e.slice(0,-11):e,r?n:""):s[t]=e;}}return w}});
 
 let MotionChip = class MotionChip extends s {
     static { this.styles = [chipBaseStyle, chipTextStyle]; }
@@ -320,12 +629,6 @@ window.customCards.push({
     description: "A SmartQasa chip for navigating to a previous/next area.",
 });
 
-const listDialogStyle = {
-    margin: "0",
-    "grid-template-columns": "1fr",
-    "grid-gap": "var(--sq-dialog-grid-gap)",
-};
-
 function selectOptionDialog(config, stateObj) {
     if (!stateObj)
         return;
@@ -450,40 +753,6 @@ window.customCards.push({
     preview: true,
     description: "A SmartQasa chip for selecting an option for a input_select entity.",
 });
-
-const listDialogConfig = (dialogTitle, filterType, filterValue, tileType) => {
-    return {
-        title: dialogTitle,
-        timeout: 60000,
-        content: {
-            type: "custom:auto-entities",
-            card: {
-                type: "custom:layout-card",
-                layout_type: "custom:grid-layout",
-                layout: listDialogStyle,
-            },
-            card_param: "cards",
-            filter: {
-                include: [
-                    {
-                        [filterType]: filterValue,
-                        sort: {
-                            method: "friendly_name",
-                            ignore_case: true,
-                        },
-                        options: {
-                            type: `custom:smartqasa-${tileType}-tile`,
-                            dialogTitle: dialogTitle,
-                            filterType: filterType,
-                            filterValue: filterValue,
-                            tileType: tileType,
-                        },
-                    },
-                ],
-            },
-        },
-    };
-};
 
 function moreInfoDialog(config, stateObj) {
     if (!stateObj)
@@ -5962,215 +6231,6 @@ window.customCards.push({
     description: "A SmartQasa card for navigating to an area panel.",
 });
 
-const dialogTable = {
-    clean_screen: {
-        icon: "hass:spray-bottle",
-        name: "Clean Screen",
-        data: {
-            title: "Clean Screen",
-            size: "fullscreen",
-            timeout: 30000,
-            dismissable: false,
-            content: {
-                type: "picture",
-                image: "/local/sq-storage/images/clean_screen.png",
-                card_mod: {
-                    style: {
-                        radius: "0px",
-                    },
-                },
-            },
-        },
-    },
-    display_themes: {
-        icon: "hass:compare",
-        name: "Dispaly Themes",
-        data: {
-            title: "Display Themes",
-            timeout: 60000,
-            content: {
-                type: "custom:layout-card",
-                layout_type: "custom:grid-layout",
-                layout: listDialogStyle,
-                cards: [
-                    {
-                        type: "custom:smartqasa-theme-tile",
-                        mode: "light",
-                        icon: "hass:brightness-7",
-                        name: "Light",
-                    },
-                    {
-                        type: "custom:smartqasa-theme-tile",
-                        mode: "dark",
-                        icon: "hass:weather-night",
-                        name: "Dark",
-                    },
-                    {
-                        type: "custom:smartqasa-theme-tile",
-                        mode: "auto",
-                        icon: "hass:theme-light-dark",
-                        name: "Auto",
-                    },
-                ],
-            },
-        },
-    },
-    energy_monitor: {
-        icon: "hass:transmission-tower",
-        name: "Energy Monitor",
-        data: {
-            title: "Energy Monitor",
-            size: "fullscreen",
-            timeout: 120000,
-            content: {
-                type: "custom:layout-card",
-                layout_type: "custom:grid-layout",
-                layout: {
-                    "grid-template-columns": "90vw",
-                    "grid-template-rows": "auto",
-                    "grid-gap": "var(--sq-dialog-grid-gap)",
-                    "place-content": "center",
-                    margin: 0,
-                },
-                cards: [
-                    {
-                        type: "horizontal-stack",
-                        cards: [{ type: "energy-distribution" }, { type: "energy-date-selection" }],
-                    },
-                    { type: "energy-usage-graph" },
-                ],
-            },
-        },
-    },
-    garages: {
-        icon: "hass:garage-variant",
-        name: "Garage Doors",
-        data: listDialogConfig("Garage Doors", "group", "cover.all_garage_doors", "garage"),
-    },
-    locks: {
-        icon: "hass:lock",
-        name: "Door Locks",
-        data: listDialogConfig("Door Locks", "group", "lock.all_door_locks", "lock"),
-    },
-    robots: {
-        icon: "hass:robot-vacuum-variant",
-        name: "Robots",
-        data: listDialogConfig("Robots", "domain", "vacuum", "robot"),
-    },
-    roku_players: {
-        icon: "hass:audio-video",
-        name: "Roku Players",
-        data: listDialogConfig("Roku Players", "group", "media_player.all_roku_players", "roku"),
-    },
-    sensors_doors: {
-        icon: "hass:door-open",
-        name: "Door Sensors",
-        data: listDialogConfig("Door Sensors", "group", "binary_sensor.all_door_sensors", "sensor"),
-    },
-    sensors_windows: {
-        icon: "hass:window-open",
-        name: "Window Sensors",
-        data: listDialogConfig("Window Sensors", "group", "binary_sensor.all_window_sensors", "sensor"),
-    },
-    speed_test: {
-        icon: "hass:gauge",
-        name: "Speed Test",
-        data: {
-            title: "Speed Test",
-            size: "wide",
-            timeout: 60000,
-            content: {
-                type: "statistics-graph",
-                entities: ["sensor.speedtest_download", "sensor.speedtest_upload"],
-                chart_type: "line",
-                period: "hour",
-                stat_types: ["mean"],
-                hide_legend: false,
-                days_to_show: 3,
-            },
-        },
-    },
-    sonos_players: {
-        icon: "hass:speaker-multiple",
-        name: "Sonos Players",
-        data: listDialogConfig("Sonos Players", "group", "media_player.all_sonos_players", "sonos"),
-    },
-    thermostats: {
-        icon: "hass:thermostat",
-        name: "Thermostats",
-        data: listDialogConfig("Thermostats", "domain", "climate", "thermostat"),
-    },
-    weather: {
-        icon: "hass:sun-wireless",
-        name: "Weather",
-        data: {
-            title: "Weather",
-            size: "fullscreen",
-            timeout: 60000,
-            content: {
-                type: "custom:layout-card",
-                layout_type: "custom:grid-layout",
-                layout: {
-                    "place-content": "center",
-                    "place-self": "center",
-                    "grid-template-columns": "446px 454px",
-                    "grid-gap": "var(--sq-dialog-grid-gap)",
-                },
-                cards: [
-                    {
-                        type: "vertical-stack",
-                        cards: [
-                            {
-                                type: "custom:gap-card",
-                                height: 15,
-                            },
-                            {
-                                type: "weather-forecast",
-                                entity: "weather.forecast_home",
-                                forecast_type: "hourly",
-                                name: "Forecast",
-                                show_current: true,
-                                show_forecast: true,
-                                secondary_info_attribute: "wind_speed",
-                            },
-                            {
-                                type: "weather-forecast",
-                                entity: "weather.forecast_home",
-                                forecast_type: "daily",
-                                show_current: false,
-                                show_forecast: true,
-                            },
-                        ],
-                    },
-                    {
-                        type: "vertical-stack",
-                        cards: [
-                            {
-                                type: "custom:gap-card",
-                                height: 15,
-                            },
-                            {
-                                type: "custom:weather-radar-card",
-                                frame_count: 10,
-                                show_marker: true,
-                                show_range: true,
-                                show_zoom: true,
-                                show_recenter: true,
-                                show_playback: true,
-                                zoom_level: 20,
-                                square_map: true,
-                                show_scale: true,
-                                extra_labels: true,
-                                map_style: "Voyager",
-                            },
-                        ],
-                    },
-                ],
-            },
-        },
-    },
-};
-
 let DialogTile = class DialogTile extends s {
     constructor() {
         super(...arguments);
@@ -6182,9 +6242,9 @@ let DialogTile = class DialogTile extends s {
     setConfig(config) {
         this._config = { ...config };
         this._dialogObj = this._config ? dialogTable[this._config.dialog] : undefined;
-        this._updateState();
+        this.updateState();
     }
-    _updateState() {
+    updateState() {
         if (!this._dialogObj) {
             this._icon = this._config?.icon || "hass:help-rhombus";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";

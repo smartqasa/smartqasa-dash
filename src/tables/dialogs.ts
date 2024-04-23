@@ -93,13 +93,13 @@ const dialogTable: DialogTable = {
     },
 
     garages: {
-        icon: "hass:garage-variant",
+        icon: "hass:garage-open-variant",
         name: "Garage Doors",
         data: listDialogConfig("Garage Doors", "group", "cover.all_garage_doors", "garage"),
     },
 
     locks: {
-        icon: "hass:lock",
+        icon: "hass:lock-open",
         name: "Door Locks",
         data: listDialogConfig("Door Locks", "group", "lock.all_door_locks", "lock"),
     },
