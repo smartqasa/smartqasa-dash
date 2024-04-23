@@ -74,6 +74,7 @@ const t$1=t=>(e,o)=>{void 0!==o?o.addInitializer((()=>{customElements.define(t,e
  * SPDX-License-Identifier: BSD-3-Clause
  */function r(r){return n$1({...r,state:!0,attribute:!1})}
 
+const gridStyle = window.smartqasa.deviceType === "phone" ? "repeat(2, 1fr)" : "repeat(3, var(--sq-tile-width-tablet, 20rem))";
 const listDialogStyle = {
     margin: 0,
     card_margin: 0,
@@ -83,7 +84,7 @@ const listDialogStyle = {
 const gridDialogStyle = {
     margin: 0,
     card_margin: 0,
-    "grid-template-columns": window.smartqasa.deviceType === "phone" ? "repeat(2, 1fr)" : "repeat(3, var(--sq-tile-width-tablet, 20rem))",
+    "grid-template-columns": gridStyle,
     "grid-gap": "var(--sq-dialog-grid-gap)",
 };
 
