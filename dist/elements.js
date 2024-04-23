@@ -8208,7 +8208,7 @@ window.customCards.push({
 
 window.smartqasa = window.smartqasa || {};
 window.smartqasa.deviceType = window.screen.width < 600 ? "phone" : "tablet";
-console.log(`Device type: ${window.smartqasa.deviceType}`);
+console.log(`Device Type: ${window.smartqasa.deviceType}`);
 window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();
 window.customCards = window.customCards ?? [];
 console.info(`%c SmartQasa ⏏ ${version} `, "background-color: #0000ff; color: #ffffff; font-weight: 700;");

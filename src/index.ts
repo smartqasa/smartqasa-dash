@@ -18,7 +18,7 @@ declare global {
 
 window.smartqasa = window.smartqasa || {};
 window.smartqasa.deviceType = window.screen.width < 600 ? "phone" : "tablet";
-console.log(`Device type: ${window.smartqasa.deviceType}`);
+console.log(`Device Type: ${window.smartqasa.deviceType}`);
 window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();
 
 window.customCards = window.customCards ?? [];
