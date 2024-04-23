@@ -5,6 +5,7 @@ interface DialogTable {
     [key: string]: {
         icon: string;
         name: string;
+        entity?: string;
         data: any;
     };
 }
@@ -95,12 +96,14 @@ const dialogTable: DialogTable = {
     garages: {
         icon: "hass:garage-open-variant",
         name: "Garage Doors",
+        entity: "cover.all_garage_doors",
         data: listDialogConfig("Garage Doors", "group", "cover.all_garage_doors", "garage"),
     },
 
     locks: {
         icon: "hass:lock-open",
         name: "Door Locks",
+        entity: "lock.all_door_locks",
         data: listDialogConfig("Door Locks", "group", "lock.all_door_locks", "lock"),
     },
 
@@ -119,12 +122,14 @@ const dialogTable: DialogTable = {
     sensors_doors: {
         icon: "hass:door-open",
         name: "Door Sensors",
+        entity: "binary_sensor.all_door_sensors",
         data: listDialogConfig("Door Sensors", "group", "binary_sensor.all_door_sensors", "sensor"),
     },
 
     sensors_windows: {
         icon: "hass:window-open",
         name: "Window Sensors",
+        entity: "binary_sensor.all_window_sensors",
         data: listDialogConfig("Window Sensors", "group", "binary_sensor.all_window_sensors", "sensor"),
     },
 

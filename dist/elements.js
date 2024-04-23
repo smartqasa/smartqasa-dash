@@ -197,11 +197,13 @@ const dialogTable = {
     garages: {
         icon: "hass:garage-open-variant",
         name: "Garage Doors",
+        entity: "cover.all_garage_doors",
         data: listDialogConfig("Garage Doors", "group", "cover.all_garage_doors", "garage"),
     },
     locks: {
         icon: "hass:lock-open",
         name: "Door Locks",
+        entity: "lock.all_door_locks",
         data: listDialogConfig("Door Locks", "group", "lock.all_door_locks", "lock"),
     },
     robots: {
@@ -217,11 +219,13 @@ const dialogTable = {
     sensors_doors: {
         icon: "hass:door-open",
         name: "Door Sensors",
+        entity: "binary_sensor.all_door_sensors",
         data: listDialogConfig("Door Sensors", "group", "binary_sensor.all_door_sensors", "sensor"),
     },
     sensors_windows: {
         icon: "hass:window-open",
         name: "Window Sensors",
+        entity: "binary_sensor.all_window_sensors",
         data: listDialogConfig("Window Sensors", "group", "binary_sensor.all_window_sensors", "sensor"),
     },
     speed_test: {
@@ -403,14 +407,9 @@ let DialogChip = class DialogChip extends s {
     static { this.styles = chipBaseStyle; }
     setConfig(config) {
         this._config = { ...config };
-        this._dialog = this._config.dialog || "";
+        this._dialog = this._config.dialog;
         this._dialogObj = this._dialog ? dialogTable[this._dialog] : undefined;
-        const data = this._dialogObj.data || "";
-        console.log(this._dialog, this._dialogObj, data);
-        if (typeof data !== "string")
-            return;
-        const parts = data.split(",");
-        this._entity = parts[2].trim().replace(/^"|"$/g, "");
+        this._entity = this._dialogObj.entity;
         this._icon = this._dialogObj.icon;
     }
     set hass(hass) {
