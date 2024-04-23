@@ -4,7 +4,7 @@ import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 import { sequenceTable } from "../tables/light-sequences";
-import { listDialogStyle } from "../styles/dialog";
+import { gridDialogStyle } from "../styles/dialog";
 
 import { tileBaseStyle, tileStateStyle } from "../styles/tile";
 
@@ -105,7 +105,7 @@ export class PoolLightTile extends LitElement {
             content: {
                 type: "custom:layout-card",
                 layout_type: "custom:grid-layout",
-                layout: listDialogStyle,
+                layout: gridDialogStyle,
                 cards: cards,
             },
         };

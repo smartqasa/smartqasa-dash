@@ -75,8 +75,15 @@ const t$1=t=>(e,o)=>{void 0!==o?o.addInitializer((()=>{customElements.define(t,e
  */function r(r){return n$1({...r,state:!0,attribute:!1})}
 
 const listDialogStyle = {
-    margin: "0",
+    margin: 0,
+    card_margin: 0,
     "grid-template-columns": "1fr",
+    "grid-gap": "var(--sq-dialog-grid-gap)",
+};
+const gridDialogStyle = {
+    margin: 0,
+    card_margin: 0,
+    "grid-template-columns": window.smartqasa.deviceType === "phone" ? "repeat(2, 1fr)" : "repeat(3, var(--sq-tile-width-tablet, 20rem))",
     "grid-gap": "var(--sq-dialog-grid-gap)",
 };
 
@@ -979,13 +986,7 @@ function areasDialog(hass) {
         content: {
             type: "custom:layout-card",
             layout_type: "custom:grid-layout",
-            layout: {
-                margin: 0,
-                "grid-template-columns": window.smartqasa.deviceType === "phone"
-                    ? "repeat(2, 1fr)"
-                    : "repeat(3, var(--sq-tile-width-tablet, 20rem))",
-                "grid-gap": "var(--sq-dialog-grid-gap)",
-            },
+            layout: gridDialogStyle,
             cards: cards,
         },
     };
@@ -7703,7 +7704,7 @@ let PoolLightTile = class PoolLightTile extends s {
             content: {
                 type: "custom:layout-card",
                 layout_type: "custom:grid-layout",
-                layout: listDialogStyle,
+                layout: gridDialogStyle,
                 cards: cards,
             },
         };

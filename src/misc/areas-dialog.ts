@@ -1,4 +1,5 @@
 import { HassArea } from "../types";
+import { gridDialogStyle } from "../styles/dialog";
 
 export function areasDialog(hass: any): void {
     if (!hass) return;
@@ -16,14 +17,7 @@ export function areasDialog(hass: any): void {
         content: {
             type: "custom:layout-card",
             layout_type: "custom:grid-layout",
-            layout: {
-                margin: 0,
-                "grid-template-columns":
-                    window.smartqasa.deviceType === "phone"
-                        ? "repeat(2, 1fr)"
-                        : "repeat(3, var(--sq-tile-width-tablet, 20rem))",
-                "grid-gap": "var(--sq-dialog-grid-gap)",
-            },
+            layout: gridDialogStyle,
             cards: cards,
         },
     };
