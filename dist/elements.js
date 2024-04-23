@@ -7624,7 +7624,112 @@ const sequenceTable = {
     },
 };
 
-let SequencerTile = class SequencerTile extends s {
+let PoolLightTile = class PoolLightTile extends s {
+    constructor() {
+        super(...arguments);
+        this._icon = "hass:lightbulb";
+        this._iconAnimation = "none";
+        this._iconColor = "var(--sq-inactive-rgb)";
+        this._name = "Loading...";
+        this._stateFmtd = "Loading...";
+    }
+    static { this.styles = [tileBaseStyle, tileStateStyle]; }
+    setConfig(config) {
+        this._config = { ...config };
+        this._entity = ["light", "switch"].includes(config.entity?.split(".")[0]) ? config.entity : undefined;
+        this.updateState();
+    }
+    set hass(hass) {
+        if (!hass || !this._entity || hass.states[this._entity] === this._stateObj) {
+            this._stateObj = undefined;
+            return;
+        }
+        this._hass = hass;
+        this._stateObj = hass.states[this._entity];
+        this.updateState();
+    }
+    updateState() {
+        if (!this._entity || !this._stateObj) {
+            this._icon = this._config?.icon || "hass:lightbulb-alert";
+            this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+            this._name = this._config?.name || "Unknown";
+            this._stateFmtd = "Invalid entity!";
+            return;
+        }
+        const state = this._stateObj.state || "unknown";
+        this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:lightbulb";
+        this._iconColor = state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
+        this._name = this._config?.name || this._stateObj.attributes.friendly_name || "Unknown";
+        this._stateFmtd =
+            this._hass.formatEntityState(this._stateObj) +
+                (state === "on" && this._stateObj.attributes.brightness
+                    ? " - " + this._hass.formatEntityAttributeValue(this._stateObj, "brightness")
+                    : "");
+    }
+    render() {
+        const iconStyles = {
+            color: `rgb(${this._iconColor})`,
+            backgroundColor: `rgba(${this._iconColor}, var(--sq-icon-opacity))`,
+            animation: this._iconAnimation,
+        };
+        return x `
+            <div class="container" @click=${this.showColorList}>
+                <div class="icon" @click=${this.toggleEntity} style="${o(iconStyles)}">
+                    <ha-icon .icon=${this._icon}></ha-icon>
+                </div>
+                <div class="name">${this._name}</div>
+                <div class="state">${this._stateFmtd}</div>
+            </div>
+        `;
+    }
+    toggleEntity(e) {
+        e.stopPropagation();
+        if (!this._stateObj)
+            return;
+        this._hass.callService("light", "toggle", { entity_id: this._entity });
+    }
+    showColorList(e) {
+        e.stopPropagation();
+        if (!this._stateObj)
+            return;
+        const cards = Object.keys(sequenceTable).map((key) => ({
+            type: "custom:smartqasa-pool-sequence-tile",
+            entity: this._entity,
+            sequence: key,
+        }));
+        const dialogConfig = {
+            title: this._stateObj.attributes.friendly_name || this._stateObj.entity_id,
+            timeout: 60000,
+            content: {
+                type: "custom:layout-card",
+                layout_type: "custom:grid-layout",
+                layout: listDialogStyle,
+                cards: cards,
+            },
+        };
+        window.browser_mod?.service("popup", dialogConfig);
+    }
+    getCardSize() {
+        return 1;
+    }
+};
+__decorate([
+    r()
+], PoolLightTile.prototype, "_config", void 0);
+__decorate([
+    r()
+], PoolLightTile.prototype, "_stateObj", void 0);
+PoolLightTile = __decorate([
+    t$1("smartqasa-pool-light-tile")
+], PoolLightTile);
+window.customCards.push({
+    type: "smartqasa-pool-light-tile",
+    name: "SmartQasa Pool Light Tile",
+    preview: true,
+    description: "A SmartQasa tile for controlling a pool color light or switch entity.",
+});
+
+let PoolSequencerTile = class PoolSequencerTile extends s {
     constructor() {
         super(...arguments);
         this._running = false;
@@ -7633,13 +7738,11 @@ let SequencerTile = class SequencerTile extends s {
         this._iconColor = "var(--sq-inactive-rgb)";
         this._name = "Loading...";
     }
-    static { this.styles = [tileBaseStyle, tileStateStyle, tileIconSpinStyle]; }
+    static { this.styles = [tileBaseStyle, tileIconSpinStyle]; }
     setConfig(config) {
         this._config = { ...config };
-        this._sequenceObj = this._config.sequence ? sequenceTable[this._config.sequence] : undefined;
-        this._entity = ["light", "switch"].includes(this._config.entity?.split(".")[0])
-            ? this._config.entity
-            : undefined;
+        this._sequenceObj = config.sequence ? sequenceTable[config.sequence] : undefined;
+        this._entity = ["light", "switch"].includes(config.entity?.split(".")[0]) ? config.entity : undefined;
         this.updateState();
     }
     set hass(hass) {
@@ -7659,7 +7762,7 @@ let SequencerTile = class SequencerTile extends s {
             this._name = "Unknown";
             return;
         }
-        this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:help-circle";
+        this._icon = this._stateObj.attributes.icon || "hass:help-circle";
         this._iconAnimation = "none";
         this._iconColor = this._sequenceObj.iconRGB || "var(--sq-inactive-rgb)";
         this._name = this._sequenceObj.name || "Unknown";
@@ -7702,16 +7805,16 @@ let SequencerTile = class SequencerTile extends s {
 };
 __decorate([
     r()
-], SequencerTile.prototype, "_config", void 0);
+], PoolSequencerTile.prototype, "_config", void 0);
 __decorate([
     r()
-], SequencerTile.prototype, "_stateObj", void 0);
+], PoolSequencerTile.prototype, "_stateObj", void 0);
 __decorate([
     r()
-], SequencerTile.prototype, "_running", void 0);
-SequencerTile = __decorate([
-    t$1("smartqasa-sequencer-tile")
-], SequencerTile);
+], PoolSequencerTile.prototype, "_running", void 0);
+PoolSequencerTile = __decorate([
+    t$1("smartqasa-pool-sequencer-tile")
+], PoolSequencerTile);
 window.customCards.push({
     type: "smartqasa-sequence-tile",
     name: "SmartQasa Light Sequencer Tile",

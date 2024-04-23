@@ -3,19 +3,17 @@ import { customElement, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
-import sequenceTable from "../tables/light-sequences";
+import { sequenceTable } from "../tables/light-sequences";
 
-import { tileBaseStyle, tileStateStyle, tileIconSpinStyle } from "../styles/tile";
+import { tileBaseStyle, tileIconSpinStyle } from "../styles/tile";
 
 interface Config extends LovelaceCardConfig {
     sequence: string;
     entity: string;
-    icon?: string;
-    name?: string;
 }
 
-@customElement("smartqasa-sequencer-tile")
-export class SequencerTile extends LitElement {
+@customElement("smartqasa-pool-sequencer-tile")
+export class PoolSequencerTile extends LitElement {
     @state() private _config?: Config;
     @state() private _stateObj?: HassEntity;
     @state() private _running: boolean = false;
@@ -28,14 +26,12 @@ export class SequencerTile extends LitElement {
     private _iconColor: string = "var(--sq-inactive-rgb)";
     private _name: string = "Loading...";
 
-    static styles: CSSResultGroup = [tileBaseStyle, tileStateStyle, tileIconSpinStyle];
+    static styles: CSSResultGroup = [tileBaseStyle, tileIconSpinStyle];
 
     setConfig(config: Config): void {
         this._config = { ...config };
-        this._sequenceObj = this._config.sequence ? sequenceTable[this._config.sequence] : undefined;
-        this._entity = ["light", "switch"].includes(this._config.entity?.split(".")[0])
-            ? this._config.entity
-            : undefined;
+        this._sequenceObj = config.sequence ? sequenceTable[config.sequence] : undefined;
+        this._entity = ["light", "switch"].includes(config.entity?.split(".")[0]) ? config.entity : undefined;
         this.updateState();
     }
 
@@ -57,7 +53,7 @@ export class SequencerTile extends LitElement {
             return;
         }
 
-        this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:help-circle";
+        this._icon = this._stateObj.attributes.icon || "hass:help-circle";
         this._iconAnimation = "none";
         this._iconColor = this._sequenceObj.iconRGB || "var(--sq-inactive-rgb)";
         this._name = this._sequenceObj.name || "Unknown";

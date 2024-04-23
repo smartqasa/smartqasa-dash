@@ -6,7 +6,7 @@ interface SequenceTable {
     };
 }
 
-const sequenceTable: SequenceTable = {
+export const sequenceTable: SequenceTable = {
     white: {
         count: 0,
         iconRGB: "255, 255, 255",
@@ -78,5 +78,3 @@ const sequenceTable: SequenceTable = {
         name: "Disco Tech",
     },
 };
-
-export default sequenceTable;
