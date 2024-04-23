@@ -27,9 +27,9 @@ export class DialogChip extends LitElement {
         this._dialog = this._config.dialog;
         this._dialogObj = this._dialog ? dialogTable[this._dialog] : undefined;
 
-        if (!this._dialogObj) return;
+        const data = this._dialogObj.data || null;
+        if (typeof data !== "string") return;
 
-        const data = this._dialogObj.data;
         const parts = data.split(",");
         this._entity = parts[2].trim().replace(/^"|"$/g, "");
         this._icon = this._dialogObj.icon;
