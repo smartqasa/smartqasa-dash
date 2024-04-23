@@ -1,9 +1,9 @@
 import { loadYamlAsJson } from "../utils/load-yaml-as-json";
+import { deviceType } from "../utils/const";
 
 export async function entertainDialog(config: any, hass: any): Promise<void> {
     if (!config || !hass) return;
 
-    const deviceType = window.smartqasa.deviceType || "phone";
     const videoPlayerObj = config.video_player ? hass.states[config.video_player] : undefined;
     const videoSoundObj = config.video_sound ? hass.states[config.video_sound] : undefined;
     const audioPlayerObj = config.audio_player ? hass.states[config.audio_player] : undefined;

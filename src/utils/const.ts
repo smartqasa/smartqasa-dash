@@ -1,3 +1,5 @@
+export const deviceType = window.screen.width < 600 ? "phone" : "tablet";
+
 export const heaterColors: Record<string, string> = {
     electric: "var(--sq-climate-heat-rgb, 250, 67, 54)",
     heating: "var(--sq-climate-heat-rgb, 250, 67, 54)",

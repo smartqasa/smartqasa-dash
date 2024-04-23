@@ -4,6 +4,7 @@ import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 import { areasDialog } from "./areas-dialog";
 import { entertainDialog } from "./entertain-dialog";
 import { menuConfig } from "./menu-config";
+import { deviceType } from "../utils/const";
 
 interface Config extends LovelaceCardConfig {
     audio_player: string;
@@ -97,7 +98,7 @@ class PanelFooter extends LitElement implements ActionHandlers {
         return html`
             <div class="button" @click="${(e: Event) => this.handleAction(e, methodName)}">
                 <ha-icon .icon=${icon}></ha-icon>
-                ${window.smartqasa.deviceType !== "phone" ? html`<span>${name}</span>` : ""}
+                ${deviceType !== "phone" ? html`<span>${name}</span>` : ""}
             </div>
         `;
     }

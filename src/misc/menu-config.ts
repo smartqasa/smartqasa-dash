@@ -1,10 +1,11 @@
 import { loadYamlAsJson } from "../utils/load-yaml-as-json";
+import { deviceType } from "../utils/const";
 
 export async function menuConfig(menu_tab?: number): Promise<any> {
     function createAttributes(icon: string, label: string) {
         return {
-            icon: window.smartqasa.deviceType === "phone" ? icon : null,
-            label: window.smartqasa.deviceType === "tablet" ? label : null,
+            icon: deviceType === "phone" ? icon : null,
+            label: deviceType === "tablet" ? label : null,
         };
     }
 
@@ -13,9 +14,7 @@ export async function menuConfig(menu_tab?: number): Promise<any> {
         card_margin: 0,
         padding: "1rem 0 0 0",
         "grid-template-columns":
-            window.smartqasa.deviceType === "phone"
-                ? "repeat(2, 1fr)"
-                : "repeat(3, var(--sq-tile-width-tablet, 20rem))",
+            deviceType === "phone" ? "repeat(2, 1fr)" : "repeat(3, var(--sq-tile-width-tablet, 20rem))",
         "grid-gap": "var(--sq-dialog-grid-gap)",
     };
 

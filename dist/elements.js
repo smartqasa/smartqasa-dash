@@ -1,3 +1,5 @@
+var version = "1.1.78";
+
 /******************************************************************************
 Copyright (c) Microsoft Corporation.
 
@@ -72,7 +74,46 @@ const t$1=t=>(e,o)=>{void 0!==o?o.addInitializer((()=>{customElements.define(t,e
  * SPDX-License-Identifier: BSD-3-Clause
  */function r(r){return n$1({...r,state:!0,attribute:!1})}
 
-const gridStyle = window.smartqasa.deviceType === "phone" ? "repeat(2, 1fr)" : "repeat(3, var(--sq-tile-width-tablet, 20rem))";
+const deviceType = window.screen.width < 600 ? "phone" : "tablet";
+const heaterColors = {
+    electric: "var(--sq-climate-heat-rgb, 250, 67, 54)",
+    heating: "var(--sq-climate-heat-rgb, 250, 67, 54)",
+    idle: "var(--sq-idle-rgb, 128, 128, 128)",
+    off: "var(--sq-inactive-rgb, 128, 128, 128)",
+    default: "var(--sq-unavailable-rgb, 255, 0, 255)",
+};
+const modeIcons = {
+    Home: "hass:home-account",
+    Away: "hass:map-marker-radius",
+    Guest: "hass:account-multiple",
+    Entertain: "hass:glass-cocktail",
+    Vacation: "hass:airplane",
+    default: "hass:help-rhombus",
+};
+const phaseIcons = {
+    Morning: "hass:weather-sunset-up",
+    Day: "hass:white-balance-sunny",
+    Evening: "hass:weather-night",
+    Night: "hass:sleep",
+    default: "hass:help-rhombus",
+};
+const thermostatColors = {
+    cooling: "var(--sq-climate-cool-rgb, 3, 169, 244)",
+    heating: "var(--sq-climate-heat-rgb, 250, 67, 54)",
+    fan_only: "var(--sq-climate-fan_only-rgb, 0, 255, 0)",
+    idle: "var(--sq-idle-rgb, 128, 128, 128)",
+    off: "var(--sq-inactive-rgb, 128, 128, 128)",
+    default: "var(--sq-unavailable-rgb, 255, 0, 255)",
+};
+const thermostatIcons = {
+    auto: "hass:thermostat-auto",
+    cool: "hass:snowflake",
+    heat: "hass:fire",
+    heat_cool: "hass:sun-snowflake-variant",
+    off: "hass:power",
+    default: "hass:thermostat-cog",
+};
+
 const listDialogStyle = {
     margin: 0,
     card_margin: 0,
@@ -82,7 +123,7 @@ const listDialogStyle = {
 const gridDialogStyle = {
     margin: 0,
     card_margin: 0,
-    "grid-template-columns": gridStyle,
+    "grid-template-columns": deviceType === "phone" ? "repeat(2, 1fr)" : "repeat(3, var(--sq-tile-width-tablet, 20rem))",
     "grid-gap": "var(--sq-dialog-grid-gap)",
 };
 
@@ -658,45 +699,6 @@ function selectOptionDialog(config, stateObj) {
     window.browser_mod?.service("popup", dialogConfig);
 }
 
-const heaterColors = {
-    electric: "var(--sq-climate-heat-rgb, 250, 67, 54)",
-    heating: "var(--sq-climate-heat-rgb, 250, 67, 54)",
-    idle: "var(--sq-idle-rgb, 128, 128, 128)",
-    off: "var(--sq-inactive-rgb, 128, 128, 128)",
-    default: "var(--sq-unavailable-rgb, 255, 0, 255)",
-};
-const modeIcons = {
-    Home: "hass:home-account",
-    Away: "hass:map-marker-radius",
-    Guest: "hass:account-multiple",
-    Entertain: "hass:glass-cocktail",
-    Vacation: "hass:airplane",
-    default: "hass:help-rhombus",
-};
-const phaseIcons = {
-    Morning: "hass:weather-sunset-up",
-    Day: "hass:white-balance-sunny",
-    Evening: "hass:weather-night",
-    Night: "hass:sleep",
-    default: "hass:help-rhombus",
-};
-const thermostatColors = {
-    cooling: "var(--sq-climate-cool-rgb, 3, 169, 244)",
-    heating: "var(--sq-climate-heat-rgb, 250, 67, 54)",
-    fan_only: "var(--sq-climate-fan_only-rgb, 0, 255, 0)",
-    idle: "var(--sq-idle-rgb, 128, 128, 128)",
-    off: "var(--sq-inactive-rgb, 128, 128, 128)",
-    default: "var(--sq-unavailable-rgb, 255, 0, 255)",
-};
-const thermostatIcons = {
-    auto: "hass:thermostat-auto",
-    cool: "hass:snowflake",
-    heat: "hass:fire",
-    heat_cool: "hass:sun-snowflake-variant",
-    off: "hass:power",
-    default: "hass:thermostat-cog",
-};
-
 let SelectChip = class SelectChip extends s {
     static { this.styles = chipBaseStyle; }
     setConfig(config) {
@@ -943,7 +945,7 @@ let AreaPicture = class AreaPicture extends s {
         this._areaObj = this._config?.area ? this._hass?.areas[this._config.area] : undefined;
     }
     render() {
-        const height = window.smartqasa.deviceType == "phone" ? "15vh" : "20vh";
+        const height = deviceType === "phone" ? "15vh" : "20vh";
         const picture = this._config?.picture
             ? `/local/smartqasa/images/${this._config.picture}`
             : this._areaObj?.picture ?? "/local/sq-storage/images/default.png";
@@ -4866,7 +4868,6 @@ async function loadYamlAsJson(yamlFilePath) {
 async function entertainDialog(config, hass) {
     if (!config || !hass)
         return;
-    const deviceType = window.smartqasa.deviceType || "phone";
     const videoPlayerObj = config.video_player ? hass.states[config.video_player] : undefined;
     const videoSoundObj = config.video_sound ? hass.states[config.video_sound] : undefined;
     const audioPlayerObj = config.audio_player ? hass.states[config.audio_player] : undefined;
@@ -4997,17 +4998,15 @@ async function entertainDialog(config, hass) {
 async function menuConfig(menu_tab) {
     function createAttributes(icon, label) {
         return {
-            icon: window.smartqasa.deviceType === "phone" ? icon : null,
-            label: window.smartqasa.deviceType === "tablet" ? label : null,
+            icon: deviceType === "phone" ? icon : null,
+            label: deviceType === "tablet" ? label : null,
         };
     }
     const layout = {
         margin: 0,
         card_margin: 0,
         padding: "1rem 0 0 0",
-        "grid-template-columns": window.smartqasa.deviceType === "phone"
-            ? "repeat(2, 1fr)"
-            : "repeat(3, var(--sq-tile-width-tablet, 20rem))",
+        "grid-template-columns": deviceType === "phone" ? "repeat(2, 1fr)" : "repeat(3, var(--sq-tile-width-tablet, 20rem))",
         "grid-gap": "var(--sq-dialog-grid-gap)",
     };
     const favoMenuTiles = await loadYamlAsJson("/local/smartqasa/menus/favorites.yaml");
@@ -5220,7 +5219,7 @@ let PanelFooter = class PanelFooter extends s {
         return x `
             <div class="button" @click="${(e) => this.handleAction(e, methodName)}">
                 <ha-icon .icon=${icon}></ha-icon>
-                ${window.smartqasa.deviceType !== "phone" ? x `<span>${name}</span>` : ""}
+                ${deviceType !== "phone" ? x `<span>${name}</span>` : ""}
             </div>
         `;
     }
@@ -8204,13 +8203,7 @@ window.customCards.push({
     description: "A SmartQasa tile for controlling a thermostat climate entity.",
 });
 
-var version = "1.1.78";
-
-(function initializeDeviceType() {
-    window.smartqasa = window.smartqasa || {};
-    window.smartqasa.deviceType = window.screen.width < 600 ? "phone" : "tablet";
-    window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();
-    console.log("Device Type initialized:", window.smartqasa.deviceType);
-})();
+window.smartqasa = window.smartqasa || {};
+window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();
 window.customCards = window.customCards ?? [];
 console.info(`%c SmartQasa ⏏ ${version} `, "background-color: #0000ff; color: #ffffff; font-weight: 700;");

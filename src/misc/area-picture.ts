@@ -2,6 +2,7 @@ import { css, CSSResultGroup, html, LitElement, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { HassArea } from "../types";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
+import { deviceType } from "../utils/const";
 
 interface Config extends LovelaceCardConfig {
     area: string;
@@ -44,7 +45,7 @@ export class AreaPicture extends LitElement {
     }
 
     render(): TemplateResult {
-        const height = window.smartqasa.deviceType == "phone" ? "15vh" : "20vh";
+        const height = deviceType === "phone" ? "15vh" : "20vh";
 
         const picture = this._config?.picture
             ? `/local/smartqasa/images/${this._config.picture}`
