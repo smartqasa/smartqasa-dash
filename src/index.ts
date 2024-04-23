@@ -1,4 +1,9 @@
-import { version } from "../package.json";
+(function initializeDeviceType() {
+    window.smartqasa = window.smartqasa || {};
+    window.smartqasa.deviceType = window.screen.width < 600 ? "phone" : "tablet";
+    window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();
+    console.log("Device Type initialized:", window.smartqasa.deviceType);
+})();
 
 declare global {
     interface Window {
@@ -15,11 +20,6 @@ declare global {
         };
     }
 }
-
-window.smartqasa = window.smartqasa || {};
-window.smartqasa.deviceType = window.screen.width < 600 ? "phone" : "tablet";
-console.log(`Device Type: ${window.smartqasa.deviceType}`);
-window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();
 
 window.customCards = window.customCards ?? [];
 
@@ -62,4 +62,5 @@ import "./tiles/switch";
 import "./tiles/theme";
 import "./tiles/thermostat";
 
+import { version } from "../package.json";
 console.info(`%c SmartQasa ⏏ ${version} `, "background-color: #0000ff; color: #ffffff; font-weight: 700;");

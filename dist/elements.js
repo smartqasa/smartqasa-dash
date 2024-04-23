@@ -1,5 +1,3 @@
-var version = "1.1.78";
-
 /******************************************************************************
 Copyright (c) Microsoft Corporation.
 
@@ -8206,9 +8204,13 @@ window.customCards.push({
     description: "A SmartQasa tile for controlling a thermostat climate entity.",
 });
 
-window.smartqasa = window.smartqasa || {};
-window.smartqasa.deviceType = window.screen.width < 600 ? "phone" : "tablet";
-console.log(`Device Type: ${window.smartqasa.deviceType}`);
-window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();
+var version = "1.1.78";
+
+(function initializeDeviceType() {
+    window.smartqasa = window.smartqasa || {};
+    window.smartqasa.deviceType = window.screen.width < 600 ? "phone" : "tablet";
+    window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();
+    console.log("Device Type initialized:", window.smartqasa.deviceType);
+})();
 window.customCards = window.customCards ?? [];
 console.info(`%c SmartQasa ⏏ ${version} `, "background-color: #0000ff; color: #ffffff; font-weight: 700;");
