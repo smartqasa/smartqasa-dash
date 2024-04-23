@@ -428,7 +428,7 @@ let DialogChip = class DialogChip extends s {
             return x ``;
         return x `
             <div class="container" style="margin-left: 0.7rem;" @click=${this.showDialog}>
-                <div class="icon" style="color: var(--sq-orange-rgb);">
+                <div class="icon" style="color: var(--sq-rgb-orange);">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
             </div>
