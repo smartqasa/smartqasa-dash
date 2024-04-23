@@ -7637,7 +7637,9 @@ let SequencerTile = class SequencerTile extends s {
     setConfig(config) {
         this._config = { ...config };
         this._sequenceObj = this._config.sequence ? sequenceTable[this._config.sequence] : undefined;
-        this._entity = this._config.entity?.startsWith("light.") ? this._config.entity : undefined;
+        this._entity = ["light", "switch"].includes(this._config.entity?.split(".")[0])
+            ? this._config.entity
+            : undefined;
         this.updateState();
     }
     set hass(hass) {
@@ -7681,7 +7683,7 @@ let SequencerTile = class SequencerTile extends s {
         e.stopPropagation();
         if (!this._stateObj)
             return;
-        this._hass.callService("light", "toggle", { entity_id: this._entity });
+        this._hass.callService("homeassistant", "toggle", { entity_id: this._entity });
     }
     runRoutine(e) {
         e.stopPropagation();

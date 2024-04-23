@@ -33,7 +33,9 @@ export class SequencerTile extends LitElement {
     setConfig(config: Config): void {
         this._config = { ...config };
         this._sequenceObj = this._config.sequence ? sequenceTable[this._config.sequence] : undefined;
-        this._entity = this._config.entity?.startsWith("light.") ? this._config.entity : undefined;
+        this._entity = ["light", "switch"].includes(this._config.entity?.split(".")[0])
+            ? this._config.entity
+            : undefined;
         this.updateState();
     }
 
@@ -82,7 +84,7 @@ export class SequencerTile extends LitElement {
         e.stopPropagation();
         if (!this._stateObj) return;
 
-        this._hass.callService("light", "toggle", { entity_id: this._entity });
+        this._hass.callService("homeassistant", "toggle", { entity_id: this._entity });
     }
 
     private runRoutine(e: Event): void {
