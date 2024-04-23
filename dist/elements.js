@@ -878,7 +878,7 @@ let ThermostatChip = class ThermostatChip extends s {
             marginLeft: "0.7rem",
         };
         return x `
-            <div class="container" style="${o(containerStyle)}" @click=${this.showMoreInfo}>
+            <div class="container" style="${o(containerStyle)}" @click=${this.showDialog}>
                 <div class="icon" style="color: rgb(${this._iconColor});">
                     <ha-state-icon .hass=${this._hass} .stateObj=${this._stateObj}></ha-state-icon>
                 </div>
@@ -886,9 +886,11 @@ let ThermostatChip = class ThermostatChip extends s {
             </div>
         `;
     }
-    showMoreInfo(e) {
+    showDialog(e) {
         e.stopPropagation();
-        moreInfoDialog(this._config, this._stateObj);
+        const dialogObj = dialogTable.weather;
+        const dialogConfig = { ...dialogObj.data };
+        window.browser_mod?.service("popup", dialogConfig);
     }
 };
 __decorate([

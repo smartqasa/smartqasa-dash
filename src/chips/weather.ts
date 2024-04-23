@@ -3,7 +3,7 @@ import { customElement, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
-import { moreInfoDialog } from "../utils/more-info-dialog";
+import dialogTable from "../tables/dialogs";
 
 import { chipBaseStyle, chipTextStyle } from "../styles/chip";
 
@@ -56,7 +56,7 @@ export class ThermostatChip extends LitElement {
         };
 
         return html`
-            <div class="container" style="${styleMap(containerStyle)}" @click=${this.showMoreInfo}>
+            <div class="container" style="${styleMap(containerStyle)}" @click=${this.showDialog}>
                 <div class="icon" style="color: rgb(${this._iconColor});">
                     <ha-state-icon .hass=${this._hass} .stateObj=${this._stateObj}></ha-state-icon>
                 </div>
@@ -65,9 +65,12 @@ export class ThermostatChip extends LitElement {
         `;
     }
 
-    private showMoreInfo(e: Event): void {
+    private showDialog(e: Event): void {
         e.stopPropagation();
-        moreInfoDialog(this._config, this._stateObj);
+
+        const dialogObj = dialogTable.weather;
+        const dialogConfig = { ...dialogObj.data };
+        window.browser_mod?.service("popup", dialogConfig);
     }
 }
 window.customCards.push({
