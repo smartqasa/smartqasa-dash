@@ -10,7 +10,7 @@ declare global {
             startApplication: (packageName: string) => void;
         };
         smartqasa: {
-            deviceType?: string;
+            deviceType?: "phone" | "tablet";
             homePath?: string;
         };
     }
@@ -18,6 +18,7 @@ declare global {
 
 window.smartqasa = window.smartqasa || {};
 window.smartqasa.deviceType = window.screen.width < 600 ? "phone" : "tablet";
+console.log(`Device type: ${window.smartqasa.deviceType}`);
 window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();
 
 window.customCards = window.customCards ?? [];
