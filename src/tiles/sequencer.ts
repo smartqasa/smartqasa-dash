@@ -3,21 +3,24 @@ import { customElement, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
+import sequenceTable from "../tables/light-sequences";
 
-import { tileBaseStyle, tileIconSpinStyle } from "../styles/tile";
+import { tileBaseStyle, tileStateStyle, tileIconSpinStyle } from "../styles/tile";
 
 interface Config extends LovelaceCardConfig {
+    sequence: string;
     entity: string;
     icon?: string;
     name?: string;
 }
 
-@customElement("smartqasa-routine-tile")
-export class RoutineTile extends LitElement {
+@customElement("smartqasa-sequencer-tile")
+export class SequencerTile extends LitElement {
     @state() private _config?: Config;
     @state() private _stateObj?: HassEntity;
     @state() private _running: boolean = false;
 
+    private _sequenceObj?: any;
     private _entity?: string;
     private _hass: any;
     private _icon: string = "hass:help-rhombus";
@@ -25,13 +28,12 @@ export class RoutineTile extends LitElement {
     private _iconColor: string = "var(--sq-inactive-rgb)";
     private _name: string = "Loading...";
 
-    static styles: CSSResultGroup = [tileBaseStyle, tileIconSpinStyle];
+    static styles: CSSResultGroup = [tileBaseStyle, tileStateStyle, tileIconSpinStyle];
 
     setConfig(config: Config): void {
         this._config = { ...config };
-        this._entity = ["automation", "scene", "script"].includes(this._config.entity?.split(".")[0])
-            ? this._config.entity
-            : undefined;
+        this._sequenceObj = this._config.sequence ? sequenceTable[this._config.sequence] : undefined;
+        this._entity = this._config.entity?.startsWith("light.") ? this._config.entity : undefined;
         this.updateState();
     }
 
@@ -45,7 +47,7 @@ export class RoutineTile extends LitElement {
     private updateState(): void {
         if (this._running === true) return;
 
-        if (!this._entity || !this._stateObj) {
+        if (!this._sequenceObj || !this._entity || !this._stateObj) {
             this._icon = this._config?.icon || "hass:alert-rhombus";
             this._iconAnimation = "none";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
@@ -56,7 +58,7 @@ export class RoutineTile extends LitElement {
         this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:help-circle";
         this._iconAnimation = "none";
         this._iconColor = "var(--sq-inactive-rgb)";
-        this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
+        this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._entity;
     }
 
     render(): TemplateResult {
@@ -68,7 +70,7 @@ export class RoutineTile extends LitElement {
 
         return html`
             <div class="container" @click=${this.runRoutine}>
-                <div class="icon" style="${styleMap(iconStyles)}">
+                <div class="icon" style="${styleMap(iconStyles)}" @click=${this.toggleEntity}>
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
                 <div class="name">${this._name}</div>
@@ -76,30 +78,27 @@ export class RoutineTile extends LitElement {
         `;
     }
 
-    private runRoutine(e: Event): void {
+    private toggleEntity(e: Event): void {
         e.stopPropagation();
         if (!this._stateObj) return;
+
+        this._hass.callService("light", "toggle", { entity_id: this._entity });
+    }
+
+    private runRoutine(e: Event): void {
+        e.stopPropagation();
+        if (!this._config || !this._stateObj) return;
 
         this._running = true;
         this._icon = "hass:rotate-right";
         this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
         this._iconAnimation = "spin 1.0s linear infinite";
 
-        const domain = this._stateObj.entity_id.split(".")[0];
-        switch (domain) {
-            case "script":
-                this._hass.callService("script", "turn_on", { entity_id: this._entity });
-                break;
-            case "scene":
-                this._hass.callService("scene", "turn_on", { entity_id: this._entity });
-                break;
-            case "automation":
-                this._hass.callService("automation", "trigger", { entity_id: this._entity });
-                break;
-            default:
-                console.error("Unsupported entity domain:", domain);
-                return;
-        }
+        this._hass.callService("script", "turn_on", {
+            entity_id: "script.system_color_light_sequence_selector",
+            entity: this._entity,
+            count: this._config.count,
+        });
 
         setTimeout(() => {
             this._running = false;
@@ -113,8 +112,8 @@ export class RoutineTile extends LitElement {
 }
 
 window.customCards.push({
-    type: "smartqasa-routine-tile",
-    name: "SmartQasa Routine Tile",
+    type: "smartqasa-sequence-tile",
+    name: "SmartQasa Light Sequencer Tile",
     preview: true,
-    description: "A SmartQasa tile for triggering an automation, scene, or script entity.",
+    description: "A SmartQasa tile for controlling Light Sequence entities.",
 });

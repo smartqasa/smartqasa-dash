@@ -54,6 +54,7 @@ import "./tiles/roku";
 import "./tiles/routine";
 import "./tiles/select";
 import "./tiles/sensor";
+import "./tiles/sequencer";
 import "./tiles/shade";
 import "./tiles/switch";
 import "./tiles/theme";

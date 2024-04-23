@@ -7283,7 +7283,7 @@ window.customCards.push({
 let RoutineTile = class RoutineTile extends s {
     constructor() {
         super(...arguments);
-        this._waiting = false;
+        this._running = false;
         this._icon = "hass:help-rhombus";
         this._iconAnimation = "none";
         this._iconColor = "var(--sq-inactive-rgb)";
@@ -7305,7 +7305,7 @@ let RoutineTile = class RoutineTile extends s {
         this.updateState();
     }
     updateState() {
-        if (this._waiting === true)
+        if (this._running === true)
             return;
         if (!this._entity || !this._stateObj) {
             this._icon = this._config?.icon || "hass:alert-rhombus";
@@ -7338,27 +7338,27 @@ let RoutineTile = class RoutineTile extends s {
         e.stopPropagation();
         if (!this._stateObj)
             return;
-        this._waiting = true;
+        this._running = true;
         this._icon = "hass:rotate-right";
         this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
         this._iconAnimation = "spin 1.0s linear infinite";
         const domain = this._stateObj.entity_id.split(".")[0];
         switch (domain) {
             case "script":
-                this._hass.callService("script", "turn_on", { entity_id: this._stateObj.entity_id });
+                this._hass.callService("script", "turn_on", { entity_id: this._entity });
                 break;
             case "scene":
-                this._hass.callService("scene", "turn_on", { entity_id: this._stateObj.entity_id });
+                this._hass.callService("scene", "turn_on", { entity_id: this._entity });
                 break;
             case "automation":
-                this._hass.callService("automation", "trigger", { entity_id: this._stateObj.entity_id });
+                this._hass.callService("automation", "trigger", { entity_id: this._entity });
                 break;
             default:
                 console.error("Unsupported entity domain:", domain);
                 return;
         }
         setTimeout(() => {
-            this._waiting = false;
+            this._running = false;
             this.updateState();
         }, 2000);
     }
@@ -7374,7 +7374,7 @@ __decorate([
 ], RoutineTile.prototype, "_stateObj", void 0);
 __decorate([
     r()
-], RoutineTile.prototype, "_waiting", void 0);
+], RoutineTile.prototype, "_running", void 0);
 RoutineTile = __decorate([
     t$1("smartqasa-routine-tile")
 ], RoutineTile);
@@ -7549,6 +7549,179 @@ window.customCards.push({
     name: "SmartQasa Sensor Tile",
     preview: true,
     description: "A SmartQasa tile for observing a binary_sensor entity.",
+});
+
+const sequenceTable = {
+    white: {
+        count: 0,
+        iconRGB: "255, 255, 255",
+        name: "White",
+    },
+    sky_blue: {
+        count: 1,
+        iconRGB: "135, 206, 250",
+        name: "Sky Blue",
+    },
+    cobalt_blue: {
+        count: 2,
+        iconRGB: "0, 71, 171",
+        name: "Cobalt Blue",
+    },
+    carribean_blue: {
+        count: 3,
+        iconRGB: "0, 105, 148",
+        name: "Carribean Blue",
+    },
+    spring_green: {
+        count: 4,
+        iconRGB: "0, 255, 127",
+        name: "Spring Green",
+    },
+    emerald_green: {
+        count: 5,
+        iconRGB: "0, 201, 87",
+        name: "Emerald Green",
+    },
+    emerald_rose: {
+        count: 6,
+        iconRGB: "0, 134, 67",
+        name: "Emerald Rose",
+    },
+    magenta: {
+        count: 7,
+        iconRGB: "255, 0, 255",
+        name: "Magenta",
+    },
+    violet: {
+        count: 8,
+        iconRGB: "127, 0, 255",
+        name: "Violet",
+    },
+    slow_color_splash: {
+        count: 9,
+        iconRGB: "204,102,0",
+        name: "Slow Color Splash",
+    },
+    fast_color_splash: {
+        count: 10,
+        iconRGB: "255,255,153",
+        name: "Fast Color Splash",
+    },
+    usa_beautiful: {
+        count: 11,
+        iconRGB: "228,28,29",
+        name: "USA Beautiful",
+    },
+    fat_tuesday: {
+        count: 12,
+        iconRGB: "0,255,255",
+        name: "Fat Tuesday",
+    },
+    disco_tech: {
+        count: 13,
+        iconRGB: "255,229,204",
+        name: "Disco Tech",
+    },
+};
+
+let SequencerTile = class SequencerTile extends s {
+    constructor() {
+        super(...arguments);
+        this._running = false;
+        this._icon = "hass:help-rhombus";
+        this._iconAnimation = "none";
+        this._iconColor = "var(--sq-inactive-rgb)";
+        this._name = "Loading...";
+    }
+    static { this.styles = [tileBaseStyle, tileStateStyle, tileIconSpinStyle]; }
+    setConfig(config) {
+        this._config = { ...config };
+        this._sequenceObj = this._config.sequence ? sequenceTable[this._config.sequence] : undefined;
+        this._entity = this._config.entity?.startsWith("light.") ? this._config.entity : undefined;
+        this.updateState();
+    }
+    set hass(hass) {
+        if (!hass || !this._entity || hass.states[this._entity] === this._stateObj)
+            return;
+        this._hass = hass;
+        this._stateObj = hass.states[this._entity];
+        this.updateState();
+    }
+    updateState() {
+        if (this._running === true)
+            return;
+        if (!this._sequenceObj || !this._entity || !this._stateObj) {
+            this._icon = this._config?.icon || "hass:alert-rhombus";
+            this._iconAnimation = "none";
+            this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+            this._name = this._config?.name || "Unknown";
+            return;
+        }
+        this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:help-circle";
+        this._iconAnimation = "none";
+        this._iconColor = "var(--sq-inactive-rgb)";
+        this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._entity;
+    }
+    render() {
+        const iconStyles = {
+            color: `rgb(${this._iconColor})`,
+            backgroundColor: `rgba(${this._iconColor}, var(--sq-icon-opacity))`,
+            animation: this._iconAnimation,
+        };
+        return x `
+            <div class="container" @click=${this.runRoutine}>
+                <div class="icon" style="${o(iconStyles)}" @click=${this.toggleEntity}>
+                    <ha-icon .icon=${this._icon}></ha-icon>
+                </div>
+                <div class="name">${this._name}</div>
+            </div>
+        `;
+    }
+    toggleEntity(e) {
+        e.stopPropagation();
+        if (!this._stateObj)
+            return;
+        this._hass.callService("light", "toggle", { entity_id: this._entity });
+    }
+    runRoutine(e) {
+        e.stopPropagation();
+        if (!this._config || !this._stateObj)
+            return;
+        this._running = true;
+        this._icon = "hass:rotate-right";
+        this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
+        this._iconAnimation = "spin 1.0s linear infinite";
+        this._hass.callService("script", "turn_on", {
+            entity_id: "script.system_color_light_sequence_selector",
+            entity: this._entity,
+            count: this._config.count,
+        });
+        setTimeout(() => {
+            this._running = false;
+            this.updateState();
+        }, 2000);
+    }
+    getCardSize() {
+        return 1;
+    }
+};
+__decorate([
+    r()
+], SequencerTile.prototype, "_config", void 0);
+__decorate([
+    r()
+], SequencerTile.prototype, "_stateObj", void 0);
+__decorate([
+    r()
+], SequencerTile.prototype, "_running", void 0);
+SequencerTile = __decorate([
+    t$1("smartqasa-sequencer-tile")
+], SequencerTile);
+window.customCards.push({
+    type: "smartqasa-sequence-tile",
+    name: "SmartQasa Light Sequencer Tile",
+    preview: true,
+    description: "A SmartQasa tile for controlling Light Sequence entities.",
 });
 
 let ShadeTile = class ShadeTile extends s {
