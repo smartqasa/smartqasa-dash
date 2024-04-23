@@ -7686,7 +7686,7 @@ let PoolLightTile = class PoolLightTile extends s {
         e.stopPropagation();
         if (!this._stateObj)
             return;
-        this._hass.callService("light", "toggle", { entity_id: this._entity });
+        this._hass.callService("homeassistant", "toggle", { entity_id: this._entity });
     }
     showColorList(e) {
         e.stopPropagation();
@@ -7697,6 +7697,7 @@ let PoolLightTile = class PoolLightTile extends s {
             entity: this._entity,
             sequence: key,
         }));
+        console.log(cards);
         const dialogConfig = {
             title: this._stateObj.attributes.friendly_name || this._stateObj.entity_id,
             timeout: 60000,

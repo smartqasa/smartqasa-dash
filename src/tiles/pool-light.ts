@@ -87,7 +87,7 @@ export class PoolLightTile extends LitElement {
         e.stopPropagation();
         if (!this._stateObj) return;
 
-        this._hass.callService("light", "toggle", { entity_id: this._entity });
+        this._hass.callService("homeassistant", "toggle", { entity_id: this._entity });
     }
 
     private showColorList(e: Event): void {
@@ -98,7 +98,7 @@ export class PoolLightTile extends LitElement {
             entity: this._entity,
             sequence: key,
         }));
-
+        console.log(cards);
         const dialogConfig = {
             title: this._stateObj.attributes.friendly_name || this._stateObj.entity_id,
             timeout: 60000,
