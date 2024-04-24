@@ -65,7 +65,6 @@ export class DialogTile extends LitElement {
         if (!this._dialogObj || !this._config) return;
 
         let dialogConfig = { ...this._dialogObj.data };
-
         window.browser_mod?.service("popup", dialogConfig);
     }
 
