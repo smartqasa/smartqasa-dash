@@ -66,8 +66,6 @@ export class RoutineChip extends LitElement {
         const containerStyle = {
             marginLeft: "0.7rem",
             gridTemplateAreas: this._name ? "'i t'" : "'i'",
-            gridColumnGap: this._name ? "0.7rem" : "0",
-            justifyContent: this._name ? "start" : "center",
         };
 
         const iconStyles = {

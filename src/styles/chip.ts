@@ -2,7 +2,7 @@ import { css } from "lit";
 
 export const chipBaseStyle = css`
     .container {
-        width: fit-content;
+        width: max-content;
         place-self: center;
         display: grid;
         grid-template-areas: "i";
@@ -10,6 +10,7 @@ export const chipBaseStyle = css`
         border: var(--sq-card-border);
         border-radius: var(--sq-chip-border-radius);
         background-color: var(--sq-card-background-color);
+        justify-content: center;
         transition: var(--sq-icon-transition, none);
         cursor: pointer;
     }
@@ -27,6 +28,7 @@ export const chipTextStyle = css`
     .container {
         grid-template-areas: "i t";
         grid-column-gap: 0.5rem;
+        justify-content: start;
     }
     .text {
         grid-area: t;

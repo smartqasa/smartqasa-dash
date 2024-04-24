@@ -1,13 +1,14 @@
-import { CSSResult, html, LitElement, TemplateResult } from "lit";
+import { CSSResultGroup, html, LitElement, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 import { dialogTable } from "../tables/dialogs";
 
-import { chipBaseStyle } from "../styles/chip";
+import { chipBaseStyle, chipTextStyle } from "../styles/chip";
 
 interface Config extends LovelaceCardConfig {
     dialog: string;
+    entity?: string;
 }
 
 @customElement("smartqasa-dialog-chip")
@@ -19,8 +20,9 @@ export class DialogChip extends LitElement {
     private _dialog?: string;
     private _entity?: string;
     private _icon?: string;
+    private _label?: string;
 
-    static styles: CSSResult = chipBaseStyle;
+    static styles: CSSResultGroup = [chipBaseStyle, chipTextStyle];
 
     setConfig(config: Config): void {
         this._config = { ...config };
@@ -47,11 +49,17 @@ export class DialogChip extends LitElement {
         )
             return html``;
 
+        const containerStyle = {
+            marginLeft: "0.7rem",
+            gridTemplateAreas: this._label ? "'i t'" : "'i'",
+        };
+
         return html`
             <div class="container" style="margin-left: 0.7rem;" @click=${this.showDialog}>
                 <div class="icon" style="color: rgb(var(--sq-rgb-orange));">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
+                ${this._label ? html`<div class="text">${this._label}</div>` : null}
             </div>
         `;
     }
