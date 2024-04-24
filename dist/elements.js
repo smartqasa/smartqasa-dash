@@ -498,7 +498,7 @@ let DialogChip = class DialogChip extends s {
             return x ``;
         const containerStyle = {
             "margin-left": "0.7rem",
-            "grid-template-areas": this._label ? "i t" : "i",
+            "grid-template-areas": this._label ? '"i t"' : '"i"',
         };
         return x `
             <div class="container" style="${o(containerStyle)}" @click=${this.showDialog}>
@@ -575,7 +575,7 @@ let MotionChip = class MotionChip extends s {
             return x ``;
         const containerStyle = {
             "margin-left": "0.7rem",
-            "grid-template-areas": this._name ? "i t" : "i",
+            "grid-template-areas": this._name ? '"i t"' : '"i"',
         };
         const iconStyles = {
             color: `rgb(${this._iconColor})`,
@@ -731,9 +731,8 @@ let RoutineChip = class RoutineChip extends s {
         if (!this._entity)
             return x ``;
         const containerStyle = {
-            marginLeft: "0.7rem",
-            gridTemplateAreas: this._name ? "'i t'" : "'i'",
-            gridGap: this._name ? "0.5rem" : "0",
+            "margin-left": "0.7rem",
+            "grid-template-areas": this._name ? '"i t"' : '"i"',
         };
         const iconStyles = {
             color: `rgb(${this._iconColor})`,
