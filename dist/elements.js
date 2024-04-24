@@ -574,7 +574,7 @@ let MotionChip = class MotionChip extends s {
         if (!this._entity)
             return x ``;
         const containerStyle = {
-            "margin-left": "0.7rem",
+            "margin-right": "0.7rem",
             "grid-template-areas": this._name ? '"i t"' : '"i"',
         };
         const iconStyles = {
@@ -8315,7 +8315,7 @@ window.customCards.push({
     description: "A SmartQasa tile for controlling a thermostat climate entity.",
 });
 
-var version = "1.1.85";
+var version = "1.1.87";
 
 window.smartqasa = window.smartqasa || {};
 window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();
