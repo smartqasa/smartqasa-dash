@@ -1,5 +1,3 @@
-var version = "1.1.80";
-
 /******************************************************************************
 Copyright (c) Microsoft Corporation.
 
@@ -674,6 +672,114 @@ window.customCards.push({
     name: "SmartQasa Navigate Chip",
     preview: true,
     description: "A SmartQasa chip for navigating to a previous/next area.",
+});
+
+let RoutineChip = class RoutineChip extends s {
+    constructor() {
+        super(...arguments);
+        this._running = false;
+        this._icon = "hass:help-rhombus";
+        this._iconAnimation = "none";
+        this._iconColor = "var(--sq-inactive-rgb)";
+    }
+    static { this.styles = [chipBaseStyle, chipTextStyle]; }
+    setConfig(config) {
+        this._config = { ...config };
+        this._entity = ["automation", "scene", "script"].includes(this._config.entity?.split(".")[0])
+            ? this._config.entity
+            : undefined;
+        this.updateState();
+    }
+    set hass(hass) {
+        if (!hass || !this._entity || hass.states[this._entity] === this._stateObj)
+            return;
+        this._hass = hass;
+        this._stateObj = hass.states[this._entity];
+        this.updateState();
+    }
+    updateState() {
+        if (this._running === true)
+            return;
+        if (!this._entity || !this._stateObj) {
+            this._icon = this._config?.icon || "hass:alert-rhombus";
+            this._iconAnimation = "none";
+            this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+            this._name = this._config?.name || "Unknown";
+            return;
+        }
+        this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:help-circle";
+        this._iconAnimation = "none";
+        this._iconColor = this._config?.color || "var(--sq-inactive-rgb)";
+        this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
+    }
+    render() {
+        if (!this._entity)
+            return x ``;
+        const containerStyle = {
+            marginRight: "0.7rem",
+            gridTemplateAreas: this._name ? "'i t'" : "'i'",
+            gridColumnGap: this._name ? "10px" : "0",
+            justifyContent: this._name ? "start" : "center",
+        };
+        const iconStyles = {
+            color: `rgb(${this._iconColor})`,
+            animation: this._iconAnimation,
+        };
+        return x `
+            <div class="container" style="${o(containerStyle)}" @click=${this.runRoutine}>
+                <div class="icon" style="${o(iconStyles)}">
+                    <ha-icon .icon=${this._icon}></ha-icon>
+                </div>
+                ${this._name ? x `<div class="text">${this._name}</div>` : null}
+            </div>
+        `;
+    }
+    runRoutine(e) {
+        e.stopPropagation();
+        if (!this._stateObj)
+            return;
+        this._running = true;
+        this._icon = "hass:rotate-right";
+        this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
+        this._iconAnimation = "spin 1.0s linear infinite";
+        const domain = this._stateObj.entity_id.split(".")[0];
+        switch (domain) {
+            case "script":
+                this._hass.callService("script", "turn_on", { entity_id: this._entity });
+                break;
+            case "scene":
+                this._hass.callService("scene", "turn_on", { entity_id: this._entity });
+                break;
+            case "automation":
+                this._hass.callService("automation", "trigger", { entity_id: this._entity });
+                break;
+            default:
+                console.error("Unsupported entity domain:", domain);
+                return;
+        }
+        setTimeout(() => {
+            this._running = false;
+            this.updateState();
+        }, 2000);
+    }
+};
+__decorate([
+    r()
+], RoutineChip.prototype, "_config", void 0);
+__decorate([
+    r()
+], RoutineChip.prototype, "_stateObj", void 0);
+__decorate([
+    r()
+], RoutineChip.prototype, "_running", void 0);
+RoutineChip = __decorate([
+    t$1("smartqasa-routine-chip")
+], RoutineChip);
+window.customCards.push({
+    type: "smartqasa-routine-chip",
+    name: "SmartQasa Routine Chip",
+    preview: true,
+    description: "A SmartQasa chip for triggering an automation, scene, or script entity.",
 });
 
 function selectOptionDialog(config, stateObj) {
@@ -8196,6 +8302,8 @@ window.customCards.push({
     preview: true,
     description: "A SmartQasa tile for controlling a thermostat climate entity.",
 });
+
+var version = "1.1.80";
 
 window.smartqasa = window.smartqasa || {};
 window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();
