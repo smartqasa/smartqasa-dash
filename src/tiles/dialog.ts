@@ -70,10 +70,9 @@ export class DialogTile extends LitElement {
         if (menuTab !== undefined && menuTab >= 0 && menuTab <= 3) {
             try {
                 const dismissData = await menuConfig(menuTab);
-                console.log("Menu configuration loaded", dismissData);
                 dialogConfig.dismiss_action = {
                     service: "browser_mod.popup",
-                    data: dismissData,
+                    /*data: dismissData,*/
                 };
             } catch (error) {
                 console.error("Error loading menu configuration", error);
