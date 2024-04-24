@@ -891,10 +891,8 @@ function moreInfoDialog(config, stateObj) {
             entity: stateObj.entity_id,
         },
     };
-    console.log("Pre POPUP dialogConfig", dialogConfig);
     if (config.dialog_title) {
         const dismissData = listDialogConfig(config.dialog_title, config.filter_type, config.filter_value, config.tile_type);
-        console.log("dismissData", dismissData);
         dialogConfig.dismiss_action = {
             service: "browser_mod.popup",
             data: dismissData,
@@ -6397,19 +6395,6 @@ let DialogTile = class DialogTile extends s {
         if (!this._dialogObj || !this._config)
             return;
         let dialogConfig = { ...this._dialogObj.data };
-        const menuTab = this._config.menu_tab;
-        if (menuTab !== undefined && menuTab >= 0 && menuTab <= 3) {
-            try {
-                const dismissData = await menuConfig(menuTab);
-                dialogConfig.dismiss_action = {
-                    service: "browser_mod.popup",
-                    data: dismissData,
-                };
-            }
-            catch (error) {
-                console.error("Error loading menu configuration", error);
-            }
-        }
         window.browser_mod?.service("popup", dialogConfig);
     }
     getCardSize() {

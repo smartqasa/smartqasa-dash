@@ -11,7 +11,6 @@ export function moreInfoDialog(config: any, stateObj: any) {
             entity: stateObj.entity_id,
         },
     };
-    console.log("Pre POPUP dialogConfig", dialogConfig);
 
     if (config.dialog_title) {
         const dismissData = listDialogConfig(
@@ -20,7 +19,6 @@ export function moreInfoDialog(config: any, stateObj: any) {
             config.filter_value,
             config.tile_type
         );
-        console.log("dismissData", dismissData);
 
         dialogConfig.dismiss_action = {
             service: "browser_mod.popup",
@@ -29,5 +27,6 @@ export function moreInfoDialog(config: any, stateObj: any) {
     }
 
     window.browser_mod?.service("popup", dialogConfig);
+
     console.log("Post POPUP dialogConfig", dialogConfig);
 }
