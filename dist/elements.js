@@ -890,7 +890,7 @@ function moreInfoDialog(config, stateObj) {
             type: "custom:smartqasa-more-info-dialog",
             entity: stateObj.entity_id,
         },
-        ...(config.dialogTitle && {
+        ...(config.dialog_title && {
             dismiss_action: {
                 service: "browser_mod.popup",
                 data: {
@@ -899,6 +899,7 @@ function moreInfoDialog(config, stateObj) {
             },
         }),
     };
+    console.log("moreInfoDialog", dialogConfig);
     window.browser_mod?.service("popup", dialogConfig);
 }
 
@@ -7008,7 +7009,6 @@ let LockTile = class LockTile extends s {
     }
     showMoreInfo(e) {
         e.stopPropagation();
-        console.log("showMoreInfo", this._config, this._stateObj);
         moreInfoDialog(this._config, this._stateObj);
     }
     getCardSize() {
