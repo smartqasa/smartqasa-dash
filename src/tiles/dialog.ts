@@ -72,7 +72,7 @@ export class DialogTile extends LitElement {
                 const dismissData = await menuConfig(menuTab);
                 dialogConfig.dismiss_action = {
                     service: "browser_mod.popup",
-                    /*data: dismissData,*/
+                    data: dismissData,
                 };
             } catch (error) {
                 console.error("Error loading menu configuration", error);

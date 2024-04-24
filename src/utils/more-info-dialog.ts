@@ -14,7 +14,7 @@ export function moreInfoDialog(config: any, stateObj: any) {
             dismiss_action: {
                 service: "browser_mod.popup",
                 data: {
-                    ...listDialogConfig(config.dialogTitle, config.filterType, config.filterValue, config.tileType),
+                    ...listDialogConfig(config.dialog_title, config.filter_type, config.filter_value, config.tile_type),
                 },
             },
         }),

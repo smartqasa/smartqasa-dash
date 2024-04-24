@@ -160,10 +160,10 @@ const listDialogConfig = (dialogTitle, filterType, filterValue, tileType) => {
                         },
                         options: {
                             type: `custom:smartqasa-${tileType}-tile`,
-                            dialogTitle: dialogTitle,
-                            filterType: filterType,
-                            filterValue: filterValue,
-                            tileType: tileType,
+                            dialog_title: dialogTitle,
+                            filter_type: filterType,
+                            filter_value: filterValue,
+                            tile_type: tileType,
                         },
                     },
                 ],
@@ -894,7 +894,7 @@ function moreInfoDialog(config, stateObj) {
             dismiss_action: {
                 service: "browser_mod.popup",
                 data: {
-                    ...listDialogConfig(config.dialogTitle, config.filterType, config.filterValue, config.tileType),
+                    ...listDialogConfig(config.dialog_title, config.filter_type, config.filter_value, config.tile_type),
                 },
             },
         }),
@@ -6401,7 +6401,7 @@ let DialogTile = class DialogTile extends s {
                 const dismissData = await menuConfig(menuTab);
                 dialogConfig.dismiss_action = {
                     service: "browser_mod.popup",
-                    /*data: dismissData,*/
+                    data: dismissData,
                 };
             }
             catch (error) {
