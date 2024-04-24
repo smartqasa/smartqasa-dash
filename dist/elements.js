@@ -891,15 +891,17 @@ function moreInfoDialog(config, stateObj) {
             entity: stateObj.entity_id,
         },
     };
+    console.log("Pre POPUP dialogConfig", dialogConfig);
     if (config.dialog_title) {
         const dismissData = listDialogConfig(config.dialog_title, config.filter_type, config.filter_value, config.tile_type);
+        console.log("dismissData", dismissData);
         dialogConfig.dismiss_action = {
             service: "browser_mod.popup",
             data: dismissData,
         };
     }
-    console.log("moreInfoDialog", dialogConfig);
     window.browser_mod?.service("popup", dialogConfig);
+    console.log("Post POPUP dialogConfig", dialogConfig);
 }
 
 let ThermostatChip$1 = class ThermostatChip extends s {
