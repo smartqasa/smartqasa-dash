@@ -447,6 +447,16 @@ const chipDoubleStyle = i$5 `
         color: rgb(var(--sq-primary-text-rgb));
     }
 `;
+const chipIconSpinStyle = i$5 `
+    @keyframes spin {
+        from {
+            transform: rotate(0deg);
+        }
+        to {
+            transform: rotate(360deg);
+        }
+    }
+`;
 
 let DialogChip = class DialogChip extends s {
     static { this.styles = chipBaseStyle; }
@@ -682,7 +692,7 @@ let RoutineChip = class RoutineChip extends s {
         this._iconAnimation = "none";
         this._iconColor = "var(--sq-inactive-rgb)";
     }
-    static { this.styles = [chipBaseStyle, chipTextStyle]; }
+    static { this.styles = [chipBaseStyle, chipTextStyle, chipIconSpinStyle]; }
     setConfig(config) {
         this._config = { ...config };
         this._entity = ["automation", "scene", "script"].includes(this._config.entity?.split(".")[0])
@@ -704,13 +714,13 @@ let RoutineChip = class RoutineChip extends s {
             this._icon = this._config?.icon || "hass:alert-rhombus";
             this._iconAnimation = "none";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            this._name = this._config?.name || "Unknown";
+            this._name = this._config?.name || "";
             return;
         }
         this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:help-circle";
         this._iconAnimation = "none";
-        this._iconColor = this._config?.color || "var(--sq-inactive-rgb)";
-        this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
+        this._iconColor = this._config?.color || "var(--sq-primary-text-rgb)";
+        this._name = this._config?.name || "";
     }
     render() {
         if (!this._entity)
@@ -740,7 +750,6 @@ let RoutineChip = class RoutineChip extends s {
             return;
         this._running = true;
         this._icon = "hass:rotate-right";
-        this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
         this._iconAnimation = "spin 1.0s linear infinite";
         const domain = this._stateObj.entity_id.split(".")[0];
         switch (domain) {

@@ -4,7 +4,7 @@ import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 
-import { chipBaseStyle, chipTextStyle } from "../styles/chip";
+import { chipBaseStyle, chipTextStyle, chipIconSpinStyle } from "../styles/chip";
 
 interface Config extends LovelaceCardConfig {
     entity: string;
@@ -26,7 +26,7 @@ export class RoutineChip extends LitElement {
     private _iconColor: string = "var(--sq-inactive-rgb)";
     private _name?: string;
 
-    static styles: CSSResultGroup = [chipBaseStyle, chipTextStyle];
+    static styles: CSSResultGroup = [chipBaseStyle, chipTextStyle, chipIconSpinStyle];
 
     setConfig(config: Config): void {
         this._config = { ...config };
@@ -50,14 +50,14 @@ export class RoutineChip extends LitElement {
             this._icon = this._config?.icon || "hass:alert-rhombus";
             this._iconAnimation = "none";
             this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            this._name = this._config?.name || "Unknown";
+            this._name = this._config?.name || "";
             return;
         }
 
         this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:help-circle";
         this._iconAnimation = "none";
-        this._iconColor = this._config?.color || "var(--sq-inactive-rgb)";
-        this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
+        this._iconColor = this._config?.color || "var(--sq-primary-text-rgb)";
+        this._name = this._config?.name || "";
     }
 
     protected render(): TemplateResult {
@@ -91,7 +91,6 @@ export class RoutineChip extends LitElement {
 
         this._running = true;
         this._icon = "hass:rotate-right";
-        this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
         this._iconAnimation = "spin 1.0s linear infinite";
 
         const domain = this._stateObj.entity_id.split(".")[0];

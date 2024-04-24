@@ -77,3 +77,14 @@ export const chipDoubleStyle = css`
         color: rgb(var(--sq-primary-text-rgb));
     }
 `;
+
+export const chipIconSpinStyle = css`
+    @keyframes spin {
+        from {
+            transform: rotate(0deg);
+        }
+        to {
+            transform: rotate(360deg);
+        }
+    }
+`;
