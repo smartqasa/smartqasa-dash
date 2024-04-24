@@ -82,7 +82,7 @@ export class GarageTile extends LitElement {
             (state === "open" && this._stateObj.attributes.current_position
                 ? " - " + this._hass.formatEntityAttributeValue(this._stateObj, "current_position")
                 : "");
-        this._name = this._config?.icon || this._stateObj.attributes.friendly_name || "Unknown";
+        this._name = this._config?.name || this._stateObj.attributes.friendly_name || "Unknown";
     }
 
     protected render(): TemplateResult {

@@ -6601,7 +6601,7 @@ let GarageTile = class GarageTile extends s {
                 (state === "open" && this._stateObj.attributes.current_position
                     ? " - " + this._hass.formatEntityAttributeValue(this._stateObj, "current_position")
                     : "");
-        this._name = this._config?.icon || this._stateObj.attributes.friendly_name || "Unknown";
+        this._name = this._config?.name || this._stateObj.attributes.friendly_name || "Unknown";
     }
     render() {
         const iconStyles = {
@@ -8311,7 +8311,7 @@ window.customCards.push({
     description: "A SmartQasa tile for controlling a thermostat climate entity.",
 });
 
-var version = "1.1.80";
+var version = "1.1.81";
 
 window.smartqasa = window.smartqasa || {};
 window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();
