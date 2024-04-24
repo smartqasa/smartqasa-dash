@@ -726,7 +726,7 @@ let RoutineChip = class RoutineChip extends s {
         if (!this._entity)
             return x ``;
         const containerStyle = {
-            marginRight: "0.7rem",
+            marginLeft: "0.7rem",
             gridTemplateAreas: this._name ? "'i t'" : "'i'",
             gridColumnGap: this._name ? "10px" : "0",
             justifyContent: this._name ? "start" : "center",
