@@ -6,7 +6,6 @@ export const chipBaseStyle = css`
         place-self: center;
         display: grid;
         grid-template-areas: "i";
-        margin-right: 0.7rem;
         padding: 1rem;
         border: var(--sq-card-border);
         border-radius: var(--sq-chip-border-radius);

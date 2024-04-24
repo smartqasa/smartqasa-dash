@@ -378,7 +378,6 @@ const chipBaseStyle = i$5 `
         place-self: center;
         display: grid;
         grid-template-areas: "i";
-        margin-right: 0.7rem;
         padding: 1rem;
         border: var(--sq-card-border);
         border-radius: var(--sq-chip-border-radius);
@@ -728,7 +727,7 @@ let RoutineChip = class RoutineChip extends s {
         const containerStyle = {
             marginLeft: "0.7rem",
             gridTemplateAreas: this._name ? "'i t'" : "'i'",
-            gridColumnGap: this._name ? "10px" : "0",
+            gridColumnGap: this._name ? "0.7rem" : "0",
             justifyContent: this._name ? "start" : "center",
         };
         const iconStyles = {
