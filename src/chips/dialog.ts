@@ -1,5 +1,6 @@
 import { CSSResultGroup, html, LitElement, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
+import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 import { dialogTable } from "../tables/dialogs";
@@ -9,6 +10,7 @@ import { chipBaseStyle, chipTextStyle } from "../styles/chip";
 interface Config extends LovelaceCardConfig {
     dialog: string;
     entity?: string;
+    label?: string;
 }
 
 @customElement("smartqasa-dialog-chip")
@@ -30,6 +32,7 @@ export class DialogChip extends LitElement {
         this._dialogObj = this._dialog ? dialogTable[this._dialog] : undefined;
         this._entity = this._dialogObj.entity;
         this._icon = this._dialogObj.icon;
+        this._label = this._config.label || "";
     }
 
     set hass(hass: HomeAssistant) {
@@ -50,13 +53,12 @@ export class DialogChip extends LitElement {
             return html``;
 
         const containerStyle = {
-            marginLeft: "0.7rem",
-            gridTemplateAreas: this._label ? "'i t'" : "'i'",
-            gridGap: this._label ? "0.5rem" : "0",
+            "margin-left": "0.7rem",
+            "grid-template-areas": this._label ? "i t" : "i",
         };
 
         return html`
-            <div class="container" style="margin-left: 0.7rem;" @click=${this.showDialog}>
+            <div class="container" style="${styleMap(containerStyle)}" @click=${this.showDialog}>
                 <div class="icon" style="color: rgb(var(--sq-rgb-orange));">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>

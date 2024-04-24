@@ -58,7 +58,7 @@ export class ThermostatChip extends LitElement {
         if (!this._entity) return html``;
 
         const containerStyle = {
-            marginRight: "0.7rem",
+            "margin-right": "0.7rem",
         };
 
         return html`

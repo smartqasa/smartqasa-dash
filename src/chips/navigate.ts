@@ -39,7 +39,7 @@ export class NavigateChip extends LitElement {
             return html``;
         }
         const containerStyle = {
-            marginRight: "0.7rem",
+            "margin-right": "0.7rem",
         };
         const iconPrev = "hass:menu-left";
         const iconNext = "hass:menu-right";

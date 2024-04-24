@@ -72,6 +72,19 @@ const t$1=t=>(e,o)=>{void 0!==o?o.addInitializer((()=>{customElements.define(t,e
  * SPDX-License-Identifier: BSD-3-Clause
  */function r(r){return n$1({...r,state:!0,attribute:!1})}
 
+/**
+ * @license
+ * Copyright 2017 Google LLC
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+const t={ATTRIBUTE:1,CHILD:2,PROPERTY:3,BOOLEAN_ATTRIBUTE:4,EVENT:5,ELEMENT:6},e=t=>(...e)=>({_$litDirective$:t,values:e});let i$2 = class i{constructor(t){}get _$AU(){return this._$AM._$AU}_$AT(t,e,i){this._$Ct=t,this._$AM=e,this._$Ci=i;}_$AS(t,e){return this.update(t,e)}update(t,e){return this.render(...e)}};
+
+/**
+ * @license
+ * Copyright 2018 Google LLC
+ * SPDX-License-Identifier: BSD-3-Clause
+ */const n="important",i$1=" !"+n,o=e(class extends i$2{constructor(t$1){if(super(t$1),t$1.type!==t.ATTRIBUTE||"style"!==t$1.name||t$1.strings?.length>2)throw Error("The `styleMap` directive must be used in the `style` attribute and must be the only part in the attribute.")}render(t){return Object.keys(t).reduce(((e,r)=>{const s=t[r];return null==s?e:e+`${r=r.includes("-")?r:r.replace(/(?:^(webkit|moz|ms|o)|)(?=[A-Z])/g,"-$&").toLowerCase()}:${s};`}),"")}update(e,[r]){const{style:s}=e.element;if(void 0===this.ft)return this.ft=new Set(Object.keys(r)),this.render(r);for(const t of this.ft)null==r[t]&&(this.ft.delete(t),t.includes("-")?s.removeProperty(t):s[t]=null);for(const t in r){const e=r[t];if(null!=e){this.ft.add(t);const r="string"==typeof e&&e.endsWith(i$1);t.includes("-")||r?s.setProperty(t,r?e.slice(0,-11):e,r?n:""):s[t]=e;}}return w}});
+
 const deviceType = window.screen.width < 600 ? "phone" : "tablet";
 const heaterColors = {
     electric: "var(--sq-climate-heat-rgb, 250, 67, 54)",
@@ -467,6 +480,7 @@ let DialogChip = class DialogChip extends s {
         this._dialogObj = this._dialog ? dialogTable[this._dialog] : undefined;
         this._entity = this._dialogObj.entity;
         this._icon = this._dialogObj.icon;
+        this._label = this._config.label || "";
     }
     set hass(hass) {
         if (!hass || !this._entity || hass.states[this._entity] === this._stateObj)
@@ -482,13 +496,12 @@ let DialogChip = class DialogChip extends s {
             (this._dialog === "sensors_doors" && state === "off") ||
             (this._dialog === "sensors_windows" && state === "off"))
             return x ``;
-        ({
-            marginLeft: "0.7rem",
-            gridTemplateAreas: this._label ? "'i t'" : "'i'",
-            gridGap: this._label ? "0.5rem" : "0",
-        });
+        const containerStyle = {
+            "margin-left": "0.7rem",
+            "grid-template-areas": this._label ? "i t" : "i",
+        };
         return x `
-            <div class="container" style="margin-left: 0.7rem;" @click=${this.showDialog}>
+            <div class="container" style="${o(containerStyle)}" @click=${this.showDialog}>
                 <div class="icon" style="color: rgb(var(--sq-rgb-orange));">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
@@ -520,19 +533,6 @@ window.customCards.push({
     preview: true,
     description: "A SmartQasa chip for dialog.",
 });
-
-/**
- * @license
- * Copyright 2017 Google LLC
- * SPDX-License-Identifier: BSD-3-Clause
- */
-const t={ATTRIBUTE:1,CHILD:2,PROPERTY:3,BOOLEAN_ATTRIBUTE:4,EVENT:5,ELEMENT:6},e=t=>(...e)=>({_$litDirective$:t,values:e});let i$2 = class i{constructor(t){}get _$AU(){return this._$AM._$AU}_$AT(t,e,i){this._$Ct=t,this._$AM=e,this._$Ci=i;}_$AS(t,e){return this.update(t,e)}update(t,e){return this.render(...e)}};
-
-/**
- * @license
- * Copyright 2018 Google LLC
- * SPDX-License-Identifier: BSD-3-Clause
- */const n="important",i$1=" !"+n,o=e(class extends i$2{constructor(t$1){if(super(t$1),t$1.type!==t.ATTRIBUTE||"style"!==t$1.name||t$1.strings?.length>2)throw Error("The `styleMap` directive must be used in the `style` attribute and must be the only part in the attribute.")}render(t){return Object.keys(t).reduce(((e,r)=>{const s=t[r];return null==s?e:e+`${r=r.includes("-")?r:r.replace(/(?:^(webkit|moz|ms|o)|)(?=[A-Z])/g,"-$&").toLowerCase()}:${s};`}),"")}update(e,[r]){const{style:s}=e.element;if(void 0===this.ft)return this.ft=new Set(Object.keys(r)),this.render(r);for(const t of this.ft)null==r[t]&&(this.ft.delete(t),t.includes("-")?s.removeProperty(t):s[t]=null);for(const t in r){const e=r[t];if(null!=e){this.ft.add(t);const r="string"==typeof e&&e.endsWith(i$1);t.includes("-")||r?s.setProperty(t,r?e.slice(0,-11):e,r?n:""):s[t]=e;}}return w}});
 
 let MotionChip = class MotionChip extends s {
     static { this.styles = [chipBaseStyle, chipTextStyle]; }
@@ -574,9 +574,8 @@ let MotionChip = class MotionChip extends s {
         if (!this._entity)
             return x ``;
         const containerStyle = {
-            marginRight: "0.7rem",
-            gridTemplateAreas: this._name ? "'i t'" : "'i'",
-            gridGap: this._name ? "0.5rem" : "0",
+            "margin-left": "0.7rem",
+            "grid-template-areas": this._name ? "i t" : "i",
         };
         const iconStyles = {
             color: `rgb(${this._iconColor})`,
@@ -631,7 +630,7 @@ let NavigateChip = class NavigateChip extends s {
             return x ``;
         }
         const containerStyle = {
-            marginRight: "0.7rem",
+            "margin-right": "0.7rem",
         };
         const iconPrev = "hass:menu-left";
         const iconNext = "hass:menu-right";
@@ -851,7 +850,7 @@ let SelectChip = class SelectChip extends s {
         if (!this._entity)
             return x ``;
         const containerStyle = {
-            marginLeft: "0.7rem",
+            "margin-left": "0.7rem",
         };
         return x `
             <div class="container" style="${o(containerStyle)}" @click=${this.showOptions}>
@@ -943,7 +942,7 @@ let ThermostatChip$1 = class ThermostatChip extends s {
         if (!this._entity)
             return x ``;
         const containerStyle = {
-            marginRight: "0.7rem",
+            "margin-right": "0.7rem",
         };
         return x `
             <div class="container" style="${o(containerStyle)}" @click=${this.showMoreInfo}>
@@ -1003,7 +1002,7 @@ let ThermostatChip = class ThermostatChip extends s {
         if (!this._entity)
             return x ``;
         const containerStyle = {
-            marginLeft: "0.7rem",
+            "margin-left": "0.7rem",
         };
         return x `
             <div class="container" style="${o(containerStyle)}" @click=${this.showDialog}>
@@ -8317,7 +8316,7 @@ window.customCards.push({
     description: "A SmartQasa tile for controlling a thermostat climate entity.",
 });
 
-var version = "1.1.84";
+var version = "1.1.85";
 
 window.smartqasa = window.smartqasa || {};
 window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();
