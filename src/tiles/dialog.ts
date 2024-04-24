@@ -65,6 +65,20 @@ export class DialogTile extends LitElement {
         if (!this._dialogObj || !this._config) return;
 
         let dialogConfig = { ...this._dialogObj.data };
+
+        const menuTab = this._config.menu_tab;
+        if (menuTab !== undefined && menuTab >= 0 && menuTab <= 3) {
+            try {
+                const dismissData = await menuConfig(menuTab);
+                dialogConfig.dismiss_action = {
+                    service: "browser_mod.popup",
+                    data: dismissData,
+                };
+            } catch (error) {
+                console.error("Error loading menu configuration", error);
+            }
+        }
+
         window.browser_mod?.service("popup", dialogConfig);
     }
 

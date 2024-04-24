@@ -36,5 +36,6 @@ export const listDialogConfig: any = (
                 ],
             },
         },
+        dismiss_action: {},
     };
 };

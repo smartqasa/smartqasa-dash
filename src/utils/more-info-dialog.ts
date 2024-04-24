@@ -10,6 +10,7 @@ export function moreInfoDialog(config: any, stateObj: any) {
             type: "custom:smartqasa-more-info-dialog",
             entity: stateObj.entity_id,
         },
+        dismiss_action: {},
     };
 
     if (config.dialog_title) {
@@ -27,6 +28,4 @@ export function moreInfoDialog(config: any, stateObj: any) {
     }
 
     window.browser_mod?.service("popup", dialogConfig);
-
-    console.log("Post POPUP dialogConfig", dialogConfig);
 }
