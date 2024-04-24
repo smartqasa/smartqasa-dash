@@ -66,6 +66,7 @@ export class MotionChip extends LitElement {
         const containerStyle = {
             marginRight: "0.7rem",
             gridTemplateAreas: this._name ? "'i t'" : "'i'",
+            gridGap: this._name ? "0.5rem" : "0",
         };
 
         const iconStyles = {

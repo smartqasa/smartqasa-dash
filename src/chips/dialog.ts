@@ -52,6 +52,7 @@ export class DialogChip extends LitElement {
         const containerStyle = {
             marginLeft: "0.7rem",
             gridTemplateAreas: this._label ? "'i t'" : "'i'",
+            gridGap: this._label ? "0.5rem" : "0",
         };
 
         return html`

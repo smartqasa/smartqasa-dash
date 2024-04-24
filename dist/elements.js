@@ -485,6 +485,7 @@ let DialogChip = class DialogChip extends s {
         ({
             marginLeft: "0.7rem",
             gridTemplateAreas: this._label ? "'i t'" : "'i'",
+            gridGap: this._label ? "0.5rem" : "0",
         });
         return x `
             <div class="container" style="margin-left: 0.7rem;" @click=${this.showDialog}>
@@ -575,6 +576,7 @@ let MotionChip = class MotionChip extends s {
         const containerStyle = {
             marginRight: "0.7rem",
             gridTemplateAreas: this._name ? "'i t'" : "'i'",
+            gridGap: this._name ? "0.5rem" : "0",
         };
         const iconStyles = {
             color: `rgb(${this._iconColor})`,
@@ -732,6 +734,7 @@ let RoutineChip = class RoutineChip extends s {
         const containerStyle = {
             marginLeft: "0.7rem",
             gridTemplateAreas: this._name ? "'i t'" : "'i'",
+            gridGap: this._name ? "0.5rem" : "0",
         };
         const iconStyles = {
             color: `rgb(${this._iconColor})`,
@@ -8314,7 +8317,7 @@ window.customCards.push({
     description: "A SmartQasa tile for controlling a thermostat climate entity.",
 });
 
-var version = "1.1.81";
+var version = "1.1.84";
 
 window.smartqasa = window.smartqasa || {};
 window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();
