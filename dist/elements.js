@@ -374,7 +374,7 @@ const dialogTable = {
 
 const chipBaseStyle = i$5 `
     .container {
-        width: fit-content;
+        width: max-content;
         place-self: center;
         display: grid;
         grid-template-areas: "i";
@@ -382,6 +382,7 @@ const chipBaseStyle = i$5 `
         border: var(--sq-card-border);
         border-radius: var(--sq-chip-border-radius);
         background-color: var(--sq-card-background-color);
+        justify-content: center;
         transition: var(--sq-icon-transition, none);
         cursor: pointer;
     }
@@ -398,6 +399,7 @@ const chipTextStyle = i$5 `
     .container {
         grid-template-areas: "i t";
         grid-column-gap: 0.5rem;
+        justify-content: start;
     }
     .text {
         grid-area: t;
@@ -458,7 +460,7 @@ const chipIconSpinStyle = i$5 `
 `;
 
 let DialogChip = class DialogChip extends s {
-    static { this.styles = chipBaseStyle; }
+    static { this.styles = [chipBaseStyle, chipTextStyle]; }
     setConfig(config) {
         this._config = { ...config };
         this._dialog = this._config.dialog;
@@ -480,11 +482,16 @@ let DialogChip = class DialogChip extends s {
             (this._dialog === "sensors_doors" && state === "off") ||
             (this._dialog === "sensors_windows" && state === "off"))
             return x ``;
+        ({
+            marginLeft: "0.7rem",
+            gridTemplateAreas: this._label ? "'i t'" : "'i'",
+        });
         return x `
             <div class="container" style="margin-left: 0.7rem;" @click=${this.showDialog}>
                 <div class="icon" style="color: rgb(var(--sq-rgb-orange));">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
+                ${this._label ? x `<div class="text">${this._label}</div>` : null}
             </div>
         `;
     }
@@ -568,8 +575,6 @@ let MotionChip = class MotionChip extends s {
         const containerStyle = {
             marginRight: "0.7rem",
             gridTemplateAreas: this._name ? "'i t'" : "'i'",
-            gridColumnGap: this._name ? "10px" : "0",
-            justifyContent: this._name ? "start" : "center",
         };
         const iconStyles = {
             color: `rgb(${this._iconColor})`,
@@ -727,8 +732,6 @@ let RoutineChip = class RoutineChip extends s {
         const containerStyle = {
             marginLeft: "0.7rem",
             gridTemplateAreas: this._name ? "'i t'" : "'i'",
-            gridColumnGap: this._name ? "0.7rem" : "0",
-            justifyContent: this._name ? "start" : "center",
         };
         const iconStyles = {
             color: `rgb(${this._iconColor})`,
