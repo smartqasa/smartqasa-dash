@@ -10,7 +10,7 @@ interface DialogTable {
     };
 }
 
-const dialogTable: DialogTable = {
+export const dialogTable: DialogTable = {
     clean_screen: {
         icon: "hass:spray-bottle",
         name: "Clean Screen",
@@ -234,5 +234,3 @@ const dialogTable: DialogTable = {
         },
     },
 };
-
-export default dialogTable;

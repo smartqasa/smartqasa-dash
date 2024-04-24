@@ -1,5 +1,3 @@
-import { version } from "../package.json";
-
 declare global {
     interface Window {
         browser_mod?: {
@@ -10,7 +8,6 @@ declare global {
             startApplication: (packageName: string) => void;
         };
         smartqasa: {
-            deviceType?: "phone" | "tablet";
             homePath?: string;
         };
     }
@@ -25,6 +22,7 @@ window.customCards = window.customCards ?? [];
 import "./chips/dialog";
 import "./chips/motion";
 import "./chips/navigate";
+import "./chips/routine";
 import "./chips/select";
 import "./chips/thermostat";
 import "./chips/weather";
@@ -60,4 +58,5 @@ import "./tiles/switch";
 import "./tiles/theme";
 import "./tiles/thermostat";
 
+import { version } from "../package.json";
 console.info(`%c SmartQasa ⏏ ${version} `, "background-color: #0000ff; color: #ffffff; font-weight: 700;");

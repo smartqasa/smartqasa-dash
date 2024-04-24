@@ -1,7 +1,7 @@
 import { CSSResult, LitElement, html, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { LovelaceCardConfig } from "custom-card-helpers";
-import dialogTable from "../tables/dialogs";
+import { dialogTable } from "../tables/dialogs";
 import { menuConfig } from "../misc/menu-config";
 
 import { tileBaseStyle } from "../styles/tile";

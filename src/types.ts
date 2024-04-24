@@ -7,7 +7,6 @@ declare global {
     }
 }
 
-// TODO Add your configuration elements here for type-checking
 export interface BoilerplateCardConfig extends LovelaceCardConfig {
     type: string;
     name?: string;
