@@ -128,6 +128,7 @@ export class LockTile extends LitElement {
 
     private showMoreInfo(e: Event): void {
         e.stopPropagation();
+        console.log("showMoreInfo", this._config, this._stateObj);
         moreInfoDialog(this._config, this._stateObj);
     }
 

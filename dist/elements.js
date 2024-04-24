@@ -7008,6 +7008,7 @@ let LockTile = class LockTile extends s {
     }
     showMoreInfo(e) {
         e.stopPropagation();
+        console.log("showMoreInfo", this._config, this._stateObj);
         moreInfoDialog(this._config, this._stateObj);
     }
     getCardSize() {
