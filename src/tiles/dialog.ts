@@ -78,7 +78,7 @@ export class DialogTile extends LitElement {
                 console.error("Error loading menu configuration", error);
             }
         }
-
+        console.log("Dialog Config", dialogConfig);
         window.browser_mod?.service("popup", dialogConfig);
     }
 

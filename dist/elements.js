@@ -6408,6 +6408,7 @@ let DialogTile = class DialogTile extends s {
                 console.error("Error loading menu configuration", error);
             }
         }
+        console.log("Dialog Config", dialogConfig);
         window.browser_mod?.service("popup", dialogConfig);
     }
     getCardSize() {
