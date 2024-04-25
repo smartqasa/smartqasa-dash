@@ -2,9 +2,9 @@ import { listDialogConfig } from "./list-dialog-config";
 
 export function moreInfoDialog(config: any, stateObj: any) {
     if (!config || !stateObj) return;
-
+    console.log("moreInfoDialog", config, stateObj);
     let dialogConfig: any = {
-        title: "TEST",
+        title: stateObj.attributes.friendly_name || stateObj.entity_id,
         timeout: 60000,
         content: {
             type: "custom:smartqasa-more-info-dialog",
