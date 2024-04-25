@@ -8,6 +8,7 @@ export function moreInfoDialog(config: any, stateObj: any) {
 
     let dialogConfig: any = {
         title: title,
+        dismissable: true,
         timeout: 60000,
         content: {
             type: "custom:smartqasa-more-info-dialog",

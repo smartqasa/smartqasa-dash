@@ -887,6 +887,7 @@ function moreInfoDialog(config, stateObj) {
     console.log(`Opening more info dialog for ${title}`);
     let dialogConfig = {
         title: title,
+        dismissable: true,
         timeout: 60000,
         content: {
             type: "custom:smartqasa-more-info-dialog",
