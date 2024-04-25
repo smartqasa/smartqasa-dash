@@ -899,6 +899,7 @@ function moreInfoDialog(config, stateObj) {
         };
     }
     window.browser_mod?.service("popup", dialogConfig);
+    console.log("moreInfoDialog", dialogConfig);
 }
 
 let ThermostatChip$1 = class ThermostatChip extends s {

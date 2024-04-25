@@ -27,4 +27,5 @@ export function moreInfoDialog(config: any, stateObj: any) {
     }
 
     window.browser_mod?.service("popup", dialogConfig);
+    console.log("moreInfoDialog", dialogConfig);
 }
