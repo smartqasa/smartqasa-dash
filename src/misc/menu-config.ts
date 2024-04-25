@@ -113,7 +113,7 @@ export async function menuConfig(menu_tab?: number): Promise<any> {
         },
     ];
 
-    return {
+    const menuConfig = {
         title: "Menu",
         timeout: 120000,
         content: {
@@ -170,4 +170,8 @@ export async function menuConfig(menu_tab?: number): Promise<any> {
             ],
         },
     };
+
+    window.smartqasa.menuConfig = menuConfig;
+
+    return menuConfig;
 }

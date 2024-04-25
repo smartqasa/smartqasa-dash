@@ -69,7 +69,7 @@ export class DialogTile extends LitElement {
         const menuTab = this._config.menu_tab;
 
         if (menuTab !== undefined && menuTab >= 0 && menuTab <= 3) {
-            const dismissData = this.loadMenuConfig(menuTab);
+            const dismissData = window.smartqasa.menuConfig;
             dialogConfig.dismiss_action = {
                 service: "browser_mod.popup",
                 data: {
@@ -79,17 +79,6 @@ export class DialogTile extends LitElement {
         }
 
         window.browser_mod?.service("popup", dialogConfig);
-    }
-
-    private async loadMenuConfig(menuTab: number): Promise<void> {
-        let dialogConfig;
-        try {
-            dialogConfig = await menuConfig(menuTab);
-        } catch (e) {
-            console.error("Error opening menu dialog", e);
-            return;
-        }
-        return dialogConfig;
     }
 
     getCardSize(): number {

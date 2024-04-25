@@ -9,6 +9,7 @@ declare global {
         };
         smartqasa: {
             homePath?: string;
+            menuConfig?: any;
         };
     }
 }

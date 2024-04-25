@@ -5223,7 +5223,7 @@ async function menuConfig(menu_tab) {
             template: "about-tile",
         },
     ];
-    return {
+    const menuConfig = {
         title: "Menu",
         timeout: 120000,
         content: {
@@ -5280,6 +5280,8 @@ async function menuConfig(menu_tab) {
             ],
         },
     };
+    window.smartqasa.menuConfig = menuConfig;
+    return menuConfig;
 }
 
 let PanelFooter = class PanelFooter extends s {
@@ -6397,7 +6399,7 @@ let DialogTile = class DialogTile extends s {
         const dialogConfig = { ...this._dialogObj.data };
         const menuTab = this._config.menu_tab;
         if (menuTab !== undefined && menuTab >= 0 && menuTab <= 3) {
-            const dismissData = this.loadMenuConfig(menuTab);
+            const dismissData = window.smartqasa.menuConfig;
             dialogConfig.dismiss_action = {
                 service: "browser_mod.popup",
                 data: {
@@ -6406,17 +6408,6 @@ let DialogTile = class DialogTile extends s {
             };
         }
         window.browser_mod?.service("popup", dialogConfig);
-    }
-    async loadMenuConfig(menuTab) {
-        let dialogConfig;
-        try {
-            dialogConfig = await menuConfig(menuTab);
-        }
-        catch (e) {
-            console.error("Error opening menu dialog", e);
-            return;
-        }
-        return dialogConfig;
     }
     getCardSize() {
         return 1;
