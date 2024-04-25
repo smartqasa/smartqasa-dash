@@ -4,7 +4,7 @@ export function moreInfoDialog(config: any, stateObj: any) {
     if (!config || !stateObj) return;
 
     let dialogConfig: any = {
-        title: stateObj.attributes?.friendly_name || stateObj.entity_id,
+        title: "TEST",
         timeout: 60000,
         content: {
             type: "custom:smartqasa-more-info-dialog",
@@ -27,5 +27,4 @@ export function moreInfoDialog(config: any, stateObj: any) {
     }
 
     window.browser_mod?.service("popup", dialogConfig);
-    console.log("moreInfoDialog", dialogConfig);
 }

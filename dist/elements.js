@@ -884,7 +884,7 @@ function moreInfoDialog(config, stateObj) {
     if (!config || !stateObj)
         return;
     let dialogConfig = {
-        title: stateObj.attributes?.friendly_name || stateObj.entity_id,
+        title: "TEST",
         timeout: 60000,
         content: {
             type: "custom:smartqasa-more-info-dialog",
@@ -899,7 +899,6 @@ function moreInfoDialog(config, stateObj) {
         };
     }
     window.browser_mod?.service("popup", dialogConfig);
-    console.log("moreInfoDialog", dialogConfig);
 }
 
 let ThermostatChip$1 = class ThermostatChip extends s {
