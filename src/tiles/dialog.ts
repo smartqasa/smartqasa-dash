@@ -60,7 +60,7 @@ export class DialogTile extends LitElement {
         `;
     }
 
-    private showDialog(e: Event): void {
+    private async showDialog(e: Event): Promise<void> {
         e.stopPropagation();
         if (!this._dialogObj || !this._config) return;
 
@@ -69,7 +69,7 @@ export class DialogTile extends LitElement {
         const menuTab = this._config.menu_tab;
 
         if (menuTab !== undefined && menuTab >= 0 && menuTab <= 3) {
-            const dismissData = window.smartqasa.menuConfig;
+            const dismissData = await menuConfig(menuTab);
             dialogConfig.dismiss_action = {
                 service: "browser_mod.popup",
                 data: {

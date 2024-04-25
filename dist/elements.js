@@ -6392,14 +6392,14 @@ let DialogTile = class DialogTile extends s {
             </div>
         `;
     }
-    showDialog(e) {
+    async showDialog(e) {
         e.stopPropagation();
         if (!this._dialogObj || !this._config)
             return;
         const dialogConfig = { ...this._dialogObj.data };
         const menuTab = this._config.menu_tab;
         if (menuTab !== undefined && menuTab >= 0 && menuTab <= 3) {
-            const dismissData = window.smartqasa.menuConfig;
+            const dismissData = await menuConfig(menuTab);
             dialogConfig.dismiss_action = {
                 service: "browser_mod.popup",
                 data: {
