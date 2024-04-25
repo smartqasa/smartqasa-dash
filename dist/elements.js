@@ -893,13 +893,21 @@ function moreInfoDialog(config, stateObj) {
             entity: stateObj.entity_id,
         },
     };
+    /*
     if (config.dialogTitle) {
-        const dismissData = listDialogConfig(config.dialogTitle, config.filterType, config.filterValue, config.tileType);
+        const dismissData = listDialogConfig(
+            config.dialogTitle,
+            config.filterType,
+            config.filterValue,
+            config.tileType
+        );
+
         dialogConfig.dismiss_action = {
             service: "browser_mod.popup",
             data: { ...dismissData },
         };
     }
+*/
     window.browser_mod?.service("popup", dialogConfig);
 }
 

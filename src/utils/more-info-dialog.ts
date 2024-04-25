@@ -14,7 +14,7 @@ export function moreInfoDialog(config: any, stateObj: any) {
             entity: stateObj.entity_id,
         },
     };
-
+    /*
     if (config.dialogTitle) {
         const dismissData = listDialogConfig(
             config.dialogTitle,
@@ -28,6 +28,6 @@ export function moreInfoDialog(config: any, stateObj: any) {
             data: { ...dismissData },
         };
     }
-
+*/
     window.browser_mod?.service("popup", dialogConfig);
 }
