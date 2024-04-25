@@ -10,7 +10,6 @@ export function moreInfoDialog(config: any, stateObj: any) {
             type: "custom:smartqasa-more-info-dialog",
             entity: stateObj.entity_id,
         },
-        dismiss_action: {},
     };
 
     if (config.dialog_title) {

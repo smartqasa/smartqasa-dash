@@ -1,5 +1,6 @@
 import { CSSResult, LitElement, html, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
+import { styleMap } from "lit/directives/style-map.js";
 import { LovelaceCardConfig } from "custom-card-helpers";
 import { dialogTable } from "../tables/dialogs";
 import { menuConfig } from "../misc/menu-config";
@@ -44,15 +45,14 @@ export class DialogTile extends LitElement {
     }
 
     protected render(): TemplateResult {
+        const iconStyles = {
+            color: `rgb(${this._iconColor})`,
+            backgroundColor: `rgba(${this._iconColor}, var(--sq-icon-opacity))`,
+        };
+
         return html`
             <div class="container" @click=${this.showDialog}>
-                <div
-                    class="icon"
-                    style="
-                        color: rgb(${this._iconColor});
-                        background-color: rgba(${this._iconColor}, var(--sq-icon-opacity, 0.2));
-                    "
-                >
+                <div class="icon" style="${styleMap(iconStyles)}">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
                 <div class="name">${this._name}</div>
@@ -60,7 +60,7 @@ export class DialogTile extends LitElement {
         `;
     }
 
-    private async showDialog(e: Event): Promise<void> {
+    private showDialog(e: Event): void {
         e.stopPropagation();
         if (!this._dialogObj || !this._config) return;
 
@@ -68,18 +68,25 @@ export class DialogTile extends LitElement {
 
         const menuTab = this._config.menu_tab;
         if (menuTab !== undefined && menuTab >= 0 && menuTab <= 3) {
-            try {
-                const dismissData = await menuConfig(menuTab);
-                dialogConfig.dismiss_action = {
-                    service: "browser_mod.popup",
-                    data: dismissData,
-                };
-            } catch (error) {
-                console.error("Error loading menu configuration", error);
-            }
+            const dismissData = this.loadMenuConfig(menuTab);
+            dialogConfig.dismiss_action = {
+                service: "browser_mod.popup",
+                data: dismissData,
+            };
         }
 
         window.browser_mod?.service("popup", dialogConfig);
+    }
+
+    private async loadMenuConfig(menuTab: number): Promise<void> {
+        let dialogConfig;
+        try {
+            dialogConfig = await menuConfig(menuTab);
+        } catch (e) {
+            console.error("Error opening menu dialog", e);
+            return;
+        }
+        return dialogConfig;
     }
 
     getCardSize(): number {

@@ -169,7 +169,6 @@ const listDialogConfig = (dialogTitle, filterType, filterValue, tileType) => {
                 ],
             },
         },
-        dismiss_action: {},
     };
 };
 
@@ -891,7 +890,6 @@ function moreInfoDialog(config, stateObj) {
             type: "custom:smartqasa-more-info-dialog",
             entity: stateObj.entity_id,
         },
-        dismiss_action: {},
     };
     if (config.dialog_title) {
         const dismissData = listDialogConfig(config.dialog_title, config.filter_type, config.filter_value, config.tile_type);
@@ -6376,40 +6374,44 @@ let DialogTile = class DialogTile extends s {
         this._name = this._config?.name || this._dialogObj.name;
     }
     render() {
+        const iconStyles = {
+            color: `rgb(${this._iconColor})`,
+            backgroundColor: `rgba(${this._iconColor}, var(--sq-icon-opacity))`,
+        };
         return x `
             <div class="container" @click=${this.showDialog}>
-                <div
-                    class="icon"
-                    style="
-                        color: rgb(${this._iconColor});
-                        background-color: rgba(${this._iconColor}, var(--sq-icon-opacity, 0.2));
-                    "
-                >
+                <div class="icon" style="${o(iconStyles)}">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
                 <div class="name">${this._name}</div>
             </div>
         `;
     }
-    async showDialog(e) {
+    showDialog(e) {
         e.stopPropagation();
         if (!this._dialogObj || !this._config)
             return;
         let dialogConfig = { ...this._dialogObj.data };
         const menuTab = this._config.menu_tab;
         if (menuTab !== undefined && menuTab >= 0 && menuTab <= 3) {
-            try {
-                const dismissData = await menuConfig(menuTab);
-                dialogConfig.dismiss_action = {
-                    service: "browser_mod.popup",
-                    data: dismissData,
-                };
-            }
-            catch (error) {
-                console.error("Error loading menu configuration", error);
-            }
+            const dismissData = this.loadMenuConfig(menuTab);
+            dialogConfig.dismiss_action = {
+                service: "browser_mod.popup",
+                data: dismissData,
+            };
         }
         window.browser_mod?.service("popup", dialogConfig);
+    }
+    async loadMenuConfig(menuTab) {
+        let dialogConfig;
+        try {
+            dialogConfig = await menuConfig(menuTab);
+        }
+        catch (e) {
+            console.error("Error opening menu dialog", e);
+            return;
+        }
+        return dialogConfig;
     }
     getCardSize() {
         return 1;
