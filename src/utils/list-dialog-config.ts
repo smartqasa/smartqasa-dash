@@ -29,7 +29,7 @@ export const listDialogConfig: any = (
                             type: `custom:smartqasa-${tileType}-tile`,
                             dialogTitle: dialogTitle,
                             filterType: filterType,
-                            filterTalue: filterValue,
+                            filterValue: filterValue,
                             tileType: tileType,
                         },
                     },

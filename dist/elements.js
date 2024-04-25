@@ -162,7 +162,7 @@ const listDialogConfig = (dialogTitle, filterType, filterValue, tileType) => {
                             type: `custom:smartqasa-${tileType}-tile`,
                             dialogTitle: dialogTitle,
                             filterType: filterType,
-                            filterTalue: filterValue,
+                            filterValue: filterValue,
                             tileType: tileType,
                         },
                     },
@@ -6360,7 +6360,7 @@ let DialogTile = class DialogTile extends s {
     static { this.styles = tileBaseStyle; }
     setConfig(config) {
         this._config = { ...config };
-        this._dialogObj = this._config ? dialogTable[this._config.dialog] : undefined;
+        this._dialogObj = dialogTable[config.dialog];
         this.updateState();
     }
     updateState() {

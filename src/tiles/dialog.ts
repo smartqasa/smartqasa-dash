@@ -27,7 +27,7 @@ export class DialogTile extends LitElement {
 
     setConfig(config: Config): void {
         this._config = { ...config };
-        this._dialogObj = this._config ? dialogTable[this._config.dialog] : undefined;
+        this._dialogObj = dialogTable[config.dialog];
         this.updateState();
     }
 
