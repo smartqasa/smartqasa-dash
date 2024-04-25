@@ -12,12 +12,12 @@ export function moreInfoDialog(config: any, stateObj: any) {
         },
     };
 
-    if (config.dialog_title) {
+    if (config.dialogTitle) {
         const dismissData = listDialogConfig(
-            config.dialog_title,
-            config.filter_type,
-            config.filter_value,
-            config.tile_type
+            config.dialogTitle,
+            config.filterType,
+            config.filterValue,
+            config.tileType
         );
 
         dialogConfig.dismiss_action = {

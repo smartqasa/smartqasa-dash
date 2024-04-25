@@ -160,10 +160,10 @@ const listDialogConfig = (dialogTitle, filterType, filterValue, tileType) => {
                         },
                         options: {
                             type: `custom:smartqasa-${tileType}-tile`,
-                            dialog_title: dialogTitle,
-                            filter_type: filterType,
-                            filter_value: filterValue,
-                            tile_type: tileType,
+                            dialogTitle: dialogTitle,
+                            filterType: filterType,
+                            filterTalue: filterValue,
+                            tileType: tileType,
                         },
                     },
                 ],
@@ -891,8 +891,8 @@ function moreInfoDialog(config, stateObj) {
             entity: stateObj.entity_id,
         },
     };
-    if (config.dialog_title) {
-        const dismissData = listDialogConfig(config.dialog_title, config.filter_type, config.filter_value, config.tile_type);
+    if (config.dialogTitle) {
+        const dismissData = listDialogConfig(config.dialogTitle, config.filterType, config.filterValue, config.tileType);
         dialogConfig.dismiss_action = {
             service: "browser_mod.popup",
             data: dismissData,
