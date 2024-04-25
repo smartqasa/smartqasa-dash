@@ -884,7 +884,6 @@ function moreInfoDialog(config, stateObj) {
     if (!config || !stateObj)
         return;
     const title = stateObj.attributes.friendly_name || stateObj.entity_id;
-    console.log(`Opening more info dialog for ${title}`);
     let dialogConfig = {
         title: title,
         dismissable: true,
@@ -898,7 +897,7 @@ function moreInfoDialog(config, stateObj) {
         const dismissData = listDialogConfig(config.dialogTitle, config.filterType, config.filterValue, config.tileType);
         dialogConfig.dismiss_action = {
             service: "browser_mod.popup",
-            data: dismissData,
+            data: { ...dismissData },
         };
     }
     window.browser_mod?.service("popup", dialogConfig);

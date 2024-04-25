@@ -4,7 +4,6 @@ export function moreInfoDialog(config: any, stateObj: any) {
     if (!config || !stateObj) return;
 
     const title = stateObj.attributes.friendly_name || stateObj.entity_id;
-    console.log(`Opening more info dialog for ${title}`);
 
     let dialogConfig: any = {
         title: title,
@@ -26,7 +25,7 @@ export function moreInfoDialog(config: any, stateObj: any) {
 
         dialogConfig.dismiss_action = {
             service: "browser_mod.popup",
-            data: dismissData,
+            data: { ...dismissData },
         };
     }
 
