@@ -883,9 +883,10 @@ window.customCards.push({
 function moreInfoDialog(config, stateObj) {
     if (!config || !stateObj)
         return;
-    console.log("moreInfoDialog", config, stateObj);
+    const title = stateObj.attributes.friendly_name || stateObj.entity_id;
+    console.log(`Opening more info dialog for ${title}`);
     let dialogConfig = {
-        title: stateObj.attributes.friendly_name || stateObj.entity_id,
+        title: title,
         timeout: 60000,
         content: {
             type: "custom:smartqasa-more-info-dialog",
