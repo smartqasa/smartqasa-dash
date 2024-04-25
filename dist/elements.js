@@ -6397,7 +6397,9 @@ let DialogTile = class DialogTile extends s {
         if (!this._dialogObj || !this._config)
             return;
         const dialogConfig = { ...this._dialogObj.data };
+        /*
         const menuTab = this._config.menu_tab;
+
         if (menuTab !== undefined && menuTab >= 0 && menuTab <= 3) {
             const dismissData = await menuConfig(menuTab);
             dialogConfig.dismiss_action = {
@@ -6407,6 +6409,7 @@ let DialogTile = class DialogTile extends s {
                 },
             };
         }
+        */
         window.browser_mod?.service("popup", dialogConfig);
     }
     getCardSize() {

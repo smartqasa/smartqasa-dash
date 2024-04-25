@@ -66,6 +66,7 @@ export class DialogTile extends LitElement {
 
         const dialogConfig = { ...this._dialogObj.data };
 
+        /*
         const menuTab = this._config.menu_tab;
 
         if (menuTab !== undefined && menuTab >= 0 && menuTab <= 3) {
@@ -77,6 +78,7 @@ export class DialogTile extends LitElement {
                 },
             };
         }
+        */
 
         window.browser_mod?.service("popup", dialogConfig);
     }
