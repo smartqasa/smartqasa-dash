@@ -13,21 +13,15 @@ export function moreInfoDialog(config: any, stateObj: any) {
             type: "custom:smartqasa-more-info-dialog",
             entity: stateObj.entity_id,
         },
+        ...(config.dialog_title && {
+            dismiss_action: {
+                service: "browser_mod.popup",
+                data: {
+                    ...listDialogConfig(config.dialog_title, config.filter_type, config.filter_value, config.tile_type),
+                },
+            },
+        }),
     };
-    /*
-    if (config.dialogTitle) {
-        const dismissData = listDialogConfig(
-            config.dialogTitle,
-            config.filterType,
-            config.filterValue,
-            config.tileType
-        );
 
-        dialogConfig.dismiss_action = {
-            service: "browser_mod.popup",
-            data: { ...dismissData },
-        };
-    }
-*/
     window.browser_mod?.service("popup", dialogConfig);
 }

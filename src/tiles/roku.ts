@@ -114,15 +114,15 @@ export class RokuTile extends LitElement {
                 entity: this._entity,
                 tv: true,
             },
-            ...(this._config.dialogTitle && {
+            ...(this._config.dialog_title && {
                 dismiss_action: {
                     service: "browser_mod.popup",
                     data: {
                         ...listDialogConfig(
-                            this._config.dialogTitle,
-                            this._config.filterType,
-                            this._config.filterValue,
-                            this._config.tileType
+                            this._config.dialog_title,
+                            this._config.filter_type,
+                            this._config.filter_value,
+                            this._config.tile_type
                         ),
                     },
                 },

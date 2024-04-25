@@ -160,10 +160,10 @@ const listDialogConfig = (dialogTitle, filterType, filterValue, tileType) => {
                         },
                         options: {
                             type: `custom:smartqasa-${tileType}-tile`,
-                            dialogTitle: dialogTitle,
-                            filterType: filterType,
-                            filterValue: filterValue,
-                            tileType: tileType,
+                            dialog_title: dialogTitle,
+                            filter_type: filterType,
+                            filter_value: filterValue,
+                            tile_type: tileType,
                         },
                     },
                 ],
@@ -511,7 +511,7 @@ let DialogChip = class DialogChip extends s {
     }
     showDialog(e) {
         e.stopPropagation();
-        const dialogConfig = { ...this._dialogObj.data };
+        const dialogConfig = this._dialogObj.data;
         window.browser_mod?.service("popup", dialogConfig);
     }
 };
@@ -892,22 +892,15 @@ function moreInfoDialog(config, stateObj) {
             type: "custom:smartqasa-more-info-dialog",
             entity: stateObj.entity_id,
         },
+        ...(config.dialog_title && {
+            dismiss_action: {
+                service: "browser_mod.popup",
+                data: {
+                    ...listDialogConfig(config.dialog_title, config.filter_type, config.filter_value, config.tile_type),
+                },
+            },
+        }),
     };
-    /*
-    if (config.dialogTitle) {
-        const dismissData = listDialogConfig(
-            config.dialogTitle,
-            config.filterType,
-            config.filterValue,
-            config.tileType
-        );
-
-        dialogConfig.dismiss_action = {
-            service: "browser_mod.popup",
-            data: { ...dismissData },
-        };
-    }
-*/
     window.browser_mod?.service("popup", dialogConfig);
 }
 
@@ -6401,7 +6394,7 @@ let DialogTile = class DialogTile extends s {
         e.stopPropagation();
         if (!this._dialogObj || !this._config)
             return;
-        let dialogConfig = { ...this._dialogObj.data };
+        let dialogConfig = this._dialogObj.data;
         const menuTab = this._config.menu_tab;
         if (menuTab !== undefined && menuTab >= 0 && menuTab <= 3) {
             const dismissData = this.loadMenuConfig(menuTab);
@@ -7379,11 +7372,11 @@ let RokuTile = class RokuTile extends s {
                 entity: this._entity,
                 tv: true,
             },
-            ...(this._config.dialogTitle && {
+            ...(this._config.dialog_title && {
                 dismiss_action: {
                     service: "browser_mod.popup",
                     data: {
-                        ...listDialogConfig(this._config.dialogTitle, this._config.filterType, this._config.filterValue, this._config.tileType),
+                        ...listDialogConfig(this._config.dialog_title, this._config.filter_type, this._config.filter_value, this._config.tile_type),
                     },
                 },
             }),
