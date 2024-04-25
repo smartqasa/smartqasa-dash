@@ -6394,13 +6394,15 @@ let DialogTile = class DialogTile extends s {
         e.stopPropagation();
         if (!this._dialogObj || !this._config)
             return;
-        let dialogConfig = this._dialogObj.data;
+        const dialogConfig = { ...this._dialogObj.data };
         const menuTab = this._config.menu_tab;
         if (menuTab !== undefined && menuTab >= 0 && menuTab <= 3) {
             const dismissData = this.loadMenuConfig(menuTab);
             dialogConfig.dismiss_action = {
                 service: "browser_mod.popup",
-                data: dismissData,
+                data: {
+                    ...dismissData,
+                },
             };
         }
         window.browser_mod?.service("popup", dialogConfig);
