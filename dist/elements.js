@@ -511,7 +511,7 @@ let DialogChip = class DialogChip extends s {
     }
     showDialog(e) {
         e.stopPropagation();
-        const dialogConfig = this._dialogObj.data;
+        const dialogConfig = { ...this._dialogObj.data };
         window.browser_mod?.service("popup", dialogConfig);
     }
 };

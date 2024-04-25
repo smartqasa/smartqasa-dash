@@ -70,7 +70,7 @@ export class DialogChip extends LitElement {
     private showDialog(e: Event): void {
         e.stopPropagation();
 
-        const dialogConfig = this._dialogObj.data;
+        const dialogConfig = { ...this._dialogObj.data };
         window.browser_mod?.service("popup", dialogConfig);
     }
 }
