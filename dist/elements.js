@@ -173,6 +173,186 @@ const listDialogConfig = (dialogTitle, filterType, filterValue, tileType) => {
 };
 
 const dialogTable = {
+    air_quality: {
+        icon: "hass:air-filter",
+        name: "Air Quality",
+        data: {
+            title: "Air Quality",
+            size: "fullscreen",
+            timeout: 120000,
+            content: {
+                type: "custom:layout-card",
+                layout_type: "custom:horizontal-layout",
+                layout: {
+                    max_cols: 3,
+                    card_margin: "4px 4px 8px",
+                },
+                cards: [
+                    {
+                        type: "custom:mini-graph-card",
+                        entities: ["sensor.air_quality_radon"],
+                        name: "Radon Gas",
+                        icon: "mdi:radioactive",
+                        hours_to_show: 48,
+                        smoothing: true,
+                        color_thresholds: [
+                            {
+                                value: 0,
+                                color: "#00ff00",
+                            },
+                            {
+                                value: 48.1,
+                                color: "#32cd32",
+                            },
+                            {
+                                value: 96.2,
+                                color: "#ffd700",
+                            },
+                            {
+                                value: 148,
+                                color: "#ff0000",
+                            },
+                        ],
+                        tap_action: {
+                            action: "none",
+                        },
+                        color_thresholds_transition: "hard",
+                    },
+                    {
+                        type: "custom:mini-graph-card",
+                        entities: ["sensor.air_quality_co2"],
+                        name: "Carbon Dioxide",
+                        icon: "mdi:molecule-co2",
+                        hours_to_show: 48,
+                        smoothing: true,
+                        color_thresholds: [
+                            {
+                                value: 0,
+                                color: "#00ff00",
+                            },
+                            {
+                                value: 799,
+                                color: "#ffd700",
+                            },
+                            {
+                                value: 999,
+                                color: "#ff0000",
+                            },
+                        ],
+                        color_thresholds_transition: "hard",
+                        tap_action: {
+                            action: "none",
+                        },
+                    },
+                    {
+                        type: "custom:mini-graph-card",
+                        entities: ["sensor.air_quality_voc"],
+                        name: "VOC (Contaminents)",
+                        icon: "mdi:weather-dust",
+                        hours_to_show: 48,
+                        smoothing: true,
+                        color_thresholds: [
+                            {
+                                value: 0,
+                                color: "#00ff00",
+                            },
+                            {
+                                value: 250,
+                                color: "#ffd700",
+                            },
+                            {
+                                value: 2000,
+                                color: "#ff0000",
+                            },
+                        ],
+                        color_thresholds_transition: "hard",
+                        tap_action: {
+                            action: "none",
+                        },
+                    },
+                    {
+                        type: "custom:mini-graph-card",
+                        entities: ["sensor.air_quality_temperature"],
+                        name: "Temperature",
+                        hours_to_show: 48,
+                        smoothing: true,
+                        color_thresholds: [
+                            {
+                                value: 0,
+                                color: "#0000ff",
+                            },
+                            {
+                                value: 68,
+                                color: "#00ff00",
+                            },
+                            {
+                                value: 75,
+                                color: "#ffa500",
+                            },
+                            {
+                                value: 85,
+                                color: "#ff0000",
+                            },
+                        ],
+                        color_thresholds_transition: "hard",
+                        tap_action: {
+                            action: "none",
+                        },
+                    },
+                    {
+                        type: "custom:mini-graph-card",
+                        entities: ["sensor.air_quality_humidity"],
+                        name: "Humidity",
+                        hours_to_show: 48,
+                        smoothing: true,
+                        color_thresholds: [
+                            {
+                                value: 0,
+                                color: "#d0ae8b",
+                            },
+                            {
+                                value: 40,
+                                color: "#00ff00",
+                            },
+                            {
+                                value: 60,
+                                color: "#52B1D2",
+                            },
+                        ],
+                        color_thresholds_transition: "hard",
+                        tap_action: {
+                            action: "none",
+                        },
+                    },
+                    {
+                        type: "custom:mini-graph-card",
+                        entities: ["sensor.air_quality_pressure"],
+                        name: "Barometric Presure",
+                        hours_to_show: 48,
+                        smoothing: true,
+                        color_thresholds: [
+                            {
+                                value: 0,
+                                color: "#52B1D2",
+                            },
+                            {
+                                value: 1009.144,
+                                color: "#00ff00",
+                            },
+                            {
+                                value: 1022.689,
+                                color: "#d0ae8b",
+                            },
+                        ],
+                        color_thresholds_transition: "hard",
+                        tap_action: {
+                            action: "none",
+                        },
+                    },
+                ],
+            },
+        },
+    },
     clean_screen: {
         icon: "hass:spray-bottle",
         name: "Clean Screen",
@@ -476,11 +656,10 @@ let DialogChip = class DialogChip extends s {
     static { this.styles = [chipBaseStyle, chipTextStyle]; }
     setConfig(config) {
         this._config = { ...config };
-        this._dialog = this._config.dialog;
-        this._dialogObj = this._dialog ? dialogTable[this._dialog] : undefined;
+        this._dialog = config.dialog;
+        this._dialogObj = dialogTable[config.dialog];
         this._entity = this._dialogObj.entity;
         this._icon = this._dialogObj.icon;
-        this._label = this._config.label || "";
     }
     set hass(hass) {
         if (!hass || !this._entity || hass.states[this._entity] === this._stateObj)
@@ -488,7 +667,7 @@ let DialogChip = class DialogChip extends s {
         this._stateObj = hass.states[this._entity];
     }
     render() {
-        if (!this._stateObj)
+        if (!this._dialogObj || !this._stateObj)
             return x ``;
         const state = this._stateObj.state;
         if ((this._dialog === "garages" && state === "closed") ||
@@ -498,14 +677,12 @@ let DialogChip = class DialogChip extends s {
             return x ``;
         const containerStyle = {
             "margin-left": "0.7rem",
-            "grid-template-areas": this._label ? '"i t"' : '"i"',
         };
         return x `
             <div class="container" style="${o(containerStyle)}" @click=${this.showDialog}>
                 <div class="icon" style="color: rgb(var(--sq-rgb-orange));">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
-                ${this._label ? x `<div class="text">${this._label}</div>` : null}
             </div>
         `;
     }
