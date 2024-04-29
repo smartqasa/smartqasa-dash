@@ -12,7 +12,7 @@ interface Config extends LovelaceCardConfig {
 }
 
 @customElement("smartqasa-dialog-chip")
-export class DialogChip extends LitElement {
+export class CustomChip extends LitElement {
     @state() private _config?: Config;
     @state() private _dialogObj?: any;
     @state() private _stateObj?: HassEntity;
@@ -74,8 +74,8 @@ export class DialogChip extends LitElement {
 }
 
 window.customCards.push({
-    type: "smartqasa-dialog-chip",
-    name: "SmartQasa Dialog Chip",
+    type: "smartqasa-custom-chip",
+    name: "SmartQasa Custom Chip",
     preview: true,
-    description: "A SmartQasa chip for dialog.",
+    description: "A SmartQasa chip for custom.",
 });

@@ -656,10 +656,11 @@ let DialogChip = class DialogChip extends s {
     static { this.styles = [chipBaseStyle, chipTextStyle]; }
     setConfig(config) {
         this._config = { ...config };
-        this._dialog = config.dialog;
-        this._dialogObj = dialogTable[config.dialog];
+        this._dialog = this._config.dialog;
+        this._dialogObj = this._dialog ? dialogTable[this._dialog] : undefined;
         this._entity = this._dialogObj.entity;
         this._icon = this._dialogObj.icon;
+        this._label = this._config.label || "";
     }
     set hass(hass) {
         if (!hass || !this._entity || hass.states[this._entity] === this._stateObj)
@@ -677,12 +678,14 @@ let DialogChip = class DialogChip extends s {
             return x ``;
         const containerStyle = {
             "margin-left": "0.7rem",
+            "grid-template-areas": this._label ? '"i t"' : '"i"',
         };
         return x `
             <div class="container" style="${o(containerStyle)}" @click=${this.showDialog}>
                 <div class="icon" style="color: rgb(var(--sq-rgb-orange));">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
+                ${this._label ? x `<div class="text">${this._label}</div>` : null}
             </div>
         `;
     }
