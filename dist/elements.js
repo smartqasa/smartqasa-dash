@@ -6690,7 +6690,7 @@ let FanTile = class FanTile extends s {
         if (!this.hass || !this.entity)
             return;
         try {
-            await this.hass.callService("light", "toggle", { entity_id: this.entity });
+            await this.hass.callService("fan", "toggle", { entity_id: this.entity });
         }
         catch (error) {
             console.error("Failed to toggle the entity:", error);
@@ -6706,7 +6706,7 @@ let FanTile = class FanTile extends s {
             !Array.isArray(this.stateObj.attributes?.entity_id) ||
             this.stateObj.attributes.entity_id.length === 0)
             return;
-        entityListDialog(this.stateObj.attributes?.friendly_name || "Unknown", "group", this.entity, "light");
+        entityListDialog(this.stateObj.attributes?.friendly_name || "Unknown", "group", this.entity, "fan");
     }
 };
 __decorate([
