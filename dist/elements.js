@@ -6745,11 +6745,11 @@ let GarageTile = class GarageTile extends s {
     setConfig(config) {
         this.config = { ...config };
         this.entity = this.config.entity?.startsWith("cover.") ? this.config.entity : undefined;
-        this.initialized = true;
     }
     updated(changedProps) {
         if (changedProps.has("hass") && this.entity) {
             this.stateObj = this.hass?.states[this.entity];
+            this.initialized = true;
         }
     }
     render() {

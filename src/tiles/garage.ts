@@ -38,12 +38,12 @@ export class GarageTile extends LitElement {
     setConfig(config: Config): void {
         this.config = { ...config };
         this.entity = this.config.entity?.startsWith("cover.") ? this.config.entity : undefined;
-        this.initialized = true;
     }
 
     updated(changedProps: PropertyValues) {
         if (changedProps.has("hass") && this.entity) {
             this.stateObj = this.hass?.states[this.entity];
+            this.initialized = true;
         }
     }
 
