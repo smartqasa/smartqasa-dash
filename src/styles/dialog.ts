@@ -1,4 +1,4 @@
-import { deviceType } from "../utils/const";
+import { deviceType } from "../const";
 
 export const listDialogStyle = {
     margin: 0,

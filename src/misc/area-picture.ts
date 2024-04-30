@@ -2,7 +2,7 @@ import { css, CSSResultGroup, html, LitElement, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { HassArea } from "../types";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
-import { deviceType } from "../utils/const";
+import { deviceType } from "../const";
 
 interface Config extends LovelaceCardConfig {
     area: string;

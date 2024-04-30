@@ -4,7 +4,7 @@ import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 import { menuConfig } from "../misc/menu-config";
-import { phaseIcons, modeIcons } from "../utils/const";
+import { phaseIcons, modeIcons } from "../const";
 
 import { tileBaseStyle, tileIconSpinStyle } from "../styles/tile";
 

@@ -4,7 +4,7 @@ import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 import { selectOptionDialog } from "../utils/select-option-dialog";
-import { phaseIcons, modeIcons } from "../utils/const";
+import { phaseIcons, modeIcons } from "../const";
 
 import { chipBaseStyle } from "../styles/chip";
 

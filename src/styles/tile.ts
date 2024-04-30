@@ -12,7 +12,6 @@ export const tileBaseStyle = css`
         grid-row-gap: 0.4rem;
         padding: 1rem;
         background-color: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
-        transition: var(--sq-icon-transition, none);
         cursor: pointer;
     }
     .icon {
@@ -24,6 +23,7 @@ export const tileBaseStyle = css`
         width: 1.8rem;
         padding: 1rem;
         border-radius: 50%;
+        transition: all 0.5s ease;
     }
     .name {
         grid-area: n;
@@ -38,6 +38,7 @@ export const tileBaseStyle = css`
         font-weight: var(--sq-primary-font-weight, 400);
         font-size: var(--sq-primary-font-size, 1.5rem);
         color: rgb(var(--sq-primary-font-rgb), 128, 128, 128);
+        transition: all 0.5s ease;
     }
 `;
 

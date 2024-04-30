@@ -4,7 +4,7 @@ import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
 import { moreInfoDialog } from "../utils/more-info-dialog";
-import { thermostatIcons, thermostatColors } from "../utils/const";
+import { thermostatIcons, thermostatColors } from "../const";
 
 import { chipBaseStyle, chipTextStyle } from "../styles/chip";
 

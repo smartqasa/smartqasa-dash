@@ -1,8 +1,8 @@
-import { CSSResultGroup, html, LitElement, TemplateResult } from "lit";
-import { customElement, state } from "lit/decorators.js";
+import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult } from "lit";
+import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity } from "home-assistant-js-websocket";
-import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
+import { HomeAssistant, LovelaceCardConfig } from "../types";
 import { moreInfoDialog } from "../utils/more-info-dialog";
 import { entityListDialog } from "../utils/entity-list-dialog";
 
@@ -14,96 +14,105 @@ interface Config extends LovelaceCardConfig {
     name?: string;
 }
 
+window.customCards.push({
+    type: "smartqasa-light-tile",
+    name: "SmartQasa Light Tile",
+    preview: true,
+    description: "A SmartQasa tile for controlling a light entity.",
+});
+
 @customElement("smartqasa-light-tile")
 export class LightTile extends LitElement {
-    @state() private _config?: Config;
-    @state() private _stateObj?: HassEntity;
+    @property({ attribute: false }) public hass?: HomeAssistant;
 
-    private _entity?: string;
-    private _hass: any;
-    private _icon: string = "hass:lightbulb";
-    private _iconAnimation: string = "none";
-    private _iconColor: string = "var(--sq-inactive-rgb)";
-    private _name: string = "Loading...";
-    private _stateFmtd: string = "Loading...";
+    @state() private config?: Config;
+    @state() private stateObj?: HassEntity;
+
+    private entity?: string;
 
     static styles: CSSResultGroup = [tileBaseStyle, tileStateStyle];
 
     setConfig(config: Config): void {
-        this._config = { ...config };
-        this._entity = this._config.entity?.startsWith("light.") ? this._config.entity : undefined;
-        this.updateState();
+        this.config = { ...config };
+        this.entity = this.config.entity?.startsWith("light.") ? this.config.entity : undefined;
     }
 
-    set hass(hass: HomeAssistant) {
-        if (!hass || !this._entity || hass.states[this._entity] === this._stateObj) {
-            this._stateObj = undefined;
-            return;
+    updated(changedProps: PropertyValues) {
+        if (changedProps.has("hass") && this.entity) {
+            this.stateObj = this.hass?.states[this.entity];
         }
-        this._hass = hass;
-        this._stateObj = hass.states[this._entity];
-        this.updateState();
-    }
-
-    private updateState(): void {
-        if (!this._entity || !this._stateObj) {
-            this._icon = this._config?.icon || "hass:lightbulb-alert";
-            this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            this._name = this._config?.name || "Unknown";
-            this._stateFmtd = "Invalid entity!";
-            return;
-        }
-
-        const state = this._stateObj.state || "unknown";
-        this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:lightbulb";
-        this._iconColor = state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
-        this._name = this._config?.name || this._stateObj.attributes.friendly_name || "Unknown";
-        this._stateFmtd =
-            this._hass.formatEntityState(this._stateObj) +
-            (state === "on" && this._stateObj.attributes.brightness
-                ? " - " + this._hass.formatEntityAttributeValue(this._stateObj, "brightness")
-                : "");
     }
 
     protected render(): TemplateResult {
+        const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
+
         const iconStyles = {
-            color: `rgb(${this._iconColor})`,
-            backgroundColor: `rgba(${this._iconColor}, var(--sq-icon-opacity))`,
-            animation: this._iconAnimation,
+            color: `rgb(${iconColor})`,
+            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity))`,
+            animation: iconAnimation,
         };
 
         return html`
             <div class="container" @click=${this.showMoreInfo} @contextmenu=${this.showEntityList}>
                 <div class="icon" @click=${this.toggleEntity} style="${styleMap(iconStyles)}">
-                    <ha-icon .icon=${this._icon}></ha-icon>
+                    <ha-icon .icon=${icon}></ha-icon>
                 </div>
-                <div class="name">${this._name}</div>
-                <div class="state">${this._stateFmtd}</div>
+                <div class="name">${name}</div>
+                <div class="state">${stateFmtd}</div>
             </div>
         `;
     }
 
-    private toggleEntity(e: Event): void {
-        e.stopPropagation();
-        if (!this._stateObj) return;
+    private updateState() {
+        if (!this.hass || !this.stateObj) {
+            return {
+                icon: this.config?.icon || "hass:lightbulb-alert",
+                iconAnimation: "none",
+                iconColor: "var(--sq-unavailable-rgb, 255, 0, 255)",
+                name: this.config?.name || "Unknown",
+                stateFmtd: "Invalid entity!",
+            };
+        }
 
-        this._hass.callService("light", "toggle", { entity_id: this._entity });
+        const state = this.stateObj.state || "unknown";
+        return {
+            icon: this.config?.icon || this.stateObj.attributes.icon || "hass:lightbulb",
+            iconAnimation: "none",
+            iconColor: state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)",
+            name: this.config?.name || this.stateObj.attributes.friendly_name || "Unknown",
+            stateFmtd:
+                this.hass.formatEntityState(this.stateObj) +
+                (state === "on" && this.stateObj.attributes.brightness
+                    ? " - " + this.hass.formatEntityAttributeValue(this.stateObj, "brightness")
+                    : ""),
+        };
+    }
+
+    private async toggleEntity(e: Event): Promise<void> {
+        e.stopPropagation();
+        if (!this.hass || !this.entity) return;
+
+        try {
+            await this.hass.callService("light", "toggle", { entity_id: this.entity });
+        } catch (error) {
+            console.error("Failed to toggle the light:", error);
+        }
     }
 
     private showMoreInfo(e: Event): void {
         e.stopPropagation();
-        moreInfoDialog(this._config, this._stateObj);
+        moreInfoDialog(this.config, this.stateObj);
     }
 
     private showEntityList(e: Event): void {
         e.stopPropagation();
         if (
-            !this._stateObj ||
-            !Array.isArray(this._stateObj.attributes?.entity_id) ||
-            this._stateObj.attributes.entity_id.length === 0
+            !this.stateObj ||
+            !Array.isArray(this.stateObj.attributes?.entity_id) ||
+            this.stateObj.attributes.entity_id.length === 0
         )
             return;
-        entityListDialog(this._stateObj.attributes?.friendly_name || "Unknown", "group", this._entity, "light");
+        entityListDialog(this.stateObj.attributes?.friendly_name || "Unknown", "group", this.entity, "light");
     }
 
     getCardSize() {
@@ -122,10 +131,3 @@ export class LightTile extends LitElement {
         };
     }
 }
-
-window.customCards.push({
-    type: "smartqasa-light-tile",
-    name: "SmartQasa Light Tile",
-    preview: true,
-    description: "A SmartQasa tile for controlling a light entity.",
-});

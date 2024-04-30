@@ -5753,7 +5753,6 @@ const tileBaseStyle = i$5 `
         grid-row-gap: 0.4rem;
         padding: 1rem;
         background-color: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
-        transition: var(--sq-icon-transition, none);
         cursor: pointer;
     }
     .icon {
@@ -5765,6 +5764,7 @@ const tileBaseStyle = i$5 `
         width: 1.8rem;
         padding: 1rem;
         border-radius: 50%;
+        transition: all 0.5s ease;
     }
     .name {
         grid-area: n;
@@ -5779,6 +5779,7 @@ const tileBaseStyle = i$5 `
         font-weight: var(--sq-primary-font-weight, 400);
         font-size: var(--sq-primary-font-size, 1.5rem);
         color: rgb(var(--sq-primary-font-rgb), 128, 128, 128);
+        transition: all 0.5s ease;
     }
 `;
 const tileStateStyle = i$5 `
@@ -6919,81 +6920,84 @@ window.customCards.push({
     description: "A SmartQasa tile for controlling a water heater entity.",
 });
 
+window.customCards.push({
+    type: "smartqasa-light-tile",
+    name: "SmartQasa Light Tile",
+    preview: true,
+    description: "A SmartQasa tile for controlling a light entity.",
+});
 let LightTile = class LightTile extends s {
-    constructor() {
-        super(...arguments);
-        this._icon = "hass:lightbulb";
-        this._iconAnimation = "none";
-        this._iconColor = "var(--sq-inactive-rgb)";
-        this._name = "Loading...";
-        this._stateFmtd = "Loading...";
-    }
     static { this.styles = [tileBaseStyle, tileStateStyle]; }
     setConfig(config) {
-        this._config = { ...config };
-        this._entity = this._config.entity?.startsWith("light.") ? this._config.entity : undefined;
-        this.updateState();
+        this.config = { ...config };
+        this.entity = this.config.entity?.startsWith("light.") ? this.config.entity : undefined;
     }
-    set hass(hass) {
-        if (!hass || !this._entity || hass.states[this._entity] === this._stateObj) {
-            this._stateObj = undefined;
-            return;
+    updated(changedProps) {
+        if (changedProps.has("hass") && this.entity) {
+            this.stateObj = this.hass?.states[this.entity];
         }
-        this._hass = hass;
-        this._stateObj = hass.states[this._entity];
-        this.updateState();
-    }
-    updateState() {
-        if (!this._entity || !this._stateObj) {
-            this._icon = this._config?.icon || "hass:lightbulb-alert";
-            this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            this._name = this._config?.name || "Unknown";
-            this._stateFmtd = "Invalid entity!";
-            return;
-        }
-        const state = this._stateObj.state || "unknown";
-        this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:lightbulb";
-        this._iconColor = state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
-        this._name = this._config?.name || this._stateObj.attributes.friendly_name || "Unknown";
-        this._stateFmtd =
-            this._hass.formatEntityState(this._stateObj) +
-                (state === "on" && this._stateObj.attributes.brightness
-                    ? " - " + this._hass.formatEntityAttributeValue(this._stateObj, "brightness")
-                    : "");
     }
     render() {
+        const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
         const iconStyles = {
-            color: `rgb(${this._iconColor})`,
-            backgroundColor: `rgba(${this._iconColor}, var(--sq-icon-opacity))`,
-            animation: this._iconAnimation,
+            color: `rgb(${iconColor})`,
+            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity))`,
+            animation: iconAnimation,
         };
         return x `
             <div class="container" @click=${this.showMoreInfo} @contextmenu=${this.showEntityList}>
                 <div class="icon" @click=${this.toggleEntity} style="${o(iconStyles)}">
-                    <ha-icon .icon=${this._icon}></ha-icon>
+                    <ha-icon .icon=${icon}></ha-icon>
                 </div>
-                <div class="name">${this._name}</div>
-                <div class="state">${this._stateFmtd}</div>
+                <div class="name">${name}</div>
+                <div class="state">${stateFmtd}</div>
             </div>
         `;
     }
-    toggleEntity(e) {
+    updateState() {
+        if (!this.hass || !this.stateObj) {
+            return {
+                icon: this.config?.icon || "hass:lightbulb-alert",
+                iconAnimation: "none",
+                iconColor: "var(--sq-unavailable-rgb, 255, 0, 255)",
+                name: this.config?.name || "Unknown",
+                stateFmtd: "Invalid entity!",
+            };
+        }
+        const state = this.stateObj.state || "unknown";
+        return {
+            icon: this.config?.icon || this.stateObj.attributes.icon || "hass:lightbulb",
+            iconAnimation: "none",
+            iconColor: state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)",
+            name: this.config?.name || this.stateObj.attributes.friendly_name || "Unknown",
+            stateFmtd: this.hass.formatEntityState(this.stateObj) +
+                (state === "on" && this.stateObj.attributes.brightness
+                    ? " - " + this.hass.formatEntityAttributeValue(this.stateObj, "brightness")
+                    : ""),
+        };
+    }
+    async toggleEntity(e) {
         e.stopPropagation();
-        if (!this._stateObj)
+        if (!this.hass || !this.entity)
             return;
-        this._hass.callService("light", "toggle", { entity_id: this._entity });
+        try {
+            await this.hass.callService("light", "toggle", { entity_id: this.entity });
+        }
+        catch (error) {
+            console.error("Failed to toggle the light:", error);
+        }
     }
     showMoreInfo(e) {
         e.stopPropagation();
-        moreInfoDialog(this._config, this._stateObj);
+        moreInfoDialog(this.config, this.stateObj);
     }
     showEntityList(e) {
         e.stopPropagation();
-        if (!this._stateObj ||
-            !Array.isArray(this._stateObj.attributes?.entity_id) ||
-            this._stateObj.attributes.entity_id.length === 0)
+        if (!this.stateObj ||
+            !Array.isArray(this.stateObj.attributes?.entity_id) ||
+            this.stateObj.attributes.entity_id.length === 0)
             return;
-        entityListDialog(this._stateObj.attributes?.friendly_name || "Unknown", "group", this._entity, "light");
+        entityListDialog(this.stateObj.attributes?.friendly_name || "Unknown", "group", this.entity, "light");
     }
     getCardSize() {
         return 1;
@@ -7010,20 +7014,17 @@ let LightTile = class LightTile extends s {
     }
 };
 __decorate([
-    r()
-], LightTile.prototype, "_config", void 0);
+    n$1({ attribute: false })
+], LightTile.prototype, "hass", void 0);
 __decorate([
     r()
-], LightTile.prototype, "_stateObj", void 0);
+], LightTile.prototype, "config", void 0);
+__decorate([
+    r()
+], LightTile.prototype, "stateObj", void 0);
 LightTile = __decorate([
     t$1("smartqasa-light-tile")
 ], LightTile);
-window.customCards.push({
-    type: "smartqasa-light-tile",
-    name: "SmartQasa Light Tile",
-    preview: true,
-    description: "A SmartQasa tile for controlling a light entity.",
-});
 
 let LightTileEditor = class LightTileEditor extends s {
     setConfig(config) {
@@ -8497,7 +8498,7 @@ window.customCards.push({
     description: "A SmartQasa tile for controlling a thermostat climate entity.",
 });
 
-var version = "1.1.90";
+var version = "1.1.91";
 
 window.smartqasa = window.smartqasa || {};
 window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();
