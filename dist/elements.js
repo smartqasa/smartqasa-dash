@@ -8170,7 +8170,7 @@ let ShadeTile = class ShadeTile extends s {
     getCardSize() {
         return 1;
     }
-    static { this.styles = [tileBaseStyle, tileStateStyle]; }
+    static { this.styles = [tileBaseStyle, tileStateStyle, tileIconBlinkStyle]; }
     setConfig(config) {
         this.config = { ...config };
         this.entity = this.config.entity?.startsWith("cover.") ? this.config.entity : undefined;
@@ -8449,101 +8449,106 @@ window.customCards.push({
     description: "A SmartQasa tile for setting the display theme.",
 });
 
-let ThermostatTile = class ThermostatTile extends s {
-    constructor() {
-        super(...arguments);
-        this._icon = "hass:thermostat";
-        this._iconAnimation = "none";
-        this._iconColor = "var(--sq-inactive-rgb)";
-        this._name = "Loading...";
-        this._stateFmtd = "Loading...";
-    }
-    static { this.styles = [tileBaseStyle, tileStateStyle]; }
-    setConfig(config) {
-        this._config = { ...config };
-        this._entity = this._config.entity?.startsWith("climate.") ? this._config.entity : undefined;
-        this.updateState();
-    }
-    set hass(hass) {
-        if (!hass || !this._entity || hass.states[this._entity] === this._stateObj)
-            return;
-        this._hass = hass;
-        this._stateObj = hass.states[this._entity];
-        this.updateState();
-    }
-    updateState() {
-        if (!this._entity || !this._stateObj) {
-            this._icon = this._config?.icon || "hass:thermostat";
-            this._iconColor = thermostatColors.default;
-            this._name = this._config?.name || "Unknown";
-            this._stateFmtd = "Invalid entity!";
-            return;
-        }
-        const state = this._stateObj.state || "unavailable";
-        this._icon = thermostatIcons[state] || thermostatIcons.default;
-        const hvacAction = this._stateObj.attributes.hvac_action || "idle";
-        if (state === "off") {
-            this._iconColor = thermostatColors.off;
-        }
-        else {
-            this._iconColor = thermostatColors[hvacAction] || thermostatColors.idle;
-        }
-        this._stateFmtd = this._hass.formatEntityState(this._stateObj);
-        if (state !== "off") {
-            if (this._stateObj.attributes.current_temperature) {
-                this._stateFmtd += ` - ${this._stateObj.attributes.current_temperature}°`;
-            }
-            if (this._stateObj.attributes.current_humidity) {
-                this._stateFmtd += ` / ${this._stateObj.attributes.current_humidity}%`;
-            }
-        }
-        this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._entity || "Unknown";
-    }
-    render() {
-        const iconStyles = {
-            color: `rgb(${this._iconColor})`,
-            backgroundColor: `rgba(${this._iconColor}, var(--sq-icon-opacity))`,
-            animation: this._iconAnimation,
-        };
-        return x `
-            <div class="container" @click=${this.showMoreInfo}>
-                <div class="icon" @click=${this.toggleEntity} style="${o(iconStyles)}">
-                    <ha-icon .icon=${this._icon}></ha-icon>
-                </div>
-                <div class="name">${this._name}</div>
-                <div class="state">${this._stateFmtd}</div>
-            </div>
-        `;
-    }
-    toggleEntity(e) {
-        e.stopPropagation();
-        if (this._stateObj) {
-            this._hass.callService("climate", "toggle", { entity_id: this._stateObj.entity_id });
-        }
-    }
-    showMoreInfo(e) {
-        e.stopPropagation();
-        moreInfoDialog(this._config, this._stateObj);
-    }
-    getCardSize() {
-        return 1;
-    }
-};
-__decorate([
-    r()
-], ThermostatTile.prototype, "_config", void 0);
-__decorate([
-    r()
-], ThermostatTile.prototype, "_stateObj", void 0);
-ThermostatTile = __decorate([
-    t$1("smartqasa-thermostat-tile")
-], ThermostatTile);
 window.customCards.push({
     type: "smartqasa-thermostat-tile",
     name: "SmartQasa Thermostat Tile",
     preview: true,
     description: "A SmartQasa tile for controlling a thermostat climate entity.",
 });
+let ThermostatTile = class ThermostatTile extends s {
+    constructor() {
+        super(...arguments);
+        this.initialized = false;
+    }
+    getCardSize() {
+        return 1;
+    }
+    static { this.styles = [tileBaseStyle, tileStateStyle]; }
+    setConfig(config) {
+        this.config = { ...config };
+        this.entity = this.config.entity?.startsWith("climate.") ? this.config.entity : undefined;
+    }
+    updated(changedProps) {
+        if (changedProps.has("hass")) {
+            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
+            this.initialized = true;
+        }
+    }
+    render() {
+        if (!this.initialized)
+            return x ``;
+        const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
+        const iconStyles = {
+            color: `rgb(${iconColor})`,
+            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity))`,
+            animation: iconAnimation,
+        };
+        return x `
+            <div class="container" @click=${this.showMoreInfo}>
+                <div class="icon" @click=${this.toggleEntity} style="${o(iconStyles)}">
+                    <ha-icon .icon=${icon}></ha-icon>
+                </div>
+                <div class="name">${name}</div>
+                <div class="state">${stateFmtd}</div>
+            </div>
+        `;
+    }
+    updateState() {
+        let icon, iconAnimation, iconColor, name, stateFmtd;
+        if (this.config && this.hass && this.stateObj) {
+            const state = this.stateObj.state || "unknown";
+            icon = thermostatIcons[state] || thermostatIcons.default;
+            iconAnimation = "none";
+            const hvacAction = this.stateObj.attributes.hvac_action || "idle";
+            if (state === "off") {
+                iconColor = thermostatColors.off;
+            }
+            else {
+                iconColor = thermostatColors[hvacAction] || thermostatColors.idle;
+            }
+            stateFmtd = this.hass.formatEntityState(this.stateObj);
+            if (state !== "off") {
+                if (this.stateObj.attributes.current_temperature) {
+                    stateFmtd += ` - ${this.stateObj.attributes.current_temperature}°`;
+                }
+                if (this.stateObj.attributes.current_humidity) {
+                    stateFmtd += ` / ${this.stateObj.attributes.current_humidity}%`;
+                }
+            }
+        }
+        else {
+            icon = this.config?.icon || "hass:thermostat";
+            iconAnimation = "none";
+            iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+            name = this.config?.name || "Unknown";
+            stateFmtd = "Unknown";
+        }
+        return { icon, iconAnimation, iconColor, name, stateFmtd };
+    }
+    toggleEntity(e) {
+        e.stopPropagation();
+        toggleHassEntity(this.hass, this.entity);
+    }
+    showMoreInfo(e) {
+        e.stopPropagation();
+        moreInfoDialog(this.config, this.stateObj);
+    }
+};
+__decorate([
+    n$1({ attribute: false })
+], ThermostatTile.prototype, "hass", void 0);
+__decorate([
+    r()
+], ThermostatTile.prototype, "initialized", void 0);
+__decorate([
+    r()
+], ThermostatTile.prototype, "config", void 0);
+__decorate([
+    r()
+], ThermostatTile.prototype, "stateObj", void 0);
+ThermostatTile = __decorate([
+    t$1("smartqasa-thermostat-tile")
+], ThermostatTile);
 
 var version = "1.1.93";
 

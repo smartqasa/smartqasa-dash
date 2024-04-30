@@ -35,7 +35,7 @@ export class ShadeTile extends LitElement {
 
     private entity?: string;
 
-    static styles: CSSResultGroup = [tileBaseStyle, tileStateStyle];
+    static styles: CSSResultGroup = [tileBaseStyle, tileStateStyle, tileIconBlinkStyle];
 
     setConfig(config: Config): void {
         this.config = { ...config };
