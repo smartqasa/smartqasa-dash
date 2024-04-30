@@ -6748,6 +6748,8 @@ let GarageTile = class GarageTile extends s {
         }
     }
     render() {
+        if (!this.entity)
+            return x ``;
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,

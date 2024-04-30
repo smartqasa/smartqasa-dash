@@ -46,6 +46,8 @@ export class GarageTile extends LitElement {
     }
 
     protected render(): TemplateResult {
+        if (!this.entity) return html``;
+
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
 
         const iconStyles = {
