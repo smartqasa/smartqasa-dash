@@ -1,8 +1,8 @@
-import { CSSResultGroup, html, LitElement, TemplateResult } from "lit";
-import { customElement, state } from "lit/decorators.js";
+import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult } from "lit";
+import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity } from "home-assistant-js-websocket";
-import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
+import { HomeAssistant, LovelaceCardConfig } from "../types";
 import { moreInfoDialog } from "../utils/more-info-dialog";
 import { entityListDialog } from "../utils/entity-list-dialog";
 
@@ -14,113 +14,116 @@ interface Config extends LovelaceCardConfig {
     name?: string;
 }
 
-@customElement("smartqasa-fan-tile")
-export class FanTile extends LitElement {
-    @state() private _config?: Config;
-    @state() private _stateObj?: HassEntity;
-
-    private _entity?: string;
-    private _hass: any;
-    private _icon: string = "hass:fan";
-    private _iconAnimation: string = "none";
-    private _iconColor: string = "var(--sq-inactive-rgb)";
-    private _name: string = "Loading...";
-    private _stateFmtd: string = "Loading...";
-
-    static styles: CSSResultGroup = [tileBaseStyle, tileStateStyle, tileIconSpinStyle];
-
-    setConfig(config: Config): void {
-        this._config = { ...config };
-        this._entity = this._config.entity?.startsWith("fan.") ? this._config.entity : undefined;
-        this.updateState();
-    }
-
-    set hass(hass: HomeAssistant) {
-        if (!hass || !this._entity || hass.states[this._entity] === this._stateObj) return;
-        this._hass = hass;
-        this._stateObj = hass.states[this._entity];
-        this.updateState();
-    }
-
-    private updateState(): void {
-        if (!this._entity || !this._stateObj) {
-            this._icon = this._config?.icon || "hass:fan-alert";
-            this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            this._name = this._config?.name || "Unknown";
-            this._stateFmtd = "Invalid entity!";
-            return;
-        }
-
-        const state: string = this._stateObj.state || "unknown";
-        this._icon = this._config?.icon || "hass:fan";
-        if (state == "on" && this._icon === "hass:fan") {
-            if (this._stateObj.attributes.percentage) {
-                const speed = 0.5 + (1 - this._stateObj.attributes.percentage / 100);
-                const direction = this._stateObj.attributes.direction == "reverse" ? "reverse" : "normal";
-                this._iconAnimation = `spin ${speed}s linear infinite ${direction}`;
-            } else {
-                this._iconAnimation = `spin 0.5s linear infinite normal`;
-            }
-        } else {
-            this._iconAnimation = "none";
-        }
-        this._iconColor = state == "on" ? "var(--sq-fan-on-rgb)" : "var(--sq-inactive-rgb)";
-        this._name = this._config?.name || this._stateObj.attributes.friendly_name || "Unknown";
-        this._stateFmtd =
-            this._hass.formatEntityState(this._stateObj) +
-            (state == "on" && this._stateObj.attributes.percentage
-                ? " - " + this._hass.formatEntityAttributeValue(this._stateObj, "percentage")
-                : "");
-    }
-
-    protected render(): TemplateResult {
-        const iconStyles = {
-            color: `rgb(${this._iconColor})`,
-            backgroundColor: `rgba(${this._iconColor}, var(--sq-icon-opacity))`,
-            animation: this._iconAnimation,
-        };
-
-        return html`
-            <div class="container" @click=${this.showMoreInfo} @contextmenu=${this.showEntityList}>
-                <div class="icon" @click=${this.toggleEntity} style="${styleMap(iconStyles)}">
-                    <ha-icon .icon=${this._icon}></ha-icon>
-                </div>
-                <div class="name">${this._name}</div>
-                <div class="state">${this._stateFmtd}</div>
-            </div>
-        `;
-    }
-
-    private toggleEntity(e: Event): void {
-        e.stopPropagation();
-        if (!this._stateObj) return;
-        this._hass.callService("fan", "toggle", { entity_id: this._entity });
-    }
-
-    private showMoreInfo(e: Event): void {
-        e.stopPropagation();
-        moreInfoDialog(this._config, this._stateObj);
-    }
-
-    private showEntityList(e: Event): void {
-        e.stopPropagation();
-        if (
-            !this._stateObj ||
-            !Array.isArray(this._stateObj.attributes?.entity_id) ||
-            this._stateObj.attributes.entity_id.length === 0
-        )
-            return;
-        entityListDialog(this._stateObj.attributes?.friendly_name || "Unknown", "group", this._entity, "fan");
-    }
-
-    getCardSize(): number {
-        return 1;
-    }
-}
-
 window.customCards.push({
     type: "smartqasa-fan-tile",
     name: "SmartQasa Fan Tile",
     preview: true,
     description: "A SmartQasa tile for controlling a fan entity.",
 });
+
+@customElement("smartqasa-fan-tile")
+export class FanTile extends LitElement {
+    getCardSize(): number {
+        return 1;
+    }
+
+    @property({ attribute: false }) public hass?: HomeAssistant;
+
+    @state() private config?: Config;
+    @state() private stateObj?: HassEntity;
+
+    private entity?: string;
+
+    static styles: CSSResultGroup = [tileBaseStyle, tileStateStyle, tileIconSpinStyle];
+
+    setConfig(config: Config): void {
+        this.config = { ...config };
+        this.entity = this.config.entity?.startsWith("light.") ? this.config.entity : undefined;
+    }
+
+    updated(changedProps: PropertyValues) {
+        if (changedProps.has("hass") && this.entity) {
+            this.stateObj = this.hass?.states[this.entity];
+        }
+    }
+
+    protected render(): TemplateResult {
+        const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
+
+        const iconStyles = {
+            color: `rgb(${iconColor})`,
+            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity))`,
+            animation: iconAnimation,
+        };
+
+        return html`
+            <div class="container" @click=${this.showMoreInfo} @contextmenu=${this.showEntityList}>
+                <div class="icon" @click=${this.toggleEntity} style="${styleMap(iconStyles)}">
+                    <ha-icon .icon=${icon}></ha-icon>
+                </div>
+                <div class="name">${name}</div>
+                <div class="state">${stateFmtd}</div>
+            </div>
+        `;
+    }
+
+    private updateState() {
+        if (!this.config || !this.hass || !this.stateObj) {
+            return {
+                icon: this.config?.icon || "hass:fan-alert",
+                iconAnimation: "none",
+                iconColor: "var(--sq-unavailable-rgb, 255, 0, 255)",
+                name: this.config?.name || "Unknown",
+                stateFmtd: "Invalid entity!",
+            };
+        }
+
+        const state = this.stateObj.state || "unknown";
+        const icon = this.config?.icon || "hass:fan";
+        let iconAnimation = "none";
+        if (state == "on" && this.config?.icon === "hass:fan") {
+            if (this.stateObj.attributes.percentage) {
+                const speed = 0.5 + (1 - this.stateObj.attributes.percentage / 100);
+                const direction = this.stateObj.attributes.direction == "reverse" ? "reverse" : "normal";
+                iconAnimation = `spin ${speed}s linear infinite ${direction}`;
+            } else {
+                iconAnimation = `spin 0.5s linear infinite normal`;
+            }
+        }
+        const iconColor = state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
+        const name = this.config.name || this.stateObj.attributes.friendly_name || "Unknown";
+        const stateFmtd = `${this.hass.formatEntityState(this.stateObj)}${
+            state === "on" && this.stateObj.attributes.percentage
+                ? " - " + this.hass.formatEntityAttributeValue(this.stateObj, "percentage")
+                : ""
+        }`;
+        return { icon, iconAnimation, iconColor, name, stateFmtd };
+    }
+
+    private async toggleEntity(e: Event): Promise<void> {
+        e.stopPropagation();
+        if (!this.hass || !this.entity) return;
+
+        try {
+            await this.hass.callService("light", "toggle", { entity_id: this.entity });
+        } catch (error) {
+            console.error("Failed to toggle the entity:", error);
+        }
+    }
+
+    private showMoreInfo(e: Event): void {
+        e.stopPropagation();
+        moreInfoDialog(this.config, this.stateObj);
+    }
+
+    private showEntityList(e: Event): void {
+        e.stopPropagation();
+        if (
+            !this.stateObj ||
+            !Array.isArray(this.stateObj.attributes?.entity_id) ||
+            this.stateObj.attributes.entity_id.length === 0
+        )
+            return;
+        entityListDialog(this.stateObj.attributes?.friendly_name || "Unknown", "group", this.entity, "light");
+    }
+}
