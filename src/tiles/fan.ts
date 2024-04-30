@@ -68,35 +68,34 @@ export class FanTile extends LitElement {
     }
 
     private updateState() {
-        if (!this.config || !this.hass || !this.stateObj) {
-            return {
-                icon: this.config?.icon || "hass:fan-alert",
-                iconAnimation: "none",
-                iconColor: "var(--sq-unavailable-rgb, 255, 0, 255)",
-                name: this.config?.name || "Unknown",
-                stateFmtd: "Invalid entity!",
-            };
+        let icon = this.config?.icon || "hass:lightbulb-alert";
+        let iconAnimation = "none";
+        let iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+        let name = this.config?.name || "Unknown";
+        let stateFmtd = "Invalid entity!";
+
+        if (this.config && this.hass && this.stateObj) {
+            const state = this.stateObj.state || "unknown";
+            icon = this.config.icon || "hass:fan";
+            iconAnimation = "none";
+            if (state == "on" && icon === "hass:fan") {
+                if (this.stateObj.attributes.percentage) {
+                    const speed = 0.5 + (1 - this.stateObj.attributes.percentage / 100);
+                    const direction = this.stateObj.attributes.direction == "reverse" ? "reverse" : "normal";
+                    iconAnimation = `spin ${speed}s linear infinite ${direction}`;
+                } else {
+                    iconAnimation = `spin 0.5s linear infinite normal`;
+                }
+            }
+            iconColor = state === "on" ? "var(--sq-fan-on-rgb)" : "var(--sq-inactive-rgb)";
+            name = this.config.name || this.stateObj.attributes.friendly_name || "Unknown";
+            stateFmtd = `${this.hass.formatEntityState(this.stateObj)}${
+                state === "on" && this.stateObj.attributes.percentage
+                    ? " - " + this.hass.formatEntityAttributeValue(this.stateObj, "percentage")
+                    : ""
+            }`;
         }
 
-        const state = this.stateObj.state || "unknown";
-        const icon = this.config.icon || "hass:fan";
-        let iconAnimation = "none";
-        if (state == "on" && icon === "hass:fan") {
-            if (this.stateObj.attributes.percentage) {
-                const speed = 0.5 + (1 - this.stateObj.attributes.percentage / 100);
-                const direction = this.stateObj.attributes.direction == "reverse" ? "reverse" : "normal";
-                iconAnimation = `spin ${speed}s linear infinite ${direction}`;
-            } else {
-                iconAnimation = `spin 0.5s linear infinite normal`;
-            }
-        }
-        const iconColor = state === "on" ? "var(--sq-fan-on-rgb)" : "var(--sq-inactive-rgb)";
-        const name = this.config.name || this.stateObj.attributes.friendly_name || "Unknown";
-        const stateFmtd = `${this.hass.formatEntityState(this.stateObj)}${
-            state === "on" && this.stateObj.attributes.percentage
-                ? " - " + this.hass.formatEntityAttributeValue(this.stateObj, "percentage")
-                : ""
-        }`;
         return { icon, iconAnimation, iconColor, name, stateFmtd };
     }
 

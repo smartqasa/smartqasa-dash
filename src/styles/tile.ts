@@ -23,7 +23,7 @@ export const tileBaseStyle = css`
         width: 1.8rem;
         padding: 1rem;
         border-radius: 50%;
-        transition: all 0.5s ease;
+        transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;
     }
     .name {
         grid-area: n;
@@ -38,7 +38,6 @@ export const tileBaseStyle = css`
         font-weight: var(--sq-primary-font-weight, 400);
         font-size: var(--sq-primary-font-size, 1.5rem);
         color: rgb(var(--sq-primary-font-rgb), 128, 128, 128);
-        transition: all 0.5s ease;
     }
 `;
 

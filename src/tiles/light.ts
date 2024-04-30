@@ -80,26 +80,24 @@ export class LightTile extends LitElement {
     }
 
     private updateState() {
-        if (!this.config || !this.hass || !this.stateObj) {
-            return {
-                icon: this.config?.icon || "hass:lightbulb-alert",
-                iconAnimation: "none",
-                iconColor: "var(--sq-unavailable-rgb, 255, 0, 255)",
-                name: this.config?.name || "Unknown",
-                stateFmtd: "Invalid entity!",
-            };
-        }
+        let icon = this.config?.icon || "hass:lightbulb-alert";
+        let iconAnimation = "none";
+        let iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+        let name = this.config?.name || "Unknown";
+        let stateFmtd = "Invalid entity!";
 
-        const state = this.stateObj.state || "unknown";
-        const icon = this.config.icon || this.stateObj.attributes.icon || "hass:lightbulb";
-        const iconAnimation = "none";
-        const iconColor = state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
-        const name = this.config?.name || this.stateObj.attributes.friendly_name || "Unknown";
-        const stateFmtd = `${this.hass.formatEntityState(this.stateObj)}${
-            state === "on" && this.stateObj.attributes.brightness
-                ? " - " + this.hass.formatEntityAttributeValue(this.stateObj, "brightness")
-                : ""
-        }`;
+        if (this.config && this.hass && this.stateObj) {
+            const state = this.stateObj.state || "unknown";
+            icon = this.config.icon || this.stateObj.attributes.icon || "hass:lightbulb";
+            iconAnimation = "none";
+            iconColor = state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
+            name = this.config?.name || this.stateObj.attributes.friendly_name || "Unknown";
+            stateFmtd = `${this.hass.formatEntityState(this.stateObj)}${
+                state === "on" && this.stateObj.attributes.brightness
+                    ? " - " + this.hass.formatEntityAttributeValue(this.stateObj, "brightness")
+                    : ""
+            }`;
+        }
 
         return { icon, iconAnimation, iconColor, name, stateFmtd };
     }

@@ -1,8 +1,7 @@
-import { CSSResultGroup, LitElement, html, TemplateResult } from "lit";
-import { customElement, state } from "lit/decorators.js";
+import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult } from "lit";
+import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
-import { HassArea } from "../types";
-import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
+import { AreaRegistryEntry, HomeAssistant, LovelaceCardConfig } from "../types";
 
 import { tileBaseStyle, tileIconSpinStyle } from "../styles/tile";
 
@@ -12,99 +11,96 @@ interface Config extends LovelaceCardConfig {
     name?: string;
 }
 
-@customElement("smartqasa-all-off-tile")
-export class AllOffTile extends LitElement {
-    @state() private _config?: Config;
-    @state() private _areaObj?: HassArea;
-    @state() private _waiting: boolean = false;
-
-    private _area?: string;
-    private _hass: any;
-    private _icon: string = "hass:help-rhombus";
-    private _iconAnimation: string = "none";
-    private _iconColor: string = "var(--sq-inactive-rgb)";
-    private _name: string = "Loading...";
-
-    static styles: CSSResultGroup = [tileBaseStyle, tileIconSpinStyle];
-
-    setConfig(config: Config): void {
-        this._config = { ...config };
-        this._area = this._config?.area;
-        this.updateState();
-    }
-
-    set hass(hass: any) {
-        if (!hass || !this._area || hass.areas[this._area] === this._areaObj) return;
-        this._hass = hass;
-        this._areaObj = hass.areas[this._area];
-        this.updateState();
-    }
-
-    private updateState(): void {
-        if (this._waiting === true) return;
-
-        if (!this._areaObj) {
-            this._icon = this._config?.icon ?? "hass:alert-rhombus";
-            this._iconAnimation = "none";
-            this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            this._name = this._config?.name ?? "Unknown";
-            return;
-        }
-
-        this._icon = this._config?.icon || "hass:power";
-        this._iconAnimation = "none";
-        this._iconColor = "var(--sq-inactive-rgb)";
-        this._name = this._config?.name || this._areaObj.name || this._area || "Unknown";
-    }
-
-    protected render(): TemplateResult {
-        const iconStyles = {
-            color: `rgb(${this._iconColor})`,
-            backgroundColor: `rgba(${this._iconColor}, var(--sq-icon-opacity))`,
-            animation: this._iconAnimation,
-        };
-
-        return html`
-            <div class="container" @click=${this.runRoutine}>
-                <div class="icon" style="${styleMap(iconStyles)}">
-                    <ha-icon .icon=${this._icon}></ha-icon>
-                </div>
-                <div class="name">${this._name}</div>
-            </div>
-        `;
-    }
-
-    private runRoutine(e: Event): void {
-        e.stopPropagation();
-        if (!this._areaObj) return;
-
-        this._waiting = true;
-        this._icon = "hass:rotate-right";
-        this._iconAnimation = "spin 1.0s linear infinite";
-        this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
-
-        this._hass.callService("light", "turn_off", {
-            area_id: this._area,
-            transition: 2,
-        });
-        this._hass.callService("fan", "turn_off", {
-            area_id: this._area,
-        });
-
-        setTimeout(() => {
-            this._waiting = false;
-            this.updateState();
-        }, 2000);
-    }
-
-    getCardSize(): number {
-        return 1;
-    }
-}
-
 window.customCards.push({
     type: "smartqasa-all-off-tile",
     name: "SmartQasa All Off Tile",
     preview: true,
     description: "A SmartQasa tile for turning off all light and fan entities in an area.",
 });
+
+@customElement("smartqasa-all-off-tile")
+export class AllOffTile extends LitElement {
+    getCardSize(): number {
+        return 1;
+    }
+
+    @property({ attribute: false }) public hass?: HomeAssistant;
+
+    @state() private config?: Config;
+    @state() private areaObj?: AreaRegistryEntry;
+    @state() private running: boolean = false;
+
+    private area?: string;
+
+    static styles: CSSResultGroup = [tileBaseStyle, tileIconSpinStyle];
+
+    setConfig(config: Config): void {
+        this.config = { ...config };
+        this.area = this.config?.area;
+    }
+
+    updated(changedProps: PropertyValues) {
+        if (changedProps.has("hass") && this.area) {
+            this.areaObj = this.hass?.areas[this.area];
+        }
+    }
+
+    protected render(): TemplateResult {
+        const { icon, iconAnimation, iconColor, name } = this.updateState();
+
+        const iconStyles = {
+            color: `rgb(${iconColor})`,
+            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity))`,
+            animation: iconAnimation,
+        };
+
+        return html`
+            <div class="container" @click=${this.runRoutine}>
+                <div class="icon" style="${styleMap(iconStyles)}">
+                    <ha-icon .icon=${icon}></ha-icon>
+                </div>
+                <div class="name">${name}</div>
+            </div>
+        `;
+    }
+
+    private updateState() {
+        let icon = "hass:alert-rhombus";
+        let iconAnimation = "none";
+        let iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+        let name = "Unknown";
+
+        if (this.config && this.hass && this.areaObj) {
+            icon = this.config.icon || "hass:power";
+            iconColor = "var(--sq-inactive-rgb)";
+            name = this.config.name || this.areaObj.name || this.area || "Unknown";
+
+            if (this.running) {
+                icon = "hass:rotate-right";
+                iconAnimation = "spin 1.0s linear infinite";
+                iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
+            }
+        }
+
+        return { icon, iconAnimation, iconColor, name };
+    }
+
+    private runRoutine(e: Event): void {
+        e.stopPropagation();
+        if (!this.areaObj || !this.hass) return;
+
+        this.running = true;
+
+        this.hass.callService("light", "turn_off", {
+            area_id: this.area,
+            transition: 2,
+        });
+        this.hass.callService("fan", "turn_off", {
+            area_id: this.area,
+        });
+
+        setTimeout(() => {
+            this.running = false;
+        }, 2000);
+    }
+}

@@ -1,8 +1,8 @@
-import { CSSResultGroup, html, LitElement, TemplateResult } from "lit";
-import { customElement, state } from "lit/decorators.js";
+import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult } from "lit";
+import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity } from "home-assistant-js-websocket";
-import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
+import { HomeAssistant, LovelaceCardConfig } from "../types";
 import { moreInfoDialog } from "../utils/more-info-dialog";
 
 import { tileBaseStyle, tileStateStyle, tileIconBlinkStyle } from "../styles/tile";
@@ -12,13 +12,26 @@ interface Config extends LovelaceCardConfig {
     name?: string;
 }
 
+window.customCards.push({
+    type: "smartqasa-garage-tile",
+    name: "SmartQasa Garage Tile",
+    preview: true,
+    description: "A SmartQasa tile for controlling a garage cover entity.",
+});
+
 @customElement("smartqasa-garage-tile")
 export class GarageTile extends LitElement {
-    @state() private _config?: Config;
-    @state() private _stateObj?: HassEntity;
+    getCardSize(): number {
+        return 1;
+    }
 
-    private _entity?: string;
-    private _hass: any;
+    @property({ attribute: false }) public hass?: HomeAssistant;
+
+    @state() private config?: Config;
+    @state() private stateObj?: HassEntity;
+
+    private entity?: string;
+
     private _icon: string = "hass:garage-variant";
     private _iconAnimation: string = "none";
     private _iconColor: string = "var(--sq-inactive-rgb)";
@@ -28,100 +41,96 @@ export class GarageTile extends LitElement {
     static styles: CSSResultGroup = [tileBaseStyle, tileStateStyle, tileIconBlinkStyle];
 
     setConfig(config: Config): void {
-        this._config = { ...config };
-        this._entity = this._config.entity?.startsWith("cover.") ? this._config.entity : undefined;
-        this.updateState();
+        this.config = { ...config };
+        this.entity = this.config.entity?.startsWith("cover.") ? this.config.entity : undefined;
     }
 
-    set hass(hass: HomeAssistant) {
-        if (!hass || !this._entity || hass.states[this._entity] === this._stateObj) return;
-        this._hass = hass;
-        this._stateObj = hass.states[this._entity];
-        this.updateState();
-    }
-
-    private updateState(): void {
-        if (!this._entity || !this._stateObj) {
-            this._icon = this._config?.icon || "hass:garage-alert-variant";
-            this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            this._name = this._config?.name || "Unknown";
-            this._stateFmtd = "Invalid entity!";
-            return;
+    updated(changedProps: PropertyValues) {
+        if (changedProps.has("hass") && this.entity) {
+            this.stateObj = this.hass?.states[this.entity];
         }
-
-        const state = this._stateObj.state || "unknown";
-        switch (state) {
-            case "closed":
-                this._icon = "hass:garage-variant";
-                this._iconAnimation = "none";
-                this._iconColor = "var(--sq-inactive-rgb)";
-                break;
-            case "opening":
-                this._icon = "hass:arrow-up-box";
-                this._iconAnimation = "blink 2.0s linear infinite";
-                this._iconColor = "var(--sq-garage-opening-rgb, 255, 120, 0)";
-                break;
-            case "open":
-                this._icon = "hass:garage-open-variant";
-                this._iconAnimation = "none";
-                this._iconColor = "var(--sq-garage-open-rgb, 255, 120, 0)";
-                break;
-            case "closing":
-                this._icon = "hass:arrow-down-box";
-                this._iconAnimation = "blink 2.0s linear infinite";
-                this._iconColor = "var(--sq-garage-closing-rgb, 255, 120, 0)";
-                break;
-            default:
-                this._icon = "hass:garage-alert-variant";
-                this._iconAnimation = "none";
-                this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-                break;
-        }
-        this._stateFmtd =
-            this._hass.formatEntityState(this._stateObj) +
-            (state === "open" && this._stateObj.attributes.current_position
-                ? " - " + this._hass.formatEntityAttributeValue(this._stateObj, "current_position")
-                : "");
-        this._name = this._config?.name || this._stateObj.attributes.friendly_name || "Unknown";
     }
 
     protected render(): TemplateResult {
+        const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
+
         const iconStyles = {
-            color: `rgb(${this._iconColor})`,
-            backgroundColor: `rgba(${this._iconColor}, var(--sq-icon-opacity))`,
-            animation: this._iconAnimation,
+            color: `rgb(${iconColor})`,
+            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity))`,
+            animation: iconAnimation,
         };
 
         return html`
             <div class="container" @click=${this.showMoreInfo}>
                 <div class="icon" @click=${this.toggleEntity} style="${styleMap(iconStyles)}">
-                    <ha-icon .icon=${this._icon}></ha-icon>
+                    <ha-icon .icon=${icon}></ha-icon>
                 </div>
-                <div class="name">${this._name}</div>
-                <div class="state">${this._stateFmtd}</div>
+                <div class="name">${name}</div>
+                <div class="state">${stateFmtd}</div>
             </div>
         `;
     }
 
-    private toggleEntity(e: Event): void {
+    private updateState() {
+        let icon = this.config?.icon || "hass:garage-alert-variant";
+        let iconAnimation = "none";
+        let iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+        let name = this.config?.name || "Unknown";
+        let stateFmtd = "Invalid entity!";
+
+        if (this.config && this.hass && this.stateObj) {
+            const state = this.stateObj.state || "unknown";
+            switch (state) {
+                case "closed":
+                    icon = "hass:garage-variant";
+                    iconAnimation = "none";
+                    iconColor = "var(--sq-inactive-rgb)";
+                    break;
+                case "opening":
+                    icon = "hass:arrow-up-box";
+                    iconAnimation = "blink 2.0s linear infinite";
+                    iconColor = "var(--sq-garage-opening-rgb, 255, 120, 0)";
+                    break;
+                case "open":
+                    icon = "hass:garage-open-variant";
+                    iconAnimation = "none";
+                    iconColor = "var(--sq-garage-open-rgb, 255, 120, 0)";
+                    break;
+                case "closing":
+                    icon = "hass:arrow-down-box";
+                    iconAnimation = "blink 2.0s linear infinite";
+                    iconColor = "var(--sq-garage-closing-rgb, 255, 120, 0)";
+                    break;
+                default:
+                    icon = "hass:garage-alert-variant";
+                    iconAnimation = "none";
+                    iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+                    break;
+            }
+            name = this.config?.name || this.stateObj.attributes.friendly_name || "Unknown";
+            stateFmtd =
+                this.hass.formatEntityState(this.stateObj) +
+                (state === "open" && this.stateObj.attributes.current_position
+                    ? " - " + this.hass.formatEntityAttributeValue(this.stateObj, "current_position")
+                    : "");
+        }
+
+        return { icon, iconAnimation, iconColor, name, stateFmtd };
+    }
+
+    private async toggleEntity(e: Event): Promise<void> {
         e.stopPropagation();
-        if (!this._stateObj) return;
-        this._hass.callService("cover", "toggle", { entity_id: this._entity });
+        if (!this.hass || !this.entity) return;
+
+        try {
+            await this.hass.callService("cover", "toggle", { entity_id: this.entity });
+        } catch (error) {
+            console.error("Failed to toggle the entity:", error);
+        }
     }
 
     private showMoreInfo(e: Event): void {
         e.stopPropagation();
-        moreInfoDialog(this._config, this._stateObj);
-    }
-
-    getCardSize(): number {
-        return 1;
+        moreInfoDialog(this.config, this.stateObj);
     }
 }
-
-window.customCards.push({
-    type: "smartqasa-garage-tile",
-    name: "SmartQasa Garage Tile",
-    preview: true,
-    description: "A SmartQasa tile for controlling a garage cover entity.",
-});
