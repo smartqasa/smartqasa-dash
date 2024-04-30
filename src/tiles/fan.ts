@@ -79,9 +79,9 @@ export class FanTile extends LitElement {
         }
 
         const state = this.stateObj.state || "unknown";
-        const icon = this.config?.icon || "hass:fan";
+        const icon = this.config.icon || "hass:fan";
         let iconAnimation = "none";
-        if (state == "on" && this.config?.icon === "hass:fan") {
+        if (state == "on" && icon === "hass:fan") {
             if (this.stateObj.attributes.percentage) {
                 const speed = 0.5 + (1 - this.stateObj.attributes.percentage / 100);
                 const direction = this.stateObj.attributes.direction == "reverse" ? "reverse" : "normal";
