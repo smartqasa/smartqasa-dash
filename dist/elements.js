@@ -6734,6 +6734,10 @@ window.customCards.push({
     description: "A SmartQasa tile for controlling a garage cover entity.",
 });
 let GarageTile = class GarageTile extends s {
+    constructor() {
+        super(...arguments);
+        this.initialized = false;
+    }
     getCardSize() {
         return 1;
     }
@@ -6741,6 +6745,7 @@ let GarageTile = class GarageTile extends s {
     setConfig(config) {
         this.config = { ...config };
         this.entity = this.config.entity?.startsWith("cover.") ? this.config.entity : undefined;
+        this.initialized = true;
     }
     updated(changedProps) {
         if (changedProps.has("hass") && this.entity) {
@@ -6748,7 +6753,7 @@ let GarageTile = class GarageTile extends s {
         }
     }
     render() {
-        if (!this.entity)
+        if (!this.initialized)
             return x ``;
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
         const iconStyles = {
@@ -6832,6 +6837,9 @@ let GarageTile = class GarageTile extends s {
 __decorate([
     n$1({ attribute: false })
 ], GarageTile.prototype, "hass", void 0);
+__decorate([
+    r()
+], GarageTile.prototype, "initialized", void 0);
 __decorate([
     r()
 ], GarageTile.prototype, "config", void 0);
