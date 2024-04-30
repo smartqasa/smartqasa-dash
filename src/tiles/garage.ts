@@ -41,8 +41,8 @@ export class GarageTile extends LitElement {
     }
 
     updated(changedProps: PropertyValues) {
-        if (changedProps.has("hass") && this.entity) {
-            this.stateObj = this.hass?.states[this.entity];
+        if (changedProps.has("hass")) {
+            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
             this.initialized = true;
         }
     }
@@ -51,13 +51,11 @@ export class GarageTile extends LitElement {
         if (!this.initialized) return html``;
 
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
-
         const iconStyles = {
             color: `rgb(${iconColor})`,
             backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity))`,
             animation: iconAnimation,
         };
-
         return html`
             <div class="container" @click=${this.showMoreInfo}>
                 <div class="icon" @click=${this.toggleEntity} style="${styleMap(iconStyles)}">
@@ -72,7 +70,7 @@ export class GarageTile extends LitElement {
     private updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
 
-        if (this.hass && this.stateObj) {
+        if (this.config && this.hass && this.stateObj) {
             const state = this.stateObj.state || "unknown";
             switch (state) {
                 case "closed":

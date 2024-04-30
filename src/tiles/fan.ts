@@ -29,6 +29,7 @@ export class FanTile extends LitElement {
 
     @property({ attribute: false }) public hass?: HomeAssistant;
 
+    @state() private initialized: boolean = false;
     @state() private config?: Config;
     @state() private stateObj?: HassEntity;
 
@@ -42,20 +43,21 @@ export class FanTile extends LitElement {
     }
 
     updated(changedProps: PropertyValues) {
-        if (changedProps.has("hass") && this.entity) {
-            this.stateObj = this.hass?.states[this.entity];
+        if (changedProps.has("hass")) {
+            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
+            this.initialized = true;
         }
     }
 
     protected render(): TemplateResult {
-        const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
+        if (!this.initialized) return html``;
 
+        const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
             backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity))`,
             animation: iconAnimation,
         };
-
         return html`
             <div class="container" @click=${this.showMoreInfo} @contextmenu=${this.showEntityList}>
                 <div class="icon" @click=${this.toggleEntity} style="${styleMap(iconStyles)}">

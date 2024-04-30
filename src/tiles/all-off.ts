@@ -26,6 +26,7 @@ export class AllOffTile extends LitElement {
 
     @property({ attribute: false }) public hass?: HomeAssistant;
 
+    @state() private initialized: boolean = false;
     @state() private config?: Config;
     @state() private areaObj?: AreaRegistryEntry;
     @state() private running: boolean = false;
@@ -41,19 +42,20 @@ export class AllOffTile extends LitElement {
 
     updated(changedProps: PropertyValues) {
         if (changedProps.has("hass") && this.area) {
-            this.areaObj = this.hass?.areas[this.area];
+            this.areaObj = this.hass && this.area ? this.hass.areas[this.area] : undefined;
+            this.initialized = true;
         }
     }
 
     protected render(): TemplateResult {
-        const { icon, iconAnimation, iconColor, name } = this.updateState();
+        if (!this.initialized) return html``;
 
+        const { icon, iconAnimation, iconColor, name } = this.updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
             backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity))`,
             animation: iconAnimation,
         };
-
         return html`
             <div class="container" @click=${this.runRoutine}>
                 <div class="icon" style="${styleMap(iconStyles)}">
