@@ -76,9 +76,10 @@ export class AllOffTile extends LitElement {
                 iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
             } else {
                 icon = this.config.icon || "hass:power";
+                iconAnimation = "none";
                 iconColor = "var(--sq-inactive-rgb)";
-                name = this.config.name || this.areaObj.name || this.area || "Unknown";
             }
+            name = this.config.name || this.areaObj.name || this.area;
         } else {
             icon = "hass:alert-rhombus";
             iconAnimation = "none";

@@ -1,7 +1,7 @@
-import { CSSResult, LitElement, html, TemplateResult } from "lit";
-import { customElement, state } from "lit/decorators.js";
+import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult } from "lit";
+import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
-import { LovelaceCardConfig } from "custom-card-helpers";
+import { LovelaceCardConfig } from "../types";
 import { dialogTable } from "../tables/dialogs";
 import { menuConfig } from "../misc/menu-config";
 
@@ -14,57 +14,68 @@ interface Config extends LovelaceCardConfig {
     menu_tab?: number;
 }
 
+window.customCards.push({
+    type: "smartqasa-dialog-tile",
+    name: "SmartQasa Dialog Tile",
+    preview: true,
+    description: "A SmartQasa card for displaying a browser_mod popup dialog.",
+});
+
 @customElement("smartqasa-dialog-tile")
 export class DialogTile extends LitElement {
-    @state() private _config?: Config;
-    @state() private _dialogObj?: any;
-
-    private _icon: string = "hass:help-rhombus";
-    private _iconColor: string = "var(--sq-inactive-rgb)";
-    private _name: string = "Loading...";
-
-    static styles: CSSResult = tileBaseStyle;
-
-    setConfig(config: Config): void {
-        this._config = { ...config };
-        this._dialogObj = dialogTable[config.dialog];
-        this.updateState();
+    getCardSize(): number {
+        return 1;
     }
 
-    private updateState(): void {
-        if (!this._dialogObj) {
-            this._icon = this._config?.icon || "hass:help-rhombus";
-            this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            this._name = this._config?.name || "Unknown";
-            return;
-        }
+    @state() private config?: Config;
+    @state() private dialogObj?: any;
 
-        this._icon = this._config?.icon || this._dialogObj.icon;
-        this._iconColor = "var(--sq-inactive-rgb)";
-        this._name = this._config?.name || this._dialogObj.name;
+    static styles: CSSResultGroup = [tileBaseStyle];
+
+    setConfig(config: Config): void {
+        this.config = { ...config };
+        this.dialogObj = dialogTable[config.dialog];
     }
 
     protected render(): TemplateResult {
+        const { icon, iconAnimation, iconColor, name } = this.updateState();
         const iconStyles = {
-            color: `rgb(${this._iconColor})`,
-            backgroundColor: `rgba(${this._iconColor}, var(--sq-icon-opacity))`,
+            color: `rgb(${iconColor})`,
+            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity))`,
+            animation: iconAnimation,
         };
-
         return html`
             <div class="container" @click=${this.showDialog}>
                 <div class="icon" style="${styleMap(iconStyles)}">
-                    <ha-icon .icon=${this._icon}></ha-icon>
+                    <ha-icon .icon=${icon}></ha-icon>
                 </div>
-                <div class="name">${this._name}</div>
+                <div class="name">${name}</div>
             </div>
         `;
     }
 
+    private updateState() {
+        let icon, iconAnimation, iconColor, name;
+
+        if (this.config && this.dialogObj) {
+            icon = this.config.icon || this.dialogObj.icon;
+            iconColor = "var(--sq-inactive-rgb)";
+            name = this.config.name || this.dialogObj.name;
+        } else {
+            icon = this.config?.icon || "hass:help-rhombus";
+            iconAnimation = "none";
+            iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+            name = this.config?.name || "Unknown";
+        }
+
+        return { icon, iconAnimation, iconColor, name };
+    }
+
     private async showDialog(e: Event): Promise<void> {
         e.stopPropagation();
-        if (!this._dialogObj || !this._config) return;
+        if (!this.dialogObj || !this.config) return;
 
-        const dialogConfig = { ...this._dialogObj.data };
+        const dialogConfig = { ...this.dialogObj.data };
 
         /*
         const menuTab = this._config.menu_tab;
@@ -82,15 +93,4 @@ export class DialogTile extends LitElement {
 
         window.browser_mod?.service("popup", dialogConfig);
     }
-
-    getCardSize(): number {
-        return 1;
-    }
 }
-
-window.customCards.push({
-    type: "smartqasa-dialog-tile",
-    name: "SmartQasa Dialog Tile",
-    preview: true,
-    description: "A SmartQasa card for displaying a browser_mod popup dialog.",
-});

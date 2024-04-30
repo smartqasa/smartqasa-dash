@@ -5,10 +5,10 @@ export function selectOptionDialog(config: any, stateObj: any) {
 
     const cards = stateObj.attributes.options.map((option: string) => ({
         type: "custom:smartqasa-option-tile",
-        entity: stateObj?.entity_id,
+        entity: stateObj.entity_id,
         option: option,
         trigger: config?.trigger,
-        menu_tab: config?.menu_tab,
+        menu_tab: config.menu_tab,
     }));
 
     const dialogConfig = {

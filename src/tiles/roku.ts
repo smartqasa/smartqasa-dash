@@ -1,8 +1,9 @@
-import { CSSResultGroup, html, LitElement, TemplateResult } from "lit";
-import { customElement, state } from "lit/decorators.js";
+import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult } from "lit";
+import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity } from "home-assistant-js-websocket";
-import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
+import { HomeAssistant, LovelaceCardConfig } from "../types";
+import { toggleHassEntity } from "../utils/toggle-hass-entity";
 import { listDialogConfig } from "../utils/list-dialog-config";
 
 import { tileBaseStyle, tileStateStyle } from "../styles/tile";
@@ -13,116 +14,129 @@ interface Config extends LovelaceCardConfig {
     name?: string;
 }
 
+window.customCards.push({
+    type: "smartqasa-roku-tile",
+    name: "SmartQasa Roku Tile",
+    preview: true,
+    description: "A SmartQasa tile for controlling a Roku media_player entity.",
+});
+
 @customElement("smartqasa-roku-tile")
 export class RokuTile extends LitElement {
-    @state() private _config?: Config;
-    @state() private _stateObj?: HassEntity;
+    getCardSize(): number {
+        return 1;
+    }
 
-    private _entity?: string;
-    private _hass: any;
-    private _icon: string = "hass:audio-video";
-    private _iconAnimation: string = "none";
-    private _iconColor: string = "var(--sq-inactive-rgb)";
-    private _name: string = "Loading...";
-    private _stateFmtd: string = "Loading...";
+    @property({ attribute: false }) public hass?: HomeAssistant;
+
+    @state() private initialized: boolean = false;
+    @state() private config?: Config;
+    @state() private stateObj?: HassEntity;
+
+    private entity?: string;
 
     static styles: CSSResultGroup = [tileBaseStyle, tileStateStyle];
 
     setConfig(config: Config): void {
-        this._config = { ...config };
-        this._entity = this._config.entity?.startsWith("media_player.") ? this._config.entity : undefined;
-        this.updateState();
+        this.config = { ...config };
+        this.entity = this.config.entity?.startsWith("media_player.") ? this.config.entity : undefined;
     }
 
-    set hass(hass: HomeAssistant) {
-        if (!hass || !this._entity || hass.states[this._entity] === this._stateObj) return;
-        this._hass = hass;
-        this._stateObj = hass.states[this._entity];
-        this.updateState();
-    }
-
-    private updateState(): void {
-        if (!this._entity || !this._stateObj) {
-            this._icon = this._config?.icon || "hass:audio-video-off";
-            this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            this._name = this._config?.name || "Unknown";
-            this._stateFmtd = "Invalid entity!";
-            return;
+    updated(changedProps: PropertyValues) {
+        if (changedProps.has("hass")) {
+            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
+            this.initialized = true;
         }
-
-        this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:audio-video";
-        const state = this._stateObj.state || "unknown";
-        switch (state) {
-            case "idle":
-                this._iconColor = "var(--sq-media_player-idle-rgb)";
-                break;
-            case "standby":
-                this._iconColor = "var(--sq-media_player-standby-rgb)";
-                break;
-            case "on":
-                this._iconColor = "var(--sq-media_player-on-rgb)";
-                break;
-            case "paused":
-                this._iconColor = "var(--sq-media_player-paused-rgb)";
-                break;
-            case "playing":
-                this._iconColor = "var(--sq-media_player-playing-rgb, 3, 169, 244)";
-                break;
-            default:
-                this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-                break;
-        }
-        this._stateFmtd = `${this._hass.formatEntityState(this._stateObj)}${
-            this._stateObj.attributes?.source ? ` - ${this._stateObj.attributes.source}` : ""
-        }`;
-        this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._entity || "Unknown";
     }
 
     protected render(): TemplateResult {
-        const iconStyles = {
-            color: `rgb(${this._iconColor})`,
-            backgroundColor: `rgba(${this._iconColor}, var(--sq-icon-opacity))`,
-            animation: this._iconAnimation,
-        };
+        if (!this.initialized) return html``;
 
+        const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
+        const iconStyles = {
+            color: `rgb(${iconColor})`,
+            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity))`,
+            animation: iconAnimation,
+        };
         return html`
             <div class="container" @click=${this.showMoreInfo}>
                 <div class="icon" @click=${this.toggleEntity} style="${styleMap(iconStyles)}">
-                    <ha-icon .icon=${this._icon}></ha-icon>
+                    <ha-icon .icon=${icon}></ha-icon>
                 </div>
-                <div class="name">${this._name}</div>
-                <div class="state">${this._stateFmtd}</div>
+                <div class="name">${name}</div>
+                <div class="state">${stateFmtd}</div>
             </div>
         `;
     }
 
+    private updateState() {
+        let icon, iconAnimation, iconColor, name, stateFmtd;
+
+        if (this.config && this.hass && this.stateObj) {
+            icon = this.config?.icon || this.stateObj.attributes.icon || "hass:audio-video";
+            iconAnimation = "none";
+            const state = this.stateObj.state || "unknown";
+            switch (state) {
+                case "idle":
+                    iconColor = "var(--sq-media_player-idle-rgb)";
+                    break;
+                case "standby":
+                    iconColor = "var(--sq-media_player-standby-rgb)";
+                    break;
+                case "on":
+                    iconColor = "var(--sq-media_player-on-rgb)";
+                    break;
+                case "paused":
+                    iconColor = "var(--sq-media_player-paused-rgb)";
+                    break;
+                case "playing":
+                    iconColor = "var(--sq-media_player-playing-rgb, 3, 169, 244)";
+                    break;
+                default:
+                    iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+                    break;
+            }
+            name = this.config.name || this.stateObj.attributes.friendly_name || this.entity;
+            stateFmtd = `${this.hass.formatEntityState(this.stateObj)}${
+                this.stateObj.attributes?.source ? ` - ${this.stateObj.attributes.source}` : ""
+            }`;
+        } else {
+            icon = this.config?.icon || "hass:audio-video-off";
+            iconAnimation = "none";
+            iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+            name = this.config?.name || "Unknown";
+            stateFmtd = "Unknown";
+        }
+
+        return { icon, iconAnimation, iconColor, name, stateFmtd };
+    }
+
     private toggleEntity(e: Event): void {
         e.stopPropagation();
-        if (!this._stateObj) return;
-        this._hass.callService("media_player", "toggle", { entity_id: this._entity });
+        toggleHassEntity(this.hass, this.entity);
     }
 
     private showMoreInfo(e: Event): void {
         e.stopPropagation();
-        if (!this._config || !this._stateObj) return;
+        if (!this.config || !this.stateObj) return;
 
         const dialogConfig = {
-            title: this._stateObj.attributes?.friendly_name || this._entity || "Unknown",
+            title: this.stateObj.attributes?.friendly_name || this.entity || "Unknown",
             timeout: 60000,
             content: {
                 type: "custom:roku-card",
-                entity: this._entity,
+                entity: this.entity,
                 tv: true,
             },
-            ...(this._config.dialog_title && {
+            ...(this.config.dialog_title && {
                 dismiss_action: {
                     service: "browser_mod.popup",
                     data: {
                         ...listDialogConfig(
-                            this._config.dialog_title,
-                            this._config.filter_type,
-                            this._config.filter_value,
-                            this._config.tile_type
+                            this.config.dialog_title,
+                            this.config.filter_type,
+                            this.config.filter_value,
+                            this.config.tile_type
                         ),
                     },
                 },
@@ -131,15 +145,4 @@ export class RokuTile extends LitElement {
 
         window.browser_mod?.service("popup", dialogConfig);
     }
-
-    getCardSize(): number {
-        return 1;
-    }
 }
-
-window.customCards.push({
-    type: "smartqasa-roku-tile",
-    name: "SmartQasa Roku Tile",
-    preview: true,
-    description: "A SmartQasa tile for controlling a Roku media_player entity.",
-});
