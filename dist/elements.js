@@ -7802,94 +7802,90 @@ window.customCards.push({
     description: "A SmartQasa tile for displaying an Input Select entity.",
 });
 
-let SensorTile = class SensorTile extends s {
-    constructor() {
-        super(...arguments);
-        this._iconAnimation = "none";
-        this._iconColor = "var(--sq-inactive-rgb)";
-        this._name = "Loading...";
-        this._stateFmtd = "Loading...";
-    }
-    static { this.styles = [tileBaseStyle, tileStateStyle]; }
-    setConfig(config) {
-        this._config = { ...config };
-        this._entity = this._config.entity?.startsWith("binary_sensor.") ? this._config.entity : undefined;
-        this.updateState();
-    }
-    set hass(hass) {
-        if (!hass || !this._entity || hass.states[this._entity] === this._stateObj)
-            return;
-        this._hass = hass;
-        this._stateObj = hass.states[this._entity];
-        this.updateState();
-    }
-    updateState() {
-        if (!this._entity || !this._stateObj) {
-            this._iconTemplate = x `<ha-icon .icon="hass:leak"></ha-icon>`;
-            this._iconColor = "var(--sq-unavailable-rgb)";
-            this._name = this._name || "Unknown";
-            this._stateFmtd = "Invalid entity!";
-            return;
-        }
-        if (this._stateObj) {
-            if (!this._config?.icon) {
-                this._iconTemplate = x `<ha-state-icon
-                    .hass=${this._hass}
-                    .stateObj=${this._stateObj}
-                ></ha-state-icon>`;
-            }
-            else {
-                this._iconTemplate = x `<ha-icon .icon=${this._config.icon}></ha-icon>`;
-            }
-            this._iconColor =
-                this._stateObj.state === "on" ? "var(--sq-binary_sensor-on-rgb)" : "var(--sq-inactive-rgb)";
-            this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._entity || "Unknown";
-            this._stateFmtd = this._hass ? this._hass.formatEntityState(this._stateObj) : "Unknown";
-        }
-        else {
-            this._iconTemplate = x `<ha-icon .icon="hass:leak"></ha-icon>`;
-            this._iconColor = "var(--sq-unavailable-rgb)";
-            this._name = this._name || "Unknown";
-            this._stateFmtd = "Unknown";
-        }
-    }
-    render() {
-        const iconStyles = {
-            color: `rgb(${this._iconColor})`,
-            backgroundColor: `rgba(${this._iconColor}, var(--sq-icon-opacity))`,
-            animation: this._iconAnimation,
-        };
-        return x `
-            <div class="container" @click=${this.showMoreInfo}>
-                <div class="icon" style="${o(iconStyles)}">${this._iconTemplate}</div>
-                <div class="name">${this._name}</div>
-                <div class="state">${this._stateFmtd}</div>
-            </div>
-        `;
-    }
-    showMoreInfo(e) {
-        e.stopPropagation();
-        moreInfoDialog(this._config, this._stateObj);
-    }
-    getCardSize() {
-        return 1;
-    }
-};
-__decorate([
-    r()
-], SensorTile.prototype, "_config", void 0);
-__decorate([
-    r()
-], SensorTile.prototype, "_stateObj", void 0);
-SensorTile = __decorate([
-    t$1("smartqasa-sensor-tile")
-], SensorTile);
 window.customCards.push({
     type: "smartqasa-sensor-tile",
     name: "SmartQasa Sensor Tile",
     preview: true,
     description: "A SmartQasa tile for observing a binary_sensor entity.",
 });
+let SensorTile = class SensorTile extends s {
+    constructor() {
+        super(...arguments);
+        this.initialized = false;
+    }
+    getCardSize() {
+        return 1;
+    }
+    static { this.styles = [tileBaseStyle, tileStateStyle]; }
+    setConfig(config) {
+        this.config = { ...config };
+        this.entity = this.config.entity?.startsWith("binary_sensor.") ? this.config.entity : undefined;
+    }
+    updated(changedProps) {
+        if (changedProps.has("hass")) {
+            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
+            this.initialized = true;
+        }
+    }
+    render() {
+        if (!this.initialized)
+            return x ``;
+        const { iconTemplate, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
+        const iconStyles = {
+            color: `rgb(${iconColor})`,
+            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity))`,
+            animation: iconAnimation,
+        };
+        return x `
+            <div class="container" @click=${this.showMoreInfo}>
+                <div class="icon" style="${o(iconStyles)}">${iconTemplate}</div>
+                <div class="name">${name}</div>
+                <div class="state">${stateFmtd}</div>
+            </div>
+        `;
+    }
+    updateState() {
+        let iconTemplate, iconAnimation, iconColor, name, stateFmtd;
+        if (this.config && this.hass && this.stateObj) {
+            if (!this.config.icon) {
+                iconTemplate = x `<ha-state-icon .hass=${this.hass} .stateObj=${this.stateObj}></ha-state-icon>`;
+            }
+            else {
+                iconTemplate = x `<ha-icon .icon=${this.config.icon}></ha-icon>`;
+            }
+            iconColor = this.stateObj.state === "on" ? "var(--sq-binary_sensor-on-rgb)" : "var(--sq-inactive-rgb)";
+            name = this.config?.name || this.stateObj.attributes.friendly_name || this.entity;
+            stateFmtd = this.hass.formatEntityState(this.stateObj);
+        }
+        else {
+            iconTemplate = x `<ha-icon .icon="hass:leak"></ha-icon>`;
+            iconAnimation = "none";
+            iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+            name = this.config?.name || "Unknown";
+            stateFmtd = "Unknown";
+        }
+        return { iconTemplate, iconAnimation, iconColor, name, stateFmtd };
+    }
+    showMoreInfo(e) {
+        e.stopPropagation();
+        moreInfoDialog(this.config, this.stateObj);
+    }
+};
+__decorate([
+    n$1({ attribute: false })
+], SensorTile.prototype, "hass", void 0);
+__decorate([
+    r()
+], SensorTile.prototype, "initialized", void 0);
+__decorate([
+    r()
+], SensorTile.prototype, "config", void 0);
+__decorate([
+    r()
+], SensorTile.prototype, "stateObj", void 0);
+SensorTile = __decorate([
+    t$1("smartqasa-sensor-tile")
+], SensorTile);
 
 const sequenceTable = {
     white: {
