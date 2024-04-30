@@ -82,7 +82,7 @@ export class ThermostatTile extends LitElement {
             } else {
                 iconColor = thermostatColors[hvacAction] || thermostatColors.idle;
             }
-
+            name = this.config.name || this.stateObj.attributes.friendly_name || this.entity;
             stateFmtd = this.hass.formatEntityState(this.stateObj);
             if (state !== "off") {
                 if (this.stateObj.attributes.current_temperature) {

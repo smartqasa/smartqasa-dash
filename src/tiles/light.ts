@@ -90,7 +90,7 @@ export class LightTile extends LitElement {
             icon = this.config.icon || this.stateObj.attributes.icon || "hass:lightbulb";
             iconAnimation = "none";
             iconColor = state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
-            name = this.config.name || this.stateObj.attributes.friendly_name || "Unknown";
+            name = this.config.name || this.stateObj.attributes.friendly_name || this.entity;
             stateFmtd = `${this.hass.formatEntityState(this.stateObj)}${
                 state === "on" && this.stateObj.attributes.brightness
                     ? " - " + this.hass.formatEntityAttributeValue(this.stateObj, "brightness")

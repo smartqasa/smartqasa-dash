@@ -7016,7 +7016,7 @@ let LightTile = class LightTile extends s {
             icon = this.config.icon || this.stateObj.attributes.icon || "hass:lightbulb";
             iconAnimation = "none";
             iconColor = state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
-            name = this.config.name || this.stateObj.attributes.friendly_name || "Unknown";
+            name = this.config.name || this.stateObj.attributes.friendly_name || this.entity;
             stateFmtd = `${this.hass.formatEntityState(this.stateObj)}${state === "on" && this.stateObj.attributes.brightness
                 ? " - " + this.hass.formatEntityAttributeValue(this.stateObj, "brightness")
                 : ""}`;
@@ -8506,6 +8506,7 @@ let ThermostatTile = class ThermostatTile extends s {
             else {
                 iconColor = thermostatColors[hvacAction] || thermostatColors.idle;
             }
+            name = this.config.name || this.stateObj.attributes.friendly_name || this.entity;
             stateFmtd = this.hass.formatEntityState(this.stateObj);
             if (state !== "off") {
                 if (this.stateObj.attributes.current_temperature) {
@@ -8550,7 +8551,7 @@ ThermostatTile = __decorate([
     t$1("smartqasa-thermostat-tile")
 ], ThermostatTile);
 
-var version = "1.1.93";
+var version = "1.1.97";
 
 window.smartqasa = window.smartqasa || {};
 window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();
