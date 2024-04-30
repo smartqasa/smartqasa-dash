@@ -65,39 +65,45 @@ export class AllOffTile extends LitElement {
     }
 
     private updateState() {
-        let icon = "hass:alert-rhombus";
-        let iconAnimation = "none";
-        let iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-        let name = "Unknown";
+        let icon, iconAnimation, iconColor, name;
 
         if (this.config && this.hass && this.areaObj) {
-            icon = this.config.icon || "hass:power";
-            iconColor = "var(--sq-inactive-rgb)";
-            name = this.config.name || this.areaObj.name || this.area || "Unknown";
-
             if (this.running) {
                 icon = "hass:rotate-right";
                 iconAnimation = "spin 1.0s linear infinite";
                 iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
+            } else {
+                icon = this.config.icon || "hass:power";
+                iconColor = "var(--sq-inactive-rgb)";
+                name = this.config.name || this.areaObj.name || this.area || "Unknown";
             }
+        } else {
+            icon = "hass:alert-rhombus";
+            iconAnimation = "none";
+            iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+            name = "Unknown";
         }
 
         return { icon, iconAnimation, iconColor, name };
     }
 
-    private runRoutine(e: Event): void {
+    private async runRoutine(e: Event): Promise<void> {
         e.stopPropagation();
         if (!this.areaObj || !this.hass) return;
 
         this.running = true;
 
-        this.hass.callService("light", "turn_off", {
-            area_id: this.area,
-            transition: 2,
-        });
-        this.hass.callService("fan", "turn_off", {
-            area_id: this.area,
-        });
+        try {
+            await this.hass.callService("light", "turn_off", {
+                area_id: this.area,
+                transition: 2,
+            });
+            await this.hass.callService("fan", "turn_off", {
+                area_id: this.area,
+            });
+        } catch (error) {
+            console.error("Failed to turn off entities:", error);
+        }
 
         setTimeout(() => {
             this.running = false;

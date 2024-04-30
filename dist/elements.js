@@ -5859,34 +5859,44 @@ let AllOffTile = class AllOffTile extends s {
         `;
     }
     updateState() {
-        let icon = "hass:alert-rhombus";
-        let iconAnimation = "none";
-        let iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-        let name = "Unknown";
+        let icon, iconAnimation, iconColor, name;
         if (this.config && this.hass && this.areaObj) {
-            icon = this.config.icon || "hass:power";
-            iconColor = "var(--sq-inactive-rgb)";
-            name = this.config.name || this.areaObj.name || this.area || "Unknown";
             if (this.running) {
                 icon = "hass:rotate-right";
                 iconAnimation = "spin 1.0s linear infinite";
                 iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
             }
+            else {
+                icon = this.config.icon || "hass:power";
+                iconColor = "var(--sq-inactive-rgb)";
+                name = this.config.name || this.areaObj.name || this.area || "Unknown";
+            }
+        }
+        else {
+            icon = "hass:alert-rhombus";
+            iconAnimation = "none";
+            iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+            name = "Unknown";
         }
         return { icon, iconAnimation, iconColor, name };
     }
-    runRoutine(e) {
+    async runRoutine(e) {
         e.stopPropagation();
         if (!this.areaObj || !this.hass)
             return;
         this.running = true;
-        this.hass.callService("light", "turn_off", {
-            area_id: this.area,
-            transition: 2,
-        });
-        this.hass.callService("fan", "turn_off", {
-            area_id: this.area,
-        });
+        try {
+            await this.hass.callService("light", "turn_off", {
+                area_id: this.area,
+                transition: 2,
+            });
+            await this.hass.callService("fan", "turn_off", {
+                area_id: this.area,
+            });
+        }
+        catch (error) {
+            console.error("Failed to turn off entities:", error);
+        }
         setTimeout(() => {
             this.running = false;
         }, 2000);
@@ -6650,11 +6660,7 @@ let FanTile = class FanTile extends s {
         `;
     }
     updateState() {
-        let icon = this.config?.icon || "hass:lightbulb-alert";
-        let iconAnimation = "none";
-        let iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-        let name = this.config?.name || "Unknown";
-        let stateFmtd = "Invalid entity!";
+        let icon, iconAnimation, iconColor, name, stateFmtd;
         if (this.config && this.hass && this.stateObj) {
             const state = this.stateObj.state || "unknown";
             icon = this.config.icon || "hass:fan";
@@ -6674,6 +6680,13 @@ let FanTile = class FanTile extends s {
             stateFmtd = `${this.hass.formatEntityState(this.stateObj)}${state === "on" && this.stateObj.attributes.percentage
                 ? " - " + this.hass.formatEntityAttributeValue(this.stateObj, "percentage")
                 : ""}`;
+        }
+        else {
+            icon = this.config?.icon || "hass:lightbulb-alert";
+            iconAnimation = "none";
+            iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+            name = this.config?.name || "Unknown";
+            stateFmtd = "Unknown";
         }
         return { icon, iconAnimation, iconColor, name, stateFmtd };
     }
@@ -6964,11 +6977,7 @@ let LightTile = class LightTile extends s {
         `;
     }
     updateState() {
-        let icon = this.config?.icon || "hass:lightbulb-alert";
-        let iconAnimation = "none";
-        let iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-        let name = this.config?.name || "Unknown";
-        let stateFmtd = "Invalid entity!";
+        let icon, iconAnimation, iconColor, name, stateFmtd;
         if (this.config && this.hass && this.stateObj) {
             const state = this.stateObj.state || "unknown";
             icon = this.config.icon || this.stateObj.attributes.icon || "hass:lightbulb";
@@ -6978,6 +6987,13 @@ let LightTile = class LightTile extends s {
             stateFmtd = `${this.hass.formatEntityState(this.stateObj)}${state === "on" && this.stateObj.attributes.brightness
                 ? " - " + this.hass.formatEntityAttributeValue(this.stateObj, "brightness")
                 : ""}`;
+        }
+        else {
+            icon = this.config?.icon || "hass:lightbulb-alert";
+            iconAnimation = "none";
+            iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+            name = this.config?.name || "Unknown";
+            stateFmtd = "Unknown";
         }
         return { icon, iconAnimation, iconColor, name, stateFmtd };
     }

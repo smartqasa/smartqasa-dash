@@ -80,11 +80,7 @@ export class LightTile extends LitElement {
     }
 
     private updateState() {
-        let icon = this.config?.icon || "hass:lightbulb-alert";
-        let iconAnimation = "none";
-        let iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-        let name = this.config?.name || "Unknown";
-        let stateFmtd = "Invalid entity!";
+        let icon, iconAnimation, iconColor, name, stateFmtd;
 
         if (this.config && this.hass && this.stateObj) {
             const state = this.stateObj.state || "unknown";
@@ -97,6 +93,12 @@ export class LightTile extends LitElement {
                     ? " - " + this.hass.formatEntityAttributeValue(this.stateObj, "brightness")
                     : ""
             }`;
+        } else {
+            icon = this.config?.icon || "hass:lightbulb-alert";
+            iconAnimation = "none";
+            iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+            name = this.config?.name || "Unknown";
+            stateFmtd = "Unknown";
         }
 
         return { icon, iconAnimation, iconColor, name, stateFmtd };
