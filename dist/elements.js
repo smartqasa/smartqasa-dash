@@ -8156,144 +8156,148 @@ PoolLightSequencerTile = __decorate([
     t$1("smartqasa-pool-light-sequencer-tile")
 ], PoolLightSequencerTile);
 
-let ShadeTile = class ShadeTile extends s {
-    constructor() {
-        super(...arguments);
-        this._icon = "hass:roller-shade";
-        this._iconAnimation = "none";
-        this._iconColor = "var(--sq-inactive-rgb)";
-        this._name = "Loading...";
-        this._stateFmtd = "Loading...";
-    }
-    static { this.styles = [tileBaseStyle, tileStateStyle, tileIconBlinkStyle]; }
-    setConfig(config) {
-        this._config = { ...config };
-        this._entity = this._config.entity?.startsWith("cover.") ? this._config.entity : undefined;
-        this.updateState();
-    }
-    set hass(hass) {
-        if (!hass || !this._entity || hass.states[this._entity] === this._stateObj)
-            return;
-        this._hass = hass;
-        this._stateObj = hass.states[this._entity];
-        this.updateState();
-    }
-    updateState() {
-        if (!this._entity || !this._stateObj) {
-            this._icon = this._config?.icon || "hass:roller-shade";
-            this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            this._name = this._config?.name || "Unknown";
-            this._stateFmtd = "Invalid entity!";
-            return;
-        }
-        const state = this._stateObj.state;
-        switch (state) {
-            case "closed":
-                this._icon = "hass:roller-shade-closed";
-                this._iconAnimation = "none";
-                this._iconColor = "var(--sq-inactive-rgb)";
-                break;
-            case "opening":
-                this._icon = "hass:arrow-up-box";
-                this._iconAnimation = "blink 2.0s linear infinite";
-                this._iconColor = "var(--sq-shade-opening-rgb, 146, 107, 199)";
-                break;
-            case "open":
-                this._icon = "hass:roller-shade";
-                this._iconAnimation = "none";
-                this._iconColor = "var(--sq-shade-open-rgb, 146, 107, 199)";
-                break;
-            case "closing":
-                this._icon = "hass:arrow-down-box";
-                this._iconAnimation = "blink 2.0s linear infinite";
-                this._iconColor = "var(--sq-shade-closing-rgb, 146, 107, 199)";
-                break;
-            default:
-                this._icon = "hass:alert-rhombus";
-                this._iconAnimation = "none";
-                this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-                break;
-        }
-        this._name = this._config?.name || this._stateObj.attributes.friendly_name || this._entity || "Unknown";
-        this._stateFmtd =
-            this._hass.formatEntityState(this._stateObj) +
-                (state === "open" && this._stateObj.attributes.current_position
-                    ? " - " + this._hass.formatEntityAttributeValue(this._stateObj, "current_position")
-                    : "");
-    }
-    render() {
-        return x `
-            <div class="container" @click=${this.showMoreInfo} @contextmenu=${this.showGroupList}>
-                <div
-                    class="icon"
-                    @click=${this.toggleEntity}
-                    style="
-                        color: rgb(${this._iconColor});
-                        background-color: rgba(${this._iconColor}, var(--sq-icon-opacity));
-                        animation: ${this._iconAnimation};
-                    "
-                >
-                    <ha-icon .icon=${this._icon}></ha-icon>
-                </div>
-                <div class="name">${this._name}</div>
-                <div class="state">${this._stateFmtd}</div>
-            </div>
-        `;
-    }
-    toggleEntity(e) {
-        e.stopPropagation();
-        if (!this._stateObj)
-            return;
-        const tilt = this._config?.tilt || 100;
-        if (tilt >= 1 && tilt <= 100) {
-            if (this._stateObj.attributes.current_position !== tilt) {
-                this._hass.callService("cover", "set_cover_position", {
-                    entity_id: this._entity,
-                    position: tilt,
-                });
-            }
-            else {
-                this._hass.callService("cover", "set_cover_position", {
-                    entity_id: this._entity,
-                    position: 0,
-                });
-            }
-        }
-        else {
-            this.hass.callService("cover", "toggle", { entity_id: this._entity });
-        }
-    }
-    showMoreInfo(e) {
-        e.stopPropagation();
-        moreInfoDialog(this._config, this._stateObj);
-    }
-    showGroupList(e) {
-        e.stopPropagation();
-        if (!this._stateObj ||
-            !Array.isArray(this._stateObj.attributes?.entity_id) ||
-            this._stateObj.attributes.entity_id.length === 0)
-            return;
-        entityListDialog(this._stateObj.attributes?.friendly_name || this._entity || "Unknown", "group", this._entity, "shade");
-    }
-    getCardSize() {
-        return 1;
-    }
-};
-__decorate([
-    r()
-], ShadeTile.prototype, "_config", void 0);
-__decorate([
-    r()
-], ShadeTile.prototype, "_stateObj", void 0);
-ShadeTile = __decorate([
-    t$1("smartqasa-shade-tile")
-], ShadeTile);
 window.customCards.push({
     type: "smartqasa-shade-tile",
     name: "SmartQasa Shade Tile",
     preview: true,
     description: "A SmartQasa tile for controlling a window shade entity.",
 });
+let ShadeTile = class ShadeTile extends s {
+    constructor() {
+        super(...arguments);
+        this.initialized = false;
+    }
+    getCardSize() {
+        return 1;
+    }
+    static { this.styles = [tileBaseStyle, tileStateStyle]; }
+    setConfig(config) {
+        this.config = { ...config };
+        this.entity = this.config.entity?.startsWith("cover.") ? this.config.entity : undefined;
+    }
+    updated(changedProps) {
+        if (changedProps.has("hass")) {
+            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
+            this.initialized = true;
+        }
+    }
+    render() {
+        if (!this.initialized)
+            return x ``;
+        const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
+        const iconStyles = {
+            color: `rgb(${iconColor})`,
+            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity))`,
+            animation: iconAnimation,
+        };
+        return x `
+            <div class="container" @click=${this.showMoreInfo} @contextmenu=${this.showEntityList}>
+                <div class="icon" @click=${this.toggleEntity} style="${o(iconStyles)}">
+                    <ha-icon .icon=${icon}></ha-icon>
+                </div>
+                <div class="name">${name}</div>
+                <div class="state">${stateFmtd}</div>
+            </div>
+        `;
+    }
+    updateState() {
+        let icon, iconAnimation, iconColor, name, stateFmtd;
+        if (this.config && this.hass && this.stateObj) {
+            const state = this.stateObj.state || "unknown";
+            switch (state) {
+                case "closed":
+                    icon = "hass:roller-shade-closed";
+                    iconAnimation = "none";
+                    iconColor = "var(--sq-inactive-rgb)";
+                    break;
+                case "opening":
+                    icon = "hass:arrow-up-box";
+                    iconAnimation = "blink 2.0s linear infinite";
+                    iconColor = "var(--sq-shade-opening-rgb, 146, 107, 199)";
+                    break;
+                case "open":
+                    icon = "hass:roller-shade";
+                    iconAnimation = "none";
+                    iconColor = "var(--sq-shade-open-rgb, 146, 107, 199)";
+                    break;
+                case "closing":
+                    icon = "hass:arrow-down-box";
+                    iconAnimation = "blink 2.0s linear infinite";
+                    iconColor = "var(--sq-shade-closing-rgb, 146, 107, 199)";
+                    break;
+                default:
+                    icon = "hass:alert-rhombus";
+                    iconAnimation = "none";
+                    iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+                    break;
+            }
+            name = this.config.name || this.stateObj.attributes.friendly_name || this.entity;
+            stateFmtd =
+                this.hass.formatEntityState(this.stateObj) +
+                    (state === "open" && this.stateObj.attributes.current_position
+                        ? " - " + this.hass.formatEntityAttributeValue(this.stateObj, "current_position")
+                        : "");
+        }
+        else {
+            icon = this.config?.icon || "hass:roller-shade";
+            iconAnimation = "none";
+            iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+            name = this.config?.name || "Unknown";
+            stateFmtd = "Unknown";
+        }
+        return { icon, iconAnimation, iconColor, name, stateFmtd };
+    }
+    toggleEntity(e) {
+        e.stopPropagation();
+        if (!this.hass || !this.config || !this.stateObj)
+            return;
+        const tilt = this.config.tilt || 100;
+        if (tilt >= 1 && tilt <= 100) {
+            if (this.stateObj.attributes.current_position !== tilt) {
+                this.hass.callService("cover", "set_cover_position", {
+                    entity_id: this.entity,
+                    position: tilt,
+                });
+            }
+            else {
+                this.hass.callService("cover", "set_cover_position", {
+                    entity_id: this.entity,
+                    position: 0,
+                });
+            }
+        }
+        else {
+            this.hass.callService("cover", "toggle", { entity_id: this.entity });
+        }
+    }
+    showMoreInfo(e) {
+        e.stopPropagation();
+        moreInfoDialog(this.config, this.stateObj);
+    }
+    showEntityList(e) {
+        e.stopPropagation();
+        if (!this.stateObj ||
+            !Array.isArray(this.stateObj.attributes?.entity_id) ||
+            this.stateObj.attributes.entity_id.length === 0)
+            return;
+        entityListDialog(this.stateObj.attributes?.friendly_name || "Unknown", "group", this.entity, "shade");
+    }
+};
+__decorate([
+    n$1({ attribute: false })
+], ShadeTile.prototype, "hass", void 0);
+__decorate([
+    r()
+], ShadeTile.prototype, "initialized", void 0);
+__decorate([
+    r()
+], ShadeTile.prototype, "config", void 0);
+__decorate([
+    r()
+], ShadeTile.prototype, "stateObj", void 0);
+ShadeTile = __decorate([
+    t$1("smartqasa-shade-tile")
+], ShadeTile);
 
 window.customCards.push({
     type: "smartqasa-switch-tile",
