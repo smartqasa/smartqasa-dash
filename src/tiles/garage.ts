@@ -3,6 +3,7 @@ import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "../types";
+import { toggleHassEntity } from "../utils/toggle-hass-entity";
 import { moreInfoDialog } from "../utils/more-info-dialog";
 
 import { tileBaseStyle, tileStateStyle, tileIconBlinkStyle } from "../styles/tile";
@@ -110,21 +111,15 @@ export class GarageTile extends LitElement {
             iconAnimation = "none";
             iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
             name = this.config?.name || "Unknown";
-            stateFmtd = "Invalid entity!";
+            stateFmtd = "Unknown";
         }
 
         return { icon, iconAnimation, iconColor, name, stateFmtd };
     }
 
-    private async toggleEntity(e: Event): Promise<void> {
+    private toggleEntity(e: Event): void {
         e.stopPropagation();
-        if (!this.hass || !this.entity) return;
-
-        try {
-            await this.hass.callService("cover", "toggle", { entity_id: this.entity });
-        } catch (error) {
-            console.error("Failed to toggle the entity:", error);
-        }
+        toggleHassEntity(this.hass, this.entity);
     }
 
     private showMoreInfo(e: Event): void {

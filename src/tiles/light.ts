@@ -3,6 +3,7 @@ import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "../types";
+import { toggleHassEntity } from "../utils/toggle-hass-entity";
 import { moreInfoDialog } from "../utils/more-info-dialog";
 import { entityListDialog } from "../utils/entity-list-dialog";
 
@@ -106,15 +107,9 @@ export class LightTile extends LitElement {
         return { icon, iconAnimation, iconColor, name, stateFmtd };
     }
 
-    private async toggleEntity(e: Event): Promise<void> {
+    private toggleEntity(e: Event): void {
         e.stopPropagation();
-        if (!this.hass || !this.entity) return;
-
-        try {
-            await this.hass.callService("light", "toggle", { entity_id: this.entity });
-        } catch (error) {
-            console.error("Failed to toggle the entity:", error);
-        }
+        toggleHassEntity(this.hass, this.entity);
     }
 
     private showMoreInfo(e: Event): void {
