@@ -6773,11 +6773,7 @@ let GarageTile = class GarageTile extends s {
         `;
     }
     updateState() {
-        let icon = this.config?.icon || "hass:garage-alert-variant";
-        let iconAnimation = "none";
-        let iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-        let name = this.config?.name || "Unknown";
-        let stateFmtd = "Invalid entity!";
+        let icon, iconAnimation, iconColor, name, stateFmtd;
         if (this.config && this.hass && this.stateObj) {
             const state = this.stateObj.state || "unknown";
             switch (state) {
@@ -6813,6 +6809,13 @@ let GarageTile = class GarageTile extends s {
                     (state === "open" && this.stateObj.attributes.current_position
                         ? " - " + this.hass.formatEntityAttributeValue(this.stateObj, "current_position")
                         : "");
+        }
+        else {
+            icon = this.config?.icon || "hass:garage-alert-variant";
+            iconAnimation = "none";
+            iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+            name = this.config?.name || "Unknown";
+            stateFmtd = "Invalid entity!";
         }
         return { icon, iconAnimation, iconColor, name, stateFmtd };
     }
