@@ -6631,7 +6631,7 @@ let FanTile = class FanTile extends s {
     static { this.styles = [tileBaseStyle, tileStateStyle, tileIconSpinStyle]; }
     setConfig(config) {
         this.config = { ...config };
-        this.entity = this.config.entity?.startsWith("light.") ? this.config.entity : undefined;
+        this.entity = this.config.entity?.startsWith("fan.") ? this.config.entity : undefined;
     }
     updated(changedProps) {
         if (changedProps.has("hass") && this.entity) {

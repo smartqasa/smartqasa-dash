@@ -38,7 +38,7 @@ export class FanTile extends LitElement {
 
     setConfig(config: Config): void {
         this.config = { ...config };
-        this.entity = this.config.entity?.startsWith("light.") ? this.config.entity : undefined;
+        this.entity = this.config.entity?.startsWith("fan.") ? this.config.entity : undefined;
     }
 
     updated(changedProps: PropertyValues) {
