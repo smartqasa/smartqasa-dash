@@ -32,12 +32,6 @@ export class GarageTile extends LitElement {
 
     private entity?: string;
 
-    private _icon: string = "hass:garage-variant";
-    private _iconAnimation: string = "none";
-    private _iconColor: string = "var(--sq-inactive-rgb)";
-    private _name: string = "Loading...";
-    private _stateFmtd: string = "Loading...";
-
     static styles: CSSResultGroup = [tileBaseStyle, tileStateStyle, tileIconBlinkStyle];
 
     setConfig(config: Config): void {
@@ -74,7 +68,7 @@ export class GarageTile extends LitElement {
     private updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
 
-        if (this.config && this.hass && this.stateObj) {
+        if (this.hass && this.stateObj) {
             const state = this.stateObj.state || "unknown";
             switch (state) {
                 case "closed":
