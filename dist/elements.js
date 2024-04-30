@@ -652,145 +652,182 @@ const chipIconSpinStyle = i$5 `
     }
 `;
 
-let DialogChip = class DialogChip extends s {
-    static { this.styles = [chipBaseStyle, chipTextStyle]; }
-    setConfig(config) {
-        this._config = { ...config };
-        this._dialog = this._config.dialog;
-        this._dialogObj = this._dialog ? dialogTable[this._dialog] : undefined;
-        this._entity = this._dialogObj.entity;
-        this._icon = this._dialogObj.icon;
-        this._label = this._config.label || "";
-    }
-    set hass(hass) {
-        if (!hass || !this._entity || hass.states[this._entity] === this._stateObj)
-            return;
-        this._stateObj = hass.states[this._entity];
-    }
-    render() {
-        if (!this._dialogObj || !this._stateObj)
-            return x ``;
-        const state = this._stateObj.state;
-        if ((this._dialog === "garages" && state === "closed") ||
-            (this._dialog === "locks" && state === "locked") ||
-            (this._dialog === "sensors_doors" && state === "off") ||
-            (this._dialog === "sensors_windows" && state === "off"))
-            return x ``;
-        const containerStyle = {
-            "margin-left": "0.7rem",
-            "grid-template-areas": this._label ? '"i t"' : '"i"',
-        };
-        return x `
-            <div class="container" style="${o(containerStyle)}" @click=${this.showDialog}>
-                <div class="icon" style="color: rgb(var(--sq-rgb-orange));">
-                    <ha-icon .icon=${this._icon}></ha-icon>
-                </div>
-                ${this._label ? x `<div class="text">${this._label}</div>` : null}
-            </div>
-        `;
-    }
-    showDialog(e) {
-        e.stopPropagation();
-        const dialogConfig = { ...this._dialogObj.data };
-        window.browser_mod?.service("popup", dialogConfig);
-    }
-};
-__decorate([
-    r()
-], DialogChip.prototype, "_config", void 0);
-__decorate([
-    r()
-], DialogChip.prototype, "_dialogObj", void 0);
-__decorate([
-    r()
-], DialogChip.prototype, "_stateObj", void 0);
-DialogChip = __decorate([
-    t$1("smartqasa-dialog-chip")
-], DialogChip);
 window.customCards.push({
     type: "smartqasa-dialog-chip",
     name: "SmartQasa Dialog Chip",
     preview: true,
     description: "A SmartQasa chip for dialog.",
 });
-
-let MotionChip = class MotionChip extends s {
+let DialogChip = class DialogChip extends s {
+    constructor() {
+        super(...arguments);
+        this.initialized = false;
+    }
     static { this.styles = [chipBaseStyle, chipTextStyle]; }
     setConfig(config) {
-        if (!config?.entity)
-            return;
-        this._config = { ...config };
-        this._entity = this._config.entity?.startsWith("automation.") ? this._config.entity : undefined;
-        this.updateState();
+        this.config = { ...config };
+        this.dialog = this.config.dialog;
+        this.dialogObj = this.dialog ? dialogTable[this.dialog] : undefined;
+        this.entity = this.dialogObj.entity;
+        this.icon = this.dialogObj.icon;
+        this.label = this.config.label || "";
     }
-    set hass(hass) {
-        if (!hass || !this._entity || hass.states[this._entity] === this._stateObj)
-            return;
-        this._hass = hass;
-        this._stateObj = hass.states[this._entity];
-        this.updateState();
-    }
-    updateState() {
-        if (!this._entity || !this._stateObj)
-            return;
-        const state = this._stateObj.state || undefined;
-        switch (state) {
-            case "on":
-                this._icon = "hass:motion-sensor";
-                this._iconColor = "var(--sq-primary-font-rgb)";
-                break;
-            case "off":
-                this._icon = "hass:motion-sensor-off";
-                this._iconColor = "var(--sq-red-rgb, 255, 0, 0)";
-                break;
-            default:
-                this._icon = "hass:motion-sensor-off";
-                this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-                break;
+    updated(changedProps) {
+        if (changedProps.has("hass")) {
+            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
+            this.initialized = true;
         }
-        this._name = this._config?.name || "";
     }
     render() {
-        if (!this._entity)
+        if (!this.initialized || !this.dialogObj || !this.stateObj)
+            return x ``;
+        const state = this.stateObj.state;
+        if ((this.dialog === "garages" && state === "closed") ||
+            (this.dialog === "locks" && state === "locked") ||
+            (this.dialog === "sensors_doors" && state === "off") ||
+            (this.dialog === "sensors_windows" && state === "off"))
             return x ``;
         const containerStyle = {
-            "margin-right": "0.7rem",
-            "grid-template-areas": this._name ? '"i t"' : '"i"',
-        };
-        const iconStyles = {
-            color: `rgb(${this._iconColor})`,
+            "margin-left": "0.7rem",
+            "grid-template-areas": this.label ? '"i t"' : '"i"',
         };
         return x `
-            <div class="container" style="${o(containerStyle)}" @click=${this.toggleEntity}>
-                <div class="icon" style="${o(iconStyles)}">
-                    <ha-icon .icon=${this._icon}></ha-icon>
+            <div class="container" style="${o(containerStyle)}" @click=${this.showDialog}>
+                <div class="icon" style="color: rgb(var(--sq-rgb-orange));">
+                    <ha-icon .icon=${this.icon}></ha-icon>
                 </div>
-                ${this._name ? x `<div class="text">${this._name}</div>` : null}
+                ${this.label ? x `<div class="text">${this.label}</div>` : null}
             </div>
         `;
     }
-    toggleEntity(e) {
+    showDialog(e) {
         e.stopPropagation();
-        if (!this._stateObj)
+        if (!window.browser_mod) {
+            console.error("browser_mod is not available!");
             return;
-        this._hass.callService("homeassistant", "toggle", { entity_id: this._entity });
+        }
+        const dialogConfig = { ...this.dialogObj.data };
+        window.browser_mod.service("popup", dialogConfig);
     }
 };
 __decorate([
-    r()
-], MotionChip.prototype, "_config", void 0);
+    n$1({ attribute: false })
+], DialogChip.prototype, "hass", void 0);
 __decorate([
     r()
-], MotionChip.prototype, "_stateObj", void 0);
-MotionChip = __decorate([
-    t$1("smartqasa-motion-chip")
-], MotionChip);
+], DialogChip.prototype, "initialized", void 0);
+__decorate([
+    r()
+], DialogChip.prototype, "config", void 0);
+__decorate([
+    r()
+], DialogChip.prototype, "dialogObj", void 0);
+__decorate([
+    r()
+], DialogChip.prototype, "stateObj", void 0);
+DialogChip = __decorate([
+    t$1("smartqasa-dialog-chip")
+], DialogChip);
+
+async function toggleHassEntity(hass, entity) {
+    if (!hass || !entity)
+        return;
+    try {
+        await hass.callService("homeassistant", "toggle", { entity_id: entity });
+    }
+    catch (error) {
+        console.error("Failed to toggle the entity:", error);
+    }
+}
+
 window.customCards.push({
     type: "smartqasa-motion-chip",
     name: "SmartQasa Motion Sensor Chip",
     preview: true,
     description: "A SmartQasa chip for toggling a motion sensor automation entity.",
 });
+let MotionChip = class MotionChip extends s {
+    constructor() {
+        super(...arguments);
+        this.initialized = false;
+    }
+    static { this.styles = [chipBaseStyle, chipTextStyle]; }
+    setConfig(config) {
+        this.config = { ...config };
+        this.entity = this.config.entity?.startsWith("automation.") ? this.config.entity : undefined;
+    }
+    updated(changedProps) {
+        if (changedProps.has("hass")) {
+            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
+            this.initialized = true;
+        }
+    }
+    render() {
+        if (!this.entity || !this.initialized)
+            return x ``;
+        const { icon, iconColor, name } = this.updateState();
+        const containerStyle = {
+            "margin-right": "0.7rem",
+            "grid-template-areas": name ? '"i t"' : '"i"',
+        };
+        const iconStyles = {
+            color: `rgb(${iconColor})`,
+        };
+        return x `
+            <div class="container" style="${o(containerStyle)}" @click=${this.toggleEntity}>
+                <div class="icon" style="${o(iconStyles)}">
+                    <ha-icon .icon=${icon}></ha-icon>
+                </div>
+                ${name ? x `<div class="text">${name}</div>` : null}
+            </div>
+        `;
+    }
+    updateState() {
+        let icon, iconColor, name;
+        if (this.config && this.hass && this.stateObj) {
+            const state = this.stateObj.state || undefined;
+            switch (state) {
+                case "on":
+                    icon = "hass:motion-sensor";
+                    iconColor = "var(--sq-primary-font-rgb)";
+                    break;
+                case "off":
+                    icon = "hass:motion-sensor-off";
+                    iconColor = "var(--sq-red-rgb, 255, 0, 0)";
+                    break;
+                default:
+                    icon = "hass:motion-sensor-off";
+                    iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+                    break;
+            }
+        }
+        else {
+            icon = this.config?.icon || "hass:lightbulb-alert";
+            iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+        }
+        name = this.config?.name || "";
+        return { icon, iconColor, name };
+    }
+    toggleEntity(e) {
+        e.stopPropagation();
+        toggleHassEntity(this.hass, this.entity);
+    }
+};
+__decorate([
+    n$1({ attribute: false })
+], MotionChip.prototype, "hass", void 0);
+__decorate([
+    r()
+], MotionChip.prototype, "initialized", void 0);
+__decorate([
+    r()
+], MotionChip.prototype, "config", void 0);
+__decorate([
+    r()
+], MotionChip.prototype, "stateObj", void 0);
+MotionChip = __decorate([
+    t$1("smartqasa-motion-chip")
+], MotionChip);
 
 let NavigateChip = class NavigateChip extends s {
     static { this.styles = chipDoubleStyle; }
@@ -6635,17 +6672,6 @@ DialogTile = __decorate([
     t$1("smartqasa-dialog-tile")
 ], DialogTile);
 
-async function toggleHassEntity(hass, entity) {
-    if (!hass || !entity)
-        return;
-    try {
-        await hass.callService("homeassistant", "toggle", { entity_id: entity });
-    }
-    catch (error) {
-        console.error("Failed to toggle the entity:", error);
-    }
-}
-
 function entityListDialog(dialogTitle, filterType, filterValue, tileType) {
     const dialogConfig = listDialogConfig(dialogTitle, filterType, filterValue, tileType);
     window.browser_mod?.service("popup", dialogConfig);
@@ -8007,81 +8033,87 @@ const sequenceTable = {
     },
 };
 
+window.customCards.push({
+    type: "smartqasa-pool-light-tile",
+    name: "SmartQasa Pool Light Tile",
+    preview: true,
+    description: "A SmartQasa tile for controlling a pool color light or switch entity.",
+});
 let PoolLightTile = class PoolLightTile extends s {
     constructor() {
         super(...arguments);
-        this._icon = "hass:lightbulb";
-        this._iconAnimation = "none";
-        this._iconColor = "var(--sq-inactive-rgb)";
-        this._name = "Loading...";
-        this._stateFmtd = "Loading...";
+        this.initialized = false;
+    }
+    getCardSize() {
+        return 1;
     }
     static { this.styles = [tileBaseStyle, tileStateStyle]; }
     setConfig(config) {
-        this._config = { ...config };
-        this._entity = ["light", "switch"].includes(config.entity?.split(".")[0]) ? config.entity : undefined;
-        this.updateState();
+        this.config = { ...config };
+        this.entity = ["light", "switch"].includes(this.config.entity?.split(".")[0]) ? this.config.entity : undefined;
     }
-    set hass(hass) {
-        if (!hass || !this._entity || hass.states[this._entity] === this._stateObj) {
-            this._stateObj = undefined;
-            return;
+    updated(changedProps) {
+        if (changedProps.has("hass")) {
+            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
+            this.initialized = true;
         }
-        this._hass = hass;
-        this._stateObj = hass.states[this._entity];
-        this.updateState();
-    }
-    updateState() {
-        if (!this._entity || !this._stateObj) {
-            this._icon = this._config?.icon || "hass:lightbulb-alert";
-            this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            this._name = this._config?.name || "Unknown";
-            this._stateFmtd = "Invalid entity!";
-            return;
-        }
-        const state = this._stateObj.state || "unknown";
-        this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:lightbulb";
-        this._iconColor = state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
-        this._name = this._config?.name || this._stateObj.attributes.friendly_name || "Unknown";
-        this._stateFmtd =
-            this._hass.formatEntityState(this._stateObj) +
-                (state === "on" && this._stateObj.attributes.brightness
-                    ? " - " + this._hass.formatEntityAttributeValue(this._stateObj, "brightness")
-                    : "");
     }
     render() {
+        if (!this.initialized)
+            return x ``;
+        const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
         const iconStyles = {
-            color: `rgb(${this._iconColor})`,
-            backgroundColor: `rgba(${this._iconColor}, var(--sq-icon-opacity))`,
-            animation: this._iconAnimation,
+            color: `rgb(${iconColor})`,
+            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity))`,
+            animation: iconAnimation,
         };
         return x `
             <div class="container" @click=${this.showColorList}>
                 <div class="icon" @click=${this.toggleEntity} style="${o(iconStyles)}">
-                    <ha-icon .icon=${this._icon}></ha-icon>
+                    <ha-icon .icon=${icon}></ha-icon>
                 </div>
-                <div class="name">${this._name}</div>
-                <div class="state">${this._stateFmtd}</div>
+                <div class="name">${name}</div>
+                <div class="state">${stateFmtd}</div>
             </div>
         `;
     }
+    updateState() {
+        let icon, iconAnimation, iconColor, name, stateFmtd;
+        if (this.config && this.hass && this.stateObj) {
+            const state = this.stateObj.state || "unknown";
+            icon = this.config.icon || this.stateObj.attributes.icon || "hass:lightbulb";
+            iconColor = state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
+            name = this.config.name || this.stateObj.attributes.friendly_name || this.entity;
+            stateFmtd =
+                this.hass.formatEntityState(this.stateObj) +
+                    (state === "on" && this.stateObj.attributes.brightness
+                        ? " - " + this.hass.formatEntityAttributeValue(this.stateObj, "brightness")
+                        : "");
+        }
+        else {
+            icon = this.config?.icon || "hass:lightbulb-alert";
+            iconAnimation = "none";
+            iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+            name = this.config?.name || "Unknown";
+            stateFmtd = "Unknown";
+        }
+        return { icon, iconAnimation, iconColor, name, stateFmtd };
+    }
     toggleEntity(e) {
         e.stopPropagation();
-        if (!this._stateObj)
-            return;
-        this._hass.callService("homeassistant", "toggle", { entity_id: this._entity });
+        toggleHassEntity(this.hass, this.entity);
     }
     showColorList(e) {
         e.stopPropagation();
-        if (!this._stateObj)
+        if (!this.stateObj)
             return;
         const cards = Object.keys(sequenceTable).map((key) => ({
             type: "custom:smartqasa-pool-light-sequencer-tile",
-            entity: this._entity,
+            entity: this.entity,
             sequence: key,
         }));
         const dialogConfig = {
-            title: this._stateObj.attributes.friendly_name || this._stateObj.entity_id,
+            title: this.stateObj.attributes.friendly_name || this.stateObj.entity_id,
             timeout: 60000,
             content: {
                 type: "custom:layout-card",
@@ -8092,109 +8124,117 @@ let PoolLightTile = class PoolLightTile extends s {
         };
         window.browser_mod?.service("popup", dialogConfig);
     }
-    getCardSize() {
-        return 1;
-    }
 };
 __decorate([
-    r()
-], PoolLightTile.prototype, "_config", void 0);
+    n$1({ attribute: false })
+], PoolLightTile.prototype, "hass", void 0);
 __decorate([
     r()
-], PoolLightTile.prototype, "_stateObj", void 0);
+], PoolLightTile.prototype, "initialized", void 0);
+__decorate([
+    r()
+], PoolLightTile.prototype, "config", void 0);
+__decorate([
+    r()
+], PoolLightTile.prototype, "stateObj", void 0);
 PoolLightTile = __decorate([
     t$1("smartqasa-pool-light-tile")
 ], PoolLightTile);
-window.customCards.push({
-    type: "smartqasa-pool-light-tile",
-    name: "SmartQasa Pool Light Tile",
-    preview: true,
-    description: "A SmartQasa tile for controlling a pool color light or switch entity.",
-});
 
 let PoolLightSequencerTile = class PoolLightSequencerTile extends s {
     constructor() {
         super(...arguments);
-        this._running = false;
-        this._icon = "hass:help-rhombus";
-        this._iconAnimation = "none";
-        this._iconColor = "var(--sq-inactive-rgb)";
-        this._name = "Loading...";
-    }
-    static { this.styles = [tileBaseStyle, tileIconSpinStyle]; }
-    setConfig(config) {
-        this._config = { ...config };
-        this._sequenceObj = config.sequence ? sequenceTable[config.sequence] : undefined;
-        this._entity = ["light", "switch"].includes(config.entity?.split(".")[0]) ? config.entity : undefined;
-        this.updateState();
-    }
-    set hass(hass) {
-        if (!hass || !this._entity || hass.states[this._entity] === this._stateObj)
-            return;
-        this._hass = hass;
-        this._stateObj = hass.states[this._entity];
-        this.updateState();
-    }
-    updateState() {
-        if (this._running === true)
-            return;
-        if (!this._sequenceObj || !this._entity || !this._stateObj) {
-            this._icon = this._config?.icon || "hass:alert-rhombus";
-            this._iconAnimation = "none";
-            this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            this._name = "Unknown";
-            return;
-        }
-        this._icon = this._stateObj.attributes.icon || "hass:help-circle";
-        this._iconAnimation = "none";
-        this._iconColor = this._sequenceObj.iconRGB || "var(--sq-inactive-rgb)";
-        this._name = this._sequenceObj.name || "Unknown";
-    }
-    render() {
-        const iconStyles = {
-            color: `rgb(${this._iconColor})`,
-            backgroundColor: `rgba(${this._iconColor}, var(--sq-icon-opacity))`,
-            animation: this._iconAnimation,
-        };
-        return x `
-            <div class="container" @click=${this.runRoutine}>
-                <div class="icon" style="${o(iconStyles)}">
-                    <ha-icon .icon=${this._icon}></ha-icon>
-                </div>
-                <div class="name">${this._name}</div>
-            </div>
-        `;
-    }
-    runRoutine(e) {
-        e.stopPropagation();
-        if (!this._config || !this._stateObj)
-            return;
-        this._running = true;
-        this._icon = "hass:rotate-right";
-        this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
-        this._iconAnimation = "spin 1.0s linear infinite";
-        this._hass.callService("script", "system_color_light_sequence_selector", {
-            entity: this._entity,
-            count: this._sequenceObj.count,
-        });
-        setTimeout(() => {
-            this._running = false;
-            this.updateState();
-        }, 2000);
+        this.initialized = false;
+        this.running = false;
     }
     getCardSize() {
         return 1;
     }
+    static { this.styles = [tileBaseStyle, tileIconSpinStyle]; }
+    setConfig(config) {
+        this.config = { ...config };
+        this.sequenceObj = config.sequence ? sequenceTable[config.sequence] : undefined;
+        this.entity = ["light", "switch"].includes(this.config.entity?.split(".")[0]) ? this.config.entity : undefined;
+    }
+    updated(changedProps) {
+        if (changedProps.has("hass")) {
+            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
+            this.initialized = true;
+        }
+    }
+    render() {
+        if (!this.initialized)
+            return x ``;
+        const { icon, iconAnimation, iconColor, name } = this.updateState();
+        const iconStyles = {
+            color: `rgb(${iconColor})`,
+            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity))`,
+            animation: iconAnimation,
+        };
+        return x `
+            <div class="container" @click=${this.runRoutine}>
+                <div class="icon" style="${o(iconStyles)}">
+                    <ha-icon .icon=${icon}></ha-icon>
+                </div>
+                <div class="name">${name}</div>
+            </div>
+        `;
+    }
+    updateState() {
+        let icon, iconAnimation, iconColor, name;
+        if (this.config && this.hass && this.sequenceObj && this.stateObj) {
+            if (this.running) {
+                icon = "hass:rotate-right";
+                iconAnimation = "spin 1.0s linear infinite";
+                iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
+            }
+            else {
+                icon = this.config.icon || this.stateObj.attributes.icon || "hass:lightbulb";
+                iconAnimation = "none";
+                iconColor = this.sequenceObj.iconRGB || "var(--sq-inactive-rgb)";
+            }
+            name = this.sequenceObj.name || "Unknown";
+        }
+        else {
+            icon = "hass:alert-rhombus";
+            iconAnimation = "none";
+            iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+            name = "Unknown";
+        }
+        return { icon, iconAnimation, iconColor, name };
+    }
+    runRoutine(e) {
+        e.stopPropagation();
+        if (!this.hass || !this.config || !this.stateObj)
+            return;
+        this.running = true;
+        this.hass.callService("script", "system_color_light_sequence_selector", {
+            entity: this.entity,
+            count: this.sequenceObj.count,
+        });
+        setTimeout(() => {
+            this.running = false;
+        }, 2000);
+    }
 };
 __decorate([
-    r()
-], PoolLightSequencerTile.prototype, "_config", void 0);
+    n$1({ attribute: false })
+], PoolLightSequencerTile.prototype, "hass", void 0);
 __decorate([
     r()
-], PoolLightSequencerTile.prototype, "_stateObj", void 0);
+], PoolLightSequencerTile.prototype, "initialized", void 0);
 __decorate([
     r()
-], PoolLightSequencerTile.prototype, "_running", void 0);
+], PoolLightSequencerTile.prototype, "config", void 0);
+__decorate([
+    r()
+], PoolLightSequencerTile.prototype, "sequenceObj", void 0);
+__decorate([
+    r()
+], PoolLightSequencerTile.prototype, "stateObj", void 0);
+__decorate([
+    r()
+], PoolLightSequencerTile.prototype, "running", void 0);
 PoolLightSequencerTile = __decorate([
     t$1("smartqasa-pool-light-sequencer-tile")
 ], PoolLightSequencerTile);

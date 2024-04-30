@@ -1,8 +1,8 @@
-import { CSSResultGroup, html, LitElement, TemplateResult } from "lit";
-import { customElement, state } from "lit/decorators.js";
+import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult } from "lit";
+import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity } from "home-assistant-js-websocket";
-import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
+import { HomeAssistant, LovelaceCardConfig } from "../types";
 import { sequenceTable } from "../tables/pool-light-sequences";
 
 import { tileBaseStyle, tileIconSpinStyle } from "../styles/tile";
@@ -14,89 +14,91 @@ interface Config extends LovelaceCardConfig {
 
 @customElement("smartqasa-pool-light-sequencer-tile")
 export class PoolLightSequencerTile extends LitElement {
-    @state() private _config?: Config;
-    @state() private _stateObj?: HassEntity;
-    @state() private _running: boolean = false;
+    getCardSize(): number {
+        return 1;
+    }
 
-    private _sequenceObj?: any;
-    private _entity?: string;
-    private _hass: any;
-    private _icon: string = "hass:help-rhombus";
-    private _iconAnimation: string = "none";
-    private _iconColor: string = "var(--sq-inactive-rgb)";
-    private _name: string = "Loading...";
+    @property({ attribute: false }) public hass?: HomeAssistant;
+
+    @state() private initialized: boolean = false;
+    @state() private config?: Config;
+    @state() private sequenceObj?: any;
+    @state() private stateObj?: any;
+    @state() private running: boolean = false;
+
+    private entity?: string;
 
     static styles: CSSResultGroup = [tileBaseStyle, tileIconSpinStyle];
 
     setConfig(config: Config): void {
-        this._config = { ...config };
-        this._sequenceObj = config.sequence ? sequenceTable[config.sequence] : undefined;
-        this._entity = ["light", "switch"].includes(config.entity?.split(".")[0]) ? config.entity : undefined;
-        this.updateState();
+        this.config = { ...config };
+        this.sequenceObj = config.sequence ? sequenceTable[config.sequence] : undefined;
+        this.entity = ["light", "switch"].includes(this.config.entity?.split(".")[0]) ? this.config.entity : undefined;
     }
 
-    set hass(hass: HomeAssistant) {
-        if (!hass || !this._entity || hass.states[this._entity] === this._stateObj) return;
-        this._hass = hass;
-        this._stateObj = hass.states[this._entity];
-        this.updateState();
-    }
-
-    private updateState(): void {
-        if (this._running === true) return;
-
-        if (!this._sequenceObj || !this._entity || !this._stateObj) {
-            this._icon = this._config?.icon || "hass:alert-rhombus";
-            this._iconAnimation = "none";
-            this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            this._name = "Unknown";
-            return;
+    updated(changedProps: PropertyValues) {
+        if (changedProps.has("hass")) {
+            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
+            this.initialized = true;
         }
-
-        this._icon = this._stateObj.attributes.icon || "hass:help-circle";
-        this._iconAnimation = "none";
-        this._iconColor = this._sequenceObj.iconRGB || "var(--sq-inactive-rgb)";
-        this._name = this._sequenceObj.name || "Unknown";
     }
 
-    render(): TemplateResult {
-        const iconStyles = {
-            color: `rgb(${this._iconColor})`,
-            backgroundColor: `rgba(${this._iconColor}, var(--sq-icon-opacity))`,
-            animation: this._iconAnimation,
-        };
+    protected render(): TemplateResult {
+        if (!this.initialized) return html``;
 
+        const { icon, iconAnimation, iconColor, name } = this.updateState();
+        const iconStyles = {
+            color: `rgb(${iconColor})`,
+            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity))`,
+            animation: iconAnimation,
+        };
         return html`
             <div class="container" @click=${this.runRoutine}>
                 <div class="icon" style="${styleMap(iconStyles)}">
-                    <ha-icon .icon=${this._icon}></ha-icon>
+                    <ha-icon .icon=${icon}></ha-icon>
                 </div>
-                <div class="name">${this._name}</div>
+                <div class="name">${name}</div>
             </div>
         `;
     }
 
+    private updateState() {
+        let icon, iconAnimation, iconColor, name;
+
+        if (this.config && this.hass && this.sequenceObj && this.stateObj) {
+            if (this.running) {
+                icon = "hass:rotate-right";
+                iconAnimation = "spin 1.0s linear infinite";
+                iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
+            } else {
+                icon = this.config.icon || this.stateObj.attributes.icon || "hass:lightbulb";
+                iconAnimation = "none";
+                iconColor = this.sequenceObj.iconRGB || "var(--sq-inactive-rgb)";
+            }
+            name = this.sequenceObj.name || "Unknown";
+        } else {
+            icon = "hass:alert-rhombus";
+            iconAnimation = "none";
+            iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+            name = "Unknown";
+        }
+
+        return { icon, iconAnimation, iconColor, name };
+    }
+
     private runRoutine(e: Event): void {
         e.stopPropagation();
-        if (!this._config || !this._stateObj) return;
+        if (!this.hass || !this.config || !this.stateObj) return;
 
-        this._running = true;
-        this._icon = "hass:rotate-right";
-        this._iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
-        this._iconAnimation = "spin 1.0s linear infinite";
+        this.running = true;
 
-        this._hass.callService("script", "system_color_light_sequence_selector", {
-            entity: this._entity,
-            count: this._sequenceObj.count,
+        this.hass.callService("script", "system_color_light_sequence_selector", {
+            entity: this.entity,
+            count: this.sequenceObj.count,
         });
 
         setTimeout(() => {
-            this._running = false;
-            this.updateState();
+            this.running = false;
         }, 2000);
-    }
-
-    getCardSize(): number {
-        return 1;
     }
 }
