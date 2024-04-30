@@ -77,7 +77,7 @@ export class HeaterTile extends LitElement {
             icon = this.config.icon || "hass:water-thermometer";
             iconAnimation = "none";
             iconColor = heaterColors[state] || heaterColors.idle;
-            name = this.config.name || this.stateObj.attributes.friendly_name || this.stateObj.entity_id;
+            name = this.config.name || this.stateObj.attributes.friendly_name || this.entity;
             stateFmtd = this.hass.formatEntityState(this.stateObj);
             if (state !== "off" && this.stateObj.attributes.temperature) {
                 stateFmtd += ` - ${this.stateObj.attributes.temperature}°`;

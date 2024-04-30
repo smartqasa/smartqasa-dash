@@ -100,7 +100,7 @@ export class GarageTile extends LitElement {
                     iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
                     break;
             }
-            name = this.config?.name || this.stateObj.attributes.friendly_name || "Unknown";
+            name = this.config.name || this.stateObj.attributes.friendly_name || this.entity;
             stateFmtd =
                 this.hass.formatEntityState(this.stateObj) +
                 (state === "open" && this.stateObj.attributes.current_position

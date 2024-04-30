@@ -87,7 +87,7 @@ export class FanTile extends LitElement {
                 }
             }
             iconColor = state === "on" ? "var(--sq-fan-on-rgb)" : "var(--sq-inactive-rgb)";
-            name = this.config.name || this.stateObj.attributes.friendly_name || "Unknown";
+            name = this.config.name || this.stateObj.attributes.friendly_name || this.entity;
             stateFmtd = `${this.hass.formatEntityState(this.stateObj)}${
                 state === "on" && this.stateObj.attributes.percentage
                     ? " - " + this.hass.formatEntityAttributeValue(this.stateObj, "percentage")
