@@ -6678,7 +6678,7 @@ let FanTile = class FanTile extends s {
                 iconAnimation = `spin 0.5s linear infinite normal`;
             }
         }
-        const iconColor = state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
+        const iconColor = state === "on" ? "var(--sq-fan-on-rgb)" : "var(--sq-inactive-rgb)";
         const name = this.config.name || this.stateObj.attributes.friendly_name || "Unknown";
         const stateFmtd = `${this.hass.formatEntityState(this.stateObj)}${state === "on" && this.stateObj.attributes.percentage
             ? " - " + this.hass.formatEntityAttributeValue(this.stateObj, "percentage")
