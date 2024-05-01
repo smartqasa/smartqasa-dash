@@ -1,7 +1,6 @@
-import { css, CSSResultGroup, html, LitElement, TemplateResult } from "lit";
-import { customElement, state } from "lit/decorators.js";
-import { HassArea } from "../types";
-import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
+import { css, CSSResultGroup, html, LitElement, PropertyValues, TemplateResult } from "lit";
+import { customElement, property, state } from "lit/decorators.js";
+import { AreaRegistryEntry, HomeAssistant, LovelaceCardConfig } from "../types";
 import { deviceType } from "../const";
 
 interface Config extends LovelaceCardConfig {
@@ -9,12 +8,26 @@ interface Config extends LovelaceCardConfig {
     picture?: string;
 }
 
+window.customCards.push({
+    type: "smartqasa-area-picture",
+    name: "SmartQasa Area Picture",
+    preview: true,
+    description: "A SmartQasa card for rendering an area picture.",
+});
+
 @customElement("smartqasa-area-picture")
 export class AreaPicture extends LitElement {
-    @state() private _config?: Config;
-    @state() private _areaObj?: HassArea;
+    getCardSize(): number {
+        return 1;
+    }
 
-    private _hass: any;
+    @property({ attribute: false }) public hass?: HomeAssistant;
+
+    @state() private initialized: boolean = false;
+    @state() private config?: Config;
+    @state() private areaObj?: AreaRegistryEntry;
+
+    private area?: string;
 
     static get styles(): CSSResultGroup {
         return css`
@@ -35,35 +48,28 @@ export class AreaPicture extends LitElement {
     }
 
     setConfig(config: Config): void {
-        this._config = config;
-        if (this._hass) this.hass = this._hass;
+        this.config = { ...config };
+        this.area = this.config?.area;
     }
 
-    set hass(hass: HomeAssistant) {
-        this._hass = hass;
-        this._areaObj = this._config?.area ? this._hass?.areas[this._config.area] : undefined;
+    updated(changedProps: PropertyValues) {
+        if (changedProps.has("hass") && this.area) {
+            this.areaObj = this.hass && this.area ? this.hass.areas[this.area] : undefined;
+            this.initialized = true;
+        }
     }
 
     render(): TemplateResult {
+        if (!this.initialized || !this.areaObj) return html``;
+
         const height = deviceType === "phone" ? "15vh" : "20vh";
 
-        const picture = this._config?.picture
-            ? `/local/smartqasa/images/${this._config.picture}`
-            : this._areaObj?.picture ?? "/local/sq-storage/images/default.png";
+        const picture = this.config?.picture
+            ? `/local/smartqasa/images/${this.config.picture}`
+            : this.areaObj?.picture ?? "/local/sq-storage/images/default.png";
 
         return html`
             <ha-card style="background-image: url(${picture}); height: ${height};" class="picture"></ha-card>
         `;
     }
-
-    getCardSize(): number {
-        return 1;
-    }
 }
-
-window.customCards.push({
-    type: "smartqasa-area-picture",
-    name: "SmartQasa Area Picture",
-    preview: true,
-    description: "A SmartQasa card for rendering an area picture.",
-});

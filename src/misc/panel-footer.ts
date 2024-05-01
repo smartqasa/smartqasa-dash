@@ -1,6 +1,6 @@
-import { LitElement, html, css, CSSResultGroup, TemplateResult } from "lit";
-import { customElement, state } from "lit/decorators.js";
-import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
+import { LitElement, html, css, CSSResultGroup, PropertyValues, TemplateResult } from "lit";
+import { customElement, property, state } from "lit/decorators.js";
+import { HomeAssistant, LovelaceCardConfig } from "../types";
 import { areasDialog } from "./areas-dialog";
 import { entertainDialog } from "./entertain-dialog";
 import { menuConfig } from "./menu-config";
@@ -12,20 +12,6 @@ interface Config extends LovelaceCardConfig {
     video_sound: string;
 }
 
-interface ExtendedHomeAssistant extends HomeAssistant {
-    areas: Record<string, Area>;
-}
-
-interface Area {
-    area_id: string;
-    aliases: string[];
-    floor_id: string;
-    icon: string;
-    labels: string[];
-    name: string;
-    picture: string;
-}
-
 interface ActionHandlers {
     handleHome: () => void;
     handleAreas: () => void;
@@ -33,11 +19,17 @@ interface ActionHandlers {
     handleMenu: () => void;
 }
 
+window.customCards.push({
+    type: "smartqasa-panel-footer",
+    name: "SmartQasa Panel Footer",
+    preview: true,
+    description: "A SmartQasa tile for displaying the panel footer strip.",
+});
+
 @customElement("smartqasa-panel-footer")
 class PanelFooter extends LitElement implements ActionHandlers {
-    @state() private _config?: Config;
-
-    private _hass: any;
+    @property({ attribute: false }) public hass?: HomeAssistant;
+    @state() private config?: Config;
 
     static styles: CSSResultGroup = css`
         :host {
@@ -75,12 +67,7 @@ class PanelFooter extends LitElement implements ActionHandlers {
     `;
 
     setConfig(config: Config): void {
-        this._config = { ...config };
-    }
-
-    set hass(hass: any) {
-        if (!hass) return;
-        this._hass = hass;
+        this.config = { ...config };
     }
 
     protected render(): TemplateResult {
@@ -120,11 +107,11 @@ class PanelFooter extends LitElement implements ActionHandlers {
     }
 
     handleAreas(): void {
-        areasDialog(this._hass);
+        areasDialog(this.hass);
     }
 
     handleEntertain(): void {
-        entertainDialog(this._config, this._hass);
+        entertainDialog(this.config, this.hass);
     }
 
     async handleMenu(): Promise<void> {
@@ -136,10 +123,3 @@ class PanelFooter extends LitElement implements ActionHandlers {
         }
     }
 }
-
-window.customCards.push({
-    type: "smartqasa-panel-footer",
-    name: "SmartQasa Panel Footer",
-    preview: true,
-    description: "A SmartQasa tile for displaying the panel footer strip.",
-});

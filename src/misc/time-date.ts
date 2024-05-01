@@ -1,6 +1,6 @@
 import { CSSResultGroup, LitElement, html, css, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
-import { HomeAssistant } from "custom-card-helpers";
+import { HomeAssistant } from "../types";
 
 @customElement("smartqasa-time-date")
 export class SmartQasaTimeDate extends LitElement {

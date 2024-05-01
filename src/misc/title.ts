@@ -1,6 +1,6 @@
-import { CSSResultGroup, LitElement, html, css, TemplateResult } from "lit";
+import { css, CSSResultGroup, html, LitElement, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
-import { LovelaceCardConfig } from "custom-card-helpers";
+import { LovelaceCardConfig } from "../types";
 
 interface Config extends LovelaceCardConfig {
     title: string;

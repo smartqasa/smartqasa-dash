@@ -1276,7 +1276,20 @@ window.customCards.push({
     description: "A SmartQasa chip for displaying the weather.",
 });
 
+window.customCards.push({
+    type: "smartqasa-area-picture",
+    name: "SmartQasa Area Picture",
+    preview: true,
+    description: "A SmartQasa card for rendering an area picture.",
+});
 let AreaPicture = class AreaPicture extends s {
+    constructor() {
+        super(...arguments);
+        this.initialized = false;
+    }
+    getCardSize() {
+        return 1;
+    }
     static get styles() {
         return i$5 `
             :host {
@@ -1295,42 +1308,42 @@ let AreaPicture = class AreaPicture extends s {
         `;
     }
     setConfig(config) {
-        this._config = config;
-        if (this._hass)
-            this.hass = this._hass;
+        this.config = { ...config };
+        this.area = this.config?.area;
     }
-    set hass(hass) {
-        this._hass = hass;
-        this._areaObj = this._config?.area ? this._hass?.areas[this._config.area] : undefined;
+    updated(changedProps) {
+        if (changedProps.has("hass") && this.area) {
+            this.areaObj = this.hass && this.area ? this.hass.areas[this.area] : undefined;
+            this.initialized = true;
+        }
     }
     render() {
+        if (!this.initialized || !this.areaObj)
+            return x ``;
         const height = deviceType === "phone" ? "15vh" : "20vh";
-        const picture = this._config?.picture
-            ? `/local/smartqasa/images/${this._config.picture}`
-            : this._areaObj?.picture ?? "/local/sq-storage/images/default.png";
+        const picture = this.config?.picture
+            ? `/local/smartqasa/images/${this.config.picture}`
+            : this.areaObj?.picture ?? "/local/sq-storage/images/default.png";
         return x `
             <ha-card style="background-image: url(${picture}); height: ${height};" class="picture"></ha-card>
         `;
     }
-    getCardSize() {
-        return 1;
-    }
 };
 __decorate([
-    r()
-], AreaPicture.prototype, "_config", void 0);
+    n$1({ attribute: false })
+], AreaPicture.prototype, "hass", void 0);
 __decorate([
     r()
-], AreaPicture.prototype, "_areaObj", void 0);
+], AreaPicture.prototype, "initialized", void 0);
+__decorate([
+    r()
+], AreaPicture.prototype, "config", void 0);
+__decorate([
+    r()
+], AreaPicture.prototype, "areaObj", void 0);
 AreaPicture = __decorate([
     t$1("smartqasa-area-picture")
 ], AreaPicture);
-window.customCards.push({
-    type: "smartqasa-area-picture",
-    name: "SmartQasa Area Picture",
-    preview: true,
-    description: "A SmartQasa card for rendering an area picture.",
-});
 
 function areasDialog(hass) {
     if (!hass)
@@ -5523,6 +5536,12 @@ async function menuConfig(menu_tab) {
     return menuConfig;
 }
 
+window.customCards.push({
+    type: "smartqasa-panel-footer",
+    name: "SmartQasa Panel Footer",
+    preview: true,
+    description: "A SmartQasa tile for displaying the panel footer strip.",
+});
 let PanelFooter = class PanelFooter extends s {
     static { this.styles = i$5 `
         :host {
@@ -5559,12 +5578,7 @@ let PanelFooter = class PanelFooter extends s {
         }
     `; }
     setConfig(config) {
-        this._config = { ...config };
-    }
-    set hass(hass) {
-        if (!hass)
-            return;
-        this._hass = hass;
+        this.config = { ...config };
     }
     render() {
         return x `
@@ -5600,10 +5614,10 @@ let PanelFooter = class PanelFooter extends s {
         window.dispatchEvent(new CustomEvent("location-changed"));
     }
     handleAreas() {
-        areasDialog(this._hass);
+        areasDialog(this.hass);
     }
     handleEntertain() {
-        entertainDialog(this._config, this._hass);
+        entertainDialog(this.config, this.hass);
     }
     async handleMenu() {
         try {
@@ -5616,17 +5630,14 @@ let PanelFooter = class PanelFooter extends s {
     }
 };
 __decorate([
+    n$1({ attribute: false })
+], PanelFooter.prototype, "hass", void 0);
+__decorate([
     r()
-], PanelFooter.prototype, "_config", void 0);
+], PanelFooter.prototype, "config", void 0);
 PanelFooter = __decorate([
     t$1("smartqasa-panel-footer")
 ], PanelFooter);
-window.customCards.push({
-    type: "smartqasa-panel-footer",
-    name: "SmartQasa Panel Footer",
-    preview: true,
-    description: "A SmartQasa tile for displaying the panel footer strip.",
-});
 
 let MoreInfoDialog = class MoreInfoDialog extends s {
     setConfig(config) {
@@ -8647,7 +8658,7 @@ ThermostatTile = __decorate([
     t$1("smartqasa-thermostat-tile")
 ], ThermostatTile);
 
-var version = "1.1.98";
+var version = "1.1.99";
 
 window.smartqasa = window.smartqasa || {};
 window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();
