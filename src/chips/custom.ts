@@ -2,12 +2,13 @@ import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult } from
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity } from "home-assistant-js-websocket";
-import { HomeAssistant, LovelaceCardConfig } from "../src/types";
+import { HomeAssistant, LovelaceCardConfig } from "../types";
+import { loadYamlAsJson } from "../utils/load-yaml-as-json";
 
-import { chipBaseStyle, chipTextStyle } from "../src/styles/chip";
+import { chipBaseStyle, chipTextStyle } from "../styles/chip";
 
 interface Config extends LovelaceCardConfig {
-    dialog: string;
+    file: string;
 }
 
 window.customCards.push({
@@ -26,18 +27,15 @@ export class CustomChip extends LitElement {
     @state() private dialogObj?: any;
     @state() private stateObj?: HassEntity;
 
-    private dialog?: string;
+    private file?: string;
     private entity?: string;
 
     static styles: CSSResultGroup = [chipBaseStyle, chipTextStyle];
 
     setConfig(config: Config): void {
-        this._config = { ...config };
-        this._dialog = this._config.dialog;
-        this._dialogObj = this._dialog ? dialogTable[this._dialog] : undefined;
-        this._entity = this._dialogObj.entity;
-        this._icon = this._dialogObj.icon;
-        this._label = this._config.label || "";
+        this.config = { ...config };
+        this.file = this.config.file;
+        this.dialogObj = loadYamlAsJson(`/local/smartqasa/dialogs/${this.file}`);
     }
 
     updated(changedProps: PropertyValues) {
@@ -50,19 +48,31 @@ export class CustomChip extends LitElement {
     protected render(): TemplateResult {
         if (!this.stateObj) return html``;
 
-        const state = this.stateObj.state;
+        let icon, iconAnimation, iconColor, text;
+
+        if (this.dialogObj.data.icon) {
+            icon = this.dialogObj.data.icon;
+        } else {
+            icon = this.stateObj.attributes.icon || "mdi:help-circle";
+        }
+        iconAnimation = "none";
+        iconColor = "var(--sq-primary-text-rgb)";
 
         const containerStyle = {
             "margin-left": "0.7rem",
-            "grid-template-areas": this.label ? '"i t"' : '"i"',
+            "grid-template-areas": text ? '"i t"' : '"i"',
         };
-
+        const iconStyles = {
+            color: `rgb(${iconColor})`,
+            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity))`,
+            animation: iconAnimation,
+        };
         return html`
             <div class="container" style="${styleMap(containerStyle)}" @click=${this.showDialog}>
-                <div class="icon" style="color: rgb(var(--sq-rgb-orange));">
-                    <ha-icon .icon=${this._icon}></ha-icon>
+                <div class="icon" style="${styleMap(iconStyles)}">
+                    <ha-icon .icon=${icon}></ha-icon>
                 </div>
-                ${this._label ? html`<div class="text">${this.label}</div>` : null}
+                ${text ? html`<div class="text">${text}</div>` : null}
             </div>
         `;
     }

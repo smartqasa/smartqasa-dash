@@ -85,1287 +85,6 @@ const t={ATTRIBUTE:1,CHILD:2,PROPERTY:3,BOOLEAN_ATTRIBUTE:4,EVENT:5,ELEMENT:6},e
  * SPDX-License-Identifier: BSD-3-Clause
  */const n="important",i$1=" !"+n,o=e(class extends i$2{constructor(t$1){if(super(t$1),t$1.type!==t.ATTRIBUTE||"style"!==t$1.name||t$1.strings?.length>2)throw Error("The `styleMap` directive must be used in the `style` attribute and must be the only part in the attribute.")}render(t){return Object.keys(t).reduce(((e,r)=>{const s=t[r];return null==s?e:e+`${r=r.includes("-")?r:r.replace(/(?:^(webkit|moz|ms|o)|)(?=[A-Z])/g,"-$&").toLowerCase()}:${s};`}),"")}update(e,[r]){const{style:s}=e.element;if(void 0===this.ft)return this.ft=new Set(Object.keys(r)),this.render(r);for(const t of this.ft)null==r[t]&&(this.ft.delete(t),t.includes("-")?s.removeProperty(t):s[t]=null);for(const t in r){const e=r[t];if(null!=e){this.ft.add(t);const r="string"==typeof e&&e.endsWith(i$1);t.includes("-")||r?s.setProperty(t,r?e.slice(0,-11):e,r?n:""):s[t]=e;}}return w}});
 
-const deviceType = window.screen.width < 600 ? "phone" : "tablet";
-const heaterColors = {
-    electric: "var(--sq-climate-heat-rgb, 250, 67, 54)",
-    heating: "var(--sq-climate-heat-rgb, 250, 67, 54)",
-    idle: "var(--sq-idle-rgb, 128, 128, 128)",
-    off: "var(--sq-inactive-rgb, 128, 128, 128)",
-    default: "var(--sq-unavailable-rgb, 255, 0, 255)",
-};
-const modeIcons = {
-    Home: "hass:home-account",
-    Away: "hass:map-marker-radius",
-    Guest: "hass:account-multiple",
-    Entertain: "hass:glass-cocktail",
-    Vacation: "hass:airplane",
-    default: "hass:help-rhombus",
-};
-const phaseIcons = {
-    Morning: "hass:weather-sunset-up",
-    Day: "hass:white-balance-sunny",
-    Evening: "hass:weather-night",
-    Night: "hass:sleep",
-    default: "hass:help-rhombus",
-};
-const thermostatColors = {
-    cooling: "var(--sq-climate-cool-rgb, 3, 169, 244)",
-    heating: "var(--sq-climate-heat-rgb, 250, 67, 54)",
-    fan_only: "var(--sq-climate-fan_only-rgb, 0, 255, 0)",
-    idle: "var(--sq-idle-rgb, 128, 128, 128)",
-    off: "var(--sq-inactive-rgb, 128, 128, 128)",
-    default: "var(--sq-unavailable-rgb, 255, 0, 255)",
-};
-const thermostatIcons = {
-    auto: "hass:thermostat-auto",
-    cool: "hass:snowflake",
-    heat: "hass:fire",
-    heat_cool: "hass:sun-snowflake-variant",
-    off: "hass:power",
-    default: "hass:thermostat-cog",
-};
-
-const listDialogStyle = {
-    margin: 0,
-    card_margin: 0,
-    "grid-template-columns": "1fr",
-    "grid-gap": "var(--sq-dialog-grid-gap)",
-};
-const gridDialogStyle = {
-    margin: 0,
-    card_margin: 0,
-    "grid-template-columns": deviceType === "phone" ? "repeat(2, 1fr)" : "repeat(3, var(--sq-tile-width-tablet, 20rem))",
-    "grid-gap": "var(--sq-dialog-grid-gap)",
-};
-
-const listDialogConfig = (dialogTitle, filterType, filterValue, tileType) => {
-    return {
-        title: dialogTitle,
-        timeout: 60000,
-        content: {
-            type: "custom:auto-entities",
-            card: {
-                type: "custom:layout-card",
-                layout_type: "custom:grid-layout",
-                layout: listDialogStyle,
-            },
-            card_param: "cards",
-            filter: {
-                include: [
-                    {
-                        [filterType]: filterValue,
-                        sort: {
-                            method: "friendly_name",
-                            ignore_case: true,
-                        },
-                        options: {
-                            type: `custom:smartqasa-${tileType}-tile`,
-                            dialog_title: dialogTitle,
-                            filter_type: filterType,
-                            filter_value: filterValue,
-                            tile_type: tileType,
-                        },
-                    },
-                ],
-            },
-        },
-    };
-};
-
-const dialogTable = {
-    air_quality: {
-        icon: "hass:air-filter",
-        name: "Air Quality",
-        data: {
-            title: "Air Quality",
-            size: "fullscreen",
-            timeout: 120000,
-            content: {
-                type: "custom:layout-card",
-                layout_type: "custom:horizontal-layout",
-                layout: {
-                    max_cols: 3,
-                    card_margin: "4px 4px 8px",
-                },
-                cards: [
-                    {
-                        type: "custom:mini-graph-card",
-                        entities: ["sensor.air_quality_radon"],
-                        name: "Radon Gas",
-                        icon: "mdi:radioactive",
-                        hours_to_show: 48,
-                        smoothing: true,
-                        color_thresholds: [
-                            {
-                                value: 0,
-                                color: "#00ff00",
-                            },
-                            {
-                                value: 48.1,
-                                color: "#32cd32",
-                            },
-                            {
-                                value: 96.2,
-                                color: "#ffd700",
-                            },
-                            {
-                                value: 148,
-                                color: "#ff0000",
-                            },
-                        ],
-                        tap_action: {
-                            action: "none",
-                        },
-                        color_thresholds_transition: "hard",
-                    },
-                    {
-                        type: "custom:mini-graph-card",
-                        entities: ["sensor.air_quality_co2"],
-                        name: "Carbon Dioxide",
-                        icon: "mdi:molecule-co2",
-                        hours_to_show: 48,
-                        smoothing: true,
-                        color_thresholds: [
-                            {
-                                value: 0,
-                                color: "#00ff00",
-                            },
-                            {
-                                value: 799,
-                                color: "#ffd700",
-                            },
-                            {
-                                value: 999,
-                                color: "#ff0000",
-                            },
-                        ],
-                        color_thresholds_transition: "hard",
-                        tap_action: {
-                            action: "none",
-                        },
-                    },
-                    {
-                        type: "custom:mini-graph-card",
-                        entities: ["sensor.air_quality_voc"],
-                        name: "VOC (Contaminents)",
-                        icon: "mdi:weather-dust",
-                        hours_to_show: 48,
-                        smoothing: true,
-                        color_thresholds: [
-                            {
-                                value: 0,
-                                color: "#00ff00",
-                            },
-                            {
-                                value: 250,
-                                color: "#ffd700",
-                            },
-                            {
-                                value: 2000,
-                                color: "#ff0000",
-                            },
-                        ],
-                        color_thresholds_transition: "hard",
-                        tap_action: {
-                            action: "none",
-                        },
-                    },
-                    {
-                        type: "custom:mini-graph-card",
-                        entities: ["sensor.air_quality_temperature"],
-                        name: "Temperature",
-                        hours_to_show: 48,
-                        smoothing: true,
-                        color_thresholds: [
-                            {
-                                value: 0,
-                                color: "#0000ff",
-                            },
-                            {
-                                value: 68,
-                                color: "#00ff00",
-                            },
-                            {
-                                value: 75,
-                                color: "#ffa500",
-                            },
-                            {
-                                value: 85,
-                                color: "#ff0000",
-                            },
-                        ],
-                        color_thresholds_transition: "hard",
-                        tap_action: {
-                            action: "none",
-                        },
-                    },
-                    {
-                        type: "custom:mini-graph-card",
-                        entities: ["sensor.air_quality_humidity"],
-                        name: "Humidity",
-                        hours_to_show: 48,
-                        smoothing: true,
-                        color_thresholds: [
-                            {
-                                value: 0,
-                                color: "#d0ae8b",
-                            },
-                            {
-                                value: 40,
-                                color: "#00ff00",
-                            },
-                            {
-                                value: 60,
-                                color: "#52B1D2",
-                            },
-                        ],
-                        color_thresholds_transition: "hard",
-                        tap_action: {
-                            action: "none",
-                        },
-                    },
-                    {
-                        type: "custom:mini-graph-card",
-                        entities: ["sensor.air_quality_pressure"],
-                        name: "Barometric Presure",
-                        hours_to_show: 48,
-                        smoothing: true,
-                        color_thresholds: [
-                            {
-                                value: 0,
-                                color: "#52B1D2",
-                            },
-                            {
-                                value: 1009.144,
-                                color: "#00ff00",
-                            },
-                            {
-                                value: 1022.689,
-                                color: "#d0ae8b",
-                            },
-                        ],
-                        color_thresholds_transition: "hard",
-                        tap_action: {
-                            action: "none",
-                        },
-                    },
-                ],
-            },
-        },
-    },
-    clean_screen: {
-        icon: "hass:spray-bottle",
-        name: "Clean Screen",
-        data: {
-            title: "Clean Screen",
-            size: "fullscreen",
-            timeout: 30000,
-            dismissable: false,
-            content: {
-                type: "picture",
-                image: "/local/sq-storage/images/clean_screen.png",
-                card_mod: {
-                    style: {
-                        radius: "0px",
-                    },
-                },
-            },
-        },
-    },
-    display_themes: {
-        icon: "hass:compare",
-        name: "Dispaly Themes",
-        data: {
-            title: "Display Themes",
-            timeout: 60000,
-            content: {
-                type: "custom:layout-card",
-                layout_type: "custom:grid-layout",
-                layout: listDialogStyle,
-                cards: [
-                    {
-                        type: "custom:smartqasa-theme-tile",
-                        mode: "light",
-                        icon: "hass:brightness-7",
-                        name: "Light",
-                    },
-                    {
-                        type: "custom:smartqasa-theme-tile",
-                        mode: "dark",
-                        icon: "hass:weather-night",
-                        name: "Dark",
-                    },
-                    {
-                        type: "custom:smartqasa-theme-tile",
-                        mode: "auto",
-                        icon: "hass:theme-light-dark",
-                        name: "Auto",
-                    },
-                ],
-            },
-        },
-    },
-    energy_monitor: {
-        icon: "hass:transmission-tower",
-        name: "Energy Monitor",
-        data: {
-            title: "Energy Monitor",
-            size: "fullscreen",
-            timeout: 120000,
-            content: {
-                type: "custom:layout-card",
-                layout_type: "custom:grid-layout",
-                layout: {
-                    "grid-template-columns": "90vw",
-                    "grid-template-rows": "auto",
-                    "grid-gap": "var(--sq-dialog-grid-gap)",
-                    "place-content": "center",
-                    margin: 0,
-                },
-                cards: [
-                    {
-                        type: "horizontal-stack",
-                        cards: [{ type: "energy-distribution" }, { type: "energy-date-selection" }],
-                    },
-                    { type: "energy-usage-graph" },
-                ],
-            },
-        },
-    },
-    garages: {
-        icon: "hass:garage-open-variant",
-        name: "Garage Doors",
-        entity: "cover.all_garage_doors",
-        data: listDialogConfig("Garage Doors", "group", "cover.all_garage_doors", "garage"),
-    },
-    locks: {
-        icon: "hass:lock-open",
-        name: "Door Locks",
-        entity: "lock.all_door_locks",
-        data: listDialogConfig("Door Locks", "group", "lock.all_door_locks", "lock"),
-    },
-    robots: {
-        icon: "hass:robot-vacuum-variant",
-        name: "Robots",
-        data: listDialogConfig("Robots", "domain", "vacuum", "robot"),
-    },
-    roku_players: {
-        icon: "hass:audio-video",
-        name: "Roku Players",
-        data: listDialogConfig("Roku Players", "group", "media_player.all_roku_players", "roku"),
-    },
-    sensors_doors: {
-        icon: "hass:door-open",
-        name: "Door Sensors",
-        entity: "binary_sensor.all_door_sensors",
-        data: listDialogConfig("Door Sensors", "group", "binary_sensor.all_door_sensors", "sensor"),
-    },
-    sensors_windows: {
-        icon: "hass:window-open",
-        name: "Window Sensors",
-        entity: "binary_sensor.all_window_sensors",
-        data: listDialogConfig("Window Sensors", "group", "binary_sensor.all_window_sensors", "sensor"),
-    },
-    speed_test: {
-        icon: "hass:gauge",
-        name: "Speed Test",
-        data: {
-            title: "Speed Test",
-            size: "wide",
-            timeout: 60000,
-            content: {
-                type: "statistics-graph",
-                entities: ["sensor.speedtest_download", "sensor.speedtest_upload"],
-                chart_type: "line",
-                period: "hour",
-                stat_types: ["mean"],
-                hide_legend: false,
-                days_to_show: 3,
-            },
-        },
-    },
-    sonos_players: {
-        icon: "hass:speaker-multiple",
-        name: "Sonos Players",
-        data: listDialogConfig("Sonos Players", "group", "media_player.all_sonos_players", "sonos"),
-    },
-    thermostats: {
-        icon: "hass:thermostat",
-        name: "Thermostats",
-        data: listDialogConfig("Thermostats", "domain", "climate", "thermostat"),
-    },
-    weather: {
-        icon: "hass:sun-wireless",
-        name: "Weather",
-        data: {
-            title: "Weather",
-            size: "fullscreen",
-            timeout: 60000,
-            content: {
-                type: "custom:layout-card",
-                layout_type: "custom:grid-layout",
-                layout: {
-                    "place-content": "center",
-                    "place-self": "center",
-                    "grid-template-columns": "446px 454px",
-                    "grid-gap": "var(--sq-dialog-grid-gap)",
-                },
-                cards: [
-                    {
-                        type: "vertical-stack",
-                        cards: [
-                            {
-                                type: "custom:gap-card",
-                                height: 15,
-                            },
-                            {
-                                type: "weather-forecast",
-                                entity: "weather.forecast_home",
-                                forecast_type: "hourly",
-                                name: "Forecast",
-                                show_current: true,
-                                show_forecast: true,
-                                secondary_info_attribute: "wind_speed",
-                            },
-                            {
-                                type: "weather-forecast",
-                                entity: "weather.forecast_home",
-                                forecast_type: "daily",
-                                show_current: false,
-                                show_forecast: true,
-                            },
-                        ],
-                    },
-                    {
-                        type: "vertical-stack",
-                        cards: [
-                            {
-                                type: "custom:gap-card",
-                                height: 15,
-                            },
-                            {
-                                type: "custom:weather-radar-card",
-                                frame_count: 10,
-                                show_marker: true,
-                                show_range: true,
-                                show_zoom: true,
-                                show_recenter: true,
-                                show_playback: true,
-                                zoom_level: 20,
-                                square_map: true,
-                                show_scale: true,
-                                extra_labels: true,
-                                map_style: "Voyager",
-                            },
-                        ],
-                    },
-                ],
-            },
-        },
-    },
-};
-
-const chipBaseStyle = i$5 `
-    .container {
-        width: max-content;
-        place-self: center;
-        display: grid;
-        grid-template-areas: "i";
-        padding: 1rem;
-        border: var(--sq-card-border);
-        border-radius: var(--sq-chip-border-radius);
-        background-color: var(--sq-card-background-color);
-        justify-content: center;
-        transition: var(--sq-icon-transition, none);
-        cursor: pointer;
-    }
-    .icon {
-        grid-area: i;
-        display: flex;
-        height: 1.8rem;
-        width: 1.8rem;
-        transition: var(--sq-icon-transition, none);
-        color: rgb(var(--sq-primary-text-rgb));
-    }
-`;
-const chipTextStyle = i$5 `
-    .container {
-        grid-template-areas: "i t";
-        grid-column-gap: 0.5rem;
-        justify-content: start;
-    }
-    .text {
-        grid-area: t;
-        place-self: center start;
-        text-align: left;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: normal;
-        font-weight: var(--sq-primary-font-weight, 400);
-        font-size: var(--sq-primary-font-size, 1.5rem);
-        color: rgb(var(--sq-primary-font-rgb), 128, 128, 128);
-    }
-`;
-const chipDoubleStyle = i$5 `
-    .container {
-        width: fit-content;
-        place-self: center;
-        display: grid;
-        grid-template-areas: "i1 s i2";
-        grid-column-gap: 0.7rem;
-        margin-right: 0.7rem;
-        padding: 0.2rem;
-        border: var(--sq-card-border);
-        border-radius: var(--sq-chip-border-radius);
-        background-color: var(--sq-card-background-color);
-        cursor: pointer;
-    }
-    .container::after {
-        content: "";
-        grid-area: s;
-        width: 1px;
-        background-color: rgb(128, 128, 128);
-        margin: auto;
-        height: 90%;
-    }
-    .icon1 {
-        grid-area: i1;
-    }
-    .icon2 {
-        grid-area: i2;
-    }
-    .icon1,
-    .icon2 {
-        display: flex;
-        --mdc-icon-size: 3.4rem;
-        color: rgb(var(--sq-primary-text-rgb));
-    }
-`;
-const chipIconSpinStyle = i$5 `
-    @keyframes spin {
-        from {
-            transform: rotate(0deg);
-        }
-        to {
-            transform: rotate(360deg);
-        }
-    }
-`;
-
-window.customCards.push({
-    type: "smartqasa-dialog-chip",
-    name: "SmartQasa Dialog Chip",
-    preview: true,
-    description: "A SmartQasa chip for dialog.",
-});
-let DialogChip = class DialogChip extends s {
-    constructor() {
-        super(...arguments);
-        this.initialized = false;
-    }
-    static { this.styles = [chipBaseStyle, chipTextStyle]; }
-    setConfig(config) {
-        this.config = { ...config };
-        this.dialog = this.config.dialog;
-        this.dialogObj = this.dialog ? dialogTable[this.dialog] : undefined;
-        this.entity = this.dialogObj.entity;
-        this.icon = this.dialogObj.icon;
-        this.label = this.config.label || "";
-    }
-    updated(changedProps) {
-        if (changedProps.has("hass")) {
-            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
-            this.initialized = true;
-        }
-    }
-    render() {
-        if (!this.initialized || !this.dialogObj || !this.stateObj)
-            return x ``;
-        const state = this.stateObj.state;
-        if ((this.dialog === "garages" && state === "closed") ||
-            (this.dialog === "locks" && state === "locked") ||
-            (this.dialog === "sensors_doors" && state === "off") ||
-            (this.dialog === "sensors_windows" && state === "off"))
-            return x ``;
-        const containerStyle = {
-            "margin-left": "0.7rem",
-            "grid-template-areas": this.label ? '"i t"' : '"i"',
-        };
-        return x `
-            <div class="container" style="${o(containerStyle)}" @click=${this.showDialog}>
-                <div class="icon" style="color: rgb(var(--sq-rgb-orange));">
-                    <ha-icon .icon=${this.icon}></ha-icon>
-                </div>
-                ${this.label ? x `<div class="text">${this.label}</div>` : null}
-            </div>
-        `;
-    }
-    showDialog(e) {
-        e.stopPropagation();
-        if (!window.browser_mod) {
-            console.error("browser_mod is not available!");
-            return;
-        }
-        const dialogConfig = { ...this.dialogObj.data };
-        window.browser_mod.service("popup", dialogConfig);
-    }
-};
-__decorate([
-    n$1({ attribute: false })
-], DialogChip.prototype, "hass", void 0);
-__decorate([
-    r()
-], DialogChip.prototype, "initialized", void 0);
-__decorate([
-    r()
-], DialogChip.prototype, "config", void 0);
-__decorate([
-    r()
-], DialogChip.prototype, "dialogObj", void 0);
-__decorate([
-    r()
-], DialogChip.prototype, "stateObj", void 0);
-DialogChip = __decorate([
-    t$1("smartqasa-dialog-chip")
-], DialogChip);
-
-async function toggleHassEntity(hass, entity) {
-    if (!hass || !entity)
-        return;
-    try {
-        await hass.callService("homeassistant", "toggle", { entity_id: entity });
-    }
-    catch (error) {
-        console.error("Failed to toggle the entity:", error);
-    }
-}
-
-window.customCards.push({
-    type: "smartqasa-motion-chip",
-    name: "SmartQasa Motion Sensor Chip",
-    preview: true,
-    description: "A SmartQasa chip for toggling a motion sensor automation entity.",
-});
-let MotionChip = class MotionChip extends s {
-    constructor() {
-        super(...arguments);
-        this.initialized = false;
-    }
-    static { this.styles = [chipBaseStyle, chipTextStyle]; }
-    setConfig(config) {
-        this.config = { ...config };
-        this.entity = this.config.entity?.startsWith("automation.") ? this.config.entity : undefined;
-    }
-    updated(changedProps) {
-        if (changedProps.has("hass")) {
-            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
-            this.initialized = true;
-        }
-    }
-    render() {
-        if (!this.entity || !this.initialized)
-            return x ``;
-        const { icon, iconColor, name } = this.updateState();
-        const containerStyle = {
-            "margin-right": "0.7rem",
-            "grid-template-areas": name ? '"i t"' : '"i"',
-        };
-        const iconStyles = {
-            color: `rgb(${iconColor})`,
-        };
-        return x `
-            <div class="container" style="${o(containerStyle)}" @click=${this.toggleEntity}>
-                <div class="icon" style="${o(iconStyles)}">
-                    <ha-icon .icon=${icon}></ha-icon>
-                </div>
-                ${name ? x `<div class="text">${name}</div>` : null}
-            </div>
-        `;
-    }
-    updateState() {
-        let icon, iconColor, name;
-        if (this.config && this.hass && this.stateObj) {
-            const state = this.stateObj.state || undefined;
-            switch (state) {
-                case "on":
-                    icon = "hass:motion-sensor";
-                    iconColor = "var(--sq-primary-font-rgb)";
-                    break;
-                case "off":
-                    icon = "hass:motion-sensor-off";
-                    iconColor = "var(--sq-red-rgb, 255, 0, 0)";
-                    break;
-                default:
-                    icon = "hass:motion-sensor-off";
-                    iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-                    break;
-            }
-        }
-        else {
-            icon = this.config?.icon || "hass:lightbulb-alert";
-            iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-        }
-        name = this.config?.name || "";
-        return { icon, iconColor, name };
-    }
-    toggleEntity(e) {
-        e.stopPropagation();
-        toggleHassEntity(this.hass, this.entity);
-    }
-};
-__decorate([
-    n$1({ attribute: false })
-], MotionChip.prototype, "hass", void 0);
-__decorate([
-    r()
-], MotionChip.prototype, "initialized", void 0);
-__decorate([
-    r()
-], MotionChip.prototype, "config", void 0);
-__decorate([
-    r()
-], MotionChip.prototype, "stateObj", void 0);
-MotionChip = __decorate([
-    t$1("smartqasa-motion-chip")
-], MotionChip);
-
-window.customCards.push({
-    type: "smartqasa-navigate-chip",
-    name: "SmartQasa Navigate Chip",
-    preview: true,
-    description: "A SmartQasa chip for navigating to a previous/next area.",
-});
-let NavigateChip = class NavigateChip extends s {
-    static { this.styles = [chipDoubleStyle]; }
-    setConfig(config) {
-        this.areaPrev = config.area_prev || undefined;
-        this.areaNext = config.area_next || undefined;
-    }
-    updated(changedProps) {
-        if (changedProps.has("hass") && this.areaPrev && this.areaNext) {
-            this.areaObjPrev = this.hass ? this.hass.areas[this.areaPrev] : undefined;
-            this.areaObjNext = this.hass ? this.hass.areas[this.areaNext] : undefined;
-        }
-    }
-    render() {
-        if (!this.areaObjPrev || !this.areaObjNext) {
-            return x ``;
-        }
-        const containerStyle = {
-            "margin-right": "0.7rem",
-        };
-        const iconPrev = "hass:menu-left";
-        const iconNext = "hass:menu-right";
-        return x `
-            <div class="container" style="${o(containerStyle)}">
-                <div class="icon1" @click=${this._navigatePrev}>
-                    <ha-icon .icon=${iconPrev}></ha-icon>
-                </div>
-                <div class="icon2" @click=${this._navigateNext}>
-                    <ha-icon .icon=${iconNext}></ha-icon>
-                </div>
-            </div>
-        `;
-    }
-    _navigatePrev(e) {
-        e.stopPropagation();
-        if (this.areaObjPrev) {
-            window.history.pushState(null, "", `/home-dash/${this.areaPrev}`);
-            window.dispatchEvent(new CustomEvent("location-changed"));
-            // Assume browser_mod is correctly typed and included
-        }
-        else {
-            console.error("Previous area is not found.");
-        }
-    }
-    _navigateNext(e) {
-        e.stopPropagation();
-        if (this.areaObjNext) {
-            window.history.pushState(null, "", `/home-dash/${this.areaNext}`);
-            window.dispatchEvent(new CustomEvent("location-changed"));
-        }
-        else {
-            console.error("Next area is not found.");
-        }
-    }
-};
-__decorate([
-    n$1({ attribute: false })
-], NavigateChip.prototype, "hass", void 0);
-__decorate([
-    r()
-], NavigateChip.prototype, "areaPrev", void 0);
-__decorate([
-    r()
-], NavigateChip.prototype, "areaNext", void 0);
-__decorate([
-    r()
-], NavigateChip.prototype, "areaObjPrev", void 0);
-__decorate([
-    r()
-], NavigateChip.prototype, "areaObjNext", void 0);
-NavigateChip = __decorate([
-    t$1("smartqasa-navigate-chip")
-], NavigateChip);
-
-let RoutineChip = class RoutineChip extends s {
-    constructor() {
-        super(...arguments);
-        this.initialized = false;
-        this.running = false;
-    }
-    static { this.styles = [chipBaseStyle, chipTextStyle, chipIconSpinStyle]; }
-    setConfig(config) {
-        this.config = { ...config };
-        this.entity = ["automation", "scene", "script"].includes(this.config.entity?.split(".")[0])
-            ? this.config.entity
-            : undefined;
-    }
-    updated(changedProps) {
-        if (changedProps.has("hass")) {
-            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
-            this.initialized = true;
-        }
-    }
-    render() {
-        if (!this.initialized || !this.entity)
-            return x ``;
-        const { icon, iconAnimation, iconColor, name } = this.updateState();
-        const containerStyle = {
-            "margin-left": "0.7rem",
-            "grid-template-areas": name ? '"i t"' : '"i"',
-        };
-        const iconStyles = {
-            color: `rgb(${iconColor})`,
-            animation: iconAnimation,
-        };
-        return x `
-            <div class="container" style="${o(containerStyle)}" @click=${this.runRoutine}>
-                <div class="icon" style="${o(iconStyles)}">
-                    <ha-icon .icon=${icon}></ha-icon>
-                </div>
-                ${name ? x `<div class="text">${name}</div>` : null}
-            </div>
-        `;
-    }
-    updateState() {
-        let icon, iconAnimation, iconColor, name;
-        if (this.config && this.hass && this.stateObj) {
-            if (this.running) {
-                icon = "hass:rotate-right";
-                iconAnimation = "spin 1.0s linear infinite";
-                iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
-            }
-            else {
-                icon = this.config.icon || this.stateObj.attributes.icon || "hass:help-rhombus";
-                iconAnimation = "none";
-                iconColor = this.config.color || "var(--sq-primary-text-rgb)";
-            }
-        }
-        else {
-            icon = "hass:alert-rhombus";
-            iconAnimation = "none";
-            iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-        }
-        name = this.config?.name || "";
-        return { icon, iconAnimation, iconColor, name };
-    }
-    runRoutine(e) {
-        e.stopPropagation();
-        if (!this.hass || !this.stateObj)
-            return;
-        this.running = true;
-        const domain = this.stateObj.entity_id.split(".")[0];
-        switch (domain) {
-            case "script":
-                this.hass.callService("script", "turn_on", { entity_id: this.entity });
-                break;
-            case "scene":
-                this.hass.callService("scene", "turn_on", { entity_id: this.entity });
-                break;
-            case "automation":
-                this.hass.callService("automation", "trigger", { entity_id: this.entity });
-                break;
-            default:
-                console.error("Unsupported entity domain:", domain);
-                return;
-        }
-        setTimeout(() => {
-            this.running = false;
-        }, 2000);
-    }
-};
-__decorate([
-    n$1({ attribute: false })
-], RoutineChip.prototype, "hass", void 0);
-__decorate([
-    r()
-], RoutineChip.prototype, "initialized", void 0);
-__decorate([
-    r()
-], RoutineChip.prototype, "config", void 0);
-__decorate([
-    r()
-], RoutineChip.prototype, "stateObj", void 0);
-__decorate([
-    r()
-], RoutineChip.prototype, "running", void 0);
-RoutineChip = __decorate([
-    t$1("smartqasa-routine-chip")
-], RoutineChip);
-window.customCards.push({
-    type: "smartqasa-routine-chip",
-    name: "SmartQasa Routine Chip",
-    preview: true,
-    description: "A SmartQasa chip for triggering an automation, scene, or script entity.",
-});
-
-function selectOptionDialog(config, stateObj) {
-    if (!stateObj)
-        return;
-    const cards = stateObj.attributes.options.map((option) => ({
-        type: "custom:smartqasa-option-tile",
-        entity: stateObj.entity_id,
-        option: option,
-        trigger: config?.trigger,
-        menu_tab: config.menu_tab,
-    }));
-    const dialogConfig = {
-        title: stateObj.attributes.friendly_name || stateObj.entity_id,
-        timeout: 60000,
-        content: {
-            type: "custom:layout-card",
-            layout_type: "custom:grid-layout",
-            layout: listDialogStyle,
-            cards: cards,
-        },
-    };
-    window.browser_mod?.service("popup", dialogConfig);
-}
-
-window.customCards.push({
-    type: "smartqasa-select-chip",
-    name: "SmartQasa Input Select Chip",
-    preview: true,
-    description: "A SmartQasa chip for selecting an option for a input_select entity.",
-});
-let SelectChip = class SelectChip extends s {
-    constructor() {
-        super(...arguments);
-        this.initialized = false;
-    }
-    static { this.styles = [chipBaseStyle]; }
-    setConfig(config) {
-        this.config = { ...config };
-        this.entity = this.config.entity?.startsWith("input_select.") ? this.config.entity : undefined;
-    }
-    updated(changedProps) {
-        if (changedProps.has("hass")) {
-            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
-            this.initialized = true;
-        }
-    }
-    render() {
-        if (!this.initialized || !this.entity)
-            return x ``;
-        let icon;
-        const state = this.stateObj?.state || "unknown";
-        if (this.entity === "input_select.location_phase") {
-            icon = phaseIcons[state] || phaseIcons.default;
-        }
-        else if (this.entity === "input_select.location_mode") {
-            icon = modeIcons[state] || modeIcons.default;
-        }
-        else {
-            icon = this.config?.icon || this.stateObj?.attributes?.icon || "hass:form-dropdown";
-        }
-        const containerStyle = {
-            "margin-left": "0.7rem",
-        };
-        return x `
-            <div class="container" style="${o(containerStyle)}" @click=${this.showOptions}>
-                <div class="icon">
-                    <ha-icon .icon=${icon}></ha-icon>
-                </div>
-            </div>
-        `;
-    }
-    showOptions(e) {
-        e.stopPropagation();
-        selectOptionDialog(this.config, this.stateObj);
-    }
-};
-__decorate([
-    n$1({ attribute: false })
-], SelectChip.prototype, "hass", void 0);
-__decorate([
-    r()
-], SelectChip.prototype, "initialized", void 0);
-__decorate([
-    r()
-], SelectChip.prototype, "config", void 0);
-__decorate([
-    r()
-], SelectChip.prototype, "stateObj", void 0);
-SelectChip = __decorate([
-    t$1("smartqasa-select-chip")
-], SelectChip);
-
-function moreInfoDialog(config, stateObj) {
-    if (!config || !stateObj)
-        return;
-    const title = stateObj.attributes.friendly_name || stateObj.entity_id;
-    let dialogConfig = {
-        title: title,
-        dismissable: true,
-        timeout: 60000,
-        content: {
-            type: "custom:smartqasa-more-info-dialog",
-            entity: stateObj.entity_id,
-        },
-        ...(config.dialog_title && {
-            dismiss_action: {
-                service: "browser_mod.popup",
-                data: {
-                    ...listDialogConfig(config.dialog_title, config.filter_type, config.filter_value, config.tile_type),
-                },
-            },
-        }),
-    };
-    window.browser_mod?.service("popup", dialogConfig);
-}
-
-let ThermostatChip$1 = class ThermostatChip extends s {
-    constructor() {
-        super(...arguments);
-        this.initialized = false;
-        this._icon = "hass:thermometer-lines";
-        this._iconColor = "var(--sq-inactive-rgb)";
-        this._temperature = "??";
-    }
-    static { this.styles = [chipBaseStyle, chipTextStyle]; }
-    setConfig(config) {
-        this.config = { ...config };
-        this.entity = this.config.entity?.startsWith("climate.") ? this.config.entity : undefined;
-    }
-    updated(changedProps) {
-        if (changedProps.has("hass")) {
-            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
-            this.initialized = true;
-        }
-    }
-    render() {
-        if (!this.initialized || !this.entity)
-            return x ``;
-        const { icon, iconColor, temperature } = this.updateState();
-        const containerStyle = {
-            "margin-right": "0.7rem",
-        };
-        return x `
-            <div class="container" style="${o(containerStyle)}" @click=${this.showMoreInfo}>
-                <div class="icon" id="icon" style="color: rgb(${iconColor});">
-                    <ha-icon .icon=${icon}></ha-icon>
-                </div>
-                <div class="text">${temperature}°</div>
-            </div>
-        `;
-    }
-    updateState() {
-        let icon, iconAnimation, iconColor, temperature;
-        if (this.config && this.hass && this.stateObj) {
-            const state = this.stateObj.state;
-            icon = thermostatIcons[state] || thermostatIcons.default;
-            const hvacAction = this.stateObj.attributes.hvac_action;
-            iconColor = thermostatColors[hvacAction] || thermostatColors.default;
-            temperature = this.stateObj.attributes.current_temperature || "??";
-        }
-        else {
-            icon = thermostatIcons.default;
-            iconColor = thermostatColors.default;
-            temperature = "??";
-        }
-        return { icon, iconAnimation, iconColor, temperature };
-    }
-    showMoreInfo(e) {
-        e.stopPropagation();
-        moreInfoDialog(this.config, this.stateObj);
-    }
-};
-__decorate([
-    n$1({ attribute: false })
-], ThermostatChip$1.prototype, "hass", void 0);
-__decorate([
-    r()
-], ThermostatChip$1.prototype, "initialized", void 0);
-__decorate([
-    r()
-], ThermostatChip$1.prototype, "config", void 0);
-__decorate([
-    r()
-], ThermostatChip$1.prototype, "stateObj", void 0);
-ThermostatChip$1 = __decorate([
-    t$1("smartqasa-thermostat-chip")
-], ThermostatChip$1);
-
-let ThermostatChip = class ThermostatChip extends s {
-    constructor() {
-        super(...arguments);
-        this.initialized = false;
-    }
-    static { this.styles = [chipBaseStyle, chipTextStyle]; }
-    setConfig(config) {
-        this.config = { ...config };
-        this.entity = this.config.entity?.startsWith("weather.") ? this.config.entity : undefined;
-    }
-    updated(changedProps) {
-        if (changedProps.has("hass")) {
-            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
-            this.initialized = true;
-        }
-    }
-    render() {
-        if (!this.initialized || !this.entity)
-            return x ``;
-        let iconColor, temperature;
-        if (this.config && this.entity && this.stateObj) {
-            iconColor = "var(--sq-primary-text-rgb)";
-            temperature = this.stateObj?.attributes?.temperature || "??";
-        }
-        else {
-            iconColor = "var(--sq-unavailable-rgb)";
-            temperature = "??";
-        }
-        const containerStyle = {
-            "margin-left": "0.7rem",
-        };
-        return x `
-            <div class="container" style="${o(containerStyle)}" @click=${this.showDialog}>
-                <div class="icon" style="color: rgb(${iconColor});">
-                    <ha-state-icon .hass=${this.hass} .stateObj=${this.stateObj}></ha-state-icon>
-                </div>
-                <div class="text">${temperature}°</div>
-            </div>
-        `;
-    }
-    showDialog(e) {
-        e.stopPropagation();
-        const dialogObj = dialogTable.weather;
-        const dialogConfig = { ...dialogObj.data };
-        window.browser_mod?.service("popup", dialogConfig);
-    }
-};
-__decorate([
-    n$1({ attribute: false })
-], ThermostatChip.prototype, "hass", void 0);
-__decorate([
-    r()
-], ThermostatChip.prototype, "initialized", void 0);
-__decorate([
-    r()
-], ThermostatChip.prototype, "config", void 0);
-__decorate([
-    r()
-], ThermostatChip.prototype, "stateObj", void 0);
-ThermostatChip = __decorate([
-    t$1("smartqasa-weather-chip")
-], ThermostatChip);
-window.customCards.push({
-    type: "smartqasa-weather-chip",
-    name: "SmartQasa Weather Chip",
-    preview: true,
-    description: "A SmartQasa chip for displaying the weather.",
-});
-
-window.customCards.push({
-    type: "smartqasa-area-picture",
-    name: "SmartQasa Area Picture",
-    preview: true,
-    description: "A SmartQasa card for rendering an area picture.",
-});
-let AreaPicture = class AreaPicture extends s {
-    constructor() {
-        super(...arguments);
-        this.initialized = false;
-    }
-    getCardSize() {
-        return 1;
-    }
-    static get styles() {
-        return i$5 `
-            :host {
-                display: block;
-            }
-            ha-card {
-                background-size: cover;
-                background-repeat: no-repeat;
-                background-position: center center;
-                border-radius: 4px;
-                border: none;
-                box-shadow: none;
-                background-color: transparent;
-                overflow: hidden;
-            }
-        `;
-    }
-    setConfig(config) {
-        this.config = { ...config };
-        this.area = this.config?.area;
-    }
-    updated(changedProps) {
-        if (changedProps.has("hass") && this.area) {
-            this.areaObj = this.hass && this.area ? this.hass.areas[this.area] : undefined;
-            this.initialized = true;
-        }
-    }
-    render() {
-        if (!this.initialized || !this.areaObj)
-            return x ``;
-        const height = deviceType === "phone" ? "15vh" : "20vh";
-        const picture = this.config?.picture
-            ? `/local/smartqasa/images/${this.config.picture}`
-            : this.areaObj?.picture ?? "/local/sq-storage/images/default.png";
-        return x `
-            <ha-card style="background-image: url(${picture}); height: ${height};" class="picture"></ha-card>
-        `;
-    }
-};
-__decorate([
-    n$1({ attribute: false })
-], AreaPicture.prototype, "hass", void 0);
-__decorate([
-    r()
-], AreaPicture.prototype, "initialized", void 0);
-__decorate([
-    r()
-], AreaPicture.prototype, "config", void 0);
-__decorate([
-    r()
-], AreaPicture.prototype, "areaObj", void 0);
-AreaPicture = __decorate([
-    t$1("smartqasa-area-picture")
-], AreaPicture);
-
-function areasDialog(hass) {
-    if (!hass)
-        return;
-    const areas = Object.values(hass.areas).filter((area) => area?.labels.includes("visible"));
-    const cards = areas?.map((area) => ({
-        type: "custom:smartqasa-area-tile",
-        area: area.area_id,
-    }));
-    const dialogConfig = {
-        title: "Areas",
-        timeout: 60000,
-        content: {
-            type: "custom:layout-card",
-            layout_type: "custom:grid-layout",
-            layout: gridDialogStyle,
-            cards: cards,
-        },
-    };
-    window.browser_mod?.service("popup", dialogConfig);
-}
-
 /*! js-yaml 4.1.0 https://github.com/nodeca/js-yaml @license MIT */
 function isNothing(subject) {
   return (typeof subject === 'undefined') || (subject === null);
@@ -5235,6 +3954,1365 @@ async function loadYamlAsJson(yamlFilePath) {
             title: "Missing file.",
         };
     }
+}
+
+const chipBaseStyle = i$5 `
+    .container {
+        width: max-content;
+        place-self: center;
+        display: grid;
+        grid-template-areas: "i";
+        padding: 1rem;
+        border: var(--sq-card-border);
+        border-radius: var(--sq-chip-border-radius);
+        background-color: var(--sq-card-background-color);
+        justify-content: center;
+        transition: var(--sq-icon-transition, none);
+        cursor: pointer;
+    }
+    .icon {
+        grid-area: i;
+        display: flex;
+        height: 1.8rem;
+        width: 1.8rem;
+        transition: var(--sq-icon-transition, none);
+        color: rgb(var(--sq-primary-text-rgb));
+    }
+`;
+const chipTextStyle = i$5 `
+    .container {
+        grid-template-areas: "i t";
+        grid-column-gap: 0.5rem;
+        justify-content: start;
+    }
+    .text {
+        grid-area: t;
+        place-self: center start;
+        text-align: left;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: normal;
+        font-weight: var(--sq-primary-font-weight, 400);
+        font-size: var(--sq-primary-font-size, 1.5rem);
+        color: rgb(var(--sq-primary-font-rgb), 128, 128, 128);
+    }
+`;
+const chipDoubleStyle = i$5 `
+    .container {
+        width: fit-content;
+        place-self: center;
+        display: grid;
+        grid-template-areas: "i1 s i2";
+        grid-column-gap: 0.7rem;
+        margin-right: 0.7rem;
+        padding: 0.2rem;
+        border: var(--sq-card-border);
+        border-radius: var(--sq-chip-border-radius);
+        background-color: var(--sq-card-background-color);
+        cursor: pointer;
+    }
+    .container::after {
+        content: "";
+        grid-area: s;
+        width: 1px;
+        background-color: rgb(128, 128, 128);
+        margin: auto;
+        height: 90%;
+    }
+    .icon1 {
+        grid-area: i1;
+    }
+    .icon2 {
+        grid-area: i2;
+    }
+    .icon1,
+    .icon2 {
+        display: flex;
+        --mdc-icon-size: 3.4rem;
+        color: rgb(var(--sq-primary-text-rgb));
+    }
+`;
+const chipIconSpinStyle = i$5 `
+    @keyframes spin {
+        from {
+            transform: rotate(0deg);
+        }
+        to {
+            transform: rotate(360deg);
+        }
+    }
+`;
+
+window.customCards.push({
+    type: "smartqasa-custom-chip",
+    name: "SmartQasa Custom Chip",
+    preview: true,
+    description: "A SmartQasa chip for custom.",
+});
+let CustomChip = class CustomChip extends s {
+    constructor() {
+        super(...arguments);
+        this.initialized = false;
+    }
+    static { this.styles = [chipBaseStyle, chipTextStyle]; }
+    setConfig(config) {
+        this.config = { ...config };
+        this.file = this.config.file;
+        this.dialogObj = loadYamlAsJson(`/local/smartqasa/dialogs/${this.file}`);
+    }
+    updated(changedProps) {
+        if (changedProps.has("hass")) {
+            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
+            this.initialized = true;
+        }
+    }
+    render() {
+        if (!this.stateObj)
+            return x ``;
+        let icon, iconAnimation, iconColor;
+        if (this.dialogObj.data.icon) {
+            icon = this.dialogObj.data.icon;
+        }
+        else {
+            icon = this.stateObj.attributes.icon || "mdi:help-circle";
+        }
+        iconAnimation = "none";
+        iconColor = "var(--sq-primary-text-rgb)";
+        const containerStyle = {
+            "margin-left": "0.7rem",
+            "grid-template-areas": '"i"',
+        };
+        const iconStyles = {
+            color: `rgb(${iconColor})`,
+            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity))`,
+            animation: iconAnimation,
+        };
+        return x `
+            <div class="container" style="${o(containerStyle)}" @click=${this.showDialog}>
+                <div class="icon" style="${o(iconStyles)}">
+                    <ha-icon .icon=${icon}></ha-icon>
+                </div>
+                ${null}
+            </div>
+        `;
+    }
+    showDialog(e) {
+        e.stopPropagation();
+        const dialogConfig = { ...this.dialogObj.data };
+        window.browser_mod?.service("popup", dialogConfig);
+    }
+};
+__decorate([
+    n$1({ attribute: false })
+], CustomChip.prototype, "hass", void 0);
+__decorate([
+    r()
+], CustomChip.prototype, "initialized", void 0);
+__decorate([
+    r()
+], CustomChip.prototype, "config", void 0);
+__decorate([
+    r()
+], CustomChip.prototype, "dialogObj", void 0);
+__decorate([
+    r()
+], CustomChip.prototype, "stateObj", void 0);
+CustomChip = __decorate([
+    t$1("smartqasa-custom-chip")
+], CustomChip);
+
+const deviceType = window.screen.width < 600 ? "phone" : "tablet";
+const heaterColors = {
+    electric: "var(--sq-climate-heat-rgb, 250, 67, 54)",
+    heating: "var(--sq-climate-heat-rgb, 250, 67, 54)",
+    idle: "var(--sq-idle-rgb, 128, 128, 128)",
+    off: "var(--sq-inactive-rgb, 128, 128, 128)",
+    default: "var(--sq-unavailable-rgb, 255, 0, 255)",
+};
+const modeIcons = {
+    Home: "hass:home-account",
+    Away: "hass:map-marker-radius",
+    Guest: "hass:account-multiple",
+    Entertain: "hass:glass-cocktail",
+    Vacation: "hass:airplane",
+    default: "hass:help-rhombus",
+};
+const phaseIcons = {
+    Morning: "hass:weather-sunset-up",
+    Day: "hass:white-balance-sunny",
+    Evening: "hass:weather-night",
+    Night: "hass:sleep",
+    default: "hass:help-rhombus",
+};
+const thermostatColors = {
+    cooling: "var(--sq-climate-cool-rgb, 3, 169, 244)",
+    heating: "var(--sq-climate-heat-rgb, 250, 67, 54)",
+    fan_only: "var(--sq-climate-fan_only-rgb, 0, 255, 0)",
+    idle: "var(--sq-idle-rgb, 128, 128, 128)",
+    off: "var(--sq-inactive-rgb, 128, 128, 128)",
+    default: "var(--sq-unavailable-rgb, 255, 0, 255)",
+};
+const thermostatIcons = {
+    auto: "hass:thermostat-auto",
+    cool: "hass:snowflake",
+    heat: "hass:fire",
+    heat_cool: "hass:sun-snowflake-variant",
+    off: "hass:power",
+    default: "hass:thermostat-cog",
+};
+
+const listDialogStyle = {
+    margin: 0,
+    card_margin: 0,
+    "grid-template-columns": "1fr",
+    "grid-gap": "var(--sq-dialog-grid-gap)",
+};
+const gridDialogStyle = {
+    margin: 0,
+    card_margin: 0,
+    "grid-template-columns": deviceType === "phone" ? "repeat(2, 1fr)" : "repeat(3, var(--sq-tile-width-tablet, 20rem))",
+    "grid-gap": "var(--sq-dialog-grid-gap)",
+};
+
+const listDialogConfig = (dialogTitle, filterType, filterValue, tileType) => {
+    return {
+        title: dialogTitle,
+        timeout: 60000,
+        content: {
+            type: "custom:auto-entities",
+            card: {
+                type: "custom:layout-card",
+                layout_type: "custom:grid-layout",
+                layout: listDialogStyle,
+            },
+            card_param: "cards",
+            filter: {
+                include: [
+                    {
+                        [filterType]: filterValue,
+                        sort: {
+                            method: "friendly_name",
+                            ignore_case: true,
+                        },
+                        options: {
+                            type: `custom:smartqasa-${tileType}-tile`,
+                            dialog_title: dialogTitle,
+                            filter_type: filterType,
+                            filter_value: filterValue,
+                            tile_type: tileType,
+                        },
+                    },
+                ],
+            },
+        },
+    };
+};
+
+const dialogTable = {
+    air_quality: {
+        icon: "hass:air-filter",
+        name: "Air Quality",
+        data: {
+            title: "Air Quality",
+            size: "fullscreen",
+            timeout: 120000,
+            content: {
+                type: "custom:layout-card",
+                layout_type: "custom:horizontal-layout",
+                layout: {
+                    max_cols: 3,
+                    card_margin: "4px 4px 8px",
+                },
+                cards: [
+                    {
+                        type: "custom:mini-graph-card",
+                        entities: ["sensor.air_quality_radon"],
+                        name: "Radon Gas",
+                        icon: "mdi:radioactive",
+                        hours_to_show: 48,
+                        smoothing: true,
+                        color_thresholds: [
+                            {
+                                value: 0,
+                                color: "#00ff00",
+                            },
+                            {
+                                value: 48.1,
+                                color: "#32cd32",
+                            },
+                            {
+                                value: 96.2,
+                                color: "#ffd700",
+                            },
+                            {
+                                value: 148,
+                                color: "#ff0000",
+                            },
+                        ],
+                        tap_action: {
+                            action: "none",
+                        },
+                        color_thresholds_transition: "hard",
+                    },
+                    {
+                        type: "custom:mini-graph-card",
+                        entities: ["sensor.air_quality_co2"],
+                        name: "Carbon Dioxide",
+                        icon: "mdi:molecule-co2",
+                        hours_to_show: 48,
+                        smoothing: true,
+                        color_thresholds: [
+                            {
+                                value: 0,
+                                color: "#00ff00",
+                            },
+                            {
+                                value: 799,
+                                color: "#ffd700",
+                            },
+                            {
+                                value: 999,
+                                color: "#ff0000",
+                            },
+                        ],
+                        color_thresholds_transition: "hard",
+                        tap_action: {
+                            action: "none",
+                        },
+                    },
+                    {
+                        type: "custom:mini-graph-card",
+                        entities: ["sensor.air_quality_voc"],
+                        name: "VOC (Contaminents)",
+                        icon: "mdi:weather-dust",
+                        hours_to_show: 48,
+                        smoothing: true,
+                        color_thresholds: [
+                            {
+                                value: 0,
+                                color: "#00ff00",
+                            },
+                            {
+                                value: 250,
+                                color: "#ffd700",
+                            },
+                            {
+                                value: 2000,
+                                color: "#ff0000",
+                            },
+                        ],
+                        color_thresholds_transition: "hard",
+                        tap_action: {
+                            action: "none",
+                        },
+                    },
+                    {
+                        type: "custom:mini-graph-card",
+                        entities: ["sensor.air_quality_temperature"],
+                        name: "Temperature",
+                        hours_to_show: 48,
+                        smoothing: true,
+                        color_thresholds: [
+                            {
+                                value: 0,
+                                color: "#0000ff",
+                            },
+                            {
+                                value: 68,
+                                color: "#00ff00",
+                            },
+                            {
+                                value: 75,
+                                color: "#ffa500",
+                            },
+                            {
+                                value: 85,
+                                color: "#ff0000",
+                            },
+                        ],
+                        color_thresholds_transition: "hard",
+                        tap_action: {
+                            action: "none",
+                        },
+                    },
+                    {
+                        type: "custom:mini-graph-card",
+                        entities: ["sensor.air_quality_humidity"],
+                        name: "Humidity",
+                        hours_to_show: 48,
+                        smoothing: true,
+                        color_thresholds: [
+                            {
+                                value: 0,
+                                color: "#d0ae8b",
+                            },
+                            {
+                                value: 40,
+                                color: "#00ff00",
+                            },
+                            {
+                                value: 60,
+                                color: "#52B1D2",
+                            },
+                        ],
+                        color_thresholds_transition: "hard",
+                        tap_action: {
+                            action: "none",
+                        },
+                    },
+                    {
+                        type: "custom:mini-graph-card",
+                        entities: ["sensor.air_quality_pressure"],
+                        name: "Barometric Presure",
+                        hours_to_show: 48,
+                        smoothing: true,
+                        color_thresholds: [
+                            {
+                                value: 0,
+                                color: "#52B1D2",
+                            },
+                            {
+                                value: 1009.144,
+                                color: "#00ff00",
+                            },
+                            {
+                                value: 1022.689,
+                                color: "#d0ae8b",
+                            },
+                        ],
+                        color_thresholds_transition: "hard",
+                        tap_action: {
+                            action: "none",
+                        },
+                    },
+                ],
+            },
+        },
+    },
+    clean_screen: {
+        icon: "hass:spray-bottle",
+        name: "Clean Screen",
+        data: {
+            title: "Clean Screen",
+            size: "fullscreen",
+            timeout: 30000,
+            dismissable: false,
+            content: {
+                type: "picture",
+                image: "/local/sq-storage/images/clean_screen.png",
+                card_mod: {
+                    style: {
+                        radius: "0px",
+                    },
+                },
+            },
+        },
+    },
+    display_themes: {
+        icon: "hass:compare",
+        name: "Dispaly Themes",
+        data: {
+            title: "Display Themes",
+            timeout: 60000,
+            content: {
+                type: "custom:layout-card",
+                layout_type: "custom:grid-layout",
+                layout: listDialogStyle,
+                cards: [
+                    {
+                        type: "custom:smartqasa-theme-tile",
+                        mode: "light",
+                        icon: "hass:brightness-7",
+                        name: "Light",
+                    },
+                    {
+                        type: "custom:smartqasa-theme-tile",
+                        mode: "dark",
+                        icon: "hass:weather-night",
+                        name: "Dark",
+                    },
+                    {
+                        type: "custom:smartqasa-theme-tile",
+                        mode: "auto",
+                        icon: "hass:theme-light-dark",
+                        name: "Auto",
+                    },
+                ],
+            },
+        },
+    },
+    energy_monitor: {
+        icon: "hass:transmission-tower",
+        name: "Energy Monitor",
+        data: {
+            title: "Energy Monitor",
+            size: "fullscreen",
+            timeout: 120000,
+            content: {
+                type: "custom:layout-card",
+                layout_type: "custom:grid-layout",
+                layout: {
+                    "grid-template-columns": "90vw",
+                    "grid-template-rows": "auto",
+                    "grid-gap": "var(--sq-dialog-grid-gap)",
+                    "place-content": "center",
+                    margin: 0,
+                },
+                cards: [
+                    {
+                        type: "horizontal-stack",
+                        cards: [{ type: "energy-distribution" }, { type: "energy-date-selection" }],
+                    },
+                    { type: "energy-usage-graph" },
+                ],
+            },
+        },
+    },
+    garages: {
+        icon: "hass:garage-open-variant",
+        name: "Garage Doors",
+        entity: "cover.all_garage_doors",
+        data: listDialogConfig("Garage Doors", "group", "cover.all_garage_doors", "garage"),
+    },
+    locks: {
+        icon: "hass:lock-open",
+        name: "Door Locks",
+        entity: "lock.all_door_locks",
+        data: listDialogConfig("Door Locks", "group", "lock.all_door_locks", "lock"),
+    },
+    robots: {
+        icon: "hass:robot-vacuum-variant",
+        name: "Robots",
+        data: listDialogConfig("Robots", "domain", "vacuum", "robot"),
+    },
+    roku_players: {
+        icon: "hass:audio-video",
+        name: "Roku Players",
+        data: listDialogConfig("Roku Players", "group", "media_player.all_roku_players", "roku"),
+    },
+    sensors_doors: {
+        icon: "hass:door-open",
+        name: "Door Sensors",
+        entity: "binary_sensor.all_door_sensors",
+        data: listDialogConfig("Door Sensors", "group", "binary_sensor.all_door_sensors", "sensor"),
+    },
+    sensors_windows: {
+        icon: "hass:window-open",
+        name: "Window Sensors",
+        entity: "binary_sensor.all_window_sensors",
+        data: listDialogConfig("Window Sensors", "group", "binary_sensor.all_window_sensors", "sensor"),
+    },
+    speed_test: {
+        icon: "hass:gauge",
+        name: "Speed Test",
+        data: {
+            title: "Speed Test",
+            size: "wide",
+            timeout: 60000,
+            content: {
+                type: "statistics-graph",
+                entities: ["sensor.speedtest_download", "sensor.speedtest_upload"],
+                chart_type: "line",
+                period: "hour",
+                stat_types: ["mean"],
+                hide_legend: false,
+                days_to_show: 3,
+            },
+        },
+    },
+    sonos_players: {
+        icon: "hass:speaker-multiple",
+        name: "Sonos Players",
+        data: listDialogConfig("Sonos Players", "group", "media_player.all_sonos_players", "sonos"),
+    },
+    thermostats: {
+        icon: "hass:thermostat",
+        name: "Thermostats",
+        data: listDialogConfig("Thermostats", "domain", "climate", "thermostat"),
+    },
+    weather: {
+        icon: "hass:sun-wireless",
+        name: "Weather",
+        data: {
+            title: "Weather",
+            size: "fullscreen",
+            timeout: 60000,
+            content: {
+                type: "custom:layout-card",
+                layout_type: "custom:grid-layout",
+                layout: {
+                    "place-content": "center",
+                    "place-self": "center",
+                    "grid-template-columns": "446px 454px",
+                    "grid-gap": "var(--sq-dialog-grid-gap)",
+                },
+                cards: [
+                    {
+                        type: "vertical-stack",
+                        cards: [
+                            {
+                                type: "custom:gap-card",
+                                height: 15,
+                            },
+                            {
+                                type: "weather-forecast",
+                                entity: "weather.forecast_home",
+                                forecast_type: "hourly",
+                                name: "Forecast",
+                                show_current: true,
+                                show_forecast: true,
+                                secondary_info_attribute: "wind_speed",
+                            },
+                            {
+                                type: "weather-forecast",
+                                entity: "weather.forecast_home",
+                                forecast_type: "daily",
+                                show_current: false,
+                                show_forecast: true,
+                            },
+                        ],
+                    },
+                    {
+                        type: "vertical-stack",
+                        cards: [
+                            {
+                                type: "custom:gap-card",
+                                height: 15,
+                            },
+                            {
+                                type: "custom:weather-radar-card",
+                                frame_count: 10,
+                                show_marker: true,
+                                show_range: true,
+                                show_zoom: true,
+                                show_recenter: true,
+                                show_playback: true,
+                                zoom_level: 20,
+                                square_map: true,
+                                show_scale: true,
+                                extra_labels: true,
+                                map_style: "Voyager",
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+    },
+};
+
+window.customCards.push({
+    type: "smartqasa-dialog-chip",
+    name: "SmartQasa Dialog Chip",
+    preview: true,
+    description: "A SmartQasa chip for dialog.",
+});
+let DialogChip = class DialogChip extends s {
+    constructor() {
+        super(...arguments);
+        this.initialized = false;
+    }
+    static { this.styles = [chipBaseStyle, chipTextStyle]; }
+    setConfig(config) {
+        this.config = { ...config };
+        this.dialog = this.config.dialog;
+        this.dialogObj = this.dialog ? dialogTable[this.dialog] : undefined;
+        this.entity = this.dialogObj.entity;
+        this.icon = this.dialogObj.icon;
+        this.label = this.config.label || "";
+    }
+    updated(changedProps) {
+        if (changedProps.has("hass")) {
+            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
+            this.initialized = true;
+        }
+    }
+    render() {
+        if (!this.initialized || !this.dialogObj || !this.stateObj)
+            return x ``;
+        const state = this.stateObj.state;
+        if ((this.dialog === "garages" && state === "closed") ||
+            (this.dialog === "locks" && state === "locked") ||
+            (this.dialog === "sensors_doors" && state === "off") ||
+            (this.dialog === "sensors_windows" && state === "off"))
+            return x ``;
+        const containerStyle = {
+            "margin-left": "0.7rem",
+            "grid-template-areas": this.label ? '"i t"' : '"i"',
+        };
+        return x `
+            <div class="container" style="${o(containerStyle)}" @click=${this.showDialog}>
+                <div class="icon" style="color: rgb(var(--sq-rgb-orange));">
+                    <ha-icon .icon=${this.icon}></ha-icon>
+                </div>
+                ${this.label ? x `<div class="text">${this.label}</div>` : null}
+            </div>
+        `;
+    }
+    showDialog(e) {
+        e.stopPropagation();
+        if (!window.browser_mod) {
+            console.error("browser_mod is not available!");
+            return;
+        }
+        const dialogConfig = { ...this.dialogObj.data };
+        window.browser_mod.service("popup", dialogConfig);
+    }
+};
+__decorate([
+    n$1({ attribute: false })
+], DialogChip.prototype, "hass", void 0);
+__decorate([
+    r()
+], DialogChip.prototype, "initialized", void 0);
+__decorate([
+    r()
+], DialogChip.prototype, "config", void 0);
+__decorate([
+    r()
+], DialogChip.prototype, "dialogObj", void 0);
+__decorate([
+    r()
+], DialogChip.prototype, "stateObj", void 0);
+DialogChip = __decorate([
+    t$1("smartqasa-dialog-chip")
+], DialogChip);
+
+async function toggleHassEntity(hass, entity) {
+    if (!hass || !entity)
+        return;
+    try {
+        await hass.callService("homeassistant", "toggle", { entity_id: entity });
+    }
+    catch (error) {
+        console.error("Failed to toggle the entity:", error);
+    }
+}
+
+window.customCards.push({
+    type: "smartqasa-motion-chip",
+    name: "SmartQasa Motion Sensor Chip",
+    preview: true,
+    description: "A SmartQasa chip for toggling a motion sensor automation entity.",
+});
+let MotionChip = class MotionChip extends s {
+    constructor() {
+        super(...arguments);
+        this.initialized = false;
+    }
+    static { this.styles = [chipBaseStyle, chipTextStyle]; }
+    setConfig(config) {
+        this.config = { ...config };
+        this.entity = this.config.entity?.startsWith("automation.") ? this.config.entity : undefined;
+    }
+    updated(changedProps) {
+        if (changedProps.has("hass")) {
+            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
+            this.initialized = true;
+        }
+    }
+    render() {
+        if (!this.entity || !this.initialized)
+            return x ``;
+        const { icon, iconColor, name } = this.updateState();
+        const containerStyle = {
+            "margin-right": "0.7rem",
+            "grid-template-areas": name ? '"i t"' : '"i"',
+        };
+        const iconStyles = {
+            color: `rgb(${iconColor})`,
+        };
+        return x `
+            <div class="container" style="${o(containerStyle)}" @click=${this.toggleEntity}>
+                <div class="icon" style="${o(iconStyles)}">
+                    <ha-icon .icon=${icon}></ha-icon>
+                </div>
+                ${name ? x `<div class="text">${name}</div>` : null}
+            </div>
+        `;
+    }
+    updateState() {
+        let icon, iconColor, name;
+        if (this.config && this.hass && this.stateObj) {
+            const state = this.stateObj.state || undefined;
+            switch (state) {
+                case "on":
+                    icon = "hass:motion-sensor";
+                    iconColor = "var(--sq-primary-font-rgb)";
+                    break;
+                case "off":
+                    icon = "hass:motion-sensor-off";
+                    iconColor = "var(--sq-red-rgb, 255, 0, 0)";
+                    break;
+                default:
+                    icon = "hass:motion-sensor-off";
+                    iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+                    break;
+            }
+        }
+        else {
+            icon = this.config?.icon || "hass:lightbulb-alert";
+            iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+        }
+        name = this.config?.name || "";
+        return { icon, iconColor, name };
+    }
+    toggleEntity(e) {
+        e.stopPropagation();
+        toggleHassEntity(this.hass, this.entity);
+    }
+};
+__decorate([
+    n$1({ attribute: false })
+], MotionChip.prototype, "hass", void 0);
+__decorate([
+    r()
+], MotionChip.prototype, "initialized", void 0);
+__decorate([
+    r()
+], MotionChip.prototype, "config", void 0);
+__decorate([
+    r()
+], MotionChip.prototype, "stateObj", void 0);
+MotionChip = __decorate([
+    t$1("smartqasa-motion-chip")
+], MotionChip);
+
+window.customCards.push({
+    type: "smartqasa-navigate-chip",
+    name: "SmartQasa Navigate Chip",
+    preview: true,
+    description: "A SmartQasa chip for navigating to a previous/next area.",
+});
+let NavigateChip = class NavigateChip extends s {
+    static { this.styles = [chipDoubleStyle]; }
+    setConfig(config) {
+        this.areaPrev = config.area_prev || undefined;
+        this.areaNext = config.area_next || undefined;
+    }
+    updated(changedProps) {
+        if (changedProps.has("hass") && this.areaPrev && this.areaNext) {
+            this.areaObjPrev = this.hass ? this.hass.areas[this.areaPrev] : undefined;
+            this.areaObjNext = this.hass ? this.hass.areas[this.areaNext] : undefined;
+        }
+    }
+    render() {
+        if (!this.areaObjPrev || !this.areaObjNext) {
+            return x ``;
+        }
+        const containerStyle = {
+            "margin-right": "0.7rem",
+        };
+        const iconPrev = "hass:menu-left";
+        const iconNext = "hass:menu-right";
+        return x `
+            <div class="container" style="${o(containerStyle)}">
+                <div class="icon1" @click=${this._navigatePrev}>
+                    <ha-icon .icon=${iconPrev}></ha-icon>
+                </div>
+                <div class="icon2" @click=${this._navigateNext}>
+                    <ha-icon .icon=${iconNext}></ha-icon>
+                </div>
+            </div>
+        `;
+    }
+    _navigatePrev(e) {
+        e.stopPropagation();
+        if (this.areaObjPrev) {
+            window.history.pushState(null, "", `/home-dash/${this.areaPrev}`);
+            window.dispatchEvent(new CustomEvent("location-changed"));
+            // Assume browser_mod is correctly typed and included
+        }
+        else {
+            console.error("Previous area is not found.");
+        }
+    }
+    _navigateNext(e) {
+        e.stopPropagation();
+        if (this.areaObjNext) {
+            window.history.pushState(null, "", `/home-dash/${this.areaNext}`);
+            window.dispatchEvent(new CustomEvent("location-changed"));
+        }
+        else {
+            console.error("Next area is not found.");
+        }
+    }
+};
+__decorate([
+    n$1({ attribute: false })
+], NavigateChip.prototype, "hass", void 0);
+__decorate([
+    r()
+], NavigateChip.prototype, "areaPrev", void 0);
+__decorate([
+    r()
+], NavigateChip.prototype, "areaNext", void 0);
+__decorate([
+    r()
+], NavigateChip.prototype, "areaObjPrev", void 0);
+__decorate([
+    r()
+], NavigateChip.prototype, "areaObjNext", void 0);
+NavigateChip = __decorate([
+    t$1("smartqasa-navigate-chip")
+], NavigateChip);
+
+let RoutineChip = class RoutineChip extends s {
+    constructor() {
+        super(...arguments);
+        this.initialized = false;
+        this.running = false;
+    }
+    static { this.styles = [chipBaseStyle, chipTextStyle, chipIconSpinStyle]; }
+    setConfig(config) {
+        this.config = { ...config };
+        this.entity = ["automation", "scene", "script"].includes(this.config.entity?.split(".")[0])
+            ? this.config.entity
+            : undefined;
+    }
+    updated(changedProps) {
+        if (changedProps.has("hass")) {
+            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
+            this.initialized = true;
+        }
+    }
+    render() {
+        if (!this.initialized || !this.entity)
+            return x ``;
+        const { icon, iconAnimation, iconColor, name } = this.updateState();
+        const containerStyle = {
+            "margin-left": "0.7rem",
+            "grid-template-areas": name ? '"i t"' : '"i"',
+        };
+        const iconStyles = {
+            color: `rgb(${iconColor})`,
+            animation: iconAnimation,
+        };
+        return x `
+            <div class="container" style="${o(containerStyle)}" @click=${this.runRoutine}>
+                <div class="icon" style="${o(iconStyles)}">
+                    <ha-icon .icon=${icon}></ha-icon>
+                </div>
+                ${name ? x `<div class="text">${name}</div>` : null}
+            </div>
+        `;
+    }
+    updateState() {
+        let icon, iconAnimation, iconColor, name;
+        if (this.config && this.hass && this.stateObj) {
+            if (this.running) {
+                icon = "hass:rotate-right";
+                iconAnimation = "spin 1.0s linear infinite";
+                iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
+            }
+            else {
+                icon = this.config.icon || this.stateObj.attributes.icon || "hass:help-rhombus";
+                iconAnimation = "none";
+                iconColor = this.config.color || "var(--sq-primary-text-rgb)";
+            }
+        }
+        else {
+            icon = "hass:alert-rhombus";
+            iconAnimation = "none";
+            iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+        }
+        name = this.config?.name || "";
+        return { icon, iconAnimation, iconColor, name };
+    }
+    runRoutine(e) {
+        e.stopPropagation();
+        if (!this.hass || !this.stateObj)
+            return;
+        this.running = true;
+        const domain = this.stateObj.entity_id.split(".")[0];
+        switch (domain) {
+            case "script":
+                this.hass.callService("script", "turn_on", { entity_id: this.entity });
+                break;
+            case "scene":
+                this.hass.callService("scene", "turn_on", { entity_id: this.entity });
+                break;
+            case "automation":
+                this.hass.callService("automation", "trigger", { entity_id: this.entity });
+                break;
+            default:
+                console.error("Unsupported entity domain:", domain);
+                return;
+        }
+        setTimeout(() => {
+            this.running = false;
+        }, 2000);
+    }
+};
+__decorate([
+    n$1({ attribute: false })
+], RoutineChip.prototype, "hass", void 0);
+__decorate([
+    r()
+], RoutineChip.prototype, "initialized", void 0);
+__decorate([
+    r()
+], RoutineChip.prototype, "config", void 0);
+__decorate([
+    r()
+], RoutineChip.prototype, "stateObj", void 0);
+__decorate([
+    r()
+], RoutineChip.prototype, "running", void 0);
+RoutineChip = __decorate([
+    t$1("smartqasa-routine-chip")
+], RoutineChip);
+window.customCards.push({
+    type: "smartqasa-routine-chip",
+    name: "SmartQasa Routine Chip",
+    preview: true,
+    description: "A SmartQasa chip for triggering an automation, scene, or script entity.",
+});
+
+function selectOptionDialog(config, stateObj) {
+    if (!stateObj)
+        return;
+    const cards = stateObj.attributes.options.map((option) => ({
+        type: "custom:smartqasa-option-tile",
+        entity: stateObj.entity_id,
+        option: option,
+        trigger: config?.trigger,
+        menu_tab: config.menu_tab,
+    }));
+    const dialogConfig = {
+        title: stateObj.attributes.friendly_name || stateObj.entity_id,
+        timeout: 60000,
+        content: {
+            type: "custom:layout-card",
+            layout_type: "custom:grid-layout",
+            layout: listDialogStyle,
+            cards: cards,
+        },
+    };
+    window.browser_mod?.service("popup", dialogConfig);
+}
+
+window.customCards.push({
+    type: "smartqasa-select-chip",
+    name: "SmartQasa Input Select Chip",
+    preview: true,
+    description: "A SmartQasa chip for selecting an option for a input_select entity.",
+});
+let SelectChip = class SelectChip extends s {
+    constructor() {
+        super(...arguments);
+        this.initialized = false;
+    }
+    static { this.styles = [chipBaseStyle]; }
+    setConfig(config) {
+        this.config = { ...config };
+        this.entity = this.config.entity?.startsWith("input_select.") ? this.config.entity : undefined;
+    }
+    updated(changedProps) {
+        if (changedProps.has("hass")) {
+            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
+            this.initialized = true;
+        }
+    }
+    render() {
+        if (!this.initialized || !this.entity)
+            return x ``;
+        let icon;
+        const state = this.stateObj?.state || "unknown";
+        if (this.entity === "input_select.location_phase") {
+            icon = phaseIcons[state] || phaseIcons.default;
+        }
+        else if (this.entity === "input_select.location_mode") {
+            icon = modeIcons[state] || modeIcons.default;
+        }
+        else {
+            icon = this.config?.icon || this.stateObj?.attributes?.icon || "hass:form-dropdown";
+        }
+        const containerStyle = {
+            "margin-left": "0.7rem",
+        };
+        return x `
+            <div class="container" style="${o(containerStyle)}" @click=${this.showOptions}>
+                <div class="icon">
+                    <ha-icon .icon=${icon}></ha-icon>
+                </div>
+            </div>
+        `;
+    }
+    showOptions(e) {
+        e.stopPropagation();
+        selectOptionDialog(this.config, this.stateObj);
+    }
+};
+__decorate([
+    n$1({ attribute: false })
+], SelectChip.prototype, "hass", void 0);
+__decorate([
+    r()
+], SelectChip.prototype, "initialized", void 0);
+__decorate([
+    r()
+], SelectChip.prototype, "config", void 0);
+__decorate([
+    r()
+], SelectChip.prototype, "stateObj", void 0);
+SelectChip = __decorate([
+    t$1("smartqasa-select-chip")
+], SelectChip);
+
+function moreInfoDialog(config, stateObj) {
+    if (!config || !stateObj)
+        return;
+    const title = stateObj.attributes.friendly_name || stateObj.entity_id;
+    let dialogConfig = {
+        title: title,
+        dismissable: true,
+        timeout: 60000,
+        content: {
+            type: "custom:smartqasa-more-info-dialog",
+            entity: stateObj.entity_id,
+        },
+        ...(config.dialog_title && {
+            dismiss_action: {
+                service: "browser_mod.popup",
+                data: {
+                    ...listDialogConfig(config.dialog_title, config.filter_type, config.filter_value, config.tile_type),
+                },
+            },
+        }),
+    };
+    window.browser_mod?.service("popup", dialogConfig);
+}
+
+let ThermostatChip$1 = class ThermostatChip extends s {
+    constructor() {
+        super(...arguments);
+        this.initialized = false;
+        this._icon = "hass:thermometer-lines";
+        this._iconColor = "var(--sq-inactive-rgb)";
+        this._temperature = "??";
+    }
+    static { this.styles = [chipBaseStyle, chipTextStyle]; }
+    setConfig(config) {
+        this.config = { ...config };
+        this.entity = this.config.entity?.startsWith("climate.") ? this.config.entity : undefined;
+    }
+    updated(changedProps) {
+        if (changedProps.has("hass")) {
+            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
+            this.initialized = true;
+        }
+    }
+    render() {
+        if (!this.initialized || !this.entity)
+            return x ``;
+        const { icon, iconColor, temperature } = this.updateState();
+        const containerStyle = {
+            "margin-right": "0.7rem",
+        };
+        return x `
+            <div class="container" style="${o(containerStyle)}" @click=${this.showMoreInfo}>
+                <div class="icon" id="icon" style="color: rgb(${iconColor});">
+                    <ha-icon .icon=${icon}></ha-icon>
+                </div>
+                <div class="text">${temperature}°</div>
+            </div>
+        `;
+    }
+    updateState() {
+        let icon, iconAnimation, iconColor, temperature;
+        if (this.config && this.hass && this.stateObj) {
+            const state = this.stateObj.state;
+            icon = thermostatIcons[state] || thermostatIcons.default;
+            const hvacAction = this.stateObj.attributes.hvac_action;
+            iconColor = thermostatColors[hvacAction] || thermostatColors.default;
+            temperature = this.stateObj.attributes.current_temperature || "??";
+        }
+        else {
+            icon = thermostatIcons.default;
+            iconColor = thermostatColors.default;
+            temperature = "??";
+        }
+        return { icon, iconAnimation, iconColor, temperature };
+    }
+    showMoreInfo(e) {
+        e.stopPropagation();
+        moreInfoDialog(this.config, this.stateObj);
+    }
+};
+__decorate([
+    n$1({ attribute: false })
+], ThermostatChip$1.prototype, "hass", void 0);
+__decorate([
+    r()
+], ThermostatChip$1.prototype, "initialized", void 0);
+__decorate([
+    r()
+], ThermostatChip$1.prototype, "config", void 0);
+__decorate([
+    r()
+], ThermostatChip$1.prototype, "stateObj", void 0);
+ThermostatChip$1 = __decorate([
+    t$1("smartqasa-thermostat-chip")
+], ThermostatChip$1);
+
+let ThermostatChip = class ThermostatChip extends s {
+    constructor() {
+        super(...arguments);
+        this.initialized = false;
+    }
+    static { this.styles = [chipBaseStyle, chipTextStyle]; }
+    setConfig(config) {
+        this.config = { ...config };
+        this.entity = this.config.entity?.startsWith("weather.") ? this.config.entity : undefined;
+    }
+    updated(changedProps) {
+        if (changedProps.has("hass")) {
+            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
+            this.initialized = true;
+        }
+    }
+    render() {
+        if (!this.initialized || !this.entity)
+            return x ``;
+        let iconColor, temperature;
+        if (this.config && this.entity && this.stateObj) {
+            iconColor = "var(--sq-primary-text-rgb)";
+            temperature = this.stateObj?.attributes?.temperature || "??";
+        }
+        else {
+            iconColor = "var(--sq-unavailable-rgb)";
+            temperature = "??";
+        }
+        const containerStyle = {
+            "margin-left": "0.7rem",
+        };
+        return x `
+            <div class="container" style="${o(containerStyle)}" @click=${this.showDialog}>
+                <div class="icon" style="color: rgb(${iconColor});">
+                    <ha-state-icon .hass=${this.hass} .stateObj=${this.stateObj}></ha-state-icon>
+                </div>
+                <div class="text">${temperature}°</div>
+            </div>
+        `;
+    }
+    showDialog(e) {
+        e.stopPropagation();
+        const dialogObj = dialogTable.weather;
+        const dialogConfig = { ...dialogObj.data };
+        window.browser_mod?.service("popup", dialogConfig);
+    }
+};
+__decorate([
+    n$1({ attribute: false })
+], ThermostatChip.prototype, "hass", void 0);
+__decorate([
+    r()
+], ThermostatChip.prototype, "initialized", void 0);
+__decorate([
+    r()
+], ThermostatChip.prototype, "config", void 0);
+__decorate([
+    r()
+], ThermostatChip.prototype, "stateObj", void 0);
+ThermostatChip = __decorate([
+    t$1("smartqasa-weather-chip")
+], ThermostatChip);
+window.customCards.push({
+    type: "smartqasa-weather-chip",
+    name: "SmartQasa Weather Chip",
+    preview: true,
+    description: "A SmartQasa chip for displaying the weather.",
+});
+
+window.customCards.push({
+    type: "smartqasa-area-picture",
+    name: "SmartQasa Area Picture",
+    preview: true,
+    description: "A SmartQasa card for rendering an area picture.",
+});
+let AreaPicture = class AreaPicture extends s {
+    constructor() {
+        super(...arguments);
+        this.initialized = false;
+    }
+    getCardSize() {
+        return 1;
+    }
+    static get styles() {
+        return i$5 `
+            :host {
+                display: block;
+            }
+            ha-card {
+                background-size: cover;
+                background-repeat: no-repeat;
+                background-position: center center;
+                border-radius: 4px;
+                border: none;
+                box-shadow: none;
+                background-color: transparent;
+                overflow: hidden;
+            }
+        `;
+    }
+    setConfig(config) {
+        this.config = { ...config };
+        this.area = this.config?.area;
+    }
+    updated(changedProps) {
+        if (changedProps.has("hass") && this.area) {
+            this.areaObj = this.hass && this.area ? this.hass.areas[this.area] : undefined;
+            this.initialized = true;
+        }
+    }
+    render() {
+        if (!this.initialized || !this.areaObj)
+            return x ``;
+        const height = deviceType === "phone" ? "15vh" : "20vh";
+        const picture = this.config?.picture
+            ? `/local/smartqasa/images/${this.config.picture}`
+            : this.areaObj?.picture ?? "/local/sq-storage/images/default.png";
+        return x `
+            <ha-card style="background-image: url(${picture}); height: ${height};" class="picture"></ha-card>
+        `;
+    }
+};
+__decorate([
+    n$1({ attribute: false })
+], AreaPicture.prototype, "hass", void 0);
+__decorate([
+    r()
+], AreaPicture.prototype, "initialized", void 0);
+__decorate([
+    r()
+], AreaPicture.prototype, "config", void 0);
+__decorate([
+    r()
+], AreaPicture.prototype, "areaObj", void 0);
+AreaPicture = __decorate([
+    t$1("smartqasa-area-picture")
+], AreaPicture);
+
+function areasDialog(hass) {
+    if (!hass)
+        return;
+    const areas = Object.values(hass.areas).filter((area) => area?.labels.includes("visible"));
+    const cards = areas?.map((area) => ({
+        type: "custom:smartqasa-area-tile",
+        area: area.area_id,
+    }));
+    const dialogConfig = {
+        title: "Areas",
+        timeout: 60000,
+        content: {
+            type: "custom:layout-card",
+            layout_type: "custom:grid-layout",
+            layout: gridDialogStyle,
+            cards: cards,
+        },
+    };
+    window.browser_mod?.service("popup", dialogConfig);
 }
 
 async function entertainDialog(config, hass) {
