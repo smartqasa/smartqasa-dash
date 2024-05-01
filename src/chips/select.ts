@@ -1,8 +1,8 @@
-import { CSSResult, html, LitElement, TemplateResult } from "lit";
-import { customElement, state } from "lit/decorators.js";
+import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult } from "lit";
+import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity } from "home-assistant-js-websocket";
-import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
+import { HomeAssistant, LovelaceCardConfig } from "../types";
 import { selectOptionDialog } from "../utils/select-option-dialog";
 import { phaseIcons, modeIcons } from "../const";
 
@@ -14,43 +14,49 @@ interface Config extends LovelaceCardConfig {
     icon?: string;
 }
 
+window.customCards.push({
+    type: "smartqasa-select-chip",
+    name: "SmartQasa Input Select Chip",
+    preview: true,
+    description: "A SmartQasa chip for selecting an option for a input_select entity.",
+});
+
 @customElement("smartqasa-select-chip")
 export class SelectChip extends LitElement {
-    @state() private _config?: Config;
-    @state() private _stateObj?: HassEntity;
+    @property({ attribute: false }) public hass?: HomeAssistant;
 
-    private _entity?: string;
-    private _icon!: string;
+    @state() private initialized: boolean = false;
+    @state() private config?: Config;
+    @state() private stateObj?: HassEntity;
 
-    static styles: CSSResult = chipBaseStyle;
+    private entity?: string;
+
+    static styles: CSSResultGroup = [chipBaseStyle];
 
     setConfig(config: Config): void {
-        if (!config?.entity) return;
-        this._config = { ...config };
-        this._entity = this._config.entity?.startsWith("input_select.") ? this._config.entity : undefined;
-        this.updateState();
+        this.config = { ...config };
+        this.entity = this.config.entity?.startsWith("input_select.") ? this.config.entity : undefined;
     }
 
-    set hass(hass: HomeAssistant) {
-        if (!hass || !this._entity || hass.states[this._entity] === this._stateObj) return;
-        this._stateObj = hass.states[this._entity];
-        this.updateState();
-    }
-
-    private updateState(): void {
-        if (!this._entity || !this._stateObj) return;
-
-        if (this._entity === "input_select.location_phase") {
-            this._icon = phaseIcons[this._stateObj.state] || phaseIcons.default;
-        } else if (this._entity === "input_select.location_mode") {
-            this._icon = modeIcons[this._stateObj.state] || modeIcons.default;
-        } else {
-            this._icon = this._config?.icon || this._stateObj.attributes?.icon || "hass:form-dropdown";
+    updated(changedProps: PropertyValues) {
+        if (changedProps.has("hass")) {
+            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
+            this.initialized = true;
         }
     }
 
     protected render(): TemplateResult {
-        if (!this._entity) return html``;
+        if (!this.initialized || !this.entity) return html``;
+
+        let icon;
+        const state = this.stateObj?.state || "unknown";
+        if (this.entity === "input_select.location_phase") {
+            icon = phaseIcons[state] || phaseIcons.default;
+        } else if (this.entity === "input_select.location_mode") {
+            icon = modeIcons[state] || modeIcons.default;
+        } else {
+            icon = this.config?.icon || this.stateObj?.attributes?.icon || "hass:form-dropdown";
+        }
 
         const containerStyle = {
             "margin-left": "0.7rem",
@@ -59,7 +65,7 @@ export class SelectChip extends LitElement {
         return html`
             <div class="container" style="${styleMap(containerStyle)}" @click=${this.showOptions}>
                 <div class="icon">
-                    <ha-icon .icon=${this._icon}></ha-icon>
+                    <ha-icon .icon=${icon}></ha-icon>
                 </div>
             </div>
         `;
@@ -67,13 +73,6 @@ export class SelectChip extends LitElement {
 
     private showOptions(e: Event): void {
         e.stopPropagation();
-        selectOptionDialog(this._config, this._stateObj);
+        selectOptionDialog(this.config, this.stateObj);
     }
 }
-
-window.customCards.push({
-    type: "smartqasa-select-chip",
-    name: "SmartQasa Input Select Chip",
-    preview: true,
-    description: "A SmartQasa chip for selecting an option for a input_select entity.",
-});

@@ -1,8 +1,8 @@
-import { CSSResultGroup, html, LitElement, TemplateResult } from "lit";
-import { customElement, state } from "lit/decorators.js";
+import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult } from "lit";
+import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity } from "home-assistant-js-websocket";
-import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
+import { HomeAssistant, LovelaceCardConfig } from "../types";
 import { moreInfoDialog } from "../utils/more-info-dialog";
 import { thermostatIcons, thermostatColors } from "../const";
 
@@ -14,11 +14,13 @@ interface Config extends LovelaceCardConfig {
 
 @customElement("smartqasa-thermostat-chip")
 export class ThermostatChip extends LitElement {
-    @state() private _config?: Config;
-    @state() private _stateObj?: HassEntity;
+    @property({ attribute: false }) public hass?: HomeAssistant;
 
-    private _entity?: string;
-    private _hass: any;
+    @state() private initialized: boolean = false;
+    @state() private config?: Config;
+    @state() private stateObj?: HassEntity;
+
+    private entity?: string;
     private _icon: string = "hass:thermometer-lines";
     private _iconColor: string = "var(--sq-inactive-rgb)";
     private _temperature: string = "??";
@@ -26,36 +28,21 @@ export class ThermostatChip extends LitElement {
     static styles: CSSResultGroup = [chipBaseStyle, chipTextStyle];
 
     setConfig(config: Config): void {
-        if (!config?.entity) return;
-        this._config = { ...config };
-        this._entity = this._config.entity?.startsWith("climate.") ? this._config.entity : undefined;
-        this.updateState();
+        this.config = { ...config };
+        this.entity = this.config.entity?.startsWith("climate.") ? this.config.entity : undefined;
     }
 
-    set hass(hass: HomeAssistant) {
-        if (!hass || !this._entity || hass.states[this._entity] === this._stateObj) return;
-        this._hass = hass;
-        this._stateObj = hass.states[this._entity];
-        this.updateState();
-    }
-
-    private updateState(): void {
-        if (!this._entity || !this._stateObj) {
-            this._icon = thermostatIcons.default;
-            this._iconColor = thermostatColors.default;
-            this._temperature = "??";
-            return;
+    updated(changedProps: PropertyValues) {
+        if (changedProps.has("hass")) {
+            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
+            this.initialized = true;
         }
-
-        const state = this._stateObj.state;
-        this._icon = thermostatIcons[state] || thermostatIcons.default;
-        const hvacAction = this._stateObj.attributes.hvac_action;
-        this._iconColor = thermostatColors[hvacAction] || thermostatColors.default;
-        this._temperature = this._stateObj.attributes.current_temperature || "??";
     }
 
     protected render(): TemplateResult {
-        if (!this._entity) return html``;
+        if (!this.initialized || !this.entity) return html``;
+
+        const { icon, iconColor, temperature } = this.updateState();
 
         const containerStyle = {
             "margin-right": "0.7rem",
@@ -63,16 +50,34 @@ export class ThermostatChip extends LitElement {
 
         return html`
             <div class="container" style="${styleMap(containerStyle)}" @click=${this.showMoreInfo}>
-                <div class="icon" id="icon" style="color: rgb(${this._iconColor});">
-                    <ha-icon .icon=${this._icon}></ha-icon>
+                <div class="icon" id="icon" style="color: rgb(${iconColor});">
+                    <ha-icon .icon=${icon}></ha-icon>
                 </div>
-                <div class="text">${this._temperature}°</div>
+                <div class="text">${temperature}°</div>
             </div>
         `;
     }
 
+    private updateState() {
+        let icon, iconAnimation, iconColor, temperature;
+
+        if (this.config && this.hass && this.stateObj) {
+            const state = this.stateObj.state;
+            icon = thermostatIcons[state] || thermostatIcons.default;
+            const hvacAction = this.stateObj.attributes.hvac_action;
+            iconColor = thermostatColors[hvacAction] || thermostatColors.default;
+            temperature = this.stateObj.attributes.current_temperature || "??";
+        } else {
+            icon = thermostatIcons.default;
+            iconColor = thermostatColors.default;
+            temperature = "??";
+        }
+
+        return { icon, iconAnimation, iconColor, temperature };
+    }
+
     private showMoreInfo(e: Event): void {
         e.stopPropagation();
-        moreInfoDialog(this._config, this._stateObj);
+        moreInfoDialog(this.config, this.stateObj);
     }
 }

@@ -1,8 +1,8 @@
-import { CSSResultGroup, html, LitElement, TemplateResult } from "lit";
-import { customElement, state } from "lit/decorators.js";
+import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult } from "lit";
+import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity } from "home-assistant-js-websocket";
-import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
+import { HomeAssistant, LovelaceCardConfig } from "../types";
 import { dialogTable } from "../tables/dialogs";
 
 import { chipBaseStyle, chipTextStyle } from "../styles/chip";
@@ -13,43 +13,39 @@ interface Config extends LovelaceCardConfig {
 
 @customElement("smartqasa-weather-chip")
 export class ThermostatChip extends LitElement {
-    @state() private _config?: Config;
-    @state() private _stateObj?: HassEntity;
+    @property({ attribute: false }) public hass?: HomeAssistant;
 
-    private _hass: any;
-    private _entity?: string;
-    private _iconColor: string = "var(--sq-inactive-rgb)";
-    private _temperature: string = "??";
+    @state() private initialized: boolean = false;
+    @state() private config?: Config;
+    @state() private stateObj?: HassEntity;
+
+    private entity?: string;
 
     static styles: CSSResultGroup = [chipBaseStyle, chipTextStyle];
 
     setConfig(config: Config): void {
-        if (!config?.entity) return;
-        this._config = { ...config };
-        this._entity = this._config.entity?.startsWith("weather.") ? this._config.entity : undefined;
-        this.updateState();
+        this.config = { ...config };
+        this.entity = this.config.entity?.startsWith("weather.") ? this.config.entity : undefined;
     }
 
-    set hass(hass: HomeAssistant) {
-        if (!hass || !this._entity || hass.states[this._entity] === this._stateObj) return;
-        this._hass = hass;
-        this._stateObj = hass.states[this._entity];
-        this.updateState();
-    }
-
-    private updateState(): void {
-        if (!this._entity || !this._stateObj) {
-            this._iconColor = "var(--sq-unavailable-rgb)";
-            this._temperature = "??";
-            return;
+    updated(changedProps: PropertyValues) {
+        if (changedProps.has("hass")) {
+            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
+            this.initialized = true;
         }
-
-        this._iconColor = "var(--sq-primary-text-rgb)";
-        this._temperature = this._stateObj.attributes.temperature || "??";
     }
 
     protected render(): TemplateResult {
-        if (!this._entity) return html``;
+        if (!this.initialized || !this.entity) return html``;
+
+        let iconColor, temperature;
+        if (this.config && this.entity && this.stateObj) {
+            iconColor = "var(--sq-primary-text-rgb)";
+            temperature = this.stateObj?.attributes?.temperature || "??";
+        } else {
+            iconColor = "var(--sq-unavailable-rgb)";
+            temperature = "??";
+        }
 
         const containerStyle = {
             "margin-left": "0.7rem",
@@ -57,10 +53,10 @@ export class ThermostatChip extends LitElement {
 
         return html`
             <div class="container" style="${styleMap(containerStyle)}" @click=${this.showDialog}>
-                <div class="icon" style="color: rgb(${this._iconColor});">
-                    <ha-state-icon .hass=${this._hass} .stateObj=${this._stateObj}></ha-state-icon>
+                <div class="icon" style="color: rgb(${iconColor});">
+                    <ha-state-icon .hass=${this.hass} .stateObj=${this.stateObj}></ha-state-icon>
                 </div>
-                <div class="text">${this._temperature}°</div>
+                <div class="text">${temperature}°</div>
             </div>
         `;
     }

@@ -1,8 +1,8 @@
-import { CSSResultGroup, html, LitElement, TemplateResult } from "lit";
-import { customElement, state } from "lit/decorators.js";
+import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult } from "lit";
+import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity } from "home-assistant-js-websocket";
-import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
+import { HomeAssistant, LovelaceCardConfig } from "../types";
 
 import { chipBaseStyle, chipTextStyle, chipIconSpinStyle } from "../styles/chip";
 
@@ -15,92 +15,95 @@ interface Config extends LovelaceCardConfig {
 
 @customElement("smartqasa-routine-chip")
 export class RoutineChip extends LitElement {
-    @state() private _config?: Config;
-    @state() private _stateObj?: HassEntity;
-    @state() private _running: boolean = false;
+    @property({ attribute: false }) public hass?: HomeAssistant;
 
-    private _entity?: string;
-    private _hass: any;
-    private _icon: string = "hass:help-rhombus";
-    private _iconAnimation: string = "none";
-    private _iconColor: string = "var(--sq-inactive-rgb)";
-    private _name?: string;
+    @state() private initialized: boolean = false;
+    @state() private config?: Config;
+    @state() private stateObj?: HassEntity;
+    @state() private running: boolean = false;
+
+    private entity?: string;
 
     static styles: CSSResultGroup = [chipBaseStyle, chipTextStyle, chipIconSpinStyle];
 
     setConfig(config: Config): void {
-        this._config = { ...config };
-        this._entity = ["automation", "scene", "script"].includes(this._config.entity?.split(".")[0])
-            ? this._config.entity
+        this.config = { ...config };
+        this.entity = ["automation", "scene", "script"].includes(this.config.entity?.split(".")[0])
+            ? this.config.entity
             : undefined;
-        this.updateState();
     }
 
-    set hass(hass: HomeAssistant) {
-        if (!hass || !this._entity || hass.states[this._entity] === this._stateObj) return;
-        this._hass = hass;
-        this._stateObj = hass.states[this._entity];
-        this.updateState();
-    }
-
-    private updateState(): void {
-        if (this._running === true) return;
-
-        if (!this._entity || !this._stateObj) {
-            this._icon = this._config?.icon || "hass:alert-rhombus";
-            this._iconAnimation = "none";
-            this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            this._name = this._config?.name || "";
-            return;
+    updated(changedProps: PropertyValues) {
+        if (changedProps.has("hass")) {
+            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
+            this.initialized = true;
         }
-
-        this._icon = this._config?.icon || this._stateObj.attributes.icon || "hass:help-circle";
-        this._iconAnimation = "none";
-        this._iconColor = this._config?.color || "var(--sq-primary-text-rgb)";
-        this._name = this._config?.name || "";
     }
 
     protected render(): TemplateResult {
-        if (!this._entity) return html``;
+        if (!this.initialized || !this.entity) return html``;
+
+        const { icon, iconAnimation, iconColor, name } = this.updateState();
 
         const containerStyle = {
             "margin-left": "0.7rem",
-            "grid-template-areas": this._name ? '"i t"' : '"i"',
+            "grid-template-areas": name ? '"i t"' : '"i"',
         };
 
         const iconStyles = {
-            color: `rgb(${this._iconColor})`,
-            animation: this._iconAnimation,
+            color: `rgb(${iconColor})`,
+            animation: iconAnimation,
         };
 
         return html`
             <div class="container" style="${styleMap(containerStyle)}" @click=${this.runRoutine}>
                 <div class="icon" style="${styleMap(iconStyles)}">
-                    <ha-icon .icon=${this._icon}></ha-icon>
+                    <ha-icon .icon=${icon}></ha-icon>
                 </div>
-                ${this._name ? html`<div class="text">${this._name}</div>` : null}
+                ${name ? html`<div class="text">${name}</div>` : null}
             </div>
         `;
     }
 
+    private updateState() {
+        let icon, iconAnimation, iconColor, name;
+
+        if (this.config && this.hass && this.stateObj) {
+            if (this.running) {
+                icon = "hass:rotate-right";
+                iconAnimation = "spin 1.0s linear infinite";
+                iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
+            } else {
+                icon = this.config.icon || this.stateObj.attributes.icon || "hass:help-rhombus";
+                iconAnimation = "none";
+                iconColor = this.config.color || "var(--sq-primary-text-rgb)";
+            }
+        } else {
+            icon = "hass:alert-rhombus";
+            iconAnimation = "none";
+            iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+        }
+        name = this.config?.name || "";
+
+        return { icon, iconAnimation, iconColor, name };
+    }
+
     private runRoutine(e: Event): void {
         e.stopPropagation();
-        if (!this._stateObj) return;
+        if (!this.hass || !this.stateObj) return;
 
-        this._running = true;
-        this._icon = "hass:rotate-right";
-        this._iconAnimation = "spin 1.0s linear infinite";
+        this.running = true;
 
-        const domain = this._stateObj.entity_id.split(".")[0];
+        const domain = this.stateObj.entity_id.split(".")[0];
         switch (domain) {
             case "script":
-                this._hass.callService("script", "turn_on", { entity_id: this._entity });
+                this.hass.callService("script", "turn_on", { entity_id: this.entity });
                 break;
             case "scene":
-                this._hass.callService("scene", "turn_on", { entity_id: this._entity });
+                this.hass.callService("scene", "turn_on", { entity_id: this.entity });
                 break;
             case "automation":
-                this._hass.callService("automation", "trigger", { entity_id: this._entity });
+                this.hass.callService("automation", "trigger", { entity_id: this.entity });
                 break;
             default:
                 console.error("Unsupported entity domain:", domain);
@@ -108,8 +111,7 @@ export class RoutineChip extends LitElement {
         }
 
         setTimeout(() => {
-            this._running = false;
-            this.updateState();
+            this.running = false;
         }, 2000);
     }
 }

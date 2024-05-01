@@ -1,7 +1,6 @@
 import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
-import { HassEntity } from "home-assistant-js-websocket";
 import { AreaRegistryEntry, HomeAssistant, LovelaceCardConfig } from "../types";
 
 import { chipDoubleStyle } from "../styles/chip";
