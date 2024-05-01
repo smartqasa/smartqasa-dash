@@ -829,21 +829,26 @@ MotionChip = __decorate([
     t$1("smartqasa-motion-chip")
 ], MotionChip);
 
+window.customCards.push({
+    type: "smartqasa-navigate-chip",
+    name: "SmartQasa Navigate Chip",
+    preview: true,
+    description: "A SmartQasa chip for navigating to a previous/next area.",
+});
 let NavigateChip = class NavigateChip extends s {
-    static { this.styles = chipDoubleStyle; }
+    static { this.styles = [chipDoubleStyle]; }
     setConfig(config) {
-        this._areaPrev = config.area_prev || undefined;
-        this._areaNext = config.area_next || undefined;
+        this.areaPrev = config.area_prev || undefined;
+        this.areaNext = config.area_next || undefined;
     }
-    set hass(hass) {
-        if (!this._areaPrev || !this._areaNext || !hass)
-            return;
-        this._hass = hass;
-        this._areaObjPrev = this._hass.areas[this._areaPrev];
-        this._areaObjNext = this._hass.areas[this._areaNext];
+    updated(changedProps) {
+        if (changedProps.has("hass") && this.areaPrev && this.areaNext) {
+            this.areaObjPrev = this.hass ? this.hass.areas[this.areaPrev] : undefined;
+            this.areaObjNext = this.hass ? this.hass.areas[this.areaNext] : undefined;
+        }
     }
     render() {
-        if (!this._areaObjPrev || !this._areaObjNext) {
+        if (!this.areaObjPrev || !this.areaObjNext) {
             return x ``;
         }
         const containerStyle = {
@@ -864,8 +869,8 @@ let NavigateChip = class NavigateChip extends s {
     }
     _navigatePrev(e) {
         e.stopPropagation();
-        if (this._areaObjPrev) {
-            window.history.pushState(null, "", `/home-dash/${this._areaPrev}`);
+        if (this.areaObjPrev) {
+            window.history.pushState(null, "", `/home-dash/${this.areaPrev}`);
             window.dispatchEvent(new CustomEvent("location-changed"));
             // Assume browser_mod is correctly typed and included
         }
@@ -875,8 +880,8 @@ let NavigateChip = class NavigateChip extends s {
     }
     _navigateNext(e) {
         e.stopPropagation();
-        if (this._areaObjNext) {
-            window.history.pushState(null, "", `/home-dash/${this._areaNext}`);
+        if (this.areaObjNext) {
+            window.history.pushState(null, "", `/home-dash/${this.areaNext}`);
             window.dispatchEvent(new CustomEvent("location-changed"));
         }
         else {
@@ -885,26 +890,23 @@ let NavigateChip = class NavigateChip extends s {
     }
 };
 __decorate([
-    r()
-], NavigateChip.prototype, "_areaPrev", void 0);
+    n$1({ attribute: false })
+], NavigateChip.prototype, "hass", void 0);
 __decorate([
     r()
-], NavigateChip.prototype, "_areaNext", void 0);
+], NavigateChip.prototype, "areaPrev", void 0);
 __decorate([
     r()
-], NavigateChip.prototype, "_areaObjPrev", void 0);
+], NavigateChip.prototype, "areaNext", void 0);
 __decorate([
     r()
-], NavigateChip.prototype, "_areaObjNext", void 0);
+], NavigateChip.prototype, "areaObjPrev", void 0);
+__decorate([
+    r()
+], NavigateChip.prototype, "areaObjNext", void 0);
 NavigateChip = __decorate([
     t$1("smartqasa-navigate-chip")
 ], NavigateChip);
-window.customCards.push({
-    type: "smartqasa-navigate-chip",
-    name: "SmartQasa Navigate Chip",
-    preview: true,
-    description: "A SmartQasa chip for navigating to a previous/next area.",
-});
 
 let RoutineChip = class RoutineChip extends s {
     constructor() {
