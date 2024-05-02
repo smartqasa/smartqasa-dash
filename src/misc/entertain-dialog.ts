@@ -110,10 +110,10 @@ export async function entertainDialog(config: any, hass: any): Promise<void> {
             cards = [videoPlayerTitle, audioPlayerTitle, appListTitle, videoPlayerCard, audioPlayerCard, appListCard];
         } else if (!videoPlayerObj && audioPlayerObj) {
             gridTemplateColumns = "420px 260px";
-            cards = [audioPlayerTitle, audioPlayerCard, audioPlayerCard, appListCard];
+            cards = [audioPlayerTitle, appListTitle, audioPlayerCard, appListCard];
         } else if (videoPlayerObj && !audioPlayerObj) {
             gridTemplateColumns = "340px 260px";
-            cards = [videoPlayerTitle, videoPlayerCard, audioPlayerCard, appListCard];
+            cards = [videoPlayerTitle, appListTitle, videoPlayerCard, appListCard];
         }
     }
 
