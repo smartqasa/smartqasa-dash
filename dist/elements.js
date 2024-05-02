@@ -4082,7 +4082,7 @@ let CustomChip = class CustomChip extends s {
             return x ``;
         const containerStyle = {
             "margin-left": "0.7rem",
-            "grid-template-areas": this.dialogObj.data.text ? '"i t"' : '"i"',
+            "grid-template-areas": this.text ? '"i t"' : '"i"',
         };
         const iconStyles = {
             color: `rgb(${this.iconColor})`,
@@ -4094,7 +4094,7 @@ let CustomChip = class CustomChip extends s {
                 <div class="icon" style="${o(iconStyles)}">
                     <ha-icon .icon=${this.icon}></ha-icon>
                 </div>
-                <div class="text">${this.dialogObj.data.text || ""}</div>
+                ${this.text ? x `<div class="text">${this.text}</div>` : null}
             </div>
         `;
     }

@@ -61,7 +61,7 @@ export class CustomChip extends LitElement {
 
         const containerStyle = {
             "margin-left": "0.7rem",
-            "grid-template-areas": this.dialogObj.data.text ? '"i t"' : '"i"',
+            "grid-template-areas": this.text ? '"i t"' : '"i"',
         };
         const iconStyles = {
             color: `rgb(${this.iconColor})`,
@@ -74,7 +74,7 @@ export class CustomChip extends LitElement {
                 <div class="icon" style="${styleMap(iconStyles)}">
                     <ha-icon .icon=${this.icon}></ha-icon>
                 </div>
-                <div class="text">${this.dialogObj.data.text || ""}</div>
+                ${this.text ? html`<div class="text">${this.text}</div>` : null}
             </div>
         `;
     }
