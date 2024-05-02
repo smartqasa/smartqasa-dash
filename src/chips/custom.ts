@@ -29,8 +29,8 @@ export class CustomChip extends LitElement {
     @state() private icon = "mdi:help-circle";
     @state() private iconAnimation = "none";
     @state() private iconColor = "var(--sq-primary-text-rgb)";
-    @state() private text = "";
 
+    private entity: string = "";
     private file?: string;
 
     static styles: CSSResultGroup = [chipBaseStyle, chipTextStyle];
@@ -51,17 +51,18 @@ export class CustomChip extends LitElement {
     async initializeComponent() {
         if (!this.config || !this.config.file) return;
         this.dialogObj = await loadYamlAsJson(`/local/smartqasa/dialogs/${this.config.file}`);
-        console.log(this.dialogObj);
-        this.icon = this.dialogObj.data.icon || "mdi:help-circle";
-        this.text = this.dialogObj.data.text || "";
+        this.icon = this.dialogObj.icon || "mdi:help-circle";
+        this.entity = this.dialogObj.entity || "";
     }
 
     protected render(): TemplateResult {
-        if (!this.file) return html``;
+        if (!this.hass || !this.file) return html``;
+
+        const text = this.hass.states[this.entity].state || "";
 
         const containerStyle = {
             "margin-left": "0.7rem",
-            "grid-template-areas": this.text ? '"i t"' : '"i"',
+            "grid-template-areas": text ? '"i t"' : '"i"',
         };
         const iconStyles = {
             color: `rgb(${this.iconColor})`,
@@ -74,7 +75,7 @@ export class CustomChip extends LitElement {
                 <div class="icon" style="${styleMap(iconStyles)}">
                     <ha-icon .icon=${this.icon}></ha-icon>
                 </div>
-                ${this.text ? html`<div class="text">${this.text}</div>` : null}
+                ${text ? html`<div class="text">${text}</div>` : null}
             </div>
         `;
     }

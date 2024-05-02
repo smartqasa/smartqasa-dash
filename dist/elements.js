@@ -4055,7 +4055,7 @@ let CustomChip = class CustomChip extends s {
         this.icon = "mdi:help-circle";
         this.iconAnimation = "none";
         this.iconColor = "var(--sq-primary-text-rgb)";
-        this.text = "";
+        this.entity = "";
     }
     static { this.styles = [chipBaseStyle, chipTextStyle]; }
     setConfig(config) {
@@ -4073,16 +4073,16 @@ let CustomChip = class CustomChip extends s {
         if (!this.config || !this.config.file)
             return;
         this.dialogObj = await loadYamlAsJson(`/local/smartqasa/dialogs/${this.config.file}`);
-        console.log(this.dialogObj);
-        this.icon = this.dialogObj.data.icon || "mdi:help-circle";
-        this.text = this.dialogObj.data.text || "";
+        this.icon = this.dialogObj.icon || "mdi:help-circle";
+        this.entity = this.dialogObj.entity || "";
     }
     render() {
-        if (!this.file)
+        if (!this.hass || !this.file)
             return x ``;
+        const text = this.hass.states[this.entity].state || "";
         const containerStyle = {
             "margin-left": "0.7rem",
-            "grid-template-areas": this.text ? '"i t"' : '"i"',
+            "grid-template-areas": text ? '"i t"' : '"i"',
         };
         const iconStyles = {
             color: `rgb(${this.iconColor})`,
@@ -4094,7 +4094,7 @@ let CustomChip = class CustomChip extends s {
                 <div class="icon" style="${o(iconStyles)}">
                     <ha-icon .icon=${this.icon}></ha-icon>
                 </div>
-                ${this.text ? x `<div class="text">${this.text}</div>` : null}
+                ${text ? x `<div class="text">${text}</div>` : null}
             </div>
         `;
     }
@@ -4125,9 +4125,6 @@ __decorate([
 __decorate([
     r()
 ], CustomChip.prototype, "iconColor", void 0);
-__decorate([
-    r()
-], CustomChip.prototype, "text", void 0);
 CustomChip = __decorate([
     t$1("smartqasa-custom-chip")
 ], CustomChip);
