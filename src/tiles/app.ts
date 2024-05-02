@@ -44,11 +44,7 @@ export class AppTile extends LitElement {
                 iconTemplate = html`<ha-icon .icon=${this.config.icon}></ha-icon>`;
             } else if (this.appObj?.app_icon) {
                 iconStyle = "height: 3.8rem; width: 3.8rem; padding: 0;";
-                iconTemplate = html`<img
-                    src="/local/community/smartqasa-dash/assets/${this.appObj.app_icon}"
-                    alt="App Icon"
-                    style="border-radius: 50%;"
-                />`;
+                iconTemplate = html`<img src="${this.appObj.app_icon}" alt="App Icon" style="border-radius: 50%;" />`;
             } else {
                 iconStyle =
                     "color: rgb(var(--sq-unavailable-rgb)); background-color: rgba(var(--sq-unavailable-rgb), var(--sq-icon-opacity, 0.2));";

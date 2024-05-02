@@ -6478,11 +6478,7 @@ let AppTile = class AppTile extends s {
             }
             else if (this.appObj?.app_icon) {
                 iconStyle = "height: 3.8rem; width: 3.8rem; padding: 0;";
-                iconTemplate = x `<img
-                    src="/local/community/smartqasa-dash/assets/${this.appObj.app_icon}"
-                    alt="App Icon"
-                    style="border-radius: 50%;"
-                />`;
+                iconTemplate = x `<img src="${this.appObj.app_icon}" alt="App Icon" style="border-radius: 50%;" />`;
             }
             else {
                 iconStyle =
