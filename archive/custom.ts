@@ -2,10 +2,10 @@ import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult } from
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity } from "home-assistant-js-websocket";
-import { HomeAssistant, LovelaceCardConfig } from "../types";
-import { loadYamlAsJson } from "../utils/load-yaml-as-json";
+import { HomeAssistant, LovelaceCardConfig } from "../src/types";
+import { loadYamlAsJson } from "../src/utils/load-yaml-as-json";
 
-import { chipBaseStyle, chipTextStyle } from "../styles/chip";
+import { chipBaseStyle, chipTextStyle } from "../src/styles/chip";
 
 interface Config extends LovelaceCardConfig {
     file: string;
@@ -35,7 +35,6 @@ export class CustomChip extends LitElement {
     setConfig(config: Config): void {
         this.config = { ...config };
         this.file = this.config.file;
-        this.dialogObj = loadYamlAsJson(`/local/smartqasa/dialogs/${this.file}`);
     }
 
     updated(changedProps: PropertyValues) {
@@ -48,15 +47,7 @@ export class CustomChip extends LitElement {
     protected render(): TemplateResult {
         if (!this.stateObj) return html``;
 
-        let icon, iconAnimation, iconColor, text;
-
-        if (this.dialogObj.data.icon) {
-            icon = this.dialogObj.data.icon;
-        } else {
-            icon = "mdi:help-circle";
-        }
-        iconAnimation = "none";
-        iconColor = "var(--sq-primary-text-rgb)";
+        const { icon, iconAnimation, iconColor, text } = this.updateState();
 
         const containerStyle = {
             "margin-left": "0.7rem",
@@ -80,6 +71,7 @@ export class CustomChip extends LitElement {
 
     private async updateState() {
         let icon, iconAnimation, iconColor;
+        this.dialogObj = await loadYamlAsJson(`/local/smartqasa/dialogs/${this.file}`);
 
         if (this.dialogObj.data.icon) {
             icon = this.dialogObj.data.icon;
