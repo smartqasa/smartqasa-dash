@@ -4055,6 +4055,7 @@ let CustomChip = class CustomChip extends s {
         this.icon = "mdi:help-circle";
         this.iconAnimation = "none";
         this.iconColor = "var(--sq-primary-text-rgb)";
+        this.text = "";
     }
     static { this.styles = [chipBaseStyle, chipTextStyle]; }
     setConfig(config) {
@@ -4072,13 +4073,16 @@ let CustomChip = class CustomChip extends s {
         if (!this.config || !this.config.file)
             return;
         this.dialogObj = await loadYamlAsJson(`/local/smartqasa/dialogs/${this.config.file}`);
+        console.log(this.dialogObj);
         this.icon = this.dialogObj.data.icon || "mdi:help-circle";
+        this.text = this.dialogObj.data.text || "";
     }
     render() {
         if (!this.file)
             return x ``;
         const containerStyle = {
             "margin-left": "0.7rem",
+            "grid-template-areas": this.dialogObj.data.text ? '"i t"' : '"i"',
         };
         const iconStyles = {
             color: `rgb(${this.iconColor})`,
@@ -4121,6 +4125,9 @@ __decorate([
 __decorate([
     r()
 ], CustomChip.prototype, "iconColor", void 0);
+__decorate([
+    r()
+], CustomChip.prototype, "text", void 0);
 CustomChip = __decorate([
     t$1("smartqasa-custom-chip")
 ], CustomChip);

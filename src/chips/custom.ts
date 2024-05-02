@@ -29,6 +29,7 @@ export class CustomChip extends LitElement {
     @state() private icon = "mdi:help-circle";
     @state() private iconAnimation = "none";
     @state() private iconColor = "var(--sq-primary-text-rgb)";
+    @state() private text = "";
 
     private file?: string;
 
@@ -50,7 +51,9 @@ export class CustomChip extends LitElement {
     async initializeComponent() {
         if (!this.config || !this.config.file) return;
         this.dialogObj = await loadYamlAsJson(`/local/smartqasa/dialogs/${this.config.file}`);
+        console.log(this.dialogObj);
         this.icon = this.dialogObj.data.icon || "mdi:help-circle";
+        this.text = this.dialogObj.data.text || "";
     }
 
     protected render(): TemplateResult {
@@ -58,6 +61,7 @@ export class CustomChip extends LitElement {
 
         const containerStyle = {
             "margin-left": "0.7rem",
+            "grid-template-areas": this.dialogObj.data.text ? '"i t"' : '"i"',
         };
         const iconStyles = {
             color: `rgb(${this.iconColor})`,
