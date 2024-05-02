@@ -94,30 +94,34 @@ export class RoutineTile extends LitElement {
         return { icon, iconAnimation, iconColor, name };
     }
 
-    private runRoutine(e: Event): void {
+    private async runRoutine(e: Event): Promise<void> {
         e.stopPropagation();
         if (!this.hass || !this.stateObj) return;
 
         this.running = true;
 
         const domain = this.stateObj.entity_id.split(".")[0];
-        switch (domain) {
-            case "script":
-                this.hass.callService("script", "turn_on", { entity_id: this.entity });
-                break;
-            case "scene":
-                this.hass.callService("scene", "turn_on", { entity_id: this.entity });
-                break;
-            case "automation":
-                this.hass.callService("automation", "trigger", { entity_id: this.entity });
-                break;
-            default:
-                console.error("Unsupported entity domain:", domain);
-                return;
+        try {
+            switch (domain) {
+                case "script":
+                    await this.hass.callService("script", "turn_on", { entity_id: this.entity });
+                    break;
+                case "scene":
+                    await this.hass.callService("scene", "turn_on", { entity_id: this.entity });
+                    break;
+                case "automation":
+                    await this.hass.callService("automation", "trigger", { entity_id: this.entity });
+                    break;
+                default:
+                    console.error("Unsupported entity domain:", domain);
+                    return;
+            }
+        } catch (error) {
+            console.error("Failed to turn off entities:", error);
         }
 
         setTimeout(() => {
             this.running = false;
-        }, 2000);
+        }, 1000);
     }
 }

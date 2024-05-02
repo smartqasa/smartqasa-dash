@@ -7806,29 +7806,34 @@ let RoutineTile = class RoutineTile extends s {
         }
         return { icon, iconAnimation, iconColor, name };
     }
-    runRoutine(e) {
+    async runRoutine(e) {
         e.stopPropagation();
         if (!this.hass || !this.stateObj)
             return;
         this.running = true;
         const domain = this.stateObj.entity_id.split(".")[0];
-        switch (domain) {
-            case "script":
-                this.hass.callService("script", "turn_on", { entity_id: this.entity });
-                break;
-            case "scene":
-                this.hass.callService("scene", "turn_on", { entity_id: this.entity });
-                break;
-            case "automation":
-                this.hass.callService("automation", "trigger", { entity_id: this.entity });
-                break;
-            default:
-                console.error("Unsupported entity domain:", domain);
-                return;
+        try {
+            switch (domain) {
+                case "script":
+                    await this.hass.callService("script", "turn_on", { entity_id: this.entity });
+                    break;
+                case "scene":
+                    await this.hass.callService("scene", "turn_on", { entity_id: this.entity });
+                    break;
+                case "automation":
+                    await this.hass.callService("automation", "trigger", { entity_id: this.entity });
+                    break;
+                default:
+                    console.error("Unsupported entity domain:", domain);
+                    return;
+            }
+        }
+        catch (error) {
+            console.error("Failed to turn off entities:", error);
         }
         setTimeout(() => {
             this.running = false;
-        }, 2000);
+        }, 1000);
     }
 };
 __decorate([
@@ -8690,7 +8695,7 @@ ThermostatTile = __decorate([
     t$1("smartqasa-thermostat-tile")
 ], ThermostatTile);
 
-var version = "1.1.99";
+var version = "2024.5.1a";
 
 window.smartqasa = window.smartqasa || {};
 window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();
