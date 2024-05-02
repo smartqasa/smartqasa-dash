@@ -20,6 +20,7 @@ window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split
 window.customCards = window.customCards ?? [];
 
 // Chips
+import "./chips/custom";
 import "./chips/dialog";
 import "./chips/motion";
 import "./chips/navigate";
