@@ -53,7 +53,7 @@ export class CustomChip extends LitElement {
         if (this.dialogObj.data.icon) {
             icon = this.dialogObj.data.icon;
         } else {
-            icon = this.stateObj.attributes.icon || "mdi:help-circle";
+            icon = "mdi:help-circle";
         }
         iconAnimation = "none";
         iconColor = "var(--sq-primary-text-rgb)";
@@ -67,6 +67,7 @@ export class CustomChip extends LitElement {
             backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity))`,
             animation: iconAnimation,
         };
+
         return html`
             <div class="container" style="${styleMap(containerStyle)}" @click=${this.showDialog}>
                 <div class="icon" style="${styleMap(iconStyles)}">
@@ -75,6 +76,20 @@ export class CustomChip extends LitElement {
                 ${text ? html`<div class="text">${text}</div>` : null}
             </div>
         `;
+    }
+
+    private async updateState() {
+        let icon, iconAnimation, iconColor;
+
+        if (this.dialogObj.data.icon) {
+            icon = this.dialogObj.data.icon;
+        } else {
+            icon = "mdi:help-circle";
+        }
+        iconAnimation = "none";
+        iconColor = "var(--sq-primary-text-rgb)";
+
+        return { icon, iconAnimation, iconColor };
     }
 
     private showDialog(e: Event): void {

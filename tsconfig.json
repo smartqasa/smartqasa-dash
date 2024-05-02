@@ -13,6 +13,6 @@
         "types": ["node"],
         "useDefineForClassFields": false
     },
-    "include": ["src/**/*.ts", "custom.d.ts", "archive/custom.tsx"],
+    "include": ["src/**/*.ts", "custom.d.ts"],
     "exclude": ["node_modules"]
 }

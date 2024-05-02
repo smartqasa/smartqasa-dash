@@ -2,6 +2,7 @@ import { css, CSSResultGroup, html, LitElement, PropertyValues, TemplateResult }
 import { customElement, property, state } from "lit/decorators.js";
 import { AreaRegistryEntry, HomeAssistant, LovelaceCardConfig } from "../types";
 import { deviceType } from "../const";
+import defaultImage from "../assets/images/default.png";
 
 interface Config extends LovelaceCardConfig {
     area: string;
@@ -63,10 +64,9 @@ export class AreaPicture extends LitElement {
         if (!this.initialized || !this.areaObj) return html``;
 
         const height = deviceType === "phone" ? "15vh" : "20vh";
-
         const picture = this.config?.picture
             ? `/local/smartqasa/images/${this.config.picture}`
-            : this.areaObj?.picture ?? "/local/sq-storage/images/default.png";
+            : this.areaObj?.picture ?? defaultImage;
 
         return html`
             <ha-card style="background-image: url(${picture}); height: ${height};" class="picture"></ha-card>
