@@ -1,5 +1,5 @@
-import { html, LitElement, TemplateResult } from "lit";
-import { customElement, state } from "lit/decorators.js";
+import { html, LitElement, PropertyValues, TemplateResult } from "lit";
+import { customElement, property, state } from "lit/decorators.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "../types";
 
@@ -10,28 +10,30 @@ interface Config extends LovelaceCardConfig {
 
 @customElement("smartqasa-more-info-dialog")
 export class MoreInfoDialog extends LitElement {
-    @state() private _config?: Config;
-    @state() private _stateObj?: HassEntity;
+    @property({ attribute: false }) public hass?: HomeAssistant;
 
-    private _entity?: string;
-    private _hass: any;
+    @state() private config?: Config;
+    @state() private stateObj?: HassEntity;
+
+    private entity?: string;
 
     setConfig(config: Config): void {
-        this._config = { ...config };
-        this._entity = this._config?.entity;
+        this.config = { ...config };
+        this.entity = this.config?.entity;
     }
 
-    set hass(hass: HomeAssistant) {
-        if (!this._entity || !hass) return;
-        this._hass = hass;
-        this._stateObj = this._hass?.states[this._entity];
+    updated(changedProps: PropertyValues) {
+        super.updated(changedProps);
+        if (changedProps.has("hass")) {
+            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
+        }
     }
 
     protected render(): TemplateResult {
         return html`
             <div>
                 <div class="card-content">
-                    <more-info-content .hass=${this._hass} .stateObj=${this._stateObj}> </more-info-content>
+                    <more-info-content .hass=${this.hass} .stateObj=${this.stateObj}> </more-info-content>
                 </div>
             </div>
         `;

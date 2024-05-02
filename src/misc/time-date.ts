@@ -1,11 +1,24 @@
-import { CSSResultGroup, LitElement, html, css, TemplateResult } from "lit";
-import { customElement, state } from "lit/decorators.js";
+import { css, CSSResultGroup, html, LitElement, PropertyValues, TemplateResult } from "lit";
+import { customElement, property, state } from "lit/decorators.js";
 import { HomeAssistant } from "../types";
+
+window.customCards.push({
+    type: "smartqasa-time-date",
+    name: "SmartQasa Time Date",
+    preview: true,
+    description: "A SmartQasa card for rendering the time and date.",
+});
 
 @customElement("smartqasa-time-date")
 export class SmartQasaTimeDate extends LitElement {
-    @state() private _time: string = "Loading...";
-    @state() private _date: string = "Loading...";
+    getCardSize(): number {
+        return 1;
+    }
+
+    @property({ attribute: false }) public hass?: HomeAssistant;
+
+    @state() private time: string = "Loading...";
+    @state() private date: string = "Loading...";
 
     static get styles(): CSSResultGroup {
         return css`
@@ -48,16 +61,19 @@ export class SmartQasaTimeDate extends LitElement {
 
     setConfig(config: any): void {}
 
-    set hass(hass: HomeAssistant) {
-        this._time = hass?.states["sensor.current_time"]?.state || "Loading...";
-        this._date = hass?.states["sensor.current_date"]?.state || "Loading...";
+    updated(changedProps: PropertyValues) {
+        super.updated(changedProps);
+        if (changedProps.has("hass") && this.hass) {
+            this.time = this.hass.states["sensor.current_time"]?.state || "Loading...";
+            this.date = this.hass.states["sensor.current_date"]?.state || "Loading...";
+        }
     }
 
     render(): TemplateResult {
         return html`
             <div class="container" @click="${this.handleTap}">
-                <div class="time">${this._time}</div>
-                <div class="date">${this._date}</div>
+                <div class="time">${this.time}</div>
+                <div class="date">${this.date}</div>
             </div>
         `;
     }
@@ -69,15 +85,4 @@ export class SmartQasaTimeDate extends LitElement {
             console.warn("fully.startApplication is not available.");
         }
     }
-
-    getCardSize(): number {
-        return 1;
-    }
 }
-
-window.customCards.push({
-    type: "smartqasa-time-date",
-    name: "SmartQasa Time Date",
-    preview: true,
-    description: "A SmartQasa card for rendering the time and date.",
-});

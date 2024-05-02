@@ -6,8 +6,19 @@ interface Config extends LovelaceCardConfig {
     title: string;
 }
 
+window.customCards.push({
+    type: "smartqasa-title-card",
+    name: "SmartQasa Title Card",
+    preview: true,
+    description: "A SmartQasa card for rendering text in a title.",
+});
+
 @customElement("smartqasa-title-card")
 export class TitleCard extends LitElement {
+    getCardSize(): number {
+        return 1;
+    }
+
     @state() private _config?: Config;
 
     static get styles(): CSSResultGroup {
@@ -41,15 +52,4 @@ export class TitleCard extends LitElement {
     render(): TemplateResult {
         return html` <div class="title">${this._config?.title}</div> `;
     }
-
-    getCardSize(): number {
-        return 1;
-    }
 }
-
-window.customCards.push({
-    type: "smartqasa-title-card",
-    name: "SmartQasa Title Card",
-    preview: true,
-    description: "A SmartQasa card for rendering text in a title.",
-});

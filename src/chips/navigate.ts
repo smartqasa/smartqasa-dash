@@ -33,6 +33,7 @@ export class NavigateChip extends LitElement {
     }
 
     updated(changedProps: PropertyValues) {
+        super.updated(changedProps);
         if (changedProps.has("hass") && this.areaPrev && this.areaNext) {
             this.areaObjPrev = this.hass ? this.hass.areas[this.areaPrev] : undefined;
             this.areaObjNext = this.hass ? this.hass.areas[this.areaNext] : undefined;

@@ -39,6 +39,7 @@ export class SelectChip extends LitElement {
     }
 
     updated(changedProps: PropertyValues) {
+        super.updated(changedProps);
         if (changedProps.has("hass")) {
             this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
             this.initialized = true;

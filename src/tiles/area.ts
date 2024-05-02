@@ -41,6 +41,7 @@ export class AreaTile extends LitElement {
     }
 
     updated(changedProps: PropertyValues) {
+        super.updated(changedProps);
         if (changedProps.has("hass") && this.area) {
             this.areaObj = this.hass && this.area ? this.hass.areas[this.area] : undefined;
             this.initialized = true;

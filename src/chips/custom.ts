@@ -22,7 +22,6 @@ window.customCards.push({
 export class CustomChip extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
 
-    @state() private initialized: boolean = false;
     @state() private config?: Config;
     @state() private dialogObj?: any;
     @state() private stateObj?: HassEntity;
@@ -31,16 +30,20 @@ export class CustomChip extends LitElement {
     @state() private iconAnimation = "none";
     @state() private iconColor = "var(--sq-primary-text-rgb)";
 
+    private file?: string;
+
     static styles: CSSResultGroup = [chipBaseStyle, chipTextStyle];
 
     setConfig(config: Config): void {
         this.config = { ...config };
+        this.file = this.config.file;
+        if (!this.file) return;
+        this.initializeComponent();
     }
 
     updated(changedProps: PropertyValues) {
         super.updated(changedProps);
         if (changedProps.has("hass")) {
-            this.initializeComponent();
         }
     }
 
@@ -48,11 +51,10 @@ export class CustomChip extends LitElement {
         if (!this.config || !this.config.file) return;
         this.dialogObj = await loadYamlAsJson(`/local/smartqasa/dialogs/${this.config.file}`);
         this.icon = this.dialogObj.data.icon || "mdi:help-circle";
-        this.initialized = true;
     }
 
     protected render(): TemplateResult {
-        if (!this.initialized) return html``;
+        if (!this.file) return html``;
 
         const containerStyle = {
             "margin-left": "0.7rem",
