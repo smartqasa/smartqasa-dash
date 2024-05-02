@@ -109,8 +109,7 @@ export class AllOffTile extends LitElement {
             console.error("Failed to turn off entities:", error);
         }
 
-        setTimeout(() => {
-            this.running = false;
-        }, 2000);
+        this.running = false;
+        setTimeout(() => {}, 1000);
     }
 }

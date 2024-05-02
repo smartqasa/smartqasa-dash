@@ -673,6 +673,7 @@ let DialogChip = class DialogChip extends s {
         this.label = this.config.label || "";
     }
     updated(changedProps) {
+        super.updated(changedProps);
         if (changedProps.has("hass")) {
             this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
             this.initialized = true;
@@ -757,6 +758,7 @@ let MotionChip = class MotionChip extends s {
         this.entity = this.config.entity?.startsWith("automation.") ? this.config.entity : undefined;
     }
     updated(changedProps) {
+        super.updated(changedProps);
         if (changedProps.has("hass")) {
             this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
             this.initialized = true;
@@ -842,6 +844,7 @@ let NavigateChip = class NavigateChip extends s {
         this.areaNext = config.area_next || undefined;
     }
     updated(changedProps) {
+        super.updated(changedProps);
         if (changedProps.has("hass") && this.areaPrev && this.areaNext) {
             this.areaObjPrev = this.hass ? this.hass.areas[this.areaPrev] : undefined;
             this.areaObjNext = this.hass ? this.hass.areas[this.areaNext] : undefined;
@@ -922,6 +925,7 @@ let RoutineChip = class RoutineChip extends s {
             : undefined;
     }
     updated(changedProps) {
+        super.updated(changedProps);
         if (changedProps.has("hass")) {
             this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
             this.initialized = true;
@@ -1060,6 +1064,7 @@ let SelectChip = class SelectChip extends s {
         this.entity = this.config.entity?.startsWith("input_select.") ? this.config.entity : undefined;
     }
     updated(changedProps) {
+        super.updated(changedProps);
         if (changedProps.has("hass")) {
             this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
             this.initialized = true;
@@ -1149,6 +1154,7 @@ let ThermostatChip$1 = class ThermostatChip extends s {
         this.entity = this.config.entity?.startsWith("climate.") ? this.config.entity : undefined;
     }
     updated(changedProps) {
+        super.updated(changedProps);
         if (changedProps.has("hass")) {
             this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
             this.initialized = true;
@@ -1218,6 +1224,7 @@ let ThermostatChip = class ThermostatChip extends s {
         this.entity = this.config.entity?.startsWith("weather.") ? this.config.entity : undefined;
     }
     updated(changedProps) {
+        super.updated(changedProps);
         if (changedProps.has("hass")) {
             this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
             this.initialized = true;
@@ -1314,6 +1321,7 @@ let AreaPicture = class AreaPicture extends s {
         this.area = this.config?.area;
     }
     updated(changedProps) {
+        super.updated(changedProps);
         if (changedProps.has("hass") && this.area) {
             this.areaObj = this.hass && this.area ? this.hass.areas[this.area] : undefined;
             this.initialized = true;
@@ -5643,20 +5651,20 @@ PanelFooter = __decorate([
 
 let MoreInfoDialog = class MoreInfoDialog extends s {
     setConfig(config) {
-        this._config = { ...config };
-        this._entity = this._config?.entity;
+        this.config = { ...config };
+        this.entity = this.config?.entity;
     }
-    set hass(hass) {
-        if (!this._entity || !hass)
-            return;
-        this._hass = hass;
-        this._stateObj = this._hass?.states[this._entity];
+    updated(changedProps) {
+        super.updated(changedProps);
+        if (changedProps.has("hass")) {
+            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
+        }
     }
     render() {
         return x `
             <div>
                 <div class="card-content">
-                    <more-info-content .hass=${this._hass} .stateObj=${this._stateObj}> </more-info-content>
+                    <more-info-content .hass=${this.hass} .stateObj=${this.stateObj}> </more-info-content>
                 </div>
             </div>
         `;
@@ -5666,11 +5674,14 @@ let MoreInfoDialog = class MoreInfoDialog extends s {
     }
 };
 __decorate([
-    r()
-], MoreInfoDialog.prototype, "_config", void 0);
+    n$1({ attribute: false })
+], MoreInfoDialog.prototype, "hass", void 0);
 __decorate([
     r()
-], MoreInfoDialog.prototype, "_stateObj", void 0);
+], MoreInfoDialog.prototype, "config", void 0);
+__decorate([
+    r()
+], MoreInfoDialog.prototype, "stateObj", void 0);
 MoreInfoDialog = __decorate([
     t$1("smartqasa-more-info-dialog")
 ], MoreInfoDialog);
@@ -5681,11 +5692,20 @@ window.customCards.push({
     description: "A SmartQasa dialog for showing More Info for an entity.",
 });
 
+window.customCards.push({
+    type: "smartqasa-time-date",
+    name: "SmartQasa Time Date",
+    preview: true,
+    description: "A SmartQasa card for rendering the time and date.",
+});
 let SmartQasaTimeDate = class SmartQasaTimeDate extends s {
     constructor() {
         super(...arguments);
-        this._time = "Loading...";
-        this._date = "Loading...";
+        this.time = "Loading...";
+        this.date = "Loading...";
+    }
+    getCardSize() {
+        return 1;
     }
     static get styles() {
         return i$5 `
@@ -5726,15 +5746,18 @@ let SmartQasaTimeDate = class SmartQasaTimeDate extends s {
         `;
     }
     setConfig(config) { }
-    set hass(hass) {
-        this._time = hass?.states["sensor.current_time"]?.state || "Loading...";
-        this._date = hass?.states["sensor.current_date"]?.state || "Loading...";
+    updated(changedProps) {
+        super.updated(changedProps);
+        if (changedProps.has("hass") && this.hass) {
+            this.time = this.hass.states["sensor.current_time"]?.state || "Loading...";
+            this.date = this.hass.states["sensor.current_date"]?.state || "Loading...";
+        }
     }
     render() {
         return x `
             <div class="container" @click="${this.handleTap}">
-                <div class="time">${this._time}</div>
-                <div class="date">${this._date}</div>
+                <div class="time">${this.time}</div>
+                <div class="date">${this.date}</div>
             </div>
         `;
     }
@@ -5746,27 +5769,30 @@ let SmartQasaTimeDate = class SmartQasaTimeDate extends s {
             console.warn("fully.startApplication is not available.");
         }
     }
-    getCardSize() {
-        return 1;
-    }
 };
 __decorate([
-    r()
-], SmartQasaTimeDate.prototype, "_time", void 0);
+    n$1({ attribute: false })
+], SmartQasaTimeDate.prototype, "hass", void 0);
 __decorate([
     r()
-], SmartQasaTimeDate.prototype, "_date", void 0);
+], SmartQasaTimeDate.prototype, "time", void 0);
+__decorate([
+    r()
+], SmartQasaTimeDate.prototype, "date", void 0);
 SmartQasaTimeDate = __decorate([
     t$1("smartqasa-time-date")
 ], SmartQasaTimeDate);
-window.customCards.push({
-    type: "smartqasa-time-date",
-    name: "SmartQasa Time Date",
-    preview: true,
-    description: "A SmartQasa card for rendering the time and date.",
-});
 
+window.customCards.push({
+    type: "smartqasa-title-card",
+    name: "SmartQasa Title Card",
+    preview: true,
+    description: "A SmartQasa card for rendering text in a title.",
+});
 let TitleCard = class TitleCard extends s {
+    getCardSize() {
+        return 1;
+    }
     static get styles() {
         return i$5 `
             :host {
@@ -5796,9 +5822,6 @@ let TitleCard = class TitleCard extends s {
     render() {
         return x ` <div class="title">${this._config?.title}</div> `;
     }
-    getCardSize() {
-        return 1;
-    }
 };
 __decorate([
     r()
@@ -5806,12 +5829,6 @@ __decorate([
 TitleCard = __decorate([
     t$1("smartqasa-title-card")
 ], TitleCard);
-window.customCards.push({
-    type: "smartqasa-title-card",
-    name: "SmartQasa Title Card",
-    preview: true,
-    description: "A SmartQasa card for rendering text in a title.",
-});
 
 const tileBaseStyle = i$5 `
     .container {
@@ -5911,6 +5928,7 @@ let AllOffTile = class AllOffTile extends s {
         this.area = this.config?.area;
     }
     updated(changedProps) {
+        super.updated(changedProps);
         if (changedProps.has("hass") && this.area) {
             this.areaObj = this.hass && this.area ? this.hass.areas[this.area] : undefined;
             this.initialized = true;
@@ -5974,9 +5992,8 @@ let AllOffTile = class AllOffTile extends s {
         catch (error) {
             console.error("Failed to turn off entities:", error);
         }
-        setTimeout(() => {
-            this.running = false;
-        }, 2000);
+        this.running = false;
+        setTimeout(() => { }, 1000);
     }
 };
 __decorate([
@@ -6548,6 +6565,7 @@ let AreaTile = class AreaTile extends s {
         this.area = this.config?.area;
     }
     updated(changedProps) {
+        super.updated(changedProps);
         if (changedProps.has("hass") && this.area) {
             this.areaObj = this.hass && this.area ? this.hass.areas[this.area] : undefined;
             this.initialized = true;
@@ -6728,6 +6746,7 @@ let FanTile = class FanTile extends s {
         this.entity = this.config.entity?.startsWith("fan.") ? this.config.entity : undefined;
     }
     updated(changedProps) {
+        super.updated(changedProps);
         if (changedProps.has("hass")) {
             this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
             this.initialized = true;
@@ -6836,6 +6855,7 @@ let GarageTile = class GarageTile extends s {
         this.entity = this.config.entity?.startsWith("cover.") ? this.config.entity : undefined;
     }
     updated(changedProps) {
+        super.updated(changedProps);
         if (changedProps.has("hass")) {
             this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
             this.initialized = true;
@@ -6952,6 +6972,7 @@ let HeaterTile = class HeaterTile extends s {
         this.entity = this.config.entity?.startsWith("water_heater.") ? this.config.entity : undefined;
     }
     updated(changedProps) {
+        super.updated(changedProps);
         if (changedProps.has("hass")) {
             this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
             this.initialized = true;
@@ -7053,6 +7074,7 @@ let LightTile = class LightTile extends s {
         this.entity = this.config.entity?.startsWith("light.") ? this.config.entity : undefined;
     }
     updated(changedProps) {
+        super.updated(changedProps);
         if (changedProps.has("hass")) {
             this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
             this.initialized = true;
@@ -7214,6 +7236,7 @@ let LockTile = class LockTile extends s {
         this.entity = this.config.entity?.startsWith("lock.") ? this.config.entity : undefined;
     }
     updated(changedProps) {
+        super.updated(changedProps);
         if (changedProps.has("hass")) {
             this.stateObj = this.hass && this.entity && !this.running ? this.hass.states[this.entity] : undefined;
             this.initialized = true;
@@ -7345,6 +7368,7 @@ let OptionTile = class OptionTile extends s {
         this.entity = this.config.entity?.startsWith("input_select.") ? this.config.entity : undefined;
     }
     updated(changedProps) {
+        super.updated(changedProps);
         if (changedProps.has("hass")) {
             this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
             this.initialized = true;
@@ -7478,6 +7502,7 @@ let RobotTile = class RobotTile extends s {
         this.entity = this.config.entity?.startsWith("light.") ? this.config.entity : undefined;
     }
     updated(changedProps) {
+        super.updated(changedProps);
         if (changedProps.has("hass")) {
             this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
             this.initialized = true;
@@ -7604,6 +7629,7 @@ let RokuTile = class RokuTile extends s {
         this.entity = this.config.entity?.startsWith("media_player.") ? this.config.entity : undefined;
     }
     updated(changedProps) {
+        super.updated(changedProps);
         if (changedProps.has("hass")) {
             this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
             this.initialized = true;
@@ -7733,6 +7759,7 @@ let RoutineTile = class RoutineTile extends s {
             : undefined;
     }
     updated(changedProps) {
+        super.updated(changedProps);
         if (changedProps.has("hass")) {
             this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
             this.initialized = true;
@@ -7843,6 +7870,7 @@ let SelectTile = class SelectTile extends s {
         this.entity = this.config.entity?.startsWith("input_select.") ? this.config.entity : undefined;
     }
     updated(changedProps) {
+        super.updated(changedProps);
         if (changedProps.has("hass")) {
             this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
             this.initialized = true;
@@ -7926,6 +7954,7 @@ let SensorTile = class SensorTile extends s {
         this.entity = this.config.entity?.startsWith("binary_sensor.") ? this.config.entity : undefined;
     }
     updated(changedProps) {
+        super.updated(changedProps);
         if (changedProps.has("hass")) {
             this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
             this.initialized = true;
@@ -8084,6 +8113,7 @@ let PoolLightTile = class PoolLightTile extends s {
         this.entity = ["light", "switch"].includes(this.config.entity?.split(".")[0]) ? this.config.entity : undefined;
     }
     updated(changedProps) {
+        super.updated(changedProps);
         if (changedProps.has("hass")) {
             this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
             this.initialized = true;
@@ -8188,6 +8218,7 @@ let PoolLightSequencerTile = class PoolLightSequencerTile extends s {
         this.entity = ["light", "switch"].includes(this.config.entity?.split(".")[0]) ? this.config.entity : undefined;
     }
     updated(changedProps) {
+        super.updated(changedProps);
         if (changedProps.has("hass")) {
             this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
             this.initialized = true;
@@ -8290,6 +8321,7 @@ let ShadeTile = class ShadeTile extends s {
         this.entity = this.config.entity?.startsWith("cover.") ? this.config.entity : undefined;
     }
     updated(changedProps) {
+        super.updated(changedProps);
         if (changedProps.has("hass")) {
             this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
             this.initialized = true;
@@ -8435,6 +8467,7 @@ let SwitchTile = class SwitchTile extends s {
             : undefined;
     }
     updated(changedProps) {
+        super.updated(changedProps);
         if (changedProps.has("hass")) {
             this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
             this.initialized = true;
@@ -8574,6 +8607,7 @@ let ThermostatTile = class ThermostatTile extends s {
         this.entity = this.config.entity?.startsWith("climate.") ? this.config.entity : undefined;
     }
     updated(changedProps) {
+        super.updated(changedProps);
         if (changedProps.has("hass")) {
             this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
             this.initialized = true;
