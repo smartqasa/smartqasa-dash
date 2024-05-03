@@ -50,8 +50,21 @@ export class CustomChip extends LitElement {
 
     async initializeComponent() {
         if (!this.config || !this.config.file) return;
+
         this.dialogObj = await loadYamlAsJson(`/local/smartqasa/dialogs/${this.config.file}`);
+
         this.icon = this.dialogObj.icon || "mdi:help-circle";
+        if (this.dialogObj.icon_color && this.hass && this.hass.states) {
+            try {
+                const iconColorFunction = new Function("states", `return (${this.dialogObj.icon_color})`);
+                this.iconColor = iconColorFunction(this.hass.states);
+            } catch (error) {
+                console.error("Error evaluating icon color: ", error);
+                this.iconColor = "var(--sq-inactive-rgb)";
+            }
+        } else {
+            this.iconColor = "var(--sq-inactive-rgb)";
+        }
         this.entity = this.dialogObj.entity || "";
     }
 
