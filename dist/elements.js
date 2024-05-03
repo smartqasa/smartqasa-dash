@@ -4076,8 +4076,7 @@ let CustomChip = class CustomChip extends s {
         this.icon = this.dialogObj.icon || "mdi:help-circle";
         if (this.dialogObj.icon_color && this.hass && this.hass.states) {
             try {
-                const iconColorFunction = new Function("states", `return (${this.dialogObj.icon_color})`);
-                this.iconColor = iconColorFunction(this.hass.states);
+                this.iconColor = eval(this.dialogObj.icon_color);
             }
             catch (error) {
                 console.error("Error evaluating icon color: ", error);
