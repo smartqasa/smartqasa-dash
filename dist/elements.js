@@ -4082,7 +4082,6 @@ let CustomChip = class CustomChip extends s {
             try {
                 const func = new Function("states", "return " + this.dialogObj.icon_rgb);
                 iconColor = func(this.hass.states);
-                console.log("Icon color:", iconColor);
             }
             catch (error) {
                 console.error("Error evaluating icon color expression:", error);
@@ -4105,6 +4104,7 @@ let CustomChip = class CustomChip extends s {
             color: `rgb(${iconColor})`,
             backgroundColor: "transparent",
         };
+        console.log("iconStyles", iconStyles);
         return x `
             <div class="container" style="${o(containerStyle)}" @click=${this.showDialog}>
                 <div class="icon" style="${o(iconStyles)}">

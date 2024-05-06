@@ -70,7 +70,6 @@ export class CustomChip extends LitElement {
             try {
                 const func = new Function("states", "return " + this.dialogObj.icon_rgb);
                 iconColor = func(this.hass.states);
-                console.log("Icon color:", iconColor);
             } catch (error) {
                 console.error("Error evaluating icon color expression:", error);
             }
@@ -93,6 +92,7 @@ export class CustomChip extends LitElement {
             color: `rgb(${iconColor})`,
             backgroundColor: "transparent",
         };
+        console.log("iconStyles", iconStyles);
 
         return html`
             <div class="container" style="${styleMap(containerStyle)}" @click=${this.showDialog}>
