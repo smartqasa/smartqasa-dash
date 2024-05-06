@@ -4061,10 +4061,10 @@ let CustomChip = class CustomChip extends s {
     async initializeComponent() {
         if (!this.config || !this.config.file)
             return;
-        this.dialogObj = await loadYamlAsJson(`/local/smartqasa/dialogs/${this.config.file}`);
+        this.dialogObj = (await loadYamlAsJson(`/local/smartqasa/dialogs/${this.config.file}`));
         if (this.dialogObj.entity) {
             this.entity = this.dialogObj.entity;
-            this.entityStyle = this.dialogObj.entity_style || null;
+            this.entityStyle = this.dialogObj.entity_style || "";
         }
     }
     updated(changedProps) {
@@ -4074,7 +4074,7 @@ let CustomChip = class CustomChip extends s {
         }
     }
     render() {
-        if (!this.hass || !this.file)
+        if (!this.hass || !this.dialogObj)
             return x ``;
         const icon = this.dialogObj.icon || "hass:help-circle";
         let iconColor = "var(--sq-inactive-rgb)";
@@ -4114,6 +4114,8 @@ let CustomChip = class CustomChip extends s {
     }
     showDialog(e) {
         e.stopPropagation();
+        if (!this.dialogObj)
+            return;
         const dialogConfig = { ...this.dialogObj.data };
         window.browser_mod?.service("popup", dialogConfig);
     }

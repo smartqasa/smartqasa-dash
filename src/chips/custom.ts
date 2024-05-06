@@ -11,6 +11,14 @@ interface Config extends LovelaceCardConfig {
     file: string;
 }
 
+interface DialogObj {
+    icon?: string;
+    icon_rgb?: string;
+    entity?: string;
+    entity_style?: string;
+    data: any;
+}
+
 window.customCards.push({
     type: "smartqasa-custom-chip",
     name: "SmartQasa Custom Chip",
@@ -23,7 +31,7 @@ export class CustomChip extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
 
     @state() private config?: Config;
-    @state() private dialogObj?: any;
+    @state() private dialogObj?: DialogObj;
     @state() private stateObj?: HassEntity;
 
     private entity?: string;
@@ -42,10 +50,10 @@ export class CustomChip extends LitElement {
     private async initializeComponent() {
         if (!this.config || !this.config.file) return;
 
-        this.dialogObj = await loadYamlAsJson(`/local/smartqasa/dialogs/${this.config.file}`);
+        this.dialogObj = (await loadYamlAsJson(`/local/smartqasa/dialogs/${this.config.file}`)) as DialogObj;
         if (this.dialogObj.entity) {
             this.entity = this.dialogObj.entity;
-            this.entityStyle = this.dialogObj.entity_style || null;
+            this.entityStyle = this.dialogObj.entity_style || "";
         }
     }
 
@@ -57,7 +65,7 @@ export class CustomChip extends LitElement {
     }
 
     protected render(): TemplateResult {
-        if (!this.hass || !this.file) return html``;
+        if (!this.hass || !this.dialogObj) return html``;
 
         const icon = this.dialogObj.icon || "hass:help-circle";
         let iconColor = "var(--sq-inactive-rgb)";
@@ -100,6 +108,8 @@ export class CustomChip extends LitElement {
 
     private showDialog(e: Event): void {
         e.stopPropagation();
+        if (!this.dialogObj) return;
+
         const dialogConfig = { ...this.dialogObj.data };
         window.browser_mod?.service("popup", dialogConfig);
     }
