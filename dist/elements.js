@@ -4082,12 +4082,13 @@ let CustomChip = class CustomChip extends s {
             try {
                 const func = new Function("states", "return " + this.dialogObj.icon_rgb);
                 iconColor = func(this.hass.states);
+                console.log("Icon color:", iconColor);
             }
             catch (error) {
                 console.error("Error evaluating icon color expression:", error);
             }
         }
-        let text = this.stateObj?.state || "";
+        let text = this.stateObj.state || "";
         switch (this.dialogObj.entity_type) {
             case "temperature":
                 text += "°";
