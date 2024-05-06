@@ -65,6 +65,7 @@ export class LightTile extends LitElement {
 
     protected render(): TemplateResult {
         if (!this.initialized) return html``;
+        console.log("render");
 
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
         const iconStyles = {

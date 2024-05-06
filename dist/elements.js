@@ -7178,6 +7178,7 @@ let LightTile = class LightTile extends s {
     render() {
         if (!this.initialized)
             return x ``;
+        console.log("render");
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
