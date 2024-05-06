@@ -4076,7 +4076,7 @@ let CustomChip = class CustomChip extends s {
     render() {
         if (!this.hass || !this.file)
             return x ``;
-        const icon = this.dialogObj.icon || "mdi:help-circle";
+        const icon = this.dialogObj.icon || "hass:help-circle";
         let iconColor = "var(--sq-inactive-rgb)";
         if (this.dialogObj.icon_color) {
             try {
@@ -4101,7 +4101,7 @@ let CustomChip = class CustomChip extends s {
         };
         const iconStyles = {
             color: `rgb(${iconColor})`,
-            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity))`,
+            backgroundColor: "transparent",
         };
         return x `
             <div class="container" style="${o(containerStyle)}" @click=${this.showDialog}>

@@ -59,7 +59,7 @@ export class CustomChip extends LitElement {
     protected render(): TemplateResult {
         if (!this.hass || !this.file) return html``;
 
-        const icon = this.dialogObj.icon || "mdi:help-circle";
+        const icon = this.dialogObj.icon || "hass:help-circle";
         let iconColor = "var(--sq-inactive-rgb)";
         if (this.dialogObj.icon_color) {
             try {
@@ -85,7 +85,7 @@ export class CustomChip extends LitElement {
         };
         const iconStyles = {
             color: `rgb(${iconColor})`,
-            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity))`,
+            backgroundColor: "transparent",
         };
 
         return html`
