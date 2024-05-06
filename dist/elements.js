@@ -4087,6 +4087,15 @@ let CustomChip = class CustomChip extends s {
                 console.error("Error evaluating icon color expression:", error);
             }
         }
+        let text = this.stateObj?.state || "";
+        switch (this.dialogObj.entity_type) {
+            case "temperature":
+                text += "°";
+                break;
+            case "percentage":
+                text += "%";
+                break;
+        }
         const containerStyle = {
             "margin-left": "0.7rem",
             "grid-template-areas": '"i t"',
@@ -4100,7 +4109,7 @@ let CustomChip = class CustomChip extends s {
                 <div class="icon" style="${o(iconStyles)}">
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
-                <div class="text">${this.stateObj.state}</div>
+                ${text ? x `<div class="text">${text}</div>` : null}
             </div>
         `;
     }

@@ -12,9 +12,10 @@ interface Config extends LovelaceCardConfig {
 }
 
 interface DialogObj {
-    icon?: string;
+    icon: string;
     icon_rgb?: string;
     entity?: string;
+    entity_type?: string;
     data: any;
 }
 
@@ -73,6 +74,15 @@ export class CustomChip extends LitElement {
                 console.error("Error evaluating icon color expression:", error);
             }
         }
+        let text = this.stateObj?.state || "";
+        switch (this.dialogObj.entity_type) {
+            case "temperature":
+                text += "°";
+                break;
+            case "percentage":
+                text += "%";
+                break;
+        }
 
         const containerStyle = {
             "margin-left": "0.7rem",
@@ -88,7 +98,7 @@ export class CustomChip extends LitElement {
                 <div class="icon" style="${styleMap(iconStyles)}">
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
-                <div class="text">${this.stateObj.state}</div>
+                ${text ? html`<div class="text">${text}</div>` : null}
             </div>
         `;
     }
