@@ -4080,7 +4080,7 @@ let CustomChip = class CustomChip extends s {
         let iconColor = "var(--sq-inactive-rgb)";
         if (this.dialogObj.icon_rgb && this.hass) {
             try {
-                const func = new Function("states", "return " + this.dialogObj.icon_rgb);
+                const func = new Function("states", `return ${this.dialogObj.icon_rgb}`);
                 iconColor = func(this.hass.states);
             }
             catch (error) {
