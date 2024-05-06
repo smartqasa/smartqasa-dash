@@ -68,8 +68,7 @@ export class CustomChip extends LitElement {
 
         if (this.dialogObj.icon_rgb && this.hass) {
             try {
-                const func = new Function("states", `return ${this.dialogObj.icon_rgb}`);
-                iconColor = func(this.hass.states);
+                iconColor = eval(this.dialogObj.icon_rgb);
             } catch (error) {
                 console.error("Error evaluating icon color expression:", error);
             }
