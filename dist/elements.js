@@ -4081,6 +4081,7 @@ let CustomChip = class CustomChip extends s {
         if (this.dialogObj.icon_rgb && this.hass) {
             try {
                 iconColor = eval(this.dialogObj.icon_rgb);
+                console.log("Icon color:", iconColor);
             }
             catch (error) {
                 console.error("Error evaluating icon color expression:", error);
@@ -4103,7 +4104,6 @@ let CustomChip = class CustomChip extends s {
             color: `rgb(${iconColor})`,
             backgroundColor: "transparent",
         };
-        console.log("iconStyles", iconStyles);
         return x `
             <div class="container" style="${o(containerStyle)}" @click=${this.showDialog}>
                 <div class="icon" style="${o(iconStyles)}">

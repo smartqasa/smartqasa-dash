@@ -69,6 +69,7 @@ export class CustomChip extends LitElement {
         if (this.dialogObj.icon_rgb && this.hass) {
             try {
                 iconColor = eval(this.dialogObj.icon_rgb);
+                console.log("Icon color:", iconColor);
             } catch (error) {
                 console.error("Error evaluating icon color expression:", error);
             }
@@ -91,7 +92,6 @@ export class CustomChip extends LitElement {
             color: `rgb(${iconColor})`,
             backgroundColor: "transparent",
         };
-        console.log("iconStyles", iconStyles);
 
         return html`
             <div class="container" style="${styleMap(containerStyle)}" @click=${this.showDialog}>
