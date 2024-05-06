@@ -4050,13 +4050,6 @@ window.customCards.push({
     description: "A SmartQasa chip for custom.",
 });
 let CustomChip = class CustomChip extends s {
-    constructor() {
-        super(...arguments);
-        this.icon = "mdi:help-circle";
-        this.iconAnimation = "none";
-        this.iconColor = "var(--sq-primary-text-rgb)";
-        this.entity = "";
-    }
     static { this.styles = [chipBaseStyle, chipTextStyle]; }
     setConfig(config) {
         this.config = { ...config };
@@ -4065,46 +4058,55 @@ let CustomChip = class CustomChip extends s {
             return;
         this.initializeComponent();
     }
-    updated(changedProps) {
-        super.updated(changedProps);
-        if (changedProps.has("hass")) ;
-    }
     async initializeComponent() {
         if (!this.config || !this.config.file)
             return;
         this.dialogObj = await loadYamlAsJson(`/local/smartqasa/dialogs/${this.config.file}`);
-        this.icon = this.dialogObj.icon || "mdi:help-circle";
-        if (this.dialogObj.icon_color && this.hass && this.hass.states) {
-            try {
-                this.iconColor = eval(this.dialogObj.icon_color);
-            }
-            catch (error) {
-                console.error("Error evaluating icon color: ", error);
-                this.iconColor = "var(--sq-inactive-rgb)";
-            }
+        if (this.dialogObj.entity) {
+            this.entity = this.dialogObj.entity;
+            this.entityStyle = this.dialogObj.entity_style || null;
         }
-        else {
-            this.iconColor = "var(--sq-inactive-rgb)";
+    }
+    updated(changedProps) {
+        super.updated(changedProps);
+        if (changedProps.has("hass") && this.hass && this.entity) {
+            this.stateObj = this.hass.states[this.entity];
         }
-        this.entity = this.dialogObj.entity || "";
     }
     render() {
         if (!this.hass || !this.file)
             return x ``;
-        const text = this.hass.states[this.entity].state || "";
+        const icon = this.dialogObj.icon || "mdi:help-circle";
+        let iconColor = "var(--sq-inactive-rgb)";
+        if (this.dialogObj.icon_color) {
+            try {
+                iconColor = eval(this.dialogObj.icon_color);
+            }
+            catch (error) {
+                console.error("Error evaluating icon color: ", error);
+            }
+        }
+        let text = this.stateObj?.state || null;
+        switch (this.entityStyle) {
+            case "temperature":
+                text += "°";
+                break;
+            case "percentage":
+                text += "%";
+                break;
+        }
         const containerStyle = {
             "margin-left": "0.7rem",
             "grid-template-areas": text ? '"i t"' : '"i"',
         };
         const iconStyles = {
-            color: `rgb(${this.iconColor})`,
-            backgroundColor: `rgba(${this.iconColor}, var(--sq-icon-opacity))`,
-            animation: this.iconAnimation,
+            color: `rgb(${iconColor})`,
+            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity))`,
         };
         return x `
             <div class="container" style="${o(containerStyle)}" @click=${this.showDialog}>
                 <div class="icon" style="${o(iconStyles)}">
-                    <ha-icon .icon=${this.icon}></ha-icon>
+                    <ha-icon .icon=${icon}></ha-icon>
                 </div>
                 ${text ? x `<div class="text">${text}</div>` : null}
             </div>
@@ -4128,15 +4130,6 @@ __decorate([
 __decorate([
     r()
 ], CustomChip.prototype, "stateObj", void 0);
-__decorate([
-    r()
-], CustomChip.prototype, "icon", void 0);
-__decorate([
-    r()
-], CustomChip.prototype, "iconAnimation", void 0);
-__decorate([
-    r()
-], CustomChip.prototype, "iconColor", void 0);
 CustomChip = __decorate([
     t$1("smartqasa-custom-chip")
 ], CustomChip);

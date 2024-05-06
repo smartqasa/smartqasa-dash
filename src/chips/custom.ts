@@ -26,11 +26,8 @@ export class CustomChip extends LitElement {
     @state() private dialogObj?: any;
     @state() private stateObj?: HassEntity;
 
-    @state() private icon = "mdi:help-circle";
-    @state() private iconAnimation = "none";
-    @state() private iconColor = "var(--sq-primary-text-rgb)";
-
-    private entity: string = "";
+    private entity?: string;
+    private entityStyle?: string;
     private file?: string;
 
     static styles: CSSResultGroup = [chipBaseStyle, chipTextStyle];
@@ -42,50 +39,59 @@ export class CustomChip extends LitElement {
         this.initializeComponent();
     }
 
-    updated(changedProps: PropertyValues) {
-        super.updated(changedProps);
-        if (changedProps.has("hass")) {
-        }
-    }
-
-    async initializeComponent() {
+    private async initializeComponent() {
         if (!this.config || !this.config.file) return;
 
         this.dialogObj = await loadYamlAsJson(`/local/smartqasa/dialogs/${this.config.file}`);
-
-        this.icon = this.dialogObj.icon || "mdi:help-circle";
-        if (this.dialogObj.icon_color && this.hass && this.hass.states) {
-            try {
-                this.iconColor = eval(this.dialogObj.icon_color);
-            } catch (error) {
-                console.error("Error evaluating icon color: ", error);
-                this.iconColor = "var(--sq-inactive-rgb)";
-            }
-        } else {
-            this.iconColor = "var(--sq-inactive-rgb)";
+        if (this.dialogObj.entity) {
+            this.entity = this.dialogObj.entity;
+            this.entityStyle = this.dialogObj.entity_style || null;
         }
-        this.entity = this.dialogObj.entity || "";
+    }
+
+    updated(changedProps: PropertyValues) {
+        super.updated(changedProps);
+        if (changedProps.has("hass") && this.hass && this.entity) {
+            this.stateObj = this.hass.states[this.entity];
+        }
     }
 
     protected render(): TemplateResult {
         if (!this.hass || !this.file) return html``;
 
-        const text = this.hass.states[this.entity].state || "";
+        const icon = this.dialogObj.icon || "mdi:help-circle";
+        let iconColor = "var(--sq-inactive-rgb)";
+        if (this.dialogObj.icon_color) {
+            try {
+                iconColor = eval(this.dialogObj.icon_color);
+            } catch (error) {
+                console.error("Error evaluating icon color: ", error);
+            }
+        }
+        let text = this.stateObj?.state || null;
+
+        switch (this.entityStyle) {
+            case "temperature":
+                text += "°";
+                break;
+            case "percentage":
+                text += "%";
+                break;
+        }
 
         const containerStyle = {
             "margin-left": "0.7rem",
             "grid-template-areas": text ? '"i t"' : '"i"',
         };
         const iconStyles = {
-            color: `rgb(${this.iconColor})`,
-            backgroundColor: `rgba(${this.iconColor}, var(--sq-icon-opacity))`,
-            animation: this.iconAnimation,
+            color: `rgb(${iconColor})`,
+            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity))`,
         };
 
         return html`
             <div class="container" style="${styleMap(containerStyle)}" @click=${this.showDialog}>
                 <div class="icon" style="${styleMap(iconStyles)}">
-                    <ha-icon .icon=${this.icon}></ha-icon>
+                    <ha-icon .icon=${icon}></ha-icon>
                 </div>
                 ${text ? html`<div class="text">${text}</div>` : null}
             </div>
