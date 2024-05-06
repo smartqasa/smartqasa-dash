@@ -15,7 +15,6 @@ interface DialogObj {
     icon?: string;
     icon_rgb?: string;
     entity?: string;
-    entity_style?: string;
     data: any;
 }
 
@@ -23,74 +22,61 @@ window.customCards.push({
     type: "smartqasa-custom-chip",
     name: "SmartQasa Custom Chip",
     preview: true,
-    description: "A SmartQasa chip for custom.",
+    description: "A SmartQasa chip for custom configurations.",
 });
 
 @customElement("smartqasa-custom-chip")
 export class CustomChip extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
-
     @state() private config?: Config;
     @state() private dialogObj?: DialogObj;
     @state() private stateObj?: HassEntity;
 
     private entity?: string;
-    private entityStyle?: string;
-    private file?: string;
 
     static styles: CSSResultGroup = [chipBaseStyle, chipTextStyle];
 
     setConfig(config: Config): void {
         this.config = { ...config };
-        this.file = this.config.file;
-        if (!this.file) return;
-        this.initializeComponent();
+        this.loadDialogObj();
     }
 
-    private async initializeComponent() {
-        if (!this.config || !this.config.file) return;
-
-        this.dialogObj = (await loadYamlAsJson(`/local/smartqasa/dialogs/${this.config.file}`)) as DialogObj;
-        if (this.dialogObj.entity) {
+    async loadDialogObj() {
+        if (!this.config?.file) return;
+        try {
+            const path = `/local/smartqasa/dialogs/${this.config.file}`;
+            this.dialogObj = (await loadYamlAsJson(path)) as DialogObj;
             this.entity = this.dialogObj.entity;
-            this.entityStyle = this.dialogObj.entity_style || "";
+        } catch (error) {
+            console.error("Failed to load YAML:", error);
         }
     }
 
     updated(changedProps: PropertyValues) {
         super.updated(changedProps);
-        if (changedProps.has("hass") && this.hass && this.entity) {
-            this.stateObj = this.hass.states[this.entity];
+        if (changedProps.has("hass") && this.entity) {
+            this.stateObj = this.hass?.states[this.entity];
         }
     }
 
     protected render(): TemplateResult {
-        if (!this.hass || !this.dialogObj) return html``;
+        if (!this.dialogObj || !this.stateObj) return html``;
 
-        const icon = this.dialogObj.icon || "hass:help-circle";
+        const icon = this.dialogObj.icon || "mdi:help-circle";
         let iconColor = "var(--sq-inactive-rgb)";
-        if (this.dialogObj.icon_rgb) {
-            console.log("Evaluating icon color: ", this.dialogObj.icon_rgb);
-            try {
-                iconColor = eval(this.dialogObj.icon_rgb);
-            } catch (error) {
-                console.error("Error evaluating icon color: ", error);
-            }
-        }
-        let text = this.stateObj?.state || null;
 
-        switch (this.entityStyle) {
-            case "temperature":
-                text += "°";
-                break;
-            case "percentage":
-                text += "%";
-                break;
+        if (this.dialogObj.icon_rgb && this.hass) {
+            try {
+                const func = new Function("states", "return " + this.dialogObj.icon_rgb);
+                iconColor = func(this.hass.states);
+            } catch (error) {
+                console.error("Error evaluating icon color expression:", error);
+            }
         }
 
         const containerStyle = {
             "margin-left": "0.7rem",
-            "grid-template-areas": text ? '"i t"' : '"i"',
+            "grid-template-areas": '"i t"',
         };
         const iconStyles = {
             color: `rgb(${iconColor})`,
@@ -102,7 +88,7 @@ export class CustomChip extends LitElement {
                 <div class="icon" style="${styleMap(iconStyles)}">
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
-                ${text ? html`<div class="text">${text}</div>` : null}
+                <div class="text">${this.stateObj.state}</div>
             </div>
         `;
     }
@@ -110,7 +96,6 @@ export class CustomChip extends LitElement {
     private showDialog(e: Event): void {
         e.stopPropagation();
         if (!this.dialogObj) return;
-
         const dialogConfig = { ...this.dialogObj.data };
         window.browser_mod?.service("popup", dialogConfig);
     }

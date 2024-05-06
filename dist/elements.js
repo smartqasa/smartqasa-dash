@@ -4047,58 +4047,49 @@ window.customCards.push({
     type: "smartqasa-custom-chip",
     name: "SmartQasa Custom Chip",
     preview: true,
-    description: "A SmartQasa chip for custom.",
+    description: "A SmartQasa chip for custom configurations.",
 });
 let CustomChip = class CustomChip extends s {
     static { this.styles = [chipBaseStyle, chipTextStyle]; }
     setConfig(config) {
         this.config = { ...config };
-        this.file = this.config.file;
-        if (!this.file)
-            return;
-        this.initializeComponent();
+        this.loadDialogObj();
     }
-    async initializeComponent() {
-        if (!this.config || !this.config.file)
+    async loadDialogObj() {
+        if (!this.config?.file)
             return;
-        this.dialogObj = (await loadYamlAsJson(`/local/smartqasa/dialogs/${this.config.file}`));
-        if (this.dialogObj.entity) {
+        try {
+            const path = `/local/smartqasa/dialogs/${this.config.file}`;
+            this.dialogObj = (await loadYamlAsJson(path));
             this.entity = this.dialogObj.entity;
-            this.entityStyle = this.dialogObj.entity_style || "";
+        }
+        catch (error) {
+            console.error("Failed to load YAML:", error);
         }
     }
     updated(changedProps) {
         super.updated(changedProps);
-        if (changedProps.has("hass") && this.hass && this.entity) {
-            this.stateObj = this.hass.states[this.entity];
+        if (changedProps.has("hass") && this.entity) {
+            this.stateObj = this.hass?.states[this.entity];
         }
     }
     render() {
-        if (!this.hass || !this.dialogObj)
+        if (!this.dialogObj || !this.stateObj)
             return x ``;
-        const icon = this.dialogObj.icon || "hass:help-circle";
+        const icon = this.dialogObj.icon || "mdi:help-circle";
         let iconColor = "var(--sq-inactive-rgb)";
-        if (this.dialogObj.icon_rgb) {
-            console.log("Evaluating icon color: ", this.dialogObj.icon_rgb);
+        if (this.dialogObj.icon_rgb && this.hass) {
             try {
-                iconColor = eval(this.dialogObj.icon_rgb);
+                const func = new Function("states", "return " + this.dialogObj.icon_rgb);
+                iconColor = func(this.hass.states);
             }
             catch (error) {
-                console.error("Error evaluating icon color: ", error);
+                console.error("Error evaluating icon color expression:", error);
             }
-        }
-        let text = this.stateObj?.state || null;
-        switch (this.entityStyle) {
-            case "temperature":
-                text += "°";
-                break;
-            case "percentage":
-                text += "%";
-                break;
         }
         const containerStyle = {
             "margin-left": "0.7rem",
-            "grid-template-areas": text ? '"i t"' : '"i"',
+            "grid-template-areas": '"i t"',
         };
         const iconStyles = {
             color: `rgb(${iconColor})`,
@@ -4109,7 +4100,7 @@ let CustomChip = class CustomChip extends s {
                 <div class="icon" style="${o(iconStyles)}">
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
-                ${text ? x `<div class="text">${text}</div>` : null}
+                <div class="text">${this.stateObj.state}</div>
             </div>
         `;
     }
