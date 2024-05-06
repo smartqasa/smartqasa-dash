@@ -4069,8 +4069,8 @@ let CustomChip = class CustomChip extends s {
     }
     updated(changedProps) {
         super.updated(changedProps);
-        if (changedProps.has("hass") && this.entity) {
-            this.stateObj = this.hass?.states[this.entity];
+        if (changedProps.has("hass") && this.hass && this.entity) {
+            this.stateObj = this.hass.states[this.entity];
         }
     }
     render() {
@@ -4078,10 +4078,10 @@ let CustomChip = class CustomChip extends s {
             return x ``;
         const icon = this.dialogObj.icon || "mdi:help-circle";
         let iconColor = "var(--sq-inactive-rgb)";
-        if (this.dialogObj.icon_rgb && this.hass) {
+        if (this.hass && this.dialogObj.icon_rgb) {
             try {
-                iconColor = eval(this.dialogObj.icon_rgb);
-                console.log("Icon color:", iconColor);
+                const func = new Function("states", this.dialogObj.icon_rgb);
+                iconColor = func(this.hass.states);
             }
             catch (error) {
                 console.error("Error evaluating icon color expression:", error);
@@ -4104,6 +4104,7 @@ let CustomChip = class CustomChip extends s {
             color: `rgb(${iconColor})`,
             backgroundColor: "transparent",
         };
+        console.log("iconStyles", iconStyles);
         return x `
             <div class="container" style="${o(containerStyle)}" @click=${this.showDialog}>
                 <div class="icon" style="${o(iconStyles)}">

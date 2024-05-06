@@ -42,7 +42,7 @@ export class CustomChip extends LitElement {
         this.loadDialogObj();
     }
 
-    async loadDialogObj() {
+    private async loadDialogObj() {
         if (!this.config?.file) return;
         try {
             const path = `/local/smartqasa/dialogs/${this.config.file}`;
@@ -55,8 +55,8 @@ export class CustomChip extends LitElement {
 
     updated(changedProps: PropertyValues) {
         super.updated(changedProps);
-        if (changedProps.has("hass") && this.entity) {
-            this.stateObj = this.hass?.states[this.entity];
+        if (changedProps.has("hass") && this.hass && this.entity) {
+            this.stateObj = this.hass.states[this.entity];
         }
     }
 
@@ -66,10 +66,10 @@ export class CustomChip extends LitElement {
         const icon = this.dialogObj.icon || "mdi:help-circle";
         let iconColor = "var(--sq-inactive-rgb)";
 
-        if (this.dialogObj.icon_rgb && this.hass) {
+        if (this.hass && this.dialogObj.icon_rgb) {
             try {
-                iconColor = eval(this.dialogObj.icon_rgb);
-                console.log("Icon color:", iconColor);
+                const func = new Function("states", this.dialogObj.icon_rgb);
+                iconColor = func(this.hass.states);
             } catch (error) {
                 console.error("Error evaluating icon color expression:", error);
             }
@@ -92,6 +92,7 @@ export class CustomChip extends LitElement {
             color: `rgb(${iconColor})`,
             backgroundColor: "transparent",
         };
+        console.log("iconStyles", iconStyles);
 
         return html`
             <div class="container" style="${styleMap(containerStyle)}" @click=${this.showDialog}>
