@@ -4078,9 +4078,9 @@ let CustomChip = class CustomChip extends s {
             return x ``;
         const icon = this.dialogObj.icon || "hass:help-circle";
         let iconColor = "var(--sq-inactive-rgb)";
-        if (this.dialogObj.icon_color) {
+        if (this.dialogObj.icon_rgb) {
             try {
-                iconColor = eval(this.dialogObj.icon_color);
+                iconColor = eval(this.dialogObj.icon_rgb);
             }
             catch (error) {
                 console.error("Error evaluating icon color: ", error);
