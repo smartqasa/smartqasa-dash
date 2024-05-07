@@ -5965,7 +5965,9 @@ let AllOffTile = class AllOffTile extends s {
         this.area = this.config?.area;
     }
     shouldUpdate(changedProps) {
-        return !!(changedProps.has("hass") && this.area && this.hass?.areas[this.area] !== this.areaObj);
+        return !!(!!(changedProps.has("config") && this.config) ||
+            (changedProps.has("hass") && this.area && this.hass?.areas[this.area] !== this.areaObj) ||
+            this.running);
     }
     render() {
         const { icon, iconAnimation, iconColor, name } = this.updateState();
@@ -7066,7 +7068,14 @@ let LightTile = class LightTile extends s {
         this.entity = this.config.entity?.startsWith("light.") ? this.config.entity : undefined;
     }
     shouldUpdate(changedProps) {
-        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
+        return !!((changedProps.has("config") && this.config) ||
+            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj));
+    }
+    updated(changedProps) {
+        super.updated(changedProps);
+        if (changedProps.has("hass") && this.hass && this.entity) {
+            this.stateObj = this.hass.states[this.entity];
+        }
     }
     render() {
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
@@ -7087,7 +7096,6 @@ let LightTile = class LightTile extends s {
     }
     updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
-        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
         if (this.config && this.stateObj) {
             const state = this.stateObj.state || "unknown";
             icon = this.config.icon || this.stateObj.attributes.icon || "hass:lightbulb";

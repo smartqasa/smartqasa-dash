@@ -40,7 +40,11 @@ export class AllOffTile extends LitElement {
     }
 
     shouldUpdate(changedProps: PropertyValues): boolean {
-        return !!(changedProps.has("hass") && this.area && this.hass?.areas[this.area] !== this.areaObj);
+        return !!(
+            !!(changedProps.has("config") && this.config) ||
+            (changedProps.has("hass") && this.area && this.hass?.areas[this.area] !== this.areaObj) ||
+            this.running
+        );
     }
 
     protected render(): TemplateResult {
