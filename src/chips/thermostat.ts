@@ -16,7 +16,6 @@ interface Config extends LovelaceCardConfig {
 export class ThermostatChip extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
 
-    @state() private initialized: boolean = false;
     @state() private config?: Config;
     @state() private stateObj?: HassEntity;
 
@@ -32,16 +31,12 @@ export class ThermostatChip extends LitElement {
         this.entity = this.config.entity?.startsWith("climate.") ? this.config.entity : undefined;
     }
 
-    updated(changedProps: PropertyValues) {
-        super.updated(changedProps);
-        if (changedProps.has("hass")) {
-            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
-            this.initialized = true;
-        }
+    shouldUpdate(changedProps: PropertyValues): boolean {
+        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
     }
 
     protected render(): TemplateResult {
-        if (!this.initialized || !this.entity) return html``;
+        if (!this.entity) return html``;
 
         const { icon, iconColor, temperature } = this.updateState();
 
@@ -62,7 +57,9 @@ export class ThermostatChip extends LitElement {
     private updateState() {
         let icon, iconAnimation, iconColor, temperature;
 
-        if (this.config && this.hass && this.stateObj) {
+        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
+
+        if (this.config && this.stateObj) {
             const state = this.stateObj.state;
             icon = thermostatIcons[state] || thermostatIcons.default;
             const hvacAction = this.stateObj.attributes.hvac_action;

@@ -17,7 +17,6 @@ interface Config extends LovelaceCardConfig {
 export class RoutineChip extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
 
-    @state() private initialized: boolean = false;
     @state() private config?: Config;
     @state() private stateObj?: HassEntity;
     @state() private running: boolean = false;
@@ -33,16 +32,12 @@ export class RoutineChip extends LitElement {
             : undefined;
     }
 
-    updated(changedProps: PropertyValues) {
-        super.updated(changedProps);
-        if (changedProps.has("hass")) {
-            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
-            this.initialized = true;
-        }
+    shouldUpdate(changedProps: PropertyValues): boolean {
+        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
     }
 
     protected render(): TemplateResult {
-        if (!this.initialized || !this.entity) return html``;
+        if (!this.entity) return html``;
 
         const { icon, iconAnimation, iconColor, name } = this.updateState();
 
@@ -69,7 +64,9 @@ export class RoutineChip extends LitElement {
     private updateState() {
         let icon, iconAnimation, iconColor, name;
 
-        if (this.config && this.hass && this.stateObj) {
+        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
+
+        if (this.config && this.stateObj) {
             if (this.running) {
                 icon = "hass:rotate-right";
                 iconAnimation = "spin 1.0s linear infinite";

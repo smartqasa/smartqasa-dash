@@ -53,15 +53,14 @@ export class CustomChip extends LitElement {
         }
     }
 
-    updated(changedProps: PropertyValues) {
-        super.updated(changedProps);
-        if (changedProps.has("hass") && this.hass && this.entity) {
-            this.stateObj = this.hass.states[this.entity];
-        }
+    shouldUpdate(changedProps: PropertyValues): boolean {
+        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
     }
 
     protected render(): TemplateResult {
-        if (!this.dialogObj || !this.stateObj) return html``;
+        if (!this.dialogObj) return html``;
+
+        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
 
         const icon = this.dialogObj.icon || "mdi:help-circle";
         let iconColor = "var(--sq-inactive-rgb)";
@@ -75,7 +74,7 @@ export class CustomChip extends LitElement {
                 console.error("Error evaluating icon color expression:", error);
             }
         }
-        let text = this.stateObj.state || "";
+        let text = this.stateObj?.state || "";
         switch (this.dialogObj.entity_type) {
             case "temperature":
                 text += "°";

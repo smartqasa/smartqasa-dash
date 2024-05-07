@@ -4067,15 +4067,13 @@ let CustomChip = class CustomChip extends s {
             console.error("Failed to load YAML:", error);
         }
     }
-    updated(changedProps) {
-        super.updated(changedProps);
-        if (changedProps.has("hass") && this.hass && this.entity) {
-            this.stateObj = this.hass.states[this.entity];
-        }
+    shouldUpdate(changedProps) {
+        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
     }
     render() {
-        if (!this.dialogObj || !this.stateObj)
+        if (!this.dialogObj)
             return x ``;
+        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
         const icon = this.dialogObj.icon || "mdi:help-circle";
         let iconColor = "var(--sq-inactive-rgb)";
         if (this.hass && this.dialogObj.icon_rgb) {
@@ -4088,7 +4086,7 @@ let CustomChip = class CustomChip extends s {
                 console.error("Error evaluating icon color expression:", error);
             }
         }
-        let text = this.stateObj.state || "";
+        let text = this.stateObj?.state || "";
         switch (this.dialogObj.entity_type) {
             case "temperature":
                 text += "°";
@@ -4625,10 +4623,6 @@ window.customCards.push({
     description: "A SmartQasa chip for dialog.",
 });
 let DialogChip = class DialogChip extends s {
-    constructor() {
-        super(...arguments);
-        this.initialized = false;
-    }
     static { this.styles = [chipBaseStyle, chipTextStyle]; }
     setConfig(config) {
         this.config = { ...config };
@@ -4638,17 +4632,14 @@ let DialogChip = class DialogChip extends s {
         this.icon = this.dialogObj.icon;
         this.label = this.config.label || "";
     }
-    updated(changedProps) {
-        super.updated(changedProps);
-        if (changedProps.has("hass")) {
-            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
-            this.initialized = true;
-        }
+    shouldUpdate(changedProps) {
+        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
     }
     render() {
-        if (!this.initialized || !this.dialogObj || !this.stateObj)
+        if (!this.dialogObj)
             return x ``;
-        const state = this.stateObj.state;
+        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
+        const state = this.stateObj?.state;
         if ((this.dialog === "garages" && state === "closed") ||
             (this.dialog === "locks" && state === "locked") ||
             (this.dialog === "sensors_doors" && state === "off") ||
@@ -4682,9 +4673,6 @@ __decorate([
 ], DialogChip.prototype, "hass", void 0);
 __decorate([
     r()
-], DialogChip.prototype, "initialized", void 0);
-__decorate([
-    r()
 ], DialogChip.prototype, "config", void 0);
 __decorate([
     r()
@@ -4714,24 +4702,16 @@ window.customCards.push({
     description: "A SmartQasa chip for toggling a motion sensor automation entity.",
 });
 let MotionChip = class MotionChip extends s {
-    constructor() {
-        super(...arguments);
-        this.initialized = false;
-    }
     static { this.styles = [chipBaseStyle, chipTextStyle]; }
     setConfig(config) {
         this.config = { ...config };
         this.entity = this.config.entity?.startsWith("automation.") ? this.config.entity : undefined;
     }
-    updated(changedProps) {
-        super.updated(changedProps);
-        if (changedProps.has("hass")) {
-            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
-            this.initialized = true;
-        }
+    shouldUpdate(changedProps) {
+        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
     }
     render() {
-        if (!this.entity || !this.initialized)
+        if (!this.entity)
             return x ``;
         const { icon, iconColor, name } = this.updateState();
         const containerStyle = {
@@ -4752,7 +4732,8 @@ let MotionChip = class MotionChip extends s {
     }
     updateState() {
         let icon, iconColor, name;
-        if (this.config && this.hass && this.stateObj) {
+        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
+        if (this.config && this.stateObj) {
             const state = this.stateObj.state || undefined;
             switch (state) {
                 case "on":
@@ -4786,9 +4767,6 @@ __decorate([
 ], MotionChip.prototype, "hass", void 0);
 __decorate([
     r()
-], MotionChip.prototype, "initialized", void 0);
-__decorate([
-    r()
 ], MotionChip.prototype, "config", void 0);
 __decorate([
     r()
@@ -4809,17 +4787,18 @@ let NavigateChip = class NavigateChip extends s {
         this.areaPrev = config.area_prev || undefined;
         this.areaNext = config.area_next || undefined;
     }
-    updated(changedProps) {
-        super.updated(changedProps);
-        if (changedProps.has("hass") && this.areaPrev && this.areaNext) {
-            this.areaObjPrev = this.hass ? this.hass.areas[this.areaPrev] : undefined;
-            this.areaObjNext = this.hass ? this.hass.areas[this.areaNext] : undefined;
-        }
+    shouldUpdate(changedProps) {
+        return !!(changedProps.has("hass") &&
+            this.areaPrev &&
+            this.areaNext &&
+            (this.hass?.areas[this.areaPrev] !== this.areaObjPrev ||
+                this.hass?.areas[this.areaNext] !== this.areaObjNext));
     }
     render() {
-        if (!this.areaObjPrev || !this.areaObjNext) {
+        if (!this.areaObjPrev || !this.areaObjNext)
             return x ``;
-        }
+        this.areaObjPrev = this.areaPrev ? this.hass?.areas[this.areaPrev] : undefined;
+        this.areaObjNext = this.areaNext ? this.hass?.areas[this.areaNext] : undefined;
         const containerStyle = {
             "margin-right": "0.7rem",
         };
@@ -4880,7 +4859,6 @@ NavigateChip = __decorate([
 let RoutineChip = class RoutineChip extends s {
     constructor() {
         super(...arguments);
-        this.initialized = false;
         this.running = false;
     }
     static { this.styles = [chipBaseStyle, chipTextStyle, chipIconSpinStyle]; }
@@ -4890,15 +4868,11 @@ let RoutineChip = class RoutineChip extends s {
             ? this.config.entity
             : undefined;
     }
-    updated(changedProps) {
-        super.updated(changedProps);
-        if (changedProps.has("hass")) {
-            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
-            this.initialized = true;
-        }
+    shouldUpdate(changedProps) {
+        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
     }
     render() {
-        if (!this.initialized || !this.entity)
+        if (!this.entity)
             return x ``;
         const { icon, iconAnimation, iconColor, name } = this.updateState();
         const containerStyle = {
@@ -4920,7 +4894,8 @@ let RoutineChip = class RoutineChip extends s {
     }
     updateState() {
         let icon, iconAnimation, iconColor, name;
-        if (this.config && this.hass && this.stateObj) {
+        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
+        if (this.config && this.stateObj) {
             if (this.running) {
                 icon = "hass:rotate-right";
                 iconAnimation = "spin 1.0s linear infinite";
@@ -4970,9 +4945,6 @@ __decorate([
 ], RoutineChip.prototype, "hass", void 0);
 __decorate([
     r()
-], RoutineChip.prototype, "initialized", void 0);
-__decorate([
-    r()
 ], RoutineChip.prototype, "config", void 0);
 __decorate([
     r()
@@ -5020,26 +4992,19 @@ window.customCards.push({
     description: "A SmartQasa chip for selecting an option for a input_select entity.",
 });
 let SelectChip = class SelectChip extends s {
-    constructor() {
-        super(...arguments);
-        this.initialized = false;
-    }
     static { this.styles = [chipBaseStyle]; }
     setConfig(config) {
         this.config = { ...config };
         this.entity = this.config.entity?.startsWith("input_select.") ? this.config.entity : undefined;
     }
-    updated(changedProps) {
-        super.updated(changedProps);
-        if (changedProps.has("hass")) {
-            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
-            this.initialized = true;
-        }
+    shouldUpdate(changedProps) {
+        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
     }
     render() {
-        if (!this.initialized || !this.entity)
+        if (!this.entity)
             return x ``;
         let icon;
+        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
         const state = this.stateObj?.state || "unknown";
         if (this.entity === "input_select.location_phase") {
             icon = phaseIcons[state] || phaseIcons.default;
@@ -5069,9 +5034,6 @@ let SelectChip = class SelectChip extends s {
 __decorate([
     n$1({ attribute: false })
 ], SelectChip.prototype, "hass", void 0);
-__decorate([
-    r()
-], SelectChip.prototype, "initialized", void 0);
 __decorate([
     r()
 ], SelectChip.prototype, "config", void 0);
@@ -5109,7 +5071,6 @@ function moreInfoDialog(config, stateObj) {
 let ThermostatChip$1 = class ThermostatChip extends s {
     constructor() {
         super(...arguments);
-        this.initialized = false;
         this._icon = "hass:thermometer-lines";
         this._iconColor = "var(--sq-inactive-rgb)";
         this._temperature = "??";
@@ -5119,15 +5080,11 @@ let ThermostatChip$1 = class ThermostatChip extends s {
         this.config = { ...config };
         this.entity = this.config.entity?.startsWith("climate.") ? this.config.entity : undefined;
     }
-    updated(changedProps) {
-        super.updated(changedProps);
-        if (changedProps.has("hass")) {
-            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
-            this.initialized = true;
-        }
+    shouldUpdate(changedProps) {
+        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
     }
     render() {
-        if (!this.initialized || !this.entity)
+        if (!this.entity)
             return x ``;
         const { icon, iconColor, temperature } = this.updateState();
         const containerStyle = {
@@ -5144,7 +5101,8 @@ let ThermostatChip$1 = class ThermostatChip extends s {
     }
     updateState() {
         let icon, iconAnimation, iconColor, temperature;
-        if (this.config && this.hass && this.stateObj) {
+        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
+        if (this.config && this.stateObj) {
             const state = this.stateObj.state;
             icon = thermostatIcons[state] || thermostatIcons.default;
             const hvacAction = this.stateObj.attributes.hvac_action;
@@ -5168,9 +5126,6 @@ __decorate([
 ], ThermostatChip$1.prototype, "hass", void 0);
 __decorate([
     r()
-], ThermostatChip$1.prototype, "initialized", void 0);
-__decorate([
-    r()
 ], ThermostatChip$1.prototype, "config", void 0);
 __decorate([
     r()
@@ -5180,27 +5135,18 @@ ThermostatChip$1 = __decorate([
 ], ThermostatChip$1);
 
 let ThermostatChip = class ThermostatChip extends s {
-    constructor() {
-        super(...arguments);
-        this.initialized = false;
-    }
     static { this.styles = [chipBaseStyle, chipTextStyle]; }
     setConfig(config) {
         this.config = { ...config };
         this.entity = this.config.entity?.startsWith("weather.") ? this.config.entity : undefined;
     }
-    updated(changedProps) {
-        super.updated(changedProps);
-        if (changedProps.has("hass")) {
-            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
-            this.initialized = true;
-        }
+    shouldUpdate(changedProps) {
+        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
     }
     render() {
-        if (!this.initialized || !this.entity)
-            return x ``;
         let iconColor, temperature;
-        if (this.config && this.entity && this.stateObj) {
+        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
+        if (this.stateObj) {
             iconColor = "var(--sq-primary-text-rgb)";
             temperature = this.stateObj?.attributes?.temperature || "??";
         }
@@ -5230,9 +5176,6 @@ let ThermostatChip = class ThermostatChip extends s {
 __decorate([
     n$1({ attribute: false })
 ], ThermostatChip.prototype, "hass", void 0);
-__decorate([
-    r()
-], ThermostatChip.prototype, "initialized", void 0);
 __decorate([
     r()
 ], ThermostatChip.prototype, "config", void 0);

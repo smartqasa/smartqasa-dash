@@ -25,7 +25,6 @@ window.customCards.push({
 export class SelectChip extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
 
-    @state() private initialized: boolean = false;
     @state() private config?: Config;
     @state() private stateObj?: HassEntity;
 
@@ -38,18 +37,17 @@ export class SelectChip extends LitElement {
         this.entity = this.config.entity?.startsWith("input_select.") ? this.config.entity : undefined;
     }
 
-    updated(changedProps: PropertyValues) {
-        super.updated(changedProps);
-        if (changedProps.has("hass")) {
-            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
-            this.initialized = true;
-        }
+    shouldUpdate(changedProps: PropertyValues): boolean {
+        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
     }
 
     protected render(): TemplateResult {
-        if (!this.initialized || !this.entity) return html``;
+        if (!this.entity) return html``;
 
         let icon;
+
+        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
+
         const state = this.stateObj?.state || "unknown";
         if (this.entity === "input_select.location_phase") {
             icon = phaseIcons[state] || phaseIcons.default;

@@ -32,18 +32,22 @@ export class NavigateChip extends LitElement {
         this.areaNext = config.area_next || undefined;
     }
 
-    updated(changedProps: PropertyValues) {
-        super.updated(changedProps);
-        if (changedProps.has("hass") && this.areaPrev && this.areaNext) {
-            this.areaObjPrev = this.hass ? this.hass.areas[this.areaPrev] : undefined;
-            this.areaObjNext = this.hass ? this.hass.areas[this.areaNext] : undefined;
-        }
+    shouldUpdate(changedProps: PropertyValues): boolean {
+        return !!(
+            changedProps.has("hass") &&
+            this.areaPrev &&
+            this.areaNext &&
+            (this.hass?.areas[this.areaPrev] !== this.areaObjPrev ||
+                this.hass?.areas[this.areaNext] !== this.areaObjNext)
+        );
     }
 
     protected render(): TemplateResult {
-        if (!this.areaObjPrev || !this.areaObjNext) {
-            return html``;
-        }
+        if (!this.areaObjPrev || !this.areaObjNext) return html``;
+
+        this.areaObjPrev = this.areaPrev ? this.hass?.areas[this.areaPrev] : undefined;
+        this.areaObjNext = this.areaNext ? this.hass?.areas[this.areaNext] : undefined;
+
         const containerStyle = {
             "margin-right": "0.7rem",
         };

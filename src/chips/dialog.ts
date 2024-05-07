@@ -24,7 +24,6 @@ window.customCards.push({
 export class DialogChip extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
 
-    @state() private initialized: boolean = false;
     @state() private config?: Config;
     @state() private dialogObj?: any;
     @state() private stateObj?: HassEntity;
@@ -45,18 +44,16 @@ export class DialogChip extends LitElement {
         this.label = this.config.label || "";
     }
 
-    updated(changedProps: PropertyValues) {
-        super.updated(changedProps);
-        if (changedProps.has("hass")) {
-            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
-            this.initialized = true;
-        }
+    shouldUpdate(changedProps: PropertyValues): boolean {
+        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
     }
 
     protected render(): TemplateResult {
-        if (!this.initialized || !this.dialogObj || !this.stateObj) return html``;
+        if (!this.dialogObj) return html``;
 
-        const state = this.stateObj.state;
+        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
+
+        const state = this.stateObj?.state;
         if (
             (this.dialog === "garages" && state === "closed") ||
             (this.dialog === "locks" && state === "locked") ||
