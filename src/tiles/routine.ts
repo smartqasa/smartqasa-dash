@@ -26,12 +26,10 @@ export class RoutineTile extends LitElement {
     }
 
     @property({ attribute: false }) public hass?: HomeAssistant;
-
     @state() private config?: Config;
-    @state() private stateObj?: HassEntity;
     @state() private running: boolean = false;
-
     private entity?: string;
+    private stateObj?: HassEntity;
 
     static styles: CSSResultGroup = [tileBaseStyle, tileIconSpinStyle];
 
@@ -44,9 +42,9 @@ export class RoutineTile extends LitElement {
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
         return !!(
+            changedProps.has("running") ||
             (changedProps.has("config") && this.config) ||
-            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj) ||
-            this.running
+            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj)
         );
     }
 

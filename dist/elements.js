@@ -5929,8 +5929,9 @@ let AllOffTile = class AllOffTile extends s {
         this.area = this.config?.area;
     }
     shouldUpdate(changedProps) {
-        return !!((changedProps.has("config") && this.config) ||
-            (changedProps.has("hass") && this.area && this.hass?.areas[this.area] !== this.areaObj));
+        return !!(changedProps.has("running") ||
+            (changedProps.has("hass") && this.area && this.hass?.areas[this.area] !== this.areaObj) ||
+            (changedProps.has("config") && this.config));
     }
     render() {
         const { icon, iconAnimation, iconColor, name } = this.updateState();
@@ -5977,7 +5978,6 @@ let AllOffTile = class AllOffTile extends s {
         if (!this.hass || !this.areaObj)
             return;
         this.running = true;
-        this.render();
         try {
             await this.hass.callService("light", "turn_off", {
                 area_id: this.area,
@@ -5992,7 +5992,6 @@ let AllOffTile = class AllOffTile extends s {
         }
         setTimeout(() => {
             this.running = false;
-            this.render();
         }, 1000);
     }
 };
@@ -7647,9 +7646,9 @@ let RoutineTile = class RoutineTile extends s {
             : undefined;
     }
     shouldUpdate(changedProps) {
-        return !!((changedProps.has("config") && this.config) ||
-            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj) ||
-            this.running);
+        return !!(changedProps.has("running") ||
+            (changedProps.has("config") && this.config) ||
+            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj));
     }
     render() {
         const { icon, iconAnimation, iconColor, name } = this.updateState();
@@ -7727,9 +7726,6 @@ __decorate([
 __decorate([
     r()
 ], RoutineTile.prototype, "config", void 0);
-__decorate([
-    r()
-], RoutineTile.prototype, "stateObj", void 0);
 __decorate([
     r()
 ], RoutineTile.prototype, "running", void 0);
