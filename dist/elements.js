@@ -72,6 +72,129 @@ const t$1=t=>(e,o)=>{void 0!==o?o.addInitializer((()=>{customElements.define(t,e
  * SPDX-License-Identifier: BSD-3-Clause
  */function r(r){return n$1({...r,state:!0,attribute:!1})}
 
+window.customCards.push({
+    type: "smartqasa-admin-mode-dialog",
+    name: "SmartQasa Admin Mode Dialog",
+    preview: true,
+    description: "A SmartQasa tile for accepting a PIN and enabling Admin Mode.",
+});
+let AdminModeDialog = class AdminModeDialog extends s {
+    constructor() {
+        super(...arguments);
+        this.adminPin = "";
+        this.inputPin = "";
+        this.isAdmin = false;
+    }
+    static { this.styles = i$5 `
+        .card {
+            --ha-card-background: none;
+            margin-top: 0;
+            border-style: none;
+            box-shadow: none;
+            text-align: center;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, min-content);
+            grid-template-rows: repeat(4, min-content);
+            grid-gap: 40px;
+            place-content: center;
+            place-items: center;
+        }
+        .button {
+            cursor: pointer;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+    `; }
+    render() {
+        return x `
+            <div class="card">
+                <div>Passcode Required</div>
+                <div class="grid">
+                    ${[1, 2, 3, 4, 5, 6, 7, 8, 9, "", 0, "✔️"].map((digit) => this.renderButton(digit))}
+                </div>
+            </div>
+        `;
+    }
+    renderButton(digit) {
+        return x ` <div class="button" @click=${() => this.handleInput(digit)}>${digit}</div> `;
+    }
+    handleInput(digit) {
+        if (digit === "✔️") {
+            this.verifyPin();
+        }
+        else if (digit === "") {
+            this.inputPin = "";
+        }
+        else {
+            this.inputPin += digit;
+        }
+    }
+    verifyPin() {
+        if (this.inputPin === this.adminPin) {
+            this.isAdmin = true;
+            console.log("Admin Mode is now ON!");
+        }
+        else {
+            this.isAdmin = false;
+            console.log("Admin Mode is OFF.");
+        }
+        this.dispatchEvent(new CustomEvent("admin-mode-changed", { detail: { isAdmin: this.isAdmin } }));
+    }
+};
+__decorate([
+    n$1({ type: String })
+], AdminModeDialog.prototype, "adminPin", void 0);
+__decorate([
+    r()
+], AdminModeDialog.prototype, "inputPin", void 0);
+__decorate([
+    r()
+], AdminModeDialog.prototype, "isAdmin", void 0);
+AdminModeDialog = __decorate([
+    t$1("smartqasa-admin-mode-dialog")
+], AdminModeDialog);
+
+window.customCards.push({
+    type: "smartqasa-more-info-dialog",
+    name: "SmartQasa More Info Dialog",
+    preview: true,
+    description: "A SmartQasa dialog for showing More Info for an entity.",
+});
+let MoreInfoDialog = class MoreInfoDialog extends s {
+    setConfig(config) {
+        this.config = { ...config };
+        this.entity = this.config?.entity;
+    }
+    shouldUpdate(changedProps) {
+        return !!((changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj) ||
+            (changedProps.has("config") && this.config));
+    }
+    render() {
+        this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
+        return x `
+            <div>
+                <div class="card-content">
+                    <more-info-content .hass=${this.hass} .stateObj=${this.stateObj}> </more-info-content>
+                </div>
+            </div>
+        `;
+    }
+    getCardSize() {
+        return 5;
+    }
+};
+__decorate([
+    n$1({ attribute: false })
+], MoreInfoDialog.prototype, "hass", void 0);
+__decorate([
+    r()
+], MoreInfoDialog.prototype, "config", void 0);
+MoreInfoDialog = __decorate([
+    t$1("smartqasa-more-info-dialog")
+], MoreInfoDialog);
+
 /**
  * @license
  * Copyright 2017 Google LLC
@@ -5654,45 +5777,6 @@ __decorate([
 PanelFooter = __decorate([
     t$1("smartqasa-panel-footer")
 ], PanelFooter);
-
-window.customCards.push({
-    type: "smartqasa-more-info-dialog",
-    name: "SmartQasa More Info Dialog",
-    preview: true,
-    description: "A SmartQasa dialog for showing More Info for an entity.",
-});
-let MoreInfoDialog = class MoreInfoDialog extends s {
-    setConfig(config) {
-        this.config = { ...config };
-        this.entity = this.config?.entity;
-    }
-    shouldUpdate(changedProps) {
-        return !!((changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj) ||
-            (changedProps.has("config") && this.config));
-    }
-    render() {
-        this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
-        return x `
-            <div>
-                <div class="card-content">
-                    <more-info-content .hass=${this.hass} .stateObj=${this.stateObj}> </more-info-content>
-                </div>
-            </div>
-        `;
-    }
-    getCardSize() {
-        return 5;
-    }
-};
-__decorate([
-    n$1({ attribute: false })
-], MoreInfoDialog.prototype, "hass", void 0);
-__decorate([
-    r()
-], MoreInfoDialog.prototype, "config", void 0);
-MoreInfoDialog = __decorate([
-    t$1("smartqasa-more-info-dialog")
-], MoreInfoDialog);
 
 window.customCards.push({
     type: "smartqasa-time-date",

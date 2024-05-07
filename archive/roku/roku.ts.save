@@ -1,4 +1,4 @@
-import { html, LitElement, TemplateResult, CSSResult, css } from "lit-element";
+import { css, CSSResult, html, LitElement, TemplateResult } from "lit-element";
 import { customElement, property, state } from "lit/decorators.js";
 import { HomeAssistant, applyThemesOnElement, hasAction, handleClick } from "custom-card-helpers";
 
@@ -12,13 +12,12 @@ const defaultRemoteAction = {
 
 @customElement("roku-card")
 export class RokuCard extends LitElement {
-    @property({ attribute: false }) public hass?: HomeAssistant;
-
-    @state() private _config?: RokuCardConfig;
-
     public getCardSize(): number {
         return 7;
     }
+
+    @property({ attribute: false }) public hass?: HomeAssistant;
+    @state() private config?: RokuCardConfig;
 
     public setConfig(config: RokuCardConfig): void {
         if (!config.entity && !config.remote) {
@@ -26,7 +25,7 @@ export class RokuCard extends LitElement {
             return;
         }
 
-        this._config = {
+        this.config = {
             theme: "default",
             haptic: "success",
             ...config,
@@ -34,13 +33,13 @@ export class RokuCard extends LitElement {
     }
 
     protected render(): TemplateResult | void {
-        if (!this._config || !this.hass) {
+        if (!this.config || !this.hass) {
             return html``;
         }
 
-        const stateObj = this.hass.states[this._config.entity];
+        const stateObj = this.hass.states[this.config.entity];
 
-        if (this._config.entity && !stateObj) {
+        if (this.config.entity && !stateObj) {
             return html`
                 <ha-card>
                     <div class="warning">Entity Unavailable</div>
@@ -49,11 +48,11 @@ export class RokuCard extends LitElement {
         }
 
         return html`
-            <ha-card .header="${this._config.name}">
+            <ha-card .header="${this.config.name}">
                 <div class="remote">
                     <div class="row">
                         <div class="app">${stateObj ? stateObj.attributes.app_name : ""}</div>
-                        ${this._config.tv || (this._config.power && this._config.power.show)
+                        ${this.config.tv || (this.config.power && this.config.power.show)
                             ? this._renderButton("power", "mdi:power", "Power")
                             : ""}
                     </div>
@@ -85,10 +84,10 @@ export class RokuCard extends LitElement {
                         ${this._renderButton("forward", "mdi:fast-forward", "Fast-Forward")}
                     </div>
 
-                    ${this._config.tv ||
-                    (this._config.volume_mute && this._config.volume_mute.show) ||
-                    (this._config.volume_down && this._config.volume_down.show) ||
-                    (this._config.volume_up && this._config.volume_up.show)
+                    ${this.config.tv ||
+                    (this.config.volume_mute && this.config.volume_mute.show) ||
+                    (this.config.volume_down && this.config.volume_down.show) ||
+                    (this.config.volume_up && this.config.volume_up.show)
                         ? html`
                               <div class="row">
                                   ${this._renderButton("volume_mute", "mdi:volume-mute", "Volume Mute")}
@@ -103,14 +102,12 @@ export class RokuCard extends LitElement {
     }
 
     protected updated(changedProps: any): void {
-        if (!this._config) {
-            return;
-        }
+        if (!this.config) return;
 
         if (this.hass) {
             const oldHass = changedProps.get("hass");
             if (!oldHass || oldHass.themes !== this.hass.themes) {
-                applyThemesOnElement(this, this.hass.themes, this._config.theme);
+                applyThemesOnElement(this, this.hass.themes, this.config.theme);
             }
         }
     }
@@ -155,31 +152,31 @@ export class RokuCard extends LitElement {
     }
 
     private _renderImage(index: number): TemplateResult {
-        return this._config && this._config.apps && this._config.apps.length > index
-            ? this._config.apps[index].icon
+        return this.config && this.config.apps && this.config.apps.length > index
+            ? this.config.apps[index].icon
                 ? html`
                       <ha-icon-button
-                          .app=${this._config.apps[index].app}
-                          .title=${this._config.apps[index].app}
-                          .config=${this._config.apps[index]}
+                          .app=${this.config.apps[index].app}
+                          .title=${this.config.apps[index].app}
+                          .config=${this.config.apps[index]}
                           @action=${this._handleAction}
                           .actionHandler=${actionHandler({
-                              hasHold: hasAction(this._config.apps[index].hold_action),
-                              hasDoubleClick: hasAction(this._config.apps[index].double_tap_action),
+                              hasHold: hasAction(this.config.apps[index].hold_action),
+                              hasDoubleClick: hasAction(this.config.apps[index].double_tap_action),
                           })}
                       >
-                          <ha-icon .icon=${this._config.apps[index].icon}></ha-icon>
+                          <ha-icon .icon=${this.config.apps[index].icon}></ha-icon>
                       </ha-icon-button>
                   `
                 : html`
                       <img
-                          src=${this._config.apps[index].image || ""}
-                          .app=${this._config.apps[index].app}
-                          .config=${this._config.apps[index]}
+                          src=${this.config.apps[index].image || ""}
+                          .app=${this.config.apps[index].app}
+                          .config=${this.config.apps[index]}
                           @action=${this._handleAction}
                           .actionHandler=${actionHandler({
-                              hasHold: hasAction(this._config.apps[index].hold_action),
-                              hasDoubleClick: hasAction(this._config.apps[index].double_tap_action),
+                              hasHold: hasAction(this.config.apps[index].hold_action),
+                              hasDoubleClick: hasAction(this.config.apps[index].double_tap_action),
                           })}
                       />
                   `
@@ -187,8 +184,8 @@ export class RokuCard extends LitElement {
     }
 
     private _renderButton(button: string, icon: string, title: string): TemplateResult {
-        if (this._config) {
-            const config = this._config[button];
+        if (this.config) {
+            const config = this.config[button];
             return config && config.show === false
                 ? html` <ha-icon icon="mdi:none"></ha-icon> `
                 : html`
@@ -209,13 +206,13 @@ export class RokuCard extends LitElement {
         }
     }
 
-    private _handleAction(ev): void {
+    private _handleAction(e: any): void {
         console.log("click");
-        if (this.hass && this._config && ev.detail.action) {
-            const button = ev.currentTarget.button;
-            const config = this._config?[button] || ev.currentTarget.config;
-            const app = ev.currentTarget.app;
-            const remote = this._config.remote ? this._config.remote : "remote." + this._config.entity.split(".")[1];
+        if (this.hass && this.config && e.detail.action) {
+            const button = e.currentTarget.button;
+            const config = this.config[button] || e.currentTarget.config;
+            const app = e.currentTarget.app;
+            const remote = this.config.remote ? this.config.remote : "remote." + this.config.entity.split(".")[1];
 
             handleClick(
                 this,
@@ -223,11 +220,11 @@ export class RokuCard extends LitElement {
                 app
                     ? {
                           tap_action: {
-                              haptic: this._config.haptic,
+                              haptic: this.config.haptic,
                               action: "call-service",
                               service: "media_player.select_source",
                               service_data: {
-                                  entity_id: this._config.entity,
+                                  entity_id: this.config.entity,
                                   source: app,
                               },
                           },
@@ -235,7 +232,7 @@ export class RokuCard extends LitElement {
                       }
                     : {
                           tap_action: {
-                              haptic: this._config.haptic,
+                              haptic: this.config.haptic,
                               service_data: {
                                   command: button,
                                   entity_id: remote,
@@ -244,8 +241,8 @@ export class RokuCard extends LitElement {
                           },
                           ...config,
                       },
-                ev.detail.action === "hold" ? true : false,
-                ev.detail.action === "double_tap" ? true : false
+                e.detail.action === "hold" ? true : false,
+                e.detail.action === "double_tap" ? true : false
             );
         }
     }

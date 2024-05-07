@@ -19,6 +19,10 @@ window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split
 
 window.customCards = window.customCards ?? [];
 
+// Dialogs
+import "./dialogs/admin-mode";
+import "./dialogs/more-info";
+
 // Chips
 import "./chips/custom";
 import "./chips/dialog";
@@ -32,7 +36,6 @@ import "./chips/weather";
 // Misc
 import "./misc/area-picture";
 import "./misc/panel-footer";
-import "./misc/more-info";
 import "./misc/time-date";
 import "./misc/title";
 
