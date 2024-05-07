@@ -7052,10 +7052,10 @@ let LightTile = class LightTile extends s {
     setConfig(config) {
         this.config = { ...config };
         this.entity = this.config.entity?.startsWith("light.") ? this.config.entity : undefined;
+        this.requestUpdate();
     }
     shouldUpdate(changedProps) {
-        return !!((changedProps.has("config") && this.config) ||
-            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj));
+        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
     }
     render() {
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
@@ -7689,7 +7689,6 @@ window.customCards.push({
 let RoutineTile = class RoutineTile extends s {
     constructor() {
         super(...arguments);
-        this.initialized = false;
         this.running = false;
     }
     getCardSize() {
@@ -7701,11 +7700,10 @@ let RoutineTile = class RoutineTile extends s {
         this.entity = ["automation", "scene", "script"].includes(this.config.entity?.split(".")[0])
             ? this.config.entity
             : undefined;
+        this.requestUpdate();
     }
     shouldUpdate(changedProps) {
-        return !!((changedProps.has("config") && this.config) ||
-            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj) ||
-            this.running);
+        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
     }
     render() {
         const { icon, iconAnimation, iconColor, name } = this.updateState();
@@ -7752,6 +7750,7 @@ let RoutineTile = class RoutineTile extends s {
         if (!this.hass || !this.stateObj)
             return;
         this.running = true;
+        this.requestUpdate();
         const domain = this.stateObj.entity_id.split(".")[0];
         try {
             switch (domain) {
@@ -7766,7 +7765,7 @@ let RoutineTile = class RoutineTile extends s {
                     break;
                 default:
                     console.error("Unsupported entity domain:", domain);
-                    return;
+                    break;
             }
         }
         catch (error) {
@@ -7774,6 +7773,7 @@ let RoutineTile = class RoutineTile extends s {
         }
         setTimeout(() => {
             this.running = false;
+            this.requestUpdate();
         }, 1000);
     }
 };
@@ -7782,16 +7782,10 @@ __decorate([
 ], RoutineTile.prototype, "hass", void 0);
 __decorate([
     r()
-], RoutineTile.prototype, "initialized", void 0);
-__decorate([
-    r()
 ], RoutineTile.prototype, "config", void 0);
 __decorate([
     r()
 ], RoutineTile.prototype, "stateObj", void 0);
-__decorate([
-    r()
-], RoutineTile.prototype, "running", void 0);
 RoutineTile = __decorate([
     t$1("smartqasa-routine-tile")
 ], RoutineTile);
