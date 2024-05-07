@@ -89,8 +89,8 @@ let AdminModeDialog = class AdminModeDialog extends s {
         return 6;
     }
     static { this.styles = i$5 `
-        .card {
-            --ha-card-background: none;
+        .container {
+            background: none;
             margin-top: 0;
             border-style: none;
             box-shadow: none;
@@ -115,7 +115,7 @@ let AdminModeDialog = class AdminModeDialog extends s {
     }
     render() {
         return x `
-            <div class="card">
+            <div class="container">
                 <div>Passcode Required</div>
                 <div class="grid">
                     ${[1, 2, 3, 4, 5, 6, 7, 8, 9, "", 0, "✔️"].map((digit) => this.renderButton(digit))}
@@ -187,7 +187,7 @@ let MoreInfoDialog = class MoreInfoDialog extends s {
         this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
         return x `
             <div>
-                <div class="card-content">
+                <div class="container">
                     <more-info-content .hass=${this.hass} .stateObj=${this.stateObj}> </more-info-content>
                 </div>
             </div>
@@ -4773,7 +4773,7 @@ let DialogChip = class DialogChip extends s {
         if (!this.dialogObj)
             return x ``;
         this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
-        const state = this.stateObj?.state;
+        const state = this.stateObj?.state || "unknown";
         if ((this.dialog === "garages" && state === "closed") ||
             (this.dialog === "locks" && state === "locked") ||
             (this.dialog === "sensors_doors" && state === "off") ||
@@ -4808,9 +4808,6 @@ __decorate([
 __decorate([
     r()
 ], DialogChip.prototype, "config", void 0);
-__decorate([
-    r()
-], DialogChip.prototype, "dialogObj", void 0);
 DialogChip = __decorate([
     t$1("smartqasa-dialog-chip")
 ], DialogChip);
@@ -8312,23 +8309,50 @@ let ShadeTile = class ShadeTile extends s {
         e.stopPropagation();
         if (!this.hass || !this.config || !this.stateObj)
             return;
+        const state = this.stateObj.state;
         const tilt = this.config.tilt || 100;
-        if (tilt >= 1 && tilt <= 100) {
-            if (this.stateObj.attributes.current_position !== tilt) {
-                this.hass.callService("cover", "set_cover_position", {
+        if (["closing", "opening"].includes(state)) {
+            try {
+                this.hass.callService("cover", "stop_cover", {
                     entity_id: this.entity,
-                    position: tilt,
                 });
             }
+            catch (e) {
+                console.error("Error stopping cover:", e);
+            }
+            return;
+        }
+        if (tilt >= 1 && tilt <= 100) {
+            if (this.stateObj.attributes.current_position !== tilt) {
+                try {
+                    this.hass.callService("cover", "set_cover_position", {
+                        entity_id: this.entity,
+                        position: tilt,
+                    });
+                }
+                catch (e) {
+                    console.error("Error setting cover position:", e);
+                }
+            }
             else {
-                this.hass.callService("cover", "set_cover_position", {
-                    entity_id: this.entity,
-                    position: 0,
-                });
+                try {
+                    this.hass.callService("cover", "set_cover_position", {
+                        entity_id: this.entity,
+                        position: 0,
+                    });
+                }
+                catch (e) {
+                    console.error("Error setting cover position:", e);
+                }
             }
         }
         else {
-            this.hass.callService("cover", "toggle", { entity_id: this.entity });
+            try {
+                this.hass.callService("cover", "toggle", { entity_id: this.entity });
+            }
+            catch (e) {
+                console.error("Error toggling cover:", e);
+            }
         }
     }
     showMoreInfo(e) {

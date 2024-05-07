@@ -24,8 +24,8 @@ window.customCards.push({
 export class DialogChip extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() private config?: Config;
-    @state() private dialogObj?: any;
     private dialog?: string;
+    private dialogObj?: any;
     private entity?: string;
     private icon?: string;
     private label?: string;
@@ -54,7 +54,7 @@ export class DialogChip extends LitElement {
 
         this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
 
-        const state = this.stateObj?.state;
+        const state = this.stateObj?.state || "unknown";
         if (
             (this.dialog === "garages" && state === "closed") ||
             (this.dialog === "locks" && state === "locked") ||

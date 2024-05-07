@@ -118,21 +118,44 @@ export class ShadeTile extends LitElement {
     private toggleEntity(e: Event): void {
         e.stopPropagation();
         if (!this.hass || !this.config || !this.stateObj) return;
+        const state = this.stateObj.state;
         const tilt = this.config.tilt || 100;
+        if (["closing", "opening"].includes(state)) {
+            try {
+                this.hass.callService("cover", "stop_cover", {
+                    entity_id: this.entity,
+                });
+            } catch (e) {
+                console.error("Error stopping cover:", e);
+            }
+            return;
+        }
         if (tilt >= 1 && tilt <= 100) {
             if (this.stateObj.attributes.current_position !== tilt) {
-                this.hass.callService("cover", "set_cover_position", {
-                    entity_id: this.entity,
-                    position: tilt,
-                });
+                try {
+                    this.hass.callService("cover", "set_cover_position", {
+                        entity_id: this.entity,
+                        position: tilt,
+                    });
+                } catch (e) {
+                    console.error("Error setting cover position:", e);
+                }
             } else {
-                this.hass.callService("cover", "set_cover_position", {
-                    entity_id: this.entity,
-                    position: 0,
-                });
+                try {
+                    this.hass.callService("cover", "set_cover_position", {
+                        entity_id: this.entity,
+                        position: 0,
+                    });
+                } catch (e) {
+                    console.error("Error setting cover position:", e);
+                }
             }
         } else {
-            this.hass.callService("cover", "toggle", { entity_id: this.entity });
+            try {
+                this.hass.callService("cover", "toggle", { entity_id: this.entity });
+            } catch (e) {
+                console.error("Error toggling cover:", e);
+            }
         }
     }
 

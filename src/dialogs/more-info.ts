@@ -41,7 +41,7 @@ export class MoreInfoDialog extends LitElement {
         this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
         return html`
             <div>
-                <div class="card-content">
+                <div class="container">
                     <more-info-content .hass=${this.hass} .stateObj=${this.stateObj}> </more-info-content>
                 </div>
             </div>

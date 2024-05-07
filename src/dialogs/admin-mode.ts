@@ -23,8 +23,8 @@ export class AdminModeDialog extends LitElement {
     @state() isAdmin: boolean = false;
 
     static styles = css`
-        .card {
-            --ha-card-background: none;
+        .container {
+            background: none;
             margin-top: 0;
             border-style: none;
             box-shadow: none;
@@ -51,7 +51,7 @@ export class AdminModeDialog extends LitElement {
 
     protected render() {
         return html`
-            <div class="card">
+            <div class="container">
                 <div>Passcode Required</div>
                 <div class="grid">
                     ${[1, 2, 3, 4, 5, 6, 7, 8, 9, "", 0, "✔️"].map((digit) => this.renderButton(digit))}
