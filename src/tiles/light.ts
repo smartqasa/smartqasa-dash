@@ -54,10 +54,6 @@ export class LightTile extends LitElement {
         this.entity = this.config.entity?.startsWith("light.") ? this.config.entity : undefined;
     }
 
-    shouldUpdate(changedProps: PropertyValues): boolean {
-        return !!(changedProps.has("config") || changedProps.has("stateObj"));
-    }
-
     protected render(): TemplateResult {
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
         const iconStyles = {
@@ -79,8 +75,6 @@ export class LightTile extends LitElement {
     private updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
 
-        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
-
         if (this.config && this.stateObj) {
             const state = this.stateObj.state || "unknown";
             icon = this.config.icon || this.stateObj.attributes.icon || "hass:lightbulb";
@@ -101,6 +95,18 @@ export class LightTile extends LitElement {
         }
 
         return { icon, iconAnimation, iconColor, name, stateFmtd };
+    }
+
+    protected shouldUpdate(changedProps: PropertyValues): boolean {
+        console.log(changedProps);
+        return !!(changedProps.has("config") || changedProps.has("stateObj"));
+    }
+
+    protected updated(changedProps: PropertyValues): void {
+        super.updated(changedProps);
+        if (!this.hass || !this.entity) return;
+
+        const stateObj = this.hass.states[this.entity];
     }
 
     private toggleEntity(e: Event): void {
