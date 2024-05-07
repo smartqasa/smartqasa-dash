@@ -6840,12 +6840,11 @@ let FanTile = class FanTile extends s {
         this.config = { ...config };
         this.entity = this.config.entity?.startsWith("fan.") ? this.config.entity : undefined;
     }
-    updated(changedProps) {
-        super.updated(changedProps);
-        if (changedProps.has("hass")) {
-            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
-            this.initialized = true;
-        }
+    shouldUpdate(changedProps) {
+        return !!(changedProps.has("hass") &&
+            this.hass &&
+            this.entity &&
+            this.hass.states[this.entity] !== this.stateObj);
     }
     render() {
         if (!this.initialized)
@@ -6868,7 +6867,8 @@ let FanTile = class FanTile extends s {
     }
     updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
-        if (this.config && this.hass && this.stateObj) {
+        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
+        if (this.config && this.stateObj) {
             const state = this.stateObj.state || "unknown";
             icon = this.config.icon || "hass:fan";
             iconAnimation = "none";
@@ -6884,8 +6884,8 @@ let FanTile = class FanTile extends s {
             }
             iconColor = state === "on" ? "var(--sq-fan-on-rgb)" : "var(--sq-inactive-rgb)";
             name = this.config.name || this.stateObj.attributes.friendly_name || this.entity;
-            stateFmtd = `${this.hass.formatEntityState(this.stateObj)}${state === "on" && this.stateObj.attributes.percentage
-                ? " - " + this.hass.formatEntityAttributeValue(this.stateObj, "percentage")
+            stateFmtd = `${this.hass?.formatEntityState(this.stateObj)}${state === "on" && this.stateObj.attributes.percentage
+                ? " - " + this.hass?.formatEntityAttributeValue(this.stateObj, "percentage")
                 : ""}`;
         }
         else {
@@ -7169,9 +7169,10 @@ let LightTile = class LightTile extends s {
         this.entity = this.config.entity?.startsWith("light.") ? this.config.entity : undefined;
     }
     shouldUpdate(changedProps) {
-        return changedProps.has("hass") && this.hass && this.entity && this.hass.states[this.entity] !== this.stateObj
-            ? true
-            : false;
+        return !!(changedProps.has("hass") &&
+            this.hass &&
+            this.entity &&
+            this.hass.states[this.entity] !== this.stateObj);
     }
     render() {
         console.log("render");
@@ -7851,16 +7852,13 @@ let RoutineTile = class RoutineTile extends s {
             ? this.config.entity
             : undefined;
     }
-    updated(changedProps) {
-        super.updated(changedProps);
-        if (changedProps.has("hass")) {
-            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
-            this.initialized = true;
-        }
+    shouldUpdate(changedProps) {
+        return !!(changedProps.has("hass") &&
+            this.hass &&
+            this.entity &&
+            this.hass.states[this.entity] !== this.stateObj);
     }
     render() {
-        if (!this.initialized)
-            return x ``;
         const { icon, iconAnimation, iconColor, name } = this.updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
@@ -7878,7 +7876,8 @@ let RoutineTile = class RoutineTile extends s {
     }
     updateState() {
         let icon, iconAnimation, iconColor, name;
-        if (this.config && this.hass && this.stateObj) {
+        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
+        if (this.config && this.stateObj) {
             if (this.running) {
                 icon = "hass:rotate-right";
                 iconAnimation = "spin 1.0s linear infinite";

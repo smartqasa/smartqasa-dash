@@ -43,12 +43,13 @@ export class FanTile extends LitElement {
         this.entity = this.config.entity?.startsWith("fan.") ? this.config.entity : undefined;
     }
 
-    updated(changedProps: PropertyValues) {
-        super.updated(changedProps);
-        if (changedProps.has("hass")) {
-            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
-            this.initialized = true;
-        }
+    shouldUpdate(changedProps: PropertyValues): boolean {
+        return !!(
+            changedProps.has("hass") &&
+            this.hass &&
+            this.entity &&
+            this.hass.states[this.entity] !== this.stateObj
+        );
     }
 
     protected render(): TemplateResult {
@@ -74,7 +75,9 @@ export class FanTile extends LitElement {
     private updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
 
-        if (this.config && this.hass && this.stateObj) {
+        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
+
+        if (this.config && this.stateObj) {
             const state = this.stateObj.state || "unknown";
             icon = this.config.icon || "hass:fan";
             iconAnimation = "none";
@@ -89,9 +92,9 @@ export class FanTile extends LitElement {
             }
             iconColor = state === "on" ? "var(--sq-fan-on-rgb)" : "var(--sq-inactive-rgb)";
             name = this.config.name || this.stateObj.attributes.friendly_name || this.entity;
-            stateFmtd = `${this.hass.formatEntityState(this.stateObj)}${
+            stateFmtd = `${this.hass?.formatEntityState(this.stateObj)}${
                 state === "on" && this.stateObj.attributes.percentage
-                    ? " - " + this.hass.formatEntityAttributeValue(this.stateObj, "percentage")
+                    ? " - " + this.hass?.formatEntityAttributeValue(this.stateObj, "percentage")
                     : ""
             }`;
         } else {
