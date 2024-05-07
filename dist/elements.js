@@ -7052,7 +7052,7 @@ let LightTile = class LightTile extends s {
     setConfig(config) {
         this.config = { ...config };
         this.entity = this.config.entity?.startsWith("light.") ? this.config.entity : undefined;
-        this.requestUpdate();
+        super.requestUpdate();
     }
     shouldUpdate(changedProps) {
         return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);

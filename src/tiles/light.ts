@@ -52,7 +52,7 @@ export class LightTile extends LitElement {
     setConfig(config: Config): void {
         this.config = { ...config };
         this.entity = this.config.entity?.startsWith("light.") ? this.config.entity : undefined;
-        this.requestUpdate();
+        super.requestUpdate();
     }
 
     shouldUpdate(changedProps: PropertyValues): boolean {
