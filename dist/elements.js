@@ -7054,14 +7054,8 @@ let LightTile = class LightTile extends s {
         this.entity = this.config.entity?.startsWith("light.") ? this.config.entity : undefined;
     }
     shouldUpdate(changedProps) {
-        console.log(changedProps);
-        return !!(changedProps.has("config") || changedProps.has("stateObj"));
-    }
-    updated(changedProps) {
-        super.updated(changedProps);
-        if (!this.hass || !this.entity)
-            return;
-        this.stateObj = this.hass.states[this.entity];
+        return !!((changedProps.has("config") && this.config) ||
+            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj));
     }
     render() {
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
@@ -7082,14 +7076,15 @@ let LightTile = class LightTile extends s {
     }
     updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
-        if (this.config && this.stateObj) {
+        this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
+        if (this.config && this.hass && this.stateObj) {
             const state = this.stateObj.state || "unknown";
             icon = this.config.icon || this.stateObj.attributes.icon || "hass:lightbulb";
             iconAnimation = "none";
             iconColor = state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
             name = this.config.name || this.stateObj.attributes.friendly_name || this.entity;
-            stateFmtd = `${this.hass?.formatEntityState(this.stateObj)}${state === "on" && this.stateObj.attributes.brightness
-                ? " - " + this.hass?.formatEntityAttributeValue(this.stateObj, "brightness")
+            stateFmtd = `${this.hass.formatEntityState(this.stateObj)}${state === "on" && this.stateObj.attributes.brightness
+                ? " - " + this.hass.formatEntityAttributeValue(this.stateObj, "brightness")
                 : ""}`;
         }
         else {
@@ -7124,9 +7119,6 @@ __decorate([
 __decorate([
     r()
 ], LightTile.prototype, "config", void 0);
-__decorate([
-    r()
-], LightTile.prototype, "stateObj", void 0);
 LightTile = __decorate([
     t$1("smartqasa-light-tile")
 ], LightTile);

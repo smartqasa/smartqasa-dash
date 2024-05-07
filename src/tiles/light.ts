@@ -41,11 +41,9 @@ export class LightTile extends LitElement {
     }
 
     @property({ attribute: false }) public hass?: HomeAssistant;
-
     @state() private config?: Config;
-    @state() private stateObj?: HassEntity;
-
     private entity?: string;
+    private stateObj?: HassEntity;
 
     static styles: CSSResultGroup = [tileBaseStyle, tileStateStyle];
 
@@ -55,14 +53,10 @@ export class LightTile extends LitElement {
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
-        console.log(changedProps);
-        return !!(changedProps.has("config") || changedProps.has("stateObj"));
-    }
-
-    protected updated(changedProps: PropertyValues): void {
-        super.updated(changedProps);
-        if (!this.hass || !this.entity) return;
-        this.stateObj = this.hass.states[this.entity];
+        return !!(
+            (changedProps.has("config") && this.config) ||
+            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj)
+        );
     }
 
     protected render(): TemplateResult {
@@ -86,15 +80,17 @@ export class LightTile extends LitElement {
     private updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
 
-        if (this.config && this.stateObj) {
+        this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
+
+        if (this.config && this.hass && this.stateObj) {
             const state = this.stateObj.state || "unknown";
             icon = this.config.icon || this.stateObj.attributes.icon || "hass:lightbulb";
             iconAnimation = "none";
             iconColor = state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
             name = this.config.name || this.stateObj.attributes.friendly_name || this.entity;
-            stateFmtd = `${this.hass?.formatEntityState(this.stateObj)}${
+            stateFmtd = `${this.hass.formatEntityState(this.stateObj)}${
                 state === "on" && this.stateObj.attributes.brightness
-                    ? " - " + this.hass?.formatEntityAttributeValue(this.stateObj, "brightness")
+                    ? " - " + this.hass.formatEntityAttributeValue(this.stateObj, "brightness")
                     : ""
             }`;
         } else {
