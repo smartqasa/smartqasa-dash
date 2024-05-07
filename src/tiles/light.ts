@@ -55,16 +55,13 @@ export class LightTile extends LitElement {
         this.entity = this.config.entity?.startsWith("light.") ? this.config.entity : undefined;
     }
 
-    updated(changedProps: PropertyValues) {
-        super.updated(changedProps);
-        if (changedProps.has("hass")) {
-            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
-            this.initialized = true;
-        }
+    shouldUpdate(changedProps: PropertyValues): boolean {
+        return changedProps.has("hass") && this.hass && this.entity && this.hass.states[this.entity] !== this.stateObj
+            ? true
+            : false;
     }
 
     protected render(): TemplateResult {
-        if (!this.initialized) return html``;
         console.log("render");
 
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
@@ -86,6 +83,8 @@ export class LightTile extends LitElement {
 
     private updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
+
+        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
 
         if (this.config && this.hass && this.stateObj) {
             const state = this.stateObj.state || "unknown";
