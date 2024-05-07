@@ -49,14 +49,13 @@ export class LightTile extends LitElement {
 
     static styles: CSSResultGroup = [tileBaseStyle, tileStateStyle];
 
-    setConfig(config: Config): void {
+    public setConfig(config: Config): void {
         this.config = { ...config };
         this.entity = this.config.entity?.startsWith("light.") ? this.config.entity : undefined;
-        super.requestUpdate();
     }
 
     shouldUpdate(changedProps: PropertyValues): boolean {
-        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
+        return !!(changedProps.has("config") || changedProps.has("stateObj"));
     }
 
     protected render(): TemplateResult {

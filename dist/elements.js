@@ -4798,7 +4798,7 @@ let NavigateChip = class NavigateChip extends s {
                 this.hass?.areas[this.areaNext] !== this.areaObjNext));
     }
     render() {
-        if (!this.areaObjPrev || !this.areaObjNext)
+        if (!this.areaPrev || !this.areaNext)
             return x ``;
         this.areaObjPrev = this.areaPrev ? this.hass?.areas[this.areaPrev] : undefined;
         this.areaObjNext = this.areaNext ? this.hass?.areas[this.areaNext] : undefined;
@@ -7052,10 +7052,9 @@ let LightTile = class LightTile extends s {
     setConfig(config) {
         this.config = { ...config };
         this.entity = this.config.entity?.startsWith("light.") ? this.config.entity : undefined;
-        super.requestUpdate();
     }
     shouldUpdate(changedProps) {
-        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
+        return !!(changedProps.has("config") || changedProps.has("stateObj"));
     }
     render() {
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
@@ -7700,10 +7699,11 @@ let RoutineTile = class RoutineTile extends s {
         this.entity = ["automation", "scene", "script"].includes(this.config.entity?.split(".")[0])
             ? this.config.entity
             : undefined;
-        this.requestUpdate();
     }
     shouldUpdate(changedProps) {
-        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
+        return !!((changedProps.has("config") && this.config) ||
+            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj) ||
+            this.running);
     }
     render() {
         const { icon, iconAnimation, iconColor, name } = this.updateState();
@@ -7750,7 +7750,6 @@ let RoutineTile = class RoutineTile extends s {
         if (!this.hass || !this.stateObj)
             return;
         this.running = true;
-        this.requestUpdate();
         const domain = this.stateObj.entity_id.split(".")[0];
         try {
             switch (domain) {
@@ -7773,7 +7772,6 @@ let RoutineTile = class RoutineTile extends s {
         }
         setTimeout(() => {
             this.running = false;
-            this.requestUpdate();
         }, 1000);
     }
 };
@@ -7786,6 +7784,9 @@ __decorate([
 __decorate([
     r()
 ], RoutineTile.prototype, "stateObj", void 0);
+__decorate([
+    r()
+], RoutineTile.prototype, "running", void 0);
 RoutineTile = __decorate([
     t$1("smartqasa-routine-tile")
 ], RoutineTile);

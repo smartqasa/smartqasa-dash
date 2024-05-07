@@ -43,7 +43,7 @@ export class NavigateChip extends LitElement {
     }
 
     protected render(): TemplateResult {
-        if (!this.areaObjPrev || !this.areaObjNext) return html``;
+        if (!this.areaPrev || !this.areaNext) return html``;
 
         this.areaObjPrev = this.areaPrev ? this.hass?.areas[this.areaPrev] : undefined;
         this.areaObjNext = this.areaNext ? this.hass?.areas[this.areaNext] : undefined;

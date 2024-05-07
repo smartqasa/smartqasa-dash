@@ -29,9 +29,9 @@ export class RoutineTile extends LitElement {
 
     @state() private config?: Config;
     @state() private stateObj?: HassEntity;
+    @state() private running: boolean = false;
 
     private entity?: string;
-    private running: boolean = false;
 
     static styles: CSSResultGroup = [tileBaseStyle, tileIconSpinStyle];
 
@@ -40,11 +40,14 @@ export class RoutineTile extends LitElement {
         this.entity = ["automation", "scene", "script"].includes(this.config.entity?.split(".")[0])
             ? this.config.entity
             : undefined;
-        this.requestUpdate();
     }
 
     shouldUpdate(changedProps: PropertyValues): boolean {
-        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
+        return !!(
+            (changedProps.has("config") && this.config) ||
+            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj) ||
+            this.running
+        );
     }
 
     protected render(): TemplateResult {
@@ -95,7 +98,6 @@ export class RoutineTile extends LitElement {
         if (!this.hass || !this.stateObj) return;
 
         this.running = true;
-        this.requestUpdate();
 
         const domain = this.stateObj.entity_id.split(".")[0];
         try {
@@ -119,7 +121,6 @@ export class RoutineTile extends LitElement {
 
         setTimeout(() => {
             this.running = false;
-            this.requestUpdate();
         }, 1000);
     }
 }
