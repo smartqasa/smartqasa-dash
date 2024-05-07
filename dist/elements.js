@@ -7219,7 +7219,8 @@ let LockTile = class LockTile extends s {
         this.entity = this.config.entity?.startsWith("lock.") ? this.config.entity : undefined;
     }
     shouldUpdate(changedProps) {
-        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
+        return (!!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj) ||
+            this.running);
     }
     render() {
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
