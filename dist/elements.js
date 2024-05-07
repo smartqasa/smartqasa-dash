@@ -106,8 +106,9 @@ let AdminModeDialog = class AdminModeDialog extends s {
         }
         .button {
             cursor: pointer;
-            padding: 10px;
+            padding: 1rem;
             border: 1px solid #ccc;
+            border-radius: 1.5rem;
         }
     `; }
     setConfig(config) {
