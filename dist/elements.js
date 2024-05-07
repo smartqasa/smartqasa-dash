@@ -5975,7 +5975,7 @@ let AllOffTile = class AllOffTile extends s {
     }
     async runRoutine(e) {
         e.stopPropagation();
-        if (!this.areaObj || !this.hass)
+        if (!this.hass || !this.areaObj)
             return;
         this.running = true;
         try {
@@ -5990,8 +5990,9 @@ let AllOffTile = class AllOffTile extends s {
         catch (error) {
             console.error("Failed to turn off entities:", error);
         }
-        this.running = false;
-        setTimeout(() => { }, 1000);
+        setTimeout(() => {
+            this.running = false;
+        }, 1000);
     }
 };
 __decorate([

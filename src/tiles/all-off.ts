@@ -90,7 +90,7 @@ export class AllOffTile extends LitElement {
 
     private async runRoutine(e: Event): Promise<void> {
         e.stopPropagation();
-        if (!this.areaObj || !this.hass) return;
+        if (!this.hass || !this.areaObj) return;
 
         this.running = true;
 
@@ -106,7 +106,8 @@ export class AllOffTile extends LitElement {
             console.error("Failed to turn off entities:", error);
         }
 
-        this.running = false;
-        setTimeout(() => {}, 1000);
+        setTimeout(() => {
+            this.running = false;
+        }, 1000);
     }
 }
