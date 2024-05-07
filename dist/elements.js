@@ -6042,7 +6042,7 @@ let AllOffTile = class AllOffTile extends s {
     }
     updateState() {
         let icon, iconAnimation, iconColor, name;
-        this.areaObj = this.area ? this.hass?.states[this.area] : undefined;
+        this.areaObj = this.area ? this.hass?.areas[this.area] : undefined;
         if (this.config && this.areaObj) {
             if (this.running) {
                 icon = "hass:rotate-right";
@@ -6670,7 +6670,7 @@ let AreaTile = class AreaTile extends s {
     }
     updateState() {
         let icon, iconAnimation, iconColor, name;
-        this.areaObj = this.area ? this.hass?.states[this.area] : undefined;
+        this.areaObj = this.area ? this.hass?.areas[this.area] : undefined;
         if (this.config && this.areaObj) {
             if (this.running) {
                 icon = "hass:rotate-right";

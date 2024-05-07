@@ -63,7 +63,7 @@ export class AreaTile extends LitElement {
     private updateState() {
         let icon, iconAnimation, iconColor, name;
 
-        this.areaObj = this.area ? (this.hass?.states[this.area] as unknown as AreaRegistryEntry) : undefined;
+        this.areaObj = this.area ? this.hass?.areas[this.area] : undefined;
 
         if (this.config && this.areaObj) {
             if (this.running) {
