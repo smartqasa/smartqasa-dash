@@ -42,9 +42,9 @@ export class LockTile extends LitElement {
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
         return !!(
-            (changedProps.has("config") && this.config) ||
+            changedProps.has("running") ||
             (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj) ||
-            this.running
+            (changedProps.has("config") && this.config)
         );
     }
 

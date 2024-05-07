@@ -44,12 +44,12 @@ export class TitleCard extends LitElement {
         `;
     }
 
-    setConfig(config: Config): void {
+    public setConfig(config: Config): void {
         this._config = { ...config };
         this._config.title = this._config.title || "Title";
     }
 
-    render(): TemplateResult {
+    protected render(): TemplateResult {
         return html` <div class="title">${this._config?.title}</div> `;
     }
 }

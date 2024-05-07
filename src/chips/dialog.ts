@@ -44,8 +44,8 @@ export class DialogChip extends LitElement {
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
         return !!(
-            (changedProps.has("config") && this.config) ||
-            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj)
+            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj) ||
+            (changedProps.has("config") && this.config)
         );
     }
 
