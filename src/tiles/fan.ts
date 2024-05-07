@@ -30,7 +30,6 @@ export class FanTile extends LitElement {
 
     @property({ attribute: false }) public hass?: HomeAssistant;
 
-    @state() private initialized: boolean = false;
     @state() private config?: Config;
     @state() private stateObj?: HassEntity;
 
@@ -44,17 +43,10 @@ export class FanTile extends LitElement {
     }
 
     shouldUpdate(changedProps: PropertyValues): boolean {
-        return !!(
-            changedProps.has("hass") &&
-            this.hass &&
-            this.entity &&
-            this.hass.states[this.entity] !== this.stateObj
-        );
+        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
     }
 
     protected render(): TemplateResult {
-        if (!this.initialized) return html``;
-
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,

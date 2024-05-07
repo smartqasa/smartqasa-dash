@@ -28,7 +28,6 @@ export class GarageTile extends LitElement {
 
     @property({ attribute: false }) public hass?: HomeAssistant;
 
-    @state() private initialized: boolean = false;
     @state() private config?: Config;
     @state() private stateObj?: HassEntity;
 
@@ -41,17 +40,11 @@ export class GarageTile extends LitElement {
         this.entity = this.config.entity?.startsWith("cover.") ? this.config.entity : undefined;
     }
 
-    updated(changedProps: PropertyValues) {
-        super.updated(changedProps);
-        if (changedProps.has("hass")) {
-            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
-            this.initialized = true;
-        }
+    shouldUpdate(changedProps: PropertyValues): boolean {
+        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
     }
 
     protected render(): TemplateResult {
-        if (!this.initialized) return html``;
-
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
@@ -71,6 +64,8 @@ export class GarageTile extends LitElement {
 
     private updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
+
+        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
 
         if (this.config && this.hass && this.stateObj) {
             const state = this.stateObj.state || "unknown";

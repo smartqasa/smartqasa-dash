@@ -30,7 +30,6 @@ export class SwitchTile extends LitElement {
 
     @property({ attribute: false }) public hass?: HomeAssistant;
 
-    @state() private initialized: boolean = false;
     @state() private config?: Config;
     @state() private stateObj?: HassEntity;
 
@@ -45,17 +44,11 @@ export class SwitchTile extends LitElement {
             : undefined;
     }
 
-    updated(changedProps: PropertyValues) {
-        super.updated(changedProps);
-        if (changedProps.has("hass")) {
-            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
-            this.initialized = true;
-        }
+    shouldUpdate(changedProps: PropertyValues): boolean {
+        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
     }
 
     protected render(): TemplateResult {
-        if (!this.initialized) return html``;
-
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
@@ -76,7 +69,9 @@ export class SwitchTile extends LitElement {
     private updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
 
-        if (this.config && this.hass && this.stateObj) {
+        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
+
+        if (this.config && this.stateObj) {
             const state = this.stateObj.state;
             icon = this.config.icon || this.stateObj.attributes.icon || "hass:toggle-switch-variant";
             iconAnimation = "none";
@@ -85,7 +80,7 @@ export class SwitchTile extends LitElement {
                     ? `var(--sq-switch${this.config?.category ? `-${this.config.category}` : ""}-on-rgb)`
                     : "var(--sq-inactive-rgb)";
             name = this.config.name || this.stateObj.attributes.friendly_name || this.stateObj.entity_id;
-            stateFmtd = this.hass.formatEntityState(this.stateObj);
+            stateFmtd = this.hass?.formatEntityState(this.stateObj);
         } else {
             icon = this.config?.icon || "hass:toggle-switch-variant";
             iconAnimation = "none";

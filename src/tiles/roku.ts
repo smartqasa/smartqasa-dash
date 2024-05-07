@@ -29,7 +29,6 @@ export class RokuTile extends LitElement {
 
     @property({ attribute: false }) public hass?: HomeAssistant;
 
-    @state() private initialized: boolean = false;
     @state() private config?: Config;
     @state() private stateObj?: HassEntity;
 
@@ -42,17 +41,11 @@ export class RokuTile extends LitElement {
         this.entity = this.config.entity?.startsWith("media_player.") ? this.config.entity : undefined;
     }
 
-    updated(changedProps: PropertyValues) {
-        super.updated(changedProps);
-        if (changedProps.has("hass")) {
-            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
-            this.initialized = true;
-        }
+    shouldUpdate(changedProps: PropertyValues): boolean {
+        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
     }
 
     protected render(): TemplateResult {
-        if (!this.initialized) return html``;
-
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
@@ -73,7 +66,9 @@ export class RokuTile extends LitElement {
     private updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
 
-        if (this.config && this.hass && this.stateObj) {
+        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
+
+        if (this.config && this.stateObj) {
             icon = this.config?.icon || this.stateObj.attributes.icon || "hass:audio-video";
             iconAnimation = "none";
             const state = this.stateObj.state || "unknown";
@@ -98,7 +93,7 @@ export class RokuTile extends LitElement {
                     break;
             }
             name = this.config.name || this.stateObj.attributes.friendly_name || this.entity;
-            stateFmtd = `${this.hass.formatEntityState(this.stateObj)}${
+            stateFmtd = `${this.hass?.formatEntityState(this.stateObj)}${
                 this.stateObj.attributes?.source ? ` - ${this.stateObj.attributes.source}` : ""
             }`;
         } else {

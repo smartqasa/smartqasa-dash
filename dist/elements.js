@@ -6011,7 +6011,6 @@ window.customCards.push({
 let AllOffTile = class AllOffTile extends s {
     constructor() {
         super(...arguments);
-        this.initialized = false;
         this.running = false;
     }
     getCardSize() {
@@ -6022,16 +6021,10 @@ let AllOffTile = class AllOffTile extends s {
         this.config = { ...config };
         this.area = this.config?.area;
     }
-    updated(changedProps) {
-        super.updated(changedProps);
-        if (changedProps.has("hass") && this.area) {
-            this.areaObj = this.hass && this.area ? this.hass.areas[this.area] : undefined;
-            this.initialized = true;
-        }
+    shouldUpdate(changedProps) {
+        return !!(changedProps.has("hass") && this.area && this.hass?.areas[this.area] !== this.areaObj);
     }
     render() {
-        if (!this.initialized)
-            return x ``;
         const { icon, iconAnimation, iconColor, name } = this.updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
@@ -6049,7 +6042,8 @@ let AllOffTile = class AllOffTile extends s {
     }
     updateState() {
         let icon, iconAnimation, iconColor, name;
-        if (this.config && this.hass && this.areaObj) {
+        this.areaObj = this.area ? this.hass?.states[this.area] : undefined;
+        if (this.config && this.areaObj) {
             if (this.running) {
                 icon = "hass:rotate-right";
                 iconAnimation = "spin 1.0s linear infinite";
@@ -6094,9 +6088,6 @@ let AllOffTile = class AllOffTile extends s {
 __decorate([
     n$1({ attribute: false })
 ], AllOffTile.prototype, "hass", void 0);
-__decorate([
-    r()
-], AllOffTile.prototype, "initialized", void 0);
 __decorate([
     r()
 ], AllOffTile.prototype, "config", void 0);
@@ -6648,7 +6639,6 @@ window.customCards.push({
 let AreaTile = class AreaTile extends s {
     constructor() {
         super(...arguments);
-        this.initialized = false;
         this.running = false;
     }
     getCardSize() {
@@ -6657,18 +6647,12 @@ let AreaTile = class AreaTile extends s {
     static { this.styles = [tileBaseStyle, tileIconSpinStyle]; }
     setConfig(config) {
         this.config = { ...config };
-        this.area = this.config?.area;
+        this.area = this.config.area;
     }
-    updated(changedProps) {
-        super.updated(changedProps);
-        if (changedProps.has("hass") && this.area) {
-            this.areaObj = this.hass && this.area ? this.hass.areas[this.area] : undefined;
-            this.initialized = true;
-        }
+    shouldUpdate(changedProps) {
+        return !!(changedProps.has("hass") && this.area && this.hass?.areas[this.area] !== this.areaObj);
     }
     render() {
-        if (!this.initialized)
-            return x ``;
         const { icon, iconAnimation, iconColor, name } = this.updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
@@ -6686,7 +6670,8 @@ let AreaTile = class AreaTile extends s {
     }
     updateState() {
         let icon, iconAnimation, iconColor, name;
-        if (this.config && this.hass && this.areaObj) {
+        this.areaObj = this.area ? this.hass?.states[this.area] : undefined;
+        if (this.config && this.areaObj) {
             if (this.running) {
                 icon = "hass:rotate-right";
                 iconAnimation = "spin 1.0s linear infinite";
@@ -6723,9 +6708,6 @@ let AreaTile = class AreaTile extends s {
 __decorate([
     n$1({ attribute: false })
 ], AreaTile.prototype, "hass", void 0);
-__decorate([
-    r()
-], AreaTile.prototype, "initialized", void 0);
 __decorate([
     r()
 ], AreaTile.prototype, "config", void 0);
@@ -6828,10 +6810,6 @@ window.customCards.push({
     description: "A SmartQasa tile for controlling a fan entity.",
 });
 let FanTile = class FanTile extends s {
-    constructor() {
-        super(...arguments);
-        this.initialized = false;
-    }
     getCardSize() {
         return 1;
     }
@@ -6841,14 +6819,9 @@ let FanTile = class FanTile extends s {
         this.entity = this.config.entity?.startsWith("fan.") ? this.config.entity : undefined;
     }
     shouldUpdate(changedProps) {
-        return !!(changedProps.has("hass") &&
-            this.hass &&
-            this.entity &&
-            this.hass.states[this.entity] !== this.stateObj);
+        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
     }
     render() {
-        if (!this.initialized)
-            return x ``;
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
@@ -6919,9 +6892,6 @@ __decorate([
 ], FanTile.prototype, "hass", void 0);
 __decorate([
     r()
-], FanTile.prototype, "initialized", void 0);
-__decorate([
-    r()
 ], FanTile.prototype, "config", void 0);
 __decorate([
     r()
@@ -6937,10 +6907,6 @@ window.customCards.push({
     description: "A SmartQasa tile for controlling a garage cover entity.",
 });
 let GarageTile = class GarageTile extends s {
-    constructor() {
-        super(...arguments);
-        this.initialized = false;
-    }
     getCardSize() {
         return 1;
     }
@@ -6949,16 +6915,10 @@ let GarageTile = class GarageTile extends s {
         this.config = { ...config };
         this.entity = this.config.entity?.startsWith("cover.") ? this.config.entity : undefined;
     }
-    updated(changedProps) {
-        super.updated(changedProps);
-        if (changedProps.has("hass")) {
-            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
-            this.initialized = true;
-        }
+    shouldUpdate(changedProps) {
+        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
     }
     render() {
-        if (!this.initialized)
-            return x ``;
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
@@ -6977,6 +6937,7 @@ let GarageTile = class GarageTile extends s {
     }
     updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
+        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
         if (this.config && this.hass && this.stateObj) {
             const state = this.stateObj.state || "unknown";
             switch (state) {
@@ -7034,9 +6995,6 @@ let GarageTile = class GarageTile extends s {
 __decorate([
     n$1({ attribute: false })
 ], GarageTile.prototype, "hass", void 0);
-__decorate([
-    r()
-], GarageTile.prototype, "initialized", void 0);
 __decorate([
     r()
 ], GarageTile.prototype, "config", void 0);
@@ -7146,10 +7104,6 @@ window.customCards.push({
     description: "A SmartQasa tile for controlling a light entity.",
 });
 let LightTile = class LightTile extends s {
-    constructor() {
-        super(...arguments);
-        this.initialized = false;
-    }
     getCardSize() {
         return 1;
     }
@@ -7169,13 +7123,9 @@ let LightTile = class LightTile extends s {
         this.entity = this.config.entity?.startsWith("light.") ? this.config.entity : undefined;
     }
     shouldUpdate(changedProps) {
-        return !!(changedProps.has("hass") &&
-            this.hass &&
-            this.entity &&
-            this.hass.states[this.entity] !== this.stateObj);
+        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
     }
     render() {
-        console.log("render");
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
@@ -7195,14 +7145,14 @@ let LightTile = class LightTile extends s {
     updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
         this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
-        if (this.config && this.hass && this.stateObj) {
+        if (this.config && this.stateObj) {
             const state = this.stateObj.state || "unknown";
             icon = this.config.icon || this.stateObj.attributes.icon || "hass:lightbulb";
             iconAnimation = "none";
             iconColor = state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
             name = this.config.name || this.stateObj.attributes.friendly_name || this.entity;
-            stateFmtd = `${this.hass.formatEntityState(this.stateObj)}${state === "on" && this.stateObj.attributes.brightness
-                ? " - " + this.hass.formatEntityAttributeValue(this.stateObj, "brightness")
+            stateFmtd = `${this.hass?.formatEntityState(this.stateObj)}${state === "on" && this.stateObj.attributes.brightness
+                ? " - " + this.hass?.formatEntityAttributeValue(this.stateObj, "brightness")
                 : ""}`;
         }
         else {
@@ -7234,9 +7184,6 @@ let LightTile = class LightTile extends s {
 __decorate([
     n$1({ attribute: false })
 ], LightTile.prototype, "hass", void 0);
-__decorate([
-    r()
-], LightTile.prototype, "initialized", void 0);
 __decorate([
     r()
 ], LightTile.prototype, "config", void 0);
@@ -7318,7 +7265,6 @@ window.customCards.push({
 let LockTile = class LockTile extends s {
     constructor() {
         super(...arguments);
-        this.initialized = false;
         this.running = false;
     }
     getCardSize() {
@@ -7329,16 +7275,10 @@ let LockTile = class LockTile extends s {
         this.config = { ...config };
         this.entity = this.config.entity?.startsWith("lock.") ? this.config.entity : undefined;
     }
-    updated(changedProps) {
-        super.updated(changedProps);
-        if (changedProps.has("hass")) {
-            this.stateObj = this.hass && this.entity && !this.running ? this.hass.states[this.entity] : undefined;
-            this.initialized = true;
-        }
+    shouldUpdate(changedProps) {
+        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
     }
     render() {
-        if (!this.initialized)
-            return x ``;
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
@@ -7357,7 +7297,8 @@ let LockTile = class LockTile extends s {
     }
     updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
-        if (this.config && this.hass && this.stateObj) {
+        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
+        if (this.config && this.stateObj) {
             const state = this.stateObj.state || "unknown";
             switch (state) {
                 case "locked":
@@ -7392,7 +7333,7 @@ let LockTile = class LockTile extends s {
                     break;
             }
             name = this.config.name || this.stateObj.attributes.friendly_name || this.entity;
-            stateFmtd = this.hass.formatEntityState(this.stateObj);
+            stateFmtd = this.hass?.formatEntityState(this.stateObj);
         }
         else {
             icon = this.config?.icon || "hass:garage-alert-variant";
@@ -7427,9 +7368,6 @@ __decorate([
 ], LockTile.prototype, "hass", void 0);
 __decorate([
     r()
-], LockTile.prototype, "initialized", void 0);
-__decorate([
-    r()
 ], LockTile.prototype, "config", void 0);
 __decorate([
     r()
@@ -7461,16 +7399,10 @@ let OptionTile = class OptionTile extends s {
         this.config = { ...config };
         this.entity = this.config.entity?.startsWith("input_select.") ? this.config.entity : undefined;
     }
-    updated(changedProps) {
-        super.updated(changedProps);
-        if (changedProps.has("hass")) {
-            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
-            this.initialized = true;
-        }
+    shouldUpdate(changedProps) {
+        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
     }
     render() {
-        if (!this.initialized)
-            return x ``;
         const { icon, iconAnimation, iconColor, name } = this.updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
@@ -7488,7 +7420,8 @@ let OptionTile = class OptionTile extends s {
     }
     updateState() {
         let icon, iconAnimation, iconColor, name;
-        if (this.config && this.hass && this.stateObj) {
+        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
+        if (this.config && this.stateObj) {
             if (this.running) {
                 icon = "hass:rotate-right";
                 iconAnimation = "spin 1.0s linear infinite";
@@ -7595,16 +7528,10 @@ let RobotTile = class RobotTile extends s {
         this.config = { ...config };
         this.entity = this.config.entity?.startsWith("light.") ? this.config.entity : undefined;
     }
-    updated(changedProps) {
-        super.updated(changedProps);
-        if (changedProps.has("hass")) {
-            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
-            this.initialized = true;
-        }
+    shouldUpdate(changedProps) {
+        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
     }
     render() {
-        if (!this.initialized)
-            return x ``;
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
@@ -7623,7 +7550,8 @@ let RobotTile = class RobotTile extends s {
     }
     updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
-        if (this.config && this.hass && this.stateObj) {
+        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
+        if (this.config && this.stateObj) {
             const state = this.stateObj.state || "unknown";
             switch (state) {
                 case "cleaning":
@@ -7659,9 +7587,9 @@ let RobotTile = class RobotTile extends s {
             }
             name = this.config.name || this.stateObj.attributes.friendly_name || this.entity;
             stateFmtd =
-                this.hass.formatEntityState(this.stateObj) +
+                this.hass?.formatEntityState(this.stateObj) +
                     (this.stateObj.attributes.battery_level
-                        ? " - " + this.hass.formatEntityAttributeValue(this.stateObj, "battery_level")
+                        ? " - " + this.hass?.formatEntityAttributeValue(this.stateObj, "battery_level")
                         : "");
         }
         else {
@@ -7710,10 +7638,6 @@ window.customCards.push({
     description: "A SmartQasa tile for controlling a Roku media_player entity.",
 });
 let RokuTile = class RokuTile extends s {
-    constructor() {
-        super(...arguments);
-        this.initialized = false;
-    }
     getCardSize() {
         return 1;
     }
@@ -7722,16 +7646,10 @@ let RokuTile = class RokuTile extends s {
         this.config = { ...config };
         this.entity = this.config.entity?.startsWith("media_player.") ? this.config.entity : undefined;
     }
-    updated(changedProps) {
-        super.updated(changedProps);
-        if (changedProps.has("hass")) {
-            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
-            this.initialized = true;
-        }
+    shouldUpdate(changedProps) {
+        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
     }
     render() {
-        if (!this.initialized)
-            return x ``;
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
@@ -7750,7 +7668,8 @@ let RokuTile = class RokuTile extends s {
     }
     updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
-        if (this.config && this.hass && this.stateObj) {
+        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
+        if (this.config && this.stateObj) {
             icon = this.config?.icon || this.stateObj.attributes.icon || "hass:audio-video";
             iconAnimation = "none";
             const state = this.stateObj.state || "unknown";
@@ -7775,7 +7694,7 @@ let RokuTile = class RokuTile extends s {
                     break;
             }
             name = this.config.name || this.stateObj.attributes.friendly_name || this.entity;
-            stateFmtd = `${this.hass.formatEntityState(this.stateObj)}${this.stateObj.attributes?.source ? ` - ${this.stateObj.attributes.source}` : ""}`;
+            stateFmtd = `${this.hass?.formatEntityState(this.stateObj)}${this.stateObj.attributes?.source ? ` - ${this.stateObj.attributes.source}` : ""}`;
         }
         else {
             icon = this.config?.icon || "hass:audio-video-off";
@@ -7817,9 +7736,6 @@ let RokuTile = class RokuTile extends s {
 __decorate([
     n$1({ attribute: false })
 ], RokuTile.prototype, "hass", void 0);
-__decorate([
-    r()
-], RokuTile.prototype, "initialized", void 0);
 __decorate([
     r()
 ], RokuTile.prototype, "config", void 0);
@@ -7954,10 +7870,6 @@ window.customCards.push({
     description: "A SmartQasa tile for displaying an Input Select entity.",
 });
 let SelectTile = class SelectTile extends s {
-    constructor() {
-        super(...arguments);
-        this.initialized = false;
-    }
     getCardSize() {
         return 1;
     }
@@ -7966,16 +7878,10 @@ let SelectTile = class SelectTile extends s {
         this.config = { ...config };
         this.entity = this.config.entity?.startsWith("input_select.") ? this.config.entity : undefined;
     }
-    updated(changedProps) {
-        super.updated(changedProps);
-        if (changedProps.has("hass")) {
-            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
-            this.initialized = true;
-        }
+    shouldUpdate(changedProps) {
+        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
     }
     render() {
-        if (!this.initialized)
-            return x ``;
         const { icon, iconAnimation, iconColor, name } = this.updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
@@ -7993,13 +7899,14 @@ let SelectTile = class SelectTile extends s {
     }
     updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
-        if (this.config && this.hass && this.stateObj) {
+        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
+        if (this.config && this.stateObj) {
             this.stateObj.state || "unknown";
             icon = this.config?.icon || this.stateObj.attributes?.icon || "hass:form-dropdown";
             iconAnimation = "none";
             iconColor = "var(--sq-inactive-rgb)";
             name = this.config?.name || this.stateObj.attributes?.friendly_name || this.entity;
-            stateFmtd = this.hass.formatEntityState(this.stateObj) || "Unknown";
+            stateFmtd = this.hass?.formatEntityState(this.stateObj) || "Unknown";
         }
         else {
             icon = this.config?.icon || "hass:form-dropdown";
@@ -8020,9 +7927,6 @@ __decorate([
 ], SelectTile.prototype, "hass", void 0);
 __decorate([
     r()
-], SelectTile.prototype, "initialized", void 0);
-__decorate([
-    r()
 ], SelectTile.prototype, "config", void 0);
 __decorate([
     r()
@@ -8038,10 +7942,6 @@ window.customCards.push({
     description: "A SmartQasa tile for observing a binary_sensor entity.",
 });
 let SensorTile = class SensorTile extends s {
-    constructor() {
-        super(...arguments);
-        this.initialized = false;
-    }
     getCardSize() {
         return 1;
     }
@@ -8050,16 +7950,10 @@ let SensorTile = class SensorTile extends s {
         this.config = { ...config };
         this.entity = this.config.entity?.startsWith("binary_sensor.") ? this.config.entity : undefined;
     }
-    updated(changedProps) {
-        super.updated(changedProps);
-        if (changedProps.has("hass")) {
-            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
-            this.initialized = true;
-        }
+    shouldUpdate(changedProps) {
+        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
     }
     render() {
-        if (!this.initialized)
-            return x ``;
         const { iconTemplate, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
@@ -8076,7 +7970,8 @@ let SensorTile = class SensorTile extends s {
     }
     updateState() {
         let iconTemplate, iconAnimation, iconColor, name, stateFmtd;
-        if (this.config && this.hass && this.stateObj) {
+        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
+        if (this.config && this.stateObj) {
             if (!this.config.icon) {
                 iconTemplate = x `<ha-state-icon .hass=${this.hass} .stateObj=${this.stateObj}></ha-state-icon>`;
             }
@@ -8085,7 +7980,7 @@ let SensorTile = class SensorTile extends s {
             }
             iconColor = this.stateObj.state === "on" ? "var(--sq-binary_sensor-on-rgb)" : "var(--sq-inactive-rgb)";
             name = this.config?.name || this.stateObj.attributes.friendly_name || this.entity;
-            stateFmtd = this.hass.formatEntityState(this.stateObj);
+            stateFmtd = this.hass?.formatEntityState(this.stateObj);
         }
         else {
             iconTemplate = x `<ha-icon .icon="hass:leak"></ha-icon>`;
@@ -8104,9 +7999,6 @@ let SensorTile = class SensorTile extends s {
 __decorate([
     n$1({ attribute: false })
 ], SensorTile.prototype, "hass", void 0);
-__decorate([
-    r()
-], SensorTile.prototype, "initialized", void 0);
 __decorate([
     r()
 ], SensorTile.prototype, "config", void 0);
@@ -8197,10 +8089,6 @@ window.customCards.push({
     description: "A SmartQasa tile for controlling a pool color light or switch entity.",
 });
 let PoolLightTile = class PoolLightTile extends s {
-    constructor() {
-        super(...arguments);
-        this.initialized = false;
-    }
     getCardSize() {
         return 1;
     }
@@ -8209,16 +8097,10 @@ let PoolLightTile = class PoolLightTile extends s {
         this.config = { ...config };
         this.entity = ["light", "switch"].includes(this.config.entity?.split(".")[0]) ? this.config.entity : undefined;
     }
-    updated(changedProps) {
-        super.updated(changedProps);
-        if (changedProps.has("hass")) {
-            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
-            this.initialized = true;
-        }
+    shouldUpdate(changedProps) {
+        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
     }
     render() {
-        if (!this.initialized)
-            return x ``;
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
@@ -8237,15 +8119,16 @@ let PoolLightTile = class PoolLightTile extends s {
     }
     updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
-        if (this.config && this.hass && this.stateObj) {
+        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
+        if (this.config && this.stateObj) {
             const state = this.stateObj.state || "unknown";
             icon = this.config.icon || this.stateObj.attributes.icon || "hass:lightbulb";
             iconColor = state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
             name = this.config.name || this.stateObj.attributes.friendly_name || this.entity;
             stateFmtd =
-                this.hass.formatEntityState(this.stateObj) +
+                this.hass?.formatEntityState(this.stateObj) +
                     (state === "on" && this.stateObj.attributes.brightness
-                        ? " - " + this.hass.formatEntityAttributeValue(this.stateObj, "brightness")
+                        ? " - " + this.hass?.formatEntityAttributeValue(this.stateObj, "brightness")
                         : "");
         }
         else {
@@ -8288,9 +8171,6 @@ __decorate([
 ], PoolLightTile.prototype, "hass", void 0);
 __decorate([
     r()
-], PoolLightTile.prototype, "initialized", void 0);
-__decorate([
-    r()
 ], PoolLightTile.prototype, "config", void 0);
 __decorate([
     r()
@@ -8302,7 +8182,6 @@ PoolLightTile = __decorate([
 let PoolLightSequencerTile = class PoolLightSequencerTile extends s {
     constructor() {
         super(...arguments);
-        this.initialized = false;
         this.running = false;
     }
     getCardSize() {
@@ -8314,16 +8193,10 @@ let PoolLightSequencerTile = class PoolLightSequencerTile extends s {
         this.sequenceObj = config.sequence ? sequenceTable[config.sequence] : undefined;
         this.entity = ["light", "switch"].includes(this.config.entity?.split(".")[0]) ? this.config.entity : undefined;
     }
-    updated(changedProps) {
-        super.updated(changedProps);
-        if (changedProps.has("hass")) {
-            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
-            this.initialized = true;
-        }
+    shouldUpdate(changedProps) {
+        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
     }
     render() {
-        if (!this.initialized)
-            return x ``;
         const { icon, iconAnimation, iconColor, name } = this.updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
@@ -8341,7 +8214,8 @@ let PoolLightSequencerTile = class PoolLightSequencerTile extends s {
     }
     updateState() {
         let icon, iconAnimation, iconColor, name;
-        if (this.config && this.hass && this.sequenceObj && this.stateObj) {
+        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
+        if (this.config && this.sequenceObj && this.stateObj) {
             if (this.running) {
                 icon = "hass:rotate-right";
                 iconAnimation = "spin 1.0s linear infinite";
@@ -8381,9 +8255,6 @@ __decorate([
 ], PoolLightSequencerTile.prototype, "hass", void 0);
 __decorate([
     r()
-], PoolLightSequencerTile.prototype, "initialized", void 0);
-__decorate([
-    r()
 ], PoolLightSequencerTile.prototype, "config", void 0);
 __decorate([
     r()
@@ -8405,10 +8276,6 @@ window.customCards.push({
     description: "A SmartQasa tile for controlling a window shade entity.",
 });
 let ShadeTile = class ShadeTile extends s {
-    constructor() {
-        super(...arguments);
-        this.initialized = false;
-    }
     getCardSize() {
         return 1;
     }
@@ -8417,16 +8284,10 @@ let ShadeTile = class ShadeTile extends s {
         this.config = { ...config };
         this.entity = this.config.entity?.startsWith("cover.") ? this.config.entity : undefined;
     }
-    updated(changedProps) {
-        super.updated(changedProps);
-        if (changedProps.has("hass")) {
-            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
-            this.initialized = true;
-        }
+    shouldUpdate(changedProps) {
+        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
     }
     render() {
-        if (!this.initialized)
-            return x ``;
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
@@ -8445,7 +8306,8 @@ let ShadeTile = class ShadeTile extends s {
     }
     updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
-        if (this.config && this.hass && this.stateObj) {
+        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
+        if (this.config && this.stateObj) {
             const state = this.stateObj.state || "unknown";
             switch (state) {
                 case "closed":
@@ -8476,9 +8338,9 @@ let ShadeTile = class ShadeTile extends s {
             }
             name = this.config.name || this.stateObj.attributes.friendly_name || this.entity;
             stateFmtd =
-                this.hass.formatEntityState(this.stateObj) +
+                this.hass?.formatEntityState(this.stateObj) +
                     (state === "open" && this.stateObj.attributes.current_position
-                        ? " - " + this.hass.formatEntityAttributeValue(this.stateObj, "current_position")
+                        ? " - " + this.hass?.formatEntityAttributeValue(this.stateObj, "current_position")
                         : "");
         }
         else {
@@ -8531,9 +8393,6 @@ __decorate([
 ], ShadeTile.prototype, "hass", void 0);
 __decorate([
     r()
-], ShadeTile.prototype, "initialized", void 0);
-__decorate([
-    r()
 ], ShadeTile.prototype, "config", void 0);
 __decorate([
     r()
@@ -8549,10 +8408,6 @@ window.customCards.push({
     description: "A SmartQasa tile for toggling an entity.",
 });
 let SwitchTile = class SwitchTile extends s {
-    constructor() {
-        super(...arguments);
-        this.initialized = false;
-    }
     getCardSize() {
         return 1;
     }
@@ -8563,16 +8418,10 @@ let SwitchTile = class SwitchTile extends s {
             ? this.config.entity
             : undefined;
     }
-    updated(changedProps) {
-        super.updated(changedProps);
-        if (changedProps.has("hass")) {
-            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
-            this.initialized = true;
-        }
+    shouldUpdate(changedProps) {
+        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
     }
     render() {
-        if (!this.initialized)
-            return x ``;
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
@@ -8591,7 +8440,8 @@ let SwitchTile = class SwitchTile extends s {
     }
     updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
-        if (this.config && this.hass && this.stateObj) {
+        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
+        if (this.config && this.stateObj) {
             const state = this.stateObj.state;
             icon = this.config.icon || this.stateObj.attributes.icon || "hass:toggle-switch-variant";
             iconAnimation = "none";
@@ -8600,7 +8450,7 @@ let SwitchTile = class SwitchTile extends s {
                     ? `var(--sq-switch${this.config?.category ? `-${this.config.category}` : ""}-on-rgb)`
                     : "var(--sq-inactive-rgb)";
             name = this.config.name || this.stateObj.attributes.friendly_name || this.stateObj.entity_id;
-            stateFmtd = this.hass.formatEntityState(this.stateObj);
+            stateFmtd = this.hass?.formatEntityState(this.stateObj);
         }
         else {
             icon = this.config?.icon || "hass:toggle-switch-variant";
@@ -8623,9 +8473,6 @@ let SwitchTile = class SwitchTile extends s {
 __decorate([
     n$1({ attribute: false })
 ], SwitchTile.prototype, "hass", void 0);
-__decorate([
-    r()
-], SwitchTile.prototype, "initialized", void 0);
 __decorate([
     r()
 ], SwitchTile.prototype, "config", void 0);
@@ -8691,10 +8538,6 @@ window.customCards.push({
     description: "A SmartQasa tile for controlling a thermostat climate entity.",
 });
 let ThermostatTile = class ThermostatTile extends s {
-    constructor() {
-        super(...arguments);
-        this.initialized = false;
-    }
     getCardSize() {
         return 1;
     }
@@ -8703,16 +8546,10 @@ let ThermostatTile = class ThermostatTile extends s {
         this.config = { ...config };
         this.entity = this.config.entity?.startsWith("climate.") ? this.config.entity : undefined;
     }
-    updated(changedProps) {
-        super.updated(changedProps);
-        if (changedProps.has("hass")) {
-            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
-            this.initialized = true;
-        }
+    shouldUpdate(changedProps) {
+        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
     }
     render() {
-        if (!this.initialized)
-            return x ``;
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
@@ -8731,7 +8568,8 @@ let ThermostatTile = class ThermostatTile extends s {
     }
     updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
-        if (this.config && this.hass && this.stateObj) {
+        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
+        if (this.config && this.stateObj) {
             const state = this.stateObj.state || "unknown";
             icon = thermostatIcons[state] || thermostatIcons.default;
             iconAnimation = "none";
@@ -8743,7 +8581,7 @@ let ThermostatTile = class ThermostatTile extends s {
                 iconColor = thermostatColors[hvacAction] || thermostatColors.idle;
             }
             name = this.config.name || this.stateObj.attributes.friendly_name || this.entity;
-            stateFmtd = this.hass.formatEntityState(this.stateObj);
+            stateFmtd = this.hass?.formatEntityState(this.stateObj);
             if (state !== "off") {
                 if (this.stateObj.attributes.current_temperature) {
                     stateFmtd += ` - ${this.stateObj.attributes.current_temperature}°`;
@@ -8774,9 +8612,6 @@ let ThermostatTile = class ThermostatTile extends s {
 __decorate([
     n$1({ attribute: false })
 ], ThermostatTile.prototype, "hass", void 0);
-__decorate([
-    r()
-], ThermostatTile.prototype, "initialized", void 0);
 __decorate([
     r()
 ], ThermostatTile.prototype, "config", void 0);

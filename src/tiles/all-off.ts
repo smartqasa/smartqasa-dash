@@ -26,7 +26,6 @@ export class AllOffTile extends LitElement {
 
     @property({ attribute: false }) public hass?: HomeAssistant;
 
-    @state() private initialized: boolean = false;
     @state() private config?: Config;
     @state() private areaObj?: AreaRegistryEntry;
     @state() private running: boolean = false;
@@ -40,17 +39,11 @@ export class AllOffTile extends LitElement {
         this.area = this.config?.area;
     }
 
-    updated(changedProps: PropertyValues) {
-        super.updated(changedProps);
-        if (changedProps.has("hass") && this.area) {
-            this.areaObj = this.hass && this.area ? this.hass.areas[this.area] : undefined;
-            this.initialized = true;
-        }
+    shouldUpdate(changedProps: PropertyValues): boolean {
+        return !!(changedProps.has("hass") && this.area && this.hass?.areas[this.area] !== this.areaObj);
     }
 
     protected render(): TemplateResult {
-        if (!this.initialized) return html``;
-
         const { icon, iconAnimation, iconColor, name } = this.updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
@@ -70,7 +63,9 @@ export class AllOffTile extends LitElement {
     private updateState() {
         let icon, iconAnimation, iconColor, name;
 
-        if (this.config && this.hass && this.areaObj) {
+        this.areaObj = this.area ? (this.hass?.states[this.area] as unknown as AreaRegistryEntry) : undefined;
+
+        if (this.config && this.areaObj) {
             if (this.running) {
                 icon = "hass:rotate-right";
                 iconAnimation = "spin 1.0s linear infinite";

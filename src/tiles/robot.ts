@@ -40,17 +40,11 @@ export class RobotTile extends LitElement {
         this.entity = this.config.entity?.startsWith("light.") ? this.config.entity : undefined;
     }
 
-    updated(changedProps: PropertyValues) {
-        super.updated(changedProps);
-        if (changedProps.has("hass")) {
-            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
-            this.initialized = true;
-        }
+    shouldUpdate(changedProps: PropertyValues): boolean {
+        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
     }
 
     protected render(): TemplateResult {
-        if (!this.initialized) return html``;
-
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
@@ -71,7 +65,9 @@ export class RobotTile extends LitElement {
     private updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
 
-        if (this.config && this.hass && this.stateObj) {
+        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
+
+        if (this.config && this.stateObj) {
             const state = this.stateObj.state || "unknown";
             switch (state) {
                 case "cleaning":
@@ -107,9 +103,9 @@ export class RobotTile extends LitElement {
             }
             name = this.config.name || this.stateObj.attributes.friendly_name || this.entity;
             stateFmtd =
-                this.hass.formatEntityState(this.stateObj) +
+                this.hass?.formatEntityState(this.stateObj) +
                 (this.stateObj.attributes.battery_level
-                    ? " - " + this.hass.formatEntityAttributeValue(this.stateObj, "battery_level")
+                    ? " - " + this.hass?.formatEntityAttributeValue(this.stateObj, "battery_level")
                     : "");
         } else {
             icon = this.config?.icon || "hass:robot-vacuum-variant-alert";

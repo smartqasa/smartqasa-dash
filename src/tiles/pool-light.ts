@@ -30,7 +30,6 @@ export class PoolLightTile extends LitElement {
 
     @property({ attribute: false }) public hass?: HomeAssistant;
 
-    @state() private initialized: boolean = false;
     @state() private config?: Config;
     @state() private stateObj?: HassEntity;
 
@@ -43,17 +42,11 @@ export class PoolLightTile extends LitElement {
         this.entity = ["light", "switch"].includes(this.config.entity?.split(".")[0]) ? this.config.entity : undefined;
     }
 
-    updated(changedProps: PropertyValues) {
-        super.updated(changedProps);
-        if (changedProps.has("hass")) {
-            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
-            this.initialized = true;
-        }
+    shouldUpdate(changedProps: PropertyValues): boolean {
+        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
     }
 
     protected render(): TemplateResult {
-        if (!this.initialized) return html``;
-
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
@@ -74,15 +67,17 @@ export class PoolLightTile extends LitElement {
     private updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
 
-        if (this.config && this.hass && this.stateObj) {
+        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
+
+        if (this.config && this.stateObj) {
             const state = this.stateObj.state || "unknown";
             icon = this.config.icon || this.stateObj.attributes.icon || "hass:lightbulb";
             iconColor = state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
             name = this.config.name || this.stateObj.attributes.friendly_name || this.entity;
             stateFmtd =
-                this.hass.formatEntityState(this.stateObj) +
+                this.hass?.formatEntityState(this.stateObj) +
                 (state === "on" && this.stateObj.attributes.brightness
-                    ? " - " + this.hass.formatEntityAttributeValue(this.stateObj, "brightness")
+                    ? " - " + this.hass?.formatEntityAttributeValue(this.stateObj, "brightness")
                     : "");
         } else {
             icon = this.config?.icon || "hass:lightbulb-alert";

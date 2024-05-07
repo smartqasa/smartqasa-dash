@@ -20,7 +20,6 @@ export class PoolLightSequencerTile extends LitElement {
 
     @property({ attribute: false }) public hass?: HomeAssistant;
 
-    @state() private initialized: boolean = false;
     @state() private config?: Config;
     @state() private sequenceObj?: any;
     @state() private stateObj?: any;
@@ -36,17 +35,11 @@ export class PoolLightSequencerTile extends LitElement {
         this.entity = ["light", "switch"].includes(this.config.entity?.split(".")[0]) ? this.config.entity : undefined;
     }
 
-    updated(changedProps: PropertyValues) {
-        super.updated(changedProps);
-        if (changedProps.has("hass")) {
-            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
-            this.initialized = true;
-        }
+    shouldUpdate(changedProps: PropertyValues): boolean {
+        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
     }
 
     protected render(): TemplateResult {
-        if (!this.initialized) return html``;
-
         const { icon, iconAnimation, iconColor, name } = this.updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
@@ -66,7 +59,9 @@ export class PoolLightSequencerTile extends LitElement {
     private updateState() {
         let icon, iconAnimation, iconColor, name;
 
-        if (this.config && this.hass && this.sequenceObj && this.stateObj) {
+        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
+
+        if (this.config && this.sequenceObj && this.stateObj) {
             if (this.running) {
                 icon = "hass:rotate-right";
                 iconAnimation = "spin 1.0s linear infinite";

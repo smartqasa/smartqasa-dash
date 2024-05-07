@@ -29,7 +29,6 @@ export class SensorTile extends LitElement {
 
     @property({ attribute: false }) public hass?: HomeAssistant;
 
-    @state() private initialized: boolean = false;
     @state() private config?: Config;
     @state() private stateObj?: HassEntity;
 
@@ -42,17 +41,11 @@ export class SensorTile extends LitElement {
         this.entity = this.config.entity?.startsWith("binary_sensor.") ? this.config.entity : undefined;
     }
 
-    updated(changedProps: PropertyValues) {
-        super.updated(changedProps);
-        if (changedProps.has("hass")) {
-            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
-            this.initialized = true;
-        }
+    shouldUpdate(changedProps: PropertyValues): boolean {
+        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
     }
 
     protected render(): TemplateResult {
-        if (!this.initialized) return html``;
-
         const { iconTemplate, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
@@ -72,7 +65,9 @@ export class SensorTile extends LitElement {
     private updateState() {
         let iconTemplate, iconAnimation, iconColor, name, stateFmtd;
 
-        if (this.config && this.hass && this.stateObj) {
+        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
+
+        if (this.config && this.stateObj) {
             if (!this.config.icon) {
                 iconTemplate = html`<ha-state-icon .hass=${this.hass} .stateObj=${this.stateObj}></ha-state-icon>`;
             } else {
@@ -80,7 +75,7 @@ export class SensorTile extends LitElement {
             }
             iconColor = this.stateObj.state === "on" ? "var(--sq-binary_sensor-on-rgb)" : "var(--sq-inactive-rgb)";
             name = this.config?.name || this.stateObj.attributes.friendly_name || this.entity;
-            stateFmtd = this.hass.formatEntityState(this.stateObj);
+            stateFmtd = this.hass?.formatEntityState(this.stateObj);
         } else {
             iconTemplate = html`<ha-icon .icon="hass:leak"></ha-icon>`;
             iconAnimation = "none";
