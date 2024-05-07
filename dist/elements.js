@@ -6554,9 +6554,9 @@ let AreaTile = class AreaTile extends s {
         this.area = this.config.area;
     }
     shouldUpdate(changedProps) {
-        return !!((changedProps.has("config") && this.config) ||
+        return !!(changedProps.has("running") ||
             (changedProps.has("hass") && this.area && this.hass?.areas[this.area] !== this.areaObj) ||
-            this.running);
+            (changedProps.has("config") && this.config));
     }
     render() {
         const { icon, iconAnimation, iconColor, name } = this.updateState();
@@ -7290,9 +7290,9 @@ let OptionTile = class OptionTile extends s {
         this.entity = this.config.entity?.startsWith("input_select.") ? this.config.entity : undefined;
     }
     shouldUpdate(changedProps) {
-        return !!((changedProps.has("config") && this.config) ||
+        return !!(changedProps.has("running") ||
             (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj) ||
-            this.running);
+            (changedProps.has("config") && this.config));
     }
     render() {
         const { icon, iconAnimation, iconColor, name } = this.updateState();

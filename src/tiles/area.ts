@@ -39,9 +39,9 @@ export class AreaTile extends LitElement {
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
         return !!(
-            (changedProps.has("config") && this.config) ||
+            changedProps.has("running") ||
             (changedProps.has("hass") && this.area && this.hass?.areas[this.area] !== this.areaObj) ||
-            this.running
+            (changedProps.has("config") && this.config)
         );
     }
 
