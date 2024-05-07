@@ -54,6 +54,17 @@ export class LightTile extends LitElement {
         this.entity = this.config.entity?.startsWith("light.") ? this.config.entity : undefined;
     }
 
+    protected shouldUpdate(changedProps: PropertyValues): boolean {
+        console.log(changedProps);
+        return !!(changedProps.has("config") || changedProps.has("stateObj"));
+    }
+
+    protected updated(changedProps: PropertyValues): void {
+        super.updated(changedProps);
+        if (!this.hass || !this.entity) return;
+        this.stateObj = this.hass.states[this.entity];
+    }
+
     protected render(): TemplateResult {
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
         const iconStyles = {
@@ -95,18 +106,6 @@ export class LightTile extends LitElement {
         }
 
         return { icon, iconAnimation, iconColor, name, stateFmtd };
-    }
-
-    protected shouldUpdate(changedProps: PropertyValues): boolean {
-        console.log(changedProps);
-        return !!(changedProps.has("config") || changedProps.has("stateObj"));
-    }
-
-    protected updated(changedProps: PropertyValues): void {
-        super.updated(changedProps);
-        if (!this.hass || !this.entity) return;
-
-        const stateObj = this.hass.states[this.entity];
     }
 
     private toggleEntity(e: Event): void {

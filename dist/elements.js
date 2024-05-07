@@ -7053,6 +7053,16 @@ let LightTile = class LightTile extends s {
         this.config = { ...config };
         this.entity = this.config.entity?.startsWith("light.") ? this.config.entity : undefined;
     }
+    shouldUpdate(changedProps) {
+        console.log(changedProps);
+        return !!(changedProps.has("config") || changedProps.has("stateObj"));
+    }
+    updated(changedProps) {
+        super.updated(changedProps);
+        if (!this.hass || !this.entity)
+            return;
+        this.stateObj = this.hass.states[this.entity];
+    }
     render() {
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
         const iconStyles = {
@@ -7090,16 +7100,6 @@ let LightTile = class LightTile extends s {
             stateFmtd = "Unknown";
         }
         return { icon, iconAnimation, iconColor, name, stateFmtd };
-    }
-    shouldUpdate(changedProps) {
-        console.log(changedProps);
-        return !!(changedProps.has("config") || changedProps.has("stateObj"));
-    }
-    updated(changedProps) {
-        super.updated(changedProps);
-        if (!this.hass || !this.entity)
-            return;
-        this.hass.states[this.entity];
     }
     toggleEntity(e) {
         e.stopPropagation();
