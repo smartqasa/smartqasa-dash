@@ -5930,8 +5930,7 @@ let AllOffTile = class AllOffTile extends s {
     }
     shouldUpdate(changedProps) {
         return !!((changedProps.has("config") && this.config) ||
-            (changedProps.has("hass") && this.area && this.hass?.areas[this.area] !== this.areaObj) ||
-            this.running);
+            (changedProps.has("hass") && this.area && this.hass?.areas[this.area] !== this.areaObj));
     }
     render() {
         const { icon, iconAnimation, iconColor, name } = this.updateState();
@@ -5978,6 +5977,7 @@ let AllOffTile = class AllOffTile extends s {
         if (!this.hass || !this.areaObj)
             return;
         this.running = true;
+        this.render();
         try {
             await this.hass.callService("light", "turn_off", {
                 area_id: this.area,
@@ -5992,6 +5992,7 @@ let AllOffTile = class AllOffTile extends s {
         }
         setTimeout(() => {
             this.running = false;
+            this.render();
         }, 1000);
     }
 };

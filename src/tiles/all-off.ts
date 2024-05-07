@@ -40,8 +40,7 @@ export class AllOffTile extends LitElement {
     protected shouldUpdate(changedProps: PropertyValues): boolean {
         return !!(
             (changedProps.has("config") && this.config) ||
-            (changedProps.has("hass") && this.area && this.hass?.areas[this.area] !== this.areaObj) ||
-            this.running
+            (changedProps.has("hass") && this.area && this.hass?.areas[this.area] !== this.areaObj)
         );
     }
 
@@ -93,6 +92,7 @@ export class AllOffTile extends LitElement {
         if (!this.hass || !this.areaObj) return;
 
         this.running = true;
+        this.render();
 
         try {
             await this.hass.callService("light", "turn_off", {
@@ -108,6 +108,7 @@ export class AllOffTile extends LitElement {
 
         setTimeout(() => {
             this.running = false;
+            this.render();
         }, 1000);
     }
 }
