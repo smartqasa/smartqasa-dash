@@ -36,12 +36,12 @@ export class HeaterTile extends LitElement {
 
     static styles: CSSResultGroup = [tileBaseStyle, tileStateStyle];
 
-    setConfig(config: Config): void {
+    public setConfig(config: Config): void {
         this.config = { ...config };
         this.entity = this.config.entity?.startsWith("water_heater.") ? this.config.entity : undefined;
     }
 
-    shouldUpdate(changedProps: PropertyValues): boolean {
+    protected shouldUpdate(changedProps: PropertyValues): boolean {
         return !!(
             (changedProps.has("config") && this.config) ||
             (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj)
@@ -71,13 +71,13 @@ export class HeaterTile extends LitElement {
 
         this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
 
-        if (this.config && this.stateObj) {
+        if (this.config && this.hass && this.stateObj) {
             const state = this.stateObj.state || "unknown";
             icon = this.config.icon || "hass:water-thermometer";
             iconAnimation = "none";
             iconColor = heaterColors[state] || heaterColors.idle;
             name = this.config.name || this.stateObj.attributes.friendly_name || this.entity;
-            stateFmtd = this.hass?.formatEntityState(this.stateObj);
+            stateFmtd = this.hass.formatEntityState(this.stateObj);
             if (state !== "off" && this.stateObj.attributes.temperature) {
                 stateFmtd += ` - ${this.stateObj.attributes.temperature}°`;
             }

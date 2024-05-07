@@ -28,20 +28,18 @@ export class ThermostatTile extends LitElement {
     }
 
     @property({ attribute: false }) public hass?: HomeAssistant;
-
     @state() private config?: Config;
-    @state() private stateObj?: HassEntity;
-
     private entity?: string;
+    private stateObj?: HassEntity;
 
     static styles: CSSResultGroup = [tileBaseStyle, tileStateStyle];
 
-    setConfig(config: Config): void {
+    public setConfig(config: Config): void {
         this.config = { ...config };
         this.entity = this.config.entity?.startsWith("climate.") ? this.config.entity : undefined;
     }
 
-    shouldUpdate(changedProps: PropertyValues): boolean {
+    protected shouldUpdate(changedProps: PropertyValues): boolean {
         return !!(
             (changedProps.has("config") && this.config) ||
             (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj)
@@ -71,7 +69,7 @@ export class ThermostatTile extends LitElement {
 
         this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
 
-        if (this.config && this.stateObj) {
+        if (this.config && this.hass && this.stateObj) {
             const state = this.stateObj.state || "unknown";
             icon = thermostatIcons[state] || thermostatIcons.default;
             iconAnimation = "none";
@@ -82,7 +80,7 @@ export class ThermostatTile extends LitElement {
                 iconColor = thermostatColors[hvacAction] || thermostatColors.idle;
             }
             name = this.config.name || this.stateObj.attributes.friendly_name || this.entity;
-            stateFmtd = this.hass?.formatEntityState(this.stateObj);
+            stateFmtd = this.hass.formatEntityState(this.stateObj);
             if (state !== "off") {
                 if (this.stateObj.attributes.current_temperature) {
                     stateFmtd += ` - ${this.stateObj.attributes.current_temperature}°`;

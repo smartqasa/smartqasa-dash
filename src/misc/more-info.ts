@@ -4,25 +4,29 @@ import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "../types";
 
 interface Config extends LovelaceCardConfig {
-    category?: string;
     entity: string;
 }
+
+window.customCards.push({
+    type: "smartqasa-more-info-dialog",
+    name: "SmartQasa More Info Dialog",
+    preview: true,
+    description: "A SmartQasa dialog for showing More Info for an entity.",
+});
 
 @customElement("smartqasa-more-info-dialog")
 export class MoreInfoDialog extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
-
     @state() private config?: Config;
-    @state() private stateObj?: HassEntity;
-
     private entity?: string;
+    private stateObj?: HassEntity;
 
-    setConfig(config: Config): void {
+    public setConfig(config: Config): void {
         this.config = { ...config };
         this.entity = this.config?.entity;
     }
 
-    shouldUpdate(changedProps: PropertyValues): boolean {
+    protected shouldUpdate(changedProps: PropertyValues): boolean {
         return !!(
             (changedProps.has("config") && this.config) ||
             (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj)
@@ -30,6 +34,7 @@ export class MoreInfoDialog extends LitElement {
     }
 
     protected render(): TemplateResult {
+        this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
         return html`
             <div>
                 <div class="card-content">
@@ -43,10 +48,3 @@ export class MoreInfoDialog extends LitElement {
         return 5;
     }
 }
-
-window.customCards.push({
-    type: "smartqasa-more-info-dialog",
-    name: "SmartQasa More Info Dialog",
-    preview: true,
-    description: "A SmartQasa dialog for showing More Info for an entity.",
-});

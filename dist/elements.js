@@ -4679,9 +4679,6 @@ __decorate([
 __decorate([
     r()
 ], DialogChip.prototype, "dialogObj", void 0);
-__decorate([
-    r()
-], DialogChip.prototype, "stateObj", void 0);
 DialogChip = __decorate([
     t$1("smartqasa-dialog-chip")
 ], DialogChip);
@@ -4771,9 +4768,6 @@ __decorate([
 __decorate([
     r()
 ], MotionChip.prototype, "config", void 0);
-__decorate([
-    r()
-], MotionChip.prototype, "stateObj", void 0);
 MotionChip = __decorate([
     t$1("smartqasa-motion-chip")
 ], MotionChip);
@@ -4952,9 +4946,6 @@ __decorate([
 ], RoutineChip.prototype, "config", void 0);
 __decorate([
     r()
-], RoutineChip.prototype, "stateObj", void 0);
-__decorate([
-    r()
 ], RoutineChip.prototype, "running", void 0);
 RoutineChip = __decorate([
     t$1("smartqasa-routine-chip")
@@ -5042,9 +5033,6 @@ __decorate([
 __decorate([
     r()
 ], SelectChip.prototype, "config", void 0);
-__decorate([
-    r()
-], SelectChip.prototype, "stateObj", void 0);
 SelectChip = __decorate([
     t$1("smartqasa-select-chip")
 ], SelectChip);
@@ -5074,12 +5062,6 @@ function moreInfoDialog(config, stateObj) {
 }
 
 let ThermostatChip$1 = class ThermostatChip extends s {
-    constructor() {
-        super(...arguments);
-        this._icon = "hass:thermometer-lines";
-        this._iconColor = "var(--sq-inactive-rgb)";
-        this._temperature = "??";
-    }
     static { this.styles = [chipBaseStyle, chipTextStyle]; }
     setConfig(config) {
         this.config = { ...config };
@@ -5133,9 +5115,6 @@ __decorate([
 __decorate([
     r()
 ], ThermostatChip$1.prototype, "config", void 0);
-__decorate([
-    r()
-], ThermostatChip$1.prototype, "stateObj", void 0);
 ThermostatChip$1 = __decorate([
     t$1("smartqasa-thermostat-chip")
 ], ThermostatChip$1);
@@ -5186,9 +5165,6 @@ __decorate([
 __decorate([
     r()
 ], ThermostatChip.prototype, "config", void 0);
-__decorate([
-    r()
-], ThermostatChip.prototype, "stateObj", void 0);
 ThermostatChip = __decorate([
     t$1("smartqasa-weather-chip")
 ], ThermostatChip);
@@ -5252,9 +5228,6 @@ __decorate([
 __decorate([
     r()
 ], AreaPicture.prototype, "config", void 0);
-__decorate([
-    r()
-], AreaPicture.prototype, "areaObj", void 0);
 AreaPicture = __decorate([
     t$1("smartqasa-area-picture")
 ], AreaPicture);
@@ -5682,6 +5655,12 @@ PanelFooter = __decorate([
     t$1("smartqasa-panel-footer")
 ], PanelFooter);
 
+window.customCards.push({
+    type: "smartqasa-more-info-dialog",
+    name: "SmartQasa More Info Dialog",
+    preview: true,
+    description: "A SmartQasa dialog for showing More Info for an entity.",
+});
 let MoreInfoDialog = class MoreInfoDialog extends s {
     setConfig(config) {
         this.config = { ...config };
@@ -5692,6 +5671,7 @@ let MoreInfoDialog = class MoreInfoDialog extends s {
             (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj));
     }
     render() {
+        this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
         return x `
             <div>
                 <div class="card-content">
@@ -5710,18 +5690,9 @@ __decorate([
 __decorate([
     r()
 ], MoreInfoDialog.prototype, "config", void 0);
-__decorate([
-    r()
-], MoreInfoDialog.prototype, "stateObj", void 0);
 MoreInfoDialog = __decorate([
     t$1("smartqasa-more-info-dialog")
 ], MoreInfoDialog);
-window.customCards.push({
-    type: "smartqasa-more-info-dialog",
-    name: "SmartQasa More Info Dialog",
-    preview: true,
-    description: "A SmartQasa dialog for showing More Info for an entity.",
-});
 
 window.customCards.push({
     type: "smartqasa-time-date",
@@ -6029,9 +6000,6 @@ __decorate([
 __decorate([
     r()
 ], AllOffTile.prototype, "config", void 0);
-__decorate([
-    r()
-], AllOffTile.prototype, "areaObj", void 0);
 __decorate([
     r()
 ], AllOffTile.prototype, "running", void 0);
@@ -6561,9 +6529,6 @@ let AppTile = class AppTile extends s {
 __decorate([
     r()
 ], AppTile.prototype, "config", void 0);
-__decorate([
-    r()
-], AppTile.prototype, "appObj", void 0);
 AppTile = __decorate([
     t$1("smartqasa-app-tile")
 ], AppTile);
@@ -6651,9 +6616,6 @@ __decorate([
 __decorate([
     r()
 ], AreaTile.prototype, "config", void 0);
-__decorate([
-    r()
-], AreaTile.prototype, "areaObj", void 0);
 __decorate([
     r()
 ], AreaTile.prototype, "running", void 0);
@@ -6782,7 +6744,7 @@ let FanTile = class FanTile extends s {
     updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
         this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
-        if (this.config && this.stateObj) {
+        if (this.config && this.hass && this.stateObj) {
             const state = this.stateObj.state || "unknown";
             icon = this.config.icon || "hass:fan";
             iconAnimation = "none";
@@ -6798,8 +6760,8 @@ let FanTile = class FanTile extends s {
             }
             iconColor = state === "on" ? "var(--sq-fan-on-rgb)" : "var(--sq-inactive-rgb)";
             name = this.config.name || this.stateObj.attributes.friendly_name || this.entity;
-            stateFmtd = `${this.hass?.formatEntityState(this.stateObj)}${state === "on" && this.stateObj.attributes.percentage
-                ? " - " + this.hass?.formatEntityAttributeValue(this.stateObj, "percentage")
+            stateFmtd = `${this.hass.formatEntityState(this.stateObj)}${state === "on" && this.stateObj.attributes.percentage
+                ? " - " + this.hass.formatEntityAttributeValue(this.stateObj, "percentage")
                 : ""}`;
         }
         else {
@@ -6834,9 +6796,6 @@ __decorate([
 __decorate([
     r()
 ], FanTile.prototype, "config", void 0);
-__decorate([
-    r()
-], FanTile.prototype, "stateObj", void 0);
 FanTile = __decorate([
     t$1("smartqasa-fan-tile")
 ], FanTile);
@@ -6986,13 +6945,13 @@ let HeaterTile = class HeaterTile extends s {
     updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
         this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
-        if (this.config && this.stateObj) {
+        if (this.config && this.hass && this.stateObj) {
             const state = this.stateObj.state || "unknown";
             icon = this.config.icon || "hass:water-thermometer";
             iconAnimation = "none";
             iconColor = heaterColors[state] || heaterColors.idle;
             name = this.config.name || this.stateObj.attributes.friendly_name || this.entity;
-            stateFmtd = this.hass?.formatEntityState(this.stateObj);
+            stateFmtd = this.hass.formatEntityState(this.stateObj);
             if (state !== "off" && this.stateObj.attributes.temperature) {
                 stateFmtd += ` - ${this.stateObj.attributes.temperature}°`;
             }
@@ -7076,7 +7035,7 @@ let LightTile = class LightTile extends s {
     }
     updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
-        this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
+        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
         if (this.config && this.hass && this.stateObj) {
             const state = this.stateObj.state || "unknown";
             icon = this.config.icon || this.stateObj.attributes.icon || "hass:lightbulb";
@@ -7229,7 +7188,7 @@ let LockTile = class LockTile extends s {
     updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
         this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
-        if (this.config && this.stateObj) {
+        if (this.config && this.hass && this.stateObj) {
             const state = this.stateObj.state || "unknown";
             switch (state) {
                 case "locked":
@@ -7264,7 +7223,7 @@ let LockTile = class LockTile extends s {
                     break;
             }
             name = this.config.name || this.stateObj.attributes.friendly_name || this.entity;
-            stateFmtd = this.hass?.formatEntityState(this.stateObj);
+            stateFmtd = this.hass.formatEntityState(this.stateObj);
         }
         else {
             icon = this.config?.icon || "hass:garage-alert-variant";
@@ -7353,7 +7312,7 @@ let OptionTile = class OptionTile extends s {
     updateState() {
         let icon, iconAnimation, iconColor, name;
         this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
-        if (this.config && this.stateObj) {
+        if (this.config && this.hass && this.stateObj) {
             if (this.running) {
                 icon = "hass:rotate-right";
                 iconAnimation = "spin 1.0s linear infinite";
@@ -7445,10 +7404,6 @@ window.customCards.push({
     description: "A SmartQasa tile for controlling a robot vacuum entity.",
 });
 let RobotTile = class RobotTile extends s {
-    constructor() {
-        super(...arguments);
-        this.initialized = false;
-    }
     getCardSize() {
         return 1;
     }
@@ -7550,13 +7505,7 @@ __decorate([
 ], RobotTile.prototype, "hass", void 0);
 __decorate([
     r()
-], RobotTile.prototype, "initialized", void 0);
-__decorate([
-    r()
 ], RobotTile.prototype, "config", void 0);
-__decorate([
-    r()
-], RobotTile.prototype, "stateObj", void 0);
 RobotTile = __decorate([
     t$1("smartqasa-robot-tile")
 ], RobotTile);
@@ -7600,7 +7549,7 @@ let RokuTile = class RokuTile extends s {
     updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
         this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
-        if (this.config && this.stateObj) {
+        if (this.config && this.hass && this.stateObj) {
             icon = this.config?.icon || this.stateObj.attributes.icon || "hass:audio-video";
             iconAnimation = "none";
             const state = this.stateObj.state || "unknown";
@@ -7625,7 +7574,7 @@ let RokuTile = class RokuTile extends s {
                     break;
             }
             name = this.config.name || this.stateObj.attributes.friendly_name || this.entity;
-            stateFmtd = `${this.hass?.formatEntityState(this.stateObj)}${this.stateObj.attributes?.source ? ` - ${this.stateObj.attributes.source}` : ""}`;
+            stateFmtd = `${this.hass.formatEntityState(this.stateObj)}${this.stateObj.attributes?.source ? ` - ${this.stateObj.attributes.source}` : ""}`;
         }
         else {
             icon = this.config?.icon || "hass:audio-video-off";
@@ -7670,9 +7619,6 @@ __decorate([
 __decorate([
     r()
 ], RokuTile.prototype, "config", void 0);
-__decorate([
-    r()
-], RokuTile.prototype, "stateObj", void 0);
 RokuTile = __decorate([
     t$1("smartqasa-roku-tile")
 ], RokuTile);
@@ -7827,13 +7773,13 @@ let SelectTile = class SelectTile extends s {
     updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
         this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
-        if (this.config && this.stateObj) {
+        if (this.config && this.hass && this.stateObj) {
             this.stateObj.state || "unknown";
             icon = this.config?.icon || this.stateObj.attributes?.icon || "hass:form-dropdown";
             iconAnimation = "none";
             iconColor = "var(--sq-inactive-rgb)";
-            name = this.config?.name || this.stateObj.attributes?.friendly_name || this.entity;
-            stateFmtd = this.hass?.formatEntityState(this.stateObj) || "Unknown";
+            name = this.config.name || this.stateObj.attributes?.friendly_name || this.entity;
+            stateFmtd = this.hass.formatEntityState(this.stateObj) || "Unknown";
         }
         else {
             icon = this.config?.icon || "hass:form-dropdown";
@@ -7855,9 +7801,6 @@ __decorate([
 __decorate([
     r()
 ], SelectTile.prototype, "config", void 0);
-__decorate([
-    r()
-], SelectTile.prototype, "stateObj", void 0);
 SelectTile = __decorate([
     t$1("smartqasa-select-tile")
 ], SelectTile);
@@ -7899,7 +7842,7 @@ let SensorTile = class SensorTile extends s {
     updateState() {
         let iconTemplate, iconAnimation, iconColor, name, stateFmtd;
         this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
-        if (this.config && this.stateObj) {
+        if (this.config && this.hass && this.stateObj) {
             if (!this.config.icon) {
                 iconTemplate = x `<ha-state-icon .hass=${this.hass} .stateObj=${this.stateObj}></ha-state-icon>`;
             }
@@ -7907,8 +7850,8 @@ let SensorTile = class SensorTile extends s {
                 iconTemplate = x `<ha-icon .icon=${this.config.icon}></ha-icon>`;
             }
             iconColor = this.stateObj.state === "on" ? "var(--sq-binary_sensor-on-rgb)" : "var(--sq-inactive-rgb)";
-            name = this.config?.name || this.stateObj.attributes.friendly_name || this.entity;
-            stateFmtd = this.hass?.formatEntityState(this.stateObj);
+            name = this.config.name || this.stateObj.attributes.friendly_name || this.entity;
+            stateFmtd = this.hass.formatEntityState(this.stateObj);
         }
         else {
             iconTemplate = x `<ha-icon .icon="hass:leak"></ha-icon>`;
@@ -7930,9 +7873,6 @@ __decorate([
 __decorate([
     r()
 ], SensorTile.prototype, "config", void 0);
-__decorate([
-    r()
-], SensorTile.prototype, "stateObj", void 0);
 SensorTile = __decorate([
     t$1("smartqasa-sensor-tile")
 ], SensorTile);
@@ -8049,15 +7989,15 @@ let PoolLightTile = class PoolLightTile extends s {
     updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
         this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
-        if (this.config && this.stateObj) {
+        if (this.config && this.hass && this.stateObj) {
             const state = this.stateObj.state || "unknown";
             icon = this.config.icon || this.stateObj.attributes.icon || "hass:lightbulb";
             iconColor = state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
             name = this.config.name || this.stateObj.attributes.friendly_name || this.entity;
             stateFmtd =
-                this.hass?.formatEntityState(this.stateObj) +
+                this.hass.formatEntityState(this.stateObj) +
                     (state === "on" && this.stateObj.attributes.brightness
-                        ? " - " + this.hass?.formatEntityAttributeValue(this.stateObj, "brightness")
+                        ? " - " + this.hass.formatEntityAttributeValue(this.stateObj, "brightness")
                         : "");
         }
         else {
@@ -8188,12 +8128,6 @@ __decorate([
 ], PoolLightSequencerTile.prototype, "config", void 0);
 __decorate([
     r()
-], PoolLightSequencerTile.prototype, "sequenceObj", void 0);
-__decorate([
-    r()
-], PoolLightSequencerTile.prototype, "stateObj", void 0);
-__decorate([
-    r()
 ], PoolLightSequencerTile.prototype, "running", void 0);
 PoolLightSequencerTile = __decorate([
     t$1("smartqasa-pool-light-sequencer-tile")
@@ -8238,7 +8172,7 @@ let ShadeTile = class ShadeTile extends s {
     updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
         this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
-        if (this.config && this.stateObj) {
+        if (this.config && this.hass && this.stateObj) {
             const state = this.stateObj.state || "unknown";
             switch (state) {
                 case "closed":
@@ -8269,9 +8203,9 @@ let ShadeTile = class ShadeTile extends s {
             }
             name = this.config.name || this.stateObj.attributes.friendly_name || this.entity;
             stateFmtd =
-                this.hass?.formatEntityState(this.stateObj) +
+                this.hass.formatEntityState(this.stateObj) +
                     (state === "open" && this.stateObj.attributes.current_position
-                        ? " - " + this.hass?.formatEntityAttributeValue(this.stateObj, "current_position")
+                        ? " - " + this.hass.formatEntityAttributeValue(this.stateObj, "current_position")
                         : "");
         }
         else {
@@ -8325,9 +8259,6 @@ __decorate([
 __decorate([
     r()
 ], ShadeTile.prototype, "config", void 0);
-__decorate([
-    r()
-], ShadeTile.prototype, "stateObj", void 0);
 ShadeTile = __decorate([
     t$1("smartqasa-shade-tile")
 ], ShadeTile);
@@ -8373,16 +8304,16 @@ let SwitchTile = class SwitchTile extends s {
     updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
         this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
-        if (this.config && this.stateObj) {
+        if (this.config && this.hass && this.stateObj) {
             const state = this.stateObj.state;
             icon = this.config.icon || this.stateObj.attributes.icon || "hass:toggle-switch-variant";
             iconAnimation = "none";
             iconColor =
                 state === "on"
-                    ? `var(--sq-switch${this.config?.category ? `-${this.config.category}` : ""}-on-rgb)`
+                    ? `var(--sq-switch${this.config.category ? `-${this.config.category}` : ""}-on-rgb)`
                     : "var(--sq-inactive-rgb)";
             name = this.config.name || this.stateObj.attributes.friendly_name || this.stateObj.entity_id;
-            stateFmtd = this.hass?.formatEntityState(this.stateObj);
+            stateFmtd = this.hass.formatEntityState(this.stateObj);
         }
         else {
             icon = this.config?.icon || "hass:toggle-switch-variant";
@@ -8408,9 +8339,6 @@ __decorate([
 __decorate([
     r()
 ], SwitchTile.prototype, "config", void 0);
-__decorate([
-    r()
-], SwitchTile.prototype, "stateObj", void 0);
 SwitchTile = __decorate([
     t$1("smartqasa-switch-tile")
 ], SwitchTile);
@@ -8502,7 +8430,7 @@ let ThermostatTile = class ThermostatTile extends s {
     updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
         this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
-        if (this.config && this.stateObj) {
+        if (this.config && this.hass && this.stateObj) {
             const state = this.stateObj.state || "unknown";
             icon = thermostatIcons[state] || thermostatIcons.default;
             iconAnimation = "none";
@@ -8514,7 +8442,7 @@ let ThermostatTile = class ThermostatTile extends s {
                 iconColor = thermostatColors[hvacAction] || thermostatColors.idle;
             }
             name = this.config.name || this.stateObj.attributes.friendly_name || this.entity;
-            stateFmtd = this.hass?.formatEntityState(this.stateObj);
+            stateFmtd = this.hass.formatEntityState(this.stateObj);
             if (state !== "off") {
                 if (this.stateObj.attributes.current_temperature) {
                     stateFmtd += ` - ${this.stateObj.attributes.current_temperature}°`;
@@ -8548,14 +8476,11 @@ __decorate([
 __decorate([
     r()
 ], ThermostatTile.prototype, "config", void 0);
-__decorate([
-    r()
-], ThermostatTile.prototype, "stateObj", void 0);
 ThermostatTile = __decorate([
     t$1("smartqasa-thermostat-tile")
 ], ThermostatTile);
 
-var version = "2024.5.6c";
+var version = "2024.5.7a";
 
 window.smartqasa = window.smartqasa || {};
 window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();

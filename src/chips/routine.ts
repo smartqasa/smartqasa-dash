@@ -16,23 +16,21 @@ interface Config extends LovelaceCardConfig {
 @customElement("smartqasa-routine-chip")
 export class RoutineChip extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
-
     @state() private config?: Config;
-    @state() private stateObj?: HassEntity;
     @state() private running: boolean = false;
-
     private entity?: string;
+    private stateObj?: HassEntity;
 
     static styles: CSSResultGroup = [chipBaseStyle, chipTextStyle, chipIconSpinStyle];
 
-    setConfig(config: Config): void {
+    public setConfig(config: Config): void {
         this.config = { ...config };
         this.entity = ["automation", "scene", "script"].includes(this.config.entity?.split(".")[0])
             ? this.config.entity
             : undefined;
     }
 
-    shouldUpdate(changedProps: PropertyValues): boolean {
+    protected shouldUpdate(changedProps: PropertyValues): boolean {
         return !!(
             (changedProps.has("config") && this.config) ||
             (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj)

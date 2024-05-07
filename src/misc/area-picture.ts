@@ -23,11 +23,9 @@ export class AreaPicture extends LitElement {
     }
 
     @property({ attribute: false }) public hass?: HomeAssistant;
-
     @state() private config?: Config;
-    @state() private areaObj?: AreaRegistryEntry;
-
     private area?: string;
+    private areaObj?: AreaRegistryEntry;
 
     static get styles(): CSSResultGroup {
         return css`
@@ -47,19 +45,19 @@ export class AreaPicture extends LitElement {
         `;
     }
 
-    setConfig(config: Config): void {
+    public setConfig(config: Config): void {
         this.config = { ...config };
         this.area = this.config?.area;
     }
 
-    shouldUpdate(changedProps: PropertyValues): boolean {
+    protected shouldUpdate(changedProps: PropertyValues): boolean {
         return !!(
             (changedProps.has("config") && this.config) ||
             (changedProps.has("hass") && this.area && this.hass?.areas[this.area] !== this.areaObj)
         );
     }
 
-    render(): TemplateResult {
+    protected render(): TemplateResult {
         const height = deviceType === "phone" ? "15vh" : "20vh";
         const picture = this.config?.picture
             ? `/local/smartqasa/images/${this.config.picture}`

@@ -25,11 +25,11 @@ export class AppTile extends LitElement {
     }
 
     @state() private config?: Config;
-    @state() private appObj?: any;
+    private appObj?: any;
 
     static styles: CSSResultGroup = tileBaseStyle;
 
-    setConfig(config: Config): void {
+    public setConfig(config: Config): void {
         if (!config.app) throw new Error("A valid app must be specified.");
         this.config = { ...config };
         this.appObj = appTable[config.app] || undefined;

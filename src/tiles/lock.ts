@@ -35,12 +35,12 @@ export class LockTile extends LitElement {
 
     static styles: CSSResultGroup = [tileBaseStyle, tileStateStyle, tileIconBlinkStyle, tileIconSpinStyle];
 
-    setConfig(config: Config): void {
+    public setConfig(config: Config): void {
         this.config = { ...config };
         this.entity = this.config.entity?.startsWith("lock.") ? this.config.entity : undefined;
     }
 
-    shouldUpdate(changedProps: PropertyValues): boolean {
+    protected shouldUpdate(changedProps: PropertyValues): boolean {
         return !!(
             (changedProps.has("config") && this.config) ||
             (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj) ||
@@ -71,7 +71,7 @@ export class LockTile extends LitElement {
 
         this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
 
-        if (this.config && this.stateObj) {
+        if (this.config && this.hass && this.stateObj) {
             const state = this.stateObj.state || "unknown";
             switch (state) {
                 case "locked":
@@ -106,7 +106,7 @@ export class LockTile extends LitElement {
                     break;
             }
             name = this.config.name || this.stateObj.attributes.friendly_name || this.entity;
-            stateFmtd = this.hass?.formatEntityState(this.stateObj);
+            stateFmtd = this.hass.formatEntityState(this.stateObj);
         } else {
             icon = this.config?.icon || "hass:garage-alert-variant";
             iconAnimation = "none";

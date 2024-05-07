@@ -24,20 +24,18 @@ window.customCards.push({
 @customElement("smartqasa-select-chip")
 export class SelectChip extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
-
     @state() private config?: Config;
-    @state() private stateObj?: HassEntity;
-
     private entity?: string;
+    private stateObj?: HassEntity;
 
     static styles: CSSResultGroup = [chipBaseStyle];
 
-    setConfig(config: Config): void {
+    public setConfig(config: Config): void {
         this.config = { ...config };
         this.entity = this.config.entity?.startsWith("input_select.") ? this.config.entity : undefined;
     }
 
-    shouldUpdate(changedProps: PropertyValues): boolean {
+    protected shouldUpdate(changedProps: PropertyValues): boolean {
         return !!(
             (changedProps.has("config") && this.config) ||
             (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj)

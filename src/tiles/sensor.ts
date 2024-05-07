@@ -28,20 +28,18 @@ export class SensorTile extends LitElement {
     }
 
     @property({ attribute: false }) public hass?: HomeAssistant;
-
     @state() private config?: Config;
-    @state() private stateObj?: HassEntity;
-
     private entity?: string;
+    private stateObj?: HassEntity;
 
     static styles: CSSResultGroup = [tileBaseStyle, tileStateStyle];
 
-    setConfig(config: Config): void {
+    public setConfig(config: Config): void {
         this.config = { ...config };
         this.entity = this.config.entity?.startsWith("binary_sensor.") ? this.config.entity : undefined;
     }
 
-    shouldUpdate(changedProps: PropertyValues): boolean {
+    protected shouldUpdate(changedProps: PropertyValues): boolean {
         return !!(
             (changedProps.has("config") && this.config) ||
             (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj)
@@ -70,15 +68,15 @@ export class SensorTile extends LitElement {
 
         this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
 
-        if (this.config && this.stateObj) {
+        if (this.config && this.hass && this.stateObj) {
             if (!this.config.icon) {
                 iconTemplate = html`<ha-state-icon .hass=${this.hass} .stateObj=${this.stateObj}></ha-state-icon>`;
             } else {
                 iconTemplate = html`<ha-icon .icon=${this.config.icon}></ha-icon>`;
             }
             iconColor = this.stateObj.state === "on" ? "var(--sq-binary_sensor-on-rgb)" : "var(--sq-inactive-rgb)";
-            name = this.config?.name || this.stateObj.attributes.friendly_name || this.entity;
-            stateFmtd = this.hass?.formatEntityState(this.stateObj);
+            name = this.config.name || this.stateObj.attributes.friendly_name || this.entity;
+            stateFmtd = this.hass.formatEntityState(this.stateObj);
         } else {
             iconTemplate = html`<ha-icon .icon="hass:leak"></ha-icon>`;
             iconAnimation = "none";

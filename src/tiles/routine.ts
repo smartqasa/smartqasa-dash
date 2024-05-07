@@ -35,14 +35,14 @@ export class RoutineTile extends LitElement {
 
     static styles: CSSResultGroup = [tileBaseStyle, tileIconSpinStyle];
 
-    setConfig(config: Config): void {
+    public setConfig(config: Config): void {
         this.config = { ...config };
         this.entity = ["automation", "scene", "script"].includes(this.config.entity?.split(".")[0])
             ? this.config.entity
             : undefined;
     }
 
-    shouldUpdate(changedProps: PropertyValues): boolean {
+    protected shouldUpdate(changedProps: PropertyValues): boolean {
         return !!(
             (changedProps.has("config") && this.config) ||
             (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj) ||

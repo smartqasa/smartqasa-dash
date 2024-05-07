@@ -28,20 +28,18 @@ export class RokuTile extends LitElement {
     }
 
     @property({ attribute: false }) public hass?: HomeAssistant;
-
     @state() private config?: Config;
-    @state() private stateObj?: HassEntity;
-
     private entity?: string;
+    private stateObj?: HassEntity;
 
     static styles: CSSResultGroup = [tileBaseStyle, tileStateStyle];
 
-    setConfig(config: Config): void {
+    public setConfig(config: Config): void {
         this.config = { ...config };
         this.entity = this.config.entity?.startsWith("media_player.") ? this.config.entity : undefined;
     }
 
-    shouldUpdate(changedProps: PropertyValues): boolean {
+    protected shouldUpdate(changedProps: PropertyValues): boolean {
         return !!(
             (changedProps.has("config") && this.config) ||
             (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj)
@@ -71,7 +69,7 @@ export class RokuTile extends LitElement {
 
         this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
 
-        if (this.config && this.stateObj) {
+        if (this.config && this.hass && this.stateObj) {
             icon = this.config?.icon || this.stateObj.attributes.icon || "hass:audio-video";
             iconAnimation = "none";
             const state = this.stateObj.state || "unknown";
@@ -96,7 +94,7 @@ export class RokuTile extends LitElement {
                     break;
             }
             name = this.config.name || this.stateObj.attributes.friendly_name || this.entity;
-            stateFmtd = `${this.hass?.formatEntityState(this.stateObj)}${
+            stateFmtd = `${this.hass.formatEntityState(this.stateObj)}${
                 this.stateObj.attributes?.source ? ` - ${this.stateObj.attributes.source}` : ""
             }`;
         } else {

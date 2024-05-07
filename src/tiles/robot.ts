@@ -26,21 +26,19 @@ export class RobotTile extends LitElement {
     }
 
     @property({ attribute: false }) public hass?: HomeAssistant;
-
-    @state() private initialized: boolean = false;
     @state() private config?: Config;
-    @state() private stateObj?: HassEntity;
+    private stateObj?: HassEntity;
 
     private entity?: string;
 
     static styles: CSSResultGroup = [tileBaseStyle, tileStateStyle];
 
-    setConfig(config: Config): void {
+    public setConfig(config: Config): void {
         this.config = { ...config };
         this.entity = this.config.entity?.startsWith("light.") ? this.config.entity : undefined;
     }
 
-    shouldUpdate(changedProps: PropertyValues): boolean {
+    protected shouldUpdate(changedProps: PropertyValues): boolean {
         return !!(
             (changedProps.has("config") && this.config) ||
             (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj)

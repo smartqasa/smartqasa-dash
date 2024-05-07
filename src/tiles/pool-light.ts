@@ -37,12 +37,12 @@ export class PoolLightTile extends LitElement {
 
     static styles: CSSResultGroup = [tileBaseStyle, tileStateStyle];
 
-    setConfig(config: Config): void {
+    public setConfig(config: Config): void {
         this.config = { ...config };
         this.entity = ["light", "switch"].includes(this.config.entity?.split(".")[0]) ? this.config.entity : undefined;
     }
 
-    shouldUpdate(changedProps: PropertyValues): boolean {
+    protected shouldUpdate(changedProps: PropertyValues): boolean {
         return !!(
             (changedProps.has("config") && this.config) ||
             (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj)
@@ -72,15 +72,15 @@ export class PoolLightTile extends LitElement {
 
         this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
 
-        if (this.config && this.stateObj) {
+        if (this.config && this.hass && this.stateObj) {
             const state = this.stateObj.state || "unknown";
             icon = this.config.icon || this.stateObj.attributes.icon || "hass:lightbulb";
             iconColor = state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
             name = this.config.name || this.stateObj.attributes.friendly_name || this.entity;
             stateFmtd =
-                this.hass?.formatEntityState(this.stateObj) +
+                this.hass.formatEntityState(this.stateObj) +
                 (state === "on" && this.stateObj.attributes.brightness
-                    ? " - " + this.hass?.formatEntityAttributeValue(this.stateObj, "brightness")
+                    ? " - " + this.hass.formatEntityAttributeValue(this.stateObj, "brightness")
                     : "");
         } else {
             icon = this.config?.icon || "hass:lightbulb-alert";

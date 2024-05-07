@@ -37,7 +37,7 @@ export class CustomChip extends LitElement {
 
     static styles: CSSResultGroup = [chipBaseStyle, chipTextStyle];
 
-    setConfig(config: Config): void {
+    public setConfig(config: Config): void {
         this.config = { ...config };
         this.loadDialogObj();
     }
@@ -53,7 +53,7 @@ export class CustomChip extends LitElement {
         }
     }
 
-    shouldUpdate(changedProps: PropertyValues): boolean {
+    protected shouldUpdate(changedProps: PropertyValues): boolean {
         return !!(
             (changedProps.has("config") && this.config) ||
             (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj)

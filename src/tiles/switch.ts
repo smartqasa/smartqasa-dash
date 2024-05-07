@@ -29,22 +29,20 @@ export class SwitchTile extends LitElement {
     }
 
     @property({ attribute: false }) public hass?: HomeAssistant;
-
     @state() private config?: Config;
-    @state() private stateObj?: HassEntity;
-
     private entity?: string;
+    private stateObj?: HassEntity;
 
     static styles: CSSResultGroup = [tileBaseStyle, tileStateStyle];
 
-    setConfig(config: Config): void {
+    public setConfig(config: Config): void {
         this.config = { ...config };
         this.entity = ["fan", "input_boolean", "light", "switch"].includes(this.config.entity?.split(".")[0])
             ? this.config.entity
             : undefined;
     }
 
-    shouldUpdate(changedProps: PropertyValues): boolean {
+    protected shouldUpdate(changedProps: PropertyValues): boolean {
         return !!(
             (changedProps.has("config") && this.config) ||
             (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj)
@@ -74,16 +72,16 @@ export class SwitchTile extends LitElement {
 
         this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
 
-        if (this.config && this.stateObj) {
+        if (this.config && this.hass && this.stateObj) {
             const state = this.stateObj.state;
             icon = this.config.icon || this.stateObj.attributes.icon || "hass:toggle-switch-variant";
             iconAnimation = "none";
             iconColor =
                 state === "on"
-                    ? `var(--sq-switch${this.config?.category ? `-${this.config.category}` : ""}-on-rgb)`
+                    ? `var(--sq-switch${this.config.category ? `-${this.config.category}` : ""}-on-rgb)`
                     : "var(--sq-inactive-rgb)";
             name = this.config.name || this.stateObj.attributes.friendly_name || this.stateObj.entity_id;
-            stateFmtd = this.hass?.formatEntityState(this.stateObj);
+            stateFmtd = this.hass.formatEntityState(this.stateObj);
         } else {
             icon = this.config?.icon || "hass:toggle-switch-variant";
             iconAnimation = "none";

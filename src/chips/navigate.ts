@@ -32,7 +32,7 @@ export class NavigateChip extends LitElement {
         this.areaNext = config.area_next || undefined;
     }
 
-    shouldUpdate(changedProps: PropertyValues): boolean {
+    protected shouldUpdate(changedProps: PropertyValues): boolean {
         return !!(
             changedProps.has("hass") &&
             this.areaPrev &&

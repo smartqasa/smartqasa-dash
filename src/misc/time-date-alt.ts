@@ -5,8 +5,8 @@ interface Config {
     // Configuration interface, define any expected properties
 }
 
-@customElement("smartqasa-time-date")
-export class SmartQasaTimeDate extends LitElement {
+@customElement("smartqasa-time-date-alt")
+export class SmartQasaTimeDateAlt extends LitElement {
     @state() private _time: string = "Loading...";
     @state() private _date: string = "Loading...";
 

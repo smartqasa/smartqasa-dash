@@ -28,7 +28,7 @@ export class ThemeTile extends LitElement {
 
     static styles: CSSResultGroup = [tileBaseStyle, tileIconSpinStyle];
 
-    setConfig(config: Config): void {
+    public setConfig(config: Config): void {
         this.config = { ...config };
     }
 

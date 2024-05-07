@@ -25,21 +25,19 @@ export class AllOffTile extends LitElement {
     }
 
     @property({ attribute: false }) public hass?: HomeAssistant;
-
     @state() private config?: Config;
-    @state() private areaObj?: AreaRegistryEntry;
     @state() private running: boolean = false;
-
     private area?: string;
+    private areaObj?: AreaRegistryEntry;
 
     static styles: CSSResultGroup = [tileBaseStyle, tileIconSpinStyle];
 
-    setConfig(config: Config): void {
+    public setConfig(config: Config): void {
         this.config = { ...config };
         this.area = this.config?.area;
     }
 
-    shouldUpdate(changedProps: PropertyValues): boolean {
+    protected shouldUpdate(changedProps: PropertyValues): boolean {
         return !!(
             (changedProps.has("config") && this.config) ||
             (changedProps.has("hass") && this.area && this.hass?.areas[this.area] !== this.areaObj) ||

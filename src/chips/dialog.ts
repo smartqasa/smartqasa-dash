@@ -23,19 +23,17 @@ window.customCards.push({
 @customElement("smartqasa-dialog-chip")
 export class DialogChip extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
-
     @state() private config?: Config;
     @state() private dialogObj?: any;
-    @state() private stateObj?: HassEntity;
-
     private dialog?: string;
     private entity?: string;
     private icon?: string;
     private label?: string;
+    private stateObj?: HassEntity;
 
     static styles: CSSResultGroup = [chipBaseStyle, chipTextStyle];
 
-    setConfig(config: Config): void {
+    public setConfig(config: Config): void {
         this.config = { ...config };
         this.dialog = this.config.dialog;
         this.dialogObj = this.dialog ? dialogTable[this.dialog] : undefined;
@@ -44,7 +42,7 @@ export class DialogChip extends LitElement {
         this.label = this.config.label || "";
     }
 
-    shouldUpdate(changedProps: PropertyValues): boolean {
+    protected shouldUpdate(changedProps: PropertyValues): boolean {
         return !!(
             (changedProps.has("config") && this.config) ||
             (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj)

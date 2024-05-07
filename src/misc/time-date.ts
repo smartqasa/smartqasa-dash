@@ -59,9 +59,9 @@ export class SmartQasaTimeDate extends LitElement {
         `;
     }
 
-    setConfig(config: any): void {}
+    public setConfig(config: any): void {}
 
-    updated(changedProps: PropertyValues) {
+    protected updated(changedProps: PropertyValues) {
         super.updated(changedProps);
         if (changedProps.has("hass") && this.hass) {
             this.time = this.hass.states["sensor.current_time"]?.state || "Loading...";
@@ -69,7 +69,7 @@ export class SmartQasaTimeDate extends LitElement {
         }
     }
 
-    render(): TemplateResult {
+    protected render(): TemplateResult {
         return html`
             <div class="container" @click="${this.handleTap}">
                 <div class="time">${this.time}</div>

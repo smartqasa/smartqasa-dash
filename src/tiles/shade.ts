@@ -28,20 +28,18 @@ export class ShadeTile extends LitElement {
     }
 
     @property({ attribute: false }) public hass?: HomeAssistant;
-
     @state() private config?: Config;
-    @state() private stateObj?: HassEntity;
-
     private entity?: string;
+    private stateObj?: HassEntity;
 
     static styles: CSSResultGroup = [tileBaseStyle, tileStateStyle, tileIconBlinkStyle];
 
-    setConfig(config: Config): void {
+    public setConfig(config: Config): void {
         this.config = { ...config };
         this.entity = this.config.entity?.startsWith("cover.") ? this.config.entity : undefined;
     }
 
-    shouldUpdate(changedProps: PropertyValues): boolean {
+    protected shouldUpdate(changedProps: PropertyValues): boolean {
         return !!(
             (changedProps.has("config") && this.config) ||
             (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj)
@@ -71,7 +69,7 @@ export class ShadeTile extends LitElement {
 
         this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
 
-        if (this.config && this.stateObj) {
+        if (this.config && this.hass && this.stateObj) {
             const state = this.stateObj.state || "unknown";
             switch (state) {
                 case "closed":
@@ -102,9 +100,9 @@ export class ShadeTile extends LitElement {
             }
             name = this.config.name || this.stateObj.attributes.friendly_name || this.entity;
             stateFmtd =
-                this.hass?.formatEntityState(this.stateObj) +
+                this.hass.formatEntityState(this.stateObj) +
                 (state === "open" && this.stateObj.attributes.current_position
-                    ? " - " + this.hass?.formatEntityAttributeValue(this.stateObj, "current_position")
+                    ? " - " + this.hass.formatEntityAttributeValue(this.stateObj, "current_position")
                     : "");
         } else {
             icon = this.config?.icon || "hass:roller-shade";

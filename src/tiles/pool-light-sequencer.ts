@@ -19,23 +19,22 @@ export class PoolLightSequencerTile extends LitElement {
     }
 
     @property({ attribute: false }) public hass?: HomeAssistant;
-
     @state() private config?: Config;
-    @state() private sequenceObj?: any;
-    @state() private stateObj?: any;
     @state() private running: boolean = false;
+    private sequenceObj?: any;
+    private stateObj?: any;
 
     private entity?: string;
 
     static styles: CSSResultGroup = [tileBaseStyle, tileIconSpinStyle];
 
-    setConfig(config: Config): void {
+    public setConfig(config: Config): void {
         this.config = { ...config };
         this.sequenceObj = config.sequence ? sequenceTable[config.sequence] : undefined;
         this.entity = ["light", "switch"].includes(this.config.entity?.split(".")[0]) ? this.config.entity : undefined;
     }
 
-    shouldUpdate(changedProps: PropertyValues): boolean {
+    protected shouldUpdate(changedProps: PropertyValues): boolean {
         return !!(
             (changedProps.has("config") && this.config) ||
             (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj)

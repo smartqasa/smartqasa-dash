@@ -80,7 +80,7 @@ export class LightTile extends LitElement {
     private updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
 
-        this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
+        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
 
         if (this.config && this.hass && this.stateObj) {
             const state = this.stateObj.state || "unknown";
