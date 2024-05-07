@@ -56,9 +56,12 @@ export class LightTile extends LitElement {
     }
 
     shouldUpdate(changedProps: PropertyValues): boolean {
-        return changedProps.has("hass") && this.hass && this.entity && this.hass.states[this.entity] !== this.stateObj
-            ? true
-            : false;
+        return !!(
+            changedProps.has("hass") &&
+            this.hass &&
+            this.entity &&
+            this.hass.states[this.entity] !== this.stateObj
+        );
     }
 
     protected render(): TemplateResult {
