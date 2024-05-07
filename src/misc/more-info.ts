@@ -22,11 +22,11 @@ export class MoreInfoDialog extends LitElement {
         this.entity = this.config?.entity;
     }
 
-    updated(changedProps: PropertyValues) {
-        super.updated(changedProps);
-        if (changedProps.has("hass")) {
-            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
-        }
+    shouldUpdate(changedProps: PropertyValues): boolean {
+        return !!(
+            (changedProps.has("config") && this.config) ||
+            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj)
+        );
     }
 
     protected render(): TemplateResult {

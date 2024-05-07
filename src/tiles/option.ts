@@ -30,7 +30,6 @@ export class OptionTile extends LitElement {
 
     @property({ attribute: false }) public hass?: HomeAssistant;
 
-    @state() private initialized: boolean = false;
     @state() private config?: Config;
     @state() private stateObj?: HassEntity;
     @state() private running: boolean = false;
@@ -45,7 +44,11 @@ export class OptionTile extends LitElement {
     }
 
     shouldUpdate(changedProps: PropertyValues): boolean {
-        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
+        return !!(
+            (changedProps.has("config") && this.config) ||
+            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj) ||
+            this.running
+        );
     }
 
     protected render(): TemplateResult {

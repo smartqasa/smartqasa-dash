@@ -24,7 +24,6 @@ export class AreaPicture extends LitElement {
 
     @property({ attribute: false }) public hass?: HomeAssistant;
 
-    @state() private initialized: boolean = false;
     @state() private config?: Config;
     @state() private areaObj?: AreaRegistryEntry;
 
@@ -53,17 +52,14 @@ export class AreaPicture extends LitElement {
         this.area = this.config?.area;
     }
 
-    updated(changedProps: PropertyValues) {
-        super.updated(changedProps);
-        if (changedProps.has("hass") && this.area) {
-            this.areaObj = this.hass && this.area ? this.hass.areas[this.area] : undefined;
-            this.initialized = true;
-        }
+    shouldUpdate(changedProps: PropertyValues): boolean {
+        return !!(
+            (changedProps.has("config") && this.config) ||
+            (changedProps.has("hass") && this.area && this.hass?.areas[this.area] !== this.areaObj)
+        );
     }
 
     render(): TemplateResult {
-        if (!this.initialized || !this.areaObj) return html``;
-
         const height = deviceType === "phone" ? "15vh" : "20vh";
         const picture = this.config?.picture
             ? `/local/smartqasa/images/${this.config.picture}`

@@ -4068,7 +4068,8 @@ let CustomChip = class CustomChip extends s {
         }
     }
     shouldUpdate(changedProps) {
-        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
+        return !!((changedProps.has("config") && this.config) ||
+            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj));
     }
     render() {
         if (!this.dialogObj)
@@ -4633,7 +4634,8 @@ let DialogChip = class DialogChip extends s {
         this.label = this.config.label || "";
     }
     shouldUpdate(changedProps) {
-        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
+        return !!((changedProps.has("config") && this.config) ||
+            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj));
     }
     render() {
         if (!this.dialogObj)
@@ -4708,7 +4710,8 @@ let MotionChip = class MotionChip extends s {
         this.entity = this.config.entity?.startsWith("automation.") ? this.config.entity : undefined;
     }
     shouldUpdate(changedProps) {
-        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
+        return !!((changedProps.has("config") && this.config) ||
+            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj));
     }
     render() {
         if (!this.entity)
@@ -4869,7 +4872,8 @@ let RoutineChip = class RoutineChip extends s {
             : undefined;
     }
     shouldUpdate(changedProps) {
-        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
+        return !!((changedProps.has("config") && this.config) ||
+            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj));
     }
     render() {
         if (!this.entity)
@@ -4998,7 +5002,8 @@ let SelectChip = class SelectChip extends s {
         this.entity = this.config.entity?.startsWith("input_select.") ? this.config.entity : undefined;
     }
     shouldUpdate(changedProps) {
-        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
+        return !!((changedProps.has("config") && this.config) ||
+            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj));
     }
     render() {
         if (!this.entity)
@@ -5081,7 +5086,8 @@ let ThermostatChip$1 = class ThermostatChip extends s {
         this.entity = this.config.entity?.startsWith("climate.") ? this.config.entity : undefined;
     }
     shouldUpdate(changedProps) {
-        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
+        return !!((changedProps.has("config") && this.config) ||
+            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj));
     }
     render() {
         if (!this.entity)
@@ -5141,7 +5147,8 @@ let ThermostatChip = class ThermostatChip extends s {
         this.entity = this.config.entity?.startsWith("weather.") ? this.config.entity : undefined;
     }
     shouldUpdate(changedProps) {
-        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
+        return !!((changedProps.has("config") && this.config) ||
+            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj));
     }
     render() {
         let iconColor, temperature;
@@ -5201,10 +5208,6 @@ window.customCards.push({
     description: "A SmartQasa card for rendering an area picture.",
 });
 let AreaPicture = class AreaPicture extends s {
-    constructor() {
-        super(...arguments);
-        this.initialized = false;
-    }
     getCardSize() {
         return 1;
     }
@@ -5229,16 +5232,11 @@ let AreaPicture = class AreaPicture extends s {
         this.config = { ...config };
         this.area = this.config?.area;
     }
-    updated(changedProps) {
-        super.updated(changedProps);
-        if (changedProps.has("hass") && this.area) {
-            this.areaObj = this.hass && this.area ? this.hass.areas[this.area] : undefined;
-            this.initialized = true;
-        }
+    shouldUpdate(changedProps) {
+        return !!((changedProps.has("config") && this.config) ||
+            (changedProps.has("hass") && this.area && this.hass?.areas[this.area] !== this.areaObj));
     }
     render() {
-        if (!this.initialized || !this.areaObj)
-            return x ``;
         const height = deviceType === "phone" ? "15vh" : "20vh";
         const picture = this.config?.picture
             ? `/local/smartqasa/images/${this.config.picture}`
@@ -5251,9 +5249,6 @@ let AreaPicture = class AreaPicture extends s {
 __decorate([
     n$1({ attribute: false })
 ], AreaPicture.prototype, "hass", void 0);
-__decorate([
-    r()
-], AreaPicture.prototype, "initialized", void 0);
 __decorate([
     r()
 ], AreaPicture.prototype, "config", void 0);
@@ -5692,11 +5687,9 @@ let MoreInfoDialog = class MoreInfoDialog extends s {
         this.config = { ...config };
         this.entity = this.config?.entity;
     }
-    updated(changedProps) {
-        super.updated(changedProps);
-        if (changedProps.has("hass")) {
-            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
-        }
+    shouldUpdate(changedProps) {
+        return !!((changedProps.has("config") && this.config) ||
+            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj));
     }
     render() {
         return x `
@@ -5965,7 +5958,7 @@ let AllOffTile = class AllOffTile extends s {
         this.area = this.config?.area;
     }
     shouldUpdate(changedProps) {
-        return !!(!!(changedProps.has("config") && this.config) ||
+        return !!((changedProps.has("config") && this.config) ||
             (changedProps.has("hass") && this.area && this.hass?.areas[this.area] !== this.areaObj) ||
             this.running);
     }
@@ -6595,7 +6588,9 @@ let AreaTile = class AreaTile extends s {
         this.area = this.config.area;
     }
     shouldUpdate(changedProps) {
-        return !!(changedProps.has("hass") && this.area && this.hass?.areas[this.area] !== this.areaObj);
+        return !!((changedProps.has("config") && this.config) ||
+            (changedProps.has("hass") && this.area && this.hass?.areas[this.area] !== this.areaObj) ||
+            this.running);
     }
     render() {
         const { icon, iconAnimation, iconColor, name } = this.updateState();
@@ -6764,7 +6759,8 @@ let FanTile = class FanTile extends s {
         this.entity = this.config.entity?.startsWith("fan.") ? this.config.entity : undefined;
     }
     shouldUpdate(changedProps) {
-        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
+        return !!((changedProps.has("config") && this.config) ||
+            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj));
     }
     render() {
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
@@ -6861,7 +6857,8 @@ let GarageTile = class GarageTile extends s {
         this.entity = this.config.entity?.startsWith("cover.") ? this.config.entity : undefined;
     }
     shouldUpdate(changedProps) {
-        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
+        return !!((changedProps.has("config") && this.config) ||
+            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj));
     }
     render() {
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
@@ -6957,10 +6954,6 @@ window.customCards.push({
     description: "A SmartQasa tile for controlling a water heater entity.",
 });
 let HeaterTile = class HeaterTile extends s {
-    constructor() {
-        super(...arguments);
-        this.initialized = false;
-    }
     getCardSize() {
         return 1;
     }
@@ -6969,16 +6962,11 @@ let HeaterTile = class HeaterTile extends s {
         this.config = { ...config };
         this.entity = this.config.entity?.startsWith("water_heater.") ? this.config.entity : undefined;
     }
-    updated(changedProps) {
-        super.updated(changedProps);
-        if (changedProps.has("hass")) {
-            this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
-            this.initialized = true;
-        }
+    shouldUpdate(changedProps) {
+        return !!((changedProps.has("config") && this.config) ||
+            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj));
     }
     render() {
-        if (!this.initialized)
-            return x ``;
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
@@ -6997,13 +6985,14 @@ let HeaterTile = class HeaterTile extends s {
     }
     updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
-        if (this.config && this.hass && this.stateObj) {
+        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
+        if (this.config && this.stateObj) {
             const state = this.stateObj.state || "unknown";
             icon = this.config.icon || "hass:water-thermometer";
             iconAnimation = "none";
             iconColor = heaterColors[state] || heaterColors.idle;
             name = this.config.name || this.stateObj.attributes.friendly_name || this.entity;
-            stateFmtd = this.hass.formatEntityState(this.stateObj);
+            stateFmtd = this.hass?.formatEntityState(this.stateObj);
             if (state !== "off" && this.stateObj.attributes.temperature) {
                 stateFmtd += ` - ${this.stateObj.attributes.temperature}°`;
             }
@@ -7029,9 +7018,6 @@ let HeaterTile = class HeaterTile extends s {
 __decorate([
     n$1({ attribute: false })
 ], HeaterTile.prototype, "hass", void 0);
-__decorate([
-    r()
-], HeaterTile.prototype, "initialized", void 0);
 __decorate([
     r()
 ], HeaterTile.prototype, "config", void 0);
@@ -7071,12 +7057,6 @@ let LightTile = class LightTile extends s {
         return !!((changedProps.has("config") && this.config) ||
             (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj));
     }
-    updated(changedProps) {
-        super.updated(changedProps);
-        if (changedProps.has("hass") && this.hass && this.entity) {
-            this.stateObj = this.hass.states[this.entity];
-        }
-    }
     render() {
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
         const iconStyles = {
@@ -7096,6 +7076,7 @@ let LightTile = class LightTile extends s {
     }
     updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
+        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
         if (this.config && this.stateObj) {
             const state = this.stateObj.state || "unknown";
             icon = this.config.icon || this.stateObj.attributes.icon || "hass:lightbulb";
@@ -7227,7 +7208,8 @@ let LockTile = class LockTile extends s {
         this.entity = this.config.entity?.startsWith("lock.") ? this.config.entity : undefined;
     }
     shouldUpdate(changedProps) {
-        return (!!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj) ||
+        return !!((changedProps.has("config") && this.config) ||
+            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj) ||
             this.running);
     }
     render() {
@@ -7340,7 +7322,6 @@ window.customCards.push({
 let OptionTile = class OptionTile extends s {
     constructor() {
         super(...arguments);
-        this.initialized = false;
         this.running = false;
     }
     getCardSize() {
@@ -7352,7 +7333,9 @@ let OptionTile = class OptionTile extends s {
         this.entity = this.config.entity?.startsWith("input_select.") ? this.config.entity : undefined;
     }
     shouldUpdate(changedProps) {
-        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
+        return !!((changedProps.has("config") && this.config) ||
+            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj) ||
+            this.running);
     }
     render() {
         const { icon, iconAnimation, iconColor, name } = this.updateState();
@@ -7447,9 +7430,6 @@ __decorate([
 ], OptionTile.prototype, "hass", void 0);
 __decorate([
     r()
-], OptionTile.prototype, "initialized", void 0);
-__decorate([
-    r()
 ], OptionTile.prototype, "config", void 0);
 __decorate([
     r()
@@ -7481,7 +7461,8 @@ let RobotTile = class RobotTile extends s {
         this.entity = this.config.entity?.startsWith("light.") ? this.config.entity : undefined;
     }
     shouldUpdate(changedProps) {
-        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
+        return !!((changedProps.has("config") && this.config) ||
+            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj));
     }
     render() {
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
@@ -7599,7 +7580,8 @@ let RokuTile = class RokuTile extends s {
         this.entity = this.config.entity?.startsWith("media_player.") ? this.config.entity : undefined;
     }
     shouldUpdate(changedProps) {
-        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
+        return !!((changedProps.has("config") && this.config) ||
+            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj));
     }
     render() {
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
@@ -7721,10 +7703,9 @@ let RoutineTile = class RoutineTile extends s {
             : undefined;
     }
     shouldUpdate(changedProps) {
-        return !!(changedProps.has("hass") &&
-            this.hass &&
-            this.entity &&
-            this.hass.states[this.entity] !== this.stateObj);
+        return !!((changedProps.has("config") && this.config) ||
+            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj) ||
+            this.running);
     }
     render() {
         const { icon, iconAnimation, iconColor, name } = this.updateState();
@@ -7831,7 +7812,8 @@ let SelectTile = class SelectTile extends s {
         this.entity = this.config.entity?.startsWith("input_select.") ? this.config.entity : undefined;
     }
     shouldUpdate(changedProps) {
-        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
+        return !!((changedProps.has("config") && this.config) ||
+            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj));
     }
     render() {
         const { icon, iconAnimation, iconColor, name } = this.updateState();
@@ -7903,7 +7885,8 @@ let SensorTile = class SensorTile extends s {
         this.entity = this.config.entity?.startsWith("binary_sensor.") ? this.config.entity : undefined;
     }
     shouldUpdate(changedProps) {
-        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
+        return !!((changedProps.has("config") && this.config) ||
+            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj));
     }
     render() {
         const { iconTemplate, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
@@ -8050,7 +8033,8 @@ let PoolLightTile = class PoolLightTile extends s {
         this.entity = ["light", "switch"].includes(this.config.entity?.split(".")[0]) ? this.config.entity : undefined;
     }
     shouldUpdate(changedProps) {
-        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
+        return !!((changedProps.has("config") && this.config) ||
+            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj));
     }
     render() {
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
@@ -8146,7 +8130,8 @@ let PoolLightSequencerTile = class PoolLightSequencerTile extends s {
         this.entity = ["light", "switch"].includes(this.config.entity?.split(".")[0]) ? this.config.entity : undefined;
     }
     shouldUpdate(changedProps) {
-        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
+        return !!((changedProps.has("config") && this.config) ||
+            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj));
     }
     render() {
         const { icon, iconAnimation, iconColor, name } = this.updateState();
@@ -8237,7 +8222,8 @@ let ShadeTile = class ShadeTile extends s {
         this.entity = this.config.entity?.startsWith("cover.") ? this.config.entity : undefined;
     }
     shouldUpdate(changedProps) {
-        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
+        return !!((changedProps.has("config") && this.config) ||
+            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj));
     }
     render() {
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
@@ -8371,7 +8357,8 @@ let SwitchTile = class SwitchTile extends s {
             : undefined;
     }
     shouldUpdate(changedProps) {
-        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
+        return !!((changedProps.has("config") && this.config) ||
+            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj));
     }
     render() {
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
@@ -8499,7 +8486,8 @@ let ThermostatTile = class ThermostatTile extends s {
         this.entity = this.config.entity?.startsWith("climate.") ? this.config.entity : undefined;
     }
     shouldUpdate(changedProps) {
-        return !!(changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj);
+        return !!((changedProps.has("config") && this.config) ||
+            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj));
     }
     render() {
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
@@ -8574,7 +8562,7 @@ ThermostatTile = __decorate([
     t$1("smartqasa-thermostat-tile")
 ], ThermostatTile);
 
-var version = "2024.5.6b";
+var version = "2024.5.6c";
 
 window.smartqasa = window.smartqasa || {};
 window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();
