@@ -1,5 +1,8 @@
 import { css, html, LitElement } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
+import { HomeAssistant, LovelaceCardConfig } from "../types";
+
+interface Config extends LovelaceCardConfig {}
 
 window.customCards.push({
     type: "smartqasa-admin-mode-dialog",
@@ -10,7 +13,12 @@ window.customCards.push({
 
 @customElement("smartqasa-admin-mode-dialog")
 export class AdminModeDialog extends LitElement {
+    getCardSize(): number {
+        return 6;
+    }
+
     @property({ type: String }) adminPin: string = "";
+    @state() config: any;
     @state() inputPin: string = "";
     @state() isAdmin: boolean = false;
 
@@ -36,6 +44,10 @@ export class AdminModeDialog extends LitElement {
             border: 1px solid #ccc;
         }
     `;
+
+    public setConfig(config: Config): void {
+        this.config = { ...config };
+    }
 
     protected render() {
         return html`

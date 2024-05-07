@@ -85,6 +85,9 @@ let AdminModeDialog = class AdminModeDialog extends s {
         this.inputPin = "";
         this.isAdmin = false;
     }
+    getCardSize() {
+        return 6;
+    }
     static { this.styles = i$5 `
         .card {
             --ha-card-background: none;
@@ -107,6 +110,9 @@ let AdminModeDialog = class AdminModeDialog extends s {
             border: 1px solid #ccc;
         }
     `; }
+    setConfig(config) {
+        this.config = { ...config };
+    }
     render() {
         return x `
             <div class="card">
@@ -148,6 +154,9 @@ __decorate([
 ], AdminModeDialog.prototype, "adminPin", void 0);
 __decorate([
     r()
+], AdminModeDialog.prototype, "config", void 0);
+__decorate([
+    r()
 ], AdminModeDialog.prototype, "inputPin", void 0);
 __decorate([
     r()
@@ -163,6 +172,9 @@ window.customCards.push({
     description: "A SmartQasa dialog for showing More Info for an entity.",
 });
 let MoreInfoDialog = class MoreInfoDialog extends s {
+    getCardSize() {
+        return 6;
+    }
     setConfig(config) {
         this.config = { ...config };
         this.entity = this.config?.entity;
@@ -180,9 +192,6 @@ let MoreInfoDialog = class MoreInfoDialog extends s {
                 </div>
             </div>
         `;
-    }
-    getCardSize() {
-        return 5;
     }
 };
 __decorate([
