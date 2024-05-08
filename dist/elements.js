@@ -83,6 +83,7 @@ let AdminModeDialog = class AdminModeDialog extends s {
         super(...arguments);
         this.adminPin = "";
         this.inputPin = "";
+        this.maskedPin = ""; // State to keep track of masked PIN
         this.isAdmin = false;
     }
     getCardSize() {
@@ -96,20 +97,33 @@ let AdminModeDialog = class AdminModeDialog extends s {
             box-shadow: none;
             text-align: center;
         }
+        .header {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .masked-pin {
+            font-size: 1.5rem;
+            margin-left: 1rem;
+        }
         .grid {
             display: grid;
             grid-template-columns: repeat(3, min-content);
             grid-template-rows: repeat(4, min-content);
-            grid-gap: 40px;
+            grid-gap: 3.5rem;
             place-content: center;
             place-items: center;
         }
         .button {
-            width: 3rem;
-            height: 3rem;
-            place-content: center;
-            border: var(--sq-card-border);
+            width: 3.5rem;
+            height: 3.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: var(--sq-card-border, none);
             border-radius: 1.5rem;
+            background-color: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
             cursor: pointer;
         }
     `; }
@@ -119,9 +133,12 @@ let AdminModeDialog = class AdminModeDialog extends s {
     render() {
         return x `
             <div class="container">
-                <div>Passcode Required</div>
+                <div class="header">
+                    Passcode Required
+                    <span class="masked-pin">${this.maskedPin}</span>
+                </div>
                 <div class="grid">
-                    ${[1, 2, 3, 4, 5, 6, 7, 8, 9, "", 0, "✔️"].map((digit) => this.renderButton(digit))}
+                    ${[1, 2, 3, 4, 5, 6, 7, 8, 9, "☓", 0, "✓"].map((digit) => this.renderButton(digit))}
                 </div>
             </div>
         `;
@@ -130,14 +147,16 @@ let AdminModeDialog = class AdminModeDialog extends s {
         return x ` <div class="button" @click=${() => this.handleInput(digit)}>${digit}</div> `;
     }
     handleInput(digit) {
-        if (digit === "✔️") {
+        if (digit === "✓") {
             this.verifyPin();
         }
-        else if (digit === "") {
+        else if (digit === "☓") {
             this.inputPin = "";
+            this.maskedPin = ""; // Clear the masked PIN
         }
         else {
             this.inputPin += digit;
+            this.maskedPin += "*"; // Add a * for each digit entered
         }
     }
     verifyPin() {
@@ -161,6 +180,9 @@ __decorate([
 __decorate([
     r()
 ], AdminModeDialog.prototype, "inputPin", void 0);
+__decorate([
+    r()
+], AdminModeDialog.prototype, "maskedPin", void 0);
 __decorate([
     r()
 ], AdminModeDialog.prototype, "isAdmin", void 0);
