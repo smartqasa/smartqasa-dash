@@ -8602,7 +8602,7 @@ ThermostatTile = __decorate([
     t$1("smartqasa-thermostat-tile")
 ], ThermostatTile);
 
-var version = "2024.5.7a";
+var version = "2024.5.8";
 
 window.smartqasa = window.smartqasa || {};
 window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();
