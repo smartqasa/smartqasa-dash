@@ -98,20 +98,29 @@ let AdminModeDialog = class AdminModeDialog extends s {
             text-align: center;
         }
         .header {
-            margin-bottom: 1rem;
+            margin-bottom: 2rem;
             display: flex;
+            justify-content: space-between; /* Aligns content to space between */
             align-items: center;
-            justify-content: center;
+            width: 100%;
+        }
+        .header-text {
+            flex-grow: 1; /* Allows the text to take necessary space */
+            text-align: left; /* Aligns the header text to the left */
         }
         .masked-pin {
+            display: flex;
+            align-items: center;
             font-size: 1.5rem;
+        }
+        .icon {
             margin-left: 1rem;
         }
         .grid {
             display: grid;
             grid-template-columns: repeat(3, min-content);
             grid-template-rows: repeat(4, min-content);
-            grid-gap: 3.5rem;
+            grid-gap: 3rem;
             place-content: center;
             place-items: center;
         }
@@ -134,8 +143,10 @@ let AdminModeDialog = class AdminModeDialog extends s {
         return x `
             <div class="container">
                 <div class="header">
-                    Passcode Required
-                    <span class="masked-pin">${this.maskedPin}</span>
+                    <span class="header-text">Passcode Required</span>
+                    <span class="masked-pin"
+                        >${this.maskedPin}<ha-icon class="icon" icon="hass:dialpad"></ha-icon
+                    ></span>
                 </div>
                 <div class="grid">
                     ${[1, 2, 3, 4, 5, 6, 7, 8, 9, "☓", 0, "✓"].map((digit) => this.renderButton(digit))}
