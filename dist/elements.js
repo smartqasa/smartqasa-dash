@@ -101,26 +101,22 @@ let AdminModeDialog = class AdminModeDialog extends s {
             margin-bottom: 2rem;
             display: flex;
             align-items: center;
-            width: 100%;
+            justify-content: space-between;
         }
         .header-text {
             flex: 1;
             text-align: left;
         }
         .masked-pin {
-            flex: 1;
-            text-align: center;
+            margin-top: 1rem; // Space from header
             font-size: 1.5rem;
-        }
-        .icon {
-            flex: 0;
-            text-align: right;
+            text-align: center;
         }
         .grid {
             display: grid;
             grid-template-columns: repeat(3, min-content);
             grid-template-rows: repeat(4, min-content);
-            grid-gap: 40px;
+            grid-gap: 3rem;
             place-content: center;
             place-items: center;
         }
@@ -144,9 +140,9 @@ let AdminModeDialog = class AdminModeDialog extends s {
             <div class="container">
                 <div class="header">
                     <span class="header-text">Password Required</span>
-                    <span class="masked-pin">${this.maskedPin}</span>
-                    <ha-icon class="icon" icon="hass:dialpad"></ha-icon>
+                    <ha-icon icon="hass:dialpad"></ha-icon>
                 </div>
+                <div class="masked-pin">${this.maskedPin}</div>
                 <div class="grid">
                     ${[1, 2, 3, 4, 5, 6, 7, 8, 9, "☓", 0, "✓"].map((digit) => this.renderButton(digit))}
                 </div>
@@ -154,7 +150,7 @@ let AdminModeDialog = class AdminModeDialog extends s {
         `;
     }
     renderButton(digit) {
-        return x ` <div class="button" @click=${() => this.handleInput(digit)}>${digit}</div> `;
+        return x `<div class="button" @click=${() => this.handleInput(digit)}>${digit}</div>`;
     }
     handleInput(digit) {
         if (digit === "✓") {
