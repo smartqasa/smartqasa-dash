@@ -90,6 +90,11 @@ let AdminModeDialog = class AdminModeDialog extends s {
         return 6;
     }
     static { this.styles = i$5 `
+        :host {
+            font-weight: var(--sq-primary-font-weight, 400);
+            font-size: var(--sq-primary-font-size, 1.5rem);
+            color: rgb(var(--sq-primary-font-rgb), 128, 128, 128);
+        }
         .container {
             background: none;
             padding: 1.5rem;
@@ -105,15 +110,11 @@ let AdminModeDialog = class AdminModeDialog extends s {
         .header-text {
             flex: 1;
             text-align: left;
-            font-weight: var(--sq-primary-font-weight, 400);
-            font-size: var(--sq-primary-font-size, 1.5rem);
         }
         .masked-pin {
             height: 2rem;
             margin-top: 1rem;
             margin-bottom: 1rem;
-            font-weight: var(--sq-primary-font-weight, 400);
-            font-size: var(--sq-primary-font-size, 1.5rem);
             text-align: center;
         }
         .grid {
@@ -133,8 +134,6 @@ let AdminModeDialog = class AdminModeDialog extends s {
             border: var(--sq-card-border, none);
             border-radius: 1.5rem;
             background-color: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
-            font-weight: var(--sq-primary-font-weight, 400);
-            font-size: var(--sq-primary-font-size, 1.5rem);
             cursor: pointer;
         }
     `; }
@@ -4228,7 +4227,7 @@ let CustomChip = class CustomChip extends s {
         if (!this.config?.file)
             return;
         try {
-            const path = `/local/smartqasa/dialogs/${this.config.file}`;
+            const path = `/local/smartqasa/dialogs/${this.config.dialog_file}`;
             this.dialogObj = (await loadYamlAsJson(path));
             this.entity = this.dialogObj.entity;
         }

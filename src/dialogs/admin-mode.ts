@@ -24,6 +24,11 @@ export class AdminModeDialog extends LitElement {
     @state() isAdmin: boolean = false;
 
     static styles = css`
+        :host {
+            font-weight: var(--sq-primary-font-weight, 400);
+            font-size: var(--sq-primary-font-size, 1.5rem);
+            color: rgb(var(--sq-primary-font-rgb), 128, 128, 128);
+        }
         .container {
             background: none;
             padding: 1.5rem;
@@ -39,15 +44,11 @@ export class AdminModeDialog extends LitElement {
         .header-text {
             flex: 1;
             text-align: left;
-            font-weight: var(--sq-primary-font-weight, 400);
-            font-size: var(--sq-primary-font-size, 1.5rem);
         }
         .masked-pin {
             height: 2rem;
             margin-top: 1rem;
             margin-bottom: 1rem;
-            font-weight: var(--sq-primary-font-weight, 400);
-            font-size: var(--sq-primary-font-size, 1.5rem);
             text-align: center;
         }
         .grid {
@@ -67,8 +68,6 @@ export class AdminModeDialog extends LitElement {
             border: var(--sq-card-border, none);
             border-radius: 1.5rem;
             background-color: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
-            font-weight: var(--sq-primary-font-weight, 400);
-            font-size: var(--sq-primary-font-size, 1.5rem);
             cursor: pointer;
         }
     `;

@@ -8,7 +8,7 @@ import { loadYamlAsJson } from "../utils/load-yaml-as-json";
 import { chipBaseStyle, chipTextStyle } from "../styles/chip";
 
 interface Config extends LovelaceCardConfig {
-    file: string;
+    dialog_file: string;
 }
 
 interface DialogObj {
@@ -45,7 +45,7 @@ export class CustomChip extends LitElement {
     private async loadDialogObj() {
         if (!this.config?.file) return;
         try {
-            const path = `/local/smartqasa/dialogs/${this.config.file}`;
+            const path = `/local/smartqasa/dialogs/${this.config.dialog_file}`;
             this.dialogObj = (await loadYamlAsJson(path)) as DialogObj;
             this.entity = this.dialogObj.entity;
         } catch (error) {
