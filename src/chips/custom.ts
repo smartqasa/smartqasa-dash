@@ -61,6 +61,7 @@ export class CustomChip extends LitElement {
     }
 
     protected render(): TemplateResult {
+        console.log("Dialog obj:", this.dialogObj);
         if (!this.dialogObj) return html``;
 
         this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;

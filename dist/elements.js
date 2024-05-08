@@ -4240,6 +4240,7 @@ let CustomChip = class CustomChip extends s {
             (changedProps.has("config") && this.config));
     }
     render() {
+        console.log("Dialog obj:", this.dialogObj);
         if (!this.dialogObj)
             return x ``;
         this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
