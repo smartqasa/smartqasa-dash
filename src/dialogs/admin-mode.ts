@@ -32,7 +32,6 @@ export class AdminModeDialog extends LitElement {
             text-align: center;
         }
         .header {
-            margin-bottom: 2rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -40,11 +39,15 @@ export class AdminModeDialog extends LitElement {
         .header-text {
             flex: 1;
             text-align: left;
+            font-weight: var(--sq-primary-font-weight, 400);
+            font-size: var(--sq-primary-font-size, 1.5rem);
         }
         .masked-pin {
             height: 2rem;
             margin-top: 1rem;
-            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: var(--sq-primary-font-weight, 400);
+            font-size: var(--sq-primary-font-size, 1.5rem);
             text-align: center;
         }
         .grid {
@@ -56,14 +59,16 @@ export class AdminModeDialog extends LitElement {
             place-items: center;
         }
         .button {
+            display: flex;
             width: 3.5rem;
             height: 3.5rem;
-            display: flex;
             align-items: center;
             justify-content: center;
             border: var(--sq-card-border, none);
             border-radius: 1.5rem;
             background-color: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
+            font-weight: var(--sq-primary-font-weight, 400);
+            font-size: var(--sq-primary-font-size, 1.5rem);
             cursor: pointer;
         }
     `;
