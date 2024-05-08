@@ -35,7 +35,7 @@ export class RobotTile extends LitElement {
 
     public setConfig(config: Config): void {
         this.config = { ...config };
-        this.entity = this.config.entity?.startsWith("light.") ? this.config.entity : undefined;
+        this.entity = this.config.entity?.startsWith("vacuum.") ? this.config.entity : undefined;
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
@@ -123,9 +123,13 @@ export class RobotTile extends LitElement {
         e.stopPropagation();
         if (!this.hass || !this.stateObj) return;
         const state = this.stateObj.state;
-        this.hass.callService("vacuum", ["docked", "idle", "paused"].includes(state) ? "start" : "pause", {
-            entity_id: this.entity,
-        });
+        try {
+            this.hass.callService("vacuum", ["docked", "idle", "paused"].includes(state) ? "start" : "pause", {
+                entity_id: this.entity,
+            });
+        } catch (e) {
+            console.error("Error toggling robot:", e);
+        }
     }
 
     private showMoreInfo(e: Event): void {

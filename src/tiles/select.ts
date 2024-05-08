@@ -71,7 +71,7 @@ export class SelectTile extends LitElement {
 
         if (this.config && this.hass && this.stateObj) {
             const state = this.stateObj.state || "unknown";
-            icon = this.config?.icon || this.stateObj.attributes?.icon || "hass:form-dropdown";
+            icon = this.config.icon || this.stateObj.attributes?.icon || "hass:form-dropdown";
             iconAnimation = "none";
             iconColor = "var(--sq-inactive-rgb)";
             name = this.config.name || this.stateObj.attributes?.friendly_name || this.entity;

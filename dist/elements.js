@@ -7502,7 +7502,7 @@ let RobotTile = class RobotTile extends s {
     static { this.styles = [tileBaseStyle, tileStateStyle]; }
     setConfig(config) {
         this.config = { ...config };
-        this.entity = this.config.entity?.startsWith("light.") ? this.config.entity : undefined;
+        this.entity = this.config.entity?.startsWith("vacuum.") ? this.config.entity : undefined;
     }
     shouldUpdate(changedProps) {
         return !!((changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj) ||
@@ -7583,9 +7583,14 @@ let RobotTile = class RobotTile extends s {
         if (!this.hass || !this.stateObj)
             return;
         const state = this.stateObj.state;
-        this.hass.callService("vacuum", ["docked", "idle", "paused"].includes(state) ? "start" : "pause", {
-            entity_id: this.entity,
-        });
+        try {
+            this.hass.callService("vacuum", ["docked", "idle", "paused"].includes(state) ? "start" : "pause", {
+                entity_id: this.entity,
+            });
+        }
+        catch (e) {
+            console.error("Error toggling robot:", e);
+        }
     }
     showMoreInfo(e) {
         e.stopPropagation();
@@ -7865,7 +7870,7 @@ let SelectTile = class SelectTile extends s {
         this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
         if (this.config && this.hass && this.stateObj) {
             this.stateObj.state || "unknown";
-            icon = this.config?.icon || this.stateObj.attributes?.icon || "hass:form-dropdown";
+            icon = this.config.icon || this.stateObj.attributes?.icon || "hass:form-dropdown";
             iconAnimation = "none";
             iconColor = "var(--sq-inactive-rgb)";
             name = this.config.name || this.stateObj.attributes?.friendly_name || this.entity;
