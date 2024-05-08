@@ -105,10 +105,12 @@ let AdminModeDialog = class AdminModeDialog extends s {
             place-items: center;
         }
         .button {
-            cursor: pointer;
-            padding: 1rem;
-            border: 1px solid #ccc;
+            width: 3rem;
+            height: 3rem;
+            place-content: center;
+            border: var(--sq-card-border);
             border-radius: 1.5rem;
+            cursor: pointer;
         }
     `; }
     setConfig(config) {
