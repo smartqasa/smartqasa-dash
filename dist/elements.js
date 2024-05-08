@@ -7844,7 +7844,7 @@ let SelectTile = class SelectTile extends s {
             (changedProps.has("config") && this.config));
     }
     render() {
-        const { icon, iconAnimation, iconColor, name } = this.updateState();
+        const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
             backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity))`,
@@ -7856,6 +7856,7 @@ let SelectTile = class SelectTile extends s {
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
                 <div class="name">${name}</div>
+                <div class="state">${stateFmtd}</div>
             </div>
         `;
     }

@@ -47,7 +47,7 @@ export class SelectTile extends LitElement {
     }
 
     protected render(): TemplateResult {
-        const { icon, iconAnimation, iconColor, name } = this.updateState();
+        const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
             backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity))`,
@@ -59,6 +59,7 @@ export class SelectTile extends LitElement {
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
                 <div class="name">${name}</div>
+                <div class="state">${stateFmtd}</div>
             </div>
         `;
     }
