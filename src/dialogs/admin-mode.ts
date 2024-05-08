@@ -34,16 +34,21 @@ export class AdminModeDialog extends LitElement {
         .header {
             margin-bottom: 2rem;
             display: flex;
-            justify-content: space-between;
             align-items: center;
             width: 100%;
         }
         .header-text {
-            flex-grow: 1;
-            text-align: center;
+            flex: 1;
+            text-align: left;
         }
         .masked-pin {
+            flex: 1;
+            text-align: center;
             font-size: 1.5rem;
+        }
+        .icon {
+            flex: 0;
+            text-align: right;
         }
         .grid {
             display: grid;
@@ -74,9 +79,9 @@ export class AdminModeDialog extends LitElement {
         return html`
             <div class="container">
                 <div class="header">
-                    <span class="header-text">Passcode Required</span>
-                    <ha-icon class="icon" icon="hass:dialpad"></ha-icon>
+                    <span class="header-text">Password Required</span>
                     <span class="masked-pin">${this.maskedPin}</span>
+                    <ha-icon class="icon" icon="hass:dialpad"></ha-icon>
                 </div>
                 <div class="grid">
                     ${[1, 2, 3, 4, 5, 6, 7, 8, 9, "☓", 0, "✓"].map((digit) => this.renderButton(digit))}
