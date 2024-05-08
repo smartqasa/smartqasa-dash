@@ -92,7 +92,7 @@ let AdminModeDialog = class AdminModeDialog extends s {
     static { this.styles = i$5 `
         .container {
             background: none;
-            margin-top: 0;
+            padding: 1.5rem;
             border-style: none;
             box-shadow: none;
             text-align: center;
@@ -108,7 +108,8 @@ let AdminModeDialog = class AdminModeDialog extends s {
             text-align: left;
         }
         .masked-pin {
-            margin-top: 1rem; // Space from header
+            height: 2rem;
+            margin-top: 1rem;
             font-size: 1.5rem;
             text-align: center;
         }

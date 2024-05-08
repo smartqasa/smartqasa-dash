@@ -26,7 +26,7 @@ export class AdminModeDialog extends LitElement {
     static styles = css`
         .container {
             background: none;
-            margin-top: 0;
+            padding: 1.5rem;
             border-style: none;
             box-shadow: none;
             text-align: center;
@@ -42,7 +42,8 @@ export class AdminModeDialog extends LitElement {
             text-align: left;
         }
         .masked-pin {
-            margin-top: 1rem; // Space from header
+            height: 2rem;
+            margin-top: 1rem;
             font-size: 1.5rem;
             text-align: center;
         }
