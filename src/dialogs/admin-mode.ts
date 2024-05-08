@@ -28,21 +28,21 @@ export class AdminModeDialog extends LitElement {
     static styles = css`
         .container {
             background: none;
-            margin-top: 0;
             border-style: none;
             box-shadow: none;
+            padding: 1rem;
             text-align: center;
         }
         .header {
             margin-bottom: 2rem;
             display: flex;
-            justify-content: space-between; /* Aligns content to space between */
+            justify-content: space-between;
             align-items: center;
             width: 100%;
         }
         .header-text {
-            flex-grow: 1; /* Allows the text to take necessary space */
-            text-align: left; /* Aligns the header text to the left */
+            flex-grow: 1;
+            text-align: center;
         }
         .masked-pin {
             display: flex;
