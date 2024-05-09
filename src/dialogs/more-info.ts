@@ -38,7 +38,8 @@ export class MoreInfoDialog extends LitElement {
     }
 
     protected render(): TemplateResult {
-        this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
+        if (!this.hass || !this.entity) return html``;
+        this.stateObj = this.hass.states[this.entity];
         return html`
             <div>
                 <div class="container">

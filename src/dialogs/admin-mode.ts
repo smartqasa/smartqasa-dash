@@ -2,7 +2,10 @@ import { css, html, LitElement } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { HomeAssistant, LovelaceCardConfig } from "../types";
 
-interface Config extends LovelaceCardConfig {}
+interface Config extends LovelaceCardConfig {
+    admin_pin_entity: string;
+    admin_mode_entity: string;
+}
 
 window.customCards.push({
     type: "smartqasa-admin-mode-dialog",
@@ -17,10 +20,10 @@ export class AdminModeDialog extends LitElement {
         return 6;
     }
 
-    @property({ type: String }) adminPin: string = "";
-    @state() config: any;
-    @state() inputPin: string = "";
-    @state() maskedPin: string = ""; // State to keep track of masked PIN
+    @property({ attribute: false }) public hass?: HomeAssistant;
+    @state() private config?: Config;
+    @state() private inputPin: string = "";
+    @state() private maskedPin: string = "";
     @state() isAdmin: boolean = false;
 
     static styles = css`
@@ -100,15 +103,18 @@ export class AdminModeDialog extends LitElement {
             this.verifyPin();
         } else if (digit === "☓") {
             this.inputPin = "";
-            this.maskedPin = ""; // Clear the masked PIN
+            this.maskedPin = "";
         } else {
             this.inputPin += digit;
-            this.maskedPin += "*"; // Add a * for each digit entered
+            this.maskedPin += "*";
         }
     }
 
     private verifyPin() {
-        if (this.inputPin === this.adminPin) {
+        if (!this.hass || !this.config) return;
+
+        const adminPin = this.hass.states[this.config.admin_pin_entity].state;
+        if (this.inputPin === adminPin) {
             this.isAdmin = true;
             console.log("Admin Mode is now ON!");
         } else {

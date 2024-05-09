@@ -81,9 +81,8 @@ window.customCards.push({
 let AdminModeDialog = class AdminModeDialog extends s {
     constructor() {
         super(...arguments);
-        this.adminPin = "";
         this.inputPin = "";
-        this.maskedPin = ""; // State to keep track of masked PIN
+        this.maskedPin = "";
         this.isAdmin = false;
     }
     getCardSize() {
@@ -163,15 +162,18 @@ let AdminModeDialog = class AdminModeDialog extends s {
         }
         else if (digit === "☓") {
             this.inputPin = "";
-            this.maskedPin = ""; // Clear the masked PIN
+            this.maskedPin = "";
         }
         else {
             this.inputPin += digit;
-            this.maskedPin += "*"; // Add a * for each digit entered
+            this.maskedPin += "*";
         }
     }
     verifyPin() {
-        if (this.inputPin === this.adminPin) {
+        if (!this.hass || !this.config)
+            return;
+        const adminPin = this.hass.states[this.config.admin_pin_entity].state;
+        if (this.inputPin === adminPin) {
             this.isAdmin = true;
             console.log("Admin Mode is now ON!");
         }
@@ -183,8 +185,8 @@ let AdminModeDialog = class AdminModeDialog extends s {
     }
 };
 __decorate([
-    n$1({ type: String })
-], AdminModeDialog.prototype, "adminPin", void 0);
+    n$1({ attribute: false })
+], AdminModeDialog.prototype, "hass", void 0);
 __decorate([
     r()
 ], AdminModeDialog.prototype, "config", void 0);
@@ -220,7 +222,9 @@ let MoreInfoDialog = class MoreInfoDialog extends s {
             (changedProps.has("config") && this.config));
     }
     render() {
-        this.stateObj = this.hass && this.entity ? this.hass.states[this.entity] : undefined;
+        if (!this.hass || !this.entity)
+            return x ``;
+        this.stateObj = this.hass.states[this.entity];
         return x `
             <div>
                 <div class="container">
