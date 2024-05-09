@@ -173,6 +173,7 @@ let AdminModeDialog = class AdminModeDialog extends s {
         if (!this.hass || !this.config)
             return;
         const adminPin = this.hass.states[this.config.admin_pin_entity].state;
+        console.log("Admin PIN:", adminPin);
         if (this.inputPin === adminPin) {
             this.isAdmin = true;
             console.log("Admin Mode is now ON!");
