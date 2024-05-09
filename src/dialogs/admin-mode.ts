@@ -25,7 +25,7 @@ export class AdminModeDialog extends LitElement {
     @state() private config?: Config;
     @state() private inputPin: string = "";
     @state() private maskedPin: string = "";
-    @state() private invalidPin: boolean = false;
+    @state() private pinState: string = "";
 
     static styles = css`
         :host {
@@ -82,10 +82,24 @@ export class AdminModeDialog extends LitElement {
 
     protected render() {
         if (!this.config) return html``;
-        const maskedPin = this.invalidPin ? "Invalid PIN" : this.maskedPin;
-        const pinStyles = {
-            color: this.invalidPin ? "rgb(var(--sq-rgb-red))" : "rgb(var(--sq-primary-font-rgb))",
-        };
+
+        let maskedPin, pinStyles;
+        if (!this.pinState) {
+            maskedPin = this.maskedPin;
+            pinStyles = {
+                color: "rgb(var(--sq-primary-font-rgb))",
+            };
+        } else if (this.pinState === "valid") {
+            maskedPin = "PIN Accepted";
+            pinStyles = {
+                color: "rgb(var(--sq-rgb-green))",
+            };
+        } else {
+            maskedPin = "Invalid PIN";
+            pinStyles = {
+                color: "rgb(var(--sq-rgb-red))",
+            };
+        }
         return html`
             <div class="container">
                 <div class="header">
@@ -105,7 +119,7 @@ export class AdminModeDialog extends LitElement {
     }
 
     private handleInput(digit: number | string) {
-        if (this.invalidPin) return;
+        if (this.pinState) return;
 
         if (digit === "✓") {
             this.verifyPin();
@@ -123,7 +137,7 @@ export class AdminModeDialog extends LitElement {
 
         const adminPin = this.hass.states[this.config.admin_pin_entity].state;
         if (this.inputPin === adminPin) {
-            this.invalidPin = false;
+            this.pinState = "valid";
             try {
                 this.hass.callService("input_boolean", "turn_on", {
                     entity_id: this.config.admin_mode_entity,
@@ -131,12 +145,18 @@ export class AdminModeDialog extends LitElement {
             } catch (error) {
                 console.error("Failed to turn_on the admin mode entity:", error);
             }
-        } else {
-            this.invalidPin = true;
             setTimeout(() => {
                 this.inputPin = "";
                 this.maskedPin = "";
-                this.invalidPin = false;
+                this.pinState = "";
+                window.browser_mod?.service("close_popup", {});
+            }, 5000);
+        } else {
+            this.pinState = "invalid";
+            setTimeout(() => {
+                this.inputPin = "";
+                this.maskedPin = "";
+                this.pinState = "";
             }, 5000);
         }
     }

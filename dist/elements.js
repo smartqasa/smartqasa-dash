@@ -96,7 +96,7 @@ let AdminModeDialog = class AdminModeDialog extends s {
         super(...arguments);
         this.inputPin = "";
         this.maskedPin = "";
-        this.invalidPin = false;
+        this.pinState = "";
     }
     getCardSize() {
         return 6;
@@ -155,10 +155,25 @@ let AdminModeDialog = class AdminModeDialog extends s {
     render() {
         if (!this.config)
             return x ``;
-        const maskedPin = this.invalidPin ? "Invalid PIN" : this.maskedPin;
-        const pinStyles = {
-            color: this.invalidPin ? "rgb(var(--sq-rgb-red))" : "rgb(var(--sq-primary-font-rgb))",
-        };
+        let maskedPin, pinStyles;
+        if (!this.pinState) {
+            maskedPin = this.maskedPin;
+            pinStyles = {
+                color: "rgb(var(--sq-primary-font-rgb))",
+            };
+        }
+        else if (this.pinState === "valid") {
+            maskedPin = "PIN Accepted";
+            pinStyles = {
+                color: "rgb(var(--sq-rgb-green))",
+            };
+        }
+        else {
+            maskedPin = "Invalid PIN";
+            pinStyles = {
+                color: "rgb(var(--sq-rgb-red))",
+            };
+        }
         return x `
             <div class="container">
                 <div class="header">
@@ -176,7 +191,7 @@ let AdminModeDialog = class AdminModeDialog extends s {
         return x `<div class="button" @click=${() => this.handleInput(digit)}>${digit}</div>`;
     }
     handleInput(digit) {
-        if (this.invalidPin)
+        if (this.pinState)
             return;
         if (digit === "✓") {
             this.verifyPin();
@@ -195,7 +210,7 @@ let AdminModeDialog = class AdminModeDialog extends s {
             return;
         const adminPin = this.hass.states[this.config.admin_pin_entity].state;
         if (this.inputPin === adminPin) {
-            this.invalidPin = false;
+            this.pinState = "valid";
             try {
                 this.hass.callService("input_boolean", "turn_on", {
                     entity_id: this.config.admin_mode_entity,
@@ -204,13 +219,19 @@ let AdminModeDialog = class AdminModeDialog extends s {
             catch (error) {
                 console.error("Failed to turn_on the admin mode entity:", error);
             }
-        }
-        else {
-            this.invalidPin = true;
             setTimeout(() => {
                 this.inputPin = "";
                 this.maskedPin = "";
-                this.invalidPin = false;
+                this.pinState = "";
+                window.browser_mod?.service("close_popup", {});
+            }, 5000);
+        }
+        else {
+            this.pinState = "invalid";
+            setTimeout(() => {
+                this.inputPin = "";
+                this.maskedPin = "";
+                this.pinState = "";
             }, 5000);
         }
     }
@@ -229,7 +250,7 @@ __decorate([
 ], AdminModeDialog.prototype, "maskedPin", void 0);
 __decorate([
     r()
-], AdminModeDialog.prototype, "invalidPin", void 0);
+], AdminModeDialog.prototype, "pinState", void 0);
 AdminModeDialog = __decorate([
     t$1("smartqasa-admin-mode-dialog")
 ], AdminModeDialog);
