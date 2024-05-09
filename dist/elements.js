@@ -72,6 +72,19 @@ const t$1=t=>(e,o)=>{void 0!==o?o.addInitializer((()=>{customElements.define(t,e
  * SPDX-License-Identifier: BSD-3-Clause
  */function r(r){return n$1({...r,state:!0,attribute:!1})}
 
+/**
+ * @license
+ * Copyright 2017 Google LLC
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+const t={ATTRIBUTE:1,CHILD:2,PROPERTY:3,BOOLEAN_ATTRIBUTE:4,EVENT:5,ELEMENT:6},e=t=>(...e)=>({_$litDirective$:t,values:e});let i$2 = class i{constructor(t){}get _$AU(){return this._$AM._$AU}_$AT(t,e,i){this._$Ct=t,this._$AM=e,this._$Ci=i;}_$AS(t,e){return this.update(t,e)}update(t,e){return this.render(...e)}};
+
+/**
+ * @license
+ * Copyright 2018 Google LLC
+ * SPDX-License-Identifier: BSD-3-Clause
+ */const n="important",i$1=" !"+n,o=e(class extends i$2{constructor(t$1){if(super(t$1),t$1.type!==t.ATTRIBUTE||"style"!==t$1.name||t$1.strings?.length>2)throw Error("The `styleMap` directive must be used in the `style` attribute and must be the only part in the attribute.")}render(t){return Object.keys(t).reduce(((e,r)=>{const s=t[r];return null==s?e:e+`${r=r.includes("-")?r:r.replace(/(?:^(webkit|moz|ms|o)|)(?=[A-Z])/g,"-$&").toLowerCase()}:${s};`}),"")}update(e,[r]){const{style:s}=e.element;if(void 0===this.ft)return this.ft=new Set(Object.keys(r)),this.render(r);for(const t of this.ft)null==r[t]&&(this.ft.delete(t),t.includes("-")?s.removeProperty(t):s[t]=null);for(const t in r){const e=r[t];if(null!=e){this.ft.add(t);const r="string"==typeof e&&e.endsWith(i$1);t.includes("-")||r?s.setProperty(t,r?e.slice(0,-11):e,r?n:""):s[t]=e;}}return w}});
+
 window.customCards.push({
     type: "smartqasa-admin-mode-dialog",
     name: "SmartQasa Admin Mode Dialog",
@@ -140,13 +153,16 @@ let AdminModeDialog = class AdminModeDialog extends s {
         this.config = { ...config };
     }
     render() {
+        const pinStyles = {
+            color: this.maskedPin === "Invalid PIN" ? "rgb(var(--sq-rgb-red))" : "rgb(var(--sq-primary-font-rgb))",
+        };
         return x `
             <div class="container">
                 <div class="header">
                     <span class="header-text">Password Required</span>
                     <ha-icon icon="hass:dialpad"></ha-icon>
                 </div>
-                <div class="masked-pin">${this.maskedPin}</div>
+                <div class="masked-pin" style="${o(pinStyles)}">${this.maskedPin}</div>
                 <div class="grid">
                     ${[1, 2, 3, 4, 5, 6, 7, 8, 9, "☓", 0, "✓"].map((digit) => this.renderButton(digit))}
                 </div>
@@ -173,16 +189,22 @@ let AdminModeDialog = class AdminModeDialog extends s {
         if (!this.hass || !this.config)
             return;
         const adminPin = this.hass.states[this.config.admin_pin_entity].state;
-        console.log("Admin PIN:", adminPin);
         if (this.inputPin === adminPin) {
-            this.isAdmin = true;
-            console.log("Admin Mode is now ON!");
+            try {
+                this.hass.callService("input_boolean", "turn_on", {
+                    entity_id: this.config.admin_mode_entity,
+                });
+            }
+            catch (error) {
+                console.error("Failed to turn_on the admin mode entity:", error);
+            }
         }
         else {
-            this.isAdmin = false;
-            console.log("Admin Mode is OFF.");
+            this.maskedPin = "Invalid PIN";
+            setTimeout(() => {
+                this.maskedPin = "";
+            }, 5000);
         }
-        this.dispatchEvent(new CustomEvent("admin-mode-changed", { detail: { isAdmin: this.isAdmin } }));
     }
 };
 __decorate([
@@ -244,19 +266,6 @@ __decorate([
 MoreInfoDialog = __decorate([
     t$1("smartqasa-more-info-dialog")
 ], MoreInfoDialog);
-
-/**
- * @license
- * Copyright 2017 Google LLC
- * SPDX-License-Identifier: BSD-3-Clause
- */
-const t={ATTRIBUTE:1,CHILD:2,PROPERTY:3,BOOLEAN_ATTRIBUTE:4,EVENT:5,ELEMENT:6},e=t=>(...e)=>({_$litDirective$:t,values:e});let i$2 = class i{constructor(t){}get _$AU(){return this._$AM._$AU}_$AT(t,e,i){this._$Ct=t,this._$AM=e,this._$Ci=i;}_$AS(t,e){return this.update(t,e)}update(t,e){return this.render(...e)}};
-
-/**
- * @license
- * Copyright 2018 Google LLC
- * SPDX-License-Identifier: BSD-3-Clause
- */const n="important",i$1=" !"+n,o=e(class extends i$2{constructor(t$1){if(super(t$1),t$1.type!==t.ATTRIBUTE||"style"!==t$1.name||t$1.strings?.length>2)throw Error("The `styleMap` directive must be used in the `style` attribute and must be the only part in the attribute.")}render(t){return Object.keys(t).reduce(((e,r)=>{const s=t[r];return null==s?e:e+`${r=r.includes("-")?r:r.replace(/(?:^(webkit|moz|ms|o)|)(?=[A-Z])/g,"-$&").toLowerCase()}:${s};`}),"")}update(e,[r]){const{style:s}=e.element;if(void 0===this.ft)return this.ft=new Set(Object.keys(r)),this.render(r);for(const t of this.ft)null==r[t]&&(this.ft.delete(t),t.includes("-")?s.removeProperty(t):s[t]=null);for(const t in r){const e=r[t];if(null!=e){this.ft.add(t);const r="string"==typeof e&&e.endsWith(i$1);t.includes("-")||r?s.setProperty(t,r?e.slice(0,-11):e,r?n:""):s[t]=e;}}return w}});
 
 /*! js-yaml 4.1.0 https://github.com/nodeca/js-yaml @license MIT */
 function isNothing(subject) {
@@ -4254,7 +4263,6 @@ let CustomChip = class CustomChip extends s {
             try {
                 const func = new Function("states", this.dialogObj.icon_rgb);
                 iconColor = func(this.hass.states);
-                console.log("Icon color:", iconColor);
             }
             catch (error) {
                 console.error("Error evaluating icon color expression:", error);
@@ -7373,9 +7381,14 @@ let LockTile = class LockTile extends s {
         const state = this.stateObj.state;
         this.running = true;
         this.stateObj.state = state == "locked" ? "unlocking" : "locking";
-        this.hass.callService("lock", state == "locked" ? "unlock" : "lock", {
-            entity_id: this.entity,
-        });
+        try {
+            this.hass.callService("lock", state == "locked" ? "unlock" : "lock", {
+                entity_id: this.entity,
+            });
+        }
+        catch (error) {
+            console.error("Failed to toggle the entity:", error);
+        }
         setTimeout(() => {
             this.running = false;
         }, 250);

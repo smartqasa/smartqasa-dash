@@ -126,9 +126,13 @@ export class LockTile extends LitElement {
         this.running = true;
         this.stateObj.state = state == "locked" ? "unlocking" : "locking";
 
-        this.hass.callService("lock", state == "locked" ? "unlock" : "lock", {
-            entity_id: this.entity,
-        });
+        try {
+            this.hass.callService("lock", state == "locked" ? "unlock" : "lock", {
+                entity_id: this.entity,
+            });
+        } catch (error) {
+            console.error("Failed to toggle the entity:", error);
+        }
 
         setTimeout(() => {
             this.running = false;
