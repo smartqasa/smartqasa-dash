@@ -227,6 +227,9 @@ __decorate([
 __decorate([
     r()
 ], AdminModeDialog.prototype, "maskedPin", void 0);
+__decorate([
+    r()
+], AdminModeDialog.prototype, "invalidPin", void 0);
 AdminModeDialog = __decorate([
     t$1("smartqasa-admin-mode-dialog")
 ], AdminModeDialog);

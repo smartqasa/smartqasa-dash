@@ -25,7 +25,7 @@ export class AdminModeDialog extends LitElement {
     @state() private config?: Config;
     @state() private inputPin: string = "";
     @state() private maskedPin: string = "";
-    private invalidPin: boolean = false;
+    @state() private invalidPin: boolean = false;
 
     static styles = css`
         :host {
