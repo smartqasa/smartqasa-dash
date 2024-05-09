@@ -155,6 +155,7 @@ let AdminModeDialog = class AdminModeDialog extends s {
     render() {
         if (!this.config)
             return x ``;
+        const title = this.config.title || "Enter PIN";
         let maskedPin, pinStyles;
         if (!this.pinState) {
             maskedPin = this.maskedPin;
@@ -177,7 +178,7 @@ let AdminModeDialog = class AdminModeDialog extends s {
         return x `
             <div class="container">
                 <div class="header">
-                    <span class="header-text">Password Required</span>
+                    <span class="header-text">${title}</span>
                     <ha-icon icon="hass:dialpad"></ha-icon>
                 </div>
                 <div class="masked-pin" style="${o(pinStyles)}">${maskedPin}</div>
@@ -4435,6 +4436,20 @@ const listDialogConfig = (dialogTitle, filterType, filterValue, tileType) => {
 };
 
 const dialogTable = {
+    admin_mode: {
+        icon: "hass:tools",
+        name: "Admin Mode",
+        data: {
+            title: "Admin Mode",
+            timeout: 30000,
+            content: {
+                type: "custom:smartqasa-admin-mode-dialog",
+                title: "Enter Admin PIN",
+                admin_pin_entity: "input_text.admin_pin",
+                admin_mode_entity: "input_boolean.admin_mode",
+            },
+        },
+    },
     air_quality: {
         icon: "hass:air-filter",
         name: "Air Quality",
@@ -8684,7 +8699,7 @@ ThermostatTile = __decorate([
     t$1("smartqasa-thermostat-tile")
 ], ThermostatTile);
 
-var version = "2024.5.9";
+var version = "2024.5.9a";
 
 window.smartqasa = window.smartqasa || {};
 window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();

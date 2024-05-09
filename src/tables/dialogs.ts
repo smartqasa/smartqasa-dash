@@ -11,6 +11,21 @@ interface DialogTable {
 }
 
 export const dialogTable: DialogTable = {
+    admin_mode: {
+        icon: "hass:tools",
+        name: "Admin Mode",
+        data: {
+            title: "Admin Mode",
+            timeout: 30000,
+            content: {
+                type: "custom:smartqasa-admin-mode-dialog",
+                title: "Enter Admin PIN",
+                admin_pin_entity: "input_text.admin_pin",
+                admin_mode_entity: "input_boolean.admin_mode",
+            },
+        },
+    },
+
     air_quality: {
         icon: "hass:air-filter",
         name: "Air Quality",

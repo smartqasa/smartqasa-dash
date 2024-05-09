@@ -4,6 +4,7 @@ import { styleMap } from "lit/directives/style-map.js";
 import { HomeAssistant, LovelaceCardConfig } from "../types";
 
 interface Config extends LovelaceCardConfig {
+    title?: string;
     admin_pin_entity: string;
     admin_mode_entity: string;
 }
@@ -83,6 +84,8 @@ export class AdminModeDialog extends LitElement {
     protected render() {
         if (!this.config) return html``;
 
+        const title = this.config.title || "Enter PIN";
+
         let maskedPin, pinStyles;
         if (!this.pinState) {
             maskedPin = this.maskedPin;
@@ -103,7 +106,7 @@ export class AdminModeDialog extends LitElement {
         return html`
             <div class="container">
                 <div class="header">
-                    <span class="header-text">Password Required</span>
+                    <span class="header-text">${title}</span>
                     <ha-icon icon="hass:dialpad"></ha-icon>
                 </div>
                 <div class="masked-pin" style="${styleMap(pinStyles)}">${maskedPin}</div>
