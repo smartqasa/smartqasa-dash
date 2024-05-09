@@ -43,7 +43,7 @@ export class CustomChip extends LitElement {
     }
 
     private async loadDialogObj() {
-        if (!this.config?.file) return;
+        if (!this.config?.dialog_file) return;
         try {
             const path = `/local/smartqasa/dialogs/${this.config.dialog_file}`;
             this.dialogObj = (await loadYamlAsJson(path)) as DialogObj;
@@ -61,7 +61,6 @@ export class CustomChip extends LitElement {
     }
 
     protected render(): TemplateResult {
-        console.log("Dialog obj:", this.dialogObj);
         if (!this.dialogObj) return html``;
 
         this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
