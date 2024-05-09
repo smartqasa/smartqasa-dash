@@ -25,7 +25,7 @@ export class AdminModeDialog extends LitElement {
     @state() private config?: Config;
     @state() private inputPin: string = "";
     @state() private maskedPin: string = "";
-    @state() isAdmin: boolean = false;
+    private invalidPin: boolean = false;
 
     static styles = css`
         :host {
@@ -81,6 +81,8 @@ export class AdminModeDialog extends LitElement {
     }
 
     protected render() {
+        if (!this.config) return html``;
+        const maskedPin = this.invalidPin ? "Invalid PIN" : this.maskedPin;
         const pinStyles = {
             color: this.maskedPin === "Invalid PIN" ? "rgb(var(--sq-rgb-red))" : "rgb(var(--sq-primary-font-rgb))",
         };
@@ -90,7 +92,7 @@ export class AdminModeDialog extends LitElement {
                     <span class="header-text">Password Required</span>
                     <ha-icon icon="hass:dialpad"></ha-icon>
                 </div>
-                <div class="masked-pin" style="${styleMap(pinStyles)}">${this.maskedPin}</div>
+                <div class="masked-pin" style="${styleMap(pinStyles)}">${maskedPin}</div>
                 <div class="grid">
                     ${[1, 2, 3, 4, 5, 6, 7, 8, 9, "☓", 0, "✓"].map((digit) => this.renderButton(digit))}
                 </div>
@@ -103,6 +105,8 @@ export class AdminModeDialog extends LitElement {
     }
 
     private handleInput(digit: number | string) {
+        if (this.invalidPin) return;
+
         if (digit === "✓") {
             this.verifyPin();
         } else if (digit === "☓") {
@@ -119,6 +123,7 @@ export class AdminModeDialog extends LitElement {
 
         const adminPin = this.hass.states[this.config.admin_pin_entity].state;
         if (this.inputPin === adminPin) {
+            this.invalidPin = false;
             try {
                 this.hass.callService("input_boolean", "turn_on", {
                     entity_id: this.config.admin_mode_entity,
@@ -127,10 +132,11 @@ export class AdminModeDialog extends LitElement {
                 console.error("Failed to turn_on the admin mode entity:", error);
             }
         } else {
-            this.maskedPin = "Invalid PIN";
             setTimeout(() => {
-                this.maskedPin = "";
+                this.invalidPin = true;
             }, 5000);
         }
+        this.inputPin = "";
+        this.maskedPin = "";
     }
 }

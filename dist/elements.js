@@ -96,7 +96,7 @@ let AdminModeDialog = class AdminModeDialog extends s {
         super(...arguments);
         this.inputPin = "";
         this.maskedPin = "";
-        this.isAdmin = false;
+        this.invalidPin = false;
     }
     getCardSize() {
         return 6;
@@ -153,6 +153,9 @@ let AdminModeDialog = class AdminModeDialog extends s {
         this.config = { ...config };
     }
     render() {
+        if (!this.config)
+            return x ``;
+        const maskedPin = this.invalidPin ? "Invalid PIN" : this.maskedPin;
         const pinStyles = {
             color: this.maskedPin === "Invalid PIN" ? "rgb(var(--sq-rgb-red))" : "rgb(var(--sq-primary-font-rgb))",
         };
@@ -162,7 +165,7 @@ let AdminModeDialog = class AdminModeDialog extends s {
                     <span class="header-text">Password Required</span>
                     <ha-icon icon="hass:dialpad"></ha-icon>
                 </div>
-                <div class="masked-pin" style="${o(pinStyles)}">${this.maskedPin}</div>
+                <div class="masked-pin" style="${o(pinStyles)}">${maskedPin}</div>
                 <div class="grid">
                     ${[1, 2, 3, 4, 5, 6, 7, 8, 9, "☓", 0, "✓"].map((digit) => this.renderButton(digit))}
                 </div>
@@ -173,6 +176,8 @@ let AdminModeDialog = class AdminModeDialog extends s {
         return x `<div class="button" @click=${() => this.handleInput(digit)}>${digit}</div>`;
     }
     handleInput(digit) {
+        if (this.invalidPin)
+            return;
         if (digit === "✓") {
             this.verifyPin();
         }
@@ -190,6 +195,7 @@ let AdminModeDialog = class AdminModeDialog extends s {
             return;
         const adminPin = this.hass.states[this.config.admin_pin_entity].state;
         if (this.inputPin === adminPin) {
+            this.invalidPin = false;
             try {
                 this.hass.callService("input_boolean", "turn_on", {
                     entity_id: this.config.admin_mode_entity,
@@ -200,11 +206,12 @@ let AdminModeDialog = class AdminModeDialog extends s {
             }
         }
         else {
-            this.maskedPin = "Invalid PIN";
             setTimeout(() => {
-                this.maskedPin = "";
+                this.invalidPin = true;
             }, 5000);
         }
+        this.inputPin = "";
+        this.maskedPin = "";
     }
 };
 __decorate([
@@ -219,9 +226,6 @@ __decorate([
 __decorate([
     r()
 ], AdminModeDialog.prototype, "maskedPin", void 0);
-__decorate([
-    r()
-], AdminModeDialog.prototype, "isAdmin", void 0);
 AdminModeDialog = __decorate([
     t$1("smartqasa-admin-mode-dialog")
 ], AdminModeDialog);
