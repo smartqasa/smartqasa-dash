@@ -20,7 +20,7 @@ export const dialogTable: DialogTable = {
             content: {
                 type: "custom:smartqasa-admin-mode-dialog",
                 title: "Enter Admin PIN",
-                admin_pin_entity: "input_text.admin_pin",
+                admin_pin_entity: "input_text.admin_pin_code",
                 admin_mode_entity: "input_boolean.admin_mode",
             },
         },
