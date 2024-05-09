@@ -104,8 +104,9 @@ export async function menuConfig(menu_tab?: number): Promise<any> {
             },
         },
         {
-            type: "custom:button-card",
-            template: "admin-mode-tile",
+            type: "custom:smartqasa-dialog-tile",
+            dialog: "admin_mode",
+            menu_tab: 3,
         },
         {
             type: "custom:button-card",
