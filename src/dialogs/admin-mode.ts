@@ -132,11 +132,12 @@ export class AdminModeDialog extends LitElement {
                 console.error("Failed to turn_on the admin mode entity:", error);
             }
         } else {
+            this.invalidPin = true;
             setTimeout(() => {
-                this.invalidPin = true;
+                this.inputPin = "";
+                this.maskedPin = "";
+                this.invalidPin = false;
             }, 5000);
         }
-        this.inputPin = "";
-        this.maskedPin = "";
     }
 }

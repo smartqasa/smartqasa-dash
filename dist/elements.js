@@ -206,12 +206,13 @@ let AdminModeDialog = class AdminModeDialog extends s {
             }
         }
         else {
+            this.invalidPin = true;
             setTimeout(() => {
-                this.invalidPin = true;
+                this.inputPin = "";
+                this.maskedPin = "";
+                this.invalidPin = false;
             }, 5000);
         }
-        this.inputPin = "";
-        this.maskedPin = "";
     }
 };
 __decorate([
