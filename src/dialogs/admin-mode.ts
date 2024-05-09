@@ -84,7 +84,7 @@ export class AdminModeDialog extends LitElement {
         if (!this.config) return html``;
         const maskedPin = this.invalidPin ? "Invalid PIN" : this.maskedPin;
         const pinStyles = {
-            color: this.maskedPin === "Invalid PIN" ? "rgb(var(--sq-rgb-red))" : "rgb(var(--sq-primary-font-rgb))",
+            color: this.invalidPin ? "rgb(var(--sq-rgb-red))" : "rgb(var(--sq-primary-font-rgb))",
         };
         return html`
             <div class="container">

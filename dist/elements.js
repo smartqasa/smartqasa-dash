@@ -157,7 +157,7 @@ let AdminModeDialog = class AdminModeDialog extends s {
             return x ``;
         const maskedPin = this.invalidPin ? "Invalid PIN" : this.maskedPin;
         const pinStyles = {
-            color: this.maskedPin === "Invalid PIN" ? "rgb(var(--sq-rgb-red))" : "rgb(var(--sq-primary-font-rgb))",
+            color: this.invalidPin ? "rgb(var(--sq-rgb-red))" : "rgb(var(--sq-primary-font-rgb))",
         };
         return x `
             <div class="container">
