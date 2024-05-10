@@ -19,6 +19,7 @@ window.customCards.push({
 @customElement("smartqasa-service-chip")
 export class ServiceChip extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
+    @state() private config?: Config;
     @state() private showConfirmDialog: boolean = false;
 
     static styles = css`
@@ -69,6 +70,10 @@ export class ServiceChip extends LitElement {
             margin-left: 10px;
         }
     `;
+
+    public setConfig(config: Config): void {
+        this.config = { ...config };
+    }
 
     protected render() {
         return html`

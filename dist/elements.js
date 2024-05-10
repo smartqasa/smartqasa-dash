@@ -5333,6 +5333,9 @@ let ServiceChip = class ServiceChip extends s {
             margin-left: 10px;
         }
     `; }
+    setConfig(config) {
+        this.config = { ...config };
+    }
     render() {
         return x `
             <div class="chip" @click="${() => (this.showConfirmDialog = true)}">Activate Service</div>
@@ -5372,6 +5375,9 @@ let ServiceChip = class ServiceChip extends s {
 __decorate([
     n$1({ attribute: false })
 ], ServiceChip.prototype, "hass", void 0);
+__decorate([
+    r()
+], ServiceChip.prototype, "config", void 0);
 __decorate([
     r()
 ], ServiceChip.prototype, "showConfirmDialog", void 0);
