@@ -86,10 +86,10 @@ const t={ATTRIBUTE:1,CHILD:2,PROPERTY:3,BOOLEAN_ATTRIBUTE:4,EVENT:5,ELEMENT:6},e
  */const n="important",i$1=" !"+n,o=e(class extends i$2{constructor(t$1){if(super(t$1),t$1.type!==t.ATTRIBUTE||"style"!==t$1.name||t$1.strings?.length>2)throw Error("The `styleMap` directive must be used in the `style` attribute and must be the only part in the attribute.")}render(t){return Object.keys(t).reduce(((e,r)=>{const s=t[r];return null==s?e:e+`${r=r.includes("-")?r:r.replace(/(?:^(webkit|moz|ms|o)|)(?=[A-Z])/g,"-$&").toLowerCase()}:${s};`}),"")}update(e,[r]){const{style:s}=e.element;if(void 0===this.ft)return this.ft=new Set(Object.keys(r)),this.render(r);for(const t of this.ft)null==r[t]&&(this.ft.delete(t),t.includes("-")?s.removeProperty(t):s[t]=null);for(const t in r){const e=r[t];if(null!=e){this.ft.add(t);const r="string"==typeof e&&e.endsWith(i$1);t.includes("-")||r?s.setProperty(t,r?e.slice(0,-11):e,r?n:""):s[t]=e;}}return w}});
 
 window.customCards.push({
-    type: "smartqasa-admin-mode-dialog",
-    name: "SmartQasa Admin Mode Dialog",
+    type: "smartqasa-pin-verify-dialog",
+    name: "SmartQasa PIN Verify Dialog",
     preview: true,
-    description: "A SmartQasa tile for accepting a PIN and enabling Admin Mode.",
+    description: "A SmartQasa dialog for accepting and verifying a PIN.",
 });
 let AdminModeDialog = class AdminModeDialog extends s {
     constructor() {
@@ -124,7 +124,7 @@ let AdminModeDialog = class AdminModeDialog extends s {
             text-align: left;
         }
         .masked-pin {
-            height: 2rem;
+            height: var(--sq-primary-font-size, 1.5rem);
             margin-top: 1rem;
             margin-bottom: 1rem;
             text-align: center;
@@ -139,8 +139,8 @@ let AdminModeDialog = class AdminModeDialog extends s {
         }
         .button {
             display: flex;
-            width: 3.5rem;
-            height: 3.5rem;
+            width: 4rem;
+            height: 4rem;
             align-items: center;
             justify-content: center;
             border: var(--sq-card-border, none);
@@ -151,6 +151,19 @@ let AdminModeDialog = class AdminModeDialog extends s {
     `; }
     setConfig(config) {
         this.config = { ...config };
+        this.validateEntities();
+    }
+    validateEntities() {
+        if (!this.config)
+            return;
+        const pinDomain = this.config.pin_entity.split(".")[0];
+        const outcomeDomain = this.config.outcome_entity.split(".")[0];
+        if (pinDomain !== "input_text") {
+            throw new Error(`Invalid entity domain: PIN entity should be of domain "input_text", got "${pinDomain}" instead.`);
+        }
+        if (outcomeDomain !== "input_boolean") {
+            throw new Error(`Invalid entity domain: Outcome entity should be of domain "input_boolean", got "${outcomeDomain}" instead.`);
+        }
     }
     render() {
         if (!this.config)
@@ -207,14 +220,14 @@ let AdminModeDialog = class AdminModeDialog extends s {
         }
     }
     verifyPin() {
-        if (!this.hass || !this.config)
+        if (!this.hass || !this.pinEntity || !this.outcomeEntity)
             return;
-        const adminPin = this.hass.states[this.config.admin_pin_entity].state;
+        const adminPin = this.hass.states[this.pinEntity].state;
         if (this.inputPin === adminPin) {
             this.pinState = "valid";
             try {
                 this.hass.callService("input_boolean", "turn_on", {
-                    entity_id: this.config.admin_mode_entity,
+                    entity_id: this.outcomeEntity,
                 });
             }
             catch (error) {
@@ -233,7 +246,7 @@ let AdminModeDialog = class AdminModeDialog extends s {
                 this.inputPin = "";
                 this.maskedPin = "";
                 this.pinState = "";
-            }, 5000);
+            }, 2000);
         }
     }
 };
@@ -253,7 +266,7 @@ __decorate([
     r()
 ], AdminModeDialog.prototype, "pinState", void 0);
 AdminModeDialog = __decorate([
-    t$1("smartqasa-admin-mode-dialog")
+    t$1("smartqasa-pin-verify-dialog")
 ], AdminModeDialog);
 
 window.customCards.push({
@@ -4443,10 +4456,10 @@ const dialogTable = {
             title: "Admin Mode",
             timeout: 30000,
             content: {
-                type: "custom:smartqasa-admin-mode-dialog",
+                type: "custom:smartqasa-pin-verify-dialog",
                 title: "Enter Admin PIN",
-                admin_pin_entity: "input_text.admin_pin_code",
-                admin_mode_entity: "input_boolean.admin_mode",
+                pin_entity: "input_text.admin_pin_code",
+                outcome_entity: "input_boolean.admin_mode",
             },
         },
     },

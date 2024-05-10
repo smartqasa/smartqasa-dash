@@ -2,21 +2,22 @@ import { css, html, LitElement } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HomeAssistant, LovelaceCardConfig } from "../types";
+import { thermostatIcons } from "../const";
 
 interface Config extends LovelaceCardConfig {
     title?: string;
-    admin_pin_entity: string;
-    admin_mode_entity: string;
+    pin_entity: string;
+    outcome_entity: string;
 }
 
 window.customCards.push({
-    type: "smartqasa-admin-mode-dialog",
-    name: "SmartQasa Admin Mode Dialog",
+    type: "smartqasa-pin-verify-dialog",
+    name: "SmartQasa PIN Verify Dialog",
     preview: true,
-    description: "A SmartQasa tile for accepting a PIN and enabling Admin Mode.",
+    description: "A SmartQasa dialog for accepting and verifying a PIN.",
 });
 
-@customElement("smartqasa-admin-mode-dialog")
+@customElement("smartqasa-pin-verify-dialog")
 export class AdminModeDialog extends LitElement {
     getCardSize(): number {
         return 6;
@@ -27,6 +28,8 @@ export class AdminModeDialog extends LitElement {
     @state() private inputPin: string = "";
     @state() private maskedPin: string = "";
     @state() private pinState: string = "";
+    private pinEntity?: string;
+    private outcomeEntity?: string;
 
     static styles = css`
         :host {
@@ -51,7 +54,7 @@ export class AdminModeDialog extends LitElement {
             text-align: left;
         }
         .masked-pin {
-            height: 2rem;
+            height: var(--sq-primary-font-size, 1.5rem);
             margin-top: 1rem;
             margin-bottom: 1rem;
             text-align: center;
@@ -66,8 +69,8 @@ export class AdminModeDialog extends LitElement {
         }
         .button {
             display: flex;
-            width: 3.5rem;
-            height: 3.5rem;
+            width: 4rem;
+            height: 4rem;
             align-items: center;
             justify-content: center;
             border: var(--sq-card-border, none);
@@ -79,6 +82,23 @@ export class AdminModeDialog extends LitElement {
 
     public setConfig(config: Config): void {
         this.config = { ...config };
+        this.validateEntities();
+    }
+
+    private validateEntities() {
+        if (!this.config) return;
+        const pinDomain = this.config.pin_entity.split(".")[0];
+        const outcomeDomain = this.config.outcome_entity.split(".")[0];
+        if (pinDomain !== "input_text") {
+            throw new Error(
+                `Invalid entity domain: PIN entity should be of domain "input_text", got "${pinDomain}" instead.`
+            );
+        }
+        if (outcomeDomain !== "input_boolean") {
+            throw new Error(
+                `Invalid entity domain: Outcome entity should be of domain "input_boolean", got "${outcomeDomain}" instead.`
+            );
+        }
     }
 
     protected render() {
@@ -136,14 +156,14 @@ export class AdminModeDialog extends LitElement {
     }
 
     private verifyPin() {
-        if (!this.hass || !this.config) return;
+        if (!this.hass || !this.pinEntity || !this.outcomeEntity) return;
 
-        const adminPin = this.hass.states[this.config.admin_pin_entity].state;
+        const adminPin = this.hass.states[this.pinEntity].state;
         if (this.inputPin === adminPin) {
             this.pinState = "valid";
             try {
                 this.hass.callService("input_boolean", "turn_on", {
-                    entity_id: this.config.admin_mode_entity,
+                    entity_id: this.outcomeEntity,
                 });
             } catch (error) {
                 console.error("Failed to turn_on the admin mode entity:", error);
@@ -160,7 +180,7 @@ export class AdminModeDialog extends LitElement {
                 this.inputPin = "";
                 this.maskedPin = "";
                 this.pinState = "";
-            }, 5000);
+            }, 2000);
         }
     }
 }

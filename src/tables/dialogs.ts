@@ -18,10 +18,10 @@ export const dialogTable: DialogTable = {
             title: "Admin Mode",
             timeout: 30000,
             content: {
-                type: "custom:smartqasa-admin-mode-dialog",
+                type: "custom:smartqasa-pin-verify-dialog",
                 title: "Enter Admin PIN",
-                admin_pin_entity: "input_text.admin_pin_code",
-                admin_mode_entity: "input_boolean.admin_mode",
+                pin_entity: "input_text.admin_pin_code",
+                outcome_entity: "input_boolean.admin_mode",
             },
         },
     },

@@ -20,7 +20,7 @@ window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split
 window.customCards = window.customCards ?? [];
 
 // Dialogs
-import "./dialogs/admin-mode";
+import "./dialogs/pin-verify";
 import "./dialogs/more-info";
 
 // Chips
