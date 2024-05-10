@@ -164,6 +164,8 @@ let PinVerifyDialog = class PinVerifyDialog extends s {
         if (outcomeDomain !== "input_boolean") {
             throw new Error(`Invalid entity domain: Outcome entity should be of domain "input_boolean", got "${outcomeDomain}" instead.`);
         }
+        this.pinEntity = this.config.pin_entity;
+        this.outcomeEntity = this.config.outcome_entity;
     }
     render() {
         if (!this.config)

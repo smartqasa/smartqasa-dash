@@ -99,6 +99,8 @@ export class PinVerifyDialog extends LitElement {
                 `Invalid entity domain: Outcome entity should be of domain "input_boolean", got "${outcomeDomain}" instead.`
             );
         }
+        this.pinEntity = this.config.pin_entity;
+        this.outcomeEntity = this.config.outcome_entity;
     }
 
     protected render() {
