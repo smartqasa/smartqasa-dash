@@ -18,7 +18,7 @@ window.customCards.push({
 });
 
 @customElement("smartqasa-pin-verify-dialog")
-export class AdminModeDialog extends LitElement {
+export class PinVerifyDialog extends LitElement {
     getCardSize(): number {
         return 6;
     }

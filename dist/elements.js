@@ -91,7 +91,7 @@ window.customCards.push({
     preview: true,
     description: "A SmartQasa dialog for accepting and verifying a PIN.",
 });
-let AdminModeDialog = class AdminModeDialog extends s {
+let PinVerifyDialog = class PinVerifyDialog extends s {
     constructor() {
         super(...arguments);
         this.inputPin = "";
@@ -252,22 +252,22 @@ let AdminModeDialog = class AdminModeDialog extends s {
 };
 __decorate([
     n$1({ attribute: false })
-], AdminModeDialog.prototype, "hass", void 0);
+], PinVerifyDialog.prototype, "hass", void 0);
 __decorate([
     r()
-], AdminModeDialog.prototype, "config", void 0);
+], PinVerifyDialog.prototype, "config", void 0);
 __decorate([
     r()
-], AdminModeDialog.prototype, "inputPin", void 0);
+], PinVerifyDialog.prototype, "inputPin", void 0);
 __decorate([
     r()
-], AdminModeDialog.prototype, "maskedPin", void 0);
+], PinVerifyDialog.prototype, "maskedPin", void 0);
 __decorate([
     r()
-], AdminModeDialog.prototype, "pinState", void 0);
-AdminModeDialog = __decorate([
+], PinVerifyDialog.prototype, "pinState", void 0);
+PinVerifyDialog = __decorate([
     t$1("smartqasa-pin-verify-dialog")
-], AdminModeDialog);
+], PinVerifyDialog);
 
 window.customCards.push({
     type: "smartqasa-more-info-dialog",
