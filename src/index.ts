@@ -30,6 +30,7 @@ import "./chips/motion";
 import "./chips/navigate";
 import "./chips/routine";
 import "./chips/select";
+import "./chips/service";
 import "./chips/thermostat";
 import "./chips/weather";
 
