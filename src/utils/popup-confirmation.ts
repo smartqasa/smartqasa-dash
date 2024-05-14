@@ -80,8 +80,8 @@ class PopupConfirmation extends LitElement {
     }
 
     handleOpen = (event: CustomEvent): void => {
-        const { detail } = event;
-        this.open(detail.message);
+        console.log("Received open-confirmation-popup", event.detail.message);
+        this.open(event.detail.message);
     };
 }
 

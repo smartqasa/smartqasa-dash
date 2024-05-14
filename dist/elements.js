@@ -7257,8 +7257,11 @@ let LightTile = class LightTile extends s {
     }
     showMoreInfo(e) {
         e.stopPropagation();
+        console.log("Dispatching open-confirmation-popup");
         const event = new CustomEvent("open-confirmation-popup", {
             detail: { message: "Do you really want to proceed?" },
+            bubbles: true, // Make sure the event bubbles if your components are nested deeply
+            composed: true, // Allows the event to cross the shadow DOM boundary
         });
         window.dispatchEvent(event);
     }
@@ -8720,8 +8723,8 @@ let PopupConfirmation = class PopupConfirmation extends s {
         this.isOpen = false;
         this.message = "Proceed?";
         this.handleOpen = (event) => {
-            const { detail } = event;
-            this.open(detail.message);
+            console.log("Received open-confirmation-popup", event.detail.message);
+            this.open(event.detail.message);
         };
     }
     static { this.styles = i$5 `

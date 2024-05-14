@@ -111,8 +111,11 @@ export class LightTile extends LitElement {
 
     private showMoreInfo(e: Event): void {
         e.stopPropagation();
+        console.log("Dispatching open-confirmation-popup");
         const event = new CustomEvent("open-confirmation-popup", {
             detail: { message: "Do you really want to proceed?" },
+            bubbles: true, // Make sure the event bubbles if your components are nested deeply
+            composed: true, // Allows the event to cross the shadow DOM boundary
         });
         window.dispatchEvent(event);
     }
