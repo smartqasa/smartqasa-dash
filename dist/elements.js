@@ -7257,14 +7257,13 @@ let LightTile = class LightTile extends s {
     }
     showMoreInfo(e) {
         e.stopPropagation();
-        moreInfoDialog(this.config, this.stateObj);
-    }
-    showEntityList(e) {
-        e.stopPropagation();
         const event = new CustomEvent("open-confirmation-popup", {
             detail: { message: "Do you really want to proceed?" },
         });
         window.dispatchEvent(event);
+    }
+    showEntityList(e) {
+        e.stopPropagation();
         if (!this.stateObj ||
             !Array.isArray(this.stateObj.attributes?.entity_id) ||
             this.stateObj.attributes.entity_id.length === 0)
