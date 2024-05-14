@@ -116,6 +116,11 @@ export class LightTile extends LitElement {
 
     private showEntityList(e: Event): void {
         e.stopPropagation();
+        const event = new CustomEvent("open-confirmation-popup", {
+            detail: { message: "Do you really want to proceed?" },
+        });
+        window.dispatchEvent(event);
+
         if (
             !this.stateObj ||
             !Array.isArray(this.stateObj.attributes?.entity_id) ||

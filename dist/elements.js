@@ -7261,6 +7261,10 @@ let LightTile = class LightTile extends s {
     }
     showEntityList(e) {
         e.stopPropagation();
+        const event = new CustomEvent("open-confirmation-popup", {
+            detail: { message: "Do you really want to proceed?" },
+        });
+        window.dispatchEvent(event);
         if (!this.stateObj ||
             !Array.isArray(this.stateObj.attributes?.entity_id) ||
             this.stateObj.attributes.entity_id.length === 0)
@@ -8710,6 +8714,93 @@ __decorate([
 ThermostatTile = __decorate([
     t$1("smartqasa-thermostat-tile")
 ], ThermostatTile);
+
+let PopupConfirmation = class PopupConfirmation extends s {
+    constructor() {
+        super(...arguments);
+        this.isOpen = false;
+        this.message = "Proceed?";
+        this.handleOpen = (event) => {
+            const { detail } = event;
+            this.open(detail.message);
+        };
+    }
+    static { this.styles = i$5 `
+        :host {
+            display: block;
+        }
+        :host([is-open]) .overlay {
+            display: flex;
+        }
+        .overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .popup {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        button {
+            margin-top: 10px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #e0e0e0;
+        }
+    `; }
+    render() {
+        return x `
+            <div class="overlay" @click="${this.close}">
+                <div class="popup" @click="${this.stopPropagation}">
+                    <p>${this.message}</p>
+                    <button @click="${this.confirm}">Confirm</button>
+                    <button @click="${this.close}">Cancel</button>
+                </div>
+            </div>
+        `;
+    }
+    confirm() {
+        this.dispatchEvent(new CustomEvent("confirm"));
+        this.close();
+    }
+    close(e) {
+        if (e)
+            e.stopPropagation();
+        this.isOpen = false;
+    }
+    open(message = "Are you sure?") {
+        this.message = message;
+        this.isOpen = true;
+    }
+    stopPropagation(e) {
+        e.stopPropagation();
+    }
+    connectedCallback() {
+        super.connectedCallback();
+        window.addEventListener("open-confirmation-popup", this.handleOpen);
+    }
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        window.removeEventListener("open-confirmation-popup", this.handleOpen);
+    }
+};
+__decorate([
+    n$1({ type: Boolean, reflect: true })
+], PopupConfirmation.prototype, "isOpen", void 0);
+__decorate([
+    n$1({ type: String })
+], PopupConfirmation.prototype, "message", void 0);
+PopupConfirmation = __decorate([
+    t$1("popup-confirmation")
+], PopupConfirmation);
 
 var version = "2024.5.9a";
 

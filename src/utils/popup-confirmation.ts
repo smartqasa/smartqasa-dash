@@ -4,7 +4,7 @@ import { customElement, property } from "lit/decorators.js";
 @customElement("popup-confirmation")
 class PopupConfirmation extends LitElement {
     @property({ type: Boolean, reflect: true }) isOpen: boolean = false;
-    @property({ type: String }) message: string = "";
+    @property({ type: String }) message: string = "Proceed?";
 
     static styles = css`
         :host {
@@ -33,12 +33,15 @@ class PopupConfirmation extends LitElement {
             margin-right: 10px;
             cursor: pointer;
         }
+        button:hover {
+            background-color: #e0e0e0;
+        }
     `;
 
     protected render() {
         return html`
             <div class="overlay" @click="${this.close}">
-                <div class="popup" @click="${this.close}">
+                <div class="popup" @click="${this.stopPropagation}">
                     <p>${this.message}</p>
                     <button @click="${this.confirm}">Confirm</button>
                     <button @click="${this.close}">Cancel</button>
@@ -47,19 +50,23 @@ class PopupConfirmation extends LitElement {
         `;
     }
 
-    private confirm() {
+    public confirm() {
         this.dispatchEvent(new CustomEvent("confirm"));
-        this.close;
+        this.close();
     }
 
-    private close(e: Event): void {
-        e.stopPropagation();
+    public close(e?: Event): void {
+        if (e) e.stopPropagation();
         this.isOpen = false;
     }
 
-    private open(message = "Are you sure?") {
+    public open(message = "Are you sure?") {
         this.message = message;
         this.isOpen = true;
+    }
+
+    private stopPropagation(e: Event): void {
+        e.stopPropagation();
     }
 
     connectedCallback() {
@@ -77,3 +84,5 @@ class PopupConfirmation extends LitElement {
         this.open(detail.message);
     };
 }
+
+export { PopupConfirmation };
