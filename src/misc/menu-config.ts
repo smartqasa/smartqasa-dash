@@ -37,7 +37,7 @@ export async function menuConfig(menu_tab?: number): Promise<any> {
             entity: "script.system_tablet_reload",
         },
         {
-            type: "custom:smartqasa-routine-tile",
+            type: "custom:button-card",
             template: "clear-cache-tile",
         },
         {
@@ -107,10 +107,6 @@ export async function menuConfig(menu_tab?: number): Promise<any> {
             type: "custom:smartqasa-dialog-tile",
             dialog: "admin_mode",
             menu_tab: 3,
-        },
-        {
-            type: "custom:button-card",
-            template: "about-tile",
         },
     ];
 

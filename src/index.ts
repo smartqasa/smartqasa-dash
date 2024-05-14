@@ -14,6 +14,12 @@ declare global {
     }
 }
 
+declare global {
+    interface WindowEventMap {
+        "open-confirmation-popup": CustomEvent;
+    }
+}
+
 window.smartqasa = window.smartqasa || {};
 window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();
 

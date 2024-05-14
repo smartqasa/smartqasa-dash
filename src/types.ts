@@ -116,16 +116,8 @@ export interface HomeAssistant {
     areas: { [id: string]: AreaRegistryEntry };
     services: HassServices;
     config: HassConfig;
-
     panelUrl: string;
-    // i18n
-    // current effective language in that order:
-    //   - backend saved user selected language
-    //   - language in local app storage
-    //   - browser language
-    //   - english (en)
     language: string;
-    // local stored language, keep that name for backward compatibility
     selectedLanguage: string | null;
     resources: Resources;
     suspendWhenHidden: boolean;
@@ -177,4 +169,14 @@ export interface LovelaceCardConfig {
     layout_options?: LovelaceLayoutOptions;
     type: string;
     [key: string]: any;
+}
+
+export interface DialogConfig {
+    title: string;
+    size: "normal" | "wide" | "fullscreen";
+    timeout: number;
+    dismissable: boolean;
+    dismiss_action: any;
+    autoclose: boolean;
+    content: any;
 }
