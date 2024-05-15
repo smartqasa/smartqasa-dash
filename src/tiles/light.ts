@@ -107,9 +107,7 @@ export class LightTile extends LitElement {
     private async toggleEntity(e: Event): Promise<void> {
         e.stopPropagation();
         if (!this.hass || !this.entity) return;
-        await callService(this.hass, "light", "toggle", {
-            entity_id: this.entity,
-        });
+        await callService(this.hass, "light", "toggle", { entity_id: this.entity });
     }
 
     private showMoreInfo(e: Event): void {

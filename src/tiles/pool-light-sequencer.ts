@@ -3,6 +3,7 @@ import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "../types";
+import { callService } from "../utils/call-service";
 import { sequenceTable } from "../tables/pool-light-sequences";
 
 import { tileBaseStyle, tileIconSpinStyle } from "../styles/tile";
@@ -84,13 +85,13 @@ export class PoolLightSequencerTile extends LitElement {
         return { icon, iconAnimation, iconColor, name };
     }
 
-    private runRoutine(e: Event): void {
+    private async runRoutine(e: Event): Promise<void> {
         e.stopPropagation();
         if (!this.hass || !this.config || !this.stateObj) return;
 
         this.running = true;
 
-        this.hass.callService("script", "system_color_light_sequence_selector", {
+        await callService(this.hass, "script", "system_color_light_sequence_selector", {
             entity: this.entity,
             count: this.sequenceObj.count,
         });

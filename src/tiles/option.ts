@@ -3,6 +3,7 @@ import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "../types";
+import { callService } from "../utils/call-service";
 import { menuConfig } from "../misc/menu-config";
 import { phaseIcons, modeIcons } from "../const";
 
@@ -103,20 +104,19 @@ export class OptionTile extends LitElement {
         return { icon, iconAnimation, iconColor, name };
     }
 
-    private selectOption(e: Event): void {
+    private async selectOption(e: Event): Promise<void> {
         e.stopPropagation();
         if (!this.hass || !this.config || !this.stateObj) return;
 
         this.running = true;
-
-        this.hass.callService("input_select", "select_option", {
+        await callService(this.hass, "input_select", "select_option", {
             entity_id: this.entity,
             option: this.config.option,
         });
 
         const trigger = this.config.trigger;
         if (trigger && trigger.startsWith("input_button.")) {
-            this.hass.callService("input_button", "press", {
+            await callService(this.hass, "input_button", "press", {
                 entity_id: trigger,
             });
         }

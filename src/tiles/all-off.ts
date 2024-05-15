@@ -2,6 +2,7 @@ import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult } from
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { AreaRegistryEntry, HomeAssistant, LovelaceCardConfig } from "../types";
+import { callService } from "../utils/call-service";
 
 import { tileBaseStyle, tileIconSpinStyle } from "../styles/tile";
 
@@ -93,18 +94,13 @@ export class AllOffTile extends LitElement {
         if (!this.hass || !this.areaObj) return;
 
         this.running = true;
-
-        try {
-            await this.hass.callService("light", "turn_off", {
-                area_id: this.area,
-                transition: 2,
-            });
-            await this.hass.callService("fan", "turn_off", {
-                area_id: this.area,
-            });
-        } catch (error) {
-            console.error("Failed to turn off entities:", error);
-        }
+        await callService(this.hass, "light", "turn_off", {
+            area_id: this.area,
+            transition: 2,
+        });
+        await callService(this.hass, "fan", "turn_off", {
+            area_id: this.area,
+        });
 
         setTimeout(() => {
             this.running = false;

@@ -3,6 +3,7 @@ import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "../types";
+import { callService } from "../utils/call-service";
 import { moreInfoDialog } from "../utils/more-info-dialog";
 
 import { tileBaseStyle, tileStateStyle, tileIconBlinkStyle } from "../styles/tile";
@@ -119,17 +120,13 @@ export class RobotTile extends LitElement {
         return { icon, iconAnimation, iconColor, name, stateFmtd };
     }
 
-    private toggleEntity(e: Event): void {
+    private async toggleEntity(e: Event): Promise<void> {
         e.stopPropagation();
         if (!this.hass || !this.stateObj) return;
         const state = this.stateObj.state;
-        try {
-            this.hass.callService("vacuum", ["docked", "idle", "paused"].includes(state) ? "start" : "pause", {
-                entity_id: this.entity,
-            });
-        } catch (e) {
-            console.error("Error toggling robot:", e);
-        }
+        await callService(this.hass, "vacuum", ["docked", "idle", "paused"].includes(state) ? "start" : "pause", {
+            entity_id: this.entity,
+        });
     }
 
     private showMoreInfo(e: Event): void {
