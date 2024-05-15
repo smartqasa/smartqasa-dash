@@ -3,6 +3,7 @@ import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "../types";
+import { callService } from "../utils/call-service";
 import { moreInfoDialog } from "../utils/more-info-dialog";
 
 import { tileBaseStyle, tileStateStyle, tileIconBlinkStyle, tileIconSpinStyle } from "../styles/tile";
@@ -118,21 +119,16 @@ export class LockTile extends LitElement {
         return { icon, iconAnimation, iconColor, name, stateFmtd };
     }
 
-    private toggleEntity(e: Event): void {
+    private async toggleEntity(e: Event): Promise<void> {
         e.stopPropagation();
         if (!this.hass || !this.stateObj) return;
 
         const state = this.stateObj.state;
         this.running = true;
         this.stateObj.state = state == "locked" ? "unlocking" : "locking";
-
-        try {
-            this.hass.callService("lock", state == "locked" ? "unlock" : "lock", {
-                entity_id: this.entity,
-            });
-        } catch (error) {
-            console.error("Failed to toggle the entity:", error);
-        }
+        await callService(this.hass, "lock", state == "locked" ? "unlock" : "lock", {
+            entity_id: this.entity,
+        });
 
         setTimeout(() => {
             this.running = false;

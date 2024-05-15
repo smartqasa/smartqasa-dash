@@ -6896,6 +6896,15 @@ DialogTile = __decorate([
     t$1("smartqasa-dialog-tile")
 ], DialogTile);
 
+const callService = async (hass, domain, service, serviceData) => {
+    try {
+        await hass.callService(domain, service, serviceData);
+    }
+    catch (error) {
+        console.error(`Error calling ${domain}.${service}:`, error);
+    }
+};
+
 function entityListDialog(dialogTitle, filterType, filterValue, tileType) {
     const dialogConfig = listDialogConfig(dialogTitle, filterType, filterValue, tileType);
     window.browser_mod?.service("popup", dialogConfig);
@@ -6969,9 +6978,13 @@ let FanTile = class FanTile extends s {
         }
         return { icon, iconAnimation, iconColor, name, stateFmtd };
     }
-    toggleEntity(e) {
+    async toggleEntity(e) {
         e.stopPropagation();
-        toggleHassEntity(this.hass, this.entity);
+        if (!this.hass || !this.entity)
+            return;
+        await callService(this.hass, "fan", "toggle", {
+            entity_id: this.entity,
+        });
     }
     showMoreInfo(e) {
         e.stopPropagation();
@@ -7080,9 +7093,13 @@ let GarageTile = class GarageTile extends s {
         }
         return { icon, iconAnimation, iconColor, name, stateFmtd };
     }
-    toggleEntity(e) {
+    async toggleEntity(e) {
         e.stopPropagation();
-        toggleHassEntity(this.hass, this.entity);
+        if (!this.hass || !this.entity)
+            return;
+        await callService(this.hass, "cover", "toggle", {
+            entity_id: this.entity,
+        });
     }
     showMoreInfo(e) {
         e.stopPropagation();
@@ -7161,9 +7178,13 @@ let HeaterTile = class HeaterTile extends s {
         }
         return { icon, iconAnimation, iconColor, name, stateFmtd };
     }
-    toggleEntity(e) {
+    async toggleEntity(e) {
         e.stopPropagation();
-        toggleHassEntity(this.hass, this.entity);
+        if (!this.hass || !this.entity)
+            return;
+        await callService(this.hass, "light", "toggle", {
+            entity_id: this.entity,
+        });
     }
     showMoreInfo(e) {
         e.stopPropagation();
@@ -7251,9 +7272,13 @@ let LightTile = class LightTile extends s {
         }
         return { icon, iconAnimation, iconColor, name, stateFmtd };
     }
-    toggleEntity(e) {
+    async toggleEntity(e) {
         e.stopPropagation();
-        toggleHassEntity(this.hass, this.entity);
+        if (!this.hass || !this.entity)
+            return;
+        await callService(this.hass, "light", "toggle", {
+            entity_id: this.entity,
+        });
     }
     showMoreInfo(e) {
         e.stopPropagation();
@@ -7430,21 +7455,16 @@ let LockTile = class LockTile extends s {
         }
         return { icon, iconAnimation, iconColor, name, stateFmtd };
     }
-    toggleEntity(e) {
+    async toggleEntity(e) {
         e.stopPropagation();
         if (!this.hass || !this.stateObj)
             return;
         const state = this.stateObj.state;
         this.running = true;
         this.stateObj.state = state == "locked" ? "unlocking" : "locking";
-        try {
-            this.hass.callService("lock", state == "locked" ? "unlock" : "lock", {
-                entity_id: this.entity,
-            });
-        }
-        catch (error) {
-            console.error("Failed to toggle the entity:", error);
-        }
+        await callService(this.hass, "lock", state == "locked" ? "unlock" : "lock", {
+            entity_id: this.entity,
+        });
         setTimeout(() => {
             this.running = false;
         }, 250);
@@ -8336,15 +8356,6 @@ __decorate([
 PoolLightSequencerTile = __decorate([
     t$1("smartqasa-pool-light-sequencer-tile")
 ], PoolLightSequencerTile);
-
-const callService = async (hass, domain, service, serviceData) => {
-    try {
-        await hass.callService(domain, service, serviceData);
-    }
-    catch (error) {
-        console.error(`Error calling ${domain}.${service}:`, error);
-    }
-};
 
 window.customCards.push({
     type: "smartqasa-shade-tile",
