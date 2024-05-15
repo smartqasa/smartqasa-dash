@@ -3,6 +3,7 @@ import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "../types";
+import { callService } from "../utils/call-service";
 
 import { chipBaseStyle, chipTextStyle, chipIconSpinStyle } from "../styles/chip";
 
@@ -87,7 +88,7 @@ export class RoutineChip extends LitElement {
         return { icon, iconAnimation, iconColor, name };
     }
 
-    private runRoutine(e: Event): void {
+    private async runRoutine(e: Event): Promise<void> {
         e.stopPropagation();
         if (!this.hass || !this.stateObj) return;
 
@@ -96,13 +97,13 @@ export class RoutineChip extends LitElement {
         const domain = this.stateObj.entity_id.split(".")[0];
         switch (domain) {
             case "script":
-                this.hass.callService("script", "turn_on", { entity_id: this.entity });
+                await callService(this.hass, "script", "turn_on", { entity_id: this.entity });
                 break;
             case "scene":
-                this.hass.callService("scene", "turn_on", { entity_id: this.entity });
+                await callService(this.hass, "scene", "turn_on", { entity_id: this.entity });
                 break;
             case "automation":
-                this.hass.callService("automation", "trigger", { entity_id: this.entity });
+                await callService(this.hass, "automation", "trigger", { entity_id: this.entity });
                 break;
             default:
                 console.error("Unsupported entity domain:", domain);

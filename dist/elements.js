@@ -4920,16 +4920,14 @@ DialogChip = __decorate([
     t$1("smartqasa-dialog-chip")
 ], DialogChip);
 
-async function toggleHassEntity(hass, entity) {
-    if (!hass || !entity)
-        return;
+const callService = async (hass, domain, service, serviceData) => {
     try {
-        await hass.callService("homeassistant", "toggle", { entity_id: entity });
+        await hass.callService(domain, service, serviceData);
     }
     catch (error) {
-        console.error("Failed to toggle the entity:", error);
+        console.error(`Error calling ${domain}.${service}:`, error);
     }
-}
+};
 
 window.customCards.push({
     type: "smartqasa-motion-chip",
@@ -4994,9 +4992,11 @@ let MotionChip = class MotionChip extends s {
         name = this.config?.name || "";
         return { icon, iconColor, name };
     }
-    toggleEntity(e) {
+    async toggleEntity(e) {
         e.stopPropagation();
-        toggleHassEntity(this.hass, this.entity);
+        if (!this.hass || !this.entity)
+            return;
+        await callService(this.hass, "automation", "toggle", { entity_id: this.entity });
     }
 };
 __decorate([
@@ -5150,7 +5150,7 @@ let RoutineChip = class RoutineChip extends s {
         name = this.config?.name || "";
         return { icon, iconAnimation, iconColor, name };
     }
-    runRoutine(e) {
+    async runRoutine(e) {
         e.stopPropagation();
         if (!this.hass || !this.stateObj)
             return;
@@ -5158,13 +5158,13 @@ let RoutineChip = class RoutineChip extends s {
         const domain = this.stateObj.entity_id.split(".")[0];
         switch (domain) {
             case "script":
-                this.hass.callService("script", "turn_on", { entity_id: this.entity });
+                await callService(this.hass, "script", "turn_on", { entity_id: this.entity });
                 break;
             case "scene":
-                this.hass.callService("scene", "turn_on", { entity_id: this.entity });
+                await callService(this.hass, "scene", "turn_on", { entity_id: this.entity });
                 break;
             case "automation":
-                this.hass.callService("automation", "trigger", { entity_id: this.entity });
+                await callService(this.hass, "automation", "trigger", { entity_id: this.entity });
                 break;
             default:
                 console.error("Unsupported entity domain:", domain);
@@ -6026,15 +6026,6 @@ __decorate([
 TitleCard = __decorate([
     t$1("smartqasa-title-card")
 ], TitleCard);
-
-const callService = async (hass, domain, service, serviceData) => {
-    try {
-        await hass.callService(domain, service, serviceData);
-    }
-    catch (error) {
-        console.error(`Error calling ${domain}.${service}:`, error);
-    }
-};
 
 const tileBaseStyle = i$5 `
     .container {
@@ -8793,7 +8784,7 @@ PopupConfirmation = __decorate([
     t$1("popup-confirmation")
 ], PopupConfirmation);
 
-var version = "2024.5.9a";
+var version = "2024.5.15";
 
 window.smartqasa = window.smartqasa || {};
 window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();
