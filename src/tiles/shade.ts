@@ -3,6 +3,7 @@ import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "../types";
+import { callService } from "../utils/call-service";
 import { moreInfoDialog } from "../utils/more-info-dialog";
 import { entityListDialog } from "../utils/entity-list-dialog";
 
@@ -115,47 +116,34 @@ export class ShadeTile extends LitElement {
         return { icon, iconAnimation, iconColor, name, stateFmtd };
     }
 
-    private toggleEntity(e: Event): void {
+    private async toggleEntity(e: Event): Promise<void> {
         e.stopPropagation();
         if (!this.hass || !this.config || !this.stateObj) return;
         const state = this.stateObj.state;
         const tilt = this.config.tilt || 100;
         if (["closing", "opening"].includes(state)) {
-            try {
-                this.hass.callService("cover", "stop_cover", {
-                    entity_id: this.entity,
-                });
-            } catch (e) {
-                console.error("Error stopping cover:", e);
-            }
+            await callService(this.hass, "cover", "stop_cover", {
+                entity_id: this.entity,
+            });
             return;
         }
         if (tilt >= 1 && tilt <= 100) {
             if (this.stateObj.attributes.current_position !== tilt) {
-                try {
-                    this.hass.callService("cover", "set_cover_position", {
-                        entity_id: this.entity,
-                        position: tilt,
-                    });
-                } catch (e) {
-                    console.error("Error setting cover position:", e);
-                }
+                await callService(this.hass, "cover", "set_cover_position", {
+                    entity_id: this.entity,
+                    position: tilt,
+                });
             } else {
-                try {
-                    this.hass.callService("cover", "set_cover_position", {
-                        entity_id: this.entity,
-                        position: 0,
-                    });
-                } catch (e) {
-                    console.error("Error setting cover position:", e);
-                }
+                await callService(this.hass, "cover", "set_cover_position", {
+                    entity_id: this.entity,
+                    position: 0,
+                });
             }
         } else {
-            try {
-                this.hass.callService("cover", "toggle", { entity_id: this.entity });
-            } catch (e) {
-                console.error("Error toggling cover:", e);
-            }
+            await callService(this.hass, "cover", "toggle", {
+                entity_id: this.entity,
+                position: 0,
+            });
         }
     }
 

@@ -8337,6 +8337,15 @@ PoolLightSequencerTile = __decorate([
     t$1("smartqasa-pool-light-sequencer-tile")
 ], PoolLightSequencerTile);
 
+const callService = async (hass, domain, service, serviceData) => {
+    try {
+        await hass.callService(domain, service, serviceData);
+    }
+    catch (error) {
+        console.error(`Error calling ${domain}.${service}:`, error);
+    }
+};
+
 window.customCards.push({
     type: "smartqasa-shade-tile",
     name: "SmartQasa Shade Tile",
@@ -8421,54 +8430,37 @@ let ShadeTile = class ShadeTile extends s {
         }
         return { icon, iconAnimation, iconColor, name, stateFmtd };
     }
-    toggleEntity(e) {
+    async toggleEntity(e) {
         e.stopPropagation();
         if (!this.hass || !this.config || !this.stateObj)
             return;
         const state = this.stateObj.state;
         const tilt = this.config.tilt || 100;
         if (["closing", "opening"].includes(state)) {
-            try {
-                this.hass.callService("cover", "stop_cover", {
-                    entity_id: this.entity,
-                });
-            }
-            catch (e) {
-                console.error("Error stopping cover:", e);
-            }
+            await callService(this.hass, "cover", "stop_cover", {
+                entity_id: this.entity,
+            });
             return;
         }
         if (tilt >= 1 && tilt <= 100) {
             if (this.stateObj.attributes.current_position !== tilt) {
-                try {
-                    this.hass.callService("cover", "set_cover_position", {
-                        entity_id: this.entity,
-                        position: tilt,
-                    });
-                }
-                catch (e) {
-                    console.error("Error setting cover position:", e);
-                }
+                await callService(this.hass, "cover", "set_cover_position", {
+                    entity_id: this.entity,
+                    position: tilt,
+                });
             }
             else {
-                try {
-                    this.hass.callService("cover", "set_cover_position", {
-                        entity_id: this.entity,
-                        position: 0,
-                    });
-                }
-                catch (e) {
-                    console.error("Error setting cover position:", e);
-                }
+                await callService(this.hass, "cover", "set_cover_position", {
+                    entity_id: this.entity,
+                    position: 0,
+                });
             }
         }
         else {
-            try {
-                this.hass.callService("cover", "toggle", { entity_id: this.entity });
-            }
-            catch (e) {
-                console.error("Error toggling cover:", e);
-            }
+            await callService(this.hass, "cover", "toggle", {
+                entity_id: this.entity,
+                position: 0,
+            });
         }
     }
     showMoreInfo(e) {
