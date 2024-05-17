@@ -6964,11 +6964,11 @@ let FanTile = class FanTile extends s {
         }
         return { icon, iconAnimation, iconColor, name, stateFmtd };
     }
-    async toggleEntity(e) {
+    toggleEntity(e) {
         e.stopPropagation();
         if (!this.hass || !this.entity)
             return;
-        await callService(this.hass, "fan", "toggle", { entity_id: this.entity });
+        callService(this.hass, "fan", "toggle", { entity_id: this.entity });
     }
     showMoreInfo(e) {
         e.stopPropagation();
@@ -7077,11 +7077,11 @@ let GarageTile = class GarageTile extends s {
         }
         return { icon, iconAnimation, iconColor, name, stateFmtd };
     }
-    async toggleEntity(e) {
+    toggleEntity(e) {
         e.stopPropagation();
         if (!this.hass || !this.entity)
             return;
-        await callService(this.hass, "cover", "toggle", { entity_id: this.entity });
+        callService(this.hass, "cover", "toggle", { entity_id: this.entity });
     }
     showMoreInfo(e) {
         e.stopPropagation();
@@ -7160,11 +7160,11 @@ let HeaterTile = class HeaterTile extends s {
         }
         return { icon, iconAnimation, iconColor, name, stateFmtd };
     }
-    async toggleEntity(e) {
+    toggleEntity(e) {
         e.stopPropagation();
         if (!this.hass || !this.entity)
             return;
-        await callService(this.hass, "water_heater", "toggle", { entity_id: this.entity });
+        callService(this.hass, "water_heater", "toggle", { entity_id: this.entity });
     }
     showMoreInfo(e) {
         e.stopPropagation();
@@ -7433,14 +7433,14 @@ let LockTile = class LockTile extends s {
         }
         return { icon, iconAnimation, iconColor, name, stateFmtd };
     }
-    async toggleEntity(e) {
+    toggleEntity(e) {
         e.stopPropagation();
         if (!this.hass || !this.stateObj)
             return;
         const state = this.stateObj.state;
         this.running = true;
         this.stateObj.state = state == "locked" ? "unlocking" : "locking";
-        await callService(this.hass, "lock", state == "locked" ? "unlock" : "lock", {
+        callService(this.hass, "lock", state == "locked" ? "unlock" : "lock", {
             entity_id: this.entity,
         });
         setTimeout(() => {
@@ -7543,18 +7543,18 @@ let OptionTile = class OptionTile extends s {
         }
         return { icon, iconAnimation, iconColor, name };
     }
-    async selectOption(e) {
+    selectOption(e) {
         e.stopPropagation();
         if (!this.hass || !this.config || !this.stateObj)
             return;
         this.running = true;
-        await callService(this.hass, "input_select", "select_option", {
+        callService(this.hass, "input_select", "select_option", {
             entity_id: this.entity,
             option: this.config.option,
         });
         const trigger = this.config.trigger;
         if (trigger && trigger.startsWith("input_button.")) {
-            await callService(this.hass, "input_button", "press", {
+            callService(this.hass, "input_button", "press", {
                 entity_id: trigger,
             });
         }
@@ -7685,12 +7685,12 @@ let RobotTile = class RobotTile extends s {
         }
         return { icon, iconAnimation, iconColor, name, stateFmtd };
     }
-    async toggleEntity(e) {
+    toggleEntity(e) {
         e.stopPropagation();
         if (!this.hass || !this.stateObj)
             return;
         const state = this.stateObj.state;
-        await callService(this.hass, "vacuum", ["docked", "idle", "paused"].includes(state) ? "start" : "pause", {
+        callService(this.hass, "vacuum", ["docked", "idle", "paused"].includes(state) ? "start" : "pause", {
             entity_id: this.entity,
         });
     }
@@ -7784,11 +7784,11 @@ let RokuTile = class RokuTile extends s {
         }
         return { icon, iconAnimation, iconColor, name, stateFmtd };
     }
-    async toggleEntity(e) {
+    toggleEntity(e) {
         e.stopPropagation();
         if (!this.hass || !this.entity)
             return;
-        await callService(this.hass, "media_player", "toggle", { entity_id: this.entity });
+        callService(this.hass, "media_player", "toggle", { entity_id: this.entity });
     }
     showMoreInfo(e) {
         e.stopPropagation();
@@ -8203,13 +8203,11 @@ let PoolLightTile = class PoolLightTile extends s {
         }
         return { icon, iconAnimation, iconColor, name, stateFmtd };
     }
-    async toggleEntity(e) {
+    toggleEntity(e) {
         e.stopPropagation();
         if (!this.hass || !this.entity)
             return;
-        await callService(this.hass, "light", "toggle", {
-            entity_id: this.entity,
-        });
+        callService(this.hass, "light", "toggle", { entity_id: this.entity });
     }
     showColorList(e) {
         e.stopPropagation();
@@ -8415,34 +8413,34 @@ let ShadeTile = class ShadeTile extends s {
         }
         return { icon, iconAnimation, iconColor, name, stateFmtd };
     }
-    async toggleEntity(e) {
+    toggleEntity(e) {
         e.stopPropagation();
         if (!this.hass || !this.config || !this.stateObj)
             return;
         const state = this.stateObj.state;
         const tilt = this.config.tilt || 100;
         if (["closing", "opening"].includes(state)) {
-            await callService(this.hass, "cover", "stop_cover", {
+            callService(this.hass, "cover", "stop_cover", {
                 entity_id: this.entity,
             });
             return;
         }
         if (tilt >= 1 && tilt <= 100) {
             if (this.stateObj.attributes.current_position !== tilt) {
-                await callService(this.hass, "cover", "set_cover_position", {
+                callService(this.hass, "cover", "set_cover_position", {
                     entity_id: this.entity,
                     position: tilt,
                 });
             }
             else {
-                await callService(this.hass, "cover", "set_cover_position", {
+                callService(this.hass, "cover", "set_cover_position", {
                     entity_id: this.entity,
                     position: 0,
                 });
             }
         }
         else {
-            await callService(this.hass, "cover", "toggle", {
+            callService(this.hass, "cover", "toggle", {
                 entity_id: this.entity,
                 position: 0,
             });
@@ -8532,11 +8530,11 @@ let SwitchTile = class SwitchTile extends s {
         }
         return { icon, iconAnimation, iconColor, name, stateFmtd };
     }
-    async toggleEntity(e) {
+    toggleEntity(e) {
         e.stopPropagation();
         if (!this.hass || !this.entity)
             return;
-        await callService(this.hass, "homeassistant", "toggle", { entity_id: this.entity });
+        callService(this.hass, "homeassistant", "toggle", { entity_id: this.entity });
     }
     showMoreInfo(e) {
         e.stopPropagation();
@@ -8671,11 +8669,11 @@ let ThermostatTile = class ThermostatTile extends s {
         }
         return { icon, iconAnimation, iconColor, name, stateFmtd };
     }
-    async toggleEntity(e) {
+    toggleEntity(e) {
         e.stopPropagation();
         if (!this.hass || !this.entity)
             return;
-        await callService(this.hass, "climate", "toggle", { entity_id: this.entity });
+        callService(this.hass, "climate", "toggle", { entity_id: this.entity });
     }
     showMoreInfo(e) {
         e.stopPropagation();

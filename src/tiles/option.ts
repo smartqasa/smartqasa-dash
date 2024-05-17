@@ -104,19 +104,19 @@ export class OptionTile extends LitElement {
         return { icon, iconAnimation, iconColor, name };
     }
 
-    private async selectOption(e: Event): Promise<void> {
+    private selectOption(e: Event): void {
         e.stopPropagation();
         if (!this.hass || !this.config || !this.stateObj) return;
 
         this.running = true;
-        await callService(this.hass, "input_select", "select_option", {
+        callService(this.hass, "input_select", "select_option", {
             entity_id: this.entity,
             option: this.config.option,
         });
 
         const trigger = this.config.trigger;
         if (trigger && trigger.startsWith("input_button.")) {
-            await callService(this.hass, "input_button", "press", {
+            callService(this.hass, "input_button", "press", {
                 entity_id: trigger,
             });
         }

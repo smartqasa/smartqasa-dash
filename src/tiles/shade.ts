@@ -116,31 +116,31 @@ export class ShadeTile extends LitElement {
         return { icon, iconAnimation, iconColor, name, stateFmtd };
     }
 
-    private async toggleEntity(e: Event): Promise<void> {
+    private toggleEntity(e: Event): void {
         e.stopPropagation();
         if (!this.hass || !this.config || !this.stateObj) return;
         const state = this.stateObj.state;
         const tilt = this.config.tilt || 100;
         if (["closing", "opening"].includes(state)) {
-            await callService(this.hass, "cover", "stop_cover", {
+            callService(this.hass, "cover", "stop_cover", {
                 entity_id: this.entity,
             });
             return;
         }
         if (tilt >= 1 && tilt <= 100) {
             if (this.stateObj.attributes.current_position !== tilt) {
-                await callService(this.hass, "cover", "set_cover_position", {
+                callService(this.hass, "cover", "set_cover_position", {
                     entity_id: this.entity,
                     position: tilt,
                 });
             } else {
-                await callService(this.hass, "cover", "set_cover_position", {
+                callService(this.hass, "cover", "set_cover_position", {
                     entity_id: this.entity,
                     position: 0,
                 });
             }
         } else {
-            await callService(this.hass, "cover", "toggle", {
+            callService(this.hass, "cover", "toggle", {
                 entity_id: this.entity,
                 position: 0,
             });

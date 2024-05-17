@@ -120,11 +120,11 @@ export class RobotTile extends LitElement {
         return { icon, iconAnimation, iconColor, name, stateFmtd };
     }
 
-    private async toggleEntity(e: Event): Promise<void> {
+    private toggleEntity(e: Event): void {
         e.stopPropagation();
         if (!this.hass || !this.stateObj) return;
         const state = this.stateObj.state;
-        await callService(this.hass, "vacuum", ["docked", "idle", "paused"].includes(state) ? "start" : "pause", {
+        callService(this.hass, "vacuum", ["docked", "idle", "paused"].includes(state) ? "start" : "pause", {
             entity_id: this.entity,
         });
     }

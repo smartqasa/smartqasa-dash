@@ -92,10 +92,10 @@ export class HeaterTile extends LitElement {
         return { icon, iconAnimation, iconColor, name, stateFmtd };
     }
 
-    private async toggleEntity(e: Event): Promise<void> {
+    private toggleEntity(e: Event): void {
         e.stopPropagation();
         if (!this.hass || !this.entity) return;
-        await callService(this.hass, "water_heater", "toggle", { entity_id: this.entity });
+        callService(this.hass, "water_heater", "toggle", { entity_id: this.entity });
     }
 
     private showMoreInfo(e: Event): void {

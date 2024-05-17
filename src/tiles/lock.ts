@@ -119,14 +119,14 @@ export class LockTile extends LitElement {
         return { icon, iconAnimation, iconColor, name, stateFmtd };
     }
 
-    private async toggleEntity(e: Event): Promise<void> {
+    private toggleEntity(e: Event): void {
         e.stopPropagation();
         if (!this.hass || !this.stateObj) return;
 
         const state = this.stateObj.state;
         this.running = true;
         this.stateObj.state = state == "locked" ? "unlocking" : "locking";
-        await callService(this.hass, "lock", state == "locked" ? "unlock" : "lock", {
+        callService(this.hass, "lock", state == "locked" ? "unlock" : "lock", {
             entity_id: this.entity,
         });
 
