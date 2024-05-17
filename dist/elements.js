@@ -6793,7 +6793,6 @@ let AreaTile = class AreaTile extends s {
         if (!this.areaObj)
             return;
         this.running = true;
-        this.render();
         window.history.pushState(null, "", `/home-dash/${this.area}`);
         window.dispatchEvent(new CustomEvent("location-changed"));
         setTimeout(() => {
