@@ -56,17 +56,17 @@ export class NavigateChip extends LitElement {
 
         return html`
             <div class="container" style="${styleMap(containerStyle)}">
-                <div class="icon1" @click=${this._navigatePrev}>
+                <div class="icon1" @click=${this.navigatePrev}>
                     <ha-icon .icon=${iconPrev}></ha-icon>
                 </div>
-                <div class="icon2" @click=${this._navigateNext}>
+                <div class="icon2" @click=${this.navigateNext}>
                     <ha-icon .icon=${iconNext}></ha-icon>
                 </div>
             </div>
         `;
     }
 
-    private _navigatePrev(e: Event): void {
+    private navigatePrev(e: Event): void {
         e.stopPropagation();
         if (this.areaObjPrev) {
             window.history.pushState(null, "", `/home-dash/${this.areaPrev}`);
@@ -77,7 +77,7 @@ export class NavigateChip extends LitElement {
         }
     }
 
-    private _navigateNext(e: Event): void {
+    private navigateNext(e: Event): void {
         e.stopPropagation();
         if (this.areaObjNext) {
             window.history.pushState(null, "", `/home-dash/${this.areaNext}`);

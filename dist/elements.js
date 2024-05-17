@@ -4992,11 +4992,11 @@ let MotionChip = class MotionChip extends s {
         name = this.config?.name || "";
         return { icon, iconColor, name };
     }
-    async toggleEntity(e) {
+    toggleEntity(e) {
         e.stopPropagation();
         if (!this.hass || !this.entity)
             return;
-        await callService(this.hass, "automation", "toggle", { entity_id: this.entity });
+        callService(this.hass, "automation", "toggle", { entity_id: this.entity });
     }
 };
 __decorate([
@@ -5040,16 +5040,16 @@ let NavigateChip = class NavigateChip extends s {
         const iconNext = "hass:menu-right";
         return x `
             <div class="container" style="${o(containerStyle)}">
-                <div class="icon1" @click=${this._navigatePrev}>
+                <div class="icon1" @click=${this.navigatePrev}>
                     <ha-icon .icon=${iconPrev}></ha-icon>
                 </div>
-                <div class="icon2" @click=${this._navigateNext}>
+                <div class="icon2" @click=${this.navigateNext}>
                     <ha-icon .icon=${iconNext}></ha-icon>
                 </div>
             </div>
         `;
     }
-    _navigatePrev(e) {
+    navigatePrev(e) {
         e.stopPropagation();
         if (this.areaObjPrev) {
             window.history.pushState(null, "", `/home-dash/${this.areaPrev}`);
@@ -5060,7 +5060,7 @@ let NavigateChip = class NavigateChip extends s {
             console.error("Previous area is not found.");
         }
     }
-    _navigateNext(e) {
+    navigateNext(e) {
         e.stopPropagation();
         if (this.areaObjNext) {
             window.history.pushState(null, "", `/home-dash/${this.areaNext}`);
@@ -5150,7 +5150,7 @@ let RoutineChip = class RoutineChip extends s {
         name = this.config?.name || "";
         return { icon, iconAnimation, iconColor, name };
     }
-    async runRoutine(e) {
+    runRoutine(e) {
         e.stopPropagation();
         if (!this.hass || !this.stateObj)
             return;
@@ -5158,13 +5158,13 @@ let RoutineChip = class RoutineChip extends s {
         const domain = this.stateObj.entity_id.split(".")[0];
         switch (domain) {
             case "script":
-                await callService(this.hass, "script", "turn_on", { entity_id: this.entity });
+                callService(this.hass, "script", "turn_on", { entity_id: this.entity });
                 break;
             case "scene":
-                await callService(this.hass, "scene", "turn_on", { entity_id: this.entity });
+                callService(this.hass, "scene", "turn_on", { entity_id: this.entity });
                 break;
             case "automation":
-                await callService(this.hass, "automation", "trigger", { entity_id: this.entity });
+                callService(this.hass, "automation", "trigger", { entity_id: this.entity });
                 break;
             default:
                 console.error("Unsupported entity domain:", domain);
