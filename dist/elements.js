@@ -7252,11 +7252,11 @@ let LightTile = class LightTile extends s {
         }
         return { icon, iconAnimation, iconColor, name, stateFmtd };
     }
-    async toggleEntity(e) {
+    toggleEntity(e) {
         e.stopPropagation();
         if (!this.hass || !this.entity)
             return;
-        await callService(this.hass, "light", "toggle", { entity_id: this.entity });
+        callService(this.hass, "light", "toggle", { entity_id: this.entity });
     }
     showMoreInfo(e) {
         e.stopPropagation();
@@ -7890,30 +7890,25 @@ let RoutineTile = class RoutineTile extends s {
         }
         return { icon, iconAnimation, iconColor, name };
     }
-    async runRoutine(e) {
+    runRoutine(e) {
         e.stopPropagation();
         if (!this.hass || !this.stateObj)
             return;
         this.running = true;
         const domain = this.stateObj.entity_id.split(".")[0];
-        try {
-            switch (domain) {
-                case "script":
-                    await callService(this.hass, "script", "turn_on", { entity_id: this.entity });
-                    break;
-                case "scene":
-                    await callService(this.hass, "scene", "turn_on", { entity_id: this.entity });
-                    break;
-                case "automation":
-                    await callService(this.hass, "automation", "trigger", { entity_id: this.entity });
-                    break;
-                default:
-                    console.error("Unsupported entity domain:", domain);
-                    break;
-            }
-        }
-        catch (error) {
-            console.error("Failed to turn off entities:", error);
+        switch (domain) {
+            case "script":
+                callService(this.hass, "script", "turn_on", { entity_id: this.entity });
+                break;
+            case "scene":
+                callService(this.hass, "scene", "turn_on", { entity_id: this.entity });
+                break;
+            case "automation":
+                callService(this.hass, "automation", "trigger", { entity_id: this.entity });
+                break;
+            default:
+                console.error("Unsupported entity domain:", domain);
+                break;
         }
         setTimeout(() => {
             this.running = false;
