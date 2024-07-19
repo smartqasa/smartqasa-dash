@@ -5762,7 +5762,7 @@ async function menuConfig(menu_tab) {
                     },
                 },
                 {
-                    attributes: createAttributes("hass:function", "Functions"),
+                    attributes: createAttributes("hass:exit-to-app", "Applications"),
                     card: {
                         type: "custom:layout-card",
                         layout_type: "custom:grid-layout",
