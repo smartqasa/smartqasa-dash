@@ -147,7 +147,7 @@ export async function menuConfig(menu_tab?: number): Promise<any> {
                     },
                 },
                 {
-                    attributes: createAttributes("hass:exit-to-app", "Applications"),
+                    attributes: createAttributes("hass:function", "Applications"),
                     card: {
                         type: "custom:layout-card",
                         layout_type: "custom:grid-layout",
