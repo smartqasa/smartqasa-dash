@@ -7265,14 +7265,14 @@ let LightTile = class LightTile extends s {
     }
     showEntityList(e) {
         e.stopPropagation();
-        if (!this.stateObj)
+        if (!this.hass || !this.stateObj)
             return;
         if (!this.group) {
-            const defaultGroup = this.entity ? `${this.entity}_group` : undefined;
-            this.group = defaultGroup && this.hass?.states[defaultGroup] ? defaultGroup : undefined;
+            const defaultGroup = `${this.entity}_group`;
+            this.group = this.hass.states[defaultGroup] ? defaultGroup : this.entity;
         }
-        const groupObj = this.group ? this.hass?.states[this.group] : undefined;
-        if (!groupObj || !Array.isArray(groupObj.attributes?.entity_id) || groupObj.attributes.entity_id.length === 0) {
+        const groupObj = this.group ? this.hass.states[this.group] : undefined;
+        if (!groupObj || !Array.isArray(groupObj.attributes?.entity_id)) {
             return;
         }
         entityListDialog(this.stateObj.attributes?.friendly_name || "Unknown", "group", this.group, "light");
