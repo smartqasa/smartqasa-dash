@@ -126,6 +126,7 @@ export class LightTile extends LitElement {
 
     private showEntityList(e: Event): void {
         e.stopPropagation();
+        console.log("Group", this.group);
         if (!this.stateObj || !this.group) return;
         let groupObj = this.hass?.states[this.group];
         if (!groupObj || !Array.isArray(groupObj.attributes?.entity_id) || groupObj.attributes.entity_id.length === 0)

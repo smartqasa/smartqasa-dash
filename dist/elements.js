@@ -7271,6 +7271,7 @@ let LightTile = class LightTile extends s {
     }
     showEntityList(e) {
         e.stopPropagation();
+        console.log("Group", this.group);
         if (!this.stateObj || !this.group)
             return;
         let groupObj = this.hass?.states[this.group];
