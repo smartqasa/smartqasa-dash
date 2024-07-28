@@ -11,6 +11,7 @@ import { tileBaseStyle, tileStateStyle } from "../styles/tile";
 
 interface Config extends LovelaceCardConfig {
     entity: string;
+    group?: string;
     icon?: string;
     name?: string;
 }
@@ -43,6 +44,7 @@ export class LightTile extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() private config?: Config;
     private entity?: string;
+    private group?: string;
     private stateObj?: HassEntity;
 
     static styles: CSSResultGroup = [tileBaseStyle, tileStateStyle];
@@ -50,6 +52,7 @@ export class LightTile extends LitElement {
     public setConfig(config: Config): void {
         this.config = { ...config };
         this.entity = this.config.entity?.startsWith("light.") ? this.config.entity : undefined;
+        this.group = this.config.group?.startsWith("light.") ? this.config.group : undefined;
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
@@ -117,13 +120,10 @@ export class LightTile extends LitElement {
 
     private showEntityList(e: Event): void {
         e.stopPropagation();
-
-        if (
-            !this.stateObj ||
-            !Array.isArray(this.stateObj.attributes?.entity_id) ||
-            this.stateObj.attributes.entity_id.length === 0
-        )
+        if (!this.stateObj || !this.group) return;
+        let groupObj = this.hass?.states[this.group];
+        if (!groupObj || !Array.isArray(groupObj.attributes?.entity_id) || groupObj.attributes.entity_id.length === 0)
             return;
-        entityListDialog(this.stateObj.attributes?.friendly_name || "Unknown", "group", this.entity, "light");
+        entityListDialog(this.stateObj.attributes?.friendly_name || "Unknown", "group", this.group, "light");
     }
 }

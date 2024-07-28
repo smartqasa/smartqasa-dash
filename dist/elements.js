@@ -7208,6 +7208,7 @@ let LightTile = class LightTile extends s {
     setConfig(config) {
         this.config = { ...config };
         this.entity = this.config.entity?.startsWith("light.") ? this.config.entity : undefined;
+        this.group = this.config.group?.startsWith("light.") ? this.config.group : undefined;
     }
     shouldUpdate(changedProps) {
         return !!((changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj) ||
@@ -7264,11 +7265,12 @@ let LightTile = class LightTile extends s {
     }
     showEntityList(e) {
         e.stopPropagation();
-        if (!this.stateObj ||
-            !Array.isArray(this.stateObj.attributes?.entity_id) ||
-            this.stateObj.attributes.entity_id.length === 0)
+        if (!this.stateObj || !this.group)
             return;
-        entityListDialog(this.stateObj.attributes?.friendly_name || "Unknown", "group", this.entity, "light");
+        let groupObj = this.hass?.states[this.group];
+        if (!groupObj || !Array.isArray(groupObj.attributes?.entity_id) || groupObj.attributes.entity_id.length === 0)
+            return;
+        entityListDialog(this.stateObj.attributes?.friendly_name || "Unknown", "group", this.group, "light");
     }
 };
 __decorate([
@@ -8777,7 +8779,7 @@ PopupConfirmation = __decorate([
     t$1("popup-confirmation")
 ], PopupConfirmation);
 
-var version = "2024.5.16";
+var version = "2024.7.27";
 
 window.smartqasa = window.smartqasa || {};
 window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();

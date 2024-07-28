@@ -1,5 +1,6 @@
 {
     "name": "SmartQasa Dashboard Elements",
+    "homeassistant": "2024.7.0",
     "render_readme": true,
     "filename": "elements.js",
     "content_in_root": false
