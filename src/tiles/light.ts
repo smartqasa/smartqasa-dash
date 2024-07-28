@@ -53,6 +53,12 @@ export class LightTile extends LitElement {
         this.config = { ...config };
         this.entity = this.config.entity?.startsWith("light.") ? this.config.entity : undefined;
         this.group = this.config.group?.startsWith("light.") ? this.config.group : undefined;
+        if (!this.group) {
+            const defaultGroup = this.entity ? `${this.entity}_group` : undefined;
+            if (defaultGroup && this.hass?.states[defaultGroup]) {
+                this.group = defaultGroup;
+            }
+        }
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
