@@ -76,7 +76,7 @@ window.customCards.push({
     type: "smartqasa-tv-remote-card",
     name: "SmartQasa TV Remote Card",
     preview: true,
-    description: "A SmartQasa card for simulating a television remote control.",
+    description: "A SmartQasa card for simulating a television remote control",
 });
 let TVRemoteCard = class TVRemoteCard extends s {
     getCardSize() {

@@ -14,5 +14,5 @@
         "useDefineForClassFields": false
     },
     "include": ["src/**/*.ts", "custom.d.ts"],
-    "exclude": ["node_modules", "src/cards/roku"]
+    "exclude": ["node_modules"]
 }
