@@ -25,9 +25,8 @@ window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split
 
 window.customCards = window.customCards ?? [];
 
-// Dialogs
-import "./dialogs/pin-verify";
-import "./dialogs/more-info";
+// Cards
+import "./cards/tv-remote";
 
 // Chips
 import "./chips/custom";
@@ -38,6 +37,10 @@ import "./chips/routine";
 import "./chips/select";
 import "./chips/thermostat";
 import "./chips/weather";
+
+// Dialogs
+import "./dialogs/pin-verify";
+import "./dialogs/more-info";
 
 // Misc
 import "./misc/area-picture";
