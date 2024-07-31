@@ -72,6 +72,15 @@ const t$1=t=>(e,o)=>{void 0!==o?o.addInitializer((()=>{customElements.define(t,e
  * SPDX-License-Identifier: BSD-3-Clause
  */function r(r){return n$1({...r,state:!0,attribute:!1})}
 
+const callService = async (hass, domain, service, serviceData) => {
+    try {
+        await hass.callService(domain, service, serviceData);
+    }
+    catch (error) {
+        console.error(`Error calling ${domain}.${service}:`, error);
+    }
+};
+
 window.customCards.push({
     type: "smartqasa-tv-remote-card",
     name: "SmartQasa TV Remote Card",
@@ -87,6 +96,12 @@ let TVRemoteCard = class TVRemoteCard extends s {
             .container {
                 padding: 1rem;
             }
+            .row {
+                display: flex;
+                padding: 1rem 4rem 1rem 4rem;
+                justify-content: space-evenly;
+                align-items: center;
+            }
             .name {
                 text-align: center;
                 overflow: hidden;
@@ -94,6 +109,15 @@ let TVRemoteCard = class TVRemoteCard extends s {
                 font-weight: var(--sq-primary-font-weight, 400);
                 font-size: var(--sq-primary-font-size, 1.5rem);
                 color: rgb(var(--sq-primary-font-rgb), 128, 128, 128);
+            }
+            .icon {
+                display: flex;
+                justify-content: center;
+                align-self: center;
+                height: 1.8rem;
+                width: 1.8rem;
+                padding: 1rem;
+                cursor: pointer;
             }
             img,
             ha-icon {
@@ -110,12 +134,7 @@ let TVRemoteCard = class TVRemoteCard extends s {
                 height: 64px;
                 border-radius: 25px;
             }
-            .row {
-                display: flex;
-                padding: 1rem 4rem 1rem 4rem;
-                justify-content: space-evenly;
-                align-items: center;
-            }
+
             .warning {
                 display: block;
                 color: black;
@@ -198,19 +217,24 @@ let TVRemoteCard = class TVRemoteCard extends s {
         `;
     }
     renderButton(button, icon, title) {
-        if (this.config) {
-            const config = this.config[button];
-            return config && config.show === false
-                ? x ` <ha-icon icon="mdi:none"></ha-icon> `
-                : x `
-                      <ha-icon-button .button=${button} title=${title} })}>
-                          <ha-icon .icon=${icon}></ha-icon>
-                      </ha-icon-button>
-                  `;
+        return x `
+            <div class="icon" data-button=${button} @click=${this.handleClick}">
+                <ha-icon .icon=${icon}></ha-icon>
+            </div>
+        `;
+    }
+    handleClick(e) {
+        e.stopPropagation();
+        if (!this.hass || !this.streamEntity)
+            return;
+        const button = e.currentTarget.dataset.button;
+        if (button === "power") {
+            callService(this.hass, "media_player", "turn_off", { entity_id: this.streamEntity });
         }
-        else {
-            return x ``;
+        else if (button === "volume_mute") {
+            callService(this.hass, "media_player", "volume_mute", { entity_id: this.streamEntity });
         }
+        callService(this.hass, "remote", "send_command", { entity_id: this.streamEntity, command: "button" });
     }
 };
 __decorate([
@@ -4843,15 +4867,6 @@ __decorate([
 DialogChip = __decorate([
     t$1("smartqasa-dialog-chip")
 ], DialogChip);
-
-const callService = async (hass, domain, service, serviceData) => {
-    try {
-        await hass.callService(domain, service, serviceData);
-    }
-    catch (error) {
-        console.error(`Error calling ${domain}.${service}:`, error);
-    }
-};
 
 window.customCards.push({
     type: "smartqasa-motion-chip",

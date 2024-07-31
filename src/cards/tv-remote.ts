@@ -1,8 +1,8 @@
 import { css, CSSResult, html, LitElement, PropertyValues, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
-import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "../types";
+import { callService } from "../utils/call-service";
 
 interface Config extends LovelaceCardConfig {
     audio_entity: string;
@@ -38,6 +38,12 @@ export class TVRemoteCard extends LitElement {
             .container {
                 padding: 1rem;
             }
+            .row {
+                display: flex;
+                padding: 1rem 4rem 1rem 4rem;
+                justify-content: space-evenly;
+                align-items: center;
+            }
             .name {
                 text-align: center;
                 overflow: hidden;
@@ -45,6 +51,15 @@ export class TVRemoteCard extends LitElement {
                 font-weight: var(--sq-primary-font-weight, 400);
                 font-size: var(--sq-primary-font-size, 1.5rem);
                 color: rgb(var(--sq-primary-font-rgb), 128, 128, 128);
+            }
+            .icon {
+                display: flex;
+                justify-content: center;
+                align-self: center;
+                height: 1.8rem;
+                width: 1.8rem;
+                padding: 1rem;
+                cursor: pointer;
             }
             img,
             ha-icon {
@@ -61,12 +76,7 @@ export class TVRemoteCard extends LitElement {
                 height: 64px;
                 border-radius: 25px;
             }
-            .row {
-                display: flex;
-                padding: 1rem 4rem 1rem 4rem;
-                justify-content: space-evenly;
-                align-items: center;
-            }
+
             .warning {
                 display: block;
                 color: black;
@@ -159,17 +169,25 @@ export class TVRemoteCard extends LitElement {
     }
 
     private renderButton(button: string, icon: string, title: string): TemplateResult {
-        if (this.config) {
-            const config = this.config[button];
-            return config && config.show === false
-                ? html` <ha-icon icon="mdi:none"></ha-icon> `
-                : html`
-                      <ha-icon-button .button=${button} title=${title} })}>
-                          <ha-icon .icon=${icon}></ha-icon>
-                      </ha-icon-button>
-                  `;
-        } else {
-            return html``;
+        return html`
+            <div class="icon" data-button=${button} @click=${this.handleClick}">
+                <ha-icon .icon=${icon}></ha-icon>
+            </div>
+        `;
+    }
+
+    private handleClick(e: Event): void {
+        e.stopPropagation();
+        if (!this.hass || !this.streamEntity) return;
+
+        const button = (e.currentTarget as HTMLElement).dataset.button;
+
+        if (button === "power") {
+            callService(this.hass, "media_player", "turn_off", { entity_id: this.streamEntity });
+        } else if (button === "volume_mute") {
+            callService(this.hass, "media_player", "volume_mute", { entity_id: this.streamEntity });
         }
+
+        callService(this.hass, "remote", "send_command", { entity_id: this.streamEntity, command: "button" });
     }
 }
