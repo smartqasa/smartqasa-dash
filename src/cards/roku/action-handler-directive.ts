@@ -1,4 +1,4 @@
-import { directive, PropertyPart } from "lit-html/directive";
+import { directive, PropertyPart } from "lit/directive.js";
 
 import { fireEvent, ActionHandlerDetail, ActionHandlerOptions } from "custom-card-helpers";
 

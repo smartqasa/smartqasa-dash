@@ -7208,7 +7208,6 @@ let LightTile = class LightTile extends s {
     setConfig(config) {
         this.config = { ...config };
         this.entity = this.config.entity?.startsWith("light.") ? this.config.entity : undefined;
-        this.group = this.config.group?.startsWith("light.") ? this.config.group : undefined;
     }
     shouldUpdate(changedProps) {
         return !!((changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj) ||
@@ -7265,17 +7264,13 @@ let LightTile = class LightTile extends s {
     }
     showEntityList(e) {
         e.stopPropagation();
-        if (!this.hass || !this.stateObj)
+        if (!this.config || !this.hass || !this.stateObj)
             return;
-        if (!this.group) {
-            const defaultGroup = `${this.entity}_group`;
-            this.group = this.hass.states[defaultGroup] ? defaultGroup : this.entity;
-        }
-        const groupObj = this.group ? this.hass.states[this.group] : undefined;
-        if (!groupObj || !Array.isArray(groupObj.attributes?.entity_id)) {
+        const group = this.config.group || `${this.entity}_group`;
+        const groupObj = this.hass.states[group];
+        if (!groupObj || !Array.isArray(groupObj.attributes?.entity_id))
             return;
-        }
-        entityListDialog(this.stateObj.attributes?.friendly_name || "Unknown", "group", this.group, "light");
+        entityListDialog(this.stateObj.attributes?.friendly_name || "Unknown", "group", group, "light");
     }
 };
 __decorate([

@@ -44,7 +44,6 @@ export class LightTile extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() private config?: Config;
     private entity?: string;
-    private group?: string;
     private stateObj?: HassEntity;
 
     static styles: CSSResultGroup = [tileBaseStyle, tileStateStyle];
@@ -52,7 +51,6 @@ export class LightTile extends LitElement {
     public setConfig(config: Config): void {
         this.config = { ...config };
         this.entity = this.config.entity?.startsWith("light.") ? this.config.entity : undefined;
-        this.group = this.config.group?.startsWith("light.") ? this.config.group : undefined;
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
@@ -120,18 +118,12 @@ export class LightTile extends LitElement {
 
     private showEntityList(e: Event): void {
         e.stopPropagation();
-        if (!this.hass || !this.stateObj) return;
+        if (!this.config || !this.hass || !this.stateObj) return;
 
-        if (!this.group) {
-            const defaultGroup = `${this.entity}_group`;
-            this.group = this.hass.states[defaultGroup] ? defaultGroup : this.entity;
-        }
+        const group = this.config.group || `${this.entity}_group`;
+        const groupObj = this.hass.states[group];
+        if (!groupObj || !Array.isArray(groupObj.attributes?.entity_id)) return;
 
-        const groupObj = this.group ? this.hass.states[this.group] : undefined;
-        if (!groupObj || !Array.isArray(groupObj.attributes?.entity_id)) {
-            return;
-        }
-
-        entityListDialog(this.stateObj.attributes?.friendly_name || "Unknown", "group", this.group, "light");
+        entityListDialog(this.stateObj.attributes?.friendly_name || "Unknown", "group", group, "light");
     }
 }

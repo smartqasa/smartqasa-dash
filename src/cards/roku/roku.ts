@@ -10,7 +10,7 @@ const defaultRemoteAction = {
     service: "remote.send_command",
 };
 
-@customElement("roku-card")
+@customElement("smartqasa-roku-card")
 export class RokuCard extends LitElement {
     public getCardSize(): number {
         return 7;
