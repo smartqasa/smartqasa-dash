@@ -43,6 +43,7 @@ export class TVRemoteCard extends LitElement {
                 align-items: center;
             }
             .name {
+                padding: 0.8rem;
                 text-align: center;
                 overflow: hidden;
                 text-overflow: ellipsis;
