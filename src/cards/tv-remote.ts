@@ -202,12 +202,19 @@ export class TVRemoteCard extends LitElement {
         }
 
         if (entity) {
+            const isMuted = this.hass!.states[entity].attributes.is_volume_muted;
             if (button === "volume_mute") {
                 callService(this.hass!, "media_player", "volume_mute", {
                     entity_id: entity,
-                    is_volume_muted: !this.hass!.states[entity].attributes.is_volume_muted,
+                    is_volume_muted: !isMuted,
                 });
             } else {
+                if (isMuted) {
+                    callService(this.hass!, "media_player", "volume_mute", {
+                        entity_id: entity,
+                        is_volume_muted: false,
+                    });
+                }
                 callService(this.hass!, "media_player", button, { entity_id: entity });
             }
         } else {
