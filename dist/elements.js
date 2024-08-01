@@ -121,7 +121,7 @@ let TVRemoteCard = class TVRemoteCard extends s {
                 align-self: center;
                 height: 3rem;
                 width: 3rem;
-                padding: 0.8rem;
+                padding: 0.8rem 0.6rem 0.8rem 0.6rem;
                 cursor: pointer;
             }
             ha-icon {
@@ -224,6 +224,7 @@ let TVRemoteCard = class TVRemoteCard extends s {
         const target = e.currentTarget;
         const category = target.dataset.category;
         const button = target.dataset.button;
+        console.log(`Button pressed: ${category} - ${button}`);
         if (category === "power") {
             this.handlePower();
         }
@@ -244,11 +245,11 @@ let TVRemoteCard = class TVRemoteCard extends s {
     }
     handleVolume(button) {
         let entity;
-        if (this.config?.volume === "audio" && this.entities.audioEntity) {
-            entity = this.entities.audioEntity;
+        if (this.config?.volume === "audio" && this.entities.audio) {
+            entity = this.entities.audio;
         }
-        else if (this.config?.volume === "video" && this.entities.videoEntity) {
-            entity = this.entities.videoEntity;
+        else if (this.config?.volume === "video" && this.entities.video) {
+            entity = this.entities.video;
         }
         if (entity) {
             if (button === "volume_mute") {
