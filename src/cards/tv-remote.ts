@@ -5,10 +5,11 @@ import { HomeAssistant, LovelaceCardConfig } from "../types";
 import { callService } from "../utils/call-service";
 
 interface Config extends LovelaceCardConfig {
-    audio_entity: string;
-    stream_entity: string;
-    video_entity?: string;
+    audio_entity?: string;
     name?: string;
+    stream_entity: string;
+    remote_entity?: string;
+    video_entity?: string;
 }
 
 window.customCards.push({
@@ -28,6 +29,8 @@ export class TVRemoteCard extends LitElement {
     @state() private config?: Config;
     private audioEntity?: string;
     private audioObj?: HassEntity;
+    private remoteEntity?: string;
+    private remoteObj?: HassEntity;
     private streamEntity?: string;
     private streamObj?: HassEntity;
     private videoEntity?: string;
@@ -56,8 +59,8 @@ export class TVRemoteCard extends LitElement {
                 display: flex;
                 justify-content: center;
                 align-self: center;
-                height: 1.8rem;
-                width: 1.8rem;
+                height: 3rem;
+                width: 3rem;
                 padding: 1rem;
                 cursor: pointer;
             }
@@ -92,10 +95,14 @@ export class TVRemoteCard extends LitElement {
 
     public setConfig(config: Config): void {
         this.config = { ...config };
-        this.audioEntity = this.config.audio_entity?.startsWith("media_player.") ? this.config.audio_entity : undefined;
         this.streamEntity = this.config.stream_entity?.startsWith("media_player.")
             ? this.config.stream_entity
             : undefined;
+
+        if (this.streamEntity) {
+        }
+        this.audioEntity = this.config.audio_entity?.startsWith("media_player.") ? this.config.audio_entity : undefined;
+
         this.videoEntity = this.config.video_entity?.startsWith("media_player.") ? this.config.video_entity : undefined;
     }
 

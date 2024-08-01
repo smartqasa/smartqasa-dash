@@ -114,8 +114,8 @@ let TVRemoteCard = class TVRemoteCard extends s {
                 display: flex;
                 justify-content: center;
                 align-self: center;
-                height: 1.8rem;
-                width: 1.8rem;
+                height: 3rem;
+                width: 3rem;
                 padding: 1rem;
                 cursor: pointer;
             }
@@ -149,10 +149,11 @@ let TVRemoteCard = class TVRemoteCard extends s {
     }
     setConfig(config) {
         this.config = { ...config };
-        this.audioEntity = this.config.audio_entity?.startsWith("media_player.") ? this.config.audio_entity : undefined;
         this.streamEntity = this.config.stream_entity?.startsWith("media_player.")
             ? this.config.stream_entity
             : undefined;
+        if (this.streamEntity) ;
+        this.audioEntity = this.config.audio_entity?.startsWith("media_player.") ? this.config.audio_entity : undefined;
         this.videoEntity = this.config.video_entity?.startsWith("media_player.") ? this.config.video_entity : undefined;
     }
     shouldUpdate(changedProps) {
