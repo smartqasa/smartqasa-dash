@@ -64,31 +64,14 @@ export class TVRemoteCard extends LitElement {
                 padding: 1rem;
                 cursor: pointer;
             }
-            img,
             ha-icon {
-                cursor: pointer;
+                --mdc-icon-size: 3rem;
             }
-            ha-icon-button {
-                --mdc-icon-size: 4rem;
-            }
-            ha-icon-button ha-icon {
-                display: flex;
-            }
-            img {
-                width: 64px;
-                height: 64px;
-                border-radius: 25px;
-            }
-
             .warning {
                 display: block;
                 color: black;
                 background-color: #fce588;
                 padding: 8px;
-            }
-            .app {
-                flex-grow: 3;
-                font-size: 20px;
             }
         `;
     }
