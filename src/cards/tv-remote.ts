@@ -5,7 +5,7 @@ import { HomeAssistant, LovelaceCardConfig } from "../types";
 import { callService } from "../utils/call-service";
 
 interface Config extends LovelaceCardConfig {
-    stream_entity: string;
+    entity: string;
     name?: string;
     audio_entity?: string;
     remote_entity?: string;
@@ -29,6 +29,8 @@ export class TVRemoteCard extends LitElement {
 
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() private config?: Config;
+    private entity?: string;
+    private stateObj?: HassEntity;
     private entities: { [key: string]: string | undefined } = {};
 
     static get styles(): CSSResult {
@@ -74,42 +76,53 @@ export class TVRemoteCard extends LitElement {
 
     public setConfig(config: Config): void {
         this.config = { ...config };
+        if (!this.config.entity.startsWith("media_player.")) return;
 
-        if (!this.config.stream_entity?.startsWith("media_player.")) return;
-
-        this.entities.stream = this.config.stream_entity;
-        const objectID = this.config.stream_entity.split(".")[1];
-
-        this.entities.remote = this.config.remote_entity?.startsWith("remote.")
-            ? this.config.remote_entity
-            : `remote.${objectID}`;
-        this.entities.audio = this.config.audio_entity?.startsWith("media_player.")
-            ? this.config.audio_entity
-            : `media_player.${objectID}`;
-        this.entities.video = this.config.video_entity?.startsWith("media_player.")
-            ? this.config.video_entity
-            : `media_player.${objectID}`;
+        this.entity = this.config.entity;
+        this.initializeEntities();
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
-        const hasStateChanged = (entity: string | undefined, stateObj: any): boolean => {
-            return entity !== undefined && this.hass?.states[entity] !== stateObj;
-        };
-
         return !!(
-            (changedProps.has("hass") &&
-                hasStateChanged(this.entities.stream, this.hass?.states[this.entities.stream!])) ||
+            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj) ||
             (changedProps.has("config") && this.config)
         );
     }
 
+    protected updated(changedProps: PropertyValues): void {
+        if (changedProps.has("hass") || changedProps.has("config")) {
+            this.initializeEntities();
+        }
+    }
+
+    private initializeEntities(): void {
+        if (!this.hass || !this.config || !this.entity || !this.entity.startsWith("media_player.")) return;
+
+        const entityBase = this.entity.split(".")[1].replace(/_roku$/, "");
+
+        this.entities.remote = this.config.remote_entity?.startsWith("remote.")
+            ? this.config.remote_entity
+            : `remote.${entityBase}_roku`;
+        this.entities.remote = this.hass.states[this.entities.remote] ? this.entities.remote : undefined;
+
+        this.entities.audio = this.config.audio_entity?.startsWith("media_player.")
+            ? this.config.audio_entity
+            : `media_player.${entityBase}_tv_speakers`;
+        this.entities.audio = this.hass.states[this.entities.audio] ? this.entities.audio : undefined;
+
+        this.entities.video = this.config.video_entity?.startsWith("media_player.")
+            ? this.config.video_entity
+            : `media_player.${entityBase}_tv`;
+        this.entities.video = this.hass.states[this.entities.video] ? this.entities.video : undefined;
+    }
+
     protected render(): TemplateResult | void {
-        if (!this.config || !this.hass) {
+        if (!this.hass || !this.config || !this.entity || !this.entities.remote) {
             return html``;
         }
 
-        const streamObj = this.hass.states[this.entities.stream!];
-        if (!streamObj) {
+        this.stateObj = this.hass.states[this.entity];
+        if (!this.stateObj || !this.hass.states[this.entities.remote]) {
             return html`
                 <ha-card>
                     <div class="warning">Entity Unavailable</div>
@@ -119,10 +132,10 @@ export class TVRemoteCard extends LitElement {
 
         return html`
             <div class="container">
-                <div class="name">${this.config.name || streamObj.attributes.friendly_name || "TV Remote"}</div>
+                <div class="name">${this.config.name || this.stateObj.attributes.friendly_name || "TV Remote"}</div>
 
                 <div class="row">
-                    <div class="app">${streamObj.attributes.app_name || ""}</div>
+                    <div class="app">${this.stateObj.attributes.app_name || ""}</div>
                     ${this.renderButton("power", "power", "mdi:power")}
                 </div>
 
@@ -185,12 +198,15 @@ export class TVRemoteCard extends LitElement {
     }
 
     private handlePower(): void {
-        const powerEntity = this.config?.power === "video" ? this.entities.video : this.entities.remote;
-        if (powerEntity) {
-            const state = this.hass?.states[powerEntity].state;
+        if (this.config?.power === "video" && this.entities.video) {
+            const entity = this.entities.video;
+            const state = this.hass!.states[entity].state;
             const action = state === "on" ? "turn_off" : "turn_on";
-            callService(this.hass!, "media_player", action, { entity_id: powerEntity });
+            callService(this.hass!, "media_player", action, { entity_id: entity });
+            return;
         }
+
+        callService(this.hass!, "remote", "send_command", { entity_id: this.entities.remote, command: "power" });
     }
 
     private handleVolume(button: string): void {
@@ -209,13 +225,14 @@ export class TVRemoteCard extends LitElement {
                     is_volume_muted: !isMuted,
                 });
             } else {
-                if (isMuted) {
+                if (!isMuted) {
+                    callService(this.hass!, "media_player", button, { entity_id: entity });
+                } else {
                     callService(this.hass!, "media_player", "volume_mute", {
                         entity_id: entity,
                         is_volume_muted: false,
                     });
                 }
-                callService(this.hass!, "media_player", button, { entity_id: entity });
             }
         } else {
             callService(this.hass!, "remote", "send_command", {
