@@ -77,16 +77,16 @@ export class TVRemoteCard extends LitElement {
 
         if (!this.config.stream_entity?.startsWith("media_player.")) return;
 
-        this.entities.streamEntity = this.config.stream_entity;
+        this.entities.stream = this.config.stream_entity;
         const objectID = this.config.stream_entity.split(".")[1];
 
-        this.entities.remoteEntity = this.config.remote_entity?.startsWith("remote.")
+        this.entities.remote = this.config.remote_entity?.startsWith("remote.")
             ? this.config.remote_entity
             : `remote.${objectID}`;
-        this.entities.audioEntity = this.config.audio_entity?.startsWith("media_player.")
+        this.entities.audio = this.config.audio_entity?.startsWith("media_player.")
             ? this.config.audio_entity
             : `media_player.${objectID}`;
-        this.entities.videoEntity = this.config.video_entity?.startsWith("media_player.")
+        this.entities.video = this.config.video_entity?.startsWith("media_player.")
             ? this.config.video_entity
             : `media_player.${objectID}`;
     }
@@ -98,7 +98,7 @@ export class TVRemoteCard extends LitElement {
 
         return !!(
             (changedProps.has("hass") &&
-                hasStateChanged(this.entities.streamEntity, this.hass?.states[this.entities.streamEntity!])) ||
+                hasStateChanged(this.entities.stream, this.hass?.states[this.entities.stream!])) ||
             (changedProps.has("config") && this.config)
         );
     }
@@ -108,7 +108,7 @@ export class TVRemoteCard extends LitElement {
             return html``;
         }
 
-        const streamObj = this.hass.states[this.entities.streamEntity!];
+        const streamObj = this.hass.states[this.entities.stream!];
         if (!streamObj) {
             return html`
                 <ha-card>
@@ -167,7 +167,7 @@ export class TVRemoteCard extends LitElement {
 
     private handleButton(e: Event): void {
         e.stopPropagation();
-        if (!this.hass || !this.entities.streamEntity) return;
+        if (!this.hass || !this.entities.stream) return;
 
         const target = e.currentTarget as HTMLElement;
         const category = target.dataset.category!;
@@ -183,7 +183,7 @@ export class TVRemoteCard extends LitElement {
     }
 
     private handlePower(): void {
-        const powerEntity = this.config?.power === "video" ? this.entities.videoEntity : this.entities.remoteEntity;
+        const powerEntity = this.config?.power === "video" ? this.entities.video : this.entities.remote;
         if (powerEntity) {
             const state = this.hass?.states[powerEntity].state;
             const action = state === "on" ? "turn_off" : "turn_on";
@@ -192,7 +192,13 @@ export class TVRemoteCard extends LitElement {
     }
 
     private handleVolume(button: string): void {
-        const entity = this.getVolumeEntity();
+        let entity: string | undefined;
+        if (this.config?.volume === "audio" && this.entities.audioEntity) {
+            entity = this.entities.audioEntity;
+        } else if (this.config?.volume === "video" && this.entities.videoEntity) {
+            entity = this.entities.videoEntity;
+        }
+
         if (entity) {
             if (button === "volume_mute") {
                 callService(this.hass!, "media_player", "volume_mute", {
@@ -204,22 +210,13 @@ export class TVRemoteCard extends LitElement {
             }
         } else {
             callService(this.hass!, "remote", "send_command", {
-                entity_id: this.entities.remoteEntity,
+                entity_id: this.entities.remote,
                 command: button,
             });
         }
     }
 
     private handleCommand(button: string): void {
-        callService(this.hass!, "remote", "send_command", { entity_id: this.entities.streamEntity, command: button });
-    }
-
-    private getVolumeEntity(): string | undefined {
-        if (this.config?.volume === "audio" && this.entities.audioEntity) {
-            return this.entities.audioEntity;
-        } else if (this.config?.volume === "video" && this.entities.videoEntity) {
-            return this.entities.videoEntity;
-        }
-        return undefined;
+        callService(this.hass!, "remote", "send_command", { entity_id: this.entities.stream, command: button });
     }
 }
