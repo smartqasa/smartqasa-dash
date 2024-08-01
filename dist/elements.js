@@ -270,7 +270,7 @@ let TVRemoteCard = class TVRemoteCard extends s {
         }
     }
     handleCommand(button) {
-        callService(this.hass, "remote", "send_command", { entity_id: this.entities.stream, command: button });
+        callService(this.hass, "remote", "send_command", { entity_id: this.entities.remote, command: button });
     }
 };
 __decorate([

@@ -219,6 +219,6 @@ export class TVRemoteCard extends LitElement {
     }
 
     private handleCommand(button: string): void {
-        callService(this.hass!, "remote", "send_command", { entity_id: this.entities.stream, command: button });
+        callService(this.hass!, "remote", "send_command", { entity_id: this.entities.remote, command: button });
     }
 }
