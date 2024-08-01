@@ -181,7 +181,7 @@ export class TVRemoteCard extends LitElement {
 
     private handleButton(e: Event): void {
         e.stopPropagation();
-        if (!this.hass || !this.entities.stream) return;
+        if (!this.hass || !this.entity) return;
 
         const target = e.currentTarget as HTMLElement;
         const category = target.dataset.category!;

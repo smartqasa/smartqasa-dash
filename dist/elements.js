@@ -229,7 +229,7 @@ let TVRemoteCard = class TVRemoteCard extends s {
     }
     handleButton(e) {
         e.stopPropagation();
-        if (!this.hass || !this.entities.stream)
+        if (!this.hass || !this.entity)
             return;
         const target = e.currentTarget;
         const category = target.dataset.category;
