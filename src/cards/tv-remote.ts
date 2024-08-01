@@ -123,6 +123,7 @@ export class TVRemoteCard extends LitElement {
 
         this.stateObj = this.hass.states[this.entity];
         if (!this.stateObj || !this.hass.states[this.entities.remote]) {
+            console.log("Entity Unavailable ", this.entities.remote);
             return html`
                 <ha-card>
                     <div class="warning">Entity Unavailable</div>
