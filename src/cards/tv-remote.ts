@@ -123,41 +123,41 @@ export class TVRemoteCard extends LitElement {
 
                 <div class="row">
                     <div class="app">${streamObj.attributes.app_name || ""}</div>
-                    ${this.renderButton("power", "power", "mdi:power", "Power")}
+                    ${this.renderButton("power", "power", "mdi:power")}
                 </div>
 
                 <div class="row">
-                    ${this.renderButton("command", "mdi:arrow-left", "Back", "back")}
-                    ${this.renderButton("command", "mdi:asterisk", "Info", "info")}
-                    ${this.renderButton("command", "mdi:home", "Home", "home")}
+                    ${this.renderButton("command", "back", "mdi:arrow-left")}
+                    ${this.renderButton("command", "info", "mdi:asterisk")}
+                    ${this.renderButton("command", "home", "mdi:home")}
                 </div>
 
-                <div class="row">${this.renderButton("command", "mdi:chevron-up", "Up", "up")}</div>
+                <div class="row">${this.renderButton("command", "up", "mdi:chevron-up")}</div>
 
                 <div class="row">
-                    ${this.renderButton("command", "mdi:chevron-left", "Left", "left")}
-                    ${this.renderButton("command", "mdi:checkbox-blank-circle", "Select", "select")}
-                    ${this.renderButton("command", "mdi:chevron-right", "Right", "right")}
+                    ${this.renderButton("command", "left", "mdi:chevron-left")}
+                    ${this.renderButton("command", "select", "mdi:checkbox-blank-circle")}
+                    ${this.renderButton("command", "right", "mdi:chevron-right")}
                 </div>
 
-                <div class="row">${this.renderButton("command", "mdi:chevron-down", "Down", "down")}</div>
+                <div class="row">${this.renderButton("command", "down", "mdi:chevron-down")}</div>
 
                 <div class="row">
-                    ${this.renderButton("command", "mdi:rewind", "Rewind", "reverse")}
-                    ${this.renderButton("command", "mdi:play-pause", "Play/Pause", "play")}
-                    ${this.renderButton("command", "mdi:fast-forward", "Fast-Forward", "forward")}
+                    ${this.renderButton("command", "reverse", "mdi:rewind")}
+                    ${this.renderButton("command", "play", "mdi:play-pause")}
+                    ${this.renderButton("command", "forward", "mdi:fast-forward")}
                 </div>
 
                 <div class="row">
-                    ${this.renderButton("volume", "mdi:volume-mute", "Volume Mute", "volume_mute")}
-                    ${this.renderButton("volume", "mdi:volume-minus", "Volume Down", "volume_down")}
-                    ${this.renderButton("volume", "mdi:volume-plus", "Volume Up", "volume_up")}
+                    ${this.renderButton("volume", "volume_down", "mdi:volume-minus")}
+                    ${this.renderButton("volume", "volume_mute", "mdi:volume-mute")}
+                    ${this.renderButton("volume", "volume_up", "mdi:volume-plus")}
                 </div>
             </div>
         `;
     }
 
-    private renderButton(category: string, icon: string, title: string, button: string): TemplateResult {
+    private renderButton(category: string, button: string, icon: string): TemplateResult {
         return html`
             <div class="icon" data-category=${category} data-button=${button} @click=${this.handleButton}>
                 <ha-icon .icon=${icon}></ha-icon>
