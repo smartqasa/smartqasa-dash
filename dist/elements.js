@@ -88,6 +88,10 @@ window.customCards.push({
     description: "A SmartQasa card for simulating a television remote control",
 });
 let TVRemoteCard = class TVRemoteCard extends s {
+    constructor() {
+        super(...arguments);
+        this.entities = {};
+    }
     getCardSize() {
         return 7;
     }
@@ -98,7 +102,7 @@ let TVRemoteCard = class TVRemoteCard extends s {
             }
             .row {
                 display: flex;
-                padding: 1rem 4rem 1rem 4rem;
+                padding: 0.8rem 4rem 0.8rem 4rem;
                 justify-content: space-evenly;
                 align-items: center;
             }
@@ -116,7 +120,7 @@ let TVRemoteCard = class TVRemoteCard extends s {
                 align-self: center;
                 height: 3rem;
                 width: 3rem;
-                padding: 1rem;
+                padding: 0.8rem;
                 cursor: pointer;
             }
             ha-icon {
@@ -132,29 +136,34 @@ let TVRemoteCard = class TVRemoteCard extends s {
     }
     setConfig(config) {
         this.config = { ...config };
-        this.streamEntity = this.config.stream_entity?.startsWith("media_player.")
-            ? this.config.stream_entity
-            : undefined;
-        if (this.streamEntity) ;
-        this.audioEntity = this.config.audio_entity?.startsWith("media_player.") ? this.config.audio_entity : undefined;
-        this.videoEntity = this.config.video_entity?.startsWith("media_player.") ? this.config.video_entity : undefined;
+        if (!this.config.stream_entity?.startsWith("media_player."))
+            return;
+        this.entities.streamEntity = this.config.stream_entity;
+        const objectID = this.config.stream_entity.split(".")[1];
+        this.entities.remoteEntity = this.config.remote_entity?.startsWith("remote.")
+            ? this.config.remote_entity
+            : `remote.${objectID}`;
+        this.entities.audioEntity = this.config.audio_entity?.startsWith("media_player.")
+            ? this.config.audio_entity
+            : `media_player.${objectID}`;
+        this.entities.videoEntity = this.config.video_entity?.startsWith("media_player.")
+            ? this.config.video_entity
+            : `media_player.${objectID}`;
     }
     shouldUpdate(changedProps) {
         const hasStateChanged = (entity, stateObj) => {
             return entity !== undefined && this.hass?.states[entity] !== stateObj;
         };
-        return ((changedProps.has("hass") &&
-            (hasStateChanged(this.audioEntity, this.audioObj) ||
-                hasStateChanged(this.streamEntity, this.streamObj) ||
-                hasStateChanged(this.videoEntity, this.videoObj))) ||
-            (changedProps.has("config") && this.config !== undefined));
+        return !!((changedProps.has("hass") &&
+            hasStateChanged(this.entities.streamEntity, this.hass?.states[this.entities.streamEntity])) ||
+            (changedProps.has("config") && this.config));
     }
     render() {
         if (!this.config || !this.hass) {
             return x ``;
         }
-        this.streamObj = this.hass.states[this.streamEntity] || undefined;
-        if (this.config.stream_entity && !this.streamObj) {
+        const streamObj = this.hass.states[this.entities.streamEntity];
+        if (!streamObj) {
             return x `
                 <ha-card>
                     <div class="warning">Entity Unavailable</div>
@@ -163,62 +172,106 @@ let TVRemoteCard = class TVRemoteCard extends s {
         }
         return x `
             <div class="container">
-                <div class="name">${this.config.name || this.streamObj?.attributes.friendly_name || "TV Remote"}</div>
+                <div class="name">${this.config.name || streamObj.attributes.friendly_name || "TV Remote"}</div>
 
                 <div class="row">
-                    <div class="app">${this.streamObj.attributes.app_name || ""}</div>
-                    ${this.renderButton("power", "mdi:power", "Power")}
+                    <div class="app">${streamObj.attributes.app_name || ""}</div>
+                    ${this.renderButton("power", "power", "mdi:power", "Power")}
                 </div>
 
                 <div class="row">
-                    ${this.renderButton("back", "mdi:arrow-left", "Back")}
-                    ${this.renderButton("info", "mdi:asterisk", "Info")}
-                    ${this.renderButton("home", "mdi:home", "Home")}
+                    ${this.renderButton("command", "mdi:arrow-left", "Back", "back")}
+                    ${this.renderButton("command", "mdi:asterisk", "Info", "info")}
+                    ${this.renderButton("command", "mdi:home", "Home", "home")}
                 </div>
 
-                <div class="row">${this.renderButton("up", "mdi:chevron-up", "Up")}</div>
+                <div class="row">${this.renderButton("command", "mdi:chevron-up", "Up", "up")}</div>
 
                 <div class="row">
-                    ${this.renderButton("left", "mdi:chevron-left", "Left")}
-                    ${this.renderButton("select", "mdi:checkbox-blank-circle", "Select")}
-                    ${this.renderButton("right", "mdi:chevron-right", "Right")}
+                    ${this.renderButton("command", "mdi:chevron-left", "Left", "left")}
+                    ${this.renderButton("command", "mdi:checkbox-blank-circle", "Select", "select")}
+                    ${this.renderButton("command", "mdi:chevron-right", "Right", "right")}
                 </div>
 
-                <div class="row">${this.renderButton("down", "mdi:chevron-down", "Down")}</div>
+                <div class="row">${this.renderButton("command", "mdi:chevron-down", "Down", "down")}</div>
 
                 <div class="row">
-                    ${this.renderButton("reverse", "mdi:rewind", "Rewind")}
-                    ${this.renderButton("play", "mdi:play-pause", "Play/Pause")}
-                    ${this.renderButton("forward", "mdi:fast-forward", "Fast-Forward")}
+                    ${this.renderButton("command", "mdi:rewind", "Rewind", "reverse")}
+                    ${this.renderButton("command", "mdi:play-pause", "Play/Pause", "play")}
+                    ${this.renderButton("command", "mdi:fast-forward", "Fast-Forward", "forward")}
                 </div>
 
                 <div class="row">
-                    ${this.renderButton("volume_mute", "mdi:volume-mute", "Volume Mute")}
-                    ${this.renderButton("volume_down", "mdi:volume-minus", "Volume Down")}
-                    ${this.renderButton("volume_up", "mdi:volume-plus", "Volume Up")}
+                    ${this.renderButton("volume", "mdi:volume-mute", "Volume Mute", "volume_mute")}
+                    ${this.renderButton("volume", "mdi:volume-minus", "Volume Down", "volume_down")}
+                    ${this.renderButton("volume", "mdi:volume-plus", "Volume Up", "volume_up")}
                 </div>
             </div>
         `;
     }
-    renderButton(button, icon, title) {
+    renderButton(category, icon, title, button) {
         return x `
-            <div class="icon" data-button=${button} @click=${this.handleClick}">
+            <div class="icon" data-category=${category} data-button=${button} @click=${this.handleButton}>
                 <ha-icon .icon=${icon}></ha-icon>
             </div>
         `;
     }
-    handleClick(e) {
+    handleButton(e) {
         e.stopPropagation();
-        if (!this.hass || !this.streamEntity)
+        if (!this.hass || !this.entities.streamEntity)
             return;
-        const button = e.currentTarget.dataset.button;
-        if (button === "power") {
-            callService(this.hass, "media_player", "turn_off", { entity_id: this.streamEntity });
+        const target = e.currentTarget;
+        const category = target.dataset.category;
+        const button = target.dataset.button;
+        if (category === "power") {
+            this.handlePower();
         }
-        else if (button === "volume_mute") {
-            callService(this.hass, "media_player", "volume_mute", { entity_id: this.streamEntity });
+        else if (category === "volume") {
+            this.handleVolume(button);
         }
-        callService(this.hass, "remote", "send_command", { entity_id: this.streamEntity, command: "button" });
+        else if (category === "command") {
+            this.handleCommand(button);
+        }
+    }
+    handlePower() {
+        const powerEntity = this.config?.power === "video" ? this.entities.videoEntity : this.entities.remoteEntity;
+        if (powerEntity) {
+            const state = this.hass?.states[powerEntity].state;
+            const action = state === "on" ? "turn_off" : "turn_on";
+            callService(this.hass, "media_player", action, { entity_id: powerEntity });
+        }
+    }
+    handleVolume(button) {
+        const entity = this.getVolumeEntity();
+        if (entity) {
+            if (button === "volume_mute") {
+                callService(this.hass, "media_player", "volume_mute", {
+                    entity_id: entity,
+                    is_volume_muted: !this.hass.states[entity].attributes.is_volume_muted,
+                });
+            }
+            else {
+                callService(this.hass, "media_player", button, { entity_id: entity });
+            }
+        }
+        else {
+            callService(this.hass, "remote", "send_command", {
+                entity_id: this.entities.remoteEntity,
+                command: button,
+            });
+        }
+    }
+    handleCommand(button) {
+        callService(this.hass, "remote", "send_command", { entity_id: this.entities.streamEntity, command: button });
+    }
+    getVolumeEntity() {
+        if (this.config?.volume === "audio" && this.entities.audioEntity) {
+            return this.entities.audioEntity;
+        }
+        else if (this.config?.volume === "video" && this.entities.videoEntity) {
+            return this.entities.videoEntity;
+        }
+        return undefined;
     }
 };
 __decorate([

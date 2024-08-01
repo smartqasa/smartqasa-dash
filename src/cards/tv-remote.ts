@@ -5,11 +5,13 @@ import { HomeAssistant, LovelaceCardConfig } from "../types";
 import { callService } from "../utils/call-service";
 
 interface Config extends LovelaceCardConfig {
-    audio_entity?: string;
-    name?: string;
     stream_entity: string;
+    name?: string;
+    audio_entity?: string;
     remote_entity?: string;
     video_entity?: string;
+    power?: string;
+    volume?: string;
 }
 
 window.customCards.push({
@@ -27,14 +29,7 @@ export class TVRemoteCard extends LitElement {
 
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() private config?: Config;
-    private audioEntity?: string;
-    private audioObj?: HassEntity;
-    private remoteEntity?: string;
-    private remoteObj?: HassEntity;
-    private streamEntity?: string;
-    private streamObj?: HassEntity;
-    private videoEntity?: string;
-    private videoObj?: HassEntity;
+    private entities: { [key: string]: string | undefined } = {};
 
     static get styles(): CSSResult {
         return css`
@@ -43,7 +38,7 @@ export class TVRemoteCard extends LitElement {
             }
             .row {
                 display: flex;
-                padding: 1rem 4rem 1rem 4rem;
+                padding: 0.8rem 4rem 0.8rem 4rem;
                 justify-content: space-evenly;
                 align-items: center;
             }
@@ -61,7 +56,7 @@ export class TVRemoteCard extends LitElement {
                 align-self: center;
                 height: 3rem;
                 width: 3rem;
-                padding: 1rem;
+                padding: 0.8rem;
                 cursor: pointer;
             }
             ha-icon {
@@ -78,15 +73,21 @@ export class TVRemoteCard extends LitElement {
 
     public setConfig(config: Config): void {
         this.config = { ...config };
-        this.streamEntity = this.config.stream_entity?.startsWith("media_player.")
-            ? this.config.stream_entity
-            : undefined;
 
-        if (this.streamEntity) {
-        }
-        this.audioEntity = this.config.audio_entity?.startsWith("media_player.") ? this.config.audio_entity : undefined;
+        if (!this.config.stream_entity?.startsWith("media_player.")) return;
 
-        this.videoEntity = this.config.video_entity?.startsWith("media_player.") ? this.config.video_entity : undefined;
+        this.entities.streamEntity = this.config.stream_entity;
+        const objectID = this.config.stream_entity.split(".")[1];
+
+        this.entities.remoteEntity = this.config.remote_entity?.startsWith("remote.")
+            ? this.config.remote_entity
+            : `remote.${objectID}`;
+        this.entities.audioEntity = this.config.audio_entity?.startsWith("media_player.")
+            ? this.config.audio_entity
+            : `media_player.${objectID}`;
+        this.entities.videoEntity = this.config.video_entity?.startsWith("media_player.")
+            ? this.config.video_entity
+            : `media_player.${objectID}`;
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
@@ -94,12 +95,10 @@ export class TVRemoteCard extends LitElement {
             return entity !== undefined && this.hass?.states[entity] !== stateObj;
         };
 
-        return (
+        return !!(
             (changedProps.has("hass") &&
-                (hasStateChanged(this.audioEntity, this.audioObj) ||
-                    hasStateChanged(this.streamEntity, this.streamObj) ||
-                    hasStateChanged(this.videoEntity, this.videoObj))) ||
-            (changedProps.has("config") && this.config !== undefined)
+                hasStateChanged(this.entities.streamEntity, this.hass?.states[this.entities.streamEntity!])) ||
+            (changedProps.has("config") && this.config)
         );
     }
 
@@ -108,9 +107,8 @@ export class TVRemoteCard extends LitElement {
             return html``;
         }
 
-        this.streamObj = this.hass.states[this.streamEntity!] || undefined;
-
-        if (this.config.stream_entity && !this.streamObj) {
+        const streamObj = this.hass.states[this.entities.streamEntity!];
+        if (!streamObj) {
             return html`
                 <ha-card>
                     <div class="warning">Entity Unavailable</div>
@@ -120,64 +118,107 @@ export class TVRemoteCard extends LitElement {
 
         return html`
             <div class="container">
-                <div class="name">${this.config.name || this.streamObj?.attributes.friendly_name || "TV Remote"}</div>
+                <div class="name">${this.config.name || streamObj.attributes.friendly_name || "TV Remote"}</div>
 
                 <div class="row">
-                    <div class="app">${this.streamObj.attributes.app_name || ""}</div>
-                    ${this.renderButton("power", "mdi:power", "Power")}
+                    <div class="app">${streamObj.attributes.app_name || ""}</div>
+                    ${this.renderButton("power", "power", "mdi:power", "Power")}
                 </div>
 
                 <div class="row">
-                    ${this.renderButton("back", "mdi:arrow-left", "Back")}
-                    ${this.renderButton("info", "mdi:asterisk", "Info")}
-                    ${this.renderButton("home", "mdi:home", "Home")}
+                    ${this.renderButton("command", "mdi:arrow-left", "Back", "back")}
+                    ${this.renderButton("command", "mdi:asterisk", "Info", "info")}
+                    ${this.renderButton("command", "mdi:home", "Home", "home")}
                 </div>
 
-                <div class="row">${this.renderButton("up", "mdi:chevron-up", "Up")}</div>
+                <div class="row">${this.renderButton("command", "mdi:chevron-up", "Up", "up")}</div>
 
                 <div class="row">
-                    ${this.renderButton("left", "mdi:chevron-left", "Left")}
-                    ${this.renderButton("select", "mdi:checkbox-blank-circle", "Select")}
-                    ${this.renderButton("right", "mdi:chevron-right", "Right")}
+                    ${this.renderButton("command", "mdi:chevron-left", "Left", "left")}
+                    ${this.renderButton("command", "mdi:checkbox-blank-circle", "Select", "select")}
+                    ${this.renderButton("command", "mdi:chevron-right", "Right", "right")}
                 </div>
 
-                <div class="row">${this.renderButton("down", "mdi:chevron-down", "Down")}</div>
+                <div class="row">${this.renderButton("command", "mdi:chevron-down", "Down", "down")}</div>
 
                 <div class="row">
-                    ${this.renderButton("reverse", "mdi:rewind", "Rewind")}
-                    ${this.renderButton("play", "mdi:play-pause", "Play/Pause")}
-                    ${this.renderButton("forward", "mdi:fast-forward", "Fast-Forward")}
+                    ${this.renderButton("command", "mdi:rewind", "Rewind", "reverse")}
+                    ${this.renderButton("command", "mdi:play-pause", "Play/Pause", "play")}
+                    ${this.renderButton("command", "mdi:fast-forward", "Fast-Forward", "forward")}
                 </div>
 
                 <div class="row">
-                    ${this.renderButton("volume_mute", "mdi:volume-mute", "Volume Mute")}
-                    ${this.renderButton("volume_down", "mdi:volume-minus", "Volume Down")}
-                    ${this.renderButton("volume_up", "mdi:volume-plus", "Volume Up")}
+                    ${this.renderButton("volume", "mdi:volume-mute", "Volume Mute", "volume_mute")}
+                    ${this.renderButton("volume", "mdi:volume-minus", "Volume Down", "volume_down")}
+                    ${this.renderButton("volume", "mdi:volume-plus", "Volume Up", "volume_up")}
                 </div>
             </div>
         `;
     }
 
-    private renderButton(button: string, icon: string, title: string): TemplateResult {
+    private renderButton(category: string, icon: string, title: string, button: string): TemplateResult {
         return html`
-            <div class="icon" data-button=${button} @click=${this.handleClick}">
+            <div class="icon" data-category=${category} data-button=${button} @click=${this.handleButton}>
                 <ha-icon .icon=${icon}></ha-icon>
             </div>
         `;
     }
 
-    private handleClick(e: Event): void {
+    private handleButton(e: Event): void {
         e.stopPropagation();
-        if (!this.hass || !this.streamEntity) return;
+        if (!this.hass || !this.entities.streamEntity) return;
 
-        const button = (e.currentTarget as HTMLElement).dataset.button;
+        const target = e.currentTarget as HTMLElement;
+        const category = target.dataset.category!;
+        const button = target.dataset.button!;
 
-        if (button === "power") {
-            callService(this.hass, "media_player", "turn_off", { entity_id: this.streamEntity });
-        } else if (button === "volume_mute") {
-            callService(this.hass, "media_player", "volume_mute", { entity_id: this.streamEntity });
+        if (category === "power") {
+            this.handlePower();
+        } else if (category === "volume") {
+            this.handleVolume(button);
+        } else if (category === "command") {
+            this.handleCommand(button);
         }
+    }
 
-        callService(this.hass, "remote", "send_command", { entity_id: this.streamEntity, command: "button" });
+    private handlePower(): void {
+        const powerEntity = this.config?.power === "video" ? this.entities.videoEntity : this.entities.remoteEntity;
+        if (powerEntity) {
+            const state = this.hass?.states[powerEntity].state;
+            const action = state === "on" ? "turn_off" : "turn_on";
+            callService(this.hass!, "media_player", action, { entity_id: powerEntity });
+        }
+    }
+
+    private handleVolume(button: string): void {
+        const entity = this.getVolumeEntity();
+        if (entity) {
+            if (button === "volume_mute") {
+                callService(this.hass!, "media_player", "volume_mute", {
+                    entity_id: entity,
+                    is_volume_muted: !this.hass!.states[entity].attributes.is_volume_muted,
+                });
+            } else {
+                callService(this.hass!, "media_player", button, { entity_id: entity });
+            }
+        } else {
+            callService(this.hass!, "remote", "send_command", {
+                entity_id: this.entities.remoteEntity,
+                command: button,
+            });
+        }
+    }
+
+    private handleCommand(button: string): void {
+        callService(this.hass!, "remote", "send_command", { entity_id: this.entities.streamEntity, command: button });
+    }
+
+    private getVolumeEntity(): string | undefined {
+        if (this.config?.volume === "audio" && this.entities.audioEntity) {
+            return this.entities.audioEntity;
+        } else if (this.config?.volume === "video" && this.entities.videoEntity) {
+            return this.entities.videoEntity;
+        }
+        return undefined;
     }
 }
