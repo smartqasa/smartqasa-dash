@@ -135,6 +135,19 @@ let TVRemoteCard = class TVRemoteCard extends s {
             ha-icon {
                 --mdc-icon-size: 2rem;
             }
+            .app-list {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .app {
+                margin: 5px;
+                padding: 5px 10px;
+                background: var(--primary-color);
+                color: white;
+                border-radius: 5px;
+                cursor: pointer;
+            }
             .logo {
                 display: flex;
                 margin: 0 1rem 0 1rem;
@@ -255,6 +268,7 @@ let TVRemoteCard = class TVRemoteCard extends s {
                             ${this.renderButton("volume", "volume_mute", "mdi:volume-mute")}
                             ${this.renderButton("volume", "volume_up", "mdi:volume-plus")}
                         </div>
+
                         <div class="row">
                             ${this.renderButton("navigate", "remote", "mdi:remote-tv")}
                             <div class="logo">
@@ -269,6 +283,12 @@ let TVRemoteCard = class TVRemoteCard extends s {
                     <div class="container">
                         <div class="name">
                             ${this.config.name || this.stateObj.attributes.friendly_name || "TV Remote"}
+                        </div>
+
+                        <div class="app-list">
+                            ${this.stateObj.attributes.source_list.map((app) => x `
+                                    <div class="app" @click=${() => this.selectApp(app)}>${app}</div>
+                                `)}
                         </div>
 
                         <div class="row">
@@ -310,11 +330,13 @@ let TVRemoteCard = class TVRemoteCard extends s {
         }
     }
     handlePower() {
+        /*
         const entity = this.entities.video || undefined;
         if (entity) {
-            callService(this.hass, "media_player", "toggle", { entity_id: entity });
+            callService(this.hass!, "media_player", "toggle", { entity_id: entity });
             return;
         }
+*/
         callService(this.hass, "remote", "send_command", { entity_id: this.entities.remote, command: "power" });
     }
     handleVolume(button) {
@@ -356,6 +378,14 @@ let TVRemoteCard = class TVRemoteCard extends s {
         else {
             this.mode = "remote";
         }
+    }
+    selectApp(app) {
+        if (!this.hass || !this.entity)
+            return;
+        callService(this.hass, "media_player", "select_source", {
+            entity_id: this.entity,
+            source: app,
+        });
     }
 };
 __decorate([
