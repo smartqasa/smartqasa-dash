@@ -59,6 +59,7 @@ export class TVRemoteCard extends LitElement {
                 display: flex;
                 justify-content: center;
                 align-self: center;
+                margin: 0 1rem 0 1rem;
                 padding: 1rem;
                 border: var(--sq-card-border, none);
                 border-radius: 1rem;
