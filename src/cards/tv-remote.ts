@@ -96,24 +96,25 @@ export class TVRemoteCard extends LitElement {
     }
 
     private initializeEntities(): void {
-        if (!this.hass || !this.config || !this.entity || !this.entity.startsWith("media_player.")) return;
+        if (!this.hass || !this.config || !this.entity) return;
+
+        this.entities.remote = this.config.remote_entity
+            ? this.config.remote_entity
+            : `remote.${this.entity.split(".")[1]}`;
 
         const entityBase = this.entity.split(".")[1].replace(/_roku$/, "");
 
-        this.entities.remote = this.config.remote_entity?.startsWith("remote.")
-            ? this.config.remote_entity
-            : `remote.${entityBase}_roku`;
-        this.entities.remote = this.hass.states[this.entities.remote] ? this.entities.remote : undefined;
-
-        this.entities.audio = this.config.audio_entity?.startsWith("media_player.")
-            ? this.config.audio_entity
-            : `media_player.${entityBase}_tv_speakers`;
-        this.entities.audio = this.hass.states[this.entities.audio] ? this.entities.audio : undefined;
-
-        this.entities.video = this.config.video_entity?.startsWith("media_player.")
+        this.entities.video = this.config.video_entity
             ? this.config.video_entity
-            : `media_player.${entityBase}_tv`;
-        this.entities.video = this.hass.states[this.entities.video] ? this.entities.video : undefined;
+            : this.hass.states[`media_player.${entityBase}`]
+            ? `media_player.${entityBase}`
+            : this.entity;
+
+        this.entities.audio = this.config.audio_entity
+            ? this.config.audio_entity
+            : this.hass.states[`media_player.${entityBase}_speakers`]
+            ? `media_player.${entityBase}_speakers`
+            : this.entities.video;
     }
 
     protected render(): TemplateResult | void {
@@ -123,7 +124,6 @@ export class TVRemoteCard extends LitElement {
 
         this.stateObj = this.hass.states[this.entity];
         if (!this.stateObj || !this.hass.states[this.entities.remote]) {
-            console.log("Entity Unavailable ", this.entities.remote);
             return html`
                 <ha-card>
                     <div class="warning">Entity Unavailable</div>

@@ -152,21 +152,22 @@ let TVRemoteCard = class TVRemoteCard extends s {
         }
     }
     initializeEntities() {
-        if (!this.hass || !this.config || !this.entity || !this.entity.startsWith("media_player."))
+        if (!this.hass || !this.config || !this.entity)
             return;
-        const entityBase = this.entity.split(".")[1].replace(/_roku$/, "");
-        this.entities.remote = this.config.remote_entity?.startsWith("remote.")
+        this.entities.remote = this.config.remote_entity
             ? this.config.remote_entity
-            : `remote.${entityBase}_roku`;
-        this.entities.remote = this.hass.states[this.entities.remote] ? this.entities.remote : undefined;
-        this.entities.audio = this.config.audio_entity?.startsWith("media_player.")
-            ? this.config.audio_entity
-            : `media_player.${entityBase}_tv_speakers`;
-        this.entities.audio = this.hass.states[this.entities.audio] ? this.entities.audio : undefined;
-        this.entities.video = this.config.video_entity?.startsWith("media_player.")
+            : `remote.${this.entity.split(".")[1]}`;
+        const entityBase = this.entity.split(".")[1].replace(/_roku$/, "");
+        this.entities.video = this.config.video_entity
             ? this.config.video_entity
-            : `media_player.${entityBase}_tv`;
-        this.entities.video = this.hass.states[this.entities.video] ? this.entities.video : undefined;
+            : this.hass.states[`media_player.${entityBase}`]
+                ? `media_player.${entityBase}`
+                : this.entity;
+        this.entities.audio = this.config.audio_entity
+            ? this.config.audio_entity
+            : this.hass.states[`media_player.${entityBase}_speakers`]
+                ? `media_player.${entityBase}_speakers`
+                : this.entities.video;
     }
     render() {
         if (!this.hass || !this.config || !this.entity || !this.entities.remote) {
@@ -174,7 +175,6 @@ let TVRemoteCard = class TVRemoteCard extends s {
         }
         this.stateObj = this.hass.states[this.entity];
         if (!this.stateObj || !this.hass.states[this.entities.remote]) {
-            console.log("Entity Unavailable ", this.entities.remote);
             return x `
                 <ha-card>
                     <div class="warning">Entity Unavailable</div>
