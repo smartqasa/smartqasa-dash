@@ -29,7 +29,7 @@ export class TVRemoteCard extends LitElement {
 
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() private config?: Config;
-    @state() private mode: "app_select" | "remote" = "remote";
+    @state() private mode: string = "remote";
     private entity?: string;
     private stateObj?: HassEntity;
     private entities: { [key: string]: string | undefined } = {};
@@ -308,5 +308,6 @@ export class TVRemoteCard extends LitElement {
             this.mode = "remote";
         }
         console.log(`Mode changed to: ${this.mode}`);
+        this.requestUpdate();
     }
 }

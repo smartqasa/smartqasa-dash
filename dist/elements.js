@@ -358,6 +358,7 @@ let TVRemoteCard = class TVRemoteCard extends s {
             this.mode = "remote";
         }
         console.log(`Mode changed to: ${this.mode}`);
+        this.requestUpdate();
     }
 };
 __decorate([
