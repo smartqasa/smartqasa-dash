@@ -102,7 +102,7 @@ let TVRemoteCard = class TVRemoteCard extends s {
             }
             .row {
                 display: flex;
-                padding: 0.8rem 4rem 0.8rem 4rem;
+                padding: 0.6rem 4rem 0.6rem 4rem;
                 justify-content: space-evenly;
                 align-items: center;
             }
@@ -119,14 +119,14 @@ let TVRemoteCard = class TVRemoteCard extends s {
                 display: flex;
                 justify-content: center;
                 align-self: center;
-                padding: 0.8rem 0.4rem 0.8rem 0.4rem;
+                padding: 0.8rem;
                 border: var(--sq-card-border, none);
-                border-radius: 1.5rem;
+                border-radius: 20%;
                 background-color: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
                 cursor: pointer;
             }
             ha-icon {
-                --mdc-icon-size: 2.5rem;
+                --mdc-icon-size: 2rem;
             }
             .warning {
                 display: block;
