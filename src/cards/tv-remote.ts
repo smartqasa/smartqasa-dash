@@ -43,7 +43,7 @@ export class TVRemoteCard extends LitElement {
             .row {
                 display: flex;
                 margin: 1.5rem;
-                justify-content: space-evenly;
+                justify-content: center;
                 align-items: center;
             }
             .name {
