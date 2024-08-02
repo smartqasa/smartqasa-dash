@@ -29,6 +29,7 @@ export class TVRemoteCard extends LitElement {
 
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() private config?: Config;
+    @state() private mode: "remote" | "apps" = "remote";
     private entity?: string;
     private stateObj?: HassEntity;
     private entities: { [key: string]: string | undefined } = {};
@@ -72,6 +73,7 @@ export class TVRemoteCard extends LitElement {
             }
             .logo {
                 display: flex;
+                margin: 0 1rem 0 1rem;
                 justify-content: center;
                 align-items: center;
             }
@@ -165,48 +167,70 @@ export class TVRemoteCard extends LitElement {
             `;
         }
 
-        return html`
-            <div class="container">
-                <div class="name">${this.config.name || this.stateObj.attributes.friendly_name || "TV Remote"}</div>
+        switch (this.mode) {
+            case "remote":
+                return html`
+                    <div class="container">
+                        <div class="name">
+                            ${this.config.name || this.stateObj.attributes.friendly_name || "TV Remote"}
+                        </div>
 
-                <div class="row">${this.renderButton("power", "power", "mdi:power")}</div>
+                        <div class="row">${this.renderButton("power", "power", "mdi:power")}</div>
 
-                <div class="row">
-                    ${this.renderButton("command", "back", "mdi:arrow-left")}
-                    ${this.renderButton("command", "info", "mdi:asterisk")}
-                    ${this.renderButton("command", "home", "mdi:home")}
-                </div>
+                        <div class="row">
+                            ${this.renderButton("command", "back", "mdi:arrow-left")}
+                            ${this.renderButton("command", "info", "mdi:asterisk")}
+                            ${this.renderButton("command", "home", "mdi:home")}
+                        </div>
 
-                <div class="row">${this.renderButton("command", "up", "mdi:chevron-up")}</div>
+                        <div class="row">${this.renderButton("command", "up", "mdi:chevron-up")}</div>
 
-                <div class="row">
-                    ${this.renderButton("command", "left", "mdi:chevron-left")}
-                    ${this.renderButton("command", "select", "mdi:checkbox-blank-circle")}
-                    ${this.renderButton("command", "right", "mdi:chevron-right")}
-                </div>
+                        <div class="row">
+                            ${this.renderButton("command", "left", "mdi:chevron-left")}
+                            ${this.renderButton("command", "select", "mdi:checkbox-blank-circle")}
+                            ${this.renderButton("command", "right", "mdi:chevron-right")}
+                        </div>
 
-                <div class="row">${this.renderButton("command", "down", "mdi:chevron-down")}</div>
+                        <div class="row">${this.renderButton("command", "down", "mdi:chevron-down")}</div>
 
-                <div class="row">
-                    ${this.renderButton("command", "reverse", "mdi:rewind")}
-                    ${this.renderButton("command", "play", "mdi:play-pause")}
-                    ${this.renderButton("command", "forward", "mdi:fast-forward")}
-                </div>
+                        <div class="row">
+                            ${this.renderButton("command", "reverse", "mdi:rewind")}
+                            ${this.renderButton("command", "play", "mdi:play-pause")}
+                            ${this.renderButton("command", "forward", "mdi:fast-forward")}
+                        </div>
 
-                <div class="row">
-                    ${this.renderButton("volume", "volume_down", "mdi:volume-minus")}
-                    ${this.renderButton("volume", "volume_mute", "mdi:volume-mute")}
-                    ${this.renderButton("volume", "volume_up", "mdi:volume-plus")}
-                </div>
-                <div class="row">
-                    ${this.renderButton("navigate", "remote", "mdi:remote-tv")}
-                    <div class="logo">
-                        <img src="${rokuLogo}" />
+                        <div class="row">
+                            ${this.renderButton("volume", "volume_down", "mdi:volume-minus")}
+                            ${this.renderButton("volume", "volume_mute", "mdi:volume-mute")}
+                            ${this.renderButton("volume", "volume_up", "mdi:volume-plus")}
+                        </div>
+                        <div class="row">
+                            ${this.renderButton("navigate", "remote", "mdi:remote-tv")}
+                            <div class="logo">
+                                <img src="${rokuLogo}" />
+                            </div>
+                            ${this.renderButton("navigate", "apps", "mdi:apps-box")}
+                        </div>
                     </div>
-                    ${this.renderButton("navigate", "apps", "mdi:apps-box")}
-                </div>
-            </div>
-        `;
+                `;
+
+            case "apps":
+                return html`
+                    <div class="container">
+                        <div class="name">
+                            ${this.config.name || this.stateObj.attributes.friendly_name || "TV Remote"}
+                        </div>
+
+                        <div class="row">
+                            ${this.renderButton("navigate", "remote", "mdi:remote-tv")}
+                            <div class="logo">
+                                <img src="${rokuLogo}" />
+                            </div>
+                            ${this.renderButton("navigate", "apps", "mdi:apps-box")}
+                        </div>
+                    </div>
+                `;
+        }
     }
 
     private renderButton(category: string, button: string, icon: string): TemplateResult {
@@ -279,5 +303,11 @@ export class TVRemoteCard extends LitElement {
         callService(this.hass!, "remote", "send_command", { entity_id: this.entities.remote, command: button });
     }
 
-    private handleNavigate(button: string): void {}
+    private handleNavigate(button: string): void {
+        if (button === "remote") {
+            this.mode = "apps";
+        } else {
+            this.mode = "remote";
+        }
+    }
 }

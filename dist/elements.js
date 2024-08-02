@@ -92,6 +92,7 @@ window.customCards.push({
 let TVRemoteCard = class TVRemoteCard extends s {
     constructor() {
         super(...arguments);
+        this.mode = "remote";
         this.entities = {};
     }
     getCardSize() {
@@ -136,6 +137,7 @@ let TVRemoteCard = class TVRemoteCard extends s {
             }
             .logo {
                 display: flex;
+                margin: 0 1rem 0 1rem;
                 justify-content: center;
                 align-items: center;
             }
@@ -217,48 +219,69 @@ let TVRemoteCard = class TVRemoteCard extends s {
                 </ha-card>
             `;
         }
-        return x `
-            <div class="container">
-                <div class="name">${this.config.name || this.stateObj.attributes.friendly_name || "TV Remote"}</div>
+        switch (this.mode) {
+            case "remote":
+                return x `
+                    <div class="container">
+                        <div class="name">
+                            ${this.config.name || this.stateObj.attributes.friendly_name || "TV Remote"}
+                        </div>
 
-                <div class="row">${this.renderButton("power", "power", "mdi:power")}</div>
+                        <div class="row">${this.renderButton("power", "power", "mdi:power")}</div>
 
-                <div class="row">
-                    ${this.renderButton("command", "back", "mdi:arrow-left")}
-                    ${this.renderButton("command", "info", "mdi:asterisk")}
-                    ${this.renderButton("command", "home", "mdi:home")}
-                </div>
+                        <div class="row">
+                            ${this.renderButton("command", "back", "mdi:arrow-left")}
+                            ${this.renderButton("command", "info", "mdi:asterisk")}
+                            ${this.renderButton("command", "home", "mdi:home")}
+                        </div>
 
-                <div class="row">${this.renderButton("command", "up", "mdi:chevron-up")}</div>
+                        <div class="row">${this.renderButton("command", "up", "mdi:chevron-up")}</div>
 
-                <div class="row">
-                    ${this.renderButton("command", "left", "mdi:chevron-left")}
-                    ${this.renderButton("command", "select", "mdi:checkbox-blank-circle")}
-                    ${this.renderButton("command", "right", "mdi:chevron-right")}
-                </div>
+                        <div class="row">
+                            ${this.renderButton("command", "left", "mdi:chevron-left")}
+                            ${this.renderButton("command", "select", "mdi:checkbox-blank-circle")}
+                            ${this.renderButton("command", "right", "mdi:chevron-right")}
+                        </div>
 
-                <div class="row">${this.renderButton("command", "down", "mdi:chevron-down")}</div>
+                        <div class="row">${this.renderButton("command", "down", "mdi:chevron-down")}</div>
 
-                <div class="row">
-                    ${this.renderButton("command", "reverse", "mdi:rewind")}
-                    ${this.renderButton("command", "play", "mdi:play-pause")}
-                    ${this.renderButton("command", "forward", "mdi:fast-forward")}
-                </div>
+                        <div class="row">
+                            ${this.renderButton("command", "reverse", "mdi:rewind")}
+                            ${this.renderButton("command", "play", "mdi:play-pause")}
+                            ${this.renderButton("command", "forward", "mdi:fast-forward")}
+                        </div>
 
-                <div class="row">
-                    ${this.renderButton("volume", "volume_down", "mdi:volume-minus")}
-                    ${this.renderButton("volume", "volume_mute", "mdi:volume-mute")}
-                    ${this.renderButton("volume", "volume_up", "mdi:volume-plus")}
-                </div>
-                <div class="row">
-                    ${this.renderButton("navigate", "remote", "mdi:remote-tv")}
-                    <div class="logo">
-                        <img src="${img$P}" />
+                        <div class="row">
+                            ${this.renderButton("volume", "volume_down", "mdi:volume-minus")}
+                            ${this.renderButton("volume", "volume_mute", "mdi:volume-mute")}
+                            ${this.renderButton("volume", "volume_up", "mdi:volume-plus")}
+                        </div>
+                        <div class="row">
+                            ${this.renderButton("navigate", "remote", "mdi:remote-tv")}
+                            <div class="logo">
+                                <img src="${img$P}" />
+                            </div>
+                            ${this.renderButton("navigate", "apps", "mdi:apps-box")}
+                        </div>
                     </div>
-                    ${this.renderButton("navigate", "apps", "mdi:apps-box")}
-                </div>
-            </div>
-        `;
+                `;
+            case "apps":
+                return x `
+                    <div class="container">
+                        <div class="name">
+                            ${this.config.name || this.stateObj.attributes.friendly_name || "TV Remote"}
+                        </div>
+
+                        <div class="row">
+                            ${this.renderButton("navigate", "remote", "mdi:remote-tv")}
+                            <div class="logo">
+                                <img src="${img$P}" />
+                            </div>
+                            ${this.renderButton("navigate", "apps", "mdi:apps-box")}
+                        </div>
+                    </div>
+                `;
+        }
     }
     renderButton(category, button, icon) {
         return x `
@@ -328,7 +351,14 @@ let TVRemoteCard = class TVRemoteCard extends s {
     handleCommand(button) {
         callService(this.hass, "remote", "send_command", { entity_id: this.entities.remote, command: button });
     }
-    handleNavigate(button) { }
+    handleNavigate(button) {
+        if (button === "remote") {
+            this.mode = "apps";
+        }
+        else {
+            this.mode = "remote";
+        }
+    }
 };
 __decorate([
     n$1({ attribute: false })
@@ -336,6 +366,9 @@ __decorate([
 __decorate([
     r()
 ], TVRemoteCard.prototype, "config", void 0);
+__decorate([
+    r()
+], TVRemoteCard.prototype, "mode", void 0);
 TVRemoteCard = __decorate([
     t$1("smartqasa-tv-remote-card")
 ], TVRemoteCard);
