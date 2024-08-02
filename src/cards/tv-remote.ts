@@ -148,6 +148,7 @@ export class TVRemoteCard extends LitElement {
         this.entities.video = findVideoEntity();
 
         console.log("Audio entity: ", this.entities.audio);
+        console.log("Video entity: ", this.entities.video);
     }
 
     protected render(): TemplateResult | void {

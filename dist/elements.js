@@ -203,6 +203,7 @@ let TVRemoteCard = class TVRemoteCard extends s {
         this.entities.audio = findAudioEntity();
         this.entities.video = findVideoEntity();
         console.log("Audio entity: ", this.entities.audio);
+        console.log("Video entity: ", this.entities.video);
     }
     render() {
         if (!this.hass || !this.config || !this.entity || !this.entities.remote) {
