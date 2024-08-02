@@ -167,7 +167,9 @@ let TVRemoteCard = class TVRemoteCard extends s {
             ? this.config.audio_entity
             : this.hass.states[`media_player.${entityBase}_speakers`]
                 ? `media_player.${entityBase}_speakers`
-                : undefined;
+                : this.hass.states[`media_player.${entityBase}`]
+                    ? `media_player.${entityBase}`
+                    : undefined;
         console.log("Audio entity: ", this.entities.audio);
     }
     render() {

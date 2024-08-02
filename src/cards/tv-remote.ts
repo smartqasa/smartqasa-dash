@@ -112,6 +112,8 @@ export class TVRemoteCard extends LitElement {
             ? this.config.audio_entity
             : this.hass.states[`media_player.${entityBase}_speakers`]
             ? `media_player.${entityBase}_speakers`
+            : this.hass.states[`media_player.${entityBase}`]
+            ? `media_player.${entityBase}`
             : undefined;
 
         console.log("Audio entity: ", this.entities.audio);
