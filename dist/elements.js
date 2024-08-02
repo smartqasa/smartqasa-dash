@@ -101,7 +101,7 @@ let TVRemoteCard = class TVRemoteCard extends s {
     static get styles() {
         return i$5 `
             .container {
-                width: fit-content;
+                width: 22rem;
                 margin: 1rem;
                 border: var(--sq-card-border, none);
                 border-radius: var(--sq-card-border-radius, 1.5rem);
@@ -143,9 +143,10 @@ let TVRemoteCard = class TVRemoteCard extends s {
             .app {
                 margin: 5px;
                 padding: 5px 10px;
-                background: var(--primary-color);
-                color: white;
-                border-radius: 5px;
+                background: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
+                color: rgb(var(--sq-primary-font-rgb), 128, 128, 128);
+                border: var(--sq-card-border, none);
+                border-radius: 0.5rem;
                 cursor: pointer;
             }
             .logo {
