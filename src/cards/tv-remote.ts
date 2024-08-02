@@ -16,7 +16,7 @@ window.customCards.push({
     type: "smartqasa-tv-remote-card",
     name: "SmartQasa TV Remote Card",
     preview: true,
-    description: "A SmartQasa card for simulating a television remote control",
+    description: "A SmartQasa card for simulating a television remote control.",
 });
 
 @customElement("smartqasa-tv-remote-card")
@@ -38,12 +38,12 @@ export class TVRemoteCard extends LitElement {
             }
             .row {
                 display: flex;
-                padding: 1rem 3.5rem 1rem 3.5rem;
+                margin: 1rem 3rem 1rem 3rem;
                 justify-content: space-evenly;
                 align-items: center;
             }
-            afasdfs .name {
-                padding: 0.8rem;
+            .name {
+                padding: 1rem;
                 text-align: center;
                 overflow: hidden;
                 text-overflow: ellipsis;
@@ -55,7 +55,7 @@ export class TVRemoteCard extends LitElement {
                 display: flex;
                 justify-content: center;
                 align-self: center;
-                padding: 0.8rem;
+                padding: 1rem;
                 border: var(--sq-card-border, none);
                 border-radius: 20%;
                 background-color: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
