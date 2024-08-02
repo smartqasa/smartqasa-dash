@@ -127,9 +127,9 @@ export class TVRemoteCard extends LitElement {
                 `media_player.${entityBase}_playbar`,
                 `media_player.${entityBase}_sound_bar`,
                 `media_player.${entityBase}_soundbar`,
-                `media_player.${entityBase}_tv`,
                 `media_player.${entityBase}_tv_speaker`,
                 `media_player.${entityBase}_tv_speakers`,
+                `media_player.${entityBase}_tv`,
             ];
             return candidates.find((candidate) => this.hass?.states[candidate]) || undefined;
         };
