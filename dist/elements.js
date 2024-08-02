@@ -204,8 +204,6 @@ let TVRemoteCard = class TVRemoteCard extends s {
         };
         this.entities.audio = findAudioEntity();
         this.entities.video = findVideoEntity();
-        console.log("Audio entity: ", this.entities.audio);
-        console.log("Video entity: ", this.entities.video);
     }
     render() {
         if (!this.hass || !this.config || !this.entity || !this.entities.remote) {
@@ -261,11 +259,11 @@ let TVRemoteCard = class TVRemoteCard extends s {
                             <div class="logo">
                                 <img src="${img$P}" />
                             </div>
-                            ${this.renderButton("navigate", "apps", "mdi:apps-box")}
+                            ${this.renderButton("navigate", "app_select", "mdi:apps-box")}
                         </div>
                     </div>
                 `;
-            case "apps":
+            case "app_select":
                 return x `
                     <div class="container">
                         <div class="name">
@@ -353,11 +351,12 @@ let TVRemoteCard = class TVRemoteCard extends s {
     }
     handleNavigate(button) {
         if (button === "remote") {
-            this.mode = "apps";
+            this.mode = "app_select";
         }
         else {
             this.mode = "remote";
         }
+        console.log(`Mode changed to: ${this.mode}`);
     }
 };
 __decorate([

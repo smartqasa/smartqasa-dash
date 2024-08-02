@@ -29,7 +29,7 @@ export class TVRemoteCard extends LitElement {
 
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() private config?: Config;
-    @state() private mode: "remote" | "apps" = "remote";
+    @state() private mode: "app_select" | "remote" = "remote";
     private entity?: string;
     private stateObj?: HassEntity;
     private entities: { [key: string]: string | undefined } = {};
@@ -148,9 +148,6 @@ export class TVRemoteCard extends LitElement {
 
         this.entities.audio = findAudioEntity();
         this.entities.video = findVideoEntity();
-
-        console.log("Audio entity: ", this.entities.audio);
-        console.log("Video entity: ", this.entities.video);
     }
 
     protected render(): TemplateResult | void {
@@ -209,12 +206,12 @@ export class TVRemoteCard extends LitElement {
                             <div class="logo">
                                 <img src="${rokuLogo}" />
                             </div>
-                            ${this.renderButton("navigate", "apps", "mdi:apps-box")}
+                            ${this.renderButton("navigate", "app_select", "mdi:apps-box")}
                         </div>
                     </div>
                 `;
 
-            case "apps":
+            case "app_select":
                 return html`
                     <div class="container">
                         <div class="name">
@@ -305,9 +302,10 @@ export class TVRemoteCard extends LitElement {
 
     private handleNavigate(button: string): void {
         if (button === "remote") {
-            this.mode = "apps";
+            this.mode = "app_select";
         } else {
             this.mode = "remote";
         }
+        console.log(`Mode changed to: ${this.mode}`);
     }
 }
