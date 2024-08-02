@@ -81,6 +81,8 @@ const callService = async (hass, domain, service, serviceData) => {
     }
 };
 
+var img$P = "data:image/webp;base64,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";
+
 window.customCards.push({
     type: "smartqasa-tv-remote-card",
     name: "SmartQasa TV Remote Card",
@@ -127,6 +129,9 @@ let TVRemoteCard = class TVRemoteCard extends s {
             }
             ha-icon {
                 --mdc-icon-size: 2rem;
+            }
+            .logo {
+                display: flex;
             }
             .warning {
                 display: block;
@@ -189,10 +194,7 @@ let TVRemoteCard = class TVRemoteCard extends s {
             <div class="container">
                 <div class="name">${this.config.name || this.stateObj.attributes.friendly_name || "TV Remote"}</div>
 
-                <div class="row">
-                    <div class="app">${this.stateObj.attributes.app_name || ""}</div>
-                    ${this.renderButton("power", "power", "mdi:power")}
-                </div>
+                <div class="row">${this.renderButton("power", "power", "mdi:power")}</div>
 
                 <div class="row">
                     ${this.renderButton("command", "back", "mdi:arrow-left")}
@@ -220,6 +222,11 @@ let TVRemoteCard = class TVRemoteCard extends s {
                     ${this.renderButton("volume", "volume_down", "mdi:volume-minus")}
                     ${this.renderButton("volume", "volume_mute", "mdi:volume-mute")}
                     ${this.renderButton("volume", "volume_up", "mdi:volume-plus")}
+                </div>
+                <div class="row">
+                    <div class="logo">
+                        <img src="${img$P}" />
+                    </div>
                 </div>
             </div>
         `;

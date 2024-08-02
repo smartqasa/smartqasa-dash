@@ -4,6 +4,8 @@ import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "../types";
 import { callService } from "../utils/call-service";
 
+import rokuLogo from "../assets/tv-remote/logos/roku.webp";
+
 interface Config extends LovelaceCardConfig {
     entity: string;
     name?: string;
@@ -63,6 +65,9 @@ export class TVRemoteCard extends LitElement {
             }
             ha-icon {
                 --mdc-icon-size: 2rem;
+            }
+            .logo {
+                display: flex;
             }
             .warning {
                 display: block;
@@ -138,10 +143,7 @@ export class TVRemoteCard extends LitElement {
             <div class="container">
                 <div class="name">${this.config.name || this.stateObj.attributes.friendly_name || "TV Remote"}</div>
 
-                <div class="row">
-                    <div class="app">${this.stateObj.attributes.app_name || ""}</div>
-                    ${this.renderButton("power", "power", "mdi:power")}
-                </div>
+                <div class="row">${this.renderButton("power", "power", "mdi:power")}</div>
 
                 <div class="row">
                     ${this.renderButton("command", "back", "mdi:arrow-left")}
@@ -169,6 +171,11 @@ export class TVRemoteCard extends LitElement {
                     ${this.renderButton("volume", "volume_down", "mdi:volume-minus")}
                     ${this.renderButton("volume", "volume_mute", "mdi:volume-mute")}
                     ${this.renderButton("volume", "volume_up", "mdi:volume-plus")}
+                </div>
+                <div class="row">
+                    <div class="logo">
+                        <img src="${rokuLogo}" />
+                    </div>
                 </div>
             </div>
         `;
