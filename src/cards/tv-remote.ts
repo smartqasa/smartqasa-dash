@@ -38,11 +38,11 @@ export class TVRemoteCard extends LitElement {
             }
             .row {
                 display: flex;
-                padding: 0.6rem 4rem 0.6rem 4rem;
+                padding: 0.8rem 3.5rem 0.8rem 3.5rem;
                 justify-content: space-evenly;
                 align-items: center;
             }
-            .name {
+            afasdfs .name {
                 padding: 0.8rem;
                 text-align: center;
                 overflow: hidden;
