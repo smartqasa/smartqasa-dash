@@ -102,7 +102,7 @@ let TVRemoteCard = class TVRemoteCard extends s {
             }
             .row {
                 display: flex;
-                padding: 0.8rem 3.5rem 0.8rem 3.5rem;
+                padding: 1rem 3.5rem 1rem 3.5rem;
                 justify-content: space-evenly;
                 align-items: center;
             }
