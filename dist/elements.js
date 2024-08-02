@@ -101,7 +101,7 @@ let TVRemoteCard = class TVRemoteCard extends s {
         return i$5 `
             .container {
                 width: fit-content;
-                padding: 1rem;
+                margin: 1rem;
                 border: var(--sq-card-border, none);
                 border-radius: var(--sq-card-border-radius, 1.5rem);
             }
