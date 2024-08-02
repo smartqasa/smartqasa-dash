@@ -130,8 +130,9 @@ let TVRemoteCard = class TVRemoteCard extends s {
             ha-icon {
                 --mdc-icon-size: 2rem;
             }
-            .logo {
-                display: flex;
+            .logo img {
+                max-height: 3rem;
+                width: auto;
             }
             .warning {
                 display: block;
