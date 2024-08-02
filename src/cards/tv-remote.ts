@@ -4,7 +4,7 @@ import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "../types";
 import { callService } from "../utils/call-service";
 
-import rokuLogo from "../assets/app_icons/roku.webp";
+import rokuLogo from "../assets/tv-remote/logos/roku.webp";
 
 interface Config extends LovelaceCardConfig {
     entity: string;
@@ -76,8 +76,8 @@ export class TVRemoteCard extends LitElement {
                 align-items: center;
             }
             .logo img {
-                height: 2rem;
-                width: 2rem;
+                height: 4rem;
+                width: 4rem;
                 border-radius: 1rem;
             }
             .warning {
