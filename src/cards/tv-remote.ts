@@ -4,7 +4,7 @@ import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "../types";
 import { callService } from "../utils/call-service";
 
-import rokuLogo from "../assets/tv-remote/logos/roku.webp";
+import rokuLogo from "../assets/app_icons/roku.webp";
 
 interface Config extends LovelaceCardConfig {
     entity: string;
@@ -76,8 +76,8 @@ export class TVRemoteCard extends LitElement {
                 align-items: center;
             }
             .logo img {
-                max-height: 3rem;
-                width: auto;
+                height: 2rem;
+                width: 2rem;
                 border-radius: 1rem;
             }
             .warning {
@@ -199,9 +199,11 @@ export class TVRemoteCard extends LitElement {
                     ${this.renderButton("volume", "volume_up", "mdi:volume-plus")}
                 </div>
                 <div class="row">
+                    ${this.renderButton("navigate", "remote", "mdi:remote-tv")}
                     <div class="logo">
                         <img src="${rokuLogo}" />
                     </div>
+                    ${this.renderButton("navigate", "apps", "mdi:apps-box")}
                 </div>
             </div>
         `;
@@ -231,6 +233,8 @@ export class TVRemoteCard extends LitElement {
             this.handleVolume(button);
         } else if (category === "command") {
             this.handleCommand(button);
+        } else if (category === "navigate") {
+            this.handleNavigate(button);
         }
     }
 
@@ -274,4 +278,6 @@ export class TVRemoteCard extends LitElement {
     private handleCommand(button: string): void {
         callService(this.hass!, "remote", "send_command", { entity_id: this.entities.remote, command: button });
     }
+
+    private handleNavigate(button: string): void {}
 }
