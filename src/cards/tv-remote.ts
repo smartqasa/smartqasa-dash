@@ -164,6 +164,7 @@ export class TVRemoteCard extends LitElement {
             `;
         }
 
+        console.log("Mode: ", this.mode);
         switch (this.mode) {
             case "remote":
                 return html`
@@ -301,7 +302,7 @@ export class TVRemoteCard extends LitElement {
     }
 
     private handleNavigate(button: string): void {
-        if (button === "remote") {
+        if (button === "app_select") {
             this.mode = "app_select";
         } else {
             this.mode = "remote";

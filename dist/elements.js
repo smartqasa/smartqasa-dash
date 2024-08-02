@@ -217,6 +217,7 @@ let TVRemoteCard = class TVRemoteCard extends s {
                 </ha-card>
             `;
         }
+        console.log("Mode: ", this.mode);
         switch (this.mode) {
             case "remote":
                 return x `
@@ -350,7 +351,7 @@ let TVRemoteCard = class TVRemoteCard extends s {
         callService(this.hass, "remote", "send_command", { entity_id: this.entities.remote, command: button });
     }
     handleNavigate(button) {
-        if (button === "remote") {
+        if (button === "app_select") {
             this.mode = "app_select";
         }
         else {
