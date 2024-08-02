@@ -162,12 +162,13 @@ let TVRemoteCard = class TVRemoteCard extends s {
             ? this.config.video_entity
             : this.hass.states[`media_player.${entityBase}`]
                 ? `media_player.${entityBase}`
-                : this.entity;
+                : undefined;
         this.entities.audio = this.config.audio_entity
             ? this.config.audio_entity
             : this.hass.states[`media_player.${entityBase}_speakers`]
                 ? `media_player.${entityBase}_speakers`
-                : this.entities.video;
+                : undefined;
+        console.log("Audio entity: ", this.entities.audio);
     }
     render() {
         if (!this.hass || !this.config || !this.entity || !this.entities.remote) {
@@ -246,8 +247,8 @@ let TVRemoteCard = class TVRemoteCard extends s {
         }
     }
     handlePower() {
-        if (this.config?.power === "video" && this.entities.video) {
-            const entity = this.entities.video;
+        const entity = this.entities.video || undefined;
+        if (entity) {
             const state = this.hass.states[entity].state;
             const action = state === "on" ? "turn_off" : "turn_on";
             callService(this.hass, "media_player", action, { entity_id: entity });
@@ -256,13 +257,7 @@ let TVRemoteCard = class TVRemoteCard extends s {
         callService(this.hass, "remote", "send_command", { entity_id: this.entities.remote, command: "power" });
     }
     handleVolume(button) {
-        let entity;
-        if (this.config?.volume === "audio" && this.entities.audio) {
-            entity = this.entities.audio;
-        }
-        else if (this.config?.volume === "video" && this.entities.video) {
-            entity = this.entities.video;
-        }
+        const entity = this.entities.audio || undefined;
         if (entity) {
             const isMuted = this.hass.states[entity].attributes.is_volume_muted;
             if (button === "volume_mute") {
