@@ -101,10 +101,12 @@ let TVRemoteCard = class TVRemoteCard extends s {
         return i$5 `
             .container {
                 padding: 1rem;
+                border: var(--sq-card-border, none);
+                border-radius: var(--sq-card-border-radius, 1.5rem);
             }
             .row {
                 display: flex;
-                margin: 2rem;
+                margin: 1.5rem;
                 justify-content: space-evenly;
                 align-items: center;
             }
@@ -123,7 +125,7 @@ let TVRemoteCard = class TVRemoteCard extends s {
                 align-self: center;
                 padding: 1rem;
                 border: var(--sq-card-border, none);
-                border-radius: 20%;
+                border-radius: 1rem;
                 background-color: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
                 cursor: pointer;
             }
@@ -6267,7 +6269,7 @@ const tileBaseStyle = i$5 `
         display: grid;
         height: 5.2rem;
         border: var(--sq-card-border, none);
-        border-radius: 1.5rem;
+        border-radius: var(--sq-card-border-radius, 1.5rem);
         grid-template-areas: "i n";
         grid-template-columns: auto 1fr;
         grid-column-gap: 1rem;
