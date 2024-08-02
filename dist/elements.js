@@ -104,12 +104,12 @@ let TVRemoteCard = class TVRemoteCard extends s {
             }
             .row {
                 display: flex;
-                margin: 1rem 3rem 1rem 3rem;
+                margin: 1.5rem 2.5rem 1.5rem 2.5rem;
                 justify-content: space-evenly;
                 align-items: center;
             }
             .name {
-                padding: 1rem;
+                padding: 2rem;
                 text-align: center;
                 overflow: hidden;
                 text-overflow: ellipsis;
@@ -131,6 +131,7 @@ let TVRemoteCard = class TVRemoteCard extends s {
                 --mdc-icon-size: 2rem;
             }
             .logo img {
+                border-radius: 20%;
                 max-height: 3rem;
                 width: auto;
             }
