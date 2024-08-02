@@ -102,7 +102,8 @@ export class TVRemoteCard extends LitElement {
     protected shouldUpdate(changedProps: PropertyValues): boolean {
         return !!(
             (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj) ||
-            (changedProps.has("config") && this.config)
+            (changedProps.has("config") && this.config) ||
+            (changedProps.has("mode") && this.mode)
         );
     }
 
@@ -164,7 +165,6 @@ export class TVRemoteCard extends LitElement {
             `;
         }
 
-        console.log("Mode: ", this.mode);
         switch (this.mode) {
             case "remote":
                 return html`
@@ -247,8 +247,6 @@ export class TVRemoteCard extends LitElement {
         const category = target.dataset.category!;
         const button = target.dataset.button!;
 
-        console.log(`Button pressed: ${category} - ${button}`);
-
         if (category === "power") {
             this.handlePower();
         } else if (category === "volume") {
@@ -307,7 +305,5 @@ export class TVRemoteCard extends LitElement {
         } else {
             this.mode = "remote";
         }
-        console.log(`Mode changed to: ${this.mode}`);
-        this.requestUpdate();
     }
 }

@@ -163,7 +163,8 @@ let TVRemoteCard = class TVRemoteCard extends s {
     }
     shouldUpdate(changedProps) {
         return !!((changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj) ||
-            (changedProps.has("config") && this.config));
+            (changedProps.has("config") && this.config) ||
+            (changedProps.has("mode") && this.mode));
     }
     updated(changedProps) {
         if (changedProps.has("hass") || changedProps.has("config")) {
@@ -217,7 +218,6 @@ let TVRemoteCard = class TVRemoteCard extends s {
                 </ha-card>
             `;
         }
-        console.log("Mode: ", this.mode);
         switch (this.mode) {
             case "remote":
                 return x `
@@ -296,7 +296,6 @@ let TVRemoteCard = class TVRemoteCard extends s {
         const target = e.currentTarget;
         const category = target.dataset.category;
         const button = target.dataset.button;
-        console.log(`Button pressed: ${category} - ${button}`);
         if (category === "power") {
             this.handlePower();
         }
@@ -357,8 +356,6 @@ let TVRemoteCard = class TVRemoteCard extends s {
         else {
             this.mode = "remote";
         }
-        console.log(`Mode changed to: ${this.mode}`);
-        this.requestUpdate();
     }
 };
 __decorate([
