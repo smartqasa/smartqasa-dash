@@ -100,6 +100,7 @@ let TVRemoteCard = class TVRemoteCard extends s {
     static get styles() {
         return i$5 `
             .container {
+                width: fit-content;
                 padding: 1rem;
                 border: var(--sq-card-border, none);
                 border-radius: var(--sq-card-border-radius, 1.5rem);
@@ -174,18 +175,33 @@ let TVRemoteCard = class TVRemoteCard extends s {
             ? this.config.remote_entity
             : `remote.${this.entity.split(".")[1]}`;
         const entityBase = this.entity.split(".")[1].replace(/_roku$/, "");
-        this.entities.video = this.config.video_entity
-            ? this.config.video_entity
-            : this.hass.states[`media_player.${entityBase}`]
-                ? `media_player.${entityBase}`
-                : undefined;
-        this.entities.audio = this.config.audio_entity
-            ? this.config.audio_entity
-            : this.hass.states[`media_player.${entityBase}_speakers`]
-                ? `media_player.${entityBase}_speakers`
-                : this.hass.states[`media_player.${entityBase}`]
-                    ? `media_player.${entityBase}`
-                    : undefined;
+        const findAudioEntity = () => {
+            if (this.config?.audio_entity)
+                return this.config.audio_entity;
+            const candidates = [
+                `media_player.${entityBase}_arc`,
+                `media_player.${entityBase}_beam`,
+                `media_player.${entityBase}_playbar`,
+                `media_player.${entityBase}_sound_bar`,
+                `media_player.${entityBase}_soundbar`,
+                `media_player.${entityBase}_tv`,
+                `media_player.${entityBase}_tv_speaker`,
+                `media_player.${entityBase}_tv_speakers`,
+            ];
+            return candidates.find((candidate) => this.hass?.states[candidate]) || undefined;
+        };
+        const findVideoEntity = () => {
+            if (this.config?.video_entity)
+                return this.config.video_entity;
+            const candidates = [
+                `media_player.${entityBase}_frame`,
+                `media_player.${entityBase}_frame_tv`,
+                `media_player.${entityBase}_tv`,
+            ];
+            return candidates.find((candidate) => this.hass?.states[candidate]) || undefined;
+        };
+        this.entities.audio = findAudioEntity();
+        this.entities.video = findVideoEntity();
         console.log("Audio entity: ", this.entities.audio);
     }
     render() {
@@ -269,9 +285,7 @@ let TVRemoteCard = class TVRemoteCard extends s {
     handlePower() {
         const entity = this.entities.video || undefined;
         if (entity) {
-            const state = this.hass.states[entity].state;
-            const action = state === "on" ? "turn_off" : "turn_on";
-            callService(this.hass, "media_player", action, { entity_id: entity });
+            callService(this.hass, "media_player", "toggle", { entity_id: entity });
             return;
         }
         callService(this.hass, "remote", "send_command", { entity_id: this.entities.remote, command: "power" });
