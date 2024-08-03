@@ -58,7 +58,7 @@ export class TVRemoteCard extends LitElement {
                 color: rgb(var(--sq-primary-font-rgb), 128, 128, 128);
             }
             .body {
-                height: 1fr;
+                height: 50rem;
             }
             .row {
                 display: flex;
@@ -221,14 +221,14 @@ export class TVRemoteCard extends LitElement {
                                 ${this.renderButton("volume", "volume_mute", "mdi:volume-mute")}
                                 ${this.renderButton("volume", "volume_up", "mdi:volume-plus")}
                             </div>
+                        </div>
 
-                            <div class="row">
-                                ${this.renderButton("navigate", "remote", "mdi:remote-tv")}
-                                <div class="logo">
-                                    <img src="${rokuLogo}" />
-                                </div>
-                                ${this.renderButton("navigate", "app_select", "mdi:apps-box")}
+                        <div class="row">
+                            ${this.renderButton("navigate", "remote", "mdi:remote-tv")}
+                            <div class="logo">
+                                <img src="${rokuLogo}" />
                             </div>
+                            ${this.renderButton("navigate", "app_select", "mdi:apps-box")}
                         </div>
                     </div>
                 `;
@@ -248,14 +248,14 @@ export class TVRemoteCard extends LitElement {
                                     `
                                 )}
                             </div>
+                        </div>
 
-                            <div class="row">
-                                ${this.renderButton("navigate", "remote", "mdi:remote-tv")}
-                                <div class="logo">
-                                    <img src="${rokuLogo}" />
-                                </div>
-                                ${this.renderButton("navigate", "apps", "mdi:apps-box")}
+                        <div class="row">
+                            ${this.renderButton("navigate", "remote", "mdi:remote-tv")}
+                            <div class="logo">
+                                <img src="${rokuLogo}" />
                             </div>
+                            ${this.renderButton("navigate", "apps", "mdi:apps-box")}
                         </div>
                     </div>
                 `;

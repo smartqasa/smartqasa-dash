@@ -122,7 +122,7 @@ let TVRemoteCard = class TVRemoteCard extends s {
                 color: rgb(var(--sq-primary-font-rgb), 128, 128, 128);
             }
             .body {
-                height: 1fr;
+                height: 50rem;
             }
             .row {
                 display: flex;
@@ -274,14 +274,14 @@ let TVRemoteCard = class TVRemoteCard extends s {
                                 ${this.renderButton("volume", "volume_mute", "mdi:volume-mute")}
                                 ${this.renderButton("volume", "volume_up", "mdi:volume-plus")}
                             </div>
+                        </div>
 
-                            <div class="row">
-                                ${this.renderButton("navigate", "remote", "mdi:remote-tv")}
-                                <div class="logo">
-                                    <img src="${img$P}" />
-                                </div>
-                                ${this.renderButton("navigate", "app_select", "mdi:apps-box")}
+                        <div class="row">
+                            ${this.renderButton("navigate", "remote", "mdi:remote-tv")}
+                            <div class="logo">
+                                <img src="${img$P}" />
                             </div>
+                            ${this.renderButton("navigate", "app_select", "mdi:apps-box")}
                         </div>
                     </div>
                 `;
@@ -298,14 +298,14 @@ let TVRemoteCard = class TVRemoteCard extends s {
                                         <div class="app" @click=${() => this.selectApp(app)}>${app}</div>
                                     `)}
                             </div>
+                        </div>
 
-                            <div class="row">
-                                ${this.renderButton("navigate", "remote", "mdi:remote-tv")}
-                                <div class="logo">
-                                    <img src="${img$P}" />
-                                </div>
-                                ${this.renderButton("navigate", "apps", "mdi:apps-box")}
+                        <div class="row">
+                            ${this.renderButton("navigate", "remote", "mdi:remote-tv")}
+                            <div class="logo">
+                                <img src="${img$P}" />
                             </div>
+                            ${this.renderButton("navigate", "apps", "mdi:apps-box")}
                         </div>
                     </div>
                 `;
