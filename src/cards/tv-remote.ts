@@ -37,8 +37,10 @@ export class TVRemoteCard extends LitElement {
     static get styles(): CSSResult {
         return css`
             .container {
+                height: 100%;
                 width: 22rem;
                 margin: 1rem;
+                padding: 1rem;
                 border: var(--sq-card-border, none);
                 border-radius: var(--sq-card-border-radius, 1.5rem);
             }
@@ -58,7 +60,8 @@ export class TVRemoteCard extends LitElement {
                 color: rgb(var(--sq-primary-font-rgb), 128, 128, 128);
             }
             .body {
-                height: 50rem;
+                height: 1fr;
+                overflow-y: auto;
             }
             .row {
                 display: flex;
