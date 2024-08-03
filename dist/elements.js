@@ -126,6 +126,11 @@ let TVRemoteCard = class TVRemoteCard extends s {
             .body {
                 height: 1fr;
                 overflow-y: auto;
+                -ms-overflow-style: none; /* Internet Explorer 10+ */
+                scrollbar-width: none; /* Firefox */
+            }
+            .body::-webkit-scrollbar {
+                display: none; /* Safari and Chrome */
             }
             .row {
                 display: flex;
