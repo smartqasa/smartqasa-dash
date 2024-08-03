@@ -101,14 +101,12 @@ let TVRemoteCard = class TVRemoteCard extends s {
     static get styles() {
         return i$5 `
             .container {
-                height: 100%;
+                display: flex;
                 width: 22rem;
                 margin: 1rem;
                 padding: 1rem;
                 border: var(--sq-card-border, none);
                 border-radius: var(--sq-card-border-radius, 1.5rem);
-                display: flex;
-                flex-direction: column;
             }
             .warning {
                 display: block;
@@ -126,9 +124,9 @@ let TVRemoteCard = class TVRemoteCard extends s {
                 color: rgb(var(--sq-primary-font-rgb), 128, 128, 128);
             }
             .body {
-                flex: 1;
+                display: flex;
+                height: 45rem;
                 overflow-y: auto;
-                -ms-overflow-style: none; /* Internet Explorer 10+ */
                 scrollbar-width: none; /* Firefox */
             }
             .body::-webkit-scrollbar {
