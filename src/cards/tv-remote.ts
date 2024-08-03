@@ -43,6 +43,8 @@ export class TVRemoteCard extends LitElement {
                 padding: 1rem;
                 border: var(--sq-card-border, none);
                 border-radius: var(--sq-card-border-radius, 1.5rem);
+                display: flex;
+                flex-direction: column;
             }
             .warning {
                 display: block;
@@ -60,7 +62,7 @@ export class TVRemoteCard extends LitElement {
                 color: rgb(var(--sq-primary-font-rgb), 128, 128, 128);
             }
             .body {
-                height: 1fr;
+                flex: 1;
                 overflow-y: auto;
                 -ms-overflow-style: none; /* Internet Explorer 10+ */
                 scrollbar-width: none; /* Firefox */
@@ -74,7 +76,6 @@ export class TVRemoteCard extends LitElement {
                 justify-content: center;
                 align-items: center;
             }
-
             .icon {
                 display: flex;
                 justify-content: center;
