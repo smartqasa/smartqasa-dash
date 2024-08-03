@@ -62,7 +62,7 @@ export class TVRemoteCard extends LitElement {
                 color: rgb(var(--sq-primary-font-rgb), 128, 128, 128);
             }
             .body {
-                flex: 1; /* Ensure the body expands to fill available space */
+                height: 45rem;
                 overflow-y: auto;
                 -ms-overflow-style: none; /* Hide scrollbar for Internet Explorer 10+ */
                 scrollbar-width: none; /* Hide scrollbar for Firefox */
