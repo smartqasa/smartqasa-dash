@@ -42,11 +42,11 @@ export class TVRemoteCard extends LitElement {
                 border: var(--sq-card-border, none);
                 border-radius: var(--sq-card-border-radius, 1.5rem);
             }
-            .row {
-                display: flex;
-                margin: 1.5rem;
-                justify-content: center;
-                align-items: center;
+            .warning {
+                display: block;
+                color: black;
+                background-color: #fce588;
+                padding: 8px;
             }
             .name {
                 padding: 1rem;
@@ -57,6 +57,16 @@ export class TVRemoteCard extends LitElement {
                 font-size: var(--sq-primary-font-size, 1.5rem);
                 color: rgb(var(--sq-primary-font-rgb), 128, 128, 128);
             }
+            .body {
+                height: 1fr;
+            }
+            .row {
+                display: flex;
+                margin: 1.5rem;
+                justify-content: center;
+                align-items: center;
+            }
+
             .icon {
                 display: flex;
                 justify-content: center;
@@ -95,12 +105,6 @@ export class TVRemoteCard extends LitElement {
                 height: 4rem;
                 width: 4rem;
                 border-radius: 1rem;
-            }
-            .warning {
-                display: block;
-                color: black;
-                background-color: #fce588;
-                padding: 8px;
             }
         `;
     }
@@ -187,42 +191,44 @@ export class TVRemoteCard extends LitElement {
                             ${this.config.name || this.stateObj.attributes.friendly_name || "TV Remote"}
                         </div>
 
-                        <div class="row">${this.renderButton("power", "power", "mdi:power")}</div>
+                        <div class="body">
+                            <div class="row">${this.renderButton("power", "power", "mdi:power")}</div>
 
-                        <div class="row">
-                            ${this.renderButton("command", "back", "mdi:arrow-left")}
-                            ${this.renderButton("command", "info", "mdi:asterisk")}
-                            ${this.renderButton("command", "home", "mdi:home")}
-                        </div>
-
-                        <div class="row">${this.renderButton("command", "up", "mdi:chevron-up")}</div>
-
-                        <div class="row">
-                            ${this.renderButton("command", "left", "mdi:chevron-left")}
-                            ${this.renderButton("command", "select", "mdi:checkbox-blank-circle")}
-                            ${this.renderButton("command", "right", "mdi:chevron-right")}
-                        </div>
-
-                        <div class="row">${this.renderButton("command", "down", "mdi:chevron-down")}</div>
-
-                        <div class="row">
-                            ${this.renderButton("command", "reverse", "mdi:rewind")}
-                            ${this.renderButton("command", "play", "mdi:play-pause")}
-                            ${this.renderButton("command", "forward", "mdi:fast-forward")}
-                        </div>
-
-                        <div class="row">
-                            ${this.renderButton("volume", "volume_down", "mdi:volume-minus")}
-                            ${this.renderButton("volume", "volume_mute", "mdi:volume-mute")}
-                            ${this.renderButton("volume", "volume_up", "mdi:volume-plus")}
-                        </div>
-
-                        <div class="row">
-                            ${this.renderButton("navigate", "remote", "mdi:remote-tv")}
-                            <div class="logo">
-                                <img src="${rokuLogo}" />
+                            <div class="row">
+                                ${this.renderButton("command", "back", "mdi:arrow-left")}
+                                ${this.renderButton("command", "info", "mdi:asterisk")}
+                                ${this.renderButton("command", "home", "mdi:home")}
                             </div>
-                            ${this.renderButton("navigate", "app_select", "mdi:apps-box")}
+
+                            <div class="row">${this.renderButton("command", "up", "mdi:chevron-up")}</div>
+
+                            <div class="row">
+                                ${this.renderButton("command", "left", "mdi:chevron-left")}
+                                ${this.renderButton("command", "select", "mdi:checkbox-blank-circle")}
+                                ${this.renderButton("command", "right", "mdi:chevron-right")}
+                            </div>
+
+                            <div class="row">${this.renderButton("command", "down", "mdi:chevron-down")}</div>
+
+                            <div class="row">
+                                ${this.renderButton("command", "reverse", "mdi:rewind")}
+                                ${this.renderButton("command", "play", "mdi:play-pause")}
+                                ${this.renderButton("command", "forward", "mdi:fast-forward")}
+                            </div>
+
+                            <div class="row">
+                                ${this.renderButton("volume", "volume_down", "mdi:volume-minus")}
+                                ${this.renderButton("volume", "volume_mute", "mdi:volume-mute")}
+                                ${this.renderButton("volume", "volume_up", "mdi:volume-plus")}
+                            </div>
+
+                            <div class="row">
+                                ${this.renderButton("navigate", "remote", "mdi:remote-tv")}
+                                <div class="logo">
+                                    <img src="${rokuLogo}" />
+                                </div>
+                                ${this.renderButton("navigate", "app_select", "mdi:apps-box")}
+                            </div>
                         </div>
                     </div>
                 `;
@@ -234,20 +240,22 @@ export class TVRemoteCard extends LitElement {
                             ${this.config.name || this.stateObj.attributes.friendly_name || "TV Remote"}
                         </div>
 
-                        <div class="app-list">
-                            ${this.stateObj.attributes.source_list.map(
-                                (app: string) => html`
-                                    <div class="app" @click=${() => this.selectApp(app)}>${app}</div>
-                                `
-                            )}
-                        </div>
-
-                        <div class="row">
-                            ${this.renderButton("navigate", "remote", "mdi:remote-tv")}
-                            <div class="logo">
-                                <img src="${rokuLogo}" />
+                        <div class="body">
+                            <div class="app-list">
+                                ${this.stateObj.attributes.source_list.map(
+                                    (app: string) => html`
+                                        <div class="app" @click=${() => this.selectApp(app)}>${app}</div>
+                                    `
+                                )}
                             </div>
-                            ${this.renderButton("navigate", "apps", "mdi:apps-box")}
+
+                            <div class="row">
+                                ${this.renderButton("navigate", "remote", "mdi:remote-tv")}
+                                <div class="logo">
+                                    <img src="${rokuLogo}" />
+                                </div>
+                                ${this.renderButton("navigate", "apps", "mdi:apps-box")}
+                            </div>
                         </div>
                     </div>
                 `;
