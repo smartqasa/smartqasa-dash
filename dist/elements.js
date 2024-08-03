@@ -391,12 +391,7 @@ let TVRemoteCard = class TVRemoteCard extends s {
         callService(this.hass, "remote", "send_command", { entity_id: this.entities.remote, command: button });
     }
     handleNavigate(button) {
-        if (button === "app_select") {
-            this.mode = "app_select";
-        }
-        else {
-            this.mode = "remote";
-        }
+        this.mode = button;
     }
     selectApp(app) {
         if (!this.hass || !this.entity)

@@ -342,11 +342,7 @@ export class TVRemoteCard extends LitElement {
     }
 
     private handleNavigate(button: string): void {
-        if (button === "app_select") {
-            this.mode = "app_select";
-        } else {
-            this.mode = "remote";
-        }
+        this.mode = button;
     }
 
     private selectApp(app: string): void {
