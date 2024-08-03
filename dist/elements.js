@@ -235,6 +235,7 @@ let TVRemoteCard = class TVRemoteCard extends s {
         this.entities.video = findVideoEntity();
     }
     render() {
+        console.log("Render - Mode", this.mode);
         if (!this.hass || !this.config || !this.entity || !this.entities.remote) {
             return x ``;
         }
@@ -392,6 +393,7 @@ let TVRemoteCard = class TVRemoteCard extends s {
     }
     handleNavigate(button) {
         this.mode = button;
+        console.log("Mode:", this.mode);
     }
     selectApp(app) {
         if (!this.hass || !this.entity)

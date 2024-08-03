@@ -5,6 +5,7 @@ import { HomeAssistant, LovelaceCardConfig } from "../types";
 import { callService } from "../utils/call-service";
 
 import rokuLogo from "../assets/tv-remote/logos/roku.webp";
+import { Console } from "console";
 
 interface Config extends LovelaceCardConfig {
     entity: string;
@@ -180,6 +181,8 @@ export class TVRemoteCard extends LitElement {
     }
 
     protected render(): TemplateResult | void {
+        console.log("Render - Mode", this.mode);
+
         if (!this.hass || !this.config || !this.entity || !this.entities.remote) {
             return html``;
         }
@@ -343,6 +346,7 @@ export class TVRemoteCard extends LitElement {
 
     private handleNavigate(button: string): void {
         this.mode = button;
+        console.log("Mode:", this.mode);
     }
 
     private selectApp(app: string): void {
