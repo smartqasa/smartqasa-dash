@@ -5951,6 +5951,7 @@ async function entertainDialog(config, hass) {
             cards: cards,
         },
     };
+    window.smartqasa.viewMode = "entertain";
     window.browser_mod?.service("popup", dialogConfig);
 }
 
@@ -6193,6 +6194,7 @@ let PanelFooter = class PanelFooter extends s {
     }
     handleHome() {
         const basePath = window.smartqasa.homePath;
+        window.smartqasa.viewMode = "area";
         const path = location.href.endsWith("/" + basePath) ? "home" : basePath;
         window.history.pushState(null, "", `/home-dash/${path}`);
         window.dispatchEvent(new CustomEvent("location-changed"));
@@ -7127,6 +7129,7 @@ let AreaTile = class AreaTile extends s {
         if (!this.areaObj)
             return;
         this.running = true;
+        window.smartqasa.viewMode = "area";
         window.history.pushState(null, "", `/home-dash/${this.area}`);
         window.dispatchEvent(new CustomEvent("location-changed"));
         setTimeout(() => {

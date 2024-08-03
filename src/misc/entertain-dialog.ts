@@ -135,5 +135,6 @@ export async function entertainDialog(config: any, hass: any): Promise<void> {
         },
     };
 
+    window.smartqasa.viewMode = "entertain";
     window.browser_mod?.service("popup", dialogConfig);
 }

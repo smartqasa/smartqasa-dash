@@ -93,7 +93,7 @@ export class AreaTile extends LitElement {
         if (!this.areaObj) return;
 
         this.running = true;
-
+        window.smartqasa.viewMode = "area";
         window.history.pushState(null, "", `/home-dash/${this.area}`);
         window.dispatchEvent(new CustomEvent("location-changed"));
 

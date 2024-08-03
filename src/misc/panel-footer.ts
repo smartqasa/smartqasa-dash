@@ -101,6 +101,7 @@ class PanelFooter extends LitElement implements ActionHandlers {
 
     handleHome(): void {
         const basePath = window.smartqasa.homePath;
+        window.smartqasa.viewMode = "area";
         const path = location.href.endsWith("/" + basePath) ? "home" : basePath;
         window.history.pushState(null, "", `/home-dash/${path}`);
         window.dispatchEvent(new CustomEvent("location-changed"));

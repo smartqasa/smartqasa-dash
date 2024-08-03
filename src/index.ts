@@ -10,6 +10,7 @@ declare global {
         smartqasa: {
             homePath?: string;
             menuConfig?: any;
+            viewMode: "area" | "entertain";
         };
     }
 }
