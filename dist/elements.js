@@ -144,7 +144,7 @@ let TVRemoteCard = class TVRemoteCard extends s {
                 display: flex;
                 justify-content: center;
                 align-self: center;
-                margin: 0 1rem 0 1rem;
+                margin: 0 0.8rem 0 0.8rem;
                 padding: 1rem;
                 border: var(--sq-card-border, none);
                 border-radius: 1rem;
@@ -171,7 +171,7 @@ let TVRemoteCard = class TVRemoteCard extends s {
             }
             .logo {
                 display: flex;
-                margin: 0 1rem 0 1rem;
+                margin: 0 0.8rem 0 0.8rem;
                 justify-content: center;
                 align-items: center;
             }

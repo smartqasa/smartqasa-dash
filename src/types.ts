@@ -157,10 +157,14 @@ export interface HassArea {
     picture: string;
 }
 
-type LovelaceLayoutOptions = {
-    grid_columns?: number;
-    grid_rows?: number;
-};
+export interface LovelaceCard extends HTMLElement {
+    hass?: HomeAssistant;
+    preview?: boolean;
+    layout?: string;
+    getCardSize(): number | Promise<number>;
+    getLayoutOptions?(): LovelaceLayoutOptions;
+    setConfig(config: LovelaceCardConfig): void;
+}
 
 export interface LovelaceCardConfig {
     index?: number;
@@ -170,6 +174,11 @@ export interface LovelaceCardConfig {
     type: string;
     [key: string]: any;
 }
+
+type LovelaceLayoutOptions = {
+    grid_columns?: number;
+    grid_rows?: number;
+};
 
 export interface DialogConfig {
     title: string;
