@@ -60,7 +60,7 @@ class SmartQasaVerticalStack extends LitElement {
     }
 
     set hass(hass: HomeAssistant) {
-        this.hass = hass;
+        this._hass = hass;
         this._cards.forEach((card) => {
             card.hass = hass;
         });

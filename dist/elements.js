@@ -119,7 +119,7 @@ let SmartQasaVerticalStack = class SmartQasaVerticalStack extends h {
         return ke ` <div class="container">${this._cards.map((card) => ke `<div>${card}</div>`)}</div> `;
     }
     set hass(hass) {
-        this.hass = hass;
+        this._hass = hass;
         this._cards.forEach((card) => {
             card.hass = hass;
         });
