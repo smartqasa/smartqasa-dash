@@ -74,7 +74,7 @@ const t$1=t=>(e,o)=>{void 0!==o?o.addInitializer((()=>{customElements.define(t,e
 
 const createCardElement = (config) => {
     try {
-        const tag = computeCardComponentName(config.type);
+        const tag = config.type;
         if (customElements.get(tag)) {
             const element = document.createElement(tag);
             element.setConfig(config);
@@ -87,19 +87,16 @@ const createCardElement = (config) => {
                 element.setConfig(config);
             }
             catch (err) {
-                // Do nothing
+                console.error("Error setting config for element:", err);
             }
         });
         return element;
     }
     catch (err) {
-        console.error(err);
+        console.error("Error creating card element:", err);
         return undefined;
     }
 };
-function computeCardComponentName(type) {
-    return `hui-${type}-card`;
-}
 
 let SmartQasaVerticalStack = class SmartQasaVerticalStack extends h {
     constructor() {

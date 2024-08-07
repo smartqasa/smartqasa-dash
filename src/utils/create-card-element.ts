@@ -2,7 +2,7 @@ import { LovelaceCard, LovelaceCardConfig } from "../types";
 
 export const createCardElement = (config: LovelaceCardConfig): LovelaceCard | undefined => {
     try {
-        const tag = computeCardComponentName(config.type);
+        const tag = config.type;
         if (customElements.get(tag)) {
             const element = document.createElement(tag) as LovelaceCard;
             element.setConfig(config);
@@ -14,16 +14,12 @@ export const createCardElement = (config: LovelaceCardConfig): LovelaceCard | un
                 customElements.upgrade(element);
                 element.setConfig(config);
             } catch (err) {
-                // Do nothing
+                console.error("Error setting config for element:", err);
             }
         });
         return element;
     } catch (err) {
-        console.error(err);
+        console.error("Error creating card element:", err);
         return undefined;
     }
 };
-
-export function computeCardComponentName(type: string): string {
-    return `hui-${type}-card`;
-}
