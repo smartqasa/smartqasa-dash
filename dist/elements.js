@@ -98,6 +98,12 @@ const createCardElement = (config) => {
     }
 };
 
+window.customCards.push({
+    type: "smartqasa-vertical-stack",
+    name: "SmartQasa Vertical Stack",
+    preview: false,
+    description: "A custom stack card that displays other cards.",
+});
 let SmartQasaVerticalStack = class SmartQasaVerticalStack extends h {
     constructor() {
         super(...arguments);
@@ -113,6 +119,7 @@ let SmartQasaVerticalStack = class SmartQasaVerticalStack extends h {
         `;
     }
     setConfig(config) {
+        console.log("Setting config for SmartQasaVerticalStack:", config);
         if (!config.cards || !Array.isArray(config.cards)) {
             throw new Error("You need to define 'cards'");
         }
@@ -121,16 +128,32 @@ let SmartQasaVerticalStack = class SmartQasaVerticalStack extends h {
     }
     _createCards() {
         if (!this._hass || !this.config) {
+            console.warn("hass or config not available for creating cards.");
             return;
         }
-        this._cards = this.config.cards.map((cardConfig) => this._createCardElement(cardConfig));
+        // Create each card element based on the configuration
+        this._cards = this.config.cards.map((cardConfig, index) => {
+            console.log(`Creating card element ${index} for config:`, cardConfig);
+            return this._createCardElement(cardConfig);
+        });
+        console.log("Created cards:", this._cards);
     }
     _createCardElement(cardConfig) {
-        const element = createCardElement(cardConfig);
-        if (element) {
-            element.hass = this._hass;
+        try {
+            const element = createCardElement(cardConfig);
+            if (element) {
+                element.hass = this._hass;
+                console.log("Created element:", element);
+            }
+            else {
+                console.error("Failed to create element for config:", cardConfig);
+            }
+            return element;
         }
-        return element;
+        catch (error) {
+            console.error("Error creating card element:", error);
+            return undefined;
+        }
     }
     firstUpdated() {
         if (this.config) {
@@ -138,6 +161,7 @@ let SmartQasaVerticalStack = class SmartQasaVerticalStack extends h {
         }
     }
     render() {
+        console.log("Rendering stack with cards:", this._cards);
         return ke ` <div class="container">${this._cards.map((card) => ke `<div>${card}</div>`)}</div> `;
     }
     set hass(hass) {
@@ -160,13 +184,6 @@ __decorate([
 SmartQasaVerticalStack = __decorate([
     t$1("smartqasa-vertical-stack")
 ], SmartQasaVerticalStack);
-window.customCards = window.customCards || [];
-window.customCards.push({
-    type: "smartqasa-vertical-stack",
-    name: "SmartQasa Vertical Stack",
-    preview: false,
-    description: "A custom stack card that displays other cards.",
-});
 
 const callService = async (hass, domain, service, serviceData) => {
     try {

@@ -6,6 +6,7 @@ export const createCardElement = (config: LovelaceCardConfig): LovelaceCard | un
         if (customElements.get(tag)) {
             const element = document.createElement(tag) as LovelaceCard;
             element.setConfig(config);
+
             return element;
         }
         const element = document.createElement(tag) as LovelaceCard;

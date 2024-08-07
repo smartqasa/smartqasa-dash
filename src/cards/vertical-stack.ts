@@ -1,11 +1,18 @@
 import { LitElement, html, css } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { HomeAssistant, LovelaceCardConfig, LovelaceCard } from "../types";
-import { createCardElement } from "../utils/create-card-element";
+import { createCardElement } from "../utils/create-card-element"; // Adjust the import path as needed
 
 interface SmartQasaVerticalStackConfig extends LovelaceCardConfig {
     cards: LovelaceCardConfig[];
 }
+
+(window as any).customCards.push({
+    type: "smartqasa-vertical-stack",
+    name: "SmartQasa Vertical Stack",
+    preview: false,
+    description: "A custom stack card that displays other cards.",
+});
 
 @customElement("smartqasa-vertical-stack")
 class SmartQasaVerticalStack extends LitElement {
@@ -24,6 +31,7 @@ class SmartQasaVerticalStack extends LitElement {
     }
 
     public setConfig(config: SmartQasaVerticalStackConfig): void {
+        console.log("Setting config for SmartQasaVerticalStack:", config);
         if (!config.cards || !Array.isArray(config.cards)) {
             throw new Error("You need to define 'cards'");
         }
@@ -34,18 +42,33 @@ class SmartQasaVerticalStack extends LitElement {
 
     private _createCards() {
         if (!this._hass || !this.config) {
+            console.warn("hass or config not available for creating cards.");
             return;
         }
 
-        this._cards = this.config.cards.map((cardConfig) => this._createCardElement(cardConfig));
+        // Create each card element based on the configuration
+        this._cards = this.config.cards.map((cardConfig, index) => {
+            console.log(`Creating card element ${index} for config:`, cardConfig);
+            return this._createCardElement(cardConfig);
+        });
+
+        console.log("Created cards:", this._cards);
     }
 
     private _createCardElement(cardConfig: LovelaceCardConfig): LovelaceCard {
-        const element = createCardElement(cardConfig) as LovelaceCard;
-        if (element) {
-            element.hass = this._hass;
+        try {
+            const element = createCardElement(cardConfig) as LovelaceCard;
+            if (element) {
+                element.hass = this._hass;
+                console.log("Created element:", element);
+            } else {
+                console.error("Failed to create element for config:", cardConfig);
+            }
+            return element;
+        } catch (error) {
+            console.error("Error creating card element:", error);
+            return undefined as unknown as LovelaceCard;
         }
-        return element;
     }
 
     protected firstUpdated() {
@@ -55,6 +78,7 @@ class SmartQasaVerticalStack extends LitElement {
     }
 
     protected render() {
+        console.log("Rendering stack with cards:", this._cards);
         return html` <div class="container">${this._cards.map((card) => html`<div>${card}</div>`)}</div> `;
     }
 
@@ -70,11 +94,3 @@ class SmartQasaVerticalStack extends LitElement {
         return this._hass!;
     }
 }
-
-(window as any).customCards = (window as any).customCards || [];
-(window as any).customCards.push({
-    type: "smartqasa-vertical-stack",
-    name: "SmartQasa Vertical Stack",
-    preview: false,
-    description: "A custom stack card that displays other cards.",
-});
