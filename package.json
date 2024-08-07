@@ -17,7 +17,7 @@
         "@babel/core": "^7.24.4",
         "@babel/preset-env": "^7.24.4",
         "@rollup/plugin-babel": "^6.0.4",
-        "@rollup/plugin-commonjs": "^25.0.7",
+        "@rollup/plugin-commonjs": "^25.0.8",
         "@rollup/plugin-image": "^3.0.3",
         "@rollup/plugin-json": "^6.1.0",
         "@rollup/plugin-node-resolve": "^15.2.3",
@@ -27,7 +27,8 @@
         "@types/http-cache-semantics": "^4.0.4",
         "@types/js-yaml": "^4.0.9",
         "@types/node": "^20.14.14",
-        "rollup": "^4.14.3"
+        "rollup": "^4.20.0",
+        "typescript": "^5.5.4"
     },
     "dependencies": {
         "browser-resolve": "^2.0.0",

@@ -18,10 +18,15 @@ export default {
             exclude: "node_modules/**",
             babelHelpers: "bundled",
         }),
-        commonjs(),
+        commonjs({
+            include: "node_modules/**",
+        }),
         image(),
         json(),
-        resolve(),
+        resolve({
+            browser: true,
+            preferBuiltins: false,
+        }),
         typescript(),
         url({
             limit: 0,
@@ -30,4 +35,5 @@ export default {
             fileName: "[dirname][hash][extname]",
         }),
     ],
+    context: "window", // Set the context to window to avoid 'this' being undefined
 };
