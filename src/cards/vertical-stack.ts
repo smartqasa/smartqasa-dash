@@ -1,13 +1,12 @@
-import { LitElement, html, css, CSSResultGroup, nothing } from "lit";
-import { customElement, property, state } from "lit/decorators.js";
+import { LitElement, html, css } from "lit";
+import { customElement, property } from "lit/decorators.js";
 import { HomeAssistant, LovelaceCardConfig, LovelaceCard } from "../types";
-import { createCardElement } from "../utils/create-card-element";
+import { createThing } from "custom-card-helpers";
 
 interface SmartQasaVerticalStackConfig extends LovelaceCardConfig {
     cards: LovelaceCardConfig[];
 }
-
-(window as any).customCards.push({
+window.customCards.push({
     type: "smartqasa-vertical-stack",
     name: "SmartQasa Vertical Stack",
     preview: false,
@@ -15,89 +14,60 @@ interface SmartQasaVerticalStackConfig extends LovelaceCardConfig {
 });
 
 @customElement("smartqasa-vertical-stack")
-class SmartQasaVerticalStack extends LitElement implements LovelaceCard {
-    @property({ attribute: false }) public hass?: HomeAssistant;
-    @property({ type: Boolean }) public preview = false;
-    @state() protected _cards?: LovelaceCard[];
-    @state() protected _config?: SmartQasaVerticalStackConfig;
+class SmartQasaVerticalStack extends LitElement {
+    @property({ attribute: false }) private _hass?: HomeAssistant;
+    @property() private config?: SmartQasaVerticalStackConfig;
+    private _cards: LovelaceCard[] = [];
 
-    static get styles(): CSSResultGroup {
+    static get styles() {
         return css`
             .container {
                 display: flex;
                 flex-direction: column;
-                gap: var(--vertical-stack-card-gap, var(--stack-card-gap, 8px));
-            }
-            .card-header {
-                color: var(--ha-card-header-color, var(--primary-text-color));
-                text-align: var(--ha-stack-title-text-align, start);
-                font-family: var(--ha-card-header-font-family, inherit);
-                font-size: var(--ha-card-header-font-size, 24px);
-                font-weight: normal;
-                margin-block-start: 0px;
-                margin-block-end: 0px;
-                letter-spacing: -0.012em;
-                line-height: 32px;
-                display: block;
-                padding: 24px 16px 16px;
             }
         `;
     }
 
-    public getCardSize(): number | Promise<number> {
-        return 1;
-    }
-
     public setConfig(config: SmartQasaVerticalStackConfig): void {
-        if (!config || !config.cards || !Array.isArray(config.cards)) {
-            throw new Error("Invalid configuration");
+        if (!config.cards || !Array.isArray(config.cards)) {
+            throw new Error("You need to define 'cards'");
         }
-        this._config = config;
-        if (this.hass) {
-            this._createCards();
-        }
-    }
 
-    protected update(changedProperties: Map<string, any>) {
-        super.update(changedProperties);
-
-        if (this._cards) {
-            if (changedProperties.has("hass")) {
-                this._cards.forEach((card) => {
-                    card.hass = this.hass;
-                });
-            }
-            if (changedProperties.has("preview")) {
-                this._cards.forEach((card) => {
-                    card.preview = this.preview;
-                });
-            }
-        }
+        this.config = config;
+        this._createCards();
     }
 
     private _createCards() {
-        if (!this._config || !this.hass) return;
+        if (!this._hass || !this.config) {
+            return;
+        }
 
-        this._cards = this._config.cards.map((cardConfig) => {
-            const element = createCardElement(cardConfig) as LovelaceCard;
-            if (element) {
-                element.hass = this.hass;
-                element.preview = this.preview;
-            }
+        this._cards = this.config.cards.map((cardConfig) => {
+            const element = createThing(cardConfig) as LovelaceCard;
+            element.hass = this._hass;
             return element;
         });
     }
 
-    protected render() {
-        if (!this._config || !this._cards) {
-            return nothing;
+    protected firstUpdated() {
+        if (this.config) {
+            this._createCards();
         }
+    }
 
-        return html`
-            <div class="container">
-                ${this._config.title ? html`<h1 class="card-header">${this._config.title}</h1>` : ""}
-                <div id="root">${this._cards.map((card) => html`<div>${card}</div>`)}</div>
-            </div>
-        `;
+    protected render() {
+        return html` <div class="container">${this._cards.map((card) => html`<div>${card}</div>`)}</div> `;
+    }
+
+    set hass(hass: HomeAssistant) {
+        this.hass = hass;
+        this._cards.forEach((card) => {
+            card.hass = hass;
+        });
+        this.requestUpdate();
+    }
+
+    get hass(): HomeAssistant {
+        return this._hass!;
     }
 }
