@@ -41,7 +41,7 @@ export class LightTile extends LitElement {
         };
     }
 
-    @property({ attribute: false }) public hass?: HomeAssistant;
+    @property({ attribute: false }) public hass!: HomeAssistant;
     @state() private config?: Config;
     private entity?: string;
     private stateObj?: HassEntity;
@@ -55,7 +55,7 @@ export class LightTile extends LitElement {
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
         return !!(
-            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj) ||
+            (changedProps.has("hass") && this.entity && this.hass.states[this.entity] !== this.stateObj) ||
             (changedProps.has("config") && this.config)
         );
     }
@@ -81,9 +81,9 @@ export class LightTile extends LitElement {
     private updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
 
-        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
+        this.stateObj = this.entity ? this.hass.states[this.entity] : undefined;
 
-        if (this.config && this.hass && this.stateObj) {
+        if (this.config && this.stateObj) {
             const state = this.stateObj.state || "unknown";
             icon = this.config.icon || this.stateObj.attributes.icon || "hass:lightbulb";
             iconAnimation = "none";

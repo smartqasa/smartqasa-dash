@@ -28,7 +28,7 @@ export class FanTile extends LitElement {
         return 1;
     }
 
-    @property({ attribute: false }) public hass?: HomeAssistant;
+    @property({ attribute: false }) public hass!: HomeAssistant;
     @state() private config?: Config;
     private entity?: string;
     private stateObj?: HassEntity;

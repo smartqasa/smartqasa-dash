@@ -1,17 +1,10 @@
 import { LitElement, html, css } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { HomeAssistant, LovelaceCardConfig, LovelaceCard } from "../types";
-import { createThing } from "custom-card-helpers";
 
 interface SmartQasaVerticalStackConfig extends LovelaceCardConfig {
     cards: LovelaceCardConfig[];
 }
-window.customCards.push({
-    type: "smartqasa-vertical-stack",
-    name: "SmartQasa Vertical Stack",
-    preview: false,
-    description: "A custom stack card that displays other cards.",
-});
 
 @customElement("smartqasa-vertical-stack")
 class SmartQasaVerticalStack extends LitElement {
@@ -24,6 +17,7 @@ class SmartQasaVerticalStack extends LitElement {
             .container {
                 display: flex;
                 flex-direction: column;
+                gap: var(--vertical-stack-card-gap, var(--stack-card-gap, 8px));
             }
         `;
     }
@@ -42,11 +36,14 @@ class SmartQasaVerticalStack extends LitElement {
             return;
         }
 
-        this._cards = this.config.cards.map((cardConfig) => {
-            const element = createThing(cardConfig) as LovelaceCard;
-            element.hass = this._hass;
-            return element;
-        });
+        this._cards = this.config.cards.map((cardConfig) => this._createCardElement(cardConfig));
+    }
+
+    private _createCardElement(cardConfig: LovelaceCardConfig): LovelaceCard {
+        const element = document.createElement("hui-card") as LovelaceCard;
+        element.setConfig(cardConfig);
+        element.hass = this._hass;
+        return element;
     }
 
     protected firstUpdated() {
@@ -71,3 +68,11 @@ class SmartQasaVerticalStack extends LitElement {
         return this._hass!;
     }
 }
+
+(window as any).customCards = (window as any).customCards || [];
+(window as any).customCards.push({
+    type: "smartqasa-vertical-stack",
+    name: "SmartQasa Vertical Stack",
+    preview: false,
+    description: "A custom stack card that displays other cards.",
+});
