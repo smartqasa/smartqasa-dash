@@ -1,6 +1,7 @@
 import { LitElement, html, css } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { HomeAssistant, LovelaceCardConfig, LovelaceCard } from "../types";
+import { createCardElement } from "../utils/create-card-element";
 
 interface SmartQasaVerticalStackConfig extends LovelaceCardConfig {
     cards: LovelaceCardConfig[];
@@ -40,9 +41,10 @@ class SmartQasaVerticalStack extends LitElement {
     }
 
     private _createCardElement(cardConfig: LovelaceCardConfig): LovelaceCard {
-        const element = document.createElement("hui-card") as LovelaceCard;
-        element.setConfig(cardConfig);
-        element.hass = this._hass;
+        const element = createCardElement(cardConfig) as LovelaceCard;
+        if (element) {
+            element.hass = this._hass;
+        }
         return element;
     }
 

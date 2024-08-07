@@ -72,6 +72,35 @@ const t$1=t=>(e,o)=>{void 0!==o?o.addInitializer((()=>{customElements.define(t,e
  * SPDX-License-Identifier: BSD-3-Clause
  */function r(r){return n({...r,state:!0,attribute:!1})}
 
+const createCardElement = (config) => {
+    try {
+        const tag = computeCardComponentName(config.type);
+        if (customElements.get(tag)) {
+            const element = document.createElement(tag);
+            element.setConfig(config);
+            return element;
+        }
+        const element = document.createElement(tag);
+        customElements.whenDefined(tag).then(() => {
+            try {
+                customElements.upgrade(element);
+                element.setConfig(config);
+            }
+            catch (err) {
+                // Do nothing
+            }
+        });
+        return element;
+    }
+    catch (err) {
+        console.error(err);
+        return undefined;
+    }
+};
+function computeCardComponentName(type) {
+    return `hui-${type}-card`;
+}
+
 let SmartQasaVerticalStack = class SmartQasaVerticalStack extends h {
     constructor() {
         super(...arguments);
@@ -100,9 +129,10 @@ let SmartQasaVerticalStack = class SmartQasaVerticalStack extends h {
         this._cards = this.config.cards.map((cardConfig) => this._createCardElement(cardConfig));
     }
     _createCardElement(cardConfig) {
-        const element = document.createElement("hui-card");
-        element.setConfig(cardConfig);
-        element.hass = this._hass;
+        const element = createCardElement(cardConfig);
+        if (element) {
+            element.hass = this._hass;
+        }
         return element;
     }
     firstUpdated() {
@@ -7314,23 +7344,23 @@ let FanTile = class FanTile extends h {
     }
     static { this.styles = [tileBaseStyle, tileStateStyle, tileIconSpinStyle]; }
     setConfig(config) {
-        this.config = { ...config };
-        this.entity = this.config.entity?.startsWith("fan.") ? this.config.entity : undefined;
+        this._config = { ...config };
+        this._entity = this._config.entity?.startsWith("fan.") ? this._config.entity : undefined;
     }
     shouldUpdate(changedProps) {
-        return !!((changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj) ||
-            (changedProps.has("config") && this.config));
+        return !!((changedProps.has("hass") && this._entity && this.hass.states[this._entity] !== this._stateObj) ||
+            (changedProps.has("_config") && this._config));
     }
     render() {
-        const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
+        const { icon, iconAnimation, iconColor, name, stateFmtd } = this._updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
             backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity))`,
             animation: iconAnimation,
         };
         return ke `
-            <div class="container" @click=${this.showMoreInfo} @contextmenu=${this.showEntityList}>
-                <div class="icon" @click=${this.toggleEntity} style="${se(iconStyles)}">
+            <div class="container" @click=${this._showMoreInfo} @contextmenu=${this._showEntityList}>
+                <div class="icon" @click=${this._toggleEntity} style="${se(iconStyles)}">
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
                 <div class="name">${name}</div>
@@ -7338,17 +7368,17 @@ let FanTile = class FanTile extends h {
             </div>
         `;
     }
-    updateState() {
+    _updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
-        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
-        if (this.config && this.hass && this.stateObj) {
-            const state = this.stateObj.state || "unknown";
-            icon = this.config.icon || "hass:fan";
+        this._stateObj = this._entity ? this.hass.states[this._entity] : undefined;
+        if (this._config && this._stateObj) {
+            const state = this._stateObj.state || "unknown";
+            icon = this._config.icon || "hass:fan";
             iconAnimation = "none";
             if (state == "on" && icon === "hass:fan") {
-                if (this.stateObj.attributes.percentage) {
-                    const speed = 0.5 + (1 - this.stateObj.attributes.percentage / 100);
-                    const direction = this.stateObj.attributes.direction == "reverse" ? "reverse" : "normal";
+                if (this._stateObj.attributes.percentage) {
+                    const speed = 0.5 + (1 - this._stateObj.attributes.percentage / 100);
+                    const direction = this._stateObj.attributes.direction == "reverse" ? "reverse" : "normal";
                     iconAnimation = `spin ${speed}s linear infinite ${direction}`;
                 }
                 else {
@@ -7356,37 +7386,37 @@ let FanTile = class FanTile extends h {
                 }
             }
             iconColor = state === "on" ? "var(--sq-fan-on-rgb)" : "var(--sq-inactive-rgb)";
-            name = this.config.name || this.stateObj.attributes.friendly_name || this.entity;
-            stateFmtd = `${this.hass.formatEntityState(this.stateObj)}${state === "on" && this.stateObj.attributes.percentage
-                ? " - " + this.hass.formatEntityAttributeValue(this.stateObj, "percentage")
+            name = this._config.name || this._stateObj.attributes.friendly_name || this._entity;
+            stateFmtd = `${this.hass.formatEntityState(this._stateObj)}${state === "on" && this._stateObj.attributes.percentage
+                ? " - " + this.hass.formatEntityAttributeValue(this._stateObj, "percentage")
                 : ""}`;
         }
         else {
-            icon = this.config?.icon || "hass:lightbulb-alert";
+            icon = this._config?.icon || "hass:lightbulb-alert";
             iconAnimation = "none";
             iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            name = this.config?.name || "Unknown";
+            name = this._config?.name || "Unknown";
             stateFmtd = "Unknown";
         }
         return { icon, iconAnimation, iconColor, name, stateFmtd };
     }
-    toggleEntity(e) {
+    _toggleEntity(e) {
         e.stopPropagation();
-        if (!this.hass || !this.entity)
+        if (!this.hass || !this._entity)
             return;
-        callService(this.hass, "fan", "toggle", { entity_id: this.entity });
+        callService(this.hass, "fan", "toggle", { entity_id: this._entity });
     }
-    showMoreInfo(e) {
+    _showMoreInfo(e) {
         e.stopPropagation();
-        moreInfoDialog(this.config, this.stateObj);
+        moreInfoDialog(this._config, this._stateObj);
     }
-    showEntityList(e) {
+    _showEntityList(e) {
         e.stopPropagation();
-        if (!this.stateObj ||
-            !Array.isArray(this.stateObj.attributes?.entity_id) ||
-            this.stateObj.attributes.entity_id.length === 0)
+        if (!this._stateObj ||
+            !Array.isArray(this._stateObj.attributes?.entity_id) ||
+            this._stateObj.attributes.entity_id.length === 0)
             return;
-        entityListDialog(this.stateObj.attributes?.friendly_name || "Unknown", "group", this.entity, "fan");
+        entityListDialog(this._stateObj.attributes?.friendly_name || "Unknown", "group", this._entity, "fan");
     }
 };
 __decorate([
@@ -7394,7 +7424,7 @@ __decorate([
 ], FanTile.prototype, "hass", void 0);
 __decorate([
     r()
-], FanTile.prototype, "config", void 0);
+], FanTile.prototype, "_config", void 0);
 FanTile = __decorate([
     t$1("smartqasa-fan-tile")
 ], FanTile);
@@ -7597,6 +7627,7 @@ window.customCards.push({
     description: "A SmartQasa tile for controlling a light entity.",
 });
 let LightTile = class LightTile extends h {
+    static { this.styles = [tileBaseStyle, tileStateStyle]; }
     getCardSize() {
         return 1;
     }
@@ -7610,25 +7641,24 @@ let LightTile = class LightTile extends h {
             name: "",
         };
     }
-    static { this.styles = [tileBaseStyle, tileStateStyle]; }
     setConfig(config) {
-        this.config = { ...config };
-        this.entity = this.config.entity?.startsWith("light.") ? this.config.entity : undefined;
+        this._config = { ...config };
+        this._entity = this._config.entity?.startsWith("light.") ? this._config.entity : undefined;
     }
     shouldUpdate(changedProps) {
-        return !!((changedProps.has("hass") && this.entity && this.hass.states[this.entity] !== this.stateObj) ||
-            (changedProps.has("config") && this.config));
+        return !!((changedProps.has("hass") && this._entity && this.hass.states[this._entity] !== this._stateObj) ||
+            (changedProps.has("_config") && this._config));
     }
     render() {
-        const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
+        const { icon, iconAnimation, iconColor, name, stateFmtd } = this._updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
             backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity))`,
             animation: iconAnimation,
         };
         return ke `
-            <div class="container" @click=${this.showMoreInfo} @contextmenu=${this.showEntityList}>
-                <div class="icon" @click=${this.toggleEntity} style="${se(iconStyles)}">
+            <div class="container" @click=${this._showMoreInfo} @contextmenu=${this._showEntityList}>
+                <div class="icon" @click=${this._toggleEntity} style="${se(iconStyles)}">
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
                 <div class="name">${name}</div>
@@ -7636,47 +7666,47 @@ let LightTile = class LightTile extends h {
             </div>
         `;
     }
-    updateState() {
+    _updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
-        this.stateObj = this.entity ? this.hass.states[this.entity] : undefined;
-        if (this.config && this.stateObj) {
-            const state = this.stateObj.state || "unknown";
-            icon = this.config.icon || this.stateObj.attributes.icon || "hass:lightbulb";
+        this._stateObj = this._entity ? this.hass.states[this._entity] : undefined;
+        if (this._config && this._stateObj) {
+            const state = this._stateObj.state || "unknown";
+            icon = this._config.icon || this._stateObj.attributes.icon || "hass:lightbulb";
             iconAnimation = "none";
             iconColor = state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
-            name = this.config.name || this.stateObj.attributes.friendly_name || this.entity;
-            stateFmtd = `${this.hass.formatEntityState(this.stateObj)}${state === "on" && this.stateObj.attributes.brightness
-                ? " - " + this.hass.formatEntityAttributeValue(this.stateObj, "brightness")
+            name = this._config.name || this._stateObj.attributes.friendly_name || this._entity;
+            stateFmtd = `${this.hass.formatEntityState(this._stateObj)}${state === "on" && this._stateObj.attributes.brightness
+                ? " - " + this.hass.formatEntityAttributeValue(this._stateObj, "brightness")
                 : ""}`;
         }
         else {
-            icon = this.config?.icon || "hass:lightbulb-alert";
+            icon = this._config?.icon || "hass:lightbulb-alert";
             iconAnimation = "none";
             iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            name = this.config?.name || "Unknown";
+            name = this._config?.name || "Unknown";
             stateFmtd = "Unknown";
         }
         return { icon, iconAnimation, iconColor, name, stateFmtd };
     }
-    toggleEntity(e) {
+    _toggleEntity(e) {
         e.stopPropagation();
-        if (!this.hass || !this.entity)
+        if (!this.hass || !this._entity)
             return;
-        callService(this.hass, "light", "toggle", { entity_id: this.entity });
+        callService(this.hass, "light", "toggle", { entity_id: this._entity });
     }
-    showMoreInfo(e) {
+    _showMoreInfo(e) {
         e.stopPropagation();
-        moreInfoDialog(this.config, this.stateObj);
+        moreInfoDialog(this._config, this._stateObj);
     }
-    showEntityList(e) {
+    _showEntityList(e) {
         e.stopPropagation();
-        if (!this.config || !this.hass || !this.stateObj)
+        if (!this._config || !this.hass || !this._stateObj)
             return;
-        const group = this.config.group || `${this.entity}_group`;
+        const group = this._config.group || `${this._entity}_group`;
         const groupObj = this.hass.states[group];
         if (!groupObj || !Array.isArray(groupObj.attributes?.entity_id))
             return;
-        entityListDialog(this.stateObj.attributes?.friendly_name || "Unknown", "group", group, "light");
+        entityListDialog(this._stateObj.attributes?.friendly_name || "Unknown", "group", group, "light");
     }
 };
 __decorate([
@@ -7684,7 +7714,7 @@ __decorate([
 ], LightTile.prototype, "hass", void 0);
 __decorate([
     r()
-], LightTile.prototype, "config", void 0);
+], LightTile.prototype, "_config", void 0);
 LightTile = __decorate([
     t$1("smartqasa-light-tile")
 ], LightTile);
