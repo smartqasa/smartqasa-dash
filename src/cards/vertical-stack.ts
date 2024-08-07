@@ -1,7 +1,7 @@
-import { LitElement, html, css } from "lit";
-import { customElement, property } from "lit/decorators.js";
+import { LitElement, html, css, CSSResultGroup, nothing } from "lit";
+import { customElement, property, state } from "lit/decorators.js";
 import { HomeAssistant, LovelaceCardConfig, LovelaceCard } from "../types";
-import { createCardElement } from "../utils/create-card-element"; // Adjust the import path as needed
+import { createCardElement } from "../utils/create-card-element";
 
 interface SmartQasaVerticalStackConfig extends LovelaceCardConfig {
     cards: LovelaceCardConfig[];
@@ -15,82 +15,89 @@ interface SmartQasaVerticalStackConfig extends LovelaceCardConfig {
 });
 
 @customElement("smartqasa-vertical-stack")
-class SmartQasaVerticalStack extends LitElement {
-    @property({ attribute: false }) private _hass?: HomeAssistant;
-    @property() private config?: SmartQasaVerticalStackConfig;
-    private _cards: LovelaceCard[] = [];
+class SmartQasaVerticalStack extends LitElement implements LovelaceCard {
+    @property({ attribute: false }) public hass?: HomeAssistant;
+    @property({ type: Boolean }) public preview = false;
+    @state() protected _cards?: LovelaceCard[];
+    @state() protected _config?: SmartQasaVerticalStackConfig;
 
-    static get styles() {
+    static get styles(): CSSResultGroup {
         return css`
             .container {
                 display: flex;
                 flex-direction: column;
                 gap: var(--vertical-stack-card-gap, var(--stack-card-gap, 8px));
             }
+            .card-header {
+                color: var(--ha-card-header-color, var(--primary-text-color));
+                text-align: var(--ha-stack-title-text-align, start);
+                font-family: var(--ha-card-header-font-family, inherit);
+                font-size: var(--ha-card-header-font-size, 24px);
+                font-weight: normal;
+                margin-block-start: 0px;
+                margin-block-end: 0px;
+                letter-spacing: -0.012em;
+                line-height: 32px;
+                display: block;
+                padding: 24px 16px 16px;
+            }
         `;
     }
 
+    public getCardSize(): number | Promise<number> {
+        return 1;
+    }
+
     public setConfig(config: SmartQasaVerticalStackConfig): void {
-        console.log("Setting config for SmartQasaVerticalStack:", config);
-        if (!config.cards || !Array.isArray(config.cards)) {
-            throw new Error("You need to define 'cards'");
+        if (!config || !config.cards || !Array.isArray(config.cards)) {
+            throw new Error("Invalid configuration");
         }
-
-        this.config = config;
-        this._createCards();
-    }
-
-    private _createCards() {
-        if (!this._hass || !this.config) {
-            console.warn("hass or config not available for creating cards.");
-            return;
-        }
-
-        // Create each card element based on the configuration
-        this._cards = this.config.cards.map((cardConfig, index) => {
-            console.log(`Creating card element ${index} for config:`, cardConfig);
-            return this._createCardElement(cardConfig);
-        });
-
-        console.log("Created cards:", this._cards);
-    }
-
-    private _createCardElement(cardConfig: LovelaceCardConfig): LovelaceCard {
-        try {
-            const element = createCardElement(cardConfig) as LovelaceCard;
-            if (element) {
-                element.hass = this._hass;
-                console.log("Created element:", element);
-            } else {
-                console.error("Failed to create element for config:", cardConfig);
-            }
-            return element;
-        } catch (error) {
-            console.error("Error creating card element:", error);
-            return undefined as unknown as LovelaceCard;
-        }
-    }
-
-    protected firstUpdated() {
-        if (this.config) {
+        this._config = config;
+        if (this.hass) {
             this._createCards();
         }
     }
 
-    protected render() {
-        console.log("Rendering stack with cards:", this._cards);
-        return html` <div class="container">${this._cards.map((card) => html`<div>${card}</div>`)}</div> `;
+    protected update(changedProperties: Map<string, any>) {
+        super.update(changedProperties);
+
+        if (this._cards) {
+            if (changedProperties.has("hass")) {
+                this._cards.forEach((card) => {
+                    card.hass = this.hass;
+                });
+            }
+            if (changedProperties.has("preview")) {
+                this._cards.forEach((card) => {
+                    card.preview = this.preview;
+                });
+            }
+        }
     }
 
-    set hass(hass: HomeAssistant) {
-        this._hass = hass;
-        this._cards.forEach((card) => {
-            card.hass = hass;
+    private _createCards() {
+        if (!this._config || !this.hass) return;
+
+        this._cards = this._config.cards.map((cardConfig) => {
+            const element = createCardElement(cardConfig) as LovelaceCard;
+            if (element) {
+                element.hass = this.hass;
+                element.preview = this.preview;
+            }
+            return element;
         });
-        this.requestUpdate();
     }
 
-    get hass(): HomeAssistant {
-        return this._hass!;
+    protected render() {
+        if (!this._config || !this._cards) {
+            return nothing;
+        }
+
+        return html`
+            <div class="container">
+                ${this._config.title ? html`<h1 class="card-header">${this._config.title}</h1>` : ""}
+                <div id="root">${this._cards.map((card) => html`<div>${card}</div>`)}</div>
+            </div>
+        `;
     }
 }

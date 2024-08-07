@@ -107,7 +107,7 @@ window.customCards.push({
 let SmartQasaVerticalStack = class SmartQasaVerticalStack extends h {
     constructor() {
         super(...arguments);
-        this._cards = [];
+        this.preview = false;
     }
     static get styles() {
         return i$3 `
@@ -116,71 +116,84 @@ let SmartQasaVerticalStack = class SmartQasaVerticalStack extends h {
                 flex-direction: column;
                 gap: var(--vertical-stack-card-gap, var(--stack-card-gap, 8px));
             }
+            .card-header {
+                color: var(--ha-card-header-color, var(--primary-text-color));
+                text-align: var(--ha-stack-title-text-align, start);
+                font-family: var(--ha-card-header-font-family, inherit);
+                font-size: var(--ha-card-header-font-size, 24px);
+                font-weight: normal;
+                margin-block-start: 0px;
+                margin-block-end: 0px;
+                letter-spacing: -0.012em;
+                line-height: 32px;
+                display: block;
+                padding: 24px 16px 16px;
+            }
         `;
     }
+    getCardSize() {
+        return 1;
+    }
     setConfig(config) {
-        console.log("Setting config for SmartQasaVerticalStack:", config);
-        if (!config.cards || !Array.isArray(config.cards)) {
-            throw new Error("You need to define 'cards'");
+        if (!config || !config.cards || !Array.isArray(config.cards)) {
+            throw new Error("Invalid configuration");
         }
-        this.config = config;
-        this._createCards();
-    }
-    _createCards() {
-        if (!this._hass || !this.config) {
-            console.warn("hass or config not available for creating cards.");
-            return;
-        }
-        // Create each card element based on the configuration
-        this._cards = this.config.cards.map((cardConfig, index) => {
-            console.log(`Creating card element ${index} for config:`, cardConfig);
-            return this._createCardElement(cardConfig);
-        });
-        console.log("Created cards:", this._cards);
-    }
-    _createCardElement(cardConfig) {
-        try {
-            const element = createCardElement(cardConfig);
-            if (element) {
-                element.hass = this._hass;
-                console.log("Created element:", element);
-            }
-            else {
-                console.error("Failed to create element for config:", cardConfig);
-            }
-            return element;
-        }
-        catch (error) {
-            console.error("Error creating card element:", error);
-            return undefined;
-        }
-    }
-    firstUpdated() {
-        if (this.config) {
+        this._config = config;
+        if (this.hass) {
             this._createCards();
         }
     }
-    render() {
-        console.log("Rendering stack with cards:", this._cards);
-        return ke ` <div class="container">${this._cards.map((card) => ke `<div>${card}</div>`)}</div> `;
+    update(changedProperties) {
+        super.update(changedProperties);
+        if (this._cards) {
+            if (changedProperties.has("hass")) {
+                this._cards.forEach((card) => {
+                    card.hass = this.hass;
+                });
+            }
+            if (changedProperties.has("preview")) {
+                this._cards.forEach((card) => {
+                    card.preview = this.preview;
+                });
+            }
+        }
     }
-    set hass(hass) {
-        this._hass = hass;
-        this._cards.forEach((card) => {
-            card.hass = hass;
+    _createCards() {
+        if (!this._config || !this.hass)
+            return;
+        this._cards = this._config.cards.map((cardConfig) => {
+            const element = createCardElement(cardConfig);
+            if (element) {
+                element.hass = this.hass;
+                element.preview = this.preview;
+            }
+            return element;
         });
-        this.requestUpdate();
     }
-    get hass() {
-        return this._hass;
+    render() {
+        if (!this._config || !this._cards) {
+            return D;
+        }
+        return ke `
+            <div class="container">
+                ${this._config.title ? ke `<h1 class="card-header">${this._config.title}</h1>` : ""}
+                <div id="root">${this._cards.map((card) => ke `<div>${card}</div>`)}</div>
+            </div>
+        `;
     }
 };
 __decorate([
     n({ attribute: false })
-], SmartQasaVerticalStack.prototype, "_hass", void 0);
+], SmartQasaVerticalStack.prototype, "hass", void 0);
 __decorate([
-    n()
-], SmartQasaVerticalStack.prototype, "config", void 0);
+    n({ type: Boolean })
+], SmartQasaVerticalStack.prototype, "preview", void 0);
+__decorate([
+    r()
+], SmartQasaVerticalStack.prototype, "_cards", void 0);
+__decorate([
+    r()
+], SmartQasaVerticalStack.prototype, "_config", void 0);
 SmartQasaVerticalStack = __decorate([
     t$1("smartqasa-vertical-stack")
 ], SmartQasaVerticalStack);
