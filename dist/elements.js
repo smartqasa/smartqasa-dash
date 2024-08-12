@@ -212,7 +212,7 @@ let TVRemoteCard = class TVRemoteCard extends h {
                 white-space: nowrap;
                 font-weight: var(--sq-secondard-font-weight, 300);
                 font-size: var(--sq-secondary-font-size, 1rem);
-                color: rgb(var(--sq-accent-rgb), 0, 120, 230);
+                color: rgb(0, 120, 230);
             }
             .body {
                 height: 37rem;
