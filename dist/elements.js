@@ -202,7 +202,7 @@ let TVRemoteCard = class TVRemoteCard extends h {
                 color: rgb(var(--sq-secondary-font-rgb), 128, 128, 128);
             }
             .body {
-                height: 40rem;
+                height: 37.5rem;
                 overflow-y: auto;
                 -ms-overflow-style: none; /* Hide scrollbar for Internet Explorer 10+ */
                 scrollbar-width: none; /* Hide scrollbar for Firefox */
@@ -379,6 +379,8 @@ let TVRemoteCard = class TVRemoteCard extends h {
                         <div class="name">
                             ${this.config.name || this.stateObj.attributes.friendly_name || "TV Remote"}
                         </div>
+
+                        <div class="app">${this.stateObj.attributes.app_name || " "}</div>
 
                         <div class="body">
                             <div class="app-list">
