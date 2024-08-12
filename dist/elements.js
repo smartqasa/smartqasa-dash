@@ -335,7 +335,7 @@ let TVRemoteCard = class TVRemoteCard extends h {
         return ke `
             <div class="name">${this.config.name || this.stateObj.attributes.friendly_name || "TV Remote"}</div>
 
-            <div class="app">${this.stateObj.attributes.app_name || " "}</div>
+            <div class="app">${this.stateObj.attributes.app_name || ke `&nbsp;`}</div>
         `;
     }
     _renderRemoteMode() {
@@ -391,7 +391,7 @@ let TVRemoteCard = class TVRemoteCard extends h {
     }
     _renderButton(category, button, icon) {
         return ke `
-            <div class="icon" data-category=${category} data-button=${button} @click=${this._handleButton}>
+            <div class="icon" data-category=${category} data-button=${button} @pointerdown=${this._handleButton}>
                 <ha-icon .icon=${icon}></ha-icon>
             </div>
         `;

@@ -217,7 +217,7 @@ export class TVRemoteCard extends LitElement {
         return html`
             <div class="name">${this.config!.name || this.stateObj!.attributes.friendly_name || "TV Remote"}</div>
 
-            <div class="app">${this.stateObj!.attributes.app_name || " "}</div>
+            <div class="app">${this.stateObj!.attributes.app_name || html`&nbsp;`}</div>
         `;
     }
 
