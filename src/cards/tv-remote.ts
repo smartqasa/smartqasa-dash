@@ -53,13 +53,22 @@ export class TVRemoteCard extends LitElement {
                 padding: 8px;
             }
             .name {
-                padding: 1rem;
+                padding: 1rem 1rem 0.25rem 1rem;
                 text-align: center;
                 overflow: hidden;
                 text-overflow: ellipsis;
                 font-weight: var(--sq-primary-font-weight, 400);
                 font-size: var(--sq-primary-font-size, 1.5rem);
                 color: rgb(var(--sq-primary-font-rgb), 128, 128, 128);
+            }
+            .app {
+                padding: 0.25rem 1rem 1rem 1rem;
+                text-align: center;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                font-weight: var(--sq-secondard-font-weight, 300);
+                font-size: var(--sq-secondary-font-size, 1rem);
+                color: rgb(var(--sq-secondary-font-rgb), 128, 128, 128);
             }
             .body {
                 height: 40rem;
@@ -96,9 +105,9 @@ export class TVRemoteCard extends LitElement {
                 justify-content: center;
                 margin: 1rem;
             }
-            .app {
-                margin: 5px;
-                padding: 5px 10px;
+            .app-item {
+                margin: 0.4rem;
+                padding: 0.4rem 0.8rem;
                 background: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
                 color: rgb(var(--sq-primary-font-rgb), 128, 128, 128);
                 border: var(--sq-card-border, none);
@@ -201,6 +210,8 @@ export class TVRemoteCard extends LitElement {
                             ${this.config.name || this.stateObj.attributes.friendly_name || "TV Remote"}
                         </div>
 
+                        <div class="app">${this.stateObj.attributes.app_name || " "}</div>
+
                         <div class="body">
                             <div class="row">${this.renderButton("power", "power", "mdi:power")}</div>
 
@@ -254,7 +265,7 @@ export class TVRemoteCard extends LitElement {
                             <div class="app-list">
                                 ${this.stateObj.attributes.source_list.map(
                                     (app: string) => html`
-                                        <div class="app" @click=${() => this.selectApp(app)}>${app}</div>
+                                        <div class="app-item" @click=${() => this.selectApp(app)}>${app}</div>
                                     `
                                 )}
                             </div>
