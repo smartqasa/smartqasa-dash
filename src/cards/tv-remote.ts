@@ -279,7 +279,7 @@ export class TVRemoteCard extends LitElement {
 
     private _renderButton(category: string, button: string, icon: string): TemplateResult {
         return html`
-            <div class="icon" data-category=${category} data-button=${button} @click=${this._handleButton}>
+            <div class="icon" data-category=${category} data-button=${button} @pointerdown=${this._handleButton}>
                 <ha-icon .icon=${icon}></ha-icon>
             </div>
         `;
