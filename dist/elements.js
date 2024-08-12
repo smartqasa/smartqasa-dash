@@ -193,7 +193,7 @@ let TVRemoteCard = class TVRemoteCard extends h {
                 color: rgb(var(--sq-primary-font-rgb), 128, 128, 128);
             }
             .app {
-                padding: 0.25rem 1rem 1rem 1rem;
+                padding: 0.25rem 1rem 0 1rem;
                 text-align: center;
                 overflow: hidden;
                 text-overflow: ellipsis;
@@ -212,7 +212,7 @@ let TVRemoteCard = class TVRemoteCard extends h {
             }
             .row {
                 display: flex;
-                margin: 1.5rem;
+                margin: 1.2rem;
                 justify-content: center;
                 align-items: center;
             }
@@ -220,7 +220,7 @@ let TVRemoteCard = class TVRemoteCard extends h {
                 display: flex;
                 justify-content: center;
                 align-self: center;
-                margin: 0 0.8rem 0 0.8rem;
+                margin: 0 0.6rem 0 0.6rem;
                 padding: 1rem;
                 border: var(--sq-card-border, none);
                 border-radius: 1rem;
