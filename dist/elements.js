@@ -233,7 +233,6 @@ let TVRemoteCard = class TVRemoteCard extends h {
                 display: flex;
                 flex-wrap: wrap;
                 justify-content: center;
-                margin: 1rem;
             }
             .app-item {
                 margin: 0.4rem;
@@ -375,7 +374,9 @@ let TVRemoteCard = class TVRemoteCard extends h {
     }
     _renderAppSelectMode() {
         return ke `
-            ${this.stateObj.attributes.source_list.map((app) => ke ` <div class="app-item" @click=${() => this.selectApp(app)}>${app}</div> `)}
+            <div class="app-list">
+                ${this.stateObj.attributes.source_list.map((app) => ke ` <div class="app-item" @click=${() => this.selectApp(app)}>${app}</div> `)}
+            </div>
         `;
     }
     _renderFooter() {

@@ -102,7 +102,6 @@ export class TVRemoteCard extends LitElement {
                 display: flex;
                 flex-wrap: wrap;
                 justify-content: center;
-                margin: 1rem;
             }
             .app-item {
                 margin: 0.4rem;
@@ -259,9 +258,11 @@ export class TVRemoteCard extends LitElement {
 
     private _renderAppSelectMode(): TemplateResult {
         return html`
-            ${this.stateObj!.attributes.source_list.map(
-                (app: string) => html` <div class="app-item" @click=${() => this.selectApp(app)}>${app}</div> `
-            )}
+            <div class="app-list">
+                ${this.stateObj!.attributes.source_list.map(
+                    (app: string) => html` <div class="app-item" @click=${() => this.selectApp(app)}>${app}</div> `
+                )}
+            </div>
         `;
     }
 
