@@ -220,7 +220,7 @@ export class TVRemoteCard extends LitElement {
             <div class="row">
                 ${this._renderButton("navigate", "remote", "mdi:remote-tv")}
                 ${this._renderButton("power", "power", "mdi:power")}
-                ${this._renderButton("navigate", "app_select", "mdi:apps-box")}
+                ${this._renderButton("navigate", "app_select", "mdi:apps")}
             </div>
         `;
     }
@@ -228,7 +228,7 @@ export class TVRemoteCard extends LitElement {
     private _renderRemoteMode(): TemplateResult {
         return html`
             <div class="row">
-                ${this._renderButton("command", "back", "mdi:arrow-left")}
+                ${this._renderButton("command", "back", "mdi:restore")}
                 ${this._renderButton("command", "info", "mdi:asterisk")}
                 ${this._renderButton("command", "home", "mdi:home")}
             </div>
