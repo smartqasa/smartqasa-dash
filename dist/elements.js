@@ -207,7 +207,7 @@ let TVRemoteCard = class TVRemoteCard extends h {
                 color: rgb(var(--sq-accent-rgb), 0, 120, 230);
             }
             .body {
-                height: 34rem;
+                height: 37rem;
                 overflow-y: auto;
                 -ms-overflow-style: none; /* Hide scrollbar for Internet Explorer 10+ */
                 scrollbar-width: none; /* Hide scrollbar for Firefox */
