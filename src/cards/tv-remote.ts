@@ -66,13 +66,14 @@ export class TVRemoteCard extends LitElement {
                 color: rgb(var(--sq-primary-font-rgb), 128, 128, 128);
             }
             .app {
-                padding-top: 0.3rem;
+                padding: 0.3rem 0;
                 text-align: center;
                 overflow: hidden;
                 text-overflow: ellipsis;
+                white-space: nowrap;
                 font-weight: var(--sq-secondard-font-weight, 300);
                 font-size: var(--sq-secondary-font-size, 1rem);
-                color: rgb(var(--sq-secondary-font-rgb), 128, 128, 128);
+                color: rgb(var(--sq-accent-rgb), 0, 120, 230);
             }
             .body {
                 height: 34rem;
@@ -87,7 +88,7 @@ export class TVRemoteCard extends LitElement {
                 display: flex;
                 justify-content: center;
                 align-self: center;
-                margin: 0.8rem;
+                margin: 1rem;
                 padding: 1rem;
                 border: var(--sq-card-border, none);
                 border-radius: 1rem;
@@ -105,7 +106,7 @@ export class TVRemoteCard extends LitElement {
             }
             .app-item {
                 margin: 0.4rem;
-                padding: 0.4rem 0.8rem;
+                padding: 0.6rem;
                 background: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
                 color: rgb(var(--sq-primary-font-rgb), 128, 128, 128);
                 border: var(--sq-card-border, none);
