@@ -259,11 +259,9 @@ export class TVRemoteCard extends LitElement {
 
     private _renderAppSelectMode(): TemplateResult {
         return html`
-            <div class="app-list">
-                ${this.stateObj!.attributes.source_list.map(
-                    (app: string) => html` <div class="app-item" @click=${() => this.selectApp(app)}>${app}</div> `
-                )}
-            </div>
+            ${this.stateObj!.attributes.source_list.map(
+                (app: string) => html` <div class="app-item" @click=${() => this.selectApp(app)}>${app}</div> `
+            )}
         `;
     }
 

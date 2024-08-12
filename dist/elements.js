@@ -338,14 +338,14 @@ let TVRemoteCard = class TVRemoteCard extends h {
             <div class="row">
                 ${this._renderButton("navigate", "remote", "mdi:remote-tv")}
                 ${this._renderButton("power", "power", "mdi:power")}
-                ${this._renderButton("navigate", "app_select", "mdi:apps-box")}
+                ${this._renderButton("navigate", "app_select", "mdi:apps")}
             </div>
         `;
     }
     _renderRemoteMode() {
         return ke `
             <div class="row">
-                ${this._renderButton("command", "back", "mdi:arrow-left")}
+                ${this._renderButton("command", "back", "mdi:restore")}
                 ${this._renderButton("command", "info", "mdi:asterisk")}
                 ${this._renderButton("command", "home", "mdi:home")}
             </div>
@@ -375,9 +375,7 @@ let TVRemoteCard = class TVRemoteCard extends h {
     }
     _renderAppSelectMode() {
         return ke `
-            <div class="app-list">
-                ${this.stateObj.attributes.source_list.map((app) => ke ` <div class="app-item" @click=${() => this.selectApp(app)}>${app}</div> `)}
-            </div>
+            ${this.stateObj.attributes.source_list.map((app) => ke ` <div class="app-item" @click=${() => this.selectApp(app)}>${app}</div> `)}
         `;
     }
     _renderFooter() {
