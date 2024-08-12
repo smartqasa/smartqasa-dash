@@ -167,6 +167,14 @@ let TVRemoteCard = class TVRemoteCard extends h {
     }
     static get styles() {
         return i$3 `
+            :host {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100%;
+                width: 100%;
+                box-sizing: border-box;
+            }
             .container {
                 display: flex;
                 width: fit-content;
