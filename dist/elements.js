@@ -184,7 +184,6 @@ let TVRemoteCard = class TVRemoteCard extends h {
             }
             .row {
                 display: flex;
-                margin: 0.6rem 0 0.6rem 0;
                 justify-content: center;
                 align-items: center;
             }
@@ -219,7 +218,7 @@ let TVRemoteCard = class TVRemoteCard extends h {
                 display: flex;
                 justify-content: center;
                 align-self: center;
-                margin: 0 0.6rem 0 0.6rem;
+                margin: 0.8rem;
                 padding: 1rem;
                 border: var(--sq-card-border, none);
                 border-radius: 1rem;
