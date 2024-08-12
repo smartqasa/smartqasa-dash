@@ -212,7 +212,7 @@ let TVRemoteCard = class TVRemoteCard extends h {
             }
             .row {
                 display: flex;
-                margin: 1.2rem;
+                margin: 0.6rem 0 0.6rem 0;
                 justify-content: center;
                 align-items: center;
             }
@@ -335,16 +335,16 @@ let TVRemoteCard = class TVRemoteCard extends h {
             <div class="name">${this.config.name || this.stateObj.attributes.friendly_name || "TV Remote"}</div>
 
             <div class="app">${this.stateObj.attributes.app_name || ke `&nbsp;`}</div>
-        `;
-    }
-    _renderRemoteMode() {
-        return ke `
+
             <div class="row">
                 ${this._renderButton("navigate", "remote", "mdi:remote-tv")}
                 ${this._renderButton("power", "power", "mdi:power")}
                 ${this._renderButton("navigate", "app_select", "mdi:apps-box")}
             </div>
-
+        `;
+    }
+    _renderRemoteMode() {
+        return ke `
             <div class="row">
                 ${this._renderButton("command", "back", "mdi:arrow-left")}
                 ${this._renderButton("command", "info", "mdi:asterisk")}

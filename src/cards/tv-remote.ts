@@ -81,7 +81,7 @@ export class TVRemoteCard extends LitElement {
             }
             .row {
                 display: flex;
-                margin: 1.2rem;
+                margin: 0.6rem 0 0.6rem 0;
                 justify-content: center;
                 align-items: center;
             }
@@ -217,17 +217,17 @@ export class TVRemoteCard extends LitElement {
             <div class="name">${this.config!.name || this.stateObj!.attributes.friendly_name || "TV Remote"}</div>
 
             <div class="app">${this.stateObj!.attributes.app_name || html`&nbsp;`}</div>
-        `;
-    }
 
-    private _renderRemoteMode(): TemplateResult {
-        return html`
             <div class="row">
                 ${this._renderButton("navigate", "remote", "mdi:remote-tv")}
                 ${this._renderButton("power", "power", "mdi:power")}
                 ${this._renderButton("navigate", "app_select", "mdi:apps-box")}
             </div>
+        `;
+    }
 
+    private _renderRemoteMode(): TemplateResult {
+        return html`
             <div class="row">
                 ${this._renderButton("command", "back", "mdi:arrow-left")}
                 ${this._renderButton("command", "info", "mdi:asterisk")}
