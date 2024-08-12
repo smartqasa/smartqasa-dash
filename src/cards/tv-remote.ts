@@ -202,98 +202,90 @@ export class TVRemoteCard extends LitElement {
             `;
         }
 
-        switch (this.mode) {
-            case "remote":
-                return html`
-                    <div class="container">
-                        <div class="name">
-                            ${this.config.name || this.stateObj.attributes.friendly_name || "TV Remote"}
-                        </div>
+        const content = this.mode === "app_select" ? this._renderAppSelectMode() : this._renderRemoteMode();
 
-                        <div class="app">${this.stateObj.attributes.app_name || " "}</div>
-
-                        <div class="body">
-                            <div class="row">${this.renderButton("power", "power", "mdi:power")}</div>
-
-                            <div class="row">
-                                ${this.renderButton("command", "back", "mdi:arrow-left")}
-                                ${this.renderButton("command", "info", "mdi:asterisk")}
-                                ${this.renderButton("command", "home", "mdi:home")}
-                            </div>
-
-                            <div class="row">${this.renderButton("command", "up", "mdi:chevron-up")}</div>
-
-                            <div class="row">
-                                ${this.renderButton("command", "left", "mdi:chevron-left")}
-                                ${this.renderButton("command", "select", "mdi:checkbox-blank-circle")}
-                                ${this.renderButton("command", "right", "mdi:chevron-right")}
-                            </div>
-
-                            <div class="row">${this.renderButton("command", "down", "mdi:chevron-down")}</div>
-
-                            <div class="row">
-                                ${this.renderButton("command", "reverse", "mdi:rewind")}
-                                ${this.renderButton("command", "play", "mdi:play-pause")}
-                                ${this.renderButton("command", "forward", "mdi:fast-forward")}
-                            </div>
-
-                            <div class="row">
-                                ${this.renderButton("volume", "volume_down", "mdi:volume-minus")}
-                                ${this.renderButton("volume", "volume_mute", "mdi:volume-mute")}
-                                ${this.renderButton("volume", "volume_up", "mdi:volume-plus")}
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            ${this.renderButton("navigate", "remote", "mdi:remote-tv")}
-                            <div class="logo">
-                                <img src="${rokuLogo}" />
-                            </div>
-                            ${this.renderButton("navigate", "app_select", "mdi:apps-box")}
-                        </div>
-                    </div>
-                `;
-
-            case "app_select":
-                return html`
-                    <div class="container">
-                        <div class="name">
-                            ${this.config.name || this.stateObj.attributes.friendly_name || "TV Remote"}
-                        </div>
-
-                        <div class="app">${this.stateObj.attributes.app_name || " "}</div>
-
-                        <div class="body">
-                            <div class="app-list">
-                                ${this.stateObj.attributes.source_list.map(
-                                    (app: string) => html`
-                                        <div class="app-item" @click=${() => this.selectApp(app)}>${app}</div>
-                                    `
-                                )}
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            ${this.renderButton("navigate", "remote", "mdi:remote-tv")}
-                            <div class="logo">
-                                <img src="${rokuLogo}" />
-                            </div>
-                            ${this.renderButton("navigate", "app_select", "mdi:apps-box")}
-                        </div>
-                    </div>
-                `;
-        }
+        return html`
+            <div class="container">
+                ${this._renderHeader()}
+                <div class="body">${content}</div>
+                ${this._renderFooter()}
+            </div>
+        `;
     }
 
-    private renderButton(category: string, button: string, icon: string): TemplateResult {
+    private _renderHeader(): TemplateResult {
         return html`
-            <div class="icon" data-category=${category} data-button=${button} @click=${this.handleButton}>
+            <div class="name">${this.config!.name || this.stateObj!.attributes.friendly_name || "TV Remote"}</div>
+
+            <div class="app">${this.stateObj!.attributes.app_name || " "}</div>
+        `;
+    }
+
+    private _renderRemoteMode(): TemplateResult {
+        return html`
+            <div class="row">${this._renderButton("power", "power", "mdi:power")}</div>
+
+            <div class="row">
+                ${this._renderButton("command", "back", "mdi:arrow-left")}
+                ${this._renderButton("command", "info", "mdi:asterisk")}
+                ${this._renderButton("command", "home", "mdi:home")}
+            </div>
+
+            <div class="row">${this._renderButton("command", "up", "mdi:chevron-up")}</div>
+
+            <div class="row">
+                ${this._renderButton("command", "left", "mdi:chevron-left")}
+                ${this._renderButton("command", "select", "mdi:checkbox-blank-circle")}
+                ${this._renderButton("command", "right", "mdi:chevron-right")}
+            </div>
+
+            <div class="row">${this._renderButton("command", "down", "mdi:chevron-down")}</div>
+
+            <div class="row">
+                ${this._renderButton("command", "reverse", "mdi:rewind")}
+                ${this._renderButton("command", "play", "mdi:play-pause")}
+                ${this._renderButton("command", "forward", "mdi:fast-forward")}
+            </div>
+
+            <div class="row">
+                ${this._renderButton("volume", "volume_down", "mdi:volume-minus")}
+                ${this._renderButton("volume", "volume_mute", "mdi:volume-mute")}
+                ${this._renderButton("volume", "volume_up", "mdi:volume-plus")}
+            </div>
+        `;
+    }
+
+    private _renderAppSelectMode(): TemplateResult {
+        return html`
+            <div class="app-list">
+                ${this.stateObj!.attributes.source_list.map(
+                    (app: string) => html` <div class="app-item" @click=${() => this.selectApp(app)}>${app}</div> `
+                )}
+            </div>
+        `;
+    }
+
+    private _renderFooter(): TemplateResult {
+        return html`
+            <div class="row">
+                ${this._renderButton("navigate", "remote", "mdi:remote-tv")}
+                <div class="logo">
+                    <img src="${rokuLogo}" />
+                </div>
+                ${this._renderButton("navigate", "app_select", "mdi:apps-box")}
+            </div>
+        `;
+    }
+
+    private _renderButton(category: string, button: string, icon: string): TemplateResult {
+        return html`
+            <div class="icon" data-category=${category} data-button=${button} @click=${this._handleButton}>
                 <ha-icon .icon=${icon}></ha-icon>
             </div>
         `;
     }
 
-    private handleButton(e: Event): void {
+    private _handleButton(e: Event): void {
         e.stopPropagation();
         if (!this.hass || !this.entity) return;
 
