@@ -38,13 +38,12 @@ export class TVRemoteCard extends LitElement {
         return css`
             .container {
                 display: flex;
-                width: 22rem;
-                margin: 1rem;
-                padding: 1rem;
+                width: fit-content;
+                margin: 1.2rem;
+                padding: 1.2rem;
                 border: var(--sq-card-border, none);
                 border-radius: var(--sq-card-border-radius, 1.5rem);
                 flex-direction: column;
-                height: 100%; /* Ensure container takes full height */
             }
             .warning {
                 display: block;
@@ -52,8 +51,14 @@ export class TVRemoteCard extends LitElement {
                 background-color: #fce588;
                 padding: 8px;
             }
+            .row {
+                display: flex;
+                margin: 0.6rem 0 0.6rem 0;
+                justify-content: center;
+                align-items: center;
+            }
             .name {
-                padding: 1rem 1rem 0.25rem 1rem;
+                padding-bottom: 0.3rem;
                 text-align: center;
                 overflow: hidden;
                 text-overflow: ellipsis;
@@ -62,7 +67,7 @@ export class TVRemoteCard extends LitElement {
                 color: rgb(var(--sq-primary-font-rgb), 128, 128, 128);
             }
             .app {
-                padding: 0.25rem 1rem 0 1rem;
+                padding-top: 0.3rem;
                 text-align: center;
                 overflow: hidden;
                 text-overflow: ellipsis;
@@ -71,19 +76,13 @@ export class TVRemoteCard extends LitElement {
                 color: rgb(var(--sq-secondary-font-rgb), 128, 128, 128);
             }
             .body {
-                height: 37.5rem;
+                height: 34rem;
                 overflow-y: auto;
                 -ms-overflow-style: none; /* Hide scrollbar for Internet Explorer 10+ */
                 scrollbar-width: none; /* Hide scrollbar for Firefox */
             }
             .body::-webkit-scrollbar {
                 display: none; /* Hide scrollbar for Safari and Chrome */
-            }
-            .row {
-                display: flex;
-                margin: 0.6rem 0 0.6rem 0;
-                justify-content: center;
-                align-items: center;
             }
             .icon {
                 display: flex;
