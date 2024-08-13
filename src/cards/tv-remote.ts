@@ -107,22 +107,22 @@ export class TVRemoteCard extends LitElement {
             }
             .app-list {
                 display: grid;
-                grid-template-columns: repeat(3, 1fr);
+                grid-template-columns: repeat(3, 5.5rem);
+                grid-auto-rows: calc(5.5rem / 1.33);
                 gap: 1.2rem;
+                justify-content: center;
                 width: 100%;
             }
             .app-item {
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                width: 5.5rem;
-                height: calc(5.5rem / 1.33);
                 cursor: pointer;
             }
             .app-item img {
                 width: 100%;
                 height: 100%;
-                object-fit: contain;
+                object-fit: cover;
             }
         `;
     }
@@ -289,7 +289,6 @@ export class TVRemoteCard extends LitElement {
             return "";
         } else {
             return `
-                padding: 0.6rem;
                 background: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
                 font-weight: var(--sq-secondary-font-weight, 300);
                 font-size: var(--sq-secondary-font-size, 1rem);
