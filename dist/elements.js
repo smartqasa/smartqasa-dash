@@ -463,6 +463,22 @@ let TVRemoteCard = class TVRemoteCard extends h {
                 --mdc-icon-size: 2rem;
             }
             .app-section {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+            .active-app {
+                width: 5.5rem;
+                height: calc(5.5rem / 1.33);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin-bottom: var(--spacing-md, 1rem);
+            }
+            .active-app img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
             }
             .app-list {
                 display: grid;
@@ -471,6 +487,9 @@ let TVRemoteCard = class TVRemoteCard extends h {
                 gap: var(--spacing-lg, 1.2rem);
                 justify-content: center;
                 width: 100%;
+                height: 35rem;
+                overflow: hidden;
+                overflow-y: auto;
             }
             .app-item {
                 display: flex;
@@ -554,7 +573,7 @@ let TVRemoteCard = class TVRemoteCard extends h {
                 <div class="name">${this.config.name || this.stateObj.attributes.friendly_name || "TV Remote"}</div>
                 <div class="sections">
                     <div class="remote-section">${this._renderRemoteSection()}</div>
-                    <div class="app-section">${this._renderAppSelectSection()}</div>
+                    <div class="app-section">${this._renderAppSection()}</div>
                 </div>
             </div>
         `;
@@ -593,22 +612,18 @@ let TVRemoteCard = class TVRemoteCard extends h {
             </div>
         `;
     }
-    _renderAppSelectSection() {
+    _renderAppSection() {
         const activeApp = this.stateObj.attributes.app_name;
         const activeIcon = channelTable[activeApp];
+        // Filter out the active app from the source list
+        const availableApps = this.stateObj.attributes.source_list.filter((app) => app !== activeApp);
         return ke `
             <div class="app-section">
-                <div class="row">
-                    ${activeIcon
-            ? ke `<img
-                              src="${activeIcon}"
-                              alt="${activeApp}"
-                              style="${this._getAppItemStyle(activeIcon)}"
-                          />`
-            : ke `${activeApp}`}
+                <div class="active-app">
+                    ${activeIcon ? ke `<img src="${activeIcon}" alt="${activeApp}" />` : ke `${activeApp}`}
                 </div>
                 <div class="app-list">
-                    ${this.stateObj.attributes.source_list.map((app) => {
+                    ${availableApps.map((app) => {
             const icon = channelTable[app];
             return ke `
                             <div
