@@ -3,10 +3,13 @@ import abcIcon from "../assets/channel_icons/apple_tv.webp";
 import animalPlanetGoIcon from "../assets/channel_icons/animal_planet_go.webp";
 import appleTvIcon from "../assets/channel_icons/apple_tv.webp";
 import bbcAmericaIcon from "../assets/channel_icons/bbc_america.webp";
+import bluetoothAudioIcon from "../assets/channel_icons/bluetooth_audio.webp";
 import bravoIcon from "../assets/channel_icons/bravo.webp";
 import cbsIcon from "../assets/channel_icons/cbs.webp";
 import cbsSportsIcon from "../assets/channel_icons/cbs_sports.webp";
 import cnnIcon from "../assets/channel_icons/cnn.webp";
+import curiosityStreamIcon from "../assets/channel_icons/curiosity_stream.webp";
+import dailyDocumentaryIcon from "../assets/channel_icons/daily_documentary.webp";
 import discoveryGoIcon from "../assets/channel_icons/discovery_go.webp";
 import discoveryPlusIcon from "../assets/channel_icons/discovery_plus.webp";
 import disneyPlusIcon from "../assets/channel_icons/disney_plus.webp";
@@ -58,12 +61,15 @@ const channelTable: ChannelTable = {
     "Animal Planet GO": animalPlanetGoIcon,
     "Apple TV": appleTvIcon,
     "BBC America": bbcAmericaIcon,
+    "Bluetood Audio": bluetoothAudioIcon,
     Bravo: bravoIcon,
     CBS: cbsIcon,
     "CBS Sports Stream & Watch Live": cbsSportsIcon,
     CNN: cnnIcon,
+    "Curiosity Stream": curiosityStreamIcon,
+    "Daily Documentary": dailyDocumentaryIcon,
     "Discovery GO": discoveryGoIcon,
-    "Discovery Plus": discoveryPlusIcon,
+    "discovery+ | Stream TV Shows": discoveryPlusIcon,
     "Disney Plus": disneyPlusIcon,
     ESPN: espnIcon,
     "FOX Sports": foxSportsIcon,
