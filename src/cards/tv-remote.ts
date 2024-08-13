@@ -52,9 +52,6 @@ export class TVRemoteCard extends LitElement {
                 border: var(--sq-card-border, none);
                 border-radius: var(--sq-card-border-radius, 1.5rem);
             }
-            .content {
-                display: flex;
-            }
             .name {
                 padding-bottom: 0.3rem;
                 text-align: center;
@@ -64,6 +61,9 @@ export class TVRemoteCard extends LitElement {
                 font-size: var(--sq-primary-font-size, 1.5rem);
                 color: rgb(var(--sq-primary-font-rgb, 128, 128, 128));
                 width: 100%;
+            }
+            .sections {
+                display: flex;
             }
             .remote-section {
                 margin-right: 1.2rem;
@@ -87,11 +87,17 @@ export class TVRemoteCard extends LitElement {
             .body::-webkit-scrollbar {
                 display: none; /* Hide scrollbar for Safari and Chrome */
             }
+            .row {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin-bottom: 0.5rem;
+            }
             .icon {
                 display: flex;
                 justify-content: center;
                 align-self: center;
-                margin: 1rem;
+                margin: 0.3rem;
                 padding: 1rem;
                 border: var(--sq-card-border, none);
                 border-radius: 1rem;
@@ -200,7 +206,7 @@ export class TVRemoteCard extends LitElement {
         return html`
             <div class="container">
                 <div class="name">${this.config!.name || this.stateObj!.attributes.friendly_name || "TV Remote"}</div>
-                <div class="content">
+                <div class="sections">
                     <div class="remote-section">${this._renderRemoteMode()}</div>
                     <div class="app-section">
                         <div class="app">${this.stateObj!.attributes.app_name || html`&nbsp;`}</div>
@@ -213,6 +219,7 @@ export class TVRemoteCard extends LitElement {
 
     private _renderRemoteMode(): TemplateResult {
         return html`
+            <div class="row">${this._renderButton("power", "power", "mdi:power")}</div>
             <div class="row">
                 ${this._renderButton("command", "back", "mdi:restore")}
                 ${this._renderButton("command", "info", "mdi:asterisk")}
