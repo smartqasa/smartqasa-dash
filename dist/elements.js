@@ -464,13 +464,13 @@ let TVRemoteCard = class TVRemoteCard extends h {
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                margin-bottom: 0.5rem;
+                margin-bottom: 0.6rem;
             }
             .icon {
                 display: flex;
                 justify-content: center;
                 align-self: center;
-                margin: 0.3rem;
+                margin: 0.6rem;
                 padding: 1rem;
                 border: var(--sq-card-border, none);
                 border-radius: 1rem;
