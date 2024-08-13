@@ -49,7 +49,7 @@ export class TVRemoteCard extends LitElement {
                 border-radius: var(--sq-card-border-radius, 1.5rem);
             }
             .name {
-                padding: var(--spacing-sm, 0.5rem);
+                padding: 0.5rem;
                 text-align: center;
                 overflow: hidden;
                 text-overflow: ellipsis;
@@ -61,7 +61,7 @@ export class TVRemoteCard extends LitElement {
             .sections {
                 display: grid;
                 grid-template-columns: auto auto;
-                gap: var(--spacing-lg, 1.5rem);
+                gap: 3rem;
             }
             .remote-section {
             }
@@ -69,13 +69,12 @@ export class TVRemoteCard extends LitElement {
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                margin-bottom: var(--spacing-sm, 0.5rem);
             }
             .icon {
                 display: flex;
                 justify-content: center;
                 align-self: center;
-                margin: var(--spacing-sm, 0.8rem);
+                margin: 0.8rem;
                 padding: 1rem;
                 border: var(--sq-card-border, none);
                 border-radius: var(--border-radius, 1rem);
@@ -107,7 +106,7 @@ export class TVRemoteCard extends LitElement {
                 display: grid;
                 grid-template-columns: repeat(3, 5.5rem);
                 grid-auto-rows: calc(5.5rem / 1.33);
-                gap: var(--spacing-lg, 1.2rem);
+                gap: 1rem;
                 justify-content: center;
                 width: 100%;
                 height: 37rem;
