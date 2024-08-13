@@ -383,7 +383,7 @@ let TVRemoteCard = class TVRemoteCard extends h {
             }
             .app-list {
                 display: grid;
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: repeat(3, 1fr);
                 gap: 1.2rem;
                 width: 100%;
             }
@@ -393,13 +393,6 @@ let TVRemoteCard = class TVRemoteCard extends h {
                 align-items: center;
                 width: 5.5rem;
                 height: calc(5.5rem / 1.33);
-                background: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
-                font-weight: var(--sq-secondary-font-weight, 300);
-                font-size: var(--sq-secondary-font-size, 1rem);
-                color: rgb(var(--sq-accent-rgb), 0, 120, 230);
-                text-overflow: ellipsis;
-                white-space: nowrap;
-                overflow: hidden;
                 cursor: pointer;
             }
             .app-item img {
@@ -541,7 +534,7 @@ let TVRemoteCard = class TVRemoteCard extends h {
                         <div
                             class="app-item"
                             @click=${() => this.selectApp(app)}
-                            style="${icon ? "" : "padding: 0.6rem;"}"
+                            style="${this._getAppItemStyle(icon)}"
                         >
                             ${icon ? ke `<img src="${icon}" alt="${app}" />` : ke `${app}`}
                         </div>
@@ -549,6 +542,22 @@ let TVRemoteCard = class TVRemoteCard extends h {
         })}
             </div>
         `;
+    }
+    _getAppItemStyle(icon) {
+        if (icon) {
+            return "";
+        }
+        else {
+            return `
+                padding: 0.6rem;
+                background: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
+                font-weight: var(--sq-secondary-font-weight, 300);
+                font-size: var(--sq-secondary-font-size, 1rem);
+                color: rgb(var(--sq-accent-rgb), 0, 120, 230);
+                text-overflow: ellipsis;
+                overflow: hidden;
+            `;
+        }
     }
     _handleButton(e) {
         e.stopPropagation();

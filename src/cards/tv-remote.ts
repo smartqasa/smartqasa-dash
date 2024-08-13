@@ -107,7 +107,7 @@ export class TVRemoteCard extends LitElement {
             }
             .app-list {
                 display: grid;
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: repeat(3, 1fr);
                 gap: 1.2rem;
                 width: 100%;
             }
@@ -117,13 +117,6 @@ export class TVRemoteCard extends LitElement {
                 align-items: center;
                 width: 5.5rem;
                 height: calc(5.5rem / 1.33);
-                background: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
-                font-weight: var(--sq-secondary-font-weight, 300);
-                font-size: var(--sq-secondary-font-size, 1rem);
-                color: rgb(var(--sq-accent-rgb), 0, 120, 230);
-                text-overflow: ellipsis;
-                white-space: nowrap;
-                overflow: hidden;
                 cursor: pointer;
             }
             .app-item img {
@@ -281,7 +274,7 @@ export class TVRemoteCard extends LitElement {
                         <div
                             class="app-item"
                             @click=${() => this.selectApp(app)}
-                            style="${icon ? "" : "padding: 0.6rem;"}"
+                            style="${this._getAppItemStyle(icon)}"
                         >
                             ${icon ? html`<img src="${icon}" alt="${app}" />` : html`${app}`}
                         </div>
@@ -289,6 +282,22 @@ export class TVRemoteCard extends LitElement {
                 })}
             </div>
         `;
+    }
+
+    private _getAppItemStyle(icon: string | undefined): string {
+        if (icon) {
+            return "";
+        } else {
+            return `
+                padding: 0.6rem;
+                background: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
+                font-weight: var(--sq-secondary-font-weight, 300);
+                font-size: var(--sq-secondary-font-size, 1rem);
+                color: rgb(var(--sq-accent-rgb), 0, 120, 230);
+                text-overflow: ellipsis;
+                overflow: hidden;
+            `;
+        }
     }
 
     private _handleButton(e: Event): void {
