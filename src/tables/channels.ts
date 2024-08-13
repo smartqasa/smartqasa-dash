@@ -1,5 +1,5 @@
 import aeIcon from "../assets/channel_icons/a_e.webp";
-import abcIcon from "../assets/channel_icons/apple_tv.webp";
+import abcIcon from "../assets/channel_icons/abc.webp";
 import abdNewsIcon from "../assets/channel_icons/abc_news.webp";
 import adultSwimIcon from "../assets/channel_icons/adult_swim.webp";
 import animalPlanetGoIcon from "../assets/channel_icons/animal_planet_go.webp";
@@ -35,7 +35,7 @@ import iheartIcon from "../assets/channel_icons/iheart.webp";
 import ipCameraViewerProIcon from "../assets/channel_icons/ip_camera_viewer_pro.webp";
 import kidsAndFamilyRokuIcon from "../assets/channel_icons/kids_and_family_roku.webp";
 import liveTvGuideIcon from "../assets/channel_icons/live_tv_guide.webp";
-import liveTvOnRokuIcon from "../assets/channel_icons/roku_channel.webp";
+import liveTvOnRokuIcon from "../assets/channel_icons/live_tv_on_roku.webp";
 import localNowIcon from "../assets/channel_icons/local_now.webp";
 import mlbIcon from "../assets/channel_icons/mlb.webp";
 import masterclassIcon from "../assets/channel_icons/masterclass.webp";

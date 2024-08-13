@@ -3,7 +3,7 @@ import { customElement, property, state } from "lit/decorators.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "../types";
 import { callService } from "../utils/call-service";
-import channelTable from "../tables/channels";
+import channelTable from "../tables/channels"; // Adjust the import path as needed
 
 interface Config extends LovelaceCardConfig {
     entity: string;
@@ -14,14 +14,14 @@ interface Config extends LovelaceCardConfig {
 }
 
 window.customCards.push({
-    type: "smartqasa-tv-remote-card",
-    name: "SmartQasa TV Remote Card",
+    type: "smartqasa-tv-remote-card-v1",
+    name: "SmartQasa TV Remote Card V1",
     preview: true,
     description: "A SmartQasa card for simulating a television remote control.",
 });
 
-@customElement("smartqasa-tv-remote-card")
-export class TVRemoteCard extends LitElement {
+@customElement("smartqasa-tv-remote-card-v1")
+export class TVRemoteCardV1 extends LitElement {
     getCardSize() {
         return 7;
     }
@@ -45,15 +45,23 @@ export class TVRemoteCard extends LitElement {
             }
             .container {
                 display: flex;
-                flex-direction: column;
                 width: fit-content;
                 margin: 1.2rem;
                 padding: 1.2rem;
                 border: var(--sq-card-border, none);
                 border-radius: var(--sq-card-border-radius, 1.5rem);
+                flex-direction: column;
             }
-            .content {
+            .warning {
+                display: block;
+                color: black;
+                background-color: #fce588;
+                padding: 8px;
+            }
+            .row {
                 display: flex;
+                justify-content: center;
+                align-items: center;
             }
             .name {
                 padding-bottom: 0.3rem;
@@ -63,13 +71,9 @@ export class TVRemoteCard extends LitElement {
                 font-weight: var(--sq-primary-font-weight, 400);
                 font-size: var(--sq-primary-font-size, 1.5rem);
                 color: rgb(var(--sq-primary-font-rgb, 128, 128, 128));
-                width: 100%;
-            }
-            .remote-section {
-                margin-right: 1.2rem;
             }
             .app {
-                padding-bottom: 0.3rem;
+                padding: 0.3rem 0;
                 text-align: center;
                 overflow: hidden;
                 text-overflow: ellipsis;
@@ -197,16 +201,26 @@ export class TVRemoteCard extends LitElement {
             `;
         }
 
+        const content = this.mode === "app_select" ? this._renderAppSelectMode() : this._renderRemoteMode();
+
         return html`
             <div class="container">
-                <div class="name">${this.config!.name || this.stateObj!.attributes.friendly_name || "TV Remote"}</div>
-                <div class="content">
-                    <div class="remote-section">${this._renderRemoteMode()}</div>
-                    <div class="app-section">
-                        <div class="app">${this.stateObj!.attributes.app_name || html`&nbsp;`}</div>
-                        <div class="body">${this._renderAppSelectMode()}</div>
-                    </div>
-                </div>
+                ${this._renderHeader()}
+                <div class="body">${content}</div>
+            </div>
+        `;
+    }
+
+    private _renderHeader(): TemplateResult {
+        return html`
+            <div class="name">${this.config!.name || this.stateObj!.attributes.friendly_name || "TV Remote"}</div>
+
+            <div class="app">${this.stateObj!.attributes.app_name || html`&nbsp;`}</div>
+
+            <div class="row">
+                ${this._renderButton("navigate", "remote", "mdi:remote-tv")}
+                ${this._renderButton("power", "power", "mdi:power")}
+                ${this._renderButton("navigate", "app_select", "mdi:apps")}
             </div>
         `;
     }
@@ -218,18 +232,23 @@ export class TVRemoteCard extends LitElement {
                 ${this._renderButton("command", "info", "mdi:asterisk")}
                 ${this._renderButton("command", "home", "mdi:home")}
             </div>
+
             <div class="row">${this._renderButton("command", "up", "mdi:chevron-up")}</div>
+
             <div class="row">
                 ${this._renderButton("command", "left", "mdi:chevron-left")}
                 ${this._renderButton("command", "select", "mdi:checkbox-blank-circle")}
                 ${this._renderButton("command", "right", "mdi:chevron-right")}
             </div>
+
             <div class="row">${this._renderButton("command", "down", "mdi:chevron-down")}</div>
+
             <div class="row">
                 ${this._renderButton("command", "reverse", "mdi:rewind")}
                 ${this._renderButton("command", "play", "mdi:play-pause")}
                 ${this._renderButton("command", "forward", "mdi:fast-forward")}
             </div>
+
             <div class="row">
                 ${this._renderButton("volume", "volume_down", "mdi:volume-minus")}
                 ${this._renderButton("volume_mute", "volume_mute", "mdi:volume-mute")}
@@ -266,9 +285,10 @@ export class TVRemoteCard extends LitElement {
     }
 
     private _getAppItemStyle(icon: string | undefined): string {
-        return icon
-            ? ""
-            : `
+        if (icon) {
+            return "";
+        } else {
+            return `
                 background: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
                 font-weight: var(--sq-secondary-font-weight, 300);
                 font-size: var(--sq-secondary-font-size, 1rem);
@@ -276,6 +296,7 @@ export class TVRemoteCard extends LitElement {
                 text-overflow: ellipsis;
                 overflow: hidden;
             `;
+        }
     }
 
     private _handleButton(e: Event): void {
@@ -292,6 +313,8 @@ export class TVRemoteCard extends LitElement {
             this.handleVolume(button);
         } else if (category === "command") {
             this.handleCommand(button);
+        } else if (category === "navigate") {
+            this.handleNavigate(button);
         }
     }
 
@@ -328,6 +351,10 @@ export class TVRemoteCard extends LitElement {
 
     private handleCommand(button: string): void {
         callService(this.hass!, "remote", "send_command", { entity_id: this.entities.remote, command: button });
+    }
+
+    private handleNavigate(button: string): void {
+        this.mode = button;
     }
 
     private selectApp(app: string): void {
