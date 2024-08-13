@@ -68,7 +68,6 @@ export class TVRemoteCard extends LitElement {
                 gap: 1.5rem;
             }
             .remote-section {
-                margin-right: 1.2rem;
             }
             .row {
                 display: flex;
@@ -79,7 +78,7 @@ export class TVRemoteCard extends LitElement {
                 display: flex;
                 justify-content: center;
                 align-self: center;
-                margin: 0.6rem;
+                margin: 0.8rem;
                 padding: 1rem;
                 border: var(--sq-card-border, none);
                 border-radius: 1rem;
@@ -89,14 +88,7 @@ export class TVRemoteCard extends LitElement {
             ha-icon {
                 --mdc-icon-size: 2rem;
             }
-            .body {
-                height: 37rem;
-                overflow-y: auto;
-                -ms-overflow-style: none; /* Hide scrollbar for Internet Explorer 10+ */
-                scrollbar-width: none; /* Hide scrollbar for Firefox */
-            }
-            .body::-webkit-scrollbar {
-                display: none; /* Hide scrollbar for Safari and Chrome */
+            .app-section {
             }
             .app-list {
                 display: grid;
@@ -235,27 +227,35 @@ export class TVRemoteCard extends LitElement {
 
     private _renderButton(category: string, button: string, icon: string): TemplateResult {
         return html`
-            <div class="icon" data-category=${category} data-button=${button} @pointerdown=${this._handleButton}>
+            <div class="icon" data-category=${category} data-button=${button} @click=${this._handleButton}>
                 <ha-icon .icon=${icon}></ha-icon>
             </div>
         `;
     }
 
     private _renderAppSelectSection(): TemplateResult {
+        const activeApp = this.stateObj!.attributes.app_name;
+        const activeIcon = channelTable[activeApp];
+
         return html`
-            <div class="app-list">
-                ${this.stateObj!.attributes.source_list.map((app: string) => {
-                    const icon = channelTable[app];
-                    return html`
-                        <div
-                            class="app-item"
-                            @click=${() => this.selectApp(app)}
-                            style="${this._getAppItemStyle(icon)}"
-                        >
-                            ${icon ? html`<img src="${icon}" alt="${app}" />` : html`${app}`}
-                        </div>
-                    `;
-                })}
+            <div class="app-section">
+                <div class="row">
+                    ${activeIcon ? html`<img src="${activeIcon}" alt="${activeApp}" />` : html`${activeApp}`}
+                </div>
+                <div class="app-list">
+                    ${this.stateObj!.attributes.source_list.map((app: string) => {
+                        const icon = channelTable[app];
+                        return html`
+                            <div
+                                class="app-item"
+                                @click=${() => this.selectApp(app)}
+                                style="${this._getAppItemStyle(icon)}"
+                            >
+                                ${icon ? html`<img src="${icon}" alt="${app}" />` : html`${app}`}
+                            </div>
+                        `;
+                    })}
+                </div>
             </div>
         `;
     }
