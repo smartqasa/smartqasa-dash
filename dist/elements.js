@@ -346,7 +346,7 @@ let TVRemoteCard = class TVRemoteCard extends h {
                 text-overflow: ellipsis;
                 font-weight: var(--sq-primary-font-weight, 400);
                 font-size: var(--sq-primary-font-size, 1.5rem);
-                color: rgb(var(--sq-primary-font-rgb), 128, 128, 128);
+                color: rgb(var(--sq-primary-font-rgb, 128, 128, 128));
             }
             .app {
                 padding: 0.3rem 0;
@@ -356,7 +356,7 @@ let TVRemoteCard = class TVRemoteCard extends h {
                 white-space: nowrap;
                 font-weight: var(--sq-secondary-font-weight, 300);
                 font-size: var(--sq-secondary-font-size, 1rem);
-                color: rgb(var(--sq-accent-rgb), 0, 120, 230);
+                color: rgb(var(--sq-accent-rgb, 0, 120, 230));
             }
             .body {
                 height: 37rem;
