@@ -426,7 +426,7 @@ let TVRemoteCard = class TVRemoteCard extends h {
                 border-radius: var(--sq-card-border-radius, 1.5rem);
             }
             .name {
-                padding-bottom: 0.3rem;
+                padding: 0.5rem;
                 text-align: center;
                 overflow: hidden;
                 text-overflow: ellipsis;
@@ -436,7 +436,9 @@ let TVRemoteCard = class TVRemoteCard extends h {
                 width: 100%;
             }
             .sections {
-                display: flex;
+                display: grid;
+                grid-template-columns: auto auto;
+                gap: 1.5rem;
             }
             .remote-section {
                 margin-right: 1.2rem;
