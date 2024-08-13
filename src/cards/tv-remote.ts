@@ -106,33 +106,28 @@ export class TVRemoteCard extends LitElement {
                 --mdc-icon-size: 2rem;
             }
             .app-list {
-                display: flex;
-                flex-wrap: wrap;
-                justify-content: center;
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 0.4rem;
+                width: 100%;
             }
             .app-item {
-                margin: 0.4rem;
+                display: flex;
+                justify-content: center;
+                align-items: center;
                 padding: 0.6rem;
                 background: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
                 color: rgb(var(--sq-primary-font-rgb), 128, 128, 128);
                 border: var(--sq-card-border, none);
                 border-radius: 0.5rem;
                 cursor: pointer;
+                overflow: hidden;
+                aspect-ratio: 1.33 / 1;
             }
             .app-item img {
-                width: 2rem;
-                height: 2rem;
-            }
-            .logo {
-                display: flex;
-                margin: 0 0.8rem 0 0.8rem;
-                justify-content: center;
-                align-items: center;
-            }
-            .logo img {
-                height: 4rem;
-                width: 4rem;
-                border-radius: 1rem;
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
             }
         `;
     }
