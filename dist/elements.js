@@ -383,22 +383,19 @@ let TVRemoteCard = class TVRemoteCard extends h {
             }
             .app-list {
                 display: grid;
-                grid-template-columns: repeat(3, 1fr);
-                gap: 0.4rem;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.6rem;
                 width: 100%;
             }
             .app-item {
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                padding: 0.6rem;
+                width: 3rem; /* Set the fixed width */
+                height: calc(3rem / 1.33); /* Maintain the aspect ratio of 1.33:1 */
                 background: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
-                color: rgb(var(--sq-primary-font-rgb), 128, 128, 128);
-                border: var(--sq-card-border, none);
-                border-radius: 0.5rem;
                 cursor: pointer;
                 overflow: hidden;
-                aspect-ratio: 1.33 / 1;
             }
             .app-item img {
                 width: 100%;
