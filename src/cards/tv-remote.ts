@@ -70,30 +70,10 @@ export class TVRemoteCard extends LitElement {
             .remote-section {
                 margin-right: 1.2rem;
             }
-            .app {
-                padding-bottom: 0.3rem;
-                text-align: center;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-                font-weight: var(--sq-secondary-font-weight, 300);
-                font-size: var(--sq-secondary-font-size, 1rem);
-                color: rgb(var(--sq-accent-rgb, 0, 120, 230));
-            }
-            .body {
-                height: 37rem;
-                overflow-y: auto;
-                -ms-overflow-style: none; /* Hide scrollbar for Internet Explorer 10+ */
-                scrollbar-width: none; /* Hide scrollbar for Firefox */
-            }
-            .body::-webkit-scrollbar {
-                display: none; /* Hide scrollbar for Safari and Chrome */
-            }
             .row {
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                margin-bottom: 0.6rem;
             }
             .icon {
                 display: flex;
@@ -108,6 +88,15 @@ export class TVRemoteCard extends LitElement {
             }
             ha-icon {
                 --mdc-icon-size: 2rem;
+            }
+            .body {
+                height: 37rem;
+                overflow-y: auto;
+                -ms-overflow-style: none; /* Hide scrollbar for Internet Explorer 10+ */
+                scrollbar-width: none; /* Hide scrollbar for Firefox */
+            }
+            .body::-webkit-scrollbar {
+                display: none; /* Hide scrollbar for Safari and Chrome */
             }
             .app-list {
                 display: grid;
@@ -209,17 +198,14 @@ export class TVRemoteCard extends LitElement {
             <div class="container">
                 <div class="name">${this.config!.name || this.stateObj!.attributes.friendly_name || "TV Remote"}</div>
                 <div class="sections">
-                    <div class="remote-section">${this._renderRemoteMode()}</div>
-                    <div class="app-section">
-                        <div class="app">${this.stateObj!.attributes.app_name || html`&nbsp;`}</div>
-                        <div class="body">${this._renderAppSelectMode()}</div>
-                    </div>
+                    <div class="remote-section">${this._renderRemoteSection()}</div>
+                    <div class="app-section">${this._renderAppSelectSection()}</div>
                 </div>
             </div>
         `;
     }
 
-    private _renderRemoteMode(): TemplateResult {
+    private _renderRemoteSection(): TemplateResult {
         return html`
             <div class="row">${this._renderButton("power", "power", "mdi:power")}</div>
             <div class="row">
@@ -255,7 +241,7 @@ export class TVRemoteCard extends LitElement {
         `;
     }
 
-    private _renderAppSelectMode(): TemplateResult {
+    private _renderAppSelectSection(): TemplateResult {
         return html`
             <div class="app-list">
                 ${this.stateObj!.attributes.source_list.map((app: string) => {
