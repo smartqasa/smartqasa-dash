@@ -3,8 +3,7 @@ import { customElement, property, state } from "lit/decorators.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "../types";
 import { callService } from "../utils/call-service";
-
-import rokuLogo from "../assets/tv-remote/logos/roku.webp";
+import channelTable from "../tables/channels"; // Adjust the import path as needed
 
 interface Config extends LovelaceCardConfig {
     entity: string;
@@ -81,7 +80,7 @@ export class TVRemoteCard extends LitElement {
                 white-space: nowrap;
                 font-weight: var(--sq-secondard-font-weight, 300);
                 font-size: var(--sq-secondary-font-size, 1rem);
-                color: rgb(0, 120, 230);
+                color: rgb(var(--sq-accent-rgb), 0, 120, 230);
             }
             .body {
                 height: 37rem;
@@ -119,6 +118,10 @@ export class TVRemoteCard extends LitElement {
                 border: var(--sq-card-border, none);
                 border-radius: 0.5rem;
                 cursor: pointer;
+            }
+            .app-item img {
+                width: 2rem;
+                height: 2rem;
             }
             .logo {
                 display: flex;
@@ -258,8 +261,8 @@ export class TVRemoteCard extends LitElement {
 
             <div class="row">
                 ${this._renderButton("volume", "volume_down", "mdi:volume-minus")}
-                ${this._renderButton("volume", "volume_mute", "mdi:volume-mute")}
-                ${this._renderButton("volume", "volume_up", "mdi:volume-plus")}
+                ${this._renderButton("volume_mute", "volume_mute", "mdi:volume-mute")}
+                ${this._renderButton("volume_up", "volume_up", "mdi:volume-plus")}
             </div>
         `;
     }
@@ -268,20 +271,13 @@ export class TVRemoteCard extends LitElement {
         return html`
             <div class="app-list">
                 ${this.stateObj!.attributes.source_list.map(
-                    (app: string) => html` <div class="app-item" @click=${() => this.selectApp(app)}>${app}</div> `
+                    (app: string) =>
+                        html`
+                            <div class="app-item" @click=${() => this.selectApp(app)}>
+                                <img src="${channelTable[app] || ""}" alt="${app}" />
+                            </div>
+                        `
                 )}
-            </div>
-        `;
-    }
-
-    private _renderFooter(): TemplateResult {
-        return html`
-            <div class="row">
-                ${this._renderButton("navigate", "remote", "mdi:remote-tv")}
-                <div class="logo">
-                    <img src="${rokuLogo}" />
-                </div>
-                ${this._renderButton("navigate", "app_select", "mdi:apps-box")}
             </div>
         `;
     }
@@ -314,13 +310,6 @@ export class TVRemoteCard extends LitElement {
     }
 
     private handlePower(): void {
-        /*
-        const entity = this.entities.video || undefined;
-        if (entity) {
-            callService(this.hass!, "media_player", "toggle", { entity_id: entity });
-            return;
-        }
-*/
         callService(this.hass!, "remote", "send_command", { entity_id: this.entities.remote, command: "power" });
     }
 
