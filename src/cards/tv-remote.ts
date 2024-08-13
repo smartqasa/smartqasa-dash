@@ -22,10 +22,6 @@ window.customCards.push({
 
 @customElement("smartqasa-tv-remote-card")
 export class TVRemoteCard extends LitElement {
-    getCardSize() {
-        return 7;
-    }
-
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() private config?: Config;
     @state() private mode: string = "remote";
@@ -47,13 +43,13 @@ export class TVRemoteCard extends LitElement {
                 display: flex;
                 flex-direction: column;
                 width: fit-content;
-                margin: 1.2rem;
-                padding: 1.2rem;
+                margin: var(--spacing, 1.2rem);
+                padding: var(--spacing, 1.2rem);
                 border: var(--sq-card-border, none);
                 border-radius: var(--sq-card-border-radius, 1.5rem);
             }
             .name {
-                padding: 0.5rem;
+                padding: var(--spacing-sm, 0.5rem);
                 text-align: center;
                 overflow: hidden;
                 text-overflow: ellipsis;
@@ -65,7 +61,7 @@ export class TVRemoteCard extends LitElement {
             .sections {
                 display: grid;
                 grid-template-columns: auto auto;
-                gap: 1.5rem;
+                gap: var(--spacing-lg, 1.5rem);
             }
             .remote-section {
             }
@@ -73,15 +69,16 @@ export class TVRemoteCard extends LitElement {
                 display: flex;
                 justify-content: center;
                 align-items: center;
+                margin-bottom: var(--spacing-sm, 0.5rem);
             }
             .icon {
                 display: flex;
                 justify-content: center;
                 align-self: center;
-                margin: 0.8rem;
-                padding: 1rem;
+                margin: var(--spacing-sm, 0.8rem);
+                padding: var(--spacing-md, 1rem);
                 border: var(--sq-card-border, none);
-                border-radius: 1rem;
+                border-radius: var(--border-radius, 1rem);
                 background-color: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
                 cursor: pointer;
             }
@@ -94,7 +91,7 @@ export class TVRemoteCard extends LitElement {
                 display: grid;
                 grid-template-columns: repeat(3, 5.5rem);
                 grid-auto-rows: calc(5.5rem / 1.33);
-                gap: 1.2rem;
+                gap: var(--spacing-lg, 1.2rem);
                 justify-content: center;
                 width: 100%;
             }
@@ -240,7 +237,13 @@ export class TVRemoteCard extends LitElement {
         return html`
             <div class="app-section">
                 <div class="row">
-                    ${activeIcon ? html`<img src="${activeIcon}" alt="${activeApp}" />` : html`${activeApp}`}
+                    ${activeIcon
+                        ? html`<img
+                              src="${activeIcon}"
+                              alt="${activeApp}"
+                              style="${this._getAppItemStyle(activeIcon)}"
+                          />`
+                        : html`${activeApp}`}
                 </div>
                 <div class="app-list">
                     ${this.stateObj!.attributes.source_list.map((app: string) => {

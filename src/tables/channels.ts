@@ -23,6 +23,7 @@ import fandangoAtHomeIcon from "../assets/channel_icons/fandango_at_home.webp";
 import foxSportsIcon from "../assets/channel_icons/fox_sports.webp";
 import fxNowIcon from "../assets/channel_icons/fx_now.webp";
 import foxbusinessIcon from "../assets/channel_icons/fox_business.webp";
+import foxNationIcon from "../assets/channel_icons/fox_nation.webp";
 import foxNewsIcon from "../assets/channel_icons/fox_news.webp";
 import freebieTvIcon from "../assets/channel_icons/freebie_tv.webp";
 import freeveeIcon from "../assets/channel_icons/freevee.webp";
@@ -109,6 +110,7 @@ const channelTable: ChannelTable = {
     "FOX Sports": foxSportsIcon,
     FXNOW: fxNowIcon,
     "Fox Business Network": foxbusinessIcon,
+    "Fox Nation": foxNationIcon,
     "Fox News: US, World, & Election Headlines": foxNewsIcon,
     "Freebie TV Free Movies & TV": freebieTvIcon,
     Freevee: freeveeIcon,
