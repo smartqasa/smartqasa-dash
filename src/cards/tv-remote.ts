@@ -76,7 +76,7 @@ export class TVRemoteCard extends LitElement {
                 justify-content: center;
                 align-self: center;
                 margin: var(--spacing-sm, 0.8rem);
-                padding: var(--spacing-md, 1rem);
+                padding: 1rem;
                 border: var(--sq-card-border, none);
                 border-radius: var(--border-radius, 1rem);
                 background-color: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
@@ -96,7 +96,7 @@ export class TVRemoteCard extends LitElement {
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                margin-bottom: var(--spacing-md, 1rem);
+                margin: 1rem 0;
             }
             .active-app img {
                 width: 100%;
@@ -110,7 +110,7 @@ export class TVRemoteCard extends LitElement {
                 gap: var(--spacing-lg, 1.2rem);
                 justify-content: center;
                 width: 100%;
-                height: 35rem;
+                height: 37rem;
                 overflow: hidden;
                 overflow-y: auto;
             }
