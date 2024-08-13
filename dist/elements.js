@@ -354,7 +354,7 @@ let TVRemoteCard = class TVRemoteCard extends h {
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: nowrap;
-                font-weight: var(--sq-secondard-font-weight, 300);
+                font-weight: var(--sq-secondary-font-weight, 300);
                 font-size: var(--sq-secondary-font-size, 1rem);
                 color: rgb(var(--sq-accent-rgb), 0, 120, 230);
             }
@@ -384,18 +384,23 @@ let TVRemoteCard = class TVRemoteCard extends h {
             .app-list {
                 display: grid;
                 grid-template-columns: repeat(2, 1fr);
-                gap: 0.6rem;
+                gap: 1.2rem;
                 width: 100%;
             }
             .app-item {
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                width: 3rem; /* Set the fixed width */
-                height: calc(3rem / 1.33); /* Maintain the aspect ratio of 1.33:1 */
+                width: 5.5rem;
+                height: calc(5.5rem / 1.33);
                 background: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
-                cursor: pointer;
+                font-weight: var(--sq-secondary-font-weight, 300);
+                font-size: var(--sq-secondary-font-size, 1rem);
+                color: rgb(var(--sq-accent-rgb), 0, 120, 230);
+                text-overflow: ellipsis;
+                white-space: nowrap;
                 overflow: hidden;
+                cursor: pointer;
             }
             .app-item img {
                 width: 100%;
@@ -520,21 +525,28 @@ let TVRemoteCard = class TVRemoteCard extends h {
             </div>
         `;
     }
-    _renderAppSelectMode() {
-        return ke `
-            <div class="app-list">
-                ${this.stateObj.attributes.source_list.map((app) => ke `
-                            <div class="app-item" @click=${() => this.selectApp(app)}>
-                                <img src="${channelTable[app] || ""}" alt="${app}" />
-                            </div>
-                        `)}
-            </div>
-        `;
-    }
     _renderButton(category, button, icon) {
         return ke `
             <div class="icon" data-category=${category} data-button=${button} @pointerdown=${this._handleButton}>
                 <ha-icon .icon=${icon}></ha-icon>
+            </div>
+        `;
+    }
+    _renderAppSelectMode() {
+        return ke `
+            <div class="app-list">
+                ${this.stateObj.attributes.source_list.map((app) => {
+            const icon = channelTable[app];
+            return ke `
+                        <div
+                            class="app-item"
+                            @click=${() => this.selectApp(app)}
+                            style="${icon ? "" : "padding: 0.6rem;"}"
+                        >
+                            ${icon ? ke `<img src="${icon}" alt="${app}" />` : ke `${app}`}
+                        </div>
+                    `;
+        })}
             </div>
         `;
     }
