@@ -70,12 +70,12 @@ export class PanelCard extends LitElement {
 
         const containerStyles = {
             padding: isPhone ? "10px 10px 5px 10px" : "15px 15px 5px 15px",
-            gridTemplateAreas: isPhone ? '"area" "phone_tiles" "footer"' : '"header" "area" "tablet_tiles" "footer"',
+            gridTemplateAreas: '"header" "area" "tablet_tiles" "footer"',
         };
 
         return html`
             <div class="container" style="${styleMap(containerStyles)}">
-                ${isPhone ? nothing : html`<div style="grid-area: header;">${this.renderHeader()}</div>`}
+                <div style="grid-area: header;">${this.renderHeader()}</div>
                 <div style="grid-area: area;">${this.renderArea()}</div>
                 <div style="grid-area: ${isPhone ? "phone_tiles" : "tablet_tiles"};">${this.renderTiles(isPhone)}</div>
                 <div style="grid-area: footer;">${this.renderFooter()}</div>

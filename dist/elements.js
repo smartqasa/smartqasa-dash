@@ -169,11 +169,11 @@ let PanelCard = class PanelCard extends h {
         const isPhone = deviceType === "phone";
         const containerStyles = {
             padding: isPhone ? "10px 10px 5px 10px" : "15px 15px 5px 15px",
-            gridTemplateAreas: isPhone ? '"area" "phone_tiles" "footer"' : '"header" "area" "tablet_tiles" "footer"',
+            gridTemplateAreas: '"header" "area" "tablet_tiles" "footer"',
         };
         return ke `
             <div class="container" style="${se(containerStyles)}">
-                ${isPhone ? D : ke `<div style="grid-area: header;">${this.renderHeader()}</div>`}
+                <div style="grid-area: header;">${this.renderHeader()}</div>
                 <div style="grid-area: area;">${this.renderArea()}</div>
                 <div style="grid-area: ${isPhone ? "phone_tiles" : "tablet_tiles"};">${this.renderTiles(isPhone)}</div>
                 <div style="grid-area: footer;">${this.renderFooter()}</div>
