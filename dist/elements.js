@@ -623,7 +623,7 @@ let TVRemoteCard = class TVRemoteCard extends h {
         const availableApps = this.stateObj.attributes.source_list.filter((app) => app !== activeApp);
         return ke `
             <div class="app-section">
-                <div class="active-app">
+                <div class="active-app" style="${this._getAppItemStyle(activeIcon)}">
                     ${activeIcon ? ke `<img src="${activeIcon}" alt="${activeApp}" />` : ke `${activeApp}`}
                 </div>
                 <div class="app-list">

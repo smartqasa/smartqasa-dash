@@ -262,7 +262,7 @@ export class TVRemoteCard extends LitElement {
 
         return html`
             <div class="app-section">
-                <div class="active-app">
+                <div class="active-app" style="${this._getAppItemStyle(activeIcon)}">
                     ${activeIcon ? html`<img src="${activeIcon}" alt="${activeApp}" />` : html`${activeApp}`}
                 </div>
                 <div class="app-list">
