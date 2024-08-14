@@ -173,7 +173,7 @@ let PanelCard = class PanelCard extends h {
         };
         return ke `
             <div class="container" style="${se(containerStyles)}">
-                ${isPhone ? ke `<div style="grid-area: header;">${this.renderHeader()}</div>` : D}
+                ${isPhone ? D : ke `<div style="grid-area: header;">${this.renderHeader()}</div>`}
                 <div style="grid-area: area;">${this.renderArea()}</div>
                 <div style="grid-area: ${isPhone ? "phone_tiles" : "tablet_tiles"};">${this.renderTiles(isPhone)}</div>
                 <div style="grid-area: footer;">${this.renderFooter()}</div>
@@ -184,7 +184,6 @@ let PanelCard = class PanelCard extends h {
         return ke `
             <div class="header-content">
                 <smartqasa-time-date .hass=${this.hass}></smartqasa-time-date>
-                <p>Additional Header content with dynamic data.</p>
             </div>
         `;
     }

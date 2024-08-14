@@ -75,7 +75,7 @@ export class PanelCard extends LitElement {
 
         return html`
             <div class="container" style="${styleMap(containerStyles)}">
-                ${isPhone ? html`<div style="grid-area: header;">${this.renderHeader()}</div>` : nothing}
+                ${isPhone ? nothing : html`<div style="grid-area: header;">${this.renderHeader()}</div>`}
                 <div style="grid-area: area;">${this.renderArea()}</div>
                 <div style="grid-area: ${isPhone ? "phone_tiles" : "tablet_tiles"};">${this.renderTiles(isPhone)}</div>
                 <div style="grid-area: footer;">${this.renderFooter()}</div>
@@ -87,7 +87,6 @@ export class PanelCard extends LitElement {
         return html`
             <div class="header-content">
                 <smartqasa-time-date .hass=${this.hass}></smartqasa-time-date>
-                <p>Additional Header content with dynamic data.</p>
             </div>
         `;
     }
