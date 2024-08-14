@@ -116,7 +116,7 @@ export class TVRemoteCard extends LitElement {
                 scrollbar-width: none; /* Hide scrollbar for Firefox */
             }
             .app-list::-webkit-scrollbar {
-                display: none; /* Hide scrollbar for Safari and Chrome */
+                display: none; /* Hide scrollbar for Safari and Chrome  */
             }
             .app-item {
                 display: flex;
