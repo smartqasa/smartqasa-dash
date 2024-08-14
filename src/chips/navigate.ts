@@ -1,7 +1,7 @@
 import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
-import { AreaRegistryEntry, HomeAssistant, LovelaceCardConfig } from "../types";
+import { HassArea, HomeAssistant, LovelaceCardConfig } from "../types";
 
 import { chipDoubleStyle } from "../styles/chip";
 
@@ -22,8 +22,8 @@ export class NavigateChip extends LitElement {
 
     @state() private areaPrev?: string;
     @state() private areaNext?: string;
-    @state() private areaObjPrev?: AreaRegistryEntry;
-    @state() private areaObjNext?: AreaRegistryEntry;
+    @state() private areaObjPrev?: HassArea;
+    @state() private areaObjNext?: HassArea;
 
     static styles: CSSResultGroup = [chipDoubleStyle];
 

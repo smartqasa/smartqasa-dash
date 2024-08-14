@@ -1,10 +1,10 @@
-import { AreaRegistryEntry } from "../types";
+import { HassArea } from "../types";
 import { gridDialogStyle } from "../styles/dialog";
 
 export function areasDialog(hass: any): void {
     if (!hass) return;
 
-    const areas = Object.values<AreaRegistryEntry>(hass.areas).filter((area) => area?.labels.includes("visible"));
+    const areas = Object.values<HassArea>(hass.areas).filter((area) => area?.labels.includes("visible"));
 
     const cards = areas?.map((area) => ({
         type: "custom:smartqasa-area-tile",

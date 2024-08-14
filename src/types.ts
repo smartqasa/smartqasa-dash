@@ -55,7 +55,7 @@ export interface DeviceRegistryEntry {
     configuration_url: string | null;
 }
 
-export interface AreaRegistryEntry {
+export interface HassArea {
     area_id: string;
     floor_id: string | null;
     name: string;
@@ -113,7 +113,7 @@ export interface HomeAssistant {
     states: HassEntities;
     entities: { [id: string]: EntityRegistryDisplayEntry };
     devices: { [id: string]: DeviceRegistryEntry };
-    areas: { [id: string]: AreaRegistryEntry };
+    areas: { [id: string]: HassArea };
     services: HassServices;
     config: HassConfig;
     panelUrl: string;
@@ -145,16 +145,6 @@ export interface HomeAssistant {
     formatEntityState(stateObj: HassEntity, state?: string): string;
     formatEntityAttributeValue(stateObj: HassEntity, attribute: string, value?: string): string;
     formatEntityAttributeName(stateObj: HassEntity, attribute: string): string;
-}
-
-export interface HassArea {
-    area_id: string;
-    aliases: string[];
-    floor_id: string;
-    icon: string;
-    labels: string[];
-    name: string;
-    picture: string;
 }
 
 export interface LovelaceCard extends HTMLElement {

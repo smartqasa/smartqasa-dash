@@ -1,6 +1,6 @@
 import { css, CSSResultGroup, html, LitElement, PropertyValues, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
-import { AreaRegistryEntry, HomeAssistant, LovelaceCardConfig } from "../types";
+import { HassArea, HomeAssistant, LovelaceCardConfig } from "../types";
 import { deviceType } from "../const";
 import defaultImage from "../assets/images/default.png";
 
@@ -25,7 +25,7 @@ export class AreaPicture extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() private config?: Config;
     private area?: string;
-    private areaObj?: AreaRegistryEntry;
+    private areaObj?: HassArea;
 
     static get styles(): CSSResultGroup {
         return css`

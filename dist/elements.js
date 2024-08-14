@@ -72,7 +72,125 @@ const t$2=t=>(e,o)=>{void 0!==o?o.addInitializer((()=>{customElements.define(t,e
  * SPDX-License-Identifier: BSD-3-Clause
  */function r$1(r){return n({...r,state:!0,attribute:!1})}
 
-var t$1,r;!function(e){e.language="language",e.system="system",e.comma_decimal="comma_decimal",e.decimal_comma="decimal_comma",e.space_comma="space_comma",e.none="none";}(t$1||(t$1={})),function(e){e.language="language",e.system="system",e.am_pm="12",e.twenty_four="24";}(r||(r={}));var ne=function(e,t,r,n){n=n||{},r=null==r?{}:r;var i=new Event(t,{bubbles:void 0===n.bubbles||n.bubbles,cancelable:Boolean(n.cancelable),composed:void 0===n.composed||n.composed});return i.detail=r,e.dispatchEvent(i),i},ie$1=new Set(["call-service","divider","section","weblink","cast","select"]),ae={alert:"toggle",automation:"toggle",climate:"climate",cover:"cover",fan:"toggle",group:"group",input_boolean:"toggle",input_number:"input-number",input_select:"input-select",input_text:"input-text",light:"toggle",lock:"lock",media_player:"media-player",remote:"toggle",scene:"scene",script:"script",sensor:"sensor",timer:"timer",switch:"toggle",vacuum:"toggle",water_heater:"climate",input_datetime:"input-datetime"},oe=function(e,t){void 0===t&&(t=!1);var r=function(e,t){return n("hui-error-card",{type:"error",error:e,config:t})},n=function(e,t){var n=window.document.createElement(e);try{if(!n.setConfig)return;n.setConfig(t);}catch(n){return console.error(e,n),r(n.message,t)}return n};if(!e||"object"!=typeof e||!t&&!e.type)return r("No type defined",e);var i=e.type;if(i&&i.startsWith("custom:"))i=i.substr("custom:".length);else if(t)if(ie$1.has(i))i="hui-"+i+"-row";else {if(!e.entity)return r("Invalid config given.",e);var a=e.entity.split(".",1)[0];i="hui-"+(ae[a]||"text")+"-entity-row";}else i="hui-"+i+"-card";if(customElements.get(i))return n(i,e);var o=r("Custom element doesn't exist: "+e.type+".",e);o.style.display="None";var u=setTimeout(function(){o.style.display="";},2e3);return customElements.whenDefined(e.type).then(function(){clearTimeout(u),ne(o,"ll-rebuild",{},o);}),o};
+/**
+ * @license
+ * Copyright 2017 Google LLC
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+const t$1={ATTRIBUTE:1,CHILD:2,PROPERTY:3,BOOLEAN_ATTRIBUTE:4,EVENT:5,ELEMENT:6},e=t=>(...e)=>({_$litDirective$:t,values:e});let i$1 = class i{constructor(t){}get _$AU(){return this._$AM._$AU}_$AT(t,e,i){this.t=t,this._$AM=e,this.i=i;}_$AS(t,e){return this.update(t,e)}update(t,e){return this.render(...e)}};
+
+/**
+ * @license
+ * Copyright 2018 Google LLC
+ * SPDX-License-Identifier: BSD-3-Clause
+ */const ee="important",ie$1=" !"+ee,se=e(class extends i$1{constructor(e){if(super(e),e.type!==t$1.ATTRIBUTE||"style"!==e.name||e.strings?.length>2)throw Error("The `styleMap` directive must be used in the `style` attribute and must be the only part in the attribute.")}render(t){return Object.keys(t).reduce(((e,r)=>{const s=t[r];return null==s?e:e+`${r=r.includes("-")?r:r.replace(/(?:^(webkit|moz|ms|o)|)(?=[A-Z])/g,"-$&").toLowerCase()}:${s};`}),"")}update(t,[e]){const{style:r}=t.element;if(void 0===this.ft)return this.ft=new Set(Object.keys(e)),this.render(e);for(const t of this.ft)null==e[t]&&(this.ft.delete(t),t.includes("-")?r.removeProperty(t):r[t]=null);for(const t in e){const s=e[t];if(null!=s){this.ft.add(t);const e="string"==typeof s&&s.endsWith(ie$1);t.includes("-")||e?r.setProperty(t,e?s.slice(0,-11):s,e?ee:""):r[t]=s;}}return R}});
+
+const deviceType = window.screen.width < 600 ? "phone" : "tablet";
+const heaterColors = {
+    electric: "var(--sq-climate-heat-rgb, 250, 67, 54)",
+    heating: "var(--sq-climate-heat-rgb, 250, 67, 54)",
+    idle: "var(--sq-idle-rgb, 128, 128, 128)",
+    off: "var(--sq-inactive-rgb, 128, 128, 128)",
+    default: "var(--sq-unavailable-rgb, 255, 0, 255)",
+};
+const modeIcons = {
+    Home: "hass:home-account",
+    Away: "hass:map-marker-radius",
+    Guest: "hass:account-multiple",
+    Entertain: "hass:glass-cocktail",
+    Vacation: "hass:airplane",
+    default: "hass:help-rhombus",
+};
+const phaseIcons = {
+    Morning: "hass:weather-sunset-up",
+    Day: "hass:white-balance-sunny",
+    Evening: "hass:weather-night",
+    Night: "hass:sleep",
+    default: "hass:help-rhombus",
+};
+const thermostatColors = {
+    cooling: "var(--sq-climate-cool-rgb, 3, 169, 244)",
+    heating: "var(--sq-climate-heat-rgb, 250, 67, 54)",
+    fan_only: "var(--sq-climate-fan_only-rgb, 0, 255, 0)",
+    idle: "var(--sq-idle-rgb, 128, 128, 128)",
+    off: "var(--sq-inactive-rgb, 128, 128, 128)",
+    default: "var(--sq-unavailable-rgb, 255, 0, 255)",
+};
+const thermostatIcons = {
+    auto: "hass:thermostat-auto",
+    cool: "hass:snowflake",
+    heat: "hass:fire",
+    heat_cool: "hass:sun-snowflake-variant",
+    off: "hass:power",
+    default: "hass:thermostat-cog",
+};
+
+window.customCards.push({
+    type: "smartqasa-panel-card",
+    name: "SmartQasa Panel Card",
+    preview: true,
+    description: "A SmartQasa card for rendering Main Panel.",
+});
+let PanelCard = class PanelCard extends h {
+    static { this.styles = i$3 `
+        :host {
+            display: block;
+            background: (var(--sq-panel-background));
+        }
+        .container {
+            display: grid;
+            grid-template-rows: auto auto 1fr auto;
+        }
+    `; }
+    setConfig(config) {
+        this._config = { ...config };
+        this._area = this._config.area;
+    }
+    shouldUpdate(changedProps) {
+        return !!((changedProps.has("hass") && this._area && this.hass.areas[this._area] !== this._areaObj) ||
+            (changedProps.has("config") && this._config));
+    }
+    render() {
+        const isAdmin = this.hass.user?.is_admin;
+        const isPhone = deviceType === "phone";
+        const containerStyles = {
+            height: isAdmin ? "calc(100vh - 56px)" : "100vh",
+            padding: isPhone ? "10px 10px 5px 10px" : "15px 15px 5px 15px",
+            gridTemplateAreas: isPhone ? '"area" "phone_tiles" "footer"' : '"header" "area" "tablet_tiles" "footer"',
+        };
+        return ke `
+            <div class="container" style="${se(containerStyles)}">
+                ${isPhone ? ke `<div style="grid-area: header;">${this.renderHeader()}</div>` : D}
+                <div style="grid-area: area;">${this.renderArea()}</div>
+                <div style="grid-area: ${isPhone ? "phone_tiles" : "tablet_tiles"};">${this.renderTiles(isPhone)}</div>
+                <div style="grid-area: footer;">${this.renderFooter()}</div>
+            </div>
+        `;
+    }
+    renderHeader() {
+        return ke `<p>Header content with dynamic data.</p>`;
+    }
+    renderArea() {
+        return ke `<p>Area content with dynamic data.</p>`;
+    }
+    renderTiles(isPhone) {
+        return isPhone ? ke `<p>Phone Tiles</p>` : ke `<p>Tablet Tiles</p>`;
+    }
+    renderFooter() {
+        return ke `<p>Footer content with dynamic data.</p>`;
+    }
+};
+__decorate([
+    n({ attribute: false })
+], PanelCard.prototype, "hass", void 0);
+__decorate([
+    r$1()
+], PanelCard.prototype, "_config", void 0);
+PanelCard = __decorate([
+    t$2("smartqasa-panel-card")
+], PanelCard);
+
+var t,r;!function(e){e.language="language",e.system="system",e.comma_decimal="comma_decimal",e.decimal_comma="decimal_comma",e.space_comma="space_comma",e.none="none";}(t||(t={})),function(e){e.language="language",e.system="system",e.am_pm="12",e.twenty_four="24";}(r||(r={}));var ne=function(e,t,r,n){n=n||{},r=null==r?{}:r;var i=new Event(t,{bubbles:void 0===n.bubbles||n.bubbles,cancelable:Boolean(n.cancelable),composed:void 0===n.composed||n.composed});return i.detail=r,e.dispatchEvent(i),i},ie=new Set(["call-service","divider","section","weblink","cast","select"]),ae={alert:"toggle",automation:"toggle",climate:"climate",cover:"cover",fan:"toggle",group:"group",input_boolean:"toggle",input_number:"input-number",input_select:"input-select",input_text:"input-text",light:"toggle",lock:"lock",media_player:"media-player",remote:"toggle",scene:"scene",script:"script",sensor:"sensor",timer:"timer",switch:"toggle",vacuum:"toggle",water_heater:"climate",input_datetime:"input-datetime"},oe=function(e,t){void 0===t&&(t=!1);var r=function(e,t){return n("hui-error-card",{type:"error",error:e,config:t})},n=function(e,t){var n=window.document.createElement(e);try{if(!n.setConfig)return;n.setConfig(t);}catch(n){return console.error(e,n),r(n.message,t)}return n};if(!e||"object"!=typeof e||!t&&!e.type)return r("No type defined",e);var i=e.type;if(i&&i.startsWith("custom:"))i=i.substr("custom:".length);else if(t)if(ie.has(i))i="hui-"+i+"-row";else {if(!e.entity)return r("Invalid config given.",e);var a=e.entity.split(".",1)[0];i="hui-"+(ae[a]||"text")+"-entity-row";}else i="hui-"+i+"-card";if(customElements.get(i))return n(i,e);var o=r("Custom element doesn't exist: "+e.type+".",e);o.style.display="None";var u=setTimeout(function(){o.style.display="";},2e3);return customElements.whenDefined(e.type).then(function(){clearTimeout(u),ne(o,"ll-rebuild",{},o);}),o};
 
 window.customCards.push({
     type: "smartqasa-vertical-stack",
@@ -1075,19 +1193,6 @@ __decorate([
 TVRemoteCardV1 = __decorate([
     t$2("smartqasa-tv-remote-card-v1")
 ], TVRemoteCardV1);
-
-/**
- * @license
- * Copyright 2017 Google LLC
- * SPDX-License-Identifier: BSD-3-Clause
- */
-const t={ATTRIBUTE:1,CHILD:2,PROPERTY:3,BOOLEAN_ATTRIBUTE:4,EVENT:5,ELEMENT:6},e=t=>(...e)=>({_$litDirective$:t,values:e});let i$1 = class i{constructor(t){}get _$AU(){return this._$AM._$AU}_$AT(t,e,i){this.t=t,this._$AM=e,this.i=i;}_$AS(t,e){return this.update(t,e)}update(t,e){return this.render(...e)}};
-
-/**
- * @license
- * Copyright 2018 Google LLC
- * SPDX-License-Identifier: BSD-3-Clause
- */const ee="important",ie=" !"+ee,se=e(class extends i$1{constructor(e){if(super(e),e.type!==t.ATTRIBUTE||"style"!==e.name||e.strings?.length>2)throw Error("The `styleMap` directive must be used in the `style` attribute and must be the only part in the attribute.")}render(t){return Object.keys(t).reduce(((e,r)=>{const s=t[r];return null==s?e:e+`${r=r.includes("-")?r:r.replace(/(?:^(webkit|moz|ms|o)|)(?=[A-Z])/g,"-$&").toLowerCase()}:${s};`}),"")}update(t,[e]){const{style:r}=t.element;if(void 0===this.ft)return this.ft=new Set(Object.keys(e)),this.render(e);for(const t of this.ft)null==e[t]&&(this.ft.delete(t),t.includes("-")?r.removeProperty(t):r[t]=null);for(const t in e){const s=e[t];if(null!=s){this.ft.add(t);const e="string"==typeof s&&s.endsWith(ie);t.includes("-")||e?r.setProperty(t,e?s.slice(0,-11):s,e?ee:""):r[t]=s;}}return R}});
 
 /*! js-yaml 4.1.0 https://github.com/nodeca/js-yaml @license MIT */
 function isNothing(subject) {
@@ -5139,46 +5244,6 @@ __decorate([
 CustomChip = __decorate([
     t$2("smartqasa-custom-chip")
 ], CustomChip);
-
-const deviceType = window.screen.width < 600 ? "phone" : "tablet";
-const heaterColors = {
-    electric: "var(--sq-climate-heat-rgb, 250, 67, 54)",
-    heating: "var(--sq-climate-heat-rgb, 250, 67, 54)",
-    idle: "var(--sq-idle-rgb, 128, 128, 128)",
-    off: "var(--sq-inactive-rgb, 128, 128, 128)",
-    default: "var(--sq-unavailable-rgb, 255, 0, 255)",
-};
-const modeIcons = {
-    Home: "hass:home-account",
-    Away: "hass:map-marker-radius",
-    Guest: "hass:account-multiple",
-    Entertain: "hass:glass-cocktail",
-    Vacation: "hass:airplane",
-    default: "hass:help-rhombus",
-};
-const phaseIcons = {
-    Morning: "hass:weather-sunset-up",
-    Day: "hass:white-balance-sunny",
-    Evening: "hass:weather-night",
-    Night: "hass:sleep",
-    default: "hass:help-rhombus",
-};
-const thermostatColors = {
-    cooling: "var(--sq-climate-cool-rgb, 3, 169, 244)",
-    heating: "var(--sq-climate-heat-rgb, 250, 67, 54)",
-    fan_only: "var(--sq-climate-fan_only-rgb, 0, 255, 0)",
-    idle: "var(--sq-idle-rgb, 128, 128, 128)",
-    off: "var(--sq-inactive-rgb, 128, 128, 128)",
-    default: "var(--sq-unavailable-rgb, 255, 0, 255)",
-};
-const thermostatIcons = {
-    auto: "hass:thermostat-auto",
-    cool: "hass:snowflake",
-    heat: "hass:fire",
-    heat_cool: "hass:sun-snowflake-variant",
-    off: "hass:power",
-    default: "hass:thermostat-cog",
-};
 
 const listDialogStyle = {
     margin: 0,

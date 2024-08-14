@@ -1,7 +1,7 @@
 import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
-import { AreaRegistryEntry, HomeAssistant, LovelaceCardConfig } from "../types";
+import { HassArea, HomeAssistant, LovelaceCardConfig } from "../types";
 import { callService } from "../utils/call-service";
 
 import { tileBaseStyle, tileIconSpinStyle } from "../styles/tile";
@@ -29,7 +29,7 @@ export class AllOffTile extends LitElement {
     @state() private config?: Config;
     @state() private running: boolean = false;
     private area?: string;
-    private areaObj?: AreaRegistryEntry;
+    private areaObj?: HassArea;
 
     static styles: CSSResultGroup = [tileBaseStyle, tileIconSpinStyle];
 
