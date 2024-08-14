@@ -438,7 +438,7 @@ let TVRemoteCard = class TVRemoteCard extends h {
             .sections {
                 display: grid;
                 grid-template-columns: auto auto;
-                gap: 3rem;
+                gap: 4rem;
             }
             .remote-section {
             }

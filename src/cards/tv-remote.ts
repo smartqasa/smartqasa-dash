@@ -61,7 +61,7 @@ export class TVRemoteCard extends LitElement {
             .sections {
                 display: grid;
                 grid-template-columns: auto auto;
-                gap: 3rem;
+                gap: 4rem;
             }
             .remote-section {
             }
