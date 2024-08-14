@@ -91,9 +91,9 @@ export class TVRemoteCard extends LitElement {
                 align-items: center;
             }
             .active-app {
+                display: flex;
                 width: 5.5rem;
                 height: calc(5.5rem / 1.33);
-                display: flex;
                 justify-content: center;
                 align-items: center;
                 margin: 1rem 0;
