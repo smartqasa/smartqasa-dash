@@ -138,7 +138,7 @@ let PanelCard = class PanelCard extends h {
     static { this.styles = i$3 `
         :host {
             display: block;
-            background: (var(--sq-panel-background));
+            background: var(--sq-panel-background);
         }
         .container {
             display: grid;
@@ -154,10 +154,10 @@ let PanelCard = class PanelCard extends h {
             (changedProps.has("config") && this._config));
     }
     render() {
-        const isAdmin = this.hass.user?.is_admin;
+        this.hass.user?.is_admin;
         const isPhone = deviceType === "phone";
         const containerStyles = {
-            height: isAdmin ? "calc(100vh - 56px)" : "100vh",
+            //height: isAdmin ? "calc(100vh - 56px)" : "100vh",
             padding: isPhone ? "10px 10px 5px 10px" : "15px 15px 5px 15px",
             gridTemplateAreas: isPhone ? '"area" "phone_tiles" "footer"' : '"header" "area" "tablet_tiles" "footer"',
         };
@@ -9845,7 +9845,7 @@ PopupConfirmation = __decorate([
     t$2("popup-confirmation")
 ], PopupConfirmation);
 
-var version = "2024.8.1";
+var version = "2024.8.14b-1";
 
 window.smartqasa = window.smartqasa || {};
 window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();

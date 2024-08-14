@@ -33,7 +33,7 @@ export class PanelCard extends LitElement {
     static styles = css`
         :host {
             display: block;
-            background: (var(--sq-panel-background));
+            background: var(--sq-panel-background);
         }
         .container {
             display: grid;
@@ -58,7 +58,7 @@ export class PanelCard extends LitElement {
         const isPhone = deviceType === "phone";
 
         const containerStyles = {
-            height: isAdmin ? "calc(100vh - 56px)" : "100vh",
+            //height: isAdmin ? "calc(100vh - 56px)" : "100vh",
             padding: isPhone ? "10px 10px 5px 10px" : "15px 15px 5px 15px",
             gridTemplateAreas: isPhone ? '"area" "phone_tiles" "footer"' : '"header" "area" "tablet_tiles" "footer"',
         };
