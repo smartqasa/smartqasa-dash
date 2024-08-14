@@ -420,10 +420,11 @@ let TVRemoteCard = class TVRemoteCard extends h {
                 display: flex;
                 flex-direction: column;
                 width: fit-content;
-                margin: var(--spacing, 1.2rem);
-                padding: var(--spacing, 1.2rem);
+                margin: 1.2rem;
+                padding: 1.2rem;
                 border: var(--sq-card-border, none);
                 border-radius: var(--sq-card-border-radius, 1.5rem);
+                background-color: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
             }
             .name {
                 padding: 0.5rem;
@@ -455,7 +456,7 @@ let TVRemoteCard = class TVRemoteCard extends h {
                 padding: 1rem;
                 border: var(--sq-card-border, none);
                 border-radius: var(--border-radius, 1rem);
-                background-color: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
+
                 cursor: pointer;
             }
             ha-icon {
@@ -646,10 +647,9 @@ let TVRemoteCard = class TVRemoteCard extends h {
         return icon
             ? ""
             : `
-                background: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
                 font-weight: var(--sq-secondary-font-weight, 300);
                 font-size: var(--sq-secondary-font-size, 1rem);
-                color: rgb(var(--sq-accent-rgb), 0, 120, 230);
+                color: rgb(var(--sq-primary-font-rgb, 128, 128, 128));
                 text-overflow: ellipsis;
                 overflow: hidden;
             `;
