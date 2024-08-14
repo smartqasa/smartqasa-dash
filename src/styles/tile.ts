@@ -37,7 +37,7 @@ export const tileBaseStyle = css`
         white-space: normal;
         font-weight: var(--sq-primary-font-weight, 400);
         font-size: var(--sq-primary-font-size, 1.5rem);
-        color: rgb(var(--sq-primary-font-rgb), 128, 128, 128);
+        color: rgb(var(--sq-primary-font-rgb, 128, 128, 128));
     }
 `;
 

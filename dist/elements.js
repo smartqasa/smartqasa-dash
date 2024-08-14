@@ -456,7 +456,7 @@ let TVRemoteCard = class TVRemoteCard extends h {
                 padding: 1rem;
                 border: var(--sq-card-border, none);
                 border-radius: var(--border-radius, 1rem);
-
+                backgroundColor: rgba(var(--sq-inactive-rgb), var(--sq-icon-opacity, 0.2)),
                 cursor: pointer;
             }
             ha-icon {
@@ -4994,7 +4994,7 @@ const chipTextStyle = i$3 `
         white-space: normal;
         font-weight: var(--sq-primary-font-weight, 400);
         font-size: var(--sq-primary-font-size, 1.5rem);
-        color: rgb(var(--sq-primary-font-rgb), 128, 128, 128);
+        color: rgb(var(--sq-primary-font-rgb, 128, 128, 128));
     }
 `;
 const chipDoubleStyle = i$3 `
@@ -7057,7 +7057,7 @@ const tileBaseStyle = i$3 `
         white-space: normal;
         font-weight: var(--sq-primary-font-weight, 400);
         font-size: var(--sq-primary-font-size, 1.5rem);
-        color: rgb(var(--sq-primary-font-rgb), 128, 128, 128);
+        color: rgb(var(--sq-primary-font-rgb, 128, 128, 128));
     }
 `;
 const tileStateStyle = i$3 `
@@ -7913,7 +7913,7 @@ let FanTile = class FanTile extends h {
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this._updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
-            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity))`,
+            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
             animation: iconAnimation,
         };
         return ke `
@@ -8010,7 +8010,7 @@ let GarageTile = class GarageTile extends h {
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
-            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity))`,
+            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
             animation: iconAnimation,
         };
         return ke `
@@ -8211,7 +8211,7 @@ let LightTile = class LightTile extends h {
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this._updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
-            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity))`,
+            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
             animation: iconAnimation,
         };
         return ke `
