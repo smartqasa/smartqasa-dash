@@ -132,6 +132,9 @@ window.customCards.push({
     description: "A SmartQasa card for rendering Main Panel.",
 });
 let PanelCard = class PanelCard extends h {
+    getCardSize() {
+        return 10;
+    }
     static { this.styles = i$3 `
         :host {
             display: block;

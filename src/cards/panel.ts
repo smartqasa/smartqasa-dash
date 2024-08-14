@@ -26,6 +26,10 @@ export class PanelCard extends LitElement {
     private _area?: string;
     private _areaObj?: HassArea;
 
+    getCardSize(): number {
+        return 10;
+    }
+
     static styles = css`
         :host {
             display: block;
