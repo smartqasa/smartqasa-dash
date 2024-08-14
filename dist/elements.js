@@ -456,7 +456,7 @@ let TVRemoteCard = class TVRemoteCard extends h {
                 padding: 1rem;
                 border: var(--sq-card-border, none);
                 border-radius: var(--border-radius, 1rem);
-                backgroundColor: rgba(var(--sq-inactive-rgb), var(--sq-icon-opacity, 0.2)),
+                background-color: rgba(var(--sq-inactive-rgb), var(--sq-icon-opacity, 0.2)),
                 cursor: pointer;
             }
             ha-icon {
