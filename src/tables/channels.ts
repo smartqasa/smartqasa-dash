@@ -1,3 +1,4 @@
+import homeIcon from "../assets/channel_icons/home.webp";
 import aeIcon from "../assets/channel_icons/a_e.webp";
 import abcIcon from "../assets/channel_icons/abc.webp";
 import abdNewsIcon from "../assets/channel_icons/abc_news.webp";
@@ -85,6 +86,7 @@ interface ChannelTable {
 }
 
 const channelTable: ChannelTable = {
+    Home: homeIcon,
     "A&E": aeIcon,
     "ABC: Watch TV Shows & News": abcIcon,
     "ABC News: Live & Breaking News": abdNewsIcon,
