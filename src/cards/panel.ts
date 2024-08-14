@@ -48,7 +48,7 @@ export class PanelCard extends LitElement {
             background-color: var(--header-background, transparent);
         }
         smartqasa-time-date {
-            margin-right: auto;
+            margin-right: 10px;
         }
     `;
 

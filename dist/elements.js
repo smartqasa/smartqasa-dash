@@ -153,7 +153,7 @@ let PanelCard = class PanelCard extends h {
             background-color: var(--header-background, transparent);
         }
         smartqasa-time-date {
-            margin-right: auto;
+            margin-right: 10px;
         }
     `; }
     setConfig(config) {
