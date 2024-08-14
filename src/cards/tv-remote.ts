@@ -109,7 +109,7 @@ export class TVRemoteCard extends LitElement {
                 gap: 1rem;
                 justify-content: center;
                 width: 100%;
-                height: 37rem;
+                height: 33rem;
                 overflow: hidden;
                 overflow-y: auto;
                 scrollbar-width: none; /* Hide scrollbar for Firefox */
