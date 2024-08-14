@@ -184,6 +184,7 @@ let PanelCard = class PanelCard extends h {
         return ke `
             <div class="header-content">
                 <smartqasa-time-date .hass=${this.hass}></smartqasa-time-date>
+                <p>Additional Header content with dynamic data.</p>
             </div>
         `;
     }
