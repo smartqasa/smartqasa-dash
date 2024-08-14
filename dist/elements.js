@@ -145,6 +145,16 @@ let PanelCard = class PanelCard extends h {
             display: grid;
             grid-template-rows: auto auto 1fr auto;
         }
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            background-color: var(--header-background, transparent);
+        }
+        smartqasa-time-date {
+            margin-right: auto;
+        }
     `; }
     setConfig(config) {
         this._config = { ...config };
@@ -158,7 +168,6 @@ let PanelCard = class PanelCard extends h {
         this.hass.user?.is_admin;
         const isPhone = deviceType === "phone";
         const containerStyles = {
-            //height: isAdmin ? "calc(100vh - 56px)" : "100vh",
             padding: isPhone ? "10px 10px 5px 10px" : "15px 15px 5px 15px",
             gridTemplateAreas: isPhone ? '"area" "phone_tiles" "footer"' : '"header" "area" "tablet_tiles" "footer"',
         };
@@ -172,7 +181,12 @@ let PanelCard = class PanelCard extends h {
         `;
     }
     renderHeader() {
-        return ke `<p>Header content with dynamic data.</p>`;
+        return ke `
+            <div class="header-content">
+                <smartqasa-time-date .hass=${this.hass}></smartqasa-time-date>
+                <p>Additional Header content with dynamic data.</p>
+            </div>
+        `;
     }
     renderArea() {
         return ke `<p>Area content with dynamic data.</p>`;

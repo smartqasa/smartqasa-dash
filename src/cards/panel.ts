@@ -40,6 +40,16 @@ export class PanelCard extends LitElement {
             display: grid;
             grid-template-rows: auto auto 1fr auto;
         }
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            background-color: var(--header-background, transparent);
+        }
+        smartqasa-time-date {
+            margin-right: auto;
+        }
     `;
 
     public setConfig(config: Config): void {
@@ -59,7 +69,6 @@ export class PanelCard extends LitElement {
         const isPhone = deviceType === "phone";
 
         const containerStyles = {
-            //height: isAdmin ? "calc(100vh - 56px)" : "100vh",
             padding: isPhone ? "10px 10px 5px 10px" : "15px 15px 5px 15px",
             gridTemplateAreas: isPhone ? '"area" "phone_tiles" "footer"' : '"header" "area" "tablet_tiles" "footer"',
         };
@@ -75,7 +84,12 @@ export class PanelCard extends LitElement {
     }
 
     renderHeader() {
-        return html`<p>Header content with dynamic data.</p>`;
+        return html`
+            <div class="header-content">
+                <smartqasa-time-date .hass=${this.hass}></smartqasa-time-date>
+                <p>Additional Header content with dynamic data.</p>
+            </div>
+        `;
     }
 
     renderArea() {
