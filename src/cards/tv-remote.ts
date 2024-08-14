@@ -79,7 +79,7 @@ export class TVRemoteCard extends LitElement {
                 padding: 1rem;
                 border: var(--sq-card-border, none);
                 border-radius: var(--border-radius, 1rem);
-                background-color: rgba(var(--sq-inactive-rgb), var(--sq-icon-opacity, 0.2)),
+                background-color: rgba(var(--sq-inactive-rgb), var(--sq-icon-opacity, 0.2));
                 cursor: pointer;
             }
             ha-icon {
@@ -287,6 +287,7 @@ export class TVRemoteCard extends LitElement {
         return icon
             ? ""
             : `
+                background-color: rgba(var(--sq-inactive-rgb), var(--sq-icon-opacity, 0.2));
                 font-weight: var(--sq-secondary-font-weight, 300);
                 font-size: var(--sq-secondary-font-size, 1rem);
                 color: rgb(var(--sq-primary-font-rgb, 128, 128, 128));
