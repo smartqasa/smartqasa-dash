@@ -33,6 +33,7 @@ export class PanelCard extends LitElement {
     static styles = css`
         :host {
             display: block;
+            height: 100%;
             background: var(--sq-panel-background);
         }
         .container {

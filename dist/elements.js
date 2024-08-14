@@ -138,6 +138,7 @@ let PanelCard = class PanelCard extends h {
     static { this.styles = i$3 `
         :host {
             display: block;
+            height: 100%;
             background: var(--sq-panel-background);
         }
         .container {
