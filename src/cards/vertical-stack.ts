@@ -50,6 +50,12 @@ class VerticalStack extends LitElement {
         });
     }
 
+    protected firstUpdated() {
+        if (this._config) {
+            this._createCards();
+        }
+    }
+
     protected render() {
         return html`
             <div class="container">

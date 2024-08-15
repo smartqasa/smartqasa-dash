@@ -237,6 +237,11 @@ let VerticalStack = class VerticalStack extends h {
             return element;
         });
     }
+    firstUpdated() {
+        if (this._config) {
+            this._createCards();
+        }
+    }
     render() {
         return ke `
             <div class="container">
