@@ -31,24 +31,24 @@ export class OptionTile extends LitElement {
 
     @property({ attribute: false }) public hass?: HomeAssistant;
 
-    @state() private config?: Config;
-    @state() private stateObj?: HassEntity;
-    @state() private running: boolean = false;
+    @state() private _config?: Config;
+    @state() private _stateObj?: HassEntity;
+    @state() private _running: boolean = false;
 
-    private entity?: string;
+    private _entity?: string;
 
     static styles: CSSResultGroup = [tileBaseStyle, tileIconSpinStyle];
 
     public setConfig(config: Config): void {
-        this.config = { ...config };
-        this.entity = this.config.entity?.startsWith("input_select.") ? this.config.entity : undefined;
+        this._config = { ...config };
+        this._entity = this._config.entity?.startsWith("input_select.") ? this._config.entity : undefined;
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
         return !!(
             changedProps.has("running") ||
-            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj) ||
-            (changedProps.has("config") && this.config)
+            (changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
+            (changedProps.has("config") && this._config)
         );
     }
 
@@ -72,33 +72,33 @@ export class OptionTile extends LitElement {
     private updateState() {
         let icon, iconAnimation, iconColor, name;
 
-        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
+        this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
 
-        if (this.config && this.hass && this.stateObj) {
-            if (this.running) {
+        if (this._config && this.hass && this._stateObj) {
+            if (this._running) {
                 icon = "hass:rotate-right";
                 iconAnimation = "spin 1.0s linear infinite";
                 iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
             } else {
-                if (this.entity === "input_select.location_phase") {
-                    icon = phaseIcons[this.config.option] || phaseIcons.default;
-                } else if (this.entity === "input_select.location_mode") {
-                    icon = modeIcons[this.config.option] || modeIcons.default;
+                if (this._entity === "input_select.location_phase") {
+                    icon = phaseIcons[this._config.option] || phaseIcons.default;
+                } else if (this._entity === "input_select.location_mode") {
+                    icon = modeIcons[this._config.option] || modeIcons.default;
                 } else {
-                    icon = this.config.icon || this.stateObj.attributes.icon || "hass:form-dropdown";
+                    icon = this._config.icon || this._stateObj.attributes.icon || "hass:form-dropdown";
                 }
                 iconAnimation = "none";
                 iconColor =
-                    this.stateObj.state === this.config.option
+                    this._stateObj.state === this._config.option
                         ? "var(--sq-rgb-blue, 25, 125, 255)"
                         : "var(--sq-inactive-rgb)";
             }
-            name = this.config.option || "Unknown";
+            name = this._config.option || "Unknown";
         } else {
-            icon = this.config?.icon || "hass:form-dropdown";
+            icon = this._config?.icon || "hass:form-dropdown";
             iconAnimation = "none";
             iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            name = this.config?.option || "Unknown";
+            name = this._config?.option || "Unknown";
         }
 
         return { icon, iconAnimation, iconColor, name };
@@ -106,25 +106,25 @@ export class OptionTile extends LitElement {
 
     private selectOption(e: Event): void {
         e.stopPropagation();
-        if (!this.hass || !this.config || !this.stateObj) return;
+        if (!this.hass || !this._config || !this._stateObj) return;
 
-        this.running = true;
+        this._running = true;
         callService(this.hass, "input_select", "select_option", {
-            entity_id: this.entity,
-            option: this.config.option,
+            entity_id: this._entity,
+            option: this._config.option,
         });
 
-        const trigger = this.config.trigger;
-        console.log("trigger", trigger);
+        const trigger = this._config.trigger;
         if (trigger && trigger.startsWith("input_button.")) {
             callService(this.hass, "input_button", "press", {
                 entity_id: trigger,
             });
+            console.log("trigger", trigger);
         }
 
         setTimeout(() => {
-            this.running = false;
-            const menuTab = this.config?.menu_tab;
+            this._running = false;
+            const menuTab = this._config?.menu_tab;
             if (menuTab !== undefined && menuTab >= 0 && menuTab <= 3) {
                 this.showMenu(menuTab);
             } else {
