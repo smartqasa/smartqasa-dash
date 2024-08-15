@@ -41,9 +41,7 @@ export class SmartQasaTimeDate extends LitElement {
             .date {
                 justify-self: start;
                 text-align: left;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
+                overflow: visible;
             }
             .time {
                 line-height: var(--sq-title-font-size, 16px);
