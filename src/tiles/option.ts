@@ -115,12 +115,10 @@ export class OptionTile extends LitElement {
         });
 
         const trigger = this._config.trigger;
-        console.log("Initiated", trigger);
         if (trigger && trigger.startsWith("input_button.")) {
             callService(this.hass, "input_button", "press", {
                 entity_id: trigger,
             });
-            console.log("Pressed", trigger);
         }
 
         setTimeout(() => {
