@@ -25,8 +25,9 @@ export class TimeDate extends LitElement {
             }
             .time,
             .date {
-                white-space: nowrap;
+                text-align: left;
                 line-height: normal;
+                white-space: nowrap;
             }
             .time {
                 margin-top: -0.6rem;
