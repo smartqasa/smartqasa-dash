@@ -217,6 +217,7 @@ let VerticalStack = class VerticalStack extends h {
             .container {
                 display: flex;
                 flex-direction: column;
+                padding: 1rem;
             }
         `;
     }
@@ -227,6 +228,14 @@ let VerticalStack = class VerticalStack extends h {
         this._config = { ...config };
         this._createCards();
     }
+    shouldUpdate(changedProps) {
+        return changedProps.has("hass") || changedProps.has("_config");
+    }
+    updated(changedProps) {
+        if (changedProps.has("hass") || changedProps.has("_config")) {
+            this._createCards();
+        }
+    }
     _createCards() {
         if (!this.hass || !this._config) {
             return;
@@ -236,11 +245,6 @@ let VerticalStack = class VerticalStack extends h {
             element.hass = this.hass;
             return element;
         });
-    }
-    firstUpdated() {
-        if (this._config) {
-            this._createCards();
-        }
     }
     render() {
         return ke `

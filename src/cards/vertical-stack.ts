@@ -1,4 +1,4 @@
-import { LitElement, html, css } from "lit";
+import { css, html, LitElement, PropertyValues } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { HomeAssistant, LovelaceCardConfig, LovelaceCard } from "../types";
 import { createThing } from "custom-card-helpers";
@@ -25,6 +25,7 @@ class VerticalStack extends LitElement {
             .container {
                 display: flex;
                 flex-direction: column;
+                padding: 1rem;
             }
         `;
     }
@@ -38,6 +39,15 @@ class VerticalStack extends LitElement {
         this._createCards();
     }
 
+    protected shouldUpdate(changedProps: PropertyValues): boolean {
+        return changedProps.has("hass") || changedProps.has("_config");
+    }
+
+    protected updated(changedProps: PropertyValues) {
+        if (changedProps.has("hass") || changedProps.has("_config")) {
+            this._createCards();
+        }
+    }
     private _createCards() {
         if (!this.hass || !this._config) {
             return;
@@ -48,12 +58,6 @@ class VerticalStack extends LitElement {
             element.hass = this.hass;
             return element;
         });
-    }
-
-    protected firstUpdated() {
-        if (this._config) {
-            this._createCards();
-        }
     }
 
     protected render() {
