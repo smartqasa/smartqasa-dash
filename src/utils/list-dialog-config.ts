@@ -1,5 +1,3 @@
-import { listDialogStyle } from "../styles/dialog";
-
 export const listDialogConfig: any = (
     dialogTitle: string,
     filterType: "domain" | "group",

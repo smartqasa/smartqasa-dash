@@ -1,5 +1,3 @@
-import { listDialogStyle } from "../styles/dialog";
-
 export function selectOptionDialog(config: any, stateObj: any) {
     if (!stateObj) return;
 
@@ -15,9 +13,7 @@ export function selectOptionDialog(config: any, stateObj: any) {
         title: stateObj.attributes.friendly_name || stateObj.entity_id,
         timeout: 60000,
         content: {
-            type: "custom:layout-card",
-            layout_type: "custom:grid-layout",
-            layout: listDialogStyle,
+            type: "custom:smartqasa-vertical-stack-card",
             cards: cards,
         },
     };
