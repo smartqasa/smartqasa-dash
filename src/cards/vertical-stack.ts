@@ -1,11 +1,12 @@
 import { LitElement, html, css } from "lit";
-import { customElement, property } from "lit/decorators.js";
+import { customElement, property, state } from "lit/decorators.js";
 import { HomeAssistant, LovelaceCardConfig, LovelaceCard } from "../types";
 import { createThing } from "custom-card-helpers";
 
 interface Config extends LovelaceCardConfig {
     cards: LovelaceCardConfig[];
 }
+
 window.customCards.push({
     type: "smartqasa-vertical-stack",
     name: "SmartQasa Vertical Stack",
@@ -17,7 +18,7 @@ window.customCards.push({
 class VerticalStack extends LitElement {
     @property({ attribute: false }) private _hass?: HomeAssistant;
     @property() private config?: Config;
-    private _cards: LovelaceCard[] = [];
+    @state() private _cards: LovelaceCard[] = [];
 
     static get styles() {
         return css`
@@ -49,14 +50,14 @@ class VerticalStack extends LitElement {
         });
     }
 
-    protected firstUpdated() {
-        if (this.config) {
-            this._createCards();
-        }
-    }
-
     protected render() {
-        return html` <div class="container">${this._cards.map((card) => html`<div>${card}</div>`)}</div> `;
+        return html`
+            <div class="container">
+                ${this._cards.length > 0
+                    ? this._cards.map((card) => html`<div>${card}</div>`)
+                    : html`<p>No cards available</p>`}
+            </div>
+        `;
     }
 
     set hass(hass: HomeAssistant) {

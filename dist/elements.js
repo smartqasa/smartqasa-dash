@@ -132,11 +132,6 @@ window.customCards.push({
     description: "A SmartQasa card for rendering Main Panel.",
 });
 let PanelCard = class PanelCard extends h {
-    /*
-    getCardSize(): number {
-        return 10;
-    }
-*/
     static { this.styles = i$3 `
         :host {
             display: block;
@@ -242,13 +237,14 @@ let VerticalStack = class VerticalStack extends h {
             return element;
         });
     }
-    firstUpdated() {
-        if (this.config) {
-            this._createCards();
-        }
-    }
     render() {
-        return ke ` <div class="container">${this._cards.map((card) => ke `<div>${card}</div>`)}</div> `;
+        return ke `
+            <div class="container">
+                ${this._cards.length > 0
+            ? this._cards.map((card) => ke `<div>${card}</div>`)
+            : ke `<p>No cards available</p>`}
+            </div>
+        `;
     }
     set hass(hass) {
         this._hass = hass;
@@ -267,6 +263,9 @@ __decorate([
 __decorate([
     n()
 ], VerticalStack.prototype, "config", void 0);
+__decorate([
+    r$1()
+], VerticalStack.prototype, "_cards", void 0);
 VerticalStack = __decorate([
     t$2("smartqasa-vertical-stack")
 ], VerticalStack);
