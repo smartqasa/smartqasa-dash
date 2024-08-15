@@ -17,7 +17,7 @@ window.customCards.push({
 @customElement("smartqasa-vertical-stack")
 class VerticalStack extends LitElement {
     @property({ attribute: false }) private _hass?: HomeAssistant;
-    @property() private config?: Config;
+    @property() private _config?: Config;
     @state() private _cards: LovelaceCard[] = [];
 
     static get styles() {
@@ -34,16 +34,16 @@ class VerticalStack extends LitElement {
             throw new Error("You need to define 'cards'");
         }
 
-        this.config = config;
+        this._config = { ...config };
         this._createCards();
     }
 
     private _createCards() {
-        if (!this._hass || !this.config) {
+        if (!this._hass || !this._config) {
             return;
         }
 
-        this._cards = this.config.cards.map((cardConfig) => {
+        this._cards = this._config.cards.map((cardConfig) => {
             const element = createThing(cardConfig) as LovelaceCard;
             element.hass = this._hass;
             return element;

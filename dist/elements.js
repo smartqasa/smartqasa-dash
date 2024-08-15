@@ -224,14 +224,14 @@ let VerticalStack = class VerticalStack extends h {
         if (!config.cards || !Array.isArray(config.cards)) {
             throw new Error("You need to define 'cards'");
         }
-        this.config = config;
+        this._config = { ...config };
         this._createCards();
     }
     _createCards() {
-        if (!this._hass || !this.config) {
+        if (!this._hass || !this._config) {
             return;
         }
-        this._cards = this.config.cards.map((cardConfig) => {
+        this._cards = this._config.cards.map((cardConfig) => {
             const element = oe(cardConfig);
             element.hass = this._hass;
             return element;
@@ -262,7 +262,7 @@ __decorate([
 ], VerticalStack.prototype, "_hass", void 0);
 __decorate([
     n()
-], VerticalStack.prototype, "config", void 0);
+], VerticalStack.prototype, "_config", void 0);
 __decorate([
     r$1()
 ], VerticalStack.prototype, "_cards", void 0);
