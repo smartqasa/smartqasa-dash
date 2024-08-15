@@ -44,11 +44,6 @@ export class PanelCard extends LitElement {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 10px;
-            background-color: var(--header-background, transparent);
-        }
-        smartqasa-time-date {
-            margin-right: 10px;
         }
     `;
 
@@ -69,8 +64,8 @@ export class PanelCard extends LitElement {
         const isPhone = deviceType === "phone";
 
         const containerStyles = {
-            padding: isPhone ? "10px 10px 5px 10px" : "15px 15px 5px 15px",
-            gridTemplateAreas: '"header" "area" "tablet_tiles" "footer"',
+            padding: isPhone ? "0.5rem" : "1rem",
+            gridTemplateAreas: isPhone ? '"area" "phone_tiles" "footer"' : '"header" "area" "tablet_tiles" "footer"',
         };
 
         return html`

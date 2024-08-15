@@ -2,15 +2,8 @@ import { css, CSSResultGroup, html, LitElement, PropertyValues, TemplateResult }
 import { customElement, property, state } from "lit/decorators.js";
 import { HomeAssistant } from "../types";
 
-window.customCards.push({
-    type: "smartqasa-time-date",
-    name: "SmartQasa Time Date",
-    preview: true,
-    description: "A SmartQasa card for rendering the time and date.",
-});
-
 @customElement("smartqasa-time-date")
-export class SmartQasaTimeDate extends LitElement {
+export class TimeDate extends LitElement {
     getCardSize(): number {
         return 1;
     }
@@ -24,35 +17,21 @@ export class SmartQasaTimeDate extends LitElement {
         return css`
             :host {
                 display: block;
-                padding: 0;
-                background-color: transparent;
             }
             .container {
-                display: grid;
-                grid-template-rows: auto auto;
-                padding: 0;
-                border-radius: 0;
-                border: none;
-                box-shadow: none;
-                background-color: transparent;
+                display: flex;
+                flex-direction: column;
                 cursor: pointer;
             }
-            .time,
-            .date {
-                justify-self: start;
-                text-align: left;
-                overflow: visible;
-            }
             .time {
-                line-height: var(--sq-title-font-size, 16px);
-                font-size: var(--sq-title-font-size, 16px);
+                font-size: var(--sq-title-font-size, 3.2rem);
                 font-weight: var(--sq-title-font-weight, 400);
-                color: rgb(var(--sq-title-font-rgb, 0, 0, 0));
+                color: rgb(var(--sq-title-font-rgb, 128, 128, 128));
             }
             .date {
-                font-size: var(--sq-primary-font-size, 14px);
+                font-size: var(--sq-primary-font-size, 1.5rem);
                 font-weight: var(--sq-primary-font-weight, 300);
-                color: rgb(var(--sq-secondary-font-rgb));
+                color: rgb(var(--sq-secondary-font-rgb, 128, 128, 128));
             }
         `;
     }

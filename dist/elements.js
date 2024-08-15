@@ -149,11 +149,6 @@ let PanelCard = class PanelCard extends h {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 10px;
-            background-color: var(--header-background, transparent);
-        }
-        smartqasa-time-date {
-            margin-right: 10px;
         }
     `; }
     setConfig(config) {
@@ -168,8 +163,8 @@ let PanelCard = class PanelCard extends h {
         this.hass.user?.is_admin;
         const isPhone = deviceType === "phone";
         const containerStyles = {
-            padding: isPhone ? "10px 10px 5px 10px" : "15px 15px 5px 15px",
-            gridTemplateAreas: '"header" "area" "tablet_tiles" "footer"',
+            padding: isPhone ? "0.5rem" : "1rem",
+            gridTemplateAreas: isPhone ? '"area" "phone_tiles" "footer"' : '"header" "area" "tablet_tiles" "footer"',
         };
         return ke `
             <div class="container" style="${se(containerStyles)}">
@@ -6968,13 +6963,7 @@ PanelFooter = __decorate([
     t$2("smartqasa-panel-footer")
 ], PanelFooter);
 
-window.customCards.push({
-    type: "smartqasa-time-date",
-    name: "SmartQasa Time Date",
-    preview: true,
-    description: "A SmartQasa card for rendering the time and date.",
-});
-let SmartQasaTimeDate = class SmartQasaTimeDate extends h {
+let TimeDate = class TimeDate extends h {
     constructor() {
         super(...arguments);
         this.time = "Loading...";
@@ -6987,35 +6976,21 @@ let SmartQasaTimeDate = class SmartQasaTimeDate extends h {
         return i$3 `
             :host {
                 display: block;
-                padding: 0;
-                background-color: transparent;
             }
             .container {
-                display: grid;
-                grid-template-rows: auto auto;
-                padding: 0;
-                border-radius: 0;
-                border: none;
-                box-shadow: none;
-                background-color: transparent;
+                display: flex;
+                flex-direction: column;
                 cursor: pointer;
             }
-            .time,
-            .date {
-                justify-self: start;
-                text-align: left;
-                overflow: visible;
-            }
             .time {
-                line-height: var(--sq-title-font-size, 16px);
-                font-size: var(--sq-title-font-size, 16px);
+                font-size: var(--sq-title-font-size, 3.2rem);
                 font-weight: var(--sq-title-font-weight, 400);
-                color: rgb(var(--sq-title-font-rgb, 0, 0, 0));
+                color: rgb(var(--sq-title-font-rgb, 128, 128, 128));
             }
             .date {
-                font-size: var(--sq-primary-font-size, 14px);
+                font-size: var(--sq-primary-font-size, 1.5rem);
                 font-weight: var(--sq-primary-font-weight, 300);
-                color: rgb(var(--sq-secondary-font-rgb));
+                color: rgb(var(--sq-secondary-font-rgb, 128, 128, 128));
             }
         `;
     }
@@ -7046,16 +7021,16 @@ let SmartQasaTimeDate = class SmartQasaTimeDate extends h {
 };
 __decorate([
     n({ attribute: false })
-], SmartQasaTimeDate.prototype, "hass", void 0);
+], TimeDate.prototype, "hass", void 0);
 __decorate([
     r$1()
-], SmartQasaTimeDate.prototype, "time", void 0);
+], TimeDate.prototype, "time", void 0);
 __decorate([
     r$1()
-], SmartQasaTimeDate.prototype, "date", void 0);
-SmartQasaTimeDate = __decorate([
+], TimeDate.prototype, "date", void 0);
+TimeDate = __decorate([
     t$2("smartqasa-time-date")
-], SmartQasaTimeDate);
+], TimeDate);
 
 window.customCards.push({
     type: "smartqasa-title-card",
