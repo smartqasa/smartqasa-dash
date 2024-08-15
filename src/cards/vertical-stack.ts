@@ -25,7 +25,9 @@ class VerticalStack extends LitElement {
             .container {
                 display: flex;
                 flex-direction: column;
-                padding: 1rem;
+            }
+            .element:not(:last-child) {
+                padding-bottom: 0.8rem;
             }
         `;
     }
@@ -48,6 +50,7 @@ class VerticalStack extends LitElement {
             this._createCards();
         }
     }
+
     private _createCards() {
         if (!this.hass || !this._config) {
             return;
@@ -61,10 +64,12 @@ class VerticalStack extends LitElement {
     }
 
     protected render() {
+        if (!this._config || !this.hass) return html``;
+
         return html`
             <div class="container">
                 ${this._cards.length > 0
-                    ? this._cards.map((card) => html`<div>${card}</div>`)
+                    ? this._cards.map((card) => html`<div class="element">${card}</div>`)
                     : html`<p>No cards available</p>`}
             </div>
         `;

@@ -217,7 +217,9 @@ let VerticalStack = class VerticalStack extends h {
             .container {
                 display: flex;
                 flex-direction: column;
-                padding: 1rem;
+            }
+            .element:not(:last-child) {
+                padding-bottom: 0.8rem;
             }
         `;
     }
@@ -247,10 +249,12 @@ let VerticalStack = class VerticalStack extends h {
         });
     }
     render() {
+        if (!this._config || !this.hass)
+            return ke ``;
         return ke `
             <div class="container">
                 ${this._cards.length > 0
-            ? this._cards.map((card) => ke `<div>${card}</div>`)
+            ? this._cards.map((card) => ke `<div class="element">${card}</div>`)
             : ke `<p>No cards available</p>`}
             </div>
         `;
