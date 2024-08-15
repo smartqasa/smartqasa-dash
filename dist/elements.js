@@ -132,9 +132,11 @@ window.customCards.push({
     description: "A SmartQasa card for rendering Main Panel.",
 });
 let PanelCard = class PanelCard extends h {
-    getCardSize() {
+    /*
+    getCardSize(): number {
         return 10;
     }
+*/
     static { this.styles = i$3 `
         :host {
             display: block;
@@ -210,7 +212,7 @@ window.customCards.push({
     preview: false,
     description: "A custom stack card that displays other cards.",
 });
-let SmartQasaVerticalStack = class SmartQasaVerticalStack extends h {
+let VerticalStack = class VerticalStack extends h {
     constructor() {
         super(...arguments);
         this._cards = [];
@@ -261,13 +263,13 @@ let SmartQasaVerticalStack = class SmartQasaVerticalStack extends h {
 };
 __decorate([
     n({ attribute: false })
-], SmartQasaVerticalStack.prototype, "_hass", void 0);
+], VerticalStack.prototype, "_hass", void 0);
 __decorate([
     n()
-], SmartQasaVerticalStack.prototype, "config", void 0);
-SmartQasaVerticalStack = __decorate([
+], VerticalStack.prototype, "config", void 0);
+VerticalStack = __decorate([
     t$2("smartqasa-vertical-stack")
-], SmartQasaVerticalStack);
+], VerticalStack);
 
 const callService = async (hass, domain, service, serviceData) => {
     try {

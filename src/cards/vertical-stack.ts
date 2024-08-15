@@ -3,7 +3,7 @@ import { customElement, property } from "lit/decorators.js";
 import { HomeAssistant, LovelaceCardConfig, LovelaceCard } from "../types";
 import { createThing } from "custom-card-helpers";
 
-interface SmartQasaVerticalStackConfig extends LovelaceCardConfig {
+interface Config extends LovelaceCardConfig {
     cards: LovelaceCardConfig[];
 }
 window.customCards.push({
@@ -14,9 +14,9 @@ window.customCards.push({
 });
 
 @customElement("smartqasa-vertical-stack")
-class SmartQasaVerticalStack extends LitElement {
+class VerticalStack extends LitElement {
     @property({ attribute: false }) private _hass?: HomeAssistant;
-    @property() private config?: SmartQasaVerticalStackConfig;
+    @property() private config?: Config;
     private _cards: LovelaceCard[] = [];
 
     static get styles() {
@@ -28,7 +28,7 @@ class SmartQasaVerticalStack extends LitElement {
         `;
     }
 
-    public setConfig(config: SmartQasaVerticalStackConfig): void {
+    public setConfig(config: Config): void {
         if (!config.cards || !Array.isArray(config.cards)) {
             throw new Error("You need to define 'cards'");
         }
