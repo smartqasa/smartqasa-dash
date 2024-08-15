@@ -12,9 +12,7 @@ export const listDialogConfig: any = (
         content: {
             type: "custom:auto-entities",
             card: {
-                type: "custom:layout-card",
-                layout_type: "custom:grid-layout",
-                layout: listDialogStyle,
+                type: "custom:smartqasa-vertical-stack-card",
             },
             card_param: "cards",
             filter: {

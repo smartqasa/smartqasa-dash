@@ -202,10 +202,10 @@ PanelCard = __decorate([
 var t,r;!function(e){e.language="language",e.system="system",e.comma_decimal="comma_decimal",e.decimal_comma="decimal_comma",e.space_comma="space_comma",e.none="none";}(t||(t={})),function(e){e.language="language",e.system="system",e.am_pm="12",e.twenty_four="24";}(r||(r={}));var ne=function(e,t,r,n){n=n||{},r=null==r?{}:r;var i=new Event(t,{bubbles:void 0===n.bubbles||n.bubbles,cancelable:Boolean(n.cancelable),composed:void 0===n.composed||n.composed});return i.detail=r,e.dispatchEvent(i),i},ie=new Set(["call-service","divider","section","weblink","cast","select"]),ae={alert:"toggle",automation:"toggle",climate:"climate",cover:"cover",fan:"toggle",group:"group",input_boolean:"toggle",input_number:"input-number",input_select:"input-select",input_text:"input-text",light:"toggle",lock:"lock",media_player:"media-player",remote:"toggle",scene:"scene",script:"script",sensor:"sensor",timer:"timer",switch:"toggle",vacuum:"toggle",water_heater:"climate",input_datetime:"input-datetime"},oe=function(e,t){void 0===t&&(t=!1);var r=function(e,t){return n("hui-error-card",{type:"error",error:e,config:t})},n=function(e,t){var n=window.document.createElement(e);try{if(!n.setConfig)return;n.setConfig(t);}catch(n){return console.error(e,n),r(n.message,t)}return n};if(!e||"object"!=typeof e||!t&&!e.type)return r("No type defined",e);var i=e.type;if(i&&i.startsWith("custom:"))i=i.substr("custom:".length);else if(t)if(ie.has(i))i="hui-"+i+"-row";else {if(!e.entity)return r("Invalid config given.",e);var a=e.entity.split(".",1)[0];i="hui-"+(ae[a]||"text")+"-entity-row";}else i="hui-"+i+"-card";if(customElements.get(i))return n(i,e);var o=r("Custom element doesn't exist: "+e.type+".",e);o.style.display="None";var u=setTimeout(function(){o.style.display="";},2e3);return customElements.whenDefined(e.type).then(function(){clearTimeout(u),ne(o,"ll-rebuild",{},o);}),o};
 
 window.customCards.push({
-    type: "smartqasa-vertical-stack",
-    name: "SmartQasa Vertical Stack",
+    type: "smartqasa-vertical-stack-card",
+    name: "SmartQasa Vertical Stack Card",
     preview: false,
-    description: "A custom stack card that displays other cards.",
+    description: "A SmartQasa card that displays other cards in a vertical stack.",
 });
 let VerticalStack = class VerticalStack extends h {
     constructor() {
@@ -266,7 +266,7 @@ __decorate([
     r$1()
 ], VerticalStack.prototype, "_cards", void 0);
 VerticalStack = __decorate([
-    t$2("smartqasa-vertical-stack")
+    t$2("smartqasa-vertical-stack-card")
 ], VerticalStack);
 
 const callService = async (hass, domain, service, serviceData) => {
@@ -5257,19 +5257,6 @@ CustomChip = __decorate([
     t$2("smartqasa-custom-chip")
 ], CustomChip);
 
-const listDialogStyle = {
-    margin: 0,
-    card_margin: 0,
-    "grid-template-columns": "1fr",
-    "grid-gap": "var(--sq-dialog-grid-gap)",
-};
-const gridDialogStyle = {
-    margin: 0,
-    card_margin: 0,
-    "grid-template-columns": deviceType === "phone" ? "repeat(2, 1fr)" : "repeat(3, var(--sq-tile-width-tablet, 20rem))",
-    "grid-gap": "var(--sq-dialog-grid-gap)",
-};
-
 const listDialogConfig = (dialogTitle, filterType, filterValue, tileType) => {
     return {
         title: dialogTitle,
@@ -5277,9 +5264,7 @@ const listDialogConfig = (dialogTitle, filterType, filterValue, tileType) => {
         content: {
             type: "custom:auto-entities",
             card: {
-                type: "custom:layout-card",
-                layout_type: "custom:grid-layout",
-                layout: listDialogStyle,
+                type: "custom:smartqasa-vertical-stack-card",
             },
             card_param: "cards",
             filter: {
@@ -5302,6 +5287,19 @@ const listDialogConfig = (dialogTitle, filterType, filterValue, tileType) => {
             },
         },
     };
+};
+
+const listDialogStyle = {
+    margin: 0,
+    card_margin: 0,
+    "grid-template-columns": "1fr",
+    "grid-gap": "var(--sq-dialog-grid-gap)",
+};
+const gridDialogStyle = {
+    margin: 0,
+    card_margin: 0,
+    "grid-template-columns": deviceType === "phone" ? "repeat(2, 1fr)" : "repeat(3, var(--sq-tile-width-tablet, 20rem))",
+    "grid-gap": "var(--sq-dialog-grid-gap)",
 };
 
 const dialogTable = {
