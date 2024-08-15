@@ -228,12 +228,12 @@ let VerticalStack = class VerticalStack extends h {
         this._createCards();
     }
     _createCards() {
-        if (!this._hass || !this._config) {
+        if (!this.hass || !this._config) {
             return;
         }
         this._cards = this._config.cards.map((cardConfig) => {
             const element = oe(cardConfig);
-            element.hass = this._hass;
+            element.hass = this.hass;
             return element;
         });
     }
@@ -251,20 +251,10 @@ let VerticalStack = class VerticalStack extends h {
             </div>
         `;
     }
-    set hass(hass) {
-        this._hass = hass;
-        this._cards.forEach((card) => {
-            card.hass = hass;
-        });
-        this.requestUpdate();
-    }
-    get hass() {
-        return this._hass;
-    }
 };
 __decorate([
     n({ attribute: false })
-], VerticalStack.prototype, "_hass", void 0);
+], VerticalStack.prototype, "hass", void 0);
 __decorate([
     n()
 ], VerticalStack.prototype, "_config", void 0);
