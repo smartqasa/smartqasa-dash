@@ -249,14 +249,10 @@ let VerticalStack = class VerticalStack extends h {
         });
     }
     render() {
-        if (!this._config || !this.hass)
+        if (!this._config || !this.hass || !(this._cards.length > 0))
             return ke ``;
         return ke `
-            <div class="container">
-                ${this._cards.length > 0
-            ? this._cards.map((card) => ke `<div class="element">${card}</div>`)
-            : ke `<p>No cards available</p>`}
-            </div>
+            <div class="container">${this._cards.map((card) => ke `<div class="element">${card}</div>`)}</div>
         `;
     }
 };

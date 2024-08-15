@@ -64,14 +64,10 @@ class VerticalStack extends LitElement {
     }
 
     protected render() {
-        if (!this._config || !this.hass) return html``;
+        if (!this._config || !this.hass || !(this._cards.length > 0)) return html``;
 
         return html`
-            <div class="container">
-                ${this._cards.length > 0
-                    ? this._cards.map((card) => html`<div class="element">${card}</div>`)
-                    : html`<p>No cards available</p>`}
-            </div>
+            <div class="container">${this._cards.map((card) => html`<div class="element">${card}</div>`)}</div>
         `;
     }
 }
