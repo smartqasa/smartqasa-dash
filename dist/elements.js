@@ -6988,6 +6988,7 @@ let TimeDate = class TimeDate extends h {
                 line-height: normal;
             }
             .time {
+                margin-top: -0.6rem;
                 font-size: var(--sq-title-font-size, 3.2rem);
                 font-weight: var(--sq-title-font-weight, 400);
                 color: rgb(var(--sq-title-font-rgb, 128, 128, 128));
