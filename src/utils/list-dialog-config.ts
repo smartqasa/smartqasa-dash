@@ -1,3 +1,5 @@
+import { listDialogStyle } from "../styles/dialog";
+
 export const listDialogConfig: any = (
     dialogTitle: string,
     filterType: "domain" | "group",
@@ -10,7 +12,9 @@ export const listDialogConfig: any = (
         content: {
             type: "custom:auto-entities",
             card: {
-                type: "custom:smartqasa-vertical-stack-card",
+                type: "custom:layout-card",
+                layout_type: "custom:grid-layout",
+                layout: listDialogStyle,
             },
             card_param: "cards",
             filter: {

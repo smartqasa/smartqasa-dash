@@ -29,25 +29,25 @@ window.customCards.push({
 @customElement("smartqasa-custom-chip")
 export class CustomChip extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
-    @state() private config?: Config;
-    @state() private dialogObj?: DialogObj;
-    @state() private stateObj?: HassEntity;
+    @state() private _config?: Config;
+    @state() private _dialogObj?: DialogObj;
+    @state() private _stateObj?: HassEntity;
 
-    private entity?: string;
+    private _entity?: string;
 
     static styles: CSSResultGroup = [chipBaseStyle, chipTextStyle];
 
     public setConfig(config: Config): void {
-        this.config = { ...config };
+        this._config = { ...config };
         this.loadDialogObj();
     }
 
     private async loadDialogObj() {
-        if (!this.config?.dialog_file) return;
+        if (!this._config?.dialog_file) return;
         try {
-            const path = `/local/smartqasa/dialogs/${this.config.dialog_file}`;
-            this.dialogObj = (await loadYamlAsJson(path)) as DialogObj;
-            this.entity = this.dialogObj.entity;
+            const path = `/local/smartqasa/dialogs/${this._config.dialog_file}`;
+            this._dialogObj = (await loadYamlAsJson(path)) as DialogObj;
+            this._entity = this._dialogObj.entity;
         } catch (error) {
             console.error("Failed to load YAML:", error);
         }
@@ -55,29 +55,29 @@ export class CustomChip extends LitElement {
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
         return !!(
-            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj) ||
-            (changedProps.has("config") && this.config)
+            (changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
+            (changedProps.has("config") && this._config)
         );
     }
 
     protected render(): TemplateResult {
-        if (!this.dialogObj) return html``;
+        if (!this._dialogObj) return html``;
 
-        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
+        this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
 
-        const icon = this.dialogObj.icon || "mdi:help-circle";
+        const icon = this._dialogObj.icon || "mdi:help-circle";
         let iconColor = "var(--sq-inactive-rgb)";
 
-        if (this.hass && this.dialogObj.icon_rgb) {
+        if (this.hass && this._dialogObj.icon_rgb) {
             try {
-                const func = new Function("states", this.dialogObj.icon_rgb);
+                const func = new Function("states", this._dialogObj.icon_rgb);
                 iconColor = func(this.hass.states);
             } catch (error) {
                 console.error("Error evaluating icon color expression:", error);
             }
         }
-        let text = this.stateObj?.state || "";
-        switch (this.dialogObj.entity_type) {
+        let text = this._stateObj?.state || "";
+        switch (this._dialogObj.entity_type) {
             case "temperature":
                 text += "°";
                 break;
@@ -107,8 +107,8 @@ export class CustomChip extends LitElement {
 
     private showDialog(e: Event): void {
         e.stopPropagation();
-        if (!this.dialogObj) return;
-        const dialogConfig = { ...this.dialogObj.data };
+        if (!this._dialogObj) return;
+        const dialogConfig = { ...this._dialogObj.data };
         window.browser_mod?.service("popup", dialogConfig);
     }
 }

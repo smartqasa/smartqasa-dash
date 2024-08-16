@@ -5173,42 +5173,42 @@ window.customCards.push({
 let CustomChip = class CustomChip extends h {
     static { this.styles = [chipBaseStyle, chipTextStyle]; }
     setConfig(config) {
-        this.config = { ...config };
+        this._config = { ...config };
         this.loadDialogObj();
     }
     async loadDialogObj() {
-        if (!this.config?.dialog_file)
+        if (!this._config?.dialog_file)
             return;
         try {
-            const path = `/local/smartqasa/dialogs/${this.config.dialog_file}`;
-            this.dialogObj = (await loadYamlAsJson(path));
-            this.entity = this.dialogObj.entity;
+            const path = `/local/smartqasa/dialogs/${this._config.dialog_file}`;
+            this._dialogObj = (await loadYamlAsJson(path));
+            this._entity = this._dialogObj.entity;
         }
         catch (error) {
             console.error("Failed to load YAML:", error);
         }
     }
     shouldUpdate(changedProps) {
-        return !!((changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj) ||
-            (changedProps.has("config") && this.config));
+        return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
+            (changedProps.has("config") && this._config));
     }
     render() {
-        if (!this.dialogObj)
+        if (!this._dialogObj)
             return ke ``;
-        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
-        const icon = this.dialogObj.icon || "mdi:help-circle";
+        this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
+        const icon = this._dialogObj.icon || "mdi:help-circle";
         let iconColor = "var(--sq-inactive-rgb)";
-        if (this.hass && this.dialogObj.icon_rgb) {
+        if (this.hass && this._dialogObj.icon_rgb) {
             try {
-                const func = new Function("states", this.dialogObj.icon_rgb);
+                const func = new Function("states", this._dialogObj.icon_rgb);
                 iconColor = func(this.hass.states);
             }
             catch (error) {
                 console.error("Error evaluating icon color expression:", error);
             }
         }
-        let text = this.stateObj?.state || "";
-        switch (this.dialogObj.entity_type) {
+        let text = this._stateObj?.state || "";
+        switch (this._dialogObj.entity_type) {
             case "temperature":
                 text += "°";
                 break;
@@ -5235,9 +5235,9 @@ let CustomChip = class CustomChip extends h {
     }
     showDialog(e) {
         e.stopPropagation();
-        if (!this.dialogObj)
+        if (!this._dialogObj)
             return;
-        const dialogConfig = { ...this.dialogObj.data };
+        const dialogConfig = { ...this._dialogObj.data };
         window.browser_mod?.service("popup", dialogConfig);
     }
 };
@@ -5246,16 +5246,29 @@ __decorate([
 ], CustomChip.prototype, "hass", void 0);
 __decorate([
     r$1()
-], CustomChip.prototype, "config", void 0);
+], CustomChip.prototype, "_config", void 0);
 __decorate([
     r$1()
-], CustomChip.prototype, "dialogObj", void 0);
+], CustomChip.prototype, "_dialogObj", void 0);
 __decorate([
     r$1()
-], CustomChip.prototype, "stateObj", void 0);
+], CustomChip.prototype, "_stateObj", void 0);
 CustomChip = __decorate([
     t$2("smartqasa-custom-chip")
 ], CustomChip);
+
+const listDialogStyle = {
+    margin: 0,
+    card_margin: 0,
+    "grid-template-columns": "1fr",
+    "grid-gap": "var(--sq-dialog-grid-gap)",
+};
+const gridDialogStyle = {
+    margin: 0,
+    card_margin: 0,
+    "grid-template-columns": deviceType === "phone" ? "repeat(2, 1fr)" : "repeat(3, var(--sq-tile-width-tablet, 20rem))",
+    "grid-gap": "var(--sq-dialog-grid-gap)",
+};
 
 const listDialogConfig = (dialogTitle, filterType, filterValue, tileType) => {
     return {
@@ -5264,7 +5277,9 @@ const listDialogConfig = (dialogTitle, filterType, filterValue, tileType) => {
         content: {
             type: "custom:auto-entities",
             card: {
-                type: "custom:smartqasa-vertical-stack-card",
+                type: "custom:layout-card",
+                layout_type: "custom:grid-layout",
+                layout: listDialogStyle,
             },
             card_param: "cards",
             filter: {
@@ -5287,19 +5302,6 @@ const listDialogConfig = (dialogTitle, filterType, filterValue, tileType) => {
             },
         },
     };
-};
-
-const listDialogStyle = {
-    margin: 0,
-    card_margin: 0,
-    "grid-template-columns": "1fr",
-    "grid-gap": "var(--sq-dialog-grid-gap)",
-};
-const gridDialogStyle = {
-    margin: 0,
-    card_margin: 0,
-    "grid-template-columns": deviceType === "phone" ? "repeat(2, 1fr)" : "repeat(3, var(--sq-tile-width-tablet, 20rem))",
-    "grid-gap": "var(--sq-dialog-grid-gap)",
 };
 
 const dialogTable = {
@@ -6051,7 +6053,9 @@ function selectOptionDialog(config, stateObj) {
         title: stateObj.attributes.friendly_name || stateObj.entity_id,
         timeout: 60000,
         content: {
-            type: "custom:smartqasa-vertical-stack-card",
+            type: "custom:layout-card",
+            layout_type: "custom:grid-layout",
+            layout: listDialogStyle,
             cards: cards,
         },
     };
@@ -9835,7 +9839,7 @@ PopupConfirmation = __decorate([
     t$2("popup-confirmation")
 ], PopupConfirmation);
 
-var version = "2024.8.14b-1";
+var version = "2024.8.15b-5";
 
 window.smartqasa = window.smartqasa || {};
 window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();
