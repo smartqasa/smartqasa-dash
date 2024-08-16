@@ -9839,7 +9839,7 @@ PopupConfirmation = __decorate([
     t$2("popup-confirmation")
 ], PopupConfirmation);
 
-var version = "2024.8.15b-5";
+var version = "2024.8.15b-6";
 
 window.smartqasa = window.smartqasa || {};
 window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();
