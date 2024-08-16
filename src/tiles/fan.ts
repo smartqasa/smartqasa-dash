@@ -24,11 +24,7 @@ window.customCards.push({
 
 @customElement("smartqasa-fan-tile")
 export class FanTile extends LitElement {
-    getCardSize(): number {
-        return 1;
-    }
-
-    @property({ attribute: false }) public hass!: HomeAssistant;
+    @property({ attribute: false }) public hass?: HomeAssistant;
     @state() private _config?: Config;
     private _entity?: string;
     private _stateObj?: HassEntity;
@@ -42,7 +38,7 @@ export class FanTile extends LitElement {
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
         return !!(
-            (changedProps.has("hass") && this._entity && this.hass.states[this._entity] !== this._stateObj) ||
+            (changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
             (changedProps.has("_config") && this._config)
         );
     }
@@ -68,7 +64,7 @@ export class FanTile extends LitElement {
     private _updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
 
-        this._stateObj = this._entity ? this.hass.states[this._entity] : undefined;
+        this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
 
         if (this._config && this._stateObj) {
             const state = this._stateObj.state || "unknown";
@@ -85,9 +81,9 @@ export class FanTile extends LitElement {
             }
             iconColor = state === "on" ? "var(--sq-fan-on-rgb)" : "var(--sq-inactive-rgb)";
             name = this._config.name || this._stateObj.attributes.friendly_name || this._entity;
-            stateFmtd = `${this.hass.formatEntityState(this._stateObj)}${
+            stateFmtd = `${this.hass?.formatEntityState(this._stateObj)}${
                 state === "on" && this._stateObj.attributes.percentage
-                    ? " - " + this.hass.formatEntityAttributeValue(this._stateObj, "percentage")
+                    ? " - " + this.hass?.formatEntityAttributeValue(this._stateObj, "percentage")
                     : ""
             }`;
         } else {

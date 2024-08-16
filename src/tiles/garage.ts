@@ -22,32 +22,28 @@ window.customCards.push({
 
 @customElement("smartqasa-garage-tile")
 export class GarageTile extends LitElement {
-    getCardSize(): number {
-        return 1;
-    }
-
     @property({ attribute: false }) public hass?: HomeAssistant;
-
-    @state() private config?: Config;
-    @state() private stateObj?: HassEntity;
-
-    private entity?: string;
+    @state() private _config?: Config;
+    @state() private _stateObj?: HassEntity;
+    private _entity?: string;
 
     static styles: CSSResultGroup = [tileBaseStyle, tileStateStyle, tileIconBlinkStyle];
 
     public setConfig(config: Config): void {
-        this.config = { ...config };
-        this.entity = this.config.entity?.startsWith("cover.") ? this.config.entity : undefined;
+        this._config = { ...config };
+        this._entity = this._config.entity?.startsWith("cover.") ? this._config.entity : undefined;
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
         return !!(
-            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj) ||
-            (changedProps.has("config") && this.config)
+            (changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
+            (changedProps.has("config") && this._config)
         );
     }
 
     protected render(): TemplateResult {
+        if (!this.hass) console.log("No hass");
+        if (!this._config) console.log("No config");
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
@@ -68,10 +64,10 @@ export class GarageTile extends LitElement {
     private updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
 
-        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
+        this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
 
-        if (this.config && this.hass && this.stateObj) {
-            const state = this.stateObj.state || "unknown";
+        if (this._config && this.hass && this._stateObj) {
+            const state = this._stateObj.state || "unknown";
             switch (state) {
                 case "closed":
                     icon = "hass:garage-variant";
@@ -99,17 +95,17 @@ export class GarageTile extends LitElement {
                     iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
                     break;
             }
-            name = this.config.name || this.stateObj.attributes.friendly_name || this.entity;
+            name = this._config.name || this._stateObj.attributes.friendly_name || this._entity;
             stateFmtd =
-                this.hass.formatEntityState(this.stateObj) +
-                (state === "open" && this.stateObj.attributes.current_position
-                    ? " - " + this.hass.formatEntityAttributeValue(this.stateObj, "current_position")
+                this.hass.formatEntityState(this._stateObj) +
+                (state === "open" && this._stateObj.attributes.current_position
+                    ? " - " + this.hass.formatEntityAttributeValue(this._stateObj, "current_position")
                     : "");
         } else {
-            icon = this.config?.icon || "hass:garage-alert-variant";
+            icon = this._config?.icon || "hass:garage-alert-variant";
             iconAnimation = "none";
             iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            name = this.config?.name || "Unknown";
+            name = this._config?.name || "Unknown";
             stateFmtd = "Unknown";
         }
 
@@ -118,12 +114,12 @@ export class GarageTile extends LitElement {
 
     private toggleEntity(e: Event): void {
         e.stopPropagation();
-        if (!this.hass || !this.entity) return;
-        callService(this.hass, "cover", "toggle", { entity_id: this.entity });
+        if (!this.hass || !this._entity) return;
+        callService(this.hass, "cover", "toggle", { entity_id: this._entity });
     }
 
     private showMoreInfo(e: Event): void {
         e.stopPropagation();
-        moreInfoDialog(this.config, this.stateObj);
+        moreInfoDialog(this._config, this._stateObj);
     }
 }

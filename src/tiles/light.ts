@@ -24,28 +24,12 @@ window.customCards.push({
 
 @customElement("smartqasa-light-tile")
 export class LightTile extends LitElement {
-    @property({ attribute: false }) public hass!: HomeAssistant;
+    @property({ attribute: false }) public hass?: HomeAssistant;
     @state() private _config?: Config;
     private _entity?: string;
     private _stateObj?: HassEntity;
 
     static styles: CSSResultGroup = [tileBaseStyle, tileStateStyle];
-
-    getCardSize() {
-        return 1;
-    }
-
-    static getConfigElement() {
-        return document.createElement("smartqasa-light-tile-editor");
-    }
-
-    static getStubConfig() {
-        return {
-            entity: "",
-            icon: "",
-            name: "",
-        };
-    }
 
     public setConfig(config: Config): void {
         this._config = { ...config };
@@ -54,7 +38,7 @@ export class LightTile extends LitElement {
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
         return !!(
-            (changedProps.has("hass") && this._entity && this.hass.states[this._entity] !== this._stateObj) ||
+            (changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
             (changedProps.has("_config") && this._config)
         );
     }
@@ -80,7 +64,7 @@ export class LightTile extends LitElement {
     private _updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
 
-        this._stateObj = this._entity ? this.hass.states[this._entity] : undefined;
+        this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
 
         if (this._config && this._stateObj) {
             const state = this._stateObj.state || "unknown";
@@ -88,9 +72,9 @@ export class LightTile extends LitElement {
             iconAnimation = "none";
             iconColor = state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
             name = this._config.name || this._stateObj.attributes.friendly_name || this._entity;
-            stateFmtd = `${this.hass.formatEntityState(this._stateObj)}${
+            stateFmtd = `${this.hass?.formatEntityState(this._stateObj)}${
                 state === "on" && this._stateObj.attributes.brightness
-                    ? " - " + this.hass.formatEntityAttributeValue(this._stateObj, "brightness")
+                    ? " - " + this.hass?.formatEntityAttributeValue(this._stateObj, "brightness")
                     : ""
             }`;
         } else {
