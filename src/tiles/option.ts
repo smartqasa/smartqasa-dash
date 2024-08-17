@@ -34,7 +34,6 @@ export class OptionTile extends LitElement {
     @state() private _config?: Config;
     @state() private _stateObj?: HassEntity;
     @state() private _running: boolean = false;
-
     private _entity?: string;
 
     static styles: CSSResultGroup = [tileBaseStyle, tileIconSpinStyle];

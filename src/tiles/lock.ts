@@ -3,7 +3,7 @@ import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "../types";
-import { callService } from "../utils/call-service";
+import { callService } from "../utils/call-service-new";
 import { moreInfoDialog } from "../utils/more-info-dialog";
 
 import { tileBaseStyle, tileStateStyle, tileIconBlinkStyle, tileIconSpinStyle } from "../styles/tile";
@@ -22,16 +22,10 @@ window.customCards.push({
 
 @customElement("smartqasa-lock-tile")
 export class LockTile extends LitElement {
-    getCardSize(): number {
-        return 1;
-    }
-
     @property({ attribute: false }) public hass?: HomeAssistant;
-
     @state() private _config?: Config;
     @state() private _stateObj?: HassEntity;
     @state() private _running: boolean = false;
-
     private _entity?: string;
 
     static styles: CSSResultGroup = [tileBaseStyle, tileStateStyle, tileIconBlinkStyle, tileIconSpinStyle];
@@ -127,7 +121,7 @@ export class LockTile extends LitElement {
         const state = this._stateObj.state;
         this._running = true;
         this._stateObj.state = state == "locked" ? "unlocking" : "locking";
-        callService(this.hass!, "lock", state == "locked" ? "unlock" : "lock", {
+        callService(this, "lock", state == "locked" ? "unlock" : "lock", {
             entity_id: this._entity,
         });
 

@@ -1,9 +1,8 @@
 import { CSSResultGroup, html, LitElement, nothing, PropertyValues, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
-import { HassEntity } from "home-assistant-js-websocket";
-import { HomeAssistant, LovelaceCardConfig } from "../types";
-import { callService } from "../utils/call-service-v2";
+import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
+import { callService } from "../utils/call-service-new";
 import { moreInfoDialog } from "../utils/more-info-dialog";
 import { entityListDialog } from "../utils/entity-list-dialog";
 import { tileBaseStyle, tileStateStyle } from "../styles/tile";

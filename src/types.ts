@@ -65,6 +65,8 @@ export interface HassArea {
     aliases: string[];
 }
 
+export type { HassEntity };
+
 export interface Resources {
     [language: string]: Record<string, string>;
 }

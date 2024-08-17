@@ -3,7 +3,7 @@ import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "../types";
-import { callService } from "../utils/call-service";
+import { callService } from "../utils/call-service-new";
 import { sequenceTable } from "../tables/pool-light-sequences";
 
 import { tileBaseStyle, tileIconSpinStyle } from "../styles/tile";
@@ -15,30 +15,27 @@ interface Config extends LovelaceCardConfig {
 
 @customElement("smartqasa-pool-light-sequencer-tile")
 export class PoolLightSequencerTile extends LitElement {
-    getCardSize(): number {
-        return 1;
-    }
-
     @property({ attribute: false }) public hass?: HomeAssistant;
-    @state() private config?: Config;
-    @state() private running: boolean = false;
-    private sequenceObj?: any;
-    private stateObj?: any;
-
-    private entity?: string;
+    @state() private _config?: Config;
+    @state() private _running: boolean = false;
+    private _sequenceObj?: any;
+    private _stateObj?: any;
+    private _entity?: string;
 
     static styles: CSSResultGroup = [tileBaseStyle, tileIconSpinStyle];
 
     public setConfig(config: Config): void {
-        this.config = { ...config };
-        this.sequenceObj = config.sequence ? sequenceTable[config.sequence] : undefined;
-        this.entity = ["light", "switch"].includes(this.config.entity?.split(".")[0]) ? this.config.entity : undefined;
+        this._config = { ...config };
+        this._sequenceObj = config.sequence ? sequenceTable[config.sequence] : undefined;
+        this._entity = ["light", "switch"].includes(this._config.entity?.split(".")[0])
+            ? this._config.entity
+            : undefined;
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
         return !!(
-            (changedProps.has("config") && this.config) ||
-            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj)
+            (changedProps.has("config") && this._config) ||
+            (changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj)
         );
     }
 
@@ -62,19 +59,19 @@ export class PoolLightSequencerTile extends LitElement {
     private updateState() {
         let icon, iconAnimation, iconColor, name;
 
-        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
+        this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
 
-        if (this.config && this.sequenceObj && this.stateObj) {
-            if (this.running) {
+        if (this._config && this._sequenceObj && this._stateObj) {
+            if (this._running) {
                 icon = "hass:rotate-right";
                 iconAnimation = "spin 1.0s linear infinite";
                 iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
             } else {
-                icon = this.config.icon || this.stateObj.attributes.icon || "hass:lightbulb";
+                icon = this._config.icon || this._stateObj.attributes.icon || "hass:lightbulb";
                 iconAnimation = "none";
-                iconColor = this.sequenceObj.iconRGB || "var(--sq-inactive-rgb)";
+                iconColor = this._sequenceObj.iconRGB || "var(--sq-inactive-rgb)";
             }
-            name = this.sequenceObj.name || "Unknown";
+            name = this._sequenceObj.name || "Unknown";
         } else {
             icon = "hass:alert-rhombus";
             iconAnimation = "none";
@@ -87,17 +84,17 @@ export class PoolLightSequencerTile extends LitElement {
 
     private async runRoutine(e: Event): Promise<void> {
         e.stopPropagation();
-        if (!this.hass || !this.config || !this.stateObj) return;
+        if (!this.hass || !this._stateObj) return;
 
-        this.running = true;
+        this._running = true;
 
-        await callService(this.hass, "script", "system_color_light_sequence_selector", {
-            entity: this.entity,
-            count: this.sequenceObj.count,
+        await callService(this, "script", "system_color_light_sequence_selector", {
+            entity: this._entity,
+            count: this._sequenceObj.count,
         });
 
         setTimeout(() => {
-            this.running = false;
+            this._running = false;
         }, 2000);
     }
 }

@@ -7086,6 +7086,23 @@ TitleCard = __decorate([
     t$2("smartqasa-title-card")
 ], TitleCard);
 
+const callService = async (context, domain, service, serviceData) => {
+    if (!context.hass) {
+        console.error(`Error calling ${domain}.${service}:`, "Connection to Home Assistant is not available.");
+        return;
+    }
+    if (!context._stateObj) {
+        console.error(`Error calling ${domain}.${service}:`, "The entity state object is not available.");
+        return;
+    }
+    try {
+        await context.hass.callService(domain, service, serviceData);
+    }
+    catch (error) {
+        console.error(`Error calling ${domain}.${service}:`, error);
+    }
+};
+
 const tileBaseStyle = i$3 `
     .container {
         display: grid;
@@ -7172,30 +7189,32 @@ window.customCards.push({
 let AllOffTile = class AllOffTile extends h {
     constructor() {
         super(...arguments);
-        this.running = false;
+        this._running = false;
     }
     getCardSize() {
         return 1;
     }
     static { this.styles = [tileBaseStyle, tileIconSpinStyle]; }
     setConfig(config) {
-        this.config = { ...config };
-        this.area = this.config?.area;
+        this._config = { ...config };
+        this._area = this._config?.area;
     }
     shouldUpdate(changedProps) {
+        if (!this._config)
+            return false;
         return !!(changedProps.has("running") ||
-            (changedProps.has("hass") && this.area && this.hass?.areas[this.area] !== this.areaObj) ||
-            (changedProps.has("config") && this.config));
+            (changedProps.has("hass") && this._area && this.hass?.areas[this._area] !== this._areaObj) ||
+            changedProps.has("config"));
     }
     render() {
-        const { icon, iconAnimation, iconColor, name } = this.updateState();
+        const { icon, iconAnimation, iconColor, name } = this._updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
             backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity))`,
             animation: iconAnimation,
         };
         return ke `
-            <div class="container" @click=${this.runRoutine}>
+            <div class="container" @click=${this._runRoutine}>
                 <div class="icon" style="${se(iconStyles)}">
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
@@ -7203,21 +7222,21 @@ let AllOffTile = class AllOffTile extends h {
             </div>
         `;
     }
-    updateState() {
+    _updateState() {
         let icon, iconAnimation, iconColor, name;
-        this.areaObj = this.area ? this.hass?.areas[this.area] : undefined;
-        if (this.config && this.areaObj) {
-            if (this.running) {
+        this._areaObj = this._area ? this.hass?.areas[this._area] : undefined;
+        if (this._config && this._areaObj) {
+            if (this._running) {
                 icon = "hass:rotate-right";
                 iconAnimation = "spin 1.0s linear infinite";
                 iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
             }
             else {
-                icon = this.config.icon || "hass:power";
+                icon = this._config.icon || "hass:power";
                 iconAnimation = "none";
                 iconColor = "var(--sq-inactive-rgb)";
             }
-            name = this.config.name || this.areaObj.name || this.area;
+            name = this._config.name || this._areaObj.name || this._area;
         }
         else {
             icon = "hass:alert-rhombus";
@@ -7227,20 +7246,20 @@ let AllOffTile = class AllOffTile extends h {
         }
         return { icon, iconAnimation, iconColor, name };
     }
-    async runRoutine(e) {
+    async _runRoutine(e) {
         e.stopPropagation();
-        if (!this.hass || !this.areaObj)
+        if (!this.hass || !this._areaObj)
             return;
-        this.running = true;
-        await callService$1(this.hass, "light", "turn_off", {
-            area_id: this.area,
+        this._running = true;
+        await callService(this, "light", "turn_off", {
+            area_id: this._area,
             transition: 2,
         });
-        await callService$1(this.hass, "fan", "turn_off", {
-            area_id: this.area,
+        await callService(this, "fan", "turn_off", {
+            area_id: this._area,
         });
         setTimeout(() => {
-            this.running = false;
+            this._running = false;
         }, 1000);
     }
 };
@@ -7249,10 +7268,10 @@ __decorate([
 ], AllOffTile.prototype, "hass", void 0);
 __decorate([
     r$1()
-], AllOffTile.prototype, "config", void 0);
+], AllOffTile.prototype, "_config", void 0);
 __decorate([
     r$1()
-], AllOffTile.prototype, "running", void 0);
+], AllOffTile.prototype, "_running", void 0);
 AllOffTile = __decorate([
     t$2("smartqasa-all-off-tile")
 ], AllOffTile);
@@ -7717,27 +7736,24 @@ window.customCards.push({
     description: "A SmartQasa tile for launching applications from the dashboard",
 });
 let AppTile = class AppTile extends h {
-    getCardSize() {
-        return 1;
-    }
     static { this.styles = tileBaseStyle; }
     setConfig(config) {
         if (!config.app)
             throw new Error("A valid app must be specified.");
-        this.config = { ...config };
-        this.appObj = appTable[config.app] || undefined;
+        this._config = { ...config };
+        this._appObj = appTable[config.app] || undefined;
     }
     render() {
         let iconStyle, iconTemplate, name;
-        if (this.appObj) {
-            if (this.config?.icon) {
+        if (this._appObj) {
+            if (this._config?.icon) {
                 iconStyle =
                     "color: rgb(var(--sq-inactive-rgb)); background-color: rgba(var(--sq-inactive-rgb), var(--sq-icon-opacity, 0.2));";
-                iconTemplate = ke `<ha-icon .icon=${this.config.icon}></ha-icon>`;
+                iconTemplate = ke `<ha-icon .icon=${this._config.icon}></ha-icon>`;
             }
-            else if (this.appObj?.app_icon) {
+            else if (this._appObj?.app_icon) {
                 iconStyle = "height: 3.8rem; width: 3.8rem; padding: 0;";
-                iconTemplate = ke `<img src="${this.appObj.app_icon}" alt="App Icon" style="border-radius: 50%;" />`;
+                iconTemplate = ke `<img src="${this._appObj.app_icon}" alt="App Icon" style="border-radius: 50%;" />`;
             }
             else {
                 iconStyle =
@@ -7750,7 +7766,7 @@ let AppTile = class AppTile extends h {
                 "color: rgb(var(--sq-unavailable-rgb)); background-color: rgba(var(--sq-unavailable-rgb), var(--sq-icon-opacity, 0.2));";
             iconTemplate = ke `<ha-icon .icon="hass:alert-rhombus"></ha-icon>`;
         }
-        name = this.config?.name || this.appObj?.name || this.config?.app;
+        name = this._config?.name || this._appObj?.name || this._config?.app;
         return ke `
             <div class="container" @click=${this.launchApp}>
                 <div class="icon" style=${iconStyle}>${iconTemplate}</div>
@@ -7760,12 +7776,12 @@ let AppTile = class AppTile extends h {
     }
     launchApp(e) {
         e.stopPropagation();
-        if (this.appObj.launcher == "uri_scheme" && this.appObj.uri_scheme) {
-            window.location.href = this.appObj.uri_scheme;
+        if (this._appObj.launcher == "uri_scheme" && this._appObj.uri_scheme) {
+            window.location.href = this._appObj.uri_scheme;
         }
-        else if (this.appObj.launcher == "package" && this.appObj.package) {
+        else if (this._appObj.launcher == "package" && this._appObj.package) {
             if (window.fully?.startApplication) {
-                window.fully.startApplication(this.appObj.package);
+                window.fully.startApplication(this._appObj.package);
             }
             else {
                 console.warn("fully.startApplication is not available.");
@@ -7778,7 +7794,7 @@ let AppTile = class AppTile extends h {
 };
 __decorate([
     r$1()
-], AppTile.prototype, "config", void 0);
+], AppTile.prototype, "_config", void 0);
 AppTile = __decorate([
     t$2("smartqasa-app-tile")
 ], AppTile);
@@ -7792,20 +7808,20 @@ window.customCards.push({
 let AreaTile = class AreaTile extends h {
     constructor() {
         super(...arguments);
-        this.running = false;
+        this._running = false;
     }
     getCardSize() {
         return 1;
     }
     static { this.styles = [tileBaseStyle, tileIconSpinStyle]; }
     setConfig(config) {
-        this.config = { ...config };
-        this.area = this.config.area;
+        this._config = { ...config };
+        this._area = this._config.area;
     }
     shouldUpdate(changedProps) {
         return !!(changedProps.has("running") ||
-            (changedProps.has("hass") && this.area && this.hass?.areas[this.area] !== this.areaObj) ||
-            (changedProps.has("config") && this.config));
+            (changedProps.has("hass") && this._area && this.hass?.areas[this._area] !== this._areaObj) ||
+            (changedProps.has("config") && this._config));
     }
     render() {
         const { icon, iconAnimation, iconColor, name } = this.updateState();
@@ -7815,7 +7831,7 @@ let AreaTile = class AreaTile extends h {
             animation: iconAnimation,
         };
         return ke `
-            <div class="container" @click=${this.navigateToArea}>
+            <div class="container" @click=${this._navigateToArea}>
                 <div class="icon" style="${se(iconStyles)}">
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
@@ -7825,19 +7841,19 @@ let AreaTile = class AreaTile extends h {
     }
     updateState() {
         let icon, iconAnimation, iconColor, name;
-        this.areaObj = this.area ? this.hass?.areas[this.area] : undefined;
-        if (this.config && this.areaObj) {
-            if (this.running) {
+        this._areaObj = this._area ? this.hass?.areas[this._area] : undefined;
+        if (this._config && this._areaObj) {
+            if (this._running) {
                 icon = "hass:rotate-right";
                 iconAnimation = "spin 1.0s linear infinite";
                 iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
             }
             else {
-                icon = this.config.icon || this.areaObj.icon || "hass:help-rhombus";
+                icon = this._config.icon || this._areaObj.icon || "hass:help-rhombus";
                 iconAnimation = "none";
                 iconColor = "var(--sq-inactive-rgb)";
             }
-            name = this.config.name || this.areaObj.name || this.area;
+            name = this._config.name || this._areaObj.name || this._area;
         }
         else {
             icon = "hass:alert-rhombus";
@@ -7847,16 +7863,16 @@ let AreaTile = class AreaTile extends h {
         }
         return { icon, iconAnimation, iconColor, name };
     }
-    navigateToArea(e) {
+    _navigateToArea(e) {
         e.stopPropagation();
-        if (!this.areaObj)
+        if (!this._areaObj)
             return;
-        this.running = true;
+        this._running = true;
         window.smartqasa.viewMode = "area";
-        window.history.pushState(null, "", `/home-dash/${this.area}`);
+        window.history.pushState(null, "", `/home-dash/${this._area}`);
         window.dispatchEvent(new CustomEvent("location-changed"));
         setTimeout(() => {
-            this.running = false;
+            this._running = false;
             window.browser_mod?.service("close_popup", {});
         }, 500);
     }
@@ -7866,10 +7882,10 @@ __decorate([
 ], AreaTile.prototype, "hass", void 0);
 __decorate([
     r$1()
-], AreaTile.prototype, "config", void 0);
+], AreaTile.prototype, "_config", void 0);
 __decorate([
     r$1()
-], AreaTile.prototype, "running", void 0);
+], AreaTile.prototype, "_running", void 0);
 AreaTile = __decorate([
     t$2("smartqasa-area-tile")
 ], AreaTile);
@@ -8247,23 +8263,6 @@ HeaterTile = __decorate([
     t$2("smartqasa-heater-tile")
 ], HeaterTile);
 
-const callService = async (context, domain, service, serviceData) => {
-    if (!context.hass) {
-        console.error(`Error calling ${domain}.${service}:`, "Connection to Home Assistant is not available.");
-        return;
-    }
-    if (!context._stateObj) {
-        console.error(`Error calling ${domain}.${service}:`, "The entity state object is not available.");
-        return;
-    }
-    try {
-        await context.hass.callService(domain, service, serviceData);
-    }
-    catch (error) {
-        console.error(`Error calling ${domain}.${service}:`, error);
-    }
-};
-
 window.customCards.push({
     type: "smartqasa-light-tile",
     name: "SmartQasa Light Tile",
@@ -8427,9 +8426,6 @@ let LockTile = class LockTile extends h {
         super(...arguments);
         this._running = false;
     }
-    getCardSize() {
-        return 1;
-    }
     static { this.styles = [tileBaseStyle, tileStateStyle, tileIconBlinkStyle, tileIconSpinStyle]; }
     setConfig(config) {
         this._config = { ...config };
@@ -8515,7 +8511,7 @@ let LockTile = class LockTile extends h {
         const state = this._stateObj.state;
         this._running = true;
         this._stateObj.state = state == "locked" ? "unlocking" : "locking";
-        callService$1(this.hass, "lock", state == "locked" ? "unlock" : "lock", {
+        callService(this, "lock", state == "locked" ? "unlock" : "lock", {
             entity_id: this._entity,
         });
         setTimeout(() => {
@@ -9324,20 +9320,19 @@ PoolLightTile = __decorate([
 let PoolLightSequencerTile = class PoolLightSequencerTile extends h {
     constructor() {
         super(...arguments);
-        this.running = false;
-    }
-    getCardSize() {
-        return 1;
+        this._running = false;
     }
     static { this.styles = [tileBaseStyle, tileIconSpinStyle]; }
     setConfig(config) {
-        this.config = { ...config };
-        this.sequenceObj = config.sequence ? sequenceTable[config.sequence] : undefined;
-        this.entity = ["light", "switch"].includes(this.config.entity?.split(".")[0]) ? this.config.entity : undefined;
+        this._config = { ...config };
+        this._sequenceObj = config.sequence ? sequenceTable[config.sequence] : undefined;
+        this._entity = ["light", "switch"].includes(this._config.entity?.split(".")[0])
+            ? this._config.entity
+            : undefined;
     }
     shouldUpdate(changedProps) {
-        return !!((changedProps.has("config") && this.config) ||
-            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj));
+        return !!((changedProps.has("config") && this._config) ||
+            (changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj));
     }
     render() {
         const { icon, iconAnimation, iconColor, name } = this.updateState();
@@ -9357,19 +9352,19 @@ let PoolLightSequencerTile = class PoolLightSequencerTile extends h {
     }
     updateState() {
         let icon, iconAnimation, iconColor, name;
-        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
-        if (this.config && this.sequenceObj && this.stateObj) {
-            if (this.running) {
+        this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
+        if (this._config && this._sequenceObj && this._stateObj) {
+            if (this._running) {
                 icon = "hass:rotate-right";
                 iconAnimation = "spin 1.0s linear infinite";
                 iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
             }
             else {
-                icon = this.config.icon || this.stateObj.attributes.icon || "hass:lightbulb";
+                icon = this._config.icon || this._stateObj.attributes.icon || "hass:lightbulb";
                 iconAnimation = "none";
-                iconColor = this.sequenceObj.iconRGB || "var(--sq-inactive-rgb)";
+                iconColor = this._sequenceObj.iconRGB || "var(--sq-inactive-rgb)";
             }
-            name = this.sequenceObj.name || "Unknown";
+            name = this._sequenceObj.name || "Unknown";
         }
         else {
             icon = "hass:alert-rhombus";
@@ -9381,15 +9376,15 @@ let PoolLightSequencerTile = class PoolLightSequencerTile extends h {
     }
     async runRoutine(e) {
         e.stopPropagation();
-        if (!this.hass || !this.config || !this.stateObj)
+        if (!this.hass || !this._stateObj)
             return;
-        this.running = true;
-        await callService$1(this.hass, "script", "system_color_light_sequence_selector", {
-            entity: this.entity,
-            count: this.sequenceObj.count,
+        this._running = true;
+        await callService(this, "script", "system_color_light_sequence_selector", {
+            entity: this._entity,
+            count: this._sequenceObj.count,
         });
         setTimeout(() => {
-            this.running = false;
+            this._running = false;
         }, 2000);
     }
 };
@@ -9398,10 +9393,10 @@ __decorate([
 ], PoolLightSequencerTile.prototype, "hass", void 0);
 __decorate([
     r$1()
-], PoolLightSequencerTile.prototype, "config", void 0);
+], PoolLightSequencerTile.prototype, "_config", void 0);
 __decorate([
     r$1()
-], PoolLightSequencerTile.prototype, "running", void 0);
+], PoolLightSequencerTile.prototype, "_running", void 0);
 PoolLightSequencerTile = __decorate([
     t$2("smartqasa-pool-light-sequencer-tile")
 ], PoolLightSequencerTile);
