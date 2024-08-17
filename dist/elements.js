@@ -269,7 +269,7 @@ VerticalStack = __decorate([
     t$2("smartqasa-vertical-stack-card")
 ], VerticalStack);
 
-const callService = async (hass, domain, service, serviceData) => {
+const callService$1 = async (hass, domain, service, serviceData) => {
     try {
         await hass.callService(domain, service, serviceData);
     }
@@ -806,24 +806,24 @@ let TVRemoteCard = class TVRemoteCard extends h {
         }
     }
     handlePower() {
-        callService(this.hass, "remote", "send_command", { entity_id: this.entities.remote, command: "power" });
+        callService$1(this.hass, "remote", "send_command", { entity_id: this.entities.remote, command: "power" });
     }
     handleVolume(button) {
         const entity = this.entities.audio || undefined;
         if (entity) {
             const isMuted = this.hass.states[entity].attributes.is_volume_muted;
             if (button === "volume_mute") {
-                callService(this.hass, "media_player", "volume_mute", {
+                callService$1(this.hass, "media_player", "volume_mute", {
                     entity_id: entity,
                     is_volume_muted: !isMuted,
                 });
             }
             else {
                 if (!isMuted) {
-                    callService(this.hass, "media_player", button, { entity_id: entity });
+                    callService$1(this.hass, "media_player", button, { entity_id: entity });
                 }
                 else {
-                    callService(this.hass, "media_player", "volume_mute", {
+                    callService$1(this.hass, "media_player", "volume_mute", {
                         entity_id: entity,
                         is_volume_muted: false,
                     });
@@ -831,19 +831,19 @@ let TVRemoteCard = class TVRemoteCard extends h {
             }
         }
         else {
-            callService(this.hass, "remote", "send_command", {
+            callService$1(this.hass, "remote", "send_command", {
                 entity_id: this.entities.remote,
                 command: button,
             });
         }
     }
     handleCommand(button) {
-        callService(this.hass, "remote", "send_command", { entity_id: this.entities.remote, command: button });
+        callService$1(this.hass, "remote", "send_command", { entity_id: this.entities.remote, command: button });
     }
     selectApp(app) {
         if (!this.hass || !this.entity)
             return;
-        callService(this.hass, "media_player", "select_source", {
+        callService$1(this.hass, "media_player", "select_source", {
             entity_id: this.entity,
             source: app,
         });
@@ -1147,24 +1147,24 @@ let TVRemoteCardV1 = class TVRemoteCardV1 extends h {
         }
     }
     handlePower() {
-        callService(this.hass, "remote", "send_command", { entity_id: this.entities.remote, command: "power" });
+        callService$1(this.hass, "remote", "send_command", { entity_id: this.entities.remote, command: "power" });
     }
     handleVolume(button) {
         const entity = this.entities.audio || undefined;
         if (entity) {
             const isMuted = this.hass.states[entity].attributes.is_volume_muted;
             if (button === "volume_mute") {
-                callService(this.hass, "media_player", "volume_mute", {
+                callService$1(this.hass, "media_player", "volume_mute", {
                     entity_id: entity,
                     is_volume_muted: !isMuted,
                 });
             }
             else {
                 if (!isMuted) {
-                    callService(this.hass, "media_player", button, { entity_id: entity });
+                    callService$1(this.hass, "media_player", button, { entity_id: entity });
                 }
                 else {
-                    callService(this.hass, "media_player", "volume_mute", {
+                    callService$1(this.hass, "media_player", "volume_mute", {
                         entity_id: entity,
                         is_volume_muted: false,
                     });
@@ -1172,14 +1172,14 @@ let TVRemoteCardV1 = class TVRemoteCardV1 extends h {
             }
         }
         else {
-            callService(this.hass, "remote", "send_command", {
+            callService$1(this.hass, "remote", "send_command", {
                 entity_id: this.entities.remote,
                 command: button,
             });
         }
     }
     handleCommand(button) {
-        callService(this.hass, "remote", "send_command", { entity_id: this.entities.remote, command: button });
+        callService$1(this.hass, "remote", "send_command", { entity_id: this.entities.remote, command: button });
     }
     handleNavigate(button) {
         this.mode = button;
@@ -1187,7 +1187,7 @@ let TVRemoteCardV1 = class TVRemoteCardV1 extends h {
     selectApp(app) {
         if (!this.hass || !this.entity)
             return;
-        callService(this.hass, "media_player", "select_source", {
+        callService$1(this.hass, "media_player", "select_source", {
             entity_id: this.entity,
             source: app,
         });
@@ -5841,7 +5841,7 @@ let MotionChip = class MotionChip extends h {
         e.stopPropagation();
         if (!this.hass || !this.entity)
             return;
-        callService(this.hass, "automation", "toggle", { entity_id: this.entity });
+        callService$1(this.hass, "automation", "toggle", { entity_id: this.entity });
     }
 };
 __decorate([
@@ -6003,13 +6003,13 @@ let RoutineChip = class RoutineChip extends h {
         const domain = this.stateObj.entity_id.split(".")[0];
         switch (domain) {
             case "script":
-                callService(this.hass, "script", "turn_on", { entity_id: this.entity });
+                callService$1(this.hass, "script", "turn_on", { entity_id: this.entity });
                 break;
             case "scene":
-                callService(this.hass, "scene", "turn_on", { entity_id: this.entity });
+                callService$1(this.hass, "scene", "turn_on", { entity_id: this.entity });
                 break;
             case "automation":
-                callService(this.hass, "automation", "trigger", { entity_id: this.entity });
+                callService$1(this.hass, "automation", "trigger", { entity_id: this.entity });
                 break;
             default:
                 console.error("Unsupported entity domain:", domain);
@@ -7232,11 +7232,11 @@ let AllOffTile = class AllOffTile extends h {
         if (!this.hass || !this.areaObj)
             return;
         this.running = true;
-        await callService(this.hass, "light", "turn_off", {
+        await callService$1(this.hass, "light", "turn_off", {
             area_id: this.area,
             transition: 2,
         });
-        await callService(this.hass, "fan", "turn_off", {
+        await callService$1(this.hass, "fan", "turn_off", {
             area_id: this.area,
         });
         setTimeout(() => {
@@ -7966,11 +7966,13 @@ let FanTile = class FanTile extends h {
     static { this.styles = [tileBaseStyle, tileStateStyle, tileIconSpinStyle]; }
     setConfig(config) {
         this._config = { ...config };
-        this._entity = this._config.entity?.startsWith("fan.") ? this._config.entity : undefined;
+        this._entity = this._config.entity.startsWith("fan.") ? this._config.entity : undefined;
     }
     shouldUpdate(changedProps) {
+        if (!this._config)
+            return false;
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
-            (changedProps.has("_config") && this._config));
+            changedProps.has("_config"));
     }
     render() {
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this._updateState();
@@ -7992,7 +7994,7 @@ let FanTile = class FanTile extends h {
     _updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
-        if (this._config && this._stateObj) {
+        if (this._stateObj) {
             const state = this._stateObj.state || "unknown";
             icon = this._config.icon || "hass:fan";
             iconAnimation = "none";
@@ -8008,12 +8010,12 @@ let FanTile = class FanTile extends h {
             }
             iconColor = state === "on" ? "var(--sq-fan-on-rgb)" : "var(--sq-inactive-rgb)";
             name = this._config.name || this._stateObj.attributes.friendly_name || this._entity;
-            stateFmtd = `${this.hass?.formatEntityState(this._stateObj)}${state === "on" && this._stateObj.attributes.percentage
-                ? " - " + this.hass?.formatEntityAttributeValue(this._stateObj, "percentage")
+            stateFmtd = `${this.hass.formatEntityState(this._stateObj)}${state === "on" && this._stateObj.attributes.percentage
+                ? " - " + this.hass.formatEntityAttributeValue(this._stateObj, "percentage")
                 : ""}`;
         }
         else {
-            icon = this._config?.icon || "hass:lightbulb-alert";
+            icon = this._config.icon || "hass:lightbulb-alert";
             iconAnimation = "none";
             iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
             name = this._config?.name || "Unknown";
@@ -8023,9 +8025,9 @@ let FanTile = class FanTile extends h {
     }
     _toggleEntity(e) {
         e.stopPropagation();
-        if (!this.hass || !this._entity)
+        if (!this._stateObj)
             return;
-        callService(this.hass, "fan", "toggle", { entity_id: this._entity });
+        callService$1(this.hass, "fan", "toggle", { entity_id: this._entity });
     }
     _showMoreInfo(e) {
         e.stopPropagation();
@@ -8033,11 +8035,17 @@ let FanTile = class FanTile extends h {
     }
     _showEntityList(e) {
         e.stopPropagation();
-        if (!this._stateObj ||
-            !Array.isArray(this._stateObj.attributes?.entity_id) ||
-            this._stateObj.attributes.entity_id.length === 0)
+        if (!this.hass || !this._stateObj)
             return;
-        entityListDialog(this._stateObj.attributes?.friendly_name || "Unknown", "group", this._entity, "fan");
+        const group = this._config.group || `${this._entity}_group`;
+        const groupObj = this.hass.states[group];
+        if (!groupObj)
+            return;
+        const entityIds = groupObj.attributes?.entity_id;
+        if (!Array.isArray(entityIds) || entityIds.length === 0)
+            return;
+        const friendlyName = this._stateObj.attributes?.friendly_name || "Unknown";
+        entityListDialog(friendlyName, "group", group, "fan");
     }
 };
 __decorate([
@@ -8063,14 +8071,12 @@ let GarageTile = class GarageTile extends h {
         this._entity = this._config.entity?.startsWith("cover.") ? this._config.entity : undefined;
     }
     shouldUpdate(changedProps) {
+        if (!this.hass || !this._config)
+            return false;
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
-            (changedProps.has("config") && this._config));
+            (changedProps.has("_config") && this._config));
     }
     render() {
-        if (!this.hass)
-            console.log("No hass");
-        if (!this._config)
-            console.log("No config");
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
@@ -8078,8 +8084,8 @@ let GarageTile = class GarageTile extends h {
             animation: iconAnimation,
         };
         return ke `
-            <div class="container" @click=${this.showMoreInfo}>
-                <div class="icon" @click=${this.toggleEntity} style="${se(iconStyles)}">
+            <div class="container" @click=${this._showMoreInfo}>
+                <div class="icon" @click=${this._toggleEntity} style="${se(iconStyles)}">
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
                 <div class="name">${name}</div>
@@ -8135,13 +8141,13 @@ let GarageTile = class GarageTile extends h {
         }
         return { icon, iconAnimation, iconColor, name, stateFmtd };
     }
-    toggleEntity(e) {
+    _toggleEntity(e) {
         e.stopPropagation();
-        if (!this.hass || !this._entity)
+        if (!this._stateObj)
             return;
-        callService(this.hass, "cover", "toggle", { entity_id: this._entity });
+        callService$1(this.hass, "cover", "toggle", { entity_id: this._entity });
     }
-    showMoreInfo(e) {
+    _showMoreInfo(e) {
         e.stopPropagation();
         moreInfoDialog(this._config, this._stateObj);
     }
@@ -8166,17 +8172,16 @@ window.customCards.push({
     description: "A SmartQasa tile for controlling a water heater entity.",
 });
 let HeaterTile = class HeaterTile extends h {
-    getCardSize() {
-        return 1;
-    }
     static { this.styles = [tileBaseStyle, tileStateStyle]; }
     setConfig(config) {
-        this.config = { ...config };
-        this.entity = this.config.entity?.startsWith("water_heater.") ? this.config.entity : undefined;
+        this._config = { ...config };
+        this._entity = this._config.entity?.startsWith("water_heater.") ? this._config.entity : undefined;
     }
     shouldUpdate(changedProps) {
-        return !!((changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj) ||
-            (changedProps.has("config") && this.config));
+        if (!this.hass || !this._config)
+            return false;
+        return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
+            (changedProps.has("_config") && this._config));
     }
     render() {
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
@@ -8186,8 +8191,8 @@ let HeaterTile = class HeaterTile extends h {
             animation: iconAnimation,
         };
         return ke `
-            <div class="container" @click=${this.showMoreInfo}>
-                <div class="icon" @click=${this.toggleEntity} style="${se(iconStyles)}">
+            <div class="container" @click=${this._showMoreInfo}>
+                <div class="icon" @click=${this._toggleEntity} style="${se(iconStyles)}">
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
                 <div class="name">${name}</div>
@@ -8197,36 +8202,36 @@ let HeaterTile = class HeaterTile extends h {
     }
     updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
-        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
-        if (this.config && this.hass && this.stateObj) {
-            const state = this.stateObj.state || "unknown";
-            icon = this.config.icon || "hass:water-thermometer";
+        this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
+        if (this._stateObj) {
+            const state = this._stateObj.state || "unknown";
+            icon = this._config.icon || "hass:water-thermometer";
             iconAnimation = "none";
             iconColor = heaterColors[state] || heaterColors.idle;
-            name = this.config.name || this.stateObj.attributes.friendly_name || this.entity;
-            stateFmtd = this.hass.formatEntityState(this.stateObj);
-            if (state !== "off" && this.stateObj.attributes.temperature) {
-                stateFmtd += ` - ${this.stateObj.attributes.temperature}°`;
+            name = this._config.name || this._stateObj.attributes.friendly_name || this._entity;
+            stateFmtd = this.hass.formatEntityState(this._stateObj);
+            if (state !== "off" && this._stateObj.attributes.temperature) {
+                stateFmtd += ` - ${this._stateObj.attributes.temperature}°`;
             }
         }
         else {
-            icon = this.config?.icon || "hass:water-thermometer";
+            icon = this._config.icon || "hass:water-thermometer";
             iconAnimation = "none";
             iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            name = this.config?.name || "Unknown";
+            name = this._config.name || "Unknown";
             stateFmtd = "Unknown";
         }
         return { icon, iconAnimation, iconColor, name, stateFmtd };
     }
-    toggleEntity(e) {
+    _toggleEntity(e) {
         e.stopPropagation();
-        if (!this.hass || !this.entity)
+        if (!this.hass || !this._stateObj)
             return;
-        callService(this.hass, "water_heater", "toggle", { entity_id: this.entity });
+        callService$1(this.hass, "water_heater", "toggle", { entity_id: this._entity });
     }
-    showMoreInfo(e) {
+    _showMoreInfo(e) {
         e.stopPropagation();
-        moreInfoDialog(this.config, this.stateObj);
+        moreInfoDialog(this._config, this._stateObj);
     }
 };
 __decorate([
@@ -8234,13 +8239,30 @@ __decorate([
 ], HeaterTile.prototype, "hass", void 0);
 __decorate([
     r$1()
-], HeaterTile.prototype, "config", void 0);
+], HeaterTile.prototype, "_config", void 0);
 __decorate([
     r$1()
-], HeaterTile.prototype, "stateObj", void 0);
+], HeaterTile.prototype, "_stateObj", void 0);
 HeaterTile = __decorate([
     t$2("smartqasa-heater-tile")
 ], HeaterTile);
+
+const callService = async (context, domain, service, serviceData) => {
+    if (!context.hass) {
+        console.error(`Error calling ${domain}.${service}:`, "Connection to Home Assistant is not available.");
+        return;
+    }
+    if (!context.stateObj) {
+        console.error(`Error calling ${domain}.${service}:`, "The entity state object is not available.");
+        return;
+    }
+    try {
+        await context.hass.callService(domain, service, serviceData);
+    }
+    catch (error) {
+        console.error(`Error calling ${domain}.${service}:`, error);
+    }
+};
 
 window.customCards.push({
     type: "smartqasa-light-tile",
@@ -8252,11 +8274,13 @@ let LightTile = class LightTile extends h {
     static { this.styles = [tileBaseStyle, tileStateStyle]; }
     setConfig(config) {
         this._config = { ...config };
-        this._entity = this._config.entity?.startsWith("light.") ? this._config.entity : undefined;
+        this._entity = this._config.entity.startsWith("light.") ? this._config.entity : undefined;
     }
     shouldUpdate(changedProps) {
+        if (!this._config)
+            return false;
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
-            (changedProps.has("_config") && this._config));
+            changedProps.has("_config"));
     }
     render() {
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this._updateState();
@@ -8277,19 +8301,19 @@ let LightTile = class LightTile extends h {
     }
     _updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
-        this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
-        if (this._config && this._stateObj) {
+        this._stateObj = this._entity ? this.hass.states[this._entity] : undefined;
+        if (this._stateObj) {
             const state = this._stateObj.state || "unknown";
             icon = this._config.icon || this._stateObj.attributes.icon || "hass:lightbulb";
             iconAnimation = "none";
             iconColor = state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
             name = this._config.name || this._stateObj.attributes.friendly_name || this._entity;
-            stateFmtd = `${this.hass?.formatEntityState(this._stateObj)}${state === "on" && this._stateObj.attributes.brightness
-                ? " - " + this.hass?.formatEntityAttributeValue(this._stateObj, "brightness")
+            stateFmtd = `${this.hass.formatEntityState(this._stateObj)}${state === "on" && this._stateObj.attributes.brightness
+                ? " - " + this.hass.formatEntityAttributeValue(this._stateObj, "brightness")
                 : ""}`;
         }
         else {
-            icon = this._config?.icon || "hass:lightbulb-alert";
+            icon = this._config.icon || "hass:lightbulb-alert";
             iconAnimation = "none";
             iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
             name = this._config?.name || "Unknown";
@@ -8299,9 +8323,7 @@ let LightTile = class LightTile extends h {
     }
     _toggleEntity(e) {
         e.stopPropagation();
-        if (!this.hass || !this._entity)
-            return;
-        callService(this.hass, "light", "toggle", { entity_id: this._entity });
+        callService(this, "light", "toggle", { entity_id: this._entity });
     }
     _showMoreInfo(e) {
         e.stopPropagation();
@@ -8309,13 +8331,17 @@ let LightTile = class LightTile extends h {
     }
     _showEntityList(e) {
         e.stopPropagation();
-        if (!this._config || !this.hass || !this._stateObj)
+        if (!this._stateObj)
             return;
         const group = this._config.group || `${this._entity}_group`;
-        const groupObj = this.hass.states[group];
-        if (!groupObj || !Array.isArray(groupObj.attributes?.entity_id))
+        const groupObj = this.hass?.states[group];
+        if (!groupObj)
             return;
-        entityListDialog(this._stateObj.attributes?.friendly_name || "Unknown", "group", group, "light");
+        const entityIds = groupObj.attributes?.entity_id;
+        if (!Array.isArray(entityIds) || entityIds.length === 0)
+            return;
+        const friendlyName = this._stateObj.attributes?.friendly_name || "Unknown";
+        entityListDialog(friendlyName, "group", group, "light");
     }
 };
 __decorate([
@@ -8399,20 +8425,22 @@ window.customCards.push({
 let LockTile = class LockTile extends h {
     constructor() {
         super(...arguments);
-        this.running = false;
+        this._running = false;
     }
     getCardSize() {
         return 1;
     }
     static { this.styles = [tileBaseStyle, tileStateStyle, tileIconBlinkStyle, tileIconSpinStyle]; }
     setConfig(config) {
-        this.config = { ...config };
-        this.entity = this.config.entity?.startsWith("lock.") ? this.config.entity : undefined;
+        this._config = { ...config };
+        this._entity = this._config.entity?.startsWith("lock.") ? this._config.entity : undefined;
     }
     shouldUpdate(changedProps) {
+        if (!this._config)
+            return false;
         return !!(changedProps.has("running") ||
-            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj) ||
-            (changedProps.has("config") && this.config));
+            (changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
+            changedProps.has("config"));
     }
     render() {
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
@@ -8422,8 +8450,8 @@ let LockTile = class LockTile extends h {
             animation: iconAnimation,
         };
         return ke `
-            <div class="container" @click=${this.showMoreInfo}>
-                <div class="icon" @click=${this.toggleEntity} style="${se(iconStyles)}">
+            <div class="container" @click=${this._showMoreInfo}>
+                <div class="icon" @click=${this._toggleEntity} style="${se(iconStyles)}">
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
                 <div class="name">${name}</div>
@@ -8433,9 +8461,9 @@ let LockTile = class LockTile extends h {
     }
     updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
-        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
-        if (this.config && this.hass && this.stateObj) {
-            const state = this.stateObj.state || "unknown";
+        this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
+        if (this._stateObj) {
+            const state = this._stateObj.state || "unknown";
             switch (state) {
                 case "locked":
                     icon = "hass:lock";
@@ -8468,35 +8496,35 @@ let LockTile = class LockTile extends h {
                     iconColor = "var(--sq-unavailable-rgb)";
                     break;
             }
-            name = this.config.name || this.stateObj.attributes.friendly_name || this.entity;
-            stateFmtd = this.hass.formatEntityState(this.stateObj);
+            name = this._config.name || this._stateObj.attributes.friendly_name || this._entity;
+            stateFmtd = this.hass.formatEntityState(this._stateObj);
         }
         else {
-            icon = this.config?.icon || "hass:garage-alert-variant";
+            icon = this._config.icon || "hass:garage-alert-variant";
             iconAnimation = "none";
             iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            name = this.config?.name || "Unknown";
+            name = this._config.name || "Unknown";
             stateFmtd = "Unknown";
         }
         return { icon, iconAnimation, iconColor, name, stateFmtd };
     }
-    toggleEntity(e) {
+    _toggleEntity(e) {
         e.stopPropagation();
-        if (!this.hass || !this.stateObj)
+        if (!this._stateObj)
             return;
-        const state = this.stateObj.state;
-        this.running = true;
-        this.stateObj.state = state == "locked" ? "unlocking" : "locking";
-        callService(this.hass, "lock", state == "locked" ? "unlock" : "lock", {
-            entity_id: this.entity,
+        const state = this._stateObj.state;
+        this._running = true;
+        this._stateObj.state = state == "locked" ? "unlocking" : "locking";
+        callService$1(this.hass, "lock", state == "locked" ? "unlock" : "lock", {
+            entity_id: this._entity,
         });
         setTimeout(() => {
-            this.running = false;
+            this._running = false;
         }, 250);
     }
-    showMoreInfo(e) {
+    _showMoreInfo(e) {
         e.stopPropagation();
-        moreInfoDialog(this.config, this.stateObj);
+        moreInfoDialog(this._config, this._stateObj);
     }
 };
 __decorate([
@@ -8504,13 +8532,13 @@ __decorate([
 ], LockTile.prototype, "hass", void 0);
 __decorate([
     r$1()
-], LockTile.prototype, "config", void 0);
+], LockTile.prototype, "_config", void 0);
 __decorate([
     r$1()
-], LockTile.prototype, "stateObj", void 0);
+], LockTile.prototype, "_stateObj", void 0);
 __decorate([
     r$1()
-], LockTile.prototype, "running", void 0);
+], LockTile.prototype, "_running", void 0);
 LockTile = __decorate([
     t$2("smartqasa-lock-tile")
 ], LockTile);
@@ -8595,13 +8623,13 @@ let OptionTile = class OptionTile extends h {
         if (!this.hass || !this._config || !this._stateObj)
             return;
         this._running = true;
-        callService(this.hass, "input_select", "select_option", {
+        callService$1(this.hass, "input_select", "select_option", {
             entity_id: this._entity,
             option: this._config.option,
         });
         const trigger = this._config.trigger;
         if (trigger && trigger.startsWith("input_button.")) {
-            callService(this.hass, "input_button", "press", {
+            callService$1(this.hass, "input_button", "press", {
                 entity_id: trigger,
             });
         }
@@ -8650,17 +8678,16 @@ window.customCards.push({
     description: "A SmartQasa tile for controlling a robot vacuum entity.",
 });
 let RobotTile = class RobotTile extends h {
-    getCardSize() {
-        return 1;
-    }
     static { this.styles = [tileBaseStyle, tileStateStyle]; }
     setConfig(config) {
-        this.config = { ...config };
-        this.entity = this.config.entity?.startsWith("vacuum.") ? this.config.entity : undefined;
+        this._config = { ...config };
+        this._entity = this._config.entity?.startsWith("vacuum.") ? this._config.entity : undefined;
     }
     shouldUpdate(changedProps) {
-        return !!((changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj) ||
-            (changedProps.has("config") && this.config));
+        if (!this._config)
+            return false;
+        return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
+            changedProps.has("_config"));
     }
     render() {
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
@@ -8681,9 +8708,9 @@ let RobotTile = class RobotTile extends h {
     }
     updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
-        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
-        if (this.config && this.stateObj) {
-            const state = this.stateObj.state || "unknown";
+        this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
+        if (this._config && this._stateObj) {
+            const state = this._stateObj.state || "unknown";
             switch (state) {
                 case "cleaning":
                     icon = "hass:robot-vacuum-variant";
@@ -8716,34 +8743,34 @@ let RobotTile = class RobotTile extends h {
                     iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
                     break;
             }
-            name = this.config.name || this.stateObj.attributes.friendly_name || this.entity;
+            name = this._config.name || this._stateObj.attributes.friendly_name || this._entity;
             stateFmtd =
-                this.hass?.formatEntityState(this.stateObj) +
-                    (this.stateObj.attributes.battery_level
-                        ? " - " + this.hass?.formatEntityAttributeValue(this.stateObj, "battery_level")
+                this.hass?.formatEntityState(this._stateObj) +
+                    (this._stateObj.attributes.battery_level
+                        ? " - " + this.hass?.formatEntityAttributeValue(this._stateObj, "battery_level")
                         : "");
         }
         else {
-            icon = this.config?.icon || "hass:robot-vacuum-variant-alert";
+            icon = this._config?.icon || "hass:robot-vacuum-variant-alert";
             iconAnimation = "none";
             iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            name = this.config?.name || "Unknown";
+            name = this._config?.name || "Unknown";
             stateFmtd = "Unknown";
         }
         return { icon, iconAnimation, iconColor, name, stateFmtd };
     }
     toggleEntity(e) {
         e.stopPropagation();
-        if (!this.hass || !this.stateObj)
+        if (!this.hass || !this._stateObj)
             return;
-        const state = this.stateObj.state;
-        callService(this.hass, "vacuum", ["docked", "idle", "paused"].includes(state) ? "start" : "pause", {
-            entity_id: this.entity,
+        const state = this._stateObj.state;
+        callService$1(this.hass, "vacuum", ["docked", "idle", "paused"].includes(state) ? "start" : "pause", {
+            entity_id: this._entity,
         });
     }
     showMoreInfo(e) {
         e.stopPropagation();
-        moreInfoDialog(this.config, this.stateObj);
+        moreInfoDialog(this._config, this._stateObj);
     }
 };
 __decorate([
@@ -8751,7 +8778,10 @@ __decorate([
 ], RobotTile.prototype, "hass", void 0);
 __decorate([
     r$1()
-], RobotTile.prototype, "config", void 0);
+], RobotTile.prototype, "_config", void 0);
+__decorate([
+    r$1()
+], RobotTile.prototype, "_stateObj", void 0);
 RobotTile = __decorate([
     t$2("smartqasa-robot-tile")
 ], RobotTile);
@@ -8835,7 +8865,7 @@ let RokuTile = class RokuTile extends h {
         e.stopPropagation();
         if (!this.hass || !this.entity)
             return;
-        callService(this.hass, "media_player", "toggle", { entity_id: this.entity });
+        callService$1(this.hass, "media_player", "toggle", { entity_id: this.entity });
     }
     showMoreInfo(e) {
         e.stopPropagation();
@@ -8945,13 +8975,13 @@ let RoutineTile = class RoutineTile extends h {
         const domain = this.stateObj.entity_id.split(".")[0];
         switch (domain) {
             case "script":
-                callService(this.hass, "script", "turn_on", { entity_id: this.entity });
+                callService$1(this.hass, "script", "turn_on", { entity_id: this.entity });
                 break;
             case "scene":
-                callService(this.hass, "scene", "turn_on", { entity_id: this.entity });
+                callService$1(this.hass, "scene", "turn_on", { entity_id: this.entity });
                 break;
             case "automation":
-                callService(this.hass, "automation", "trigger", { entity_id: this.entity });
+                callService$1(this.hass, "automation", "trigger", { entity_id: this.entity });
                 break;
             default:
                 console.error("Unsupported entity domain:", domain);
@@ -9254,7 +9284,7 @@ let PoolLightTile = class PoolLightTile extends h {
         e.stopPropagation();
         if (!this.hass || !this.entity)
             return;
-        callService(this.hass, "light", "toggle", { entity_id: this.entity });
+        callService$1(this.hass, "light", "toggle", { entity_id: this.entity });
     }
     showColorList(e) {
         e.stopPropagation();
@@ -9354,7 +9384,7 @@ let PoolLightSequencerTile = class PoolLightSequencerTile extends h {
         if (!this.hass || !this.config || !this.stateObj)
             return;
         this.running = true;
-        await callService(this.hass, "script", "system_color_light_sequence_selector", {
+        await callService$1(this.hass, "script", "system_color_light_sequence_selector", {
             entity: this.entity,
             count: this.sequenceObj.count,
         });
@@ -9467,27 +9497,27 @@ let ShadeTile = class ShadeTile extends h {
         const state = this.stateObj.state;
         const tilt = this.config.tilt || 100;
         if (["closing", "opening"].includes(state)) {
-            callService(this.hass, "cover", "stop_cover", {
+            callService$1(this.hass, "cover", "stop_cover", {
                 entity_id: this.entity,
             });
             return;
         }
         if (tilt >= 1 && tilt <= 100) {
             if (this.stateObj.attributes.current_position !== tilt) {
-                callService(this.hass, "cover", "set_cover_position", {
+                callService$1(this.hass, "cover", "set_cover_position", {
                     entity_id: this.entity,
                     position: tilt,
                 });
             }
             else {
-                callService(this.hass, "cover", "set_cover_position", {
+                callService$1(this.hass, "cover", "set_cover_position", {
                     entity_id: this.entity,
                     position: 0,
                 });
             }
         }
         else {
-            callService(this.hass, "cover", "toggle", {
+            callService$1(this.hass, "cover", "toggle", {
                 entity_id: this.entity,
                 position: 0,
             });
@@ -9581,7 +9611,7 @@ let SwitchTile = class SwitchTile extends h {
         e.stopPropagation();
         if (!this.hass || !this.entity)
             return;
-        callService(this.hass, "homeassistant", "toggle", { entity_id: this.entity });
+        callService$1(this.hass, "homeassistant", "toggle", { entity_id: this.entity });
     }
     showMoreInfo(e) {
         e.stopPropagation();
@@ -9720,7 +9750,7 @@ let ThermostatTile = class ThermostatTile extends h {
         e.stopPropagation();
         if (!this.hass || !this.entity)
             return;
-        callService(this.hass, "climate", "toggle", { entity_id: this.entity });
+        callService$1(this.hass, "climate", "toggle", { entity_id: this.entity });
     }
     showMoreInfo(e) {
         e.stopPropagation();

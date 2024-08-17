@@ -33,13 +33,14 @@ export class FanTile extends LitElement {
 
     public setConfig(config: Config): void {
         this._config = { ...config };
-        this._entity = this._config.entity?.startsWith("fan.") ? this._config.entity : undefined;
+        this._entity = this._config.entity.startsWith("fan.") ? this._config.entity : undefined;
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
+        if (!this._config) return false;
         return !!(
             (changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
-            (changedProps.has("_config") && this._config)
+            changedProps.has("_config")
         );
     }
 
@@ -66,9 +67,9 @@ export class FanTile extends LitElement {
 
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
 
-        if (this._config && this._stateObj) {
+        if (this._stateObj) {
             const state = this._stateObj.state || "unknown";
-            icon = this._config.icon || "hass:fan";
+            icon = this._config!.icon || "hass:fan";
             iconAnimation = "none";
             if (state == "on" && icon === "hass:fan") {
                 if (this._stateObj.attributes.percentage) {
@@ -80,14 +81,14 @@ export class FanTile extends LitElement {
                 }
             }
             iconColor = state === "on" ? "var(--sq-fan-on-rgb)" : "var(--sq-inactive-rgb)";
-            name = this._config.name || this._stateObj.attributes.friendly_name || this._entity;
-            stateFmtd = `${this.hass?.formatEntityState(this._stateObj)}${
+            name = this._config!.name || this._stateObj.attributes.friendly_name || this._entity;
+            stateFmtd = `${this.hass!.formatEntityState(this._stateObj)}${
                 state === "on" && this._stateObj.attributes.percentage
-                    ? " - " + this.hass?.formatEntityAttributeValue(this._stateObj, "percentage")
+                    ? " - " + this.hass!.formatEntityAttributeValue(this._stateObj, "percentage")
                     : ""
             }`;
         } else {
-            icon = this._config?.icon || "hass:lightbulb-alert";
+            icon = this._config!.icon || "hass:lightbulb-alert";
             iconAnimation = "none";
             iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
             name = this._config?.name || "Unknown";
@@ -99,8 +100,8 @@ export class FanTile extends LitElement {
 
     private _toggleEntity(e: Event): void {
         e.stopPropagation();
-        if (!this.hass || !this._entity) return;
-        callService(this.hass, "fan", "toggle", { entity_id: this._entity });
+        if (!this._stateObj) return;
+        callService(this.hass!, "fan", "toggle", { entity_id: this._entity });
     }
 
     private _showMoreInfo(e: Event): void {
@@ -110,12 +111,16 @@ export class FanTile extends LitElement {
 
     private _showEntityList(e: Event): void {
         e.stopPropagation();
-        if (
-            !this._stateObj ||
-            !Array.isArray(this._stateObj.attributes?.entity_id) ||
-            this._stateObj.attributes.entity_id.length === 0
-        )
-            return;
-        entityListDialog(this._stateObj.attributes?.friendly_name || "Unknown", "group", this._entity, "fan");
+        if (!this.hass || !this._stateObj) return;
+
+        const group = this._config!.group || `${this._entity}_group`;
+        const groupObj = this.hass.states[group];
+        if (!groupObj) return;
+
+        const entityIds = groupObj.attributes?.entity_id;
+        if (!Array.isArray(entityIds) || entityIds.length === 0) return;
+
+        const friendlyName = this._stateObj.attributes?.friendly_name || "Unknown";
+        entityListDialog(friendlyName, "group", group, "fan");
     }
 }

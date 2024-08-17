@@ -1,9 +1,9 @@
-import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult } from "lit";
+import { CSSResultGroup, html, LitElement, nothing, PropertyValues, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "../types";
-import { callService } from "../utils/call-service";
+import { callService } from "../utils/call-service-v2";
 import { moreInfoDialog } from "../utils/more-info-dialog";
 import { entityListDialog } from "../utils/entity-list-dialog";
 import { tileBaseStyle, tileStateStyle } from "../styles/tile";
@@ -33,17 +33,18 @@ export class LightTile extends LitElement {
 
     public setConfig(config: Config): void {
         this._config = { ...config };
-        this._entity = this._config.entity?.startsWith("light.") ? this._config.entity : undefined;
+        this._entity = this._config.entity.startsWith("light.") ? this._config.entity : undefined;
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
+        if (!this._config) return false;
         return !!(
             (changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
-            (changedProps.has("_config") && this._config)
+            changedProps.has("_config")
         );
     }
 
-    protected render(): TemplateResult {
+    protected render(): TemplateResult | typeof nothing {
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this._updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
@@ -64,21 +65,21 @@ export class LightTile extends LitElement {
     private _updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
 
-        this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
+        this._stateObj = this._entity ? this.hass!.states[this._entity] : undefined;
 
-        if (this._config && this._stateObj) {
+        if (this._stateObj) {
             const state = this._stateObj.state || "unknown";
-            icon = this._config.icon || this._stateObj.attributes.icon || "hass:lightbulb";
+            icon = this._config!.icon || this._stateObj.attributes.icon || "hass:lightbulb";
             iconAnimation = "none";
             iconColor = state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
-            name = this._config.name || this._stateObj.attributes.friendly_name || this._entity;
-            stateFmtd = `${this.hass?.formatEntityState(this._stateObj)}${
+            name = this._config!.name || this._stateObj.attributes.friendly_name || this._entity;
+            stateFmtd = `${this.hass!.formatEntityState(this._stateObj)}${
                 state === "on" && this._stateObj.attributes.brightness
-                    ? " - " + this.hass?.formatEntityAttributeValue(this._stateObj, "brightness")
+                    ? " - " + this.hass!.formatEntityAttributeValue(this._stateObj, "brightness")
                     : ""
             }`;
         } else {
-            icon = this._config?.icon || "hass:lightbulb-alert";
+            icon = this._config!.icon || "hass:lightbulb-alert";
             iconAnimation = "none";
             iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
             name = this._config?.name || "Unknown";
@@ -90,8 +91,7 @@ export class LightTile extends LitElement {
 
     private _toggleEntity(e: Event): void {
         e.stopPropagation();
-        if (!this.hass || !this._entity) return;
-        callService(this.hass, "light", "toggle", { entity_id: this._entity });
+        callService(this, "light", "toggle", { entity_id: this._entity });
     }
 
     private _showMoreInfo(e: Event): void {
@@ -101,12 +101,16 @@ export class LightTile extends LitElement {
 
     private _showEntityList(e: Event): void {
         e.stopPropagation();
-        if (!this._config || !this.hass || !this._stateObj) return;
+        if (!this._stateObj) return;
 
-        const group = this._config.group || `${this._entity}_group`;
-        const groupObj = this.hass.states[group];
-        if (!groupObj || !Array.isArray(groupObj.attributes?.entity_id)) return;
+        const group = this._config!.group || `${this._entity}_group`;
+        const groupObj = this.hass?.states[group];
+        if (!groupObj) return;
 
-        entityListDialog(this._stateObj.attributes?.friendly_name || "Unknown", "group", group, "light");
+        const entityIds = groupObj.attributes?.entity_id;
+        if (!Array.isArray(entityIds) || entityIds.length === 0) return;
+
+        const friendlyName = this._stateObj.attributes?.friendly_name || "Unknown";
+        entityListDialog(friendlyName, "group", group, "light");
     }
 }

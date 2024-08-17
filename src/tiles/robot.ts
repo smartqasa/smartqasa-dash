@@ -22,27 +22,23 @@ window.customCards.push({
 
 @customElement("smartqasa-robot-tile")
 export class RobotTile extends LitElement {
-    getCardSize(): number {
-        return 1;
-    }
-
     @property({ attribute: false }) public hass?: HomeAssistant;
-    @state() private config?: Config;
-    private stateObj?: HassEntity;
-
-    private entity?: string;
+    @state() private _config?: Config;
+    @state() private _stateObj?: HassEntity;
+    private _entity?: string;
 
     static styles: CSSResultGroup = [tileBaseStyle, tileStateStyle];
 
     public setConfig(config: Config): void {
-        this.config = { ...config };
-        this.entity = this.config.entity?.startsWith("vacuum.") ? this.config.entity : undefined;
+        this._config = { ...config };
+        this._entity = this._config.entity?.startsWith("vacuum.") ? this._config.entity : undefined;
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
+        if (!this._config) return false;
         return !!(
-            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj) ||
-            (changedProps.has("config") && this.config)
+            (changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
+            changedProps.has("_config")
         );
     }
 
@@ -67,10 +63,10 @@ export class RobotTile extends LitElement {
     private updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
 
-        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
+        this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
 
-        if (this.config && this.stateObj) {
-            const state = this.stateObj.state || "unknown";
+        if (this._config && this._stateObj) {
+            const state = this._stateObj.state || "unknown";
             switch (state) {
                 case "cleaning":
                     icon = "hass:robot-vacuum-variant";
@@ -103,17 +99,17 @@ export class RobotTile extends LitElement {
                     iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
                     break;
             }
-            name = this.config.name || this.stateObj.attributes.friendly_name || this.entity;
+            name = this._config.name || this._stateObj.attributes.friendly_name || this._entity;
             stateFmtd =
-                this.hass?.formatEntityState(this.stateObj) +
-                (this.stateObj.attributes.battery_level
-                    ? " - " + this.hass?.formatEntityAttributeValue(this.stateObj, "battery_level")
+                this.hass?.formatEntityState(this._stateObj) +
+                (this._stateObj.attributes.battery_level
+                    ? " - " + this.hass?.formatEntityAttributeValue(this._stateObj, "battery_level")
                     : "");
         } else {
-            icon = this.config?.icon || "hass:robot-vacuum-variant-alert";
+            icon = this._config?.icon || "hass:robot-vacuum-variant-alert";
             iconAnimation = "none";
             iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            name = this.config?.name || "Unknown";
+            name = this._config?.name || "Unknown";
             stateFmtd = "Unknown";
         }
 
@@ -122,15 +118,15 @@ export class RobotTile extends LitElement {
 
     private toggleEntity(e: Event): void {
         e.stopPropagation();
-        if (!this.hass || !this.stateObj) return;
-        const state = this.stateObj.state;
+        if (!this.hass || !this._stateObj) return;
+        const state = this._stateObj.state;
         callService(this.hass, "vacuum", ["docked", "idle", "paused"].includes(state) ? "start" : "pause", {
-            entity_id: this.entity,
+            entity_id: this._entity,
         });
     }
 
     private showMoreInfo(e: Event): void {
         e.stopPropagation();
-        moreInfoDialog(this.config, this.stateObj);
+        moreInfoDialog(this._config, this._stateObj);
     }
 }

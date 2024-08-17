@@ -35,15 +35,14 @@ export class GarageTile extends LitElement {
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
+        if (!this.hass || !this._config) return false;
         return !!(
             (changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
-            (changedProps.has("config") && this._config)
+            (changedProps.has("_config") && this._config)
         );
     }
 
     protected render(): TemplateResult {
-        if (!this.hass) console.log("No hass");
-        if (!this._config) console.log("No config");
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
@@ -51,8 +50,8 @@ export class GarageTile extends LitElement {
             animation: iconAnimation,
         };
         return html`
-            <div class="container" @click=${this.showMoreInfo}>
-                <div class="icon" @click=${this.toggleEntity} style="${styleMap(iconStyles)}">
+            <div class="container" @click=${this._showMoreInfo}>
+                <div class="icon" @click=${this._toggleEntity} style="${styleMap(iconStyles)}">
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
                 <div class="name">${name}</div>
@@ -112,13 +111,13 @@ export class GarageTile extends LitElement {
         return { icon, iconAnimation, iconColor, name, stateFmtd };
     }
 
-    private toggleEntity(e: Event): void {
+    private _toggleEntity(e: Event): void {
         e.stopPropagation();
-        if (!this.hass || !this._entity) return;
-        callService(this.hass, "cover", "toggle", { entity_id: this._entity });
+        if (!this._stateObj) return;
+        callService(this.hass!, "cover", "toggle", { entity_id: this._entity });
     }
 
-    private showMoreInfo(e: Event): void {
+    private _showMoreInfo(e: Event): void {
         e.stopPropagation();
         moreInfoDialog(this._config, this._stateObj);
     }

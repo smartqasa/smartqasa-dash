@@ -28,24 +28,25 @@ export class LockTile extends LitElement {
 
     @property({ attribute: false }) public hass?: HomeAssistant;
 
-    @state() private config?: Config;
-    @state() private stateObj?: HassEntity;
-    @state() private running: boolean = false;
+    @state() private _config?: Config;
+    @state() private _stateObj?: HassEntity;
+    @state() private _running: boolean = false;
 
-    private entity?: string;
+    private _entity?: string;
 
     static styles: CSSResultGroup = [tileBaseStyle, tileStateStyle, tileIconBlinkStyle, tileIconSpinStyle];
 
     public setConfig(config: Config): void {
-        this.config = { ...config };
-        this.entity = this.config.entity?.startsWith("lock.") ? this.config.entity : undefined;
+        this._config = { ...config };
+        this._entity = this._config.entity?.startsWith("lock.") ? this._config.entity : undefined;
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
+        if (!this._config) return false;
         return !!(
             changedProps.has("running") ||
-            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj) ||
-            (changedProps.has("config") && this.config)
+            (changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
+            changedProps.has("config")
         );
     }
 
@@ -57,8 +58,8 @@ export class LockTile extends LitElement {
             animation: iconAnimation,
         };
         return html`
-            <div class="container" @click=${this.showMoreInfo}>
-                <div class="icon" @click=${this.toggleEntity} style="${styleMap(iconStyles)}">
+            <div class="container" @click=${this._showMoreInfo}>
+                <div class="icon" @click=${this._toggleEntity} style="${styleMap(iconStyles)}">
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
                 <div class="name">${name}</div>
@@ -70,10 +71,10 @@ export class LockTile extends LitElement {
     private updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
 
-        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
+        this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
 
-        if (this.config && this.hass && this.stateObj) {
-            const state = this.stateObj.state || "unknown";
+        if (this._stateObj) {
+            const state = this._stateObj.state || "unknown";
             switch (state) {
                 case "locked":
                     icon = "hass:lock";
@@ -106,37 +107,37 @@ export class LockTile extends LitElement {
                     iconColor = "var(--sq-unavailable-rgb)";
                     break;
             }
-            name = this.config.name || this.stateObj.attributes.friendly_name || this.entity;
-            stateFmtd = this.hass.formatEntityState(this.stateObj);
+            name = this._config!.name || this._stateObj.attributes.friendly_name || this._entity;
+            stateFmtd = this.hass!.formatEntityState(this._stateObj);
         } else {
-            icon = this.config?.icon || "hass:garage-alert-variant";
+            icon = this._config!.icon || "hass:garage-alert-variant";
             iconAnimation = "none";
             iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            name = this.config?.name || "Unknown";
+            name = this._config!.name || "Unknown";
             stateFmtd = "Unknown";
         }
 
         return { icon, iconAnimation, iconColor, name, stateFmtd };
     }
 
-    private toggleEntity(e: Event): void {
+    private _toggleEntity(e: Event): void {
         e.stopPropagation();
-        if (!this.hass || !this.stateObj) return;
+        if (!this._stateObj) return;
 
-        const state = this.stateObj.state;
-        this.running = true;
-        this.stateObj.state = state == "locked" ? "unlocking" : "locking";
-        callService(this.hass, "lock", state == "locked" ? "unlock" : "lock", {
-            entity_id: this.entity,
+        const state = this._stateObj.state;
+        this._running = true;
+        this._stateObj.state = state == "locked" ? "unlocking" : "locking";
+        callService(this.hass!, "lock", state == "locked" ? "unlock" : "lock", {
+            entity_id: this._entity,
         });
 
         setTimeout(() => {
-            this.running = false;
+            this._running = false;
         }, 250);
     }
 
-    private showMoreInfo(e: Event): void {
+    private _showMoreInfo(e: Event): void {
         e.stopPropagation();
-        moreInfoDialog(this.config, this.stateObj);
+        moreInfoDialog(this._config, this._stateObj);
     }
 }
