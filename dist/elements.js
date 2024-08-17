@@ -269,9 +269,17 @@ VerticalStack = __decorate([
     t$2("smartqasa-vertical-stack-card")
 ], VerticalStack);
 
-const callService$1 = async (hass, domain, service, serviceData) => {
+const callService = async (context, domain, service, serviceData) => {
+    if (!context.hass) {
+        console.error(`Error calling ${domain}.${service}:`, "Connection to Home Assistant is not available.");
+        return;
+    }
+    if (!context._stateObj) {
+        console.error(`Error calling ${domain}.${service}:`, "The entity state object is not available.");
+        return;
+    }
     try {
-        await hass.callService(domain, service, serviceData);
+        await context.hass.callService(domain, service, serviceData);
     }
     catch (error) {
         console.error(`Error calling ${domain}.${service}:`, error);
@@ -536,8 +544,8 @@ window.customCards.push({
 let TVRemoteCard = class TVRemoteCard extends h {
     constructor() {
         super(...arguments);
-        this.mode = "remote";
-        this.entities = {};
+        this._mode = "remote";
+        this._entities = {};
     }
     static get styles() {
         return i$3 `
@@ -642,16 +650,17 @@ let TVRemoteCard = class TVRemoteCard extends h {
         `;
     }
     setConfig(config) {
-        this.config = { ...config };
-        if (!this.config.entity.startsWith("media_player."))
+        this._config = { ...config };
+        if (!this._config.entity.startsWith("media_player."))
             return;
-        this.entity = this.config.entity;
+        this._entity = this._config.entity;
         this.initializeEntities();
     }
     shouldUpdate(changedProps) {
-        return !!((changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj) ||
-            (changedProps.has("config") && this.config) ||
-            (changedProps.has("mode") && this.mode));
+        if (!this._config)
+            return false;
+        return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
+            changedProps.has("config"));
     }
     updated(changedProps) {
         if (changedProps.has("hass") || changedProps.has("config")) {
@@ -659,15 +668,15 @@ let TVRemoteCard = class TVRemoteCard extends h {
         }
     }
     initializeEntities() {
-        if (!this.hass || !this.config || !this.entity)
+        if (!this.hass || !this._config || !this._entity)
             return;
-        this.entities.remote = this.config.remote_entity
-            ? this.config.remote_entity
-            : `remote.${this.entity.split(".")[1]}`;
-        const entityBase = this.entity.split(".")[1].replace(/_roku$/, "");
+        this._entities.remote = this._config.remote_entity
+            ? this._config.remote_entity
+            : `remote.${this._entity.split(".")[1]}`;
+        const entityBase = this._entity.split(".")[1].replace(/_roku$/, "");
         const findAudioEntity = () => {
-            if (this.config?.audio_entity)
-                return this.config.audio_entity;
+            if (this._config?.audio_entity)
+                return this._config.audio_entity;
             const candidates = [
                 `media_player.${entityBase}_arc`,
                 `media_player.${entityBase}_beam`,
@@ -681,8 +690,8 @@ let TVRemoteCard = class TVRemoteCard extends h {
             return candidates.find((candidate) => this.hass?.states[candidate]) || undefined;
         };
         const findVideoEntity = () => {
-            if (this.config?.video_entity)
-                return this.config.video_entity;
+            if (this._config?.video_entity)
+                return this._config.video_entity;
             const candidates = [
                 `media_player.${entityBase}_frame_tv`,
                 `media_player.${entityBase}_frame`,
@@ -690,15 +699,15 @@ let TVRemoteCard = class TVRemoteCard extends h {
             ];
             return candidates.find((candidate) => this.hass?.states[candidate]) || undefined;
         };
-        this.entities.audio = findAudioEntity();
-        this.entities.video = findVideoEntity();
+        this._entities.audio = findAudioEntity();
+        this._entities.video = findVideoEntity();
     }
     render() {
-        if (!this.hass || !this.config || !this.entity || !this.entities.remote) {
+        if (!this.hass || !this._config || !this._entity || !this._entities.remote) {
             return ke ``;
         }
-        this.stateObj = this.hass.states[this.entity];
-        if (!this.stateObj || !this.hass.states[this.entities.remote]) {
+        this._stateObj = this.hass.states[this._entity];
+        if (!this._stateObj || !this.hass.states[this._entities.remote]) {
             return ke `
                 <ha-card>
                     <div class="warning">Entity Unavailable</div>
@@ -707,7 +716,7 @@ let TVRemoteCard = class TVRemoteCard extends h {
         }
         return ke `
             <div class="container">
-                <div class="name">${this.config.name || this.stateObj.attributes.friendly_name || "TV Remote"}</div>
+                <div class="name">${this._config.name || this._stateObj.attributes.friendly_name || "TV Remote"}</div>
                 <div class="sections">
                     <div class="remote-section">${this._renderRemoteSection()}</div>
                     <div class="app-section">${this._renderAppSection()}</div>
@@ -750,10 +759,10 @@ let TVRemoteCard = class TVRemoteCard extends h {
         `;
     }
     _renderAppSection() {
-        const activeApp = this.stateObj.attributes.app_name;
+        const activeApp = this._stateObj.attributes.app_name;
         const activeIcon = channelTable[activeApp];
         // Filter out the active app from the source list
-        const availableApps = this.stateObj.attributes.source_list.filter((app) => app !== activeApp);
+        const availableApps = this._stateObj.attributes.source_list.filter((app) => app !== activeApp);
         return ke `
             <div class="app-section">
                 <div class="active-app" style="${this._getAppItemStyle(activeIcon)}">
@@ -790,7 +799,7 @@ let TVRemoteCard = class TVRemoteCard extends h {
     }
     _handleButton(e) {
         e.stopPropagation();
-        if (!this.hass || !this.entity)
+        if (!this.hass || !this._entity)
             return;
         const target = e.currentTarget;
         const category = target.dataset.category;
@@ -806,24 +815,24 @@ let TVRemoteCard = class TVRemoteCard extends h {
         }
     }
     handlePower() {
-        callService$1(this.hass, "remote", "send_command", { entity_id: this.entities.remote, command: "power" });
+        callService(this, "remote", "send_command", { entity_id: this._entities.remote, command: "power" });
     }
     handleVolume(button) {
-        const entity = this.entities.audio || undefined;
+        const entity = this._entities.audio || undefined;
         if (entity) {
             const isMuted = this.hass.states[entity].attributes.is_volume_muted;
             if (button === "volume_mute") {
-                callService$1(this.hass, "media_player", "volume_mute", {
+                callService(this, "media_player", "volume_mute", {
                     entity_id: entity,
                     is_volume_muted: !isMuted,
                 });
             }
             else {
                 if (!isMuted) {
-                    callService$1(this.hass, "media_player", button, { entity_id: entity });
+                    callService(this, "media_player", button, { entity_id: entity });
                 }
                 else {
-                    callService$1(this.hass, "media_player", "volume_mute", {
+                    callService(this, "media_player", "volume_mute", {
                         entity_id: entity,
                         is_volume_muted: false,
                     });
@@ -831,20 +840,20 @@ let TVRemoteCard = class TVRemoteCard extends h {
             }
         }
         else {
-            callService$1(this.hass, "remote", "send_command", {
-                entity_id: this.entities.remote,
+            callService(this, "remote", "send_command", {
+                entity_id: this._entities.remote,
                 command: button,
             });
         }
     }
     handleCommand(button) {
-        callService$1(this.hass, "remote", "send_command", { entity_id: this.entities.remote, command: button });
+        callService(this, "remote", "send_command", { entity_id: this._entities.remote, command: button });
     }
     selectApp(app) {
-        if (!this.hass || !this.entity)
+        if (!this.hass || !this._entity)
             return;
-        callService$1(this.hass, "media_player", "select_source", {
-            entity_id: this.entity,
+        callService(this, "media_player", "select_source", {
+            entity_id: this._entity,
             source: app,
         });
     }
@@ -854,10 +863,10 @@ __decorate([
 ], TVRemoteCard.prototype, "hass", void 0);
 __decorate([
     r$1()
-], TVRemoteCard.prototype, "config", void 0);
+], TVRemoteCard.prototype, "_config", void 0);
 __decorate([
     r$1()
-], TVRemoteCard.prototype, "mode", void 0);
+], TVRemoteCard.prototype, "_mode", void 0);
 TVRemoteCard = __decorate([
     t$2("smartqasa-tv-remote-card")
 ], TVRemoteCard);
@@ -1147,24 +1156,24 @@ let TVRemoteCardV1 = class TVRemoteCardV1 extends h {
         }
     }
     handlePower() {
-        callService$1(this.hass, "remote", "send_command", { entity_id: this.entities.remote, command: "power" });
+        callService(this, "remote", "send_command", { entity_id: this.entities.remote, command: "power" });
     }
     handleVolume(button) {
         const entity = this.entities.audio || undefined;
         if (entity) {
             const isMuted = this.hass.states[entity].attributes.is_volume_muted;
             if (button === "volume_mute") {
-                callService$1(this.hass, "media_player", "volume_mute", {
+                callService(this, "media_player", "volume_mute", {
                     entity_id: entity,
                     is_volume_muted: !isMuted,
                 });
             }
             else {
                 if (!isMuted) {
-                    callService$1(this.hass, "media_player", button, { entity_id: entity });
+                    callService(this, "media_player", button, { entity_id: entity });
                 }
                 else {
-                    callService$1(this.hass, "media_player", "volume_mute", {
+                    callService(this, "media_player", "volume_mute", {
                         entity_id: entity,
                         is_volume_muted: false,
                     });
@@ -1172,14 +1181,14 @@ let TVRemoteCardV1 = class TVRemoteCardV1 extends h {
             }
         }
         else {
-            callService$1(this.hass, "remote", "send_command", {
+            callService(this, "remote", "send_command", {
                 entity_id: this.entities.remote,
                 command: button,
             });
         }
     }
     handleCommand(button) {
-        callService$1(this.hass, "remote", "send_command", { entity_id: this.entities.remote, command: button });
+        callService(this, "remote", "send_command", { entity_id: this.entities.remote, command: button });
     }
     handleNavigate(button) {
         this.mode = button;
@@ -1187,7 +1196,7 @@ let TVRemoteCardV1 = class TVRemoteCardV1 extends h {
     selectApp(app) {
         if (!this.hass || !this.entity)
             return;
-        callService$1(this.hass, "media_player", "select_source", {
+        callService(this, "media_player", "select_source", {
             entity_id: this.entity,
             source: app,
         });
@@ -5189,8 +5198,10 @@ let CustomChip = class CustomChip extends h {
         }
     }
     shouldUpdate(changedProps) {
+        if (!this._config)
+            return false;
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
-            (changedProps.has("config") && this._config));
+            changedProps.has("config"));
     }
     render() {
         if (!this._dialogObj)
@@ -5225,7 +5236,7 @@ let CustomChip = class CustomChip extends h {
             backgroundColor: "transparent",
         };
         return ke `
-            <div class="container" style="${se(containerStyle)}" @click=${this.showDialog}>
+            <div class="container" style="${se(containerStyle)}" @click=${this._showDialog}>
                 <div class="icon" style="${se(iconStyles)}">
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
@@ -5233,7 +5244,7 @@ let CustomChip = class CustomChip extends h {
             </div>
         `;
     }
-    showDialog(e) {
+    _showDialog(e) {
         e.stopPropagation();
         if (!this._dialogObj)
             return;
@@ -5720,47 +5731,49 @@ window.customCards.push({
 let DialogChip = class DialogChip extends h {
     static { this.styles = [chipBaseStyle, chipTextStyle]; }
     setConfig(config) {
-        this.config = { ...config };
-        this.dialog = this.config.dialog;
-        this.dialogObj = this.dialog ? dialogTable[this.dialog] : undefined;
-        this.entity = this.dialogObj.entity;
-        this.icon = this.dialogObj.icon;
-        this.label = this.config.label || "";
+        this._config = { ...config };
+        this._dialog = this._config.dialog;
+        this._dialogObj = this._dialog ? dialogTable[this._dialog] : undefined;
+        this._entity = this._dialogObj.entity;
+        this._icon = this._dialogObj.icon;
+        this._label = this._config.label || "";
     }
     shouldUpdate(changedProps) {
-        return !!((changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj) ||
-            (changedProps.has("config") && this.config));
+        if (!this._config)
+            return false;
+        return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
+            changedProps.has("config"));
     }
     render() {
-        if (!this.dialogObj)
+        if (!this._dialogObj)
             return ke ``;
-        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
-        const state = this.stateObj?.state || "unknown";
-        if ((this.dialog === "garages" && state === "closed") ||
-            (this.dialog === "locks" && state === "locked") ||
-            (this.dialog === "sensors_doors" && state === "off") ||
-            (this.dialog === "sensors_windows" && state === "off"))
+        this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
+        const state = this._stateObj?.state || "unknown";
+        if ((this._dialog === "garages" && state === "closed") ||
+            (this._dialog === "locks" && state === "locked") ||
+            (this._dialog === "sensors_doors" && state === "off") ||
+            (this._dialog === "sensors_windows" && state === "off"))
             return ke ``;
         const containerStyle = {
             "margin-left": "0.7rem",
-            "grid-template-areas": this.label ? '"i t"' : '"i"',
+            "grid-template-areas": this._label ? '"i t"' : '"i"',
         };
         return ke `
-            <div class="container" style="${se(containerStyle)}" @click=${this.showDialog}>
+            <div class="container" style="${se(containerStyle)}" @click=${this._showDialog}>
                 <div class="icon" style="color: rgb(var(--sq-rgb-orange));">
-                    <ha-icon .icon=${this.icon}></ha-icon>
+                    <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
-                ${this.label ? ke `<div class="text">${this.label}</div>` : null}
+                ${this._label ? ke `<div class="text">${this._label}</div>` : null}
             </div>
         `;
     }
-    showDialog(e) {
+    _showDialog(e) {
         e.stopPropagation();
         if (!window.browser_mod) {
             console.error("browser_mod is not available!");
             return;
         }
-        const dialogConfig = { ...this.dialogObj.data };
+        const dialogConfig = { ...this._dialogObj.data };
         window.browser_mod.service("popup", dialogConfig);
     }
 };
@@ -5769,7 +5782,7 @@ __decorate([
 ], DialogChip.prototype, "hass", void 0);
 __decorate([
     r$1()
-], DialogChip.prototype, "config", void 0);
+], DialogChip.prototype, "_config", void 0);
 DialogChip = __decorate([
     t$2("smartqasa-dialog-chip")
 ], DialogChip);
@@ -5783,17 +5796,19 @@ window.customCards.push({
 let MotionChip = class MotionChip extends h {
     static { this.styles = [chipBaseStyle, chipTextStyle]; }
     setConfig(config) {
-        this.config = { ...config };
-        this.entity = this.config.entity?.startsWith("automation.") ? this.config.entity : undefined;
+        this._config = { ...config };
+        this._entity = this._config.entity?.startsWith("automation.") ? this._config.entity : undefined;
     }
     shouldUpdate(changedProps) {
-        return !!((changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj) ||
-            (changedProps.has("config") && this.config));
+        if (!this._config)
+            return false;
+        return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
+            changedProps.has("config"));
     }
     render() {
-        if (!this.entity)
-            return ke ``;
-        const { icon, iconColor, name } = this.updateState();
+        if (!this._entity)
+            return D;
+        const { icon, iconColor, name } = this._updateState();
         const containerStyle = {
             "margin-right": "0.7rem",
             "grid-template-areas": name ? '"i t"' : '"i"',
@@ -5802,7 +5817,7 @@ let MotionChip = class MotionChip extends h {
             color: `rgb(${iconColor})`,
         };
         return ke `
-            <div class="container" style="${se(containerStyle)}" @click=${this.toggleEntity}>
+            <div class="container" style="${se(containerStyle)}" @click=${this._toggleEntity}>
                 <div class="icon" style="${se(iconStyles)}">
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
@@ -5810,11 +5825,11 @@ let MotionChip = class MotionChip extends h {
             </div>
         `;
     }
-    updateState() {
+    _updateState() {
         let icon, iconColor, name;
-        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
-        if (this.config && this.stateObj) {
-            const state = this.stateObj.state || undefined;
+        this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
+        if (this._config && this._stateObj) {
+            const state = this._stateObj.state || undefined;
             switch (state) {
                 case "on":
                     icon = "hass:motion-sensor";
@@ -5831,17 +5846,15 @@ let MotionChip = class MotionChip extends h {
             }
         }
         else {
-            icon = this.config?.icon || "hass:lightbulb-alert";
+            icon = this._config?.icon || "hass:lightbulb-alert";
             iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
         }
-        name = this.config?.name || "";
+        name = this._config?.name || "";
         return { icon, iconColor, name };
     }
-    toggleEntity(e) {
+    _toggleEntity(e) {
         e.stopPropagation();
-        if (!this.hass || !this.entity)
-            return;
-        callService$1(this.hass, "automation", "toggle", { entity_id: this.entity });
+        callService(this, "automation", "toggle", { entity_id: this._entity });
     }
 };
 __decorate([
@@ -5849,7 +5862,7 @@ __decorate([
 ], MotionChip.prototype, "hass", void 0);
 __decorate([
     r$1()
-], MotionChip.prototype, "config", void 0);
+], MotionChip.prototype, "_config", void 0);
 MotionChip = __decorate([
     t$2("smartqasa-motion-chip")
 ], MotionChip);
@@ -5863,21 +5876,21 @@ window.customCards.push({
 let NavigateChip = class NavigateChip extends h {
     static { this.styles = [chipDoubleStyle]; }
     setConfig(config) {
-        this.areaPrev = config.area_prev || undefined;
-        this.areaNext = config.area_next || undefined;
+        this._areaPrev = config.area_prev || undefined;
+        this._areaNext = config.area_next || undefined;
     }
     shouldUpdate(changedProps) {
         return !!(changedProps.has("hass") &&
-            this.areaPrev &&
-            this.areaNext &&
-            (this.hass?.areas[this.areaPrev] !== this.areaObjPrev ||
-                this.hass?.areas[this.areaNext] !== this.areaObjNext));
+            this._areaPrev &&
+            this._areaNext &&
+            (this.hass?.areas[this._areaPrev] !== this._areaObjPrev ||
+                this.hass?.areas[this._areaNext] !== this._areaObjNext));
     }
     render() {
-        if (!this.areaPrev || !this.areaNext)
+        if (!this._areaPrev || !this._areaNext)
             return ke ``;
-        this.areaObjPrev = this.areaPrev ? this.hass?.areas[this.areaPrev] : undefined;
-        this.areaObjNext = this.areaNext ? this.hass?.areas[this.areaNext] : undefined;
+        this._areaObjPrev = this._areaPrev ? this.hass?.areas[this._areaPrev] : undefined;
+        this._areaObjNext = this._areaNext ? this.hass?.areas[this._areaNext] : undefined;
         const containerStyle = {
             "margin-right": "0.7rem",
         };
@@ -5885,19 +5898,19 @@ let NavigateChip = class NavigateChip extends h {
         const iconNext = "hass:menu-right";
         return ke `
             <div class="container" style="${se(containerStyle)}">
-                <div class="icon1" @click=${this.navigatePrev}>
+                <div class="icon1" @click=${this._navigatePrev}>
                     <ha-icon .icon=${iconPrev}></ha-icon>
                 </div>
-                <div class="icon2" @click=${this.navigateNext}>
+                <div class="icon2" @click=${this._navigateNext}>
                     <ha-icon .icon=${iconNext}></ha-icon>
                 </div>
             </div>
         `;
     }
-    navigatePrev(e) {
+    _navigatePrev(e) {
         e.stopPropagation();
-        if (this.areaObjPrev) {
-            window.history.pushState(null, "", `/home-dash/${this.areaPrev}`);
+        if (this._areaObjPrev) {
+            window.history.pushState(null, "", `/home-dash/${this._areaPrev}`);
             window.dispatchEvent(new CustomEvent("location-changed"));
             // Assume browser_mod is correctly typed and included
         }
@@ -5905,10 +5918,10 @@ let NavigateChip = class NavigateChip extends h {
             console.error("Previous area is not found.");
         }
     }
-    navigateNext(e) {
+    _navigateNext(e) {
         e.stopPropagation();
-        if (this.areaObjNext) {
-            window.history.pushState(null, "", `/home-dash/${this.areaNext}`);
+        if (this._areaObjNext) {
+            window.history.pushState(null, "", `/home-dash/${this._areaNext}`);
             window.dispatchEvent(new CustomEvent("location-changed"));
         }
         else {
@@ -5921,16 +5934,16 @@ __decorate([
 ], NavigateChip.prototype, "hass", void 0);
 __decorate([
     r$1()
-], NavigateChip.prototype, "areaPrev", void 0);
+], NavigateChip.prototype, "_areaPrev", void 0);
 __decorate([
     r$1()
-], NavigateChip.prototype, "areaNext", void 0);
+], NavigateChip.prototype, "_areaNext", void 0);
 __decorate([
     r$1()
-], NavigateChip.prototype, "areaObjPrev", void 0);
+], NavigateChip.prototype, "_areaObjPrev", void 0);
 __decorate([
     r$1()
-], NavigateChip.prototype, "areaObjNext", void 0);
+], NavigateChip.prototype, "_areaObjNext", void 0);
 NavigateChip = __decorate([
     t$2("smartqasa-navigate-chip")
 ], NavigateChip);
@@ -5938,23 +5951,23 @@ NavigateChip = __decorate([
 let RoutineChip = class RoutineChip extends h {
     constructor() {
         super(...arguments);
-        this.running = false;
+        this._running = false;
     }
     static { this.styles = [chipBaseStyle, chipTextStyle, chipIconSpinStyle]; }
     setConfig(config) {
-        this.config = { ...config };
-        this.entity = ["automation", "scene", "script"].includes(this.config.entity?.split(".")[0])
-            ? this.config.entity
+        this._config = { ...config };
+        this._entity = ["automation", "scene", "script"].includes(this._config.entity?.split(".")[0])
+            ? this._config.entity
             : undefined;
     }
     shouldUpdate(changedProps) {
-        return !!((changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj) ||
-            (changedProps.has("config") && this.config));
+        return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
+            (changedProps.has("config") && this._config));
     }
     render() {
-        if (!this.entity)
+        if (!this._entity)
             return ke ``;
-        const { icon, iconAnimation, iconColor, name } = this.updateState();
+        const { icon, iconAnimation, iconColor, name } = this._updateState();
         const containerStyle = {
             "margin-left": "0.7rem",
             "grid-template-areas": name ? '"i t"' : '"i"',
@@ -5964,7 +5977,7 @@ let RoutineChip = class RoutineChip extends h {
             animation: iconAnimation,
         };
         return ke `
-            <div class="container" style="${se(containerStyle)}" @click=${this.runRoutine}>
+            <div class="container" style="${se(containerStyle)}" @click=${this._runRoutine}>
                 <div class="icon" style="${se(iconStyles)}">
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
@@ -5972,19 +5985,19 @@ let RoutineChip = class RoutineChip extends h {
             </div>
         `;
     }
-    updateState() {
+    _updateState() {
         let icon, iconAnimation, iconColor, name;
-        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
-        if (this.config && this.stateObj) {
-            if (this.running) {
+        this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
+        if (this._stateObj) {
+            if (this._running) {
                 icon = "hass:rotate-right";
                 iconAnimation = "spin 1.0s linear infinite";
                 iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
             }
             else {
-                icon = this.config.icon || this.stateObj.attributes.icon || "hass:help-rhombus";
+                icon = this._config.icon || this._stateObj.attributes.icon || "hass:help-rhombus";
                 iconAnimation = "none";
-                iconColor = this.config.color || "var(--sq-primary-text-rgb)";
+                iconColor = this._config.color || "var(--sq-primary-text-rgb)";
             }
         }
         else {
@@ -5992,31 +6005,31 @@ let RoutineChip = class RoutineChip extends h {
             iconAnimation = "none";
             iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
         }
-        name = this.config?.name || "";
+        name = this._config?.name || "";
         return { icon, iconAnimation, iconColor, name };
     }
-    runRoutine(e) {
+    _runRoutine(e) {
         e.stopPropagation();
-        if (!this.hass || !this.stateObj)
+        if (!this.hass || !this._stateObj)
             return;
-        this.running = true;
-        const domain = this.stateObj.entity_id.split(".")[0];
+        this._running = true;
+        const domain = this._stateObj.entity_id.split(".")[0];
         switch (domain) {
             case "script":
-                callService$1(this.hass, "script", "turn_on", { entity_id: this.entity });
+                callService(this, "script", "turn_on", { entity_id: this._entity });
                 break;
             case "scene":
-                callService$1(this.hass, "scene", "turn_on", { entity_id: this.entity });
+                callService(this, "scene", "turn_on", { entity_id: this._entity });
                 break;
             case "automation":
-                callService$1(this.hass, "automation", "trigger", { entity_id: this.entity });
+                callService(this, "automation", "trigger", { entity_id: this._entity });
                 break;
             default:
                 console.error("Unsupported entity domain:", domain);
                 return;
         }
         setTimeout(() => {
-            this.running = false;
+            this._running = false;
         }, 2000);
     }
 };
@@ -6025,10 +6038,10 @@ __decorate([
 ], RoutineChip.prototype, "hass", void 0);
 __decorate([
     r$1()
-], RoutineChip.prototype, "config", void 0);
+], RoutineChip.prototype, "_config", void 0);
 __decorate([
     r$1()
-], RoutineChip.prototype, "running", void 0);
+], RoutineChip.prototype, "_running", void 0);
 RoutineChip = __decorate([
     t$2("smartqasa-routine-chip")
 ], RoutineChip);
@@ -6071,42 +6084,44 @@ window.customCards.push({
 let SelectChip = class SelectChip extends h {
     static { this.styles = [chipBaseStyle]; }
     setConfig(config) {
-        this.config = { ...config };
-        this.entity = this.config.entity?.startsWith("input_select.") ? this.config.entity : undefined;
+        this._config = { ...config };
+        this._entity = this._config.entity?.startsWith("input_select.") ? this._config.entity : undefined;
     }
     shouldUpdate(changedProps) {
-        return !!((changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj) ||
-            (changedProps.has("config") && this.config));
+        if (!this._config)
+            return false;
+        return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
+            changedProps.has("config"));
     }
     render() {
-        if (!this.entity)
+        if (!this._entity)
             return ke ``;
         let icon;
-        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
-        const state = this.stateObj?.state || "unknown";
-        if (this.entity === "input_select.location_phase") {
+        this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
+        const state = this._stateObj?.state || "unknown";
+        if (this._entity === "input_select.location_phase") {
             icon = phaseIcons[state] || phaseIcons.default;
         }
-        else if (this.entity === "input_select.location_mode") {
+        else if (this._entity === "input_select.location_mode") {
             icon = modeIcons[state] || modeIcons.default;
         }
         else {
-            icon = this.config?.icon || this.stateObj?.attributes?.icon || "hass:form-dropdown";
+            icon = this._config?.icon || this._stateObj?.attributes?.icon || "hass:form-dropdown";
         }
         const containerStyle = {
             "margin-left": "0.7rem",
         };
         return ke `
-            <div class="container" style="${se(containerStyle)}" @click=${this.showOptions}>
+            <div class="container" style="${se(containerStyle)}" @click=${this._showOptions}>
                 <div class="icon">
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
             </div>
         `;
     }
-    showOptions(e) {
+    _showOptions(e) {
         e.stopPropagation();
-        selectOptionDialog(this.config, this.stateObj);
+        selectOptionDialog(this._config, this._stateObj);
     }
 };
 __decorate([
@@ -6114,7 +6129,7 @@ __decorate([
 ], SelectChip.prototype, "hass", void 0);
 __decorate([
     r$1()
-], SelectChip.prototype, "config", void 0);
+], SelectChip.prototype, "_config", void 0);
 SelectChip = __decorate([
     t$2("smartqasa-select-chip")
 ], SelectChip);
@@ -6146,22 +6161,24 @@ function moreInfoDialog(config, stateObj) {
 let ThermostatChip$1 = class ThermostatChip extends h {
     static { this.styles = [chipBaseStyle, chipTextStyle]; }
     setConfig(config) {
-        this.config = { ...config };
-        this.entity = this.config.entity?.startsWith("climate.") ? this.config.entity : undefined;
+        this._config = { ...config };
+        this._entity = this._config.entity?.startsWith("climate.") ? this._config.entity : undefined;
     }
     shouldUpdate(changedProps) {
-        return !!((changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj) ||
-            (changedProps.has("config") && this.config));
+        if (!this._config)
+            return false;
+        return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
+            changedProps.has("config"));
     }
     render() {
-        if (!this.entity)
-            return ke ``;
-        const { icon, iconColor, temperature } = this.updateState();
+        if (!this._entity)
+            return D;
+        const { icon, iconColor, temperature } = this._updateState();
         const containerStyle = {
             "margin-right": "0.7rem",
         };
         return ke `
-            <div class="container" style="${se(containerStyle)}" @click=${this.showMoreInfo}>
+            <div class="container" style="${se(containerStyle)}" @click=${this._showMoreInfo}>
                 <div class="icon" id="icon" style="color: rgb(${iconColor});">
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
@@ -6169,15 +6186,15 @@ let ThermostatChip$1 = class ThermostatChip extends h {
             </div>
         `;
     }
-    updateState() {
+    _updateState() {
         let icon, iconAnimation, iconColor, temperature;
-        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
-        if (this.config && this.stateObj) {
-            const state = this.stateObj.state;
+        this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
+        if (this._stateObj) {
+            const state = this._stateObj.state;
             icon = thermostatIcons[state] || thermostatIcons.default;
-            const hvacAction = this.stateObj.attributes.hvac_action;
+            const hvacAction = this._stateObj.attributes.hvac_action;
             iconColor = thermostatColors[hvacAction] || thermostatColors.default;
-            temperature = this.stateObj.attributes.current_temperature || "??";
+            temperature = this._stateObj.attributes.current_temperature || "??";
         }
         else {
             icon = thermostatIcons.default;
@@ -6186,9 +6203,9 @@ let ThermostatChip$1 = class ThermostatChip extends h {
         }
         return { icon, iconAnimation, iconColor, temperature };
     }
-    showMoreInfo(e) {
+    _showMoreInfo(e) {
         e.stopPropagation();
-        moreInfoDialog(this.config, this.stateObj);
+        moreInfoDialog(this._config, this._stateObj);
     }
 };
 __decorate([
@@ -6196,27 +6213,35 @@ __decorate([
 ], ThermostatChip$1.prototype, "hass", void 0);
 __decorate([
     r$1()
-], ThermostatChip$1.prototype, "config", void 0);
+], ThermostatChip$1.prototype, "_config", void 0);
 ThermostatChip$1 = __decorate([
     t$2("smartqasa-thermostat-chip")
 ], ThermostatChip$1);
 
+window.customCards.push({
+    type: "smartqasa-weather-chip",
+    name: "SmartQasa Weather Chip",
+    preview: true,
+    description: "A SmartQasa chip for displaying the weather.",
+});
 let ThermostatChip = class ThermostatChip extends h {
     static { this.styles = [chipBaseStyle, chipTextStyle]; }
     setConfig(config) {
-        this.config = { ...config };
-        this.entity = this.config.entity?.startsWith("weather.") ? this.config.entity : undefined;
+        this._config = { ...config };
+        this._entity = this._config.entity?.startsWith("weather.") ? this._config.entity : undefined;
     }
     shouldUpdate(changedProps) {
-        return !!((changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj) ||
-            (changedProps.has("config") && this.config));
+        if (!this._config)
+            return false;
+        return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
+            changedProps.has("config"));
     }
     render() {
         let iconColor, temperature;
-        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
-        if (this.stateObj) {
+        this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
+        if (this._stateObj) {
             iconColor = "var(--sq-primary-text-rgb)";
-            temperature = this.stateObj?.attributes?.temperature || "??";
+            temperature = this._stateObj?.attributes?.temperature || "??";
         }
         else {
             iconColor = "var(--sq-unavailable-rgb)";
@@ -6226,15 +6251,15 @@ let ThermostatChip = class ThermostatChip extends h {
             "margin-left": "0.7rem",
         };
         return ke `
-            <div class="container" style="${se(containerStyle)}" @click=${this.showDialog}>
+            <div class="container" style="${se(containerStyle)}" @click=${this._showDialog}>
                 <div class="icon" style="color: rgb(${iconColor});">
-                    <ha-state-icon .hass=${this.hass} .stateObj=${this.stateObj}></ha-state-icon>
+                    <ha-state-icon .hass=${this.hass} .stateObj=${this._stateObj}></ha-state-icon>
                 </div>
                 <div class="text">${temperature}°</div>
             </div>
         `;
     }
-    showDialog(e) {
+    _showDialog(e) {
         e.stopPropagation();
         const dialogObj = dialogTable.weather;
         const dialogConfig = { ...dialogObj.data };
@@ -6246,16 +6271,10 @@ __decorate([
 ], ThermostatChip.prototype, "hass", void 0);
 __decorate([
     r$1()
-], ThermostatChip.prototype, "config", void 0);
+], ThermostatChip.prototype, "_config", void 0);
 ThermostatChip = __decorate([
     t$2("smartqasa-weather-chip")
 ], ThermostatChip);
-window.customCards.push({
-    type: "smartqasa-weather-chip",
-    name: "SmartQasa Weather Chip",
-    preview: true,
-    description: "A SmartQasa chip for displaying the weather.",
-});
 
 window.customCards.push({
     type: "smartqasa-pin-verify-dialog",
@@ -6266,12 +6285,9 @@ window.customCards.push({
 let PinVerifyDialog = class PinVerifyDialog extends h {
     constructor() {
         super(...arguments);
-        this.inputPin = "";
-        this.maskedPin = "";
-        this.pinState = "";
-    }
-    getCardSize() {
-        return 6;
+        this._inputPin = "";
+        this._maskedPin = "";
+        this._pinState = "";
     }
     static { this.styles = i$3 `
         :host {
@@ -6322,35 +6338,35 @@ let PinVerifyDialog = class PinVerifyDialog extends h {
         }
     `; }
     setConfig(config) {
-        this.config = { ...config };
+        this._config = { ...config };
         this.validateEntities();
     }
     validateEntities() {
-        if (!this.config)
+        if (!this._config)
             return;
-        const pinDomain = this.config.pin_entity.split(".")[0];
-        const outcomeDomain = this.config.outcome_entity.split(".")[0];
+        const pinDomain = this._config.pin_entity.split(".")[0];
+        const outcomeDomain = this._config.outcome_entity.split(".")[0];
         if (pinDomain !== "input_text") {
             throw new Error(`Invalid entity domain: PIN entity should be of domain "input_text", got "${pinDomain}" instead.`);
         }
         if (outcomeDomain !== "input_boolean") {
             throw new Error(`Invalid entity domain: Outcome entity should be of domain "input_boolean", got "${outcomeDomain}" instead.`);
         }
-        this.pinEntity = this.config.pin_entity;
-        this.outcomeEntity = this.config.outcome_entity;
+        this._pinEntity = this._config.pin_entity;
+        this._outcomeEntity = this._config.outcome_entity;
     }
     render() {
-        if (!this.config)
+        if (!this._config)
             return ke ``;
-        const title = this.config.title || "Enter PIN";
+        const title = this._config.title || "Enter PIN";
         let maskedPin, pinStyles;
-        if (!this.pinState) {
-            maskedPin = this.maskedPin;
+        if (!this._pinState) {
+            maskedPin = this._maskedPin;
             pinStyles = {
                 color: "rgb(var(--sq-primary-font-rgb))",
             };
         }
-        else if (this.pinState === "valid") {
+        else if (this._pinState === "valid") {
             maskedPin = "PIN Accepted";
             pinStyles = {
                 color: "rgb(var(--sq-rgb-green))",
@@ -6379,47 +6395,47 @@ let PinVerifyDialog = class PinVerifyDialog extends h {
         return ke `<div class="button" @click=${() => this.handleInput(digit)}>${digit}</div>`;
     }
     handleInput(digit) {
-        if (this.pinState)
+        if (this._pinState)
             return;
         if (digit === "✓") {
             this.verifyPin();
         }
         else if (digit === "☓") {
-            this.inputPin = "";
-            this.maskedPin = "";
+            this._inputPin = "";
+            this._maskedPin = "";
         }
         else {
-            this.inputPin += digit;
-            this.maskedPin += "*";
+            this._inputPin += digit;
+            this._maskedPin += "*";
         }
     }
     verifyPin() {
-        if (!this.hass || !this.pinEntity || !this.outcomeEntity)
+        if (!this.hass || !this._pinEntity || !this._outcomeEntity)
             return;
-        const adminPin = this.hass.states[this.pinEntity].state;
-        if (this.inputPin === adminPin) {
-            this.pinState = "valid";
+        const adminPin = this.hass.states[this._pinEntity].state;
+        if (this._inputPin === adminPin) {
+            this._pinState = "valid";
             try {
                 this.hass.callService("input_boolean", "turn_on", {
-                    entity_id: this.outcomeEntity,
+                    entity_id: this._outcomeEntity,
                 });
             }
             catch (error) {
                 console.error("Failed to turn_on the admin mode entity:", error);
             }
             setTimeout(() => {
-                this.inputPin = "";
-                this.maskedPin = "";
-                this.pinState = "";
+                this._inputPin = "";
+                this._maskedPin = "";
+                this._pinState = "";
                 window.browser_mod?.service("close_popup", {});
             }, 5000);
         }
         else {
-            this.pinState = "invalid";
+            this._pinState = "invalid";
             setTimeout(() => {
-                this.inputPin = "";
-                this.maskedPin = "";
-                this.pinState = "";
+                this._inputPin = "";
+                this._maskedPin = "";
+                this._pinState = "";
             }, 2000);
         }
     }
@@ -6429,16 +6445,16 @@ __decorate([
 ], PinVerifyDialog.prototype, "hass", void 0);
 __decorate([
     r$1()
-], PinVerifyDialog.prototype, "config", void 0);
+], PinVerifyDialog.prototype, "_config", void 0);
 __decorate([
     r$1()
-], PinVerifyDialog.prototype, "inputPin", void 0);
+], PinVerifyDialog.prototype, "_inputPin", void 0);
 __decorate([
     r$1()
-], PinVerifyDialog.prototype, "maskedPin", void 0);
+], PinVerifyDialog.prototype, "_maskedPin", void 0);
 __decorate([
     r$1()
-], PinVerifyDialog.prototype, "pinState", void 0);
+], PinVerifyDialog.prototype, "_pinState", void 0);
 PinVerifyDialog = __decorate([
     t$2("smartqasa-pin-verify-dialog")
 ], PinVerifyDialog);
@@ -6454,21 +6470,21 @@ let MoreInfoDialog = class MoreInfoDialog extends h {
         return 6;
     }
     setConfig(config) {
-        this.config = { ...config };
-        this.entity = this.config?.entity;
+        this._config = { ...config };
+        this._entity = this._config?.entity;
     }
     shouldUpdate(changedProps) {
-        return !!((changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj) ||
-            (changedProps.has("config") && this.config));
+        return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
+            (changedProps.has("config") && this._config));
     }
     render() {
-        if (!this.hass || !this.entity)
+        if (!this.hass || !this._entity)
             return ke ``;
-        this.stateObj = this.hass.states[this.entity];
+        this._stateObj = this.hass.states[this._entity];
         return ke `
             <div>
                 <div class="container">
-                    <more-info-content .hass=${this.hass} .stateObj=${this.stateObj}> </more-info-content>
+                    <more-info-content .hass=${this.hass} .stateObj=${this._stateObj}> </more-info-content>
                 </div>
             </div>
         `;
@@ -6479,7 +6495,7 @@ __decorate([
 ], MoreInfoDialog.prototype, "hass", void 0);
 __decorate([
     r$1()
-], MoreInfoDialog.prototype, "config", void 0);
+], MoreInfoDialog.prototype, "_config", void 0);
 MoreInfoDialog = __decorate([
     t$2("smartqasa-more-info-dialog")
 ], MoreInfoDialog);
@@ -6493,9 +6509,6 @@ window.customCards.push({
     description: "A SmartQasa card for rendering an area picture.",
 });
 let AreaPicture = class AreaPicture extends h {
-    getCardSize() {
-        return 1;
-    }
     static get styles() {
         return i$3 `
             :host {
@@ -6514,18 +6527,18 @@ let AreaPicture = class AreaPicture extends h {
         `;
     }
     setConfig(config) {
-        this.config = { ...config };
-        this.area = this.config?.area;
+        this._config = { ...config };
+        this._area = this._config?.area;
     }
     shouldUpdate(changedProps) {
-        return !!((changedProps.has("hass") && this.area && this.hass?.areas[this.area] !== this.areaObj) ||
-            (changedProps.has("config") && this.config));
+        return !!((changedProps.has("hass") && this._area && this.hass?.areas[this._area] !== this._areaObj) ||
+            (changedProps.has("config") && this._config));
     }
     render() {
         const height = deviceType === "phone" ? "15vh" : "20vh";
-        const picture = this.config?.picture
-            ? `/local/smartqasa/images/${this.config.picture}`
-            : this.areaObj?.picture ?? img$O;
+        const picture = this._config?.picture
+            ? `/local/smartqasa/images/${this._config.picture}`
+            : this._areaObj?.picture ?? img$O;
         return ke `
             <ha-card style="background-image: url(${picture}); height: ${height};" class="picture"></ha-card>
         `;
@@ -6536,7 +6549,7 @@ __decorate([
 ], AreaPicture.prototype, "hass", void 0);
 __decorate([
     r$1()
-], AreaPicture.prototype, "config", void 0);
+], AreaPicture.prototype, "_config", void 0);
 AreaPicture = __decorate([
     t$2("smartqasa-area-picture")
 ], AreaPicture);
@@ -6901,7 +6914,7 @@ let PanelFooter = class PanelFooter extends h {
         }
     `; }
     setConfig(config) {
-        this.config = { ...config };
+        this._config = { ...config };
     }
     render() {
         return ke `
@@ -6941,7 +6954,7 @@ let PanelFooter = class PanelFooter extends h {
         areasDialog(this.hass);
     }
     handleEntertain() {
-        entertainDialog(this.config, this.hass);
+        entertainDialog(this._config, this.hass);
     }
     async handleMenu() {
         try {
@@ -6958,7 +6971,7 @@ __decorate([
 ], PanelFooter.prototype, "hass", void 0);
 __decorate([
     r$1()
-], PanelFooter.prototype, "config", void 0);
+], PanelFooter.prototype, "_config", void 0);
 PanelFooter = __decorate([
     t$2("smartqasa-panel-footer")
 ], PanelFooter);
@@ -6966,8 +6979,8 @@ PanelFooter = __decorate([
 let TimeDate = class TimeDate extends h {
     constructor() {
         super(...arguments);
-        this.time = "Loading...";
-        this.date = "Loading...";
+        this._time = "Loading...";
+        this._date = "Loading...";
     }
     getCardSize() {
         return 1;
@@ -7005,15 +7018,15 @@ let TimeDate = class TimeDate extends h {
     updated(changedProps) {
         super.updated(changedProps);
         if (changedProps.has("hass") && this.hass) {
-            this.time = this.hass.states["sensor.current_time"]?.state || "Loading...";
-            this.date = this.hass.states["sensor.current_date"]?.state || "Loading...";
+            this._time = this.hass.states["sensor.current_time"]?.state || "Loading...";
+            this._date = this.hass.states["sensor.current_date"]?.state || "Loading...";
         }
     }
     render() {
         return ke `
             <div class="container" @click="${this.handleTap}">
-                <div class="time">${this.time}</div>
-                <div class="date">${this.date}</div>
+                <div class="time">${this._time}</div>
+                <div class="date">${this._date}</div>
             </div>
         `;
     }
@@ -7031,10 +7044,10 @@ __decorate([
 ], TimeDate.prototype, "hass", void 0);
 __decorate([
     r$1()
-], TimeDate.prototype, "time", void 0);
+], TimeDate.prototype, "_time", void 0);
 __decorate([
     r$1()
-], TimeDate.prototype, "date", void 0);
+], TimeDate.prototype, "_date", void 0);
 TimeDate = __decorate([
     t$2("smartqasa-time-date")
 ], TimeDate);
@@ -7085,23 +7098,6 @@ __decorate([
 TitleCard = __decorate([
     t$2("smartqasa-title-card")
 ], TitleCard);
-
-const callService = async (context, domain, service, serviceData) => {
-    if (!context.hass) {
-        console.error(`Error calling ${domain}.${service}:`, "Connection to Home Assistant is not available.");
-        return;
-    }
-    if (!context._stateObj) {
-        console.error(`Error calling ${domain}.${service}:`, "The entity state object is not available.");
-        return;
-    }
-    try {
-        await context.hass.callService(domain, service, serviceData);
-    }
-    catch (error) {
-        console.error(`Error calling ${domain}.${service}:`, error);
-    }
-};
 
 const tileBaseStyle = i$3 `
     .container {
@@ -7810,9 +7806,6 @@ let AreaTile = class AreaTile extends h {
         super(...arguments);
         this._running = false;
     }
-    getCardSize() {
-        return 1;
-    }
     static { this.styles = [tileBaseStyle, tileIconSpinStyle]; }
     setConfig(config) {
         this._config = { ...config };
@@ -8043,7 +8036,7 @@ let FanTile = class FanTile extends h {
         e.stopPropagation();
         if (!this._stateObj)
             return;
-        callService$1(this.hass, "fan", "toggle", { entity_id: this._entity });
+        callService(this, "fan", "toggle", { entity_id: this._entity });
     }
     _showMoreInfo(e) {
         e.stopPropagation();

@@ -20,10 +20,6 @@ window.customCards.push({
 
 @customElement("smartqasa-area-tile")
 export class AreaTile extends LitElement {
-    getCardSize(): number {
-        return 1;
-    }
-
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() private _config?: Config;
     @state() private _running: boolean = false;

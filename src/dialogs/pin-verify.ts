@@ -18,17 +18,13 @@ window.customCards.push({
 
 @customElement("smartqasa-pin-verify-dialog")
 export class PinVerifyDialog extends LitElement {
-    getCardSize(): number {
-        return 6;
-    }
-
     @property({ attribute: false }) public hass?: HomeAssistant;
-    @state() private config?: Config;
-    @state() private inputPin: string = "";
-    @state() private maskedPin: string = "";
-    @state() private pinState: string = "";
-    private pinEntity?: string;
-    private outcomeEntity?: string;
+    @state() private _config?: Config;
+    @state() private _inputPin: string = "";
+    @state() private _maskedPin: string = "";
+    @state() private _pinState: string = "";
+    private _pinEntity?: string;
+    private _outcomeEntity?: string;
 
     static styles = css`
         :host {
@@ -80,14 +76,14 @@ export class PinVerifyDialog extends LitElement {
     `;
 
     public setConfig(config: Config): void {
-        this.config = { ...config };
+        this._config = { ...config };
         this.validateEntities();
     }
 
     private validateEntities() {
-        if (!this.config) return;
-        const pinDomain = this.config.pin_entity.split(".")[0];
-        const outcomeDomain = this.config.outcome_entity.split(".")[0];
+        if (!this._config) return;
+        const pinDomain = this._config.pin_entity.split(".")[0];
+        const outcomeDomain = this._config.outcome_entity.split(".")[0];
         if (pinDomain !== "input_text") {
             throw new Error(
                 `Invalid entity domain: PIN entity should be of domain "input_text", got "${pinDomain}" instead.`
@@ -98,22 +94,22 @@ export class PinVerifyDialog extends LitElement {
                 `Invalid entity domain: Outcome entity should be of domain "input_boolean", got "${outcomeDomain}" instead.`
             );
         }
-        this.pinEntity = this.config.pin_entity;
-        this.outcomeEntity = this.config.outcome_entity;
+        this._pinEntity = this._config.pin_entity;
+        this._outcomeEntity = this._config.outcome_entity;
     }
 
     protected render() {
-        if (!this.config) return html``;
+        if (!this._config) return html``;
 
-        const title = this.config.title || "Enter PIN";
+        const title = this._config.title || "Enter PIN";
 
         let maskedPin, pinStyles;
-        if (!this.pinState) {
-            maskedPin = this.maskedPin;
+        if (!this._pinState) {
+            maskedPin = this._maskedPin;
             pinStyles = {
                 color: "rgb(var(--sq-primary-font-rgb))",
             };
-        } else if (this.pinState === "valid") {
+        } else if (this._pinState === "valid") {
             maskedPin = "PIN Accepted";
             pinStyles = {
                 color: "rgb(var(--sq-rgb-green))",
@@ -143,44 +139,44 @@ export class PinVerifyDialog extends LitElement {
     }
 
     private handleInput(digit: number | string) {
-        if (this.pinState) return;
+        if (this._pinState) return;
 
         if (digit === "✓") {
             this.verifyPin();
         } else if (digit === "☓") {
-            this.inputPin = "";
-            this.maskedPin = "";
+            this._inputPin = "";
+            this._maskedPin = "";
         } else {
-            this.inputPin += digit;
-            this.maskedPin += "*";
+            this._inputPin += digit;
+            this._maskedPin += "*";
         }
     }
 
     private verifyPin() {
-        if (!this.hass || !this.pinEntity || !this.outcomeEntity) return;
+        if (!this.hass || !this._pinEntity || !this._outcomeEntity) return;
 
-        const adminPin = this.hass.states[this.pinEntity].state;
-        if (this.inputPin === adminPin) {
-            this.pinState = "valid";
+        const adminPin = this.hass.states[this._pinEntity].state;
+        if (this._inputPin === adminPin) {
+            this._pinState = "valid";
             try {
                 this.hass.callService("input_boolean", "turn_on", {
-                    entity_id: this.outcomeEntity,
+                    entity_id: this._outcomeEntity,
                 });
             } catch (error) {
                 console.error("Failed to turn_on the admin mode entity:", error);
             }
             setTimeout(() => {
-                this.inputPin = "";
-                this.maskedPin = "";
-                this.pinState = "";
+                this._inputPin = "";
+                this._maskedPin = "";
+                this._pinState = "";
                 window.browser_mod?.service("close_popup", {});
             }, 5000);
         } else {
-            this.pinState = "invalid";
+            this._pinState = "invalid";
             setTimeout(() => {
-                this.inputPin = "";
-                this.maskedPin = "";
-                this.pinState = "";
+                this._inputPin = "";
+                this._maskedPin = "";
+                this._pinState = "";
             }, 2000);
         }
     }

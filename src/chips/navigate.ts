@@ -19,34 +19,33 @@ window.customCards.push({
 @customElement("smartqasa-navigate-chip")
 export class NavigateChip extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
-
-    @state() private areaPrev?: string;
-    @state() private areaNext?: string;
-    @state() private areaObjPrev?: HassArea;
-    @state() private areaObjNext?: HassArea;
+    @state() private _areaPrev?: string;
+    @state() private _areaNext?: string;
+    @state() private _areaObjPrev?: HassArea;
+    @state() private _areaObjNext?: HassArea;
 
     static styles: CSSResultGroup = [chipDoubleStyle];
 
     public setConfig(config: Config): void {
-        this.areaPrev = config.area_prev || undefined;
-        this.areaNext = config.area_next || undefined;
+        this._areaPrev = config.area_prev || undefined;
+        this._areaNext = config.area_next || undefined;
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
         return !!(
             changedProps.has("hass") &&
-            this.areaPrev &&
-            this.areaNext &&
-            (this.hass?.areas[this.areaPrev] !== this.areaObjPrev ||
-                this.hass?.areas[this.areaNext] !== this.areaObjNext)
+            this._areaPrev &&
+            this._areaNext &&
+            (this.hass?.areas[this._areaPrev] !== this._areaObjPrev ||
+                this.hass?.areas[this._areaNext] !== this._areaObjNext)
         );
     }
 
     protected render(): TemplateResult {
-        if (!this.areaPrev || !this.areaNext) return html``;
+        if (!this._areaPrev || !this._areaNext) return html``;
 
-        this.areaObjPrev = this.areaPrev ? this.hass?.areas[this.areaPrev] : undefined;
-        this.areaObjNext = this.areaNext ? this.hass?.areas[this.areaNext] : undefined;
+        this._areaObjPrev = this._areaPrev ? this.hass?.areas[this._areaPrev] : undefined;
+        this._areaObjNext = this._areaNext ? this.hass?.areas[this._areaNext] : undefined;
 
         const containerStyle = {
             "margin-right": "0.7rem",
@@ -56,20 +55,20 @@ export class NavigateChip extends LitElement {
 
         return html`
             <div class="container" style="${styleMap(containerStyle)}">
-                <div class="icon1" @click=${this.navigatePrev}>
+                <div class="icon1" @click=${this._navigatePrev}>
                     <ha-icon .icon=${iconPrev}></ha-icon>
                 </div>
-                <div class="icon2" @click=${this.navigateNext}>
+                <div class="icon2" @click=${this._navigateNext}>
                     <ha-icon .icon=${iconNext}></ha-icon>
                 </div>
             </div>
         `;
     }
 
-    private navigatePrev(e: Event): void {
+    private _navigatePrev(e: Event): void {
         e.stopPropagation();
-        if (this.areaObjPrev) {
-            window.history.pushState(null, "", `/home-dash/${this.areaPrev}`);
+        if (this._areaObjPrev) {
+            window.history.pushState(null, "", `/home-dash/${this._areaPrev}`);
             window.dispatchEvent(new CustomEvent("location-changed"));
             // Assume browser_mod is correctly typed and included
         } else {
@@ -77,10 +76,10 @@ export class NavigateChip extends LitElement {
         }
     }
 
-    private navigateNext(e: Event): void {
+    private _navigateNext(e: Event): void {
         e.stopPropagation();
-        if (this.areaObjNext) {
-            window.history.pushState(null, "", `/home-dash/${this.areaNext}`);
+        if (this._areaObjNext) {
+            window.history.pushState(null, "", `/home-dash/${this._areaNext}`);
             window.dispatchEvent(new CustomEvent("location-changed"));
         } else {
             console.error("Next area is not found.");

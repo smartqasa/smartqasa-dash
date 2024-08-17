@@ -2,7 +2,7 @@ import { css, CSSResult, html, LitElement, PropertyValues, TemplateResult } from
 import { customElement, property, state } from "lit/decorators.js";
 import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCardConfig } from "../types";
-import { callService } from "../utils/call-service";
+import { callService } from "../utils/call-service-new";
 import channelTable from "../tables/channels"; // Adjust the import path as needed
 
 interface Config extends LovelaceCardConfig {
@@ -319,7 +319,7 @@ export class TVRemoteCardV1 extends LitElement {
     }
 
     private handlePower(): void {
-        callService(this.hass!, "remote", "send_command", { entity_id: this.entities.remote, command: "power" });
+        callService(this, "remote", "send_command", { entity_id: this.entities.remote, command: "power" });
     }
 
     private handleVolume(button: string): void {
@@ -327,22 +327,22 @@ export class TVRemoteCardV1 extends LitElement {
         if (entity) {
             const isMuted = this.hass!.states[entity].attributes.is_volume_muted;
             if (button === "volume_mute") {
-                callService(this.hass!, "media_player", "volume_mute", {
+                callService(this, "media_player", "volume_mute", {
                     entity_id: entity,
                     is_volume_muted: !isMuted,
                 });
             } else {
                 if (!isMuted) {
-                    callService(this.hass!, "media_player", button, { entity_id: entity });
+                    callService(this, "media_player", button, { entity_id: entity });
                 } else {
-                    callService(this.hass!, "media_player", "volume_mute", {
+                    callService(this, "media_player", "volume_mute", {
                         entity_id: entity,
                         is_volume_muted: false,
                     });
                 }
             }
         } else {
-            callService(this.hass!, "remote", "send_command", {
+            callService(this, "remote", "send_command", {
                 entity_id: this.entities.remote,
                 command: button,
             });
@@ -350,7 +350,7 @@ export class TVRemoteCardV1 extends LitElement {
     }
 
     private handleCommand(button: string): void {
-        callService(this.hass!, "remote", "send_command", { entity_id: this.entities.remote, command: button });
+        callService(this, "remote", "send_command", { entity_id: this.entities.remote, command: button });
     }
 
     private handleNavigate(button: string): void {
@@ -359,7 +359,7 @@ export class TVRemoteCardV1 extends LitElement {
 
     private selectApp(app: string): void {
         if (!this.hass || !this.entity) return;
-        callService(this.hass!, "media_player", "select_source", {
+        callService(this, "media_player", "select_source", {
             entity_id: this.entity,
             source: app,
         });

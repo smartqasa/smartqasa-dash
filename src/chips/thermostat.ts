@@ -1,8 +1,7 @@
-import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult } from "lit";
+import { CSSResultGroup, html, LitElement, nothing, PropertyValues, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
-import { HassEntity } from "home-assistant-js-websocket";
-import { HomeAssistant, LovelaceCardConfig } from "../types";
+import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
 import { moreInfoDialog } from "../utils/more-info-dialog";
 import { thermostatIcons, thermostatColors } from "../const";
 
@@ -15,35 +14,36 @@ interface Config extends LovelaceCardConfig {
 @customElement("smartqasa-thermostat-chip")
 export class ThermostatChip extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
-    @state() private config?: Config;
-    private entity?: string;
-    private stateObj?: HassEntity;
+    @state() private _config?: Config;
+    private _entity?: string;
+    private _stateObj?: HassEntity;
 
     static styles: CSSResultGroup = [chipBaseStyle, chipTextStyle];
 
     public setConfig(config: Config): void {
-        this.config = { ...config };
-        this.entity = this.config.entity?.startsWith("climate.") ? this.config.entity : undefined;
+        this._config = { ...config };
+        this._entity = this._config.entity?.startsWith("climate.") ? this._config.entity : undefined;
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
+        if (!this._config) return false;
         return !!(
-            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj) ||
-            (changedProps.has("config") && this.config)
+            (changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
+            changedProps.has("config")
         );
     }
 
-    protected render(): TemplateResult {
-        if (!this.entity) return html``;
+    protected render(): TemplateResult | typeof nothing {
+        if (!this._entity) return nothing;
 
-        const { icon, iconColor, temperature } = this.updateState();
+        const { icon, iconColor, temperature } = this._updateState();
 
         const containerStyle = {
             "margin-right": "0.7rem",
         };
 
         return html`
-            <div class="container" style="${styleMap(containerStyle)}" @click=${this.showMoreInfo}>
+            <div class="container" style="${styleMap(containerStyle)}" @click=${this._showMoreInfo}>
                 <div class="icon" id="icon" style="color: rgb(${iconColor});">
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
@@ -52,17 +52,17 @@ export class ThermostatChip extends LitElement {
         `;
     }
 
-    private updateState() {
+    private _updateState() {
         let icon, iconAnimation, iconColor, temperature;
 
-        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
+        this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
 
-        if (this.config && this.stateObj) {
-            const state = this.stateObj.state;
+        if (this._stateObj) {
+            const state = this._stateObj.state;
             icon = thermostatIcons[state] || thermostatIcons.default;
-            const hvacAction = this.stateObj.attributes.hvac_action;
+            const hvacAction = this._stateObj.attributes.hvac_action;
             iconColor = thermostatColors[hvacAction] || thermostatColors.default;
-            temperature = this.stateObj.attributes.current_temperature || "??";
+            temperature = this._stateObj.attributes.current_temperature || "??";
         } else {
             icon = thermostatIcons.default;
             iconColor = thermostatColors.default;
@@ -72,8 +72,8 @@ export class ThermostatChip extends LitElement {
         return { icon, iconAnimation, iconColor, temperature };
     }
 
-    private showMoreInfo(e: Event): void {
+    private _showMoreInfo(e: Event): void {
         e.stopPropagation();
-        moreInfoDialog(this.config, this.stateObj);
+        moreInfoDialog(this._config, this._stateObj);
     }
 }

@@ -1,9 +1,8 @@
 import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
-import { HassEntity } from "home-assistant-js-websocket";
-import { HomeAssistant, LovelaceCardConfig } from "../types";
-import { callService } from "../utils/call-service";
+import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
+import { callService } from "../utils/call-service-new";
 
 import { chipBaseStyle, chipTextStyle, chipIconSpinStyle } from "../styles/chip";
 
@@ -17,31 +16,31 @@ interface Config extends LovelaceCardConfig {
 @customElement("smartqasa-routine-chip")
 export class RoutineChip extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
-    @state() private config?: Config;
-    @state() private running: boolean = false;
-    private entity?: string;
-    private stateObj?: HassEntity;
+    @state() private _config?: Config;
+    @state() private _running: boolean = false;
+    private _entity?: string;
+    private _stateObj?: HassEntity;
 
     static styles: CSSResultGroup = [chipBaseStyle, chipTextStyle, chipIconSpinStyle];
 
     public setConfig(config: Config): void {
-        this.config = { ...config };
-        this.entity = ["automation", "scene", "script"].includes(this.config.entity?.split(".")[0])
-            ? this.config.entity
+        this._config = { ...config };
+        this._entity = ["automation", "scene", "script"].includes(this._config.entity?.split(".")[0])
+            ? this._config.entity
             : undefined;
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
         return !!(
-            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj) ||
-            (changedProps.has("config") && this.config)
+            (changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
+            (changedProps.has("config") && this._config)
         );
     }
 
     protected render(): TemplateResult {
-        if (!this.entity) return html``;
+        if (!this._entity) return html``;
 
-        const { icon, iconAnimation, iconColor, name } = this.updateState();
+        const { icon, iconAnimation, iconColor, name } = this._updateState();
 
         const containerStyle = {
             "margin-left": "0.7rem",
@@ -54,7 +53,7 @@ export class RoutineChip extends LitElement {
         };
 
         return html`
-            <div class="container" style="${styleMap(containerStyle)}" @click=${this.runRoutine}>
+            <div class="container" style="${styleMap(containerStyle)}" @click=${this._runRoutine}>
                 <div class="icon" style="${styleMap(iconStyles)}">
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
@@ -63,47 +62,47 @@ export class RoutineChip extends LitElement {
         `;
     }
 
-    private updateState() {
+    private _updateState() {
         let icon, iconAnimation, iconColor, name;
 
-        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
+        this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
 
-        if (this.config && this.stateObj) {
-            if (this.running) {
+        if (this._stateObj) {
+            if (this._running) {
                 icon = "hass:rotate-right";
                 iconAnimation = "spin 1.0s linear infinite";
                 iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
             } else {
-                icon = this.config.icon || this.stateObj.attributes.icon || "hass:help-rhombus";
+                icon = this._config!.icon || this._stateObj.attributes.icon || "hass:help-rhombus";
                 iconAnimation = "none";
-                iconColor = this.config.color || "var(--sq-primary-text-rgb)";
+                iconColor = this._config!.color || "var(--sq-primary-text-rgb)";
             }
         } else {
             icon = "hass:alert-rhombus";
             iconAnimation = "none";
             iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
         }
-        name = this.config?.name || "";
+        name = this._config?.name || "";
 
         return { icon, iconAnimation, iconColor, name };
     }
 
-    private runRoutine(e: Event): void {
+    private _runRoutine(e: Event): void {
         e.stopPropagation();
-        if (!this.hass || !this.stateObj) return;
+        if (!this.hass || !this._stateObj) return;
 
-        this.running = true;
+        this._running = true;
 
-        const domain = this.stateObj.entity_id.split(".")[0];
+        const domain = this._stateObj.entity_id.split(".")[0];
         switch (domain) {
             case "script":
-                callService(this.hass, "script", "turn_on", { entity_id: this.entity });
+                callService(this, "script", "turn_on", { entity_id: this._entity });
                 break;
             case "scene":
-                callService(this.hass, "scene", "turn_on", { entity_id: this.entity });
+                callService(this, "scene", "turn_on", { entity_id: this._entity });
                 break;
             case "automation":
-                callService(this.hass, "automation", "trigger", { entity_id: this.entity });
+                callService(this, "automation", "trigger", { entity_id: this._entity });
                 break;
             default:
                 console.error("Unsupported entity domain:", domain);
@@ -111,7 +110,7 @@ export class RoutineChip extends LitElement {
         }
 
         setTimeout(() => {
-            this.running = false;
+            this._running = false;
         }, 2000);
     }
 }

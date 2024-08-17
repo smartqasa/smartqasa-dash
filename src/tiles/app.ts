@@ -22,6 +22,7 @@ window.customCards.push({
 export class AppTile extends LitElement {
     @state() private _config?: Config;
     private _appObj?: any;
+
     static styles: CSSResultGroup = tileBaseStyle;
 
     public setConfig(config: Config): void {

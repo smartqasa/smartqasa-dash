@@ -1,8 +1,7 @@
 import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
-import { HassEntity } from "home-assistant-js-websocket";
-import { HomeAssistant, LovelaceCardConfig } from "../types";
+import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
 import { selectOptionDialog } from "../utils/select-option-dialog";
 import { phaseIcons, modeIcons } from "../const";
 
@@ -24,38 +23,39 @@ window.customCards.push({
 @customElement("smartqasa-select-chip")
 export class SelectChip extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
-    @state() private config?: Config;
-    private entity?: string;
-    private stateObj?: HassEntity;
+    @state() private _config?: Config;
+    private _entity?: string;
+    private _stateObj?: HassEntity;
 
     static styles: CSSResultGroup = [chipBaseStyle];
 
     public setConfig(config: Config): void {
-        this.config = { ...config };
-        this.entity = this.config.entity?.startsWith("input_select.") ? this.config.entity : undefined;
+        this._config = { ...config };
+        this._entity = this._config.entity?.startsWith("input_select.") ? this._config.entity : undefined;
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
+        if (!this._config) return false;
         return !!(
-            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj) ||
-            (changedProps.has("config") && this.config)
+            (changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
+            changedProps.has("config")
         );
     }
 
     protected render(): TemplateResult {
-        if (!this.entity) return html``;
+        if (!this._entity) return html``;
 
         let icon;
 
-        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
+        this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
 
-        const state = this.stateObj?.state || "unknown";
-        if (this.entity === "input_select.location_phase") {
+        const state = this._stateObj?.state || "unknown";
+        if (this._entity === "input_select.location_phase") {
             icon = phaseIcons[state] || phaseIcons.default;
-        } else if (this.entity === "input_select.location_mode") {
+        } else if (this._entity === "input_select.location_mode") {
             icon = modeIcons[state] || modeIcons.default;
         } else {
-            icon = this.config?.icon || this.stateObj?.attributes?.icon || "hass:form-dropdown";
+            icon = this._config?.icon || this._stateObj?.attributes?.icon || "hass:form-dropdown";
         }
 
         const containerStyle = {
@@ -63,7 +63,7 @@ export class SelectChip extends LitElement {
         };
 
         return html`
-            <div class="container" style="${styleMap(containerStyle)}" @click=${this.showOptions}>
+            <div class="container" style="${styleMap(containerStyle)}" @click=${this._showOptions}>
                 <div class="icon">
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
@@ -71,8 +71,8 @@ export class SelectChip extends LitElement {
         `;
     }
 
-    private showOptions(e: Event): void {
+    private _showOptions(e: Event): void {
         e.stopPropagation();
-        selectOptionDialog(this.config, this.stateObj);
+        selectOptionDialog(this._config, this._stateObj);
     }
 }

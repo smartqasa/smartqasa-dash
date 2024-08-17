@@ -1,8 +1,7 @@
 import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
-import { HassEntity } from "home-assistant-js-websocket";
-import { HomeAssistant, LovelaceCardConfig } from "../types";
+import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
 import { dialogTable } from "../tables/dialogs";
 
 import { chipBaseStyle, chipTextStyle } from "../styles/chip";
@@ -23,69 +22,70 @@ window.customCards.push({
 @customElement("smartqasa-dialog-chip")
 export class DialogChip extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
-    @state() private config?: Config;
-    private dialog?: string;
-    private dialogObj?: any;
-    private entity?: string;
-    private icon?: string;
-    private label?: string;
-    private stateObj?: HassEntity;
+    @state() private _config?: Config;
+    private _dialog?: string;
+    private _dialogObj?: any;
+    private _entity?: string;
+    private _icon?: string;
+    private _label?: string;
+    private _stateObj?: HassEntity;
 
     static styles: CSSResultGroup = [chipBaseStyle, chipTextStyle];
 
     public setConfig(config: Config): void {
-        this.config = { ...config };
-        this.dialog = this.config.dialog;
-        this.dialogObj = this.dialog ? dialogTable[this.dialog] : undefined;
-        this.entity = this.dialogObj.entity;
-        this.icon = this.dialogObj.icon;
-        this.label = this.config.label || "";
+        this._config = { ...config };
+        this._dialog = this._config.dialog;
+        this._dialogObj = this._dialog ? dialogTable[this._dialog] : undefined;
+        this._entity = this._dialogObj.entity;
+        this._icon = this._dialogObj.icon;
+        this._label = this._config.label || "";
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
+        if (!this._config) return false;
         return !!(
-            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj) ||
-            (changedProps.has("config") && this.config)
+            (changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
+            changedProps.has("config")
         );
     }
 
     protected render(): TemplateResult {
-        if (!this.dialogObj) return html``;
+        if (!this._dialogObj) return html``;
 
-        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
+        this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
 
-        const state = this.stateObj?.state || "unknown";
+        const state = this._stateObj?.state || "unknown";
         if (
-            (this.dialog === "garages" && state === "closed") ||
-            (this.dialog === "locks" && state === "locked") ||
-            (this.dialog === "sensors_doors" && state === "off") ||
-            (this.dialog === "sensors_windows" && state === "off")
+            (this._dialog === "garages" && state === "closed") ||
+            (this._dialog === "locks" && state === "locked") ||
+            (this._dialog === "sensors_doors" && state === "off") ||
+            (this._dialog === "sensors_windows" && state === "off")
         )
             return html``;
 
         const containerStyle = {
             "margin-left": "0.7rem",
-            "grid-template-areas": this.label ? '"i t"' : '"i"',
+            "grid-template-areas": this._label ? '"i t"' : '"i"',
         };
 
         return html`
-            <div class="container" style="${styleMap(containerStyle)}" @click=${this.showDialog}>
+            <div class="container" style="${styleMap(containerStyle)}" @click=${this._showDialog}>
                 <div class="icon" style="color: rgb(var(--sq-rgb-orange));">
-                    <ha-icon .icon=${this.icon}></ha-icon>
+                    <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
-                ${this.label ? html`<div class="text">${this.label}</div>` : null}
+                ${this._label ? html`<div class="text">${this._label}</div>` : null}
             </div>
         `;
     }
 
-    private showDialog(e: Event): void {
+    private _showDialog(e: Event): void {
         e.stopPropagation();
         if (!window.browser_mod) {
             console.error("browser_mod is not available!");
             return;
         }
 
-        const dialogConfig = { ...this.dialogObj.data };
+        const dialogConfig = { ...this._dialogObj.data };
         window.browser_mod.service("popup", dialogConfig);
     }
 }

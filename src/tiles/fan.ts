@@ -2,7 +2,7 @@ import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult } from
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
-import { callService } from "../utils/call-service";
+import { callService } from "../utils/call-service-new";
 import { moreInfoDialog } from "../utils/more-info-dialog";
 import { entityListDialog } from "../utils/entity-list-dialog";
 
@@ -100,7 +100,7 @@ export class FanTile extends LitElement {
     private _toggleEntity(e: Event): void {
         e.stopPropagation();
         if (!this._stateObj) return;
-        callService(this.hass!, "fan", "toggle", { entity_id: this._entity });
+        callService(this, "fan", "toggle", { entity_id: this._entity });
     }
 
     private _showMoreInfo(e: Event): void {

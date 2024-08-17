@@ -1,8 +1,7 @@
 import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
-import { HassEntity } from "home-assistant-js-websocket";
-import { HomeAssistant, LovelaceCardConfig } from "../types";
+import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
 import { loadYamlAsJson } from "../utils/load-yaml-as-json";
 
 import { chipBaseStyle, chipTextStyle } from "../styles/chip";
@@ -54,9 +53,10 @@ export class CustomChip extends LitElement {
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
+        if (!this._config) return false;
         return !!(
             (changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
-            (changedProps.has("config") && this._config)
+            changedProps.has("config")
         );
     }
 
@@ -96,7 +96,7 @@ export class CustomChip extends LitElement {
         };
 
         return html`
-            <div class="container" style="${styleMap(containerStyle)}" @click=${this.showDialog}>
+            <div class="container" style="${styleMap(containerStyle)}" @click=${this._showDialog}>
                 <div class="icon" style="${styleMap(iconStyles)}">
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
@@ -105,7 +105,7 @@ export class CustomChip extends LitElement {
         `;
     }
 
-    private showDialog(e: Event): void {
+    private _showDialog(e: Event): void {
         e.stopPropagation();
         if (!this._dialogObj) return;
         const dialogConfig = { ...this._dialogObj.data };

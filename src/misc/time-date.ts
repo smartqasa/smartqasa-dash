@@ -10,8 +10,8 @@ export class TimeDate extends LitElement {
 
     @property({ attribute: false }) public hass?: HomeAssistant;
 
-    @state() private time: string = "Loading...";
-    @state() private date: string = "Loading...";
+    @state() private _time: string = "Loading...";
+    @state() private _date: string = "Loading...";
 
     static get styles(): CSSResultGroup {
         return css`
@@ -48,16 +48,16 @@ export class TimeDate extends LitElement {
     protected updated(changedProps: PropertyValues) {
         super.updated(changedProps);
         if (changedProps.has("hass") && this.hass) {
-            this.time = this.hass.states["sensor.current_time"]?.state || "Loading...";
-            this.date = this.hass.states["sensor.current_date"]?.state || "Loading...";
+            this._time = this.hass.states["sensor.current_time"]?.state || "Loading...";
+            this._date = this.hass.states["sensor.current_date"]?.state || "Loading...";
         }
     }
 
     protected render(): TemplateResult {
         return html`
             <div class="container" @click="${this.handleTap}">
-                <div class="time">${this.time}</div>
-                <div class="date">${this.date}</div>
+                <div class="time">${this._time}</div>
+                <div class="date">${this._date}</div>
             </div>
         `;
     }

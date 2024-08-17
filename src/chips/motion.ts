@@ -1,9 +1,8 @@
-import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult } from "lit";
+import { CSSResultGroup, html, LitElement, nothing, PropertyValues, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
-import { HassEntity } from "home-assistant-js-websocket";
-import { HomeAssistant, LovelaceCardConfig } from "../types";
-import { callService } from "../utils/call-service";
+import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
+import { callService } from "../utils/call-service-new";
 
 import { chipBaseStyle, chipTextStyle } from "../styles/chip";
 
@@ -22,28 +21,29 @@ window.customCards.push({
 @customElement("smartqasa-motion-chip")
 export class MotionChip extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
-    @state() private config?: Config;
-    private entity?: string;
-    private stateObj?: HassEntity;
+    @state() private _config?: Config;
+    private _entity?: string;
+    private _stateObj?: HassEntity;
 
     static styles: CSSResultGroup = [chipBaseStyle, chipTextStyle];
 
     public setConfig(config: Config): void {
-        this.config = { ...config };
-        this.entity = this.config.entity?.startsWith("automation.") ? this.config.entity : undefined;
+        this._config = { ...config };
+        this._entity = this._config.entity?.startsWith("automation.") ? this._config.entity : undefined;
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
+        if (!this._config) return false;
         return !!(
-            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj) ||
-            (changedProps.has("config") && this.config)
+            (changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
+            changedProps.has("config")
         );
     }
 
-    protected render(): TemplateResult {
-        if (!this.entity) return html``;
+    protected render(): TemplateResult | typeof nothing {
+        if (!this._entity) return nothing;
 
-        const { icon, iconColor, name } = this.updateState();
+        const { icon, iconColor, name } = this._updateState();
 
         const containerStyle = {
             "margin-right": "0.7rem",
@@ -55,7 +55,7 @@ export class MotionChip extends LitElement {
         };
 
         return html`
-            <div class="container" style="${styleMap(containerStyle)}" @click=${this.toggleEntity}>
+            <div class="container" style="${styleMap(containerStyle)}" @click=${this._toggleEntity}>
                 <div class="icon" style="${styleMap(iconStyles)}">
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
@@ -64,13 +64,13 @@ export class MotionChip extends LitElement {
         `;
     }
 
-    private updateState() {
+    private _updateState() {
         let icon, iconColor, name;
 
-        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
+        this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
 
-        if (this.config && this.stateObj) {
-            const state = this.stateObj.state || undefined;
+        if (this._config && this._stateObj) {
+            const state = this._stateObj.state || undefined;
             switch (state) {
                 case "on":
                     icon = "hass:motion-sensor";
@@ -86,17 +86,16 @@ export class MotionChip extends LitElement {
                     break;
             }
         } else {
-            icon = this.config?.icon || "hass:lightbulb-alert";
+            icon = this._config?.icon || "hass:lightbulb-alert";
             iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
         }
-        name = this.config?.name || "";
+        name = this._config?.name || "";
 
         return { icon, iconColor, name };
     }
 
-    private toggleEntity(e: Event): void {
+    private _toggleEntity(e: Event): void {
         e.stopPropagation();
-        if (!this.hass || !this.entity) return;
-        callService(this.hass, "automation", "toggle", { entity_id: this.entity });
+        callService(this, "automation", "toggle", { entity_id: this._entity });
     }
 }
