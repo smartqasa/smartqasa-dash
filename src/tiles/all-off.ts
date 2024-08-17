@@ -2,7 +2,7 @@ import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult } from
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HassArea, HomeAssistant, LovelaceCardConfig } from "../types";
-import { callService } from "../utils/call-service";
+import { callService } from "../utils/call-service-new";
 
 import { tileBaseStyle, tileIconSpinStyle } from "../styles/tile";
 
@@ -43,7 +43,7 @@ export class AllOffTile extends LitElement {
         return !!(
             changedProps.has("running") ||
             (changedProps.has("hass") && this._area && this.hass?.areas[this._area] !== this._areaObj) ||
-            changedProps.has("config")
+            changedProps.has("_config")
         );
     }
 

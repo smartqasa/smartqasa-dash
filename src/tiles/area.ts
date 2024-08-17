@@ -37,7 +37,7 @@ export class AreaTile extends LitElement {
         return !!(
             changedProps.has("running") ||
             (changedProps.has("hass") && this._area && this.hass?.areas[this._area] !== this._areaObj) ||
-            (changedProps.has("config") && this._config)
+            (changedProps.has("_config") && this._config)
         );
     }
 

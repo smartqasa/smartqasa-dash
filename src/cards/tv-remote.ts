@@ -1,7 +1,7 @@
 import { css, CSSResult, html, LitElement, PropertyValues, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
-import { callService } from "../utils/call-service";
+import { callService } from "../utils/call-service-new";
 import channelTable from "../tables/channels";
 
 interface Config extends LovelaceCardConfig {
@@ -143,12 +143,12 @@ export class TVRemoteCard extends LitElement {
         if (!this._config) return false;
         return !!(
             (changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
-            changedProps.has("config")
+            changedProps.has("_config")
         );
     }
 
     protected updated(changedProps: PropertyValues): void {
-        if (changedProps.has("hass") || changedProps.has("config")) {
+        if (changedProps.has("hass") || changedProps.has("_config")) {
             this.initializeEntities();
         }
     }

@@ -37,7 +37,7 @@ export class SelectTile extends LitElement {
     protected shouldUpdate(changedProps: PropertyValues): boolean {
         return !!(
             (changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
-            (changedProps.has("config") && this._config)
+            (changedProps.has("_config") && this._config)
         );
     }
 

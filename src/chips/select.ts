@@ -38,7 +38,7 @@ export class SelectChip extends LitElement {
         if (!this._config) return false;
         return !!(
             (changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
-            changedProps.has("config")
+            changedProps.has("_config")
         );
     }
 

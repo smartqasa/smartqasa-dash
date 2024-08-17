@@ -153,8 +153,10 @@ let PanelCard = class PanelCard extends h {
         this._area = this._config.area;
     }
     shouldUpdate(changedProps) {
+        if (!this._config)
+            return false;
         return !!((changedProps.has("hass") && this._area && this.hass.areas[this._area] !== this._areaObj) ||
-            (changedProps.has("config") && this._config));
+            changedProps.has("_config"));
     }
     render() {
         this.hass.user?.is_admin;
@@ -660,10 +662,10 @@ let TVRemoteCard = class TVRemoteCard extends h {
         if (!this._config)
             return false;
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
-            changedProps.has("config"));
+            changedProps.has("_config"));
     }
     updated(changedProps) {
-        if (changedProps.has("hass") || changedProps.has("config")) {
+        if (changedProps.has("hass") || changedProps.has("_config")) {
             this.initializeEntities();
         }
     }
@@ -4857,7 +4859,7 @@ let CustomChip = class CustomChip extends h {
         if (!this._config)
             return false;
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
-            changedProps.has("config"));
+            changedProps.has("_config"));
     }
     render() {
         if (!this._dialogObj)
@@ -5398,7 +5400,7 @@ let DialogChip = class DialogChip extends h {
         if (!this._config)
             return false;
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
-            changedProps.has("config"));
+            changedProps.has("_config"));
     }
     render() {
         if (!this._dialogObj)
@@ -5459,7 +5461,7 @@ let MotionChip = class MotionChip extends h {
         if (!this._config)
             return false;
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
-            changedProps.has("config"));
+            changedProps.has("_config"));
     }
     render() {
         if (!this._entity)
@@ -5618,7 +5620,7 @@ let RoutineChip = class RoutineChip extends h {
     }
     shouldUpdate(changedProps) {
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
-            (changedProps.has("config") && this._config));
+            (changedProps.has("_config") && this._config));
     }
     render() {
         if (!this._entity)
@@ -5747,7 +5749,7 @@ let SelectChip = class SelectChip extends h {
         if (!this._config)
             return false;
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
-            changedProps.has("config"));
+            changedProps.has("_config"));
     }
     render() {
         if (!this._entity)
@@ -5827,7 +5829,7 @@ let ThermostatChip$1 = class ThermostatChip extends h {
         if (!this._config)
             return false;
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
-            changedProps.has("config"));
+            changedProps.has("_config"));
     }
     render() {
         if (!this._entity)
@@ -5893,7 +5895,7 @@ let ThermostatChip = class ThermostatChip extends h {
         if (!this._config)
             return false;
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
-            changedProps.has("config"));
+            changedProps.has("_config"));
     }
     render() {
         let iconColor, temperature;
@@ -6859,7 +6861,7 @@ let AllOffTile = class AllOffTile extends h {
             return false;
         return !!(changedProps.has("running") ||
             (changedProps.has("hass") && this._area && this.hass?.areas[this._area] !== this._areaObj) ||
-            changedProps.has("config"));
+            changedProps.has("_config"));
     }
     render() {
         const { icon, iconAnimation, iconColor, name } = this._updateState();
@@ -7404,7 +7406,7 @@ let AppTile = class AppTile extends h {
             if (this._config?.icon) {
                 iconStyle =
                     "color: rgb(var(--sq-inactive-rgb)); background-color: rgba(var(--sq-inactive-rgb), var(--sq-icon-opacity, 0.2));";
-                iconTemplate = ke `<ha-icon .icon=${this._config.icon}></ha-icon>`;
+                iconTemplate = ke `<ha-icon icon=${this._config.icon}></ha-icon>`;
             }
             else if (this._appObj?.app_icon) {
                 iconStyle = "height: 3.8rem; width: 3.8rem; padding: 0;";
@@ -7413,13 +7415,13 @@ let AppTile = class AppTile extends h {
             else {
                 iconStyle =
                     "color: rgb(var(--sq-unavailable-rgb)); background-color: rgba(var(--sq-unavailable-rgb), var(--sq-icon-opacity, 0.2));";
-                iconTemplate = ke `<ha-icon .icon="hass:help-rhombus"></ha-icon>`;
+                iconTemplate = ke `<ha-icon icon="hass:help-rhombus"></ha-icon>`;
             }
         }
         else {
             iconStyle =
                 "color: rgb(var(--sq-unavailable-rgb)); background-color: rgba(var(--sq-unavailable-rgb), var(--sq-icon-opacity, 0.2));";
-            iconTemplate = ke `<ha-icon .icon="hass:alert-rhombus"></ha-icon>`;
+            iconTemplate = ke `<ha-icon icon="hass:alert-rhombus"></ha-icon>`;
         }
         name = this._config?.name || this._appObj?.name || this._config?.app;
         return ke `
@@ -7473,7 +7475,7 @@ let AreaTile = class AreaTile extends h {
     shouldUpdate(changedProps) {
         return !!(changedProps.has("running") ||
             (changedProps.has("hass") && this._area && this.hass?.areas[this._area] !== this._areaObj) ||
-            (changedProps.has("config") && this._config));
+            (changedProps.has("_config") && this._config));
     }
     render() {
         const { icon, iconAnimation, iconColor, name } = this.updateState();
@@ -8082,9 +8084,9 @@ let LockTile = class LockTile extends h {
     shouldUpdate(changedProps) {
         if (!this._config)
             return false;
-        return !!(changedProps.has("running") ||
+        return !!(changedProps.has("_running") ||
             (changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
-            changedProps.has("config"));
+            changedProps.has("_config"));
     }
     render() {
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
@@ -8204,9 +8206,9 @@ let OptionTile = class OptionTile extends h {
         this._entity = this._config.entity?.startsWith("input_select.") ? this._config.entity : undefined;
     }
     shouldUpdate(changedProps) {
-        return !!(changedProps.has("running") ||
+        return !!(changedProps.has("_running") ||
             (changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
-            (changedProps.has("config") && this._config));
+            (changedProps.has("_config") && this._config));
     }
     render() {
         const { icon, iconAnimation, iconColor, name } = this.updateState();
@@ -8442,7 +8444,7 @@ let RokuTile = class RokuTile extends h {
         if (!this._config)
             return false;
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
-            changedProps.has("config"));
+            changedProps.has("_config"));
     }
     render() {
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this._updateState();
@@ -8562,9 +8564,9 @@ let RoutineTile = class RoutineTile extends h {
     shouldUpdate(changedProps) {
         if (!this._config)
             return false;
-        return !!(changedProps.has("running") ||
+        return !!(changedProps.has("_running") ||
             (changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
-            changedProps.has("config"));
+            changedProps.has("_config"));
     }
     render() {
         const { icon, iconAnimation, iconColor, name } = this.updateState();
@@ -8658,7 +8660,7 @@ let SelectTile = class SelectTile extends h {
     }
     shouldUpdate(changedProps) {
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
-            (changedProps.has("config") && this._config));
+            (changedProps.has("_config") && this._config));
     }
     render() {
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this._updateState();
@@ -8728,7 +8730,7 @@ let SensorTile = class SensorTile extends h {
         if (!this._config)
             return false;
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
-            changedProps.has("config"));
+            changedProps.has("_config"));
     }
     render() {
         const { iconTemplate, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
@@ -8760,7 +8762,7 @@ let SensorTile = class SensorTile extends h {
             stateFmtd = this.hass.formatEntityState(this._stateObj);
         }
         else {
-            iconTemplate = ke `<ha-icon .icon="hass:leak"></ha-icon>`;
+            iconTemplate = ke `<ha-icon icon="hass:leak"></ha-icon>`;
             iconAnimation = "none";
             iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
             name = this._config.name || "Unknown";
@@ -8967,8 +8969,10 @@ let PoolLightSequencerTile = class PoolLightSequencerTile extends h {
             : undefined;
     }
     shouldUpdate(changedProps) {
-        return !!((changedProps.has("config") && this._config) ||
-            (changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj));
+        if (!this._config)
+            return false;
+        return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
+            changedProps.has("_config"));
     }
     render() {
         const { icon, iconAnimation, iconColor, name } = this.updateState();
@@ -9053,7 +9057,7 @@ let ShadeTile = class ShadeTile extends h {
         if (!this._config)
             return false;
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
-            changedProps.has("config"));
+            changedProps.has("_config"));
     }
     render() {
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this._updateState();
@@ -9200,7 +9204,7 @@ let SwitchTile = class SwitchTile extends h {
         if (!this._config)
             return false;
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
-            changedProps.has("config"));
+            changedProps.has("_config"));
     }
     render() {
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this._updateState();
@@ -9320,7 +9324,7 @@ let ThermostatTile = class ThermostatTile extends h {
         if (!this._config)
             return false;
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
-            changedProps.has("config"));
+            changedProps.has("_config"));
     }
     render() {
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this._updateState();

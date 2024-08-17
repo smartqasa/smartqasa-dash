@@ -1,7 +1,6 @@
 import { CSSResultGroup, html, LitElement, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { LovelaceCardConfig } from "../types";
-
 import { tileBaseStyle } from "../styles/tile";
 import appTable from "../tables/apps";
 
@@ -37,19 +36,19 @@ export class AppTile extends LitElement {
             if (this._config?.icon) {
                 iconStyle =
                     "color: rgb(var(--sq-inactive-rgb)); background-color: rgba(var(--sq-inactive-rgb), var(--sq-icon-opacity, 0.2));";
-                iconTemplate = html`<ha-icon .icon=${this._config.icon}></ha-icon>`;
+                iconTemplate = html`<ha-icon icon=${this._config.icon}></ha-icon>`;
             } else if (this._appObj?.app_icon) {
                 iconStyle = "height: 3.8rem; width: 3.8rem; padding: 0;";
                 iconTemplate = html`<img src="${this._appObj.app_icon}" alt="App Icon" style="border-radius: 50%;" />`;
             } else {
                 iconStyle =
                     "color: rgb(var(--sq-unavailable-rgb)); background-color: rgba(var(--sq-unavailable-rgb), var(--sq-icon-opacity, 0.2));";
-                iconTemplate = html`<ha-icon .icon="hass:help-rhombus"></ha-icon>`;
+                iconTemplate = html`<ha-icon icon="hass:help-rhombus"></ha-icon>`;
             }
         } else {
             iconStyle =
                 "color: rgb(var(--sq-unavailable-rgb)); background-color: rgba(var(--sq-unavailable-rgb), var(--sq-icon-opacity, 0.2));";
-            iconTemplate = html`<ha-icon .icon="hass:alert-rhombus"></ha-icon>`;
+            iconTemplate = html`<ha-icon icon="hass:alert-rhombus"></ha-icon>`;
         }
         name = this._config?.name || this._appObj?.name || this._config?.app;
 

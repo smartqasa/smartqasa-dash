@@ -2,7 +2,7 @@ import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult } from
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
-import { callService } from "../utils/call-service";
+import { callService } from "../utils/call-service-new";
 import { sequenceTable } from "../tables/pool-light-sequences";
 
 import { tileBaseStyle, tileIconSpinStyle } from "../styles/tile";
@@ -32,9 +32,10 @@ export class PoolLightSequencerTile extends LitElement {
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
+        if (!this._config) return false;
         return !!(
-            (changedProps.has("config") && this._config) ||
-            (changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj)
+            (changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
+            changedProps.has("_config")
         );
     }
 

@@ -39,7 +39,7 @@ export class SensorTile extends LitElement {
         if (!this._config) return false;
         return !!(
             (changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
-            changedProps.has("config")
+            changedProps.has("_config")
         );
     }
 
@@ -75,7 +75,7 @@ export class SensorTile extends LitElement {
             name = this._config!.name || this._stateObj.attributes.friendly_name || this._entity;
             stateFmtd = this.hass!.formatEntityState(this._stateObj);
         } else {
-            iconTemplate = html`<ha-icon .icon="hass:leak"></ha-icon>`;
+            iconTemplate = html`<ha-icon icon="hass:leak"></ha-icon>`;
             iconAnimation = "none";
             iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
             name = this._config!.name || "Unknown";

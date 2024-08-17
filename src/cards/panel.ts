@@ -49,9 +49,10 @@ export class PanelCard extends LitElement {
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
+        if (!this._config) return false;
         return !!(
             (changedProps.has("hass") && this._area && this.hass.areas[this._area] !== this._areaObj) ||
-            (changedProps.has("config") && this._config)
+            changedProps.has("_config")
         );
     }
 
