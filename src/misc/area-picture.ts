@@ -49,7 +49,7 @@ export class AreaPicture extends LitElement {
     protected shouldUpdate(changedProps: PropertyValues): boolean {
         return !!(
             (changedProps.has("hass") && this._area && this.hass?.areas[this._area] !== this._areaObj) ||
-            (changedProps.has("config") && this._config)
+            (changedProps.has("_config") && this._config)
         );
     }
 

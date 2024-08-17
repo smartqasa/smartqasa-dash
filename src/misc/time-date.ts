@@ -4,12 +4,7 @@ import { HomeAssistant } from "../types";
 
 @customElement("smartqasa-time-date")
 export class TimeDate extends LitElement {
-    getCardSize(): number {
-        return 1;
-    }
-
     @property({ attribute: false }) public hass?: HomeAssistant;
-
     @state() private _time: string = "Loading...";
     @state() private _date: string = "Loading...";
 
@@ -55,14 +50,14 @@ export class TimeDate extends LitElement {
 
     protected render(): TemplateResult {
         return html`
-            <div class="container" @click="${this.handleTap}">
+            <div class="container" @click="${this._handleTap}">
                 <div class="time">${this._time}</div>
                 <div class="date">${this._date}</div>
             </div>
         `;
     }
 
-    private handleTap(): void {
+    private _handleTap(): void {
         if (typeof window.fully !== "undefined" && window.fully.startApplication) {
             window.fully.startApplication("com.google.android.deskclock");
         } else {

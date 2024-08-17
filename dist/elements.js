@@ -6193,7 +6193,7 @@ let AreaPicture = class AreaPicture extends h {
     }
     shouldUpdate(changedProps) {
         return !!((changedProps.has("hass") && this._area && this.hass?.areas[this._area] !== this._areaObj) ||
-            (changedProps.has("config") && this._config));
+            (changedProps.has("_config") && this._config));
     }
     render() {
         const height = deviceType === "phone" ? "15vh" : "20vh";
@@ -6643,9 +6643,6 @@ let TimeDate = class TimeDate extends h {
         this._time = "Loading...";
         this._date = "Loading...";
     }
-    getCardSize() {
-        return 1;
-    }
     static get styles() {
         return i$3 `
             :host {
@@ -6685,13 +6682,13 @@ let TimeDate = class TimeDate extends h {
     }
     render() {
         return ke `
-            <div class="container" @click="${this.handleTap}">
+            <div class="container" @click="${this._handleTap}">
                 <div class="time">${this._time}</div>
                 <div class="date">${this._date}</div>
             </div>
         `;
     }
-    handleTap() {
+    _handleTap() {
         if (typeof window.fully !== "undefined" && window.fully.startApplication) {
             window.fully.startApplication("com.google.android.deskclock");
         }
