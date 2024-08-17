@@ -2,7 +2,7 @@ import { CSSResultGroup, html, LitElement, nothing, PropertyValues, TemplateResu
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
-import { callService } from "../utils/call-service-new";
+import { callService } from "../utils/call-service";
 
 import { chipBaseStyle, chipTextStyle } from "../styles/chip";
 
