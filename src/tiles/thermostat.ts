@@ -1,9 +1,8 @@
 import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
-import { HassEntity } from "home-assistant-js-websocket";
-import { HomeAssistant, LovelaceCardConfig } from "../types";
-import { callService } from "../utils/call-service";
+import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
+import { callService } from "../utils/call-service-new";
 import { moreInfoDialog } from "../utils/more-info-dialog";
 import { thermostatIcons, thermostatColors } from "../const";
 
@@ -23,39 +22,36 @@ window.customCards.push({
 
 @customElement("smartqasa-thermostat-tile")
 export class ThermostatTile extends LitElement {
-    getCardSize(): number {
-        return 1;
-    }
-
     @property({ attribute: false }) public hass?: HomeAssistant;
-    @state() private config?: Config;
-    private entity?: string;
-    private stateObj?: HassEntity;
+    @state() private _config?: Config;
+    private _entity?: string;
+    private _stateObj?: HassEntity;
 
     static styles: CSSResultGroup = [tileBaseStyle, tileStateStyle];
 
     public setConfig(config: Config): void {
-        this.config = { ...config };
-        this.entity = this.config.entity?.startsWith("climate.") ? this.config.entity : undefined;
+        this._config = { ...config };
+        this._entity = this._config.entity?.startsWith("climate.") ? this._config.entity : undefined;
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
+        if (!this._config) return false;
         return !!(
-            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj) ||
-            (changedProps.has("config") && this.config)
+            (changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
+            changedProps.has("config")
         );
     }
 
     protected render(): TemplateResult {
-        const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
+        const { icon, iconAnimation, iconColor, name, stateFmtd } = this._updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
             backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
             animation: iconAnimation,
         };
         return html`
-            <div class="container" @click=${this.showMoreInfo}>
-                <div class="icon" @click=${this.toggleEntity} style="${styleMap(iconStyles)}">
+            <div class="container" @click=${this._showMoreInfo}>
+                <div class="icon" @click=${this._toggleEntity} style="${styleMap(iconStyles)}">
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
                 <div class="name">${name}</div>
@@ -64,50 +60,49 @@ export class ThermostatTile extends LitElement {
         `;
     }
 
-    private updateState() {
+    private _updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
 
-        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
+        this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
 
-        if (this.config && this.hass && this.stateObj) {
-            const state = this.stateObj.state || "unknown";
+        if (this._stateObj) {
+            const state = this._stateObj.state || "unknown";
             icon = thermostatIcons[state] || thermostatIcons.default;
             iconAnimation = "none";
-            const hvacAction = this.stateObj.attributes.hvac_action || "idle";
+            const hvacAction = this._stateObj.attributes.hvac_action || "idle";
             if (state === "off") {
                 iconColor = thermostatColors.off;
             } else {
                 iconColor = thermostatColors[hvacAction] || thermostatColors.idle;
             }
-            name = this.config.name || this.stateObj.attributes.friendly_name || this.entity;
-            stateFmtd = this.hass.formatEntityState(this.stateObj);
+            name = this._config!.name || this._stateObj.attributes.friendly_name || this._entity;
+            stateFmtd = this.hass!.formatEntityState(this._stateObj);
             if (state !== "off") {
-                if (this.stateObj.attributes.current_temperature) {
-                    stateFmtd += ` - ${this.stateObj.attributes.current_temperature}°`;
+                if (this._stateObj.attributes.current_temperature) {
+                    stateFmtd += ` - ${this._stateObj.attributes.current_temperature}°`;
                 }
-                if (this.stateObj.attributes.current_humidity) {
-                    stateFmtd += ` / ${this.stateObj.attributes.current_humidity}%`;
+                if (this._stateObj.attributes.current_humidity) {
+                    stateFmtd += ` / ${this._stateObj.attributes.current_humidity}%`;
                 }
             }
         } else {
-            icon = this.config?.icon || "hass:thermostat";
+            icon = this._config!.icon || "hass:thermostat";
             iconAnimation = "none";
             iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            name = this.config?.name || "Unknown";
+            name = this._config?.name || "Unknown";
             stateFmtd = "Unknown";
         }
 
         return { icon, iconAnimation, iconColor, name, stateFmtd };
     }
 
-    private toggleEntity(e: Event): void {
+    private _toggleEntity(e: Event): void {
         e.stopPropagation();
-        if (!this.hass || !this.entity) return;
-        callService(this.hass, "climate", "toggle", { entity_id: this.entity });
+        callService(this, "climate", "toggle", { entity_id: this._entity });
     }
 
-    private showMoreInfo(e: Event): void {
+    private _showMoreInfo(e: Event): void {
         e.stopPropagation();
-        moreInfoDialog(this.config, this.stateObj);
+        moreInfoDialog(this._config, this._stateObj);
     }
 }

@@ -1,9 +1,8 @@
 import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
-import { HassEntity } from "home-assistant-js-websocket";
-import { HomeAssistant, LovelaceCardConfig } from "../types";
-import { callService } from "../utils/call-service";
+import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
+import { callService } from "../utils/call-service-new";
 import { listDialogConfig } from "../utils/list-dialog-config";
 
 import { tileBaseStyle, tileStateStyle } from "../styles/tile";
@@ -23,39 +22,36 @@ window.customCards.push({
 
 @customElement("smartqasa-roku-tile")
 export class RokuTile extends LitElement {
-    getCardSize(): number {
-        return 1;
-    }
-
     @property({ attribute: false }) public hass?: HomeAssistant;
-    @state() private config?: Config;
-    private entity?: string;
-    private stateObj?: HassEntity;
+    @state() private _config?: Config;
+    private _entity?: string;
+    private _stateObj?: HassEntity;
 
     static styles: CSSResultGroup = [tileBaseStyle, tileStateStyle];
 
     public setConfig(config: Config): void {
-        this.config = { ...config };
-        this.entity = this.config.entity?.startsWith("media_player.") ? this.config.entity : undefined;
+        this._config = { ...config };
+        this._entity = this._config.entity.startsWith("media_player.") ? this._config.entity : undefined;
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
+        if (!this._config) return false;
         return !!(
-            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj) ||
-            (changedProps.has("config") && this.config)
+            (changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
+            changedProps.has("config")
         );
     }
 
     protected render(): TemplateResult {
-        const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
+        const { icon, iconAnimation, iconColor, name, stateFmtd } = this._updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
             backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
             animation: iconAnimation,
         };
         return html`
-            <div class="container" @click=${this.showMoreInfo}>
-                <div class="icon" @click=${this.toggleEntity} style="${styleMap(iconStyles)}">
+            <div class="container" @click=${this._showMoreInfo}>
+                <div class="icon" @click=${this._toggleEntity} style="${styleMap(iconStyles)}">
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
                 <div class="name">${name}</div>
@@ -64,15 +60,15 @@ export class RokuTile extends LitElement {
         `;
     }
 
-    private updateState() {
+    private _updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
 
-        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
+        this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
 
-        if (this.config && this.hass && this.stateObj) {
-            icon = this.config?.icon || this.stateObj.attributes.icon || "hass:audio-video";
+        if (this._stateObj) {
+            icon = this._config?.icon || this._stateObj.attributes.icon || "hass:audio-video";
             iconAnimation = "none";
-            const state = this.stateObj.state || "unknown";
+            const state = this._stateObj.state || "unknown";
             switch (state) {
                 case "idle":
                     iconColor = "var(--sq-media_player-idle-rgb)";
@@ -93,48 +89,47 @@ export class RokuTile extends LitElement {
                     iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
                     break;
             }
-            name = this.config.name || this.stateObj.attributes.friendly_name || this.entity;
-            stateFmtd = `${this.hass.formatEntityState(this.stateObj)}${
-                this.stateObj.attributes?.source ? ` - ${this.stateObj.attributes.source}` : ""
+            name = this._config!.name || this._stateObj.attributes.friendly_name || this._entity;
+            stateFmtd = `${this.hass!.formatEntityState(this._stateObj)}${
+                this._stateObj.attributes?.source ? ` - ${this._stateObj.attributes.source}` : ""
             }`;
         } else {
-            icon = this.config?.icon || "hass:audio-video-off";
+            icon = this._config!.icon || "hass:audio-video-off";
             iconAnimation = "none";
             iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            name = this.config?.name || "Unknown";
+            name = this._config!.name || "Unknown";
             stateFmtd = "Unknown";
         }
 
         return { icon, iconAnimation, iconColor, name, stateFmtd };
     }
 
-    private toggleEntity(e: Event): void {
+    private _toggleEntity(e: Event): void {
         e.stopPropagation();
-        if (!this.hass || !this.entity) return;
-        callService(this.hass, "media_player", "toggle", { entity_id: this.entity });
+        callService(this, "media_player", "toggle", { entity_id: this._entity });
     }
 
-    private showMoreInfo(e: Event): void {
+    private _showMoreInfo(e: Event): void {
         e.stopPropagation();
-        if (!this.config || !this.stateObj) return;
+        if (!this._config || !this._stateObj) return;
 
         const dialogConfig = {
-            title: this.stateObj.attributes?.friendly_name || this.entity || "Unknown",
+            title: this._stateObj.attributes?.friendly_name || this._entity || "Unknown",
             timeout: 60000,
             content: {
                 type: "custom:roku-card",
-                entity: this.entity,
+                entity: this._entity,
                 tv: true,
             },
-            ...(this.config.dialog_title && {
+            ...(this._config.dialog_title && {
                 dismiss_action: {
                     service: "browser_mod.popup",
                     data: {
                         ...listDialogConfig(
-                            this.config.dialog_title,
-                            this.config.filter_type,
-                            this.config.filter_value,
-                            this.config.tile_type
+                            this._config.dialog_title,
+                            this._config.filter_type,
+                            this._config.filter_value,
+                            this._config.tile_type
                         ),
                     },
                 },

@@ -20,24 +20,20 @@ window.customCards.push({
 
 @customElement("smartqasa-theme-tile")
 export class ThemeTile extends LitElement {
-    getCardSize(): number {
-        return 1;
-    }
-
-    @state() private config?: Config;
+    @state() private _config?: Config;
 
     static styles: CSSResultGroup = [tileBaseStyle, tileIconSpinStyle];
 
     public setConfig(config: Config): void {
-        this.config = { ...config };
+        this._config = { ...config };
     }
 
     protected render(): TemplateResult {
-        if (!this.config) return html``;
+        if (!this._config) return html``;
 
-        const icon = this.config.icon || "hass:compare";
-        const iconColor = this.config.mode ? "var(--sq-inactive-rgb)" : "var(--sq-unavailable-rgb, 255, 0, 255)";
-        const name = this.config.name || this.config.mode || "Unknown";
+        const icon = this._config.icon || "hass:compare";
+        const iconColor = this._config.mode ? "var(--sq-inactive-rgb)" : "var(--sq-unavailable-rgb, 255, 0, 255)";
+        const name = this._config.name || this._config.mode || "Unknown";
 
         const iconStyles = {
             color: `rgb(${iconColor})`,
@@ -56,9 +52,7 @@ export class ThemeTile extends LitElement {
 
     private selectMode(e: Event): void {
         e.stopPropagation();
-        if (!this.config) return;
-
-        window.browser_mod?.service("set_theme", { dark: this.config.mode });
+        window.browser_mod?.service("set_theme", { dark: this._config!.mode });
         window.browser_mod?.service("close_popup", {});
     }
 }

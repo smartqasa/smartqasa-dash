@@ -1,10 +1,5 @@
 import { HomeAssistant } from "../types";
 
-interface ServiceContext {
-    hass: HomeAssistant;
-    stateObj?: any; // Replace `any` with the actual type of stateObj if known
-}
-
 export const callService = async (
     hass: HomeAssistant,
     domain: string,

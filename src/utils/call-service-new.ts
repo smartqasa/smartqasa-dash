@@ -1,4 +1,9 @@
-import { HomeAssistant } from "../types";
+import { HassEntity, HomeAssistant } from "../types";
+
+interface ServiceContext {
+    hass: HomeAssistant;
+    _stateObj: HassEntity;
+}
 
 export const callService = async (
     context: any,

@@ -1,9 +1,8 @@
 import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
-import { HassEntity } from "home-assistant-js-websocket";
-import { HomeAssistant, LovelaceCardConfig } from "../types";
-import { callService } from "../utils/call-service";
+import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
+import { callService } from "../utils/call-service-new";
 import { moreInfoDialog } from "../utils/more-info-dialog";
 import { heaterColors } from "../const";
 
@@ -36,7 +35,7 @@ export class HeaterTile extends LitElement {
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
-        if (!this.hass || !this._config) return false;
+        if (!this._config) return false;
         return !!(
             (changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
             (changedProps.has("_config") && this._config)
@@ -89,8 +88,7 @@ export class HeaterTile extends LitElement {
 
     private _toggleEntity(e: Event): void {
         e.stopPropagation();
-        if (!this.hass || !this._stateObj) return;
-        callService(this.hass, "water_heater", "toggle", { entity_id: this._entity });
+        callService(this, "water_heater", "toggle", { entity_id: this._entity });
     }
 
     private _showMoreInfo(e: Event): void {

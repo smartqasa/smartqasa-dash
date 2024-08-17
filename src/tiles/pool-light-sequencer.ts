@@ -1,8 +1,7 @@
 import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
-import { HassEntity } from "home-assistant-js-websocket";
-import { HomeAssistant, LovelaceCardConfig } from "../types";
+import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
 import { callService } from "../utils/call-service-new";
 import { sequenceTable } from "../tables/pool-light-sequences";
 
@@ -19,7 +18,7 @@ export class PoolLightSequencerTile extends LitElement {
     @state() private _config?: Config;
     @state() private _running: boolean = false;
     private _sequenceObj?: any;
-    private _stateObj?: any;
+    private _stateObj?: HassEntity;
     private _entity?: string;
 
     static styles: CSSResultGroup = [tileBaseStyle, tileIconSpinStyle];

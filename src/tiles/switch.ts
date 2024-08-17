@@ -1,9 +1,8 @@
 import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
-import { HassEntity } from "home-assistant-js-websocket";
-import { HomeAssistant, LovelaceCardConfig } from "../types";
-import { callService } from "../utils/call-service";
+import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
+import { callService } from "../utils/call-service-new";
 import { moreInfoDialog } from "../utils/more-info-dialog";
 
 import { tileBaseStyle, tileStateStyle } from "../styles/tile";
@@ -24,41 +23,38 @@ window.customCards.push({
 
 @customElement("smartqasa-switch-tile")
 export class SwitchTile extends LitElement {
-    getCardSize(): number {
-        return 1;
-    }
-
     @property({ attribute: false }) public hass?: HomeAssistant;
-    @state() private config?: Config;
-    private entity?: string;
-    private stateObj?: HassEntity;
+    @state() private _config?: Config;
+    private _entity?: string;
+    private _stateObj?: HassEntity;
 
     static styles: CSSResultGroup = [tileBaseStyle, tileStateStyle];
 
     public setConfig(config: Config): void {
-        this.config = { ...config };
-        this.entity = ["fan", "input_boolean", "light", "switch"].includes(this.config.entity?.split(".")[0])
-            ? this.config.entity
+        this._config = { ...config };
+        this._entity = ["fan", "input_boolean", "light", "switch"].includes(this._config.entity?.split(".")[0])
+            ? this._config.entity
             : undefined;
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
+        if (!this._config) return false;
         return !!(
-            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj) ||
-            (changedProps.has("config") && this.config)
+            (changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
+            changedProps.has("config")
         );
     }
 
     protected render(): TemplateResult {
-        const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
+        const { icon, iconAnimation, iconColor, name, stateFmtd } = this._updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
             backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
             animation: iconAnimation,
         };
         return html`
-            <div class="container" @click=${this.showMoreInfo}>
-                <div class="icon" @click=${this.toggleEntity} style="${styleMap(iconStyles)}">
+            <div class="container" @click=${this._showMoreInfo}>
+                <div class="icon" @click=${this._toggleEntity} style="${styleMap(iconStyles)}">
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
                 <div class="name">${name}</div>
@@ -67,40 +63,39 @@ export class SwitchTile extends LitElement {
         `;
     }
 
-    private updateState() {
+    private _updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
 
-        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
+        this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
 
-        if (this.config && this.hass && this.stateObj) {
-            const state = this.stateObj.state;
-            icon = this.config.icon || this.stateObj.attributes.icon || "hass:toggle-switch-variant";
+        if (this._stateObj) {
+            const state = this._stateObj.state;
+            icon = this._config!.icon || this._stateObj.attributes.icon || "hass:toggle-switch-variant";
             iconAnimation = "none";
             iconColor =
                 state === "on"
-                    ? `var(--sq-switch${this.config.category ? `-${this.config.category}` : ""}-on-rgb)`
+                    ? `var(--sq-switch${this._config!.category ? `-${this._config!.category}` : ""}-on-rgb)`
                     : "var(--sq-inactive-rgb)";
-            name = this.config.name || this.stateObj.attributes.friendly_name || this.stateObj.entity_id;
-            stateFmtd = this.hass.formatEntityState(this.stateObj);
+            name = this._config!.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
+            stateFmtd = this.hass!.formatEntityState(this._stateObj);
         } else {
-            icon = this.config?.icon || "hass:toggle-switch-variant";
+            icon = this._config!.icon || "hass:toggle-switch-variant";
             iconAnimation = "none";
             iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            name = this.config?.name || "Unknown";
+            name = this._config?.name || "Unknown";
             stateFmtd = "Unknown";
         }
 
         return { icon, iconAnimation, iconColor, name, stateFmtd };
     }
 
-    private toggleEntity(e: Event): void {
+    private _toggleEntity(e: Event): void {
         e.stopPropagation();
-        if (!this.hass || !this.entity) return;
-        callService(this.hass, "homeassistant", "toggle", { entity_id: this.entity });
+        callService(this, "homeassistant", "toggle", { entity_id: this._entity });
     }
 
-    private showMoreInfo(e: Event): void {
+    private _showMoreInfo(e: Event): void {
         e.stopPropagation();
-        moreInfoDialog(this.config, this.stateObj);
+        moreInfoDialog(this._config, this._stateObj);
     }
 }

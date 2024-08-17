@@ -1,9 +1,8 @@
 import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
-import { HassEntity } from "home-assistant-js-websocket";
-import { HomeAssistant, LovelaceCardConfig } from "../types";
-import { callService } from "../utils/call-service";
+import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
+import { callService } from "../utils/call-service-new";
 import { menuConfig } from "../misc/menu-config";
 import { phaseIcons, modeIcons } from "../const";
 
@@ -25,12 +24,7 @@ window.customCards.push({
 
 @customElement("smartqasa-option-tile")
 export class OptionTile extends LitElement {
-    getCardSize(): number {
-        return 1;
-    }
-
     @property({ attribute: false }) public hass?: HomeAssistant;
-
     @state() private _config?: Config;
     @state() private _stateObj?: HassEntity;
     @state() private _running: boolean = false;
@@ -108,14 +102,14 @@ export class OptionTile extends LitElement {
         if (!this.hass || !this._config || !this._stateObj) return;
 
         this._running = true;
-        callService(this.hass, "input_select", "select_option", {
+        callService(this, "input_select", "select_option", {
             entity_id: this._entity,
             option: this._config.option,
         });
 
         const trigger = this._config.trigger;
         if (trigger && trigger.startsWith("input_button.")) {
-            callService(this.hass, "input_button", "press", {
+            callService(this, "input_button", "press", {
                 entity_id: trigger,
             });
         }

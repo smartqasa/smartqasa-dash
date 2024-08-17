@@ -1,9 +1,8 @@
 import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
-import { HassEntity } from "home-assistant-js-websocket";
-import { HomeAssistant, LovelaceCardConfig } from "../types";
-import { callService } from "../utils/call-service";
+import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
+import { callService } from "../utils/call-service-new";
 import { moreInfoDialog } from "../utils/more-info-dialog";
 
 import { tileBaseStyle, tileStateStyle, tileIconBlinkStyle } from "../styles/tile";
@@ -113,8 +112,7 @@ export class GarageTile extends LitElement {
 
     private _toggleEntity(e: Event): void {
         e.stopPropagation();
-        if (!this._stateObj) return;
-        callService(this.hass!, "cover", "toggle", { entity_id: this._entity });
+        callService(this, "cover", "toggle", { entity_id: this._entity });
     }
 
     private _showMoreInfo(e: Event): void {

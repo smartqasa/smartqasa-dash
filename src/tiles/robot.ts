@@ -1,9 +1,8 @@
 import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
-import { HassEntity } from "home-assistant-js-websocket";
-import { HomeAssistant, LovelaceCardConfig } from "../types";
-import { callService } from "../utils/call-service";
+import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
+import { callService } from "../utils/call-service-new";
 import { moreInfoDialog } from "../utils/more-info-dialog";
 
 import { tileBaseStyle, tileStateStyle, tileIconBlinkStyle } from "../styles/tile";
@@ -43,15 +42,15 @@ export class RobotTile extends LitElement {
     }
 
     protected render(): TemplateResult {
-        const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
+        const { icon, iconAnimation, iconColor, name, stateFmtd } = this._updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
             backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
             animation: iconAnimation,
         };
         return html`
-            <div class="container" @click=${this.showMoreInfo}>
-                <div class="icon" @click=${this.toggleEntity} style="${styleMap(iconStyles)}">
+            <div class="container" @click=${this._showMoreInfo}>
+                <div class="icon" @click=${this._toggleEntity} style="${styleMap(iconStyles)}">
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
                 <div class="name">${name}</div>
@@ -60,7 +59,7 @@ export class RobotTile extends LitElement {
         `;
     }
 
-    private updateState() {
+    private _updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
 
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
@@ -116,16 +115,16 @@ export class RobotTile extends LitElement {
         return { icon, iconAnimation, iconColor, name, stateFmtd };
     }
 
-    private toggleEntity(e: Event): void {
+    private _toggleEntity(e: Event): void {
         e.stopPropagation();
-        if (!this.hass || !this._stateObj) return;
-        const state = this._stateObj.state;
-        callService(this.hass, "vacuum", ["docked", "idle", "paused"].includes(state) ? "start" : "pause", {
+        const state = this._stateObj?.state || "unknown";
+        const service = ["docked", "idle", "paused"].includes(state) ? "start" : "pause";
+        callService(this, "vacuum", service, {
             entity_id: this._entity,
         });
     }
 
-    private showMoreInfo(e: Event): void {
+    private _showMoreInfo(e: Event): void {
         e.stopPropagation();
         moreInfoDialog(this._config, this._stateObj);
     }

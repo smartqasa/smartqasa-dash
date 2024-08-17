@@ -23,26 +23,23 @@ window.customCards.push({
 
 @customElement("smartqasa-sensor-tile")
 export class SensorTile extends LitElement {
-    getCardSize(): number {
-        return 1;
-    }
-
     @property({ attribute: false }) public hass?: HomeAssistant;
-    @state() private config?: Config;
-    private entity?: string;
-    private stateObj?: HassEntity;
+    @state() private _config?: Config;
+    private _entity?: string;
+    private _stateObj?: HassEntity;
 
     static styles: CSSResultGroup = [tileBaseStyle, tileStateStyle];
 
     public setConfig(config: Config): void {
-        this.config = { ...config };
-        this.entity = this.config.entity?.startsWith("binary_sensor.") ? this.config.entity : undefined;
+        this._config = { ...config };
+        this._entity = this._config.entity?.startsWith("binary_sensor.") ? this._config.entity : undefined;
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
+        if (!this._config) return false;
         return !!(
-            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj) ||
-            (changedProps.has("config") && this.config)
+            (changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
+            changedProps.has("config")
         );
     }
 
@@ -55,7 +52,7 @@ export class SensorTile extends LitElement {
         };
 
         return html`
-            <div class="container" @click=${this.showMoreInfo}>
+            <div class="container" @click=${this._showMoreInfo}>
                 <div class="icon" style="${styleMap(iconStyles)}">${iconTemplate}</div>
                 <div class="name">${name}</div>
                 <div class="state">${stateFmtd}</div>
@@ -66,30 +63,30 @@ export class SensorTile extends LitElement {
     private updateState() {
         let iconTemplate, iconAnimation, iconColor, name, stateFmtd;
 
-        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
+        this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
 
-        if (this.config && this.hass && this.stateObj) {
-            if (!this.config.icon) {
-                iconTemplate = html`<ha-state-icon .hass=${this.hass} .stateObj=${this.stateObj}></ha-state-icon>`;
+        if (this._stateObj) {
+            if (!this._config!.icon) {
+                iconTemplate = html`<ha-state-icon .hass=${this.hass} .stateObj=${this._stateObj}></ha-state-icon>`;
             } else {
-                iconTemplate = html`<ha-icon .icon=${this.config.icon}></ha-icon>`;
+                iconTemplate = html`<ha-icon .icon=${this._config!.icon}></ha-icon>`;
             }
-            iconColor = this.stateObj.state === "on" ? "var(--sq-binary_sensor-on-rgb)" : "var(--sq-inactive-rgb)";
-            name = this.config.name || this.stateObj.attributes.friendly_name || this.entity;
-            stateFmtd = this.hass.formatEntityState(this.stateObj);
+            iconColor = this._stateObj.state === "on" ? "var(--sq-binary_sensor-on-rgb)" : "var(--sq-inactive-rgb)";
+            name = this._config!.name || this._stateObj.attributes.friendly_name || this._entity;
+            stateFmtd = this.hass!.formatEntityState(this._stateObj);
         } else {
             iconTemplate = html`<ha-icon .icon="hass:leak"></ha-icon>`;
             iconAnimation = "none";
             iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            name = this.config?.name || "Unknown";
+            name = this._config!.name || "Unknown";
             stateFmtd = "Unknown";
         }
 
         return { iconTemplate, iconAnimation, iconColor, name, stateFmtd };
     }
 
-    private showMoreInfo(e: Event): void {
+    private _showMoreInfo(e: Event): void {
         e.stopPropagation();
-        moreInfoDialog(this.config, this.stateObj);
+        moreInfoDialog(this._config, this._stateObj);
     }
 }

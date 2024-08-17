@@ -1,8 +1,7 @@
 import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
-import { HassEntity } from "home-assistant-js-websocket";
-import { HomeAssistant, LovelaceCardConfig } from "../types";
+import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
 import { selectOptionDialog } from "../utils/select-option-dialog";
 
 import { tileBaseStyle, tileStateStyle } from "../styles/tile";
@@ -23,38 +22,34 @@ window.customCards.push({
 
 @customElement("smartqasa-select-tile")
 export class SelectTile extends LitElement {
-    getCardSize(): number {
-        return 1;
-    }
-
     @property({ attribute: false }) public hass?: HomeAssistant;
-    @state() private config?: Config;
-    private entity?: string;
-    private stateObj?: HassEntity;
+    @state() private _config?: Config;
+    private _entity?: string;
+    private _stateObj?: HassEntity;
 
     static styles: CSSResultGroup = [tileBaseStyle, tileStateStyle];
 
     public setConfig(config: Config): void {
-        this.config = { ...config };
-        this.entity = this.config.entity?.startsWith("input_select.") ? this.config.entity : undefined;
+        this._config = { ...config };
+        this._entity = this._config.entity?.startsWith("input_select.") ? this._config.entity : undefined;
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
         return !!(
-            (changedProps.has("hass") && this.entity && this.hass?.states[this.entity] !== this.stateObj) ||
-            (changedProps.has("config") && this.config)
+            (changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
+            (changedProps.has("config") && this._config)
         );
     }
 
     protected render(): TemplateResult {
-        const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
+        const { icon, iconAnimation, iconColor, name, stateFmtd } = this._updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
             backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
             animation: iconAnimation,
         };
         return html`
-            <div class="container" @click=${this.showOptions}>
+            <div class="container" @click=${this._showOptions}>
                 <div class="icon" style="${styleMap(iconStyles)}">
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
@@ -64,31 +59,31 @@ export class SelectTile extends LitElement {
         `;
     }
 
-    private updateState() {
+    private _updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
 
-        this.stateObj = this.entity ? this.hass?.states[this.entity] : undefined;
+        this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
 
-        if (this.config && this.hass && this.stateObj) {
-            const state = this.stateObj.state || "unknown";
-            icon = this.config.icon || this.stateObj.attributes?.icon || "hass:form-dropdown";
+        if (this._config && this.hass && this._stateObj) {
+            const state = this._stateObj.state || "unknown";
+            icon = this._config.icon || this._stateObj.attributes?.icon || "hass:form-dropdown";
             iconAnimation = "none";
             iconColor = "var(--sq-inactive-rgb)";
-            name = this.config.name || this.stateObj.attributes?.friendly_name || this.entity;
-            stateFmtd = this.hass.formatEntityState(this.stateObj) || "Unknown";
+            name = this._config.name || this._stateObj.attributes?.friendly_name || this._entity;
+            stateFmtd = this.hass.formatEntityState(this._stateObj) || "Unknown";
         } else {
-            icon = this.config?.icon || "hass:form-dropdown";
+            icon = this._config?.icon || "hass:form-dropdown";
             iconAnimation = "none";
             iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            name = this.config?.name || "Unknown";
+            name = this._config?.name || "Unknown";
             stateFmtd = "Unknown";
         }
 
         return { icon, iconAnimation, iconColor, name, stateFmtd };
     }
 
-    private showOptions(e: Event): void {
+    private _showOptions(e: Event): void {
         e.stopPropagation();
-        selectOptionDialog(this.config, this.stateObj);
+        selectOptionDialog(this._config, this._stateObj);
     }
 }
