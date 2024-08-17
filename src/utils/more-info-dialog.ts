@@ -23,5 +23,8 @@ export function moreInfoDialog(config: any, stateObj: any) {
         }),
     };
 
+    if (!window.browser_mod) {
+        console.error("browser_mod is not available");
+    }
     window.browser_mod?.service("popup", dialogConfig);
 }

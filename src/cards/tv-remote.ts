@@ -1,7 +1,7 @@
 import { css, CSSResult, html, LitElement, PropertyValues, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
-import { callService } from "../utils/call-service-new";
+import { callService } from "../utils/call-service";
 import channelTable from "../tables/channels";
 
 interface Config extends LovelaceCardConfig {

@@ -31,17 +31,17 @@ class PopupDialog extends LitElement {
 
     protected render() {
         return html`
-            <div class="overlay" @click="${this.close}">
-                <div class="popup" @click="${this.handleClick}"></div>
+            <div class="overlay" @click="${this._close}">
+                <div class="popup" @click="${this._handleClick}"></div>
             </div>
         `;
     }
 
-    private handleClick(e: Event): void {
+    private _handleClick(e: Event): void {
         e.stopPropagation();
     }
 
-    private close() {
+    private _close() {
         this.dispatchEvent(new CustomEvent("close"));
     }
 }
