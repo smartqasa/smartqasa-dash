@@ -9,13 +9,13 @@ interface Config extends LovelaceCardConfig {
 }
 
 window.customCards.push({
-    type: "smartqasa-vertical-stack-card",
-    name: "SmartQasa Vertical Stack Card",
+    type: "smartqasa-vertical-stack",
+    name: "SmartQasa Vertical Stack",
     preview: false,
-    description: "A SmartQasa card that displays other cards in a vertical stack.",
+    description: "A SmartQasa element that displays other cards in a vertical stack.",
 });
 
-@customElement("smartqasa-vertical-stack-card")
+@customElement("smartqasa-vertical-stack")
 class VerticalStack extends LitElement {
     @property({ attribute: false }) private hass?: HomeAssistant;
     @state() private _config?: Config;

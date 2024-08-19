@@ -13,7 +13,7 @@ export function selectOptionDialog(config: any, stateObj: any) {
         title: stateObj.attributes.friendly_name || stateObj.entity_id,
         timeout: 60000,
         content: {
-            type: "custom:smartqasa-vertical-stack-card",
+            type: "custom:smartqasa-vertical-stack",
             cards: cards,
         },
     };

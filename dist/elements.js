@@ -222,10 +222,10 @@ const createElement = (config) => {
 };
 
 window.customCards.push({
-    type: "smartqasa-vertical-stack-card",
-    name: "SmartQasa Vertical Stack Card",
+    type: "smartqasa-vertical-stack",
+    name: "SmartQasa Vertical Stack",
     preview: false,
-    description: "A SmartQasa card that displays other cards in a vertical stack.",
+    description: "A SmartQasa element that displays other cards in a vertical stack.",
 });
 let VerticalStack = class VerticalStack extends h {
     constructor() {
@@ -288,7 +288,7 @@ __decorate([
     r()
 ], VerticalStack.prototype, "_cards", void 0);
 VerticalStack = __decorate([
-    t$1("smartqasa-vertical-stack-card")
+    t$1("smartqasa-vertical-stack")
 ], VerticalStack);
 
 const callService = async (hass, domain, service, serviceData) => {
@@ -4949,7 +4949,7 @@ const listDialogConfig = (dialogTitle, filterType, filterValue, tileType) => {
         content: {
             type: "custom:auto-entities",
             card: {
-                type: "custom:smartqasa-vertical-stack-card",
+                type: "custom:smartqasa-vertical-stack",
             },
             card_param: "cards",
             filter: {
@@ -5738,7 +5738,7 @@ function selectOptionDialog(config, stateObj) {
         title: stateObj.attributes.friendly_name || stateObj.entity_id,
         timeout: 60000,
         content: {
-            type: "custom:smartqasa-vertical-stack-card",
+            type: "custom:smartqasa-vertical-stack",
             cards: cards,
         },
     };
@@ -9492,7 +9492,7 @@ PopupConfirmation = __decorate([
     t$1("popup-confirmation")
 ], PopupConfirmation);
 
-var version = "2024.8.19b-2";
+var version = "2024.8.19b-3";
 
 window.smartqasa = window.smartqasa || {};
 window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();
