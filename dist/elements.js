@@ -249,11 +249,9 @@ let VerticalStack = class VerticalStack extends h {
             throw new Error("You need to define 'cards'");
         }
         this._config = { ...config };
+        this._createCards();
     }
     update(changedProps) {
-        if (changedProps.has("_config")) {
-            this._createCards();
-        }
         if (changedProps.has("hass") && this.hass) {
             this._cards.forEach((card) => {
                 card.hass = this.hass;
@@ -269,10 +267,11 @@ let VerticalStack = class VerticalStack extends h {
         `;
     }
     _createCards() {
-        if (!this._config)
+        if (!this._config || !this.hass)
             return;
         this._cards = this._config.cards.map((cardConfig) => {
             const card = createElement(cardConfig);
+            card.hass = this.hass;
             return card;
         });
     }

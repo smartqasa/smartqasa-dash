@@ -13,7 +13,6 @@ export const createElement = (config: LovelaceCardConfig): LovelaceCard | undefi
     }
 
     const element = window.document.createElement(tag) as LovelaceCard;
-
     try {
         element.setConfig(config);
     } catch (err) {

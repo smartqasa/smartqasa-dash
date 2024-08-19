@@ -38,13 +38,10 @@ class VerticalStack extends LitElement {
         }
 
         this._config = { ...config };
+        this._createCards();
     }
 
     protected update(changedProps: PropertyValues) {
-        if (changedProps.has("_config")) {
-            this._createCards();
-        }
-
         if (changedProps.has("hass") && this.hass) {
             this._cards.forEach((card) => {
                 card.hass = this.hass;
@@ -63,10 +60,11 @@ class VerticalStack extends LitElement {
     }
 
     private _createCards() {
-        if (!this._config) return;
+        if (!this._config || !this.hass) return;
 
         this._cards = this._config.cards.map((cardConfig) => {
             const card = createElement(cardConfig) as LovelaceCard;
+            card.hass = this.hass;
             return card;
         });
     }
