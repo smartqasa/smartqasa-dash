@@ -230,19 +230,23 @@ let VerticalStack = class VerticalStack extends h {
             throw new Error("You need to define 'cards'");
         }
         this._config = { ...config };
-        this._createCards();
     }
-    shouldUpdate(changedProps) {
-        return changedProps.has("hass") || changedProps.has("_config");
-    }
-    updated(changedProps) {
-        if (changedProps.has("hass") || changedProps.has("_config")) {
-            this._createCards();
+    update(changedProps) {
+        if (changedProps.has("_config")) {
+            this._createCards(); // Recreate cards only when the config changes
         }
+        if (changedProps.has("hass") && this.hass) {
+            this._cards.forEach((card) => {
+                card.hass = this.hass; // Update hass for each card
+            });
+        }
+        super.update(changedProps); // Always call super.update() to continue the update lifecycle
     }
     render() {
+        console.log("Render before checks");
         if (!this._config || !this.hass || !(this._cards.length > 0))
             return ke ``;
+        console.log("Render after checks");
         return ke `
             <div class="container">${this._cards.map((card) => ke `<div class="element">${card}</div>`)}</div>
         `;

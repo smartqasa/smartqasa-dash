@@ -38,26 +38,31 @@ class VerticalStack extends LitElement {
         }
 
         this._config = { ...config };
-        this._createCards();
     }
 
-    protected shouldUpdate(changedProps: PropertyValues): boolean {
-        return changedProps.has("hass") || changedProps.has("_config");
-    }
-
-    protected updated(changedProps: PropertyValues) {
-        if (changedProps.has("hass") || changedProps.has("_config")) {
-            this._createCards();
+    protected update(changedProps: PropertyValues) {
+        if (changedProps.has("_config")) {
+            this._createCards(); // Recreate cards only when the config changes
         }
+
+        if (changedProps.has("hass") && this.hass) {
+            this._cards.forEach((card) => {
+                card.hass = this.hass; // Update hass for each card
+            });
+        }
+
+        super.update(changedProps); // Always call super.update() to continue the update lifecycle
     }
 
     protected render() {
+        console.log("Render before checks");
         if (!this._config || !this.hass || !(this._cards.length > 0)) return html``;
-
+        console.log("Render after checks");
         return html`
             <div class="container">${this._cards.map((card) => html`<div class="element">${card}</div>`)}</div>
         `;
     }
+
     private _createCards() {
         if (!this.hass || !this._config) {
             return;
