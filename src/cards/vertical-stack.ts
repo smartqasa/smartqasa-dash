@@ -38,27 +38,38 @@ class VerticalStack extends LitElement {
         }
 
         this._config = { ...config };
-        this._createCards();
+    }
+
+    protected update(changedProps: PropertyValues) {
+        if (changedProps.has("_config")) {
+            this._createCards();
+        }
+
+        if (changedProps.has("hass") && this.hass) {
+            this._cards.forEach((card) => {
+                card.hass = this.hass;
+            });
+        }
+
+        super.update(changedProps);
     }
 
     protected render() {
-        console.log("Render before checks");
+        // console.log("Render before checks");
         if (!this._config || !this.hass || !(this._cards.length > 0)) return html``;
-        console.log("Render after checks");
+        // console.log("Render after checks");
         return html`
             <div class="container">${this._cards.map((card) => html`<div class="element">${card}</div>`)}</div>
         `;
     }
 
     private _createCards() {
-        if (!this.hass || !this._config) {
-            return;
-        }
+        if (!this._config || !this.hass) return;
 
         this._cards = this._config.cards.map((cardConfig) => {
-            const element = createThing(cardConfig) as LovelaceCard;
-            element.hass = this.hass;
-            return element;
+            const card = createThing(cardConfig) as LovelaceCard;
+            card.hass = this.hass;
+            return card;
         });
     }
 }

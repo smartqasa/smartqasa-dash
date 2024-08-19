@@ -1,7 +1,7 @@
 /* eslint-disable max-classes-per-file */
 import { noChange } from "lit";
 import { AttributePart, directive, Directive, DirectiveParameters } from "lit/directive";
-import { fireEvent } from "./fire_event";
+import { fireEvent } from "../fire_event";
 import { deepEqual } from "./deep-equal";
 import { ActionHandlerDetail, ActionHandlerOptions } from "./action_handler";
 import { isTouch } from "./is_touch";
