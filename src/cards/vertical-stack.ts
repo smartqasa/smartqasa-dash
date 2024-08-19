@@ -38,17 +38,12 @@ class VerticalStack extends LitElement {
         }
 
         this._config = { ...config };
+
         this._createCards();
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
         return changedProps.has("hass") || changedProps.has("_config");
-    }
-
-    protected updated(changedProps: PropertyValues) {
-        if (changedProps.has("hass") || changedProps.has("_config")) {
-            this._createCards();
-        }
     }
 
     protected render() {
