@@ -1,8 +1,8 @@
 import { css, html, LitElement, PropertyValues } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { HomeAssistant, LovelaceCardConfig, LovelaceCard } from "../types";
-//import { createThing } from "custom-card-helpers";
-import { createElement } from "../utils/create-element";
+import { createThing } from "custom-card-helpers";
+//import { createElement } from "../utils/create-element";
 
 interface Config extends LovelaceCardConfig {
     cards: LovelaceCardConfig[];
@@ -64,7 +64,7 @@ class VerticalStack extends LitElement {
 
         this._cards = this._config.cards.map((cardConfig) => {
             console.log("Card config", cardConfig);
-            const card = createElement(cardConfig) as LovelaceCard;
+            const card = createThing(cardConfig) as LovelaceCard;
             card.hass = this.hass;
             return card;
         });
