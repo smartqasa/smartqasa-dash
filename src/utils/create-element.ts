@@ -6,7 +6,11 @@ export const createElement = (config: LovelaceCardConfig): LovelaceCard | undefi
     const tag = config.type.startsWith("custom:") ? config.type.replace("custom:", "") : config.type;
     if (!customElements.get(tag)) return;
 
-    const element = window.document.createElement(tag) as LovelaceCard;
+    const element = window.document.createElement(tag) as any;
     if (!element.setConfig) return;
     element.setConfig(config);
+
+    console.log("Element", element);
+
+    return element;
 };

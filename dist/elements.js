@@ -211,6 +211,8 @@ const createElement = (config) => {
     if (!element.setConfig)
         return;
     element.setConfig(config);
+    console.log("Element", element);
+    return element;
 };
 
 window.customCards.push({
