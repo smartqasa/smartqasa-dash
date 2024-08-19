@@ -271,17 +271,13 @@ VerticalStack = __decorate([
     t$2("smartqasa-vertical-stack-card")
 ], VerticalStack);
 
-const callService = async (context, domain, service, serviceData) => {
-    if (!context.hass) {
+const callService = async (hass, domain, service, serviceData) => {
+    if (!hass) {
         console.error(`Error calling ${domain}.${service}:`, "Connection to Home Assistant is not available.");
         return;
     }
-    if (!context._stateObj) {
-        console.error(`Error calling ${domain}.${service}:`, "The entity state object is not available.");
-        return;
-    }
     try {
-        await context.hass.callService(domain, service, serviceData);
+        await hass.callService(domain, service, serviceData);
     }
     catch (error) {
         console.error(`Error calling ${domain}.${service}:`, error);
@@ -817,24 +813,24 @@ let TVRemoteCard = class TVRemoteCard extends h {
         }
     }
     handlePower() {
-        callService(this, "remote", "send_command", { entity_id: this._entities.remote, command: "power" });
+        callService(this.hass, "remote", "send_command", { entity_id: this._entities.remote, command: "power" });
     }
     handleVolume(button) {
         const entity = this._entities.audio || undefined;
         if (entity) {
             const isMuted = this.hass.states[entity].attributes.is_volume_muted;
             if (button === "volume_mute") {
-                callService(this, "media_player", "volume_mute", {
+                callService(this.hass, "media_player", "volume_mute", {
                     entity_id: entity,
                     is_volume_muted: !isMuted,
                 });
             }
             else {
                 if (!isMuted) {
-                    callService(this, "media_player", button, { entity_id: entity });
+                    callService(this.hass, "media_player", button, { entity_id: entity });
                 }
                 else {
-                    callService(this, "media_player", "volume_mute", {
+                    callService(this.hass, "media_player", "volume_mute", {
                         entity_id: entity,
                         is_volume_muted: false,
                     });
@@ -842,19 +838,19 @@ let TVRemoteCard = class TVRemoteCard extends h {
             }
         }
         else {
-            callService(this, "remote", "send_command", {
+            callService(this.hass, "remote", "send_command", {
                 entity_id: this._entities.remote,
                 command: button,
             });
         }
     }
     handleCommand(button) {
-        callService(this, "remote", "send_command", { entity_id: this._entities.remote, command: button });
+        callService(this.hass, "remote", "send_command", { entity_id: this._entities.remote, command: button });
     }
     selectApp(app) {
         if (!this.hass || !this._entity)
             return;
-        callService(this, "media_player", "select_source", {
+        callService(this.hass, "media_player", "select_source", {
             entity_id: this._entity,
             source: app,
         });
@@ -5512,7 +5508,7 @@ let MotionChip = class MotionChip extends h {
     }
     _toggleEntity(e) {
         e.stopPropagation();
-        callService(this, "automation", "toggle", { entity_id: this._entity });
+        callService(this.hass, "automation", "toggle", { entity_id: this._entity });
     }
 };
 __decorate([
@@ -5674,13 +5670,13 @@ let RoutineChip = class RoutineChip extends h {
         const domain = this._stateObj.entity_id.split(".")[0];
         switch (domain) {
             case "script":
-                callService(this, "script", "turn_on", { entity_id: this._entity });
+                callService(this.hass, "script", "turn_on", { entity_id: this._entity });
                 break;
             case "scene":
-                callService(this, "scene", "turn_on", { entity_id: this._entity });
+                callService(this.hass, "scene", "turn_on", { entity_id: this._entity });
                 break;
             case "automation":
-                callService(this, "automation", "trigger", { entity_id: this._entity });
+                callService(this.hass, "automation", "trigger", { entity_id: this._entity });
                 break;
             default:
                 console.error("Unsupported entity domain:", domain);
@@ -6905,11 +6901,11 @@ let AllOffTile = class AllOffTile extends h {
         if (!this.hass || !this._areaObj)
             return;
         this._running = true;
-        await callService(this, "light", "turn_off", {
+        await callService(this.hass, "light", "turn_off", {
             area_id: this._area,
             transition: 2,
         });
-        await callService(this, "fan", "turn_off", {
+        await callService(this.hass, "fan", "turn_off", {
             area_id: this._area,
         });
         setTimeout(() => {
@@ -7694,7 +7690,7 @@ let FanTile = class FanTile extends h {
         e.stopPropagation();
         if (!this._stateObj)
             return;
-        callService(this, "fan", "toggle", { entity_id: this._entity });
+        callService(this.hass, "fan", "toggle", { entity_id: this._entity });
     }
     _showMoreInfo(e) {
         e.stopPropagation();
@@ -7810,7 +7806,7 @@ let GarageTile = class GarageTile extends h {
     }
     _toggleEntity(e) {
         e.stopPropagation();
-        callService(this, "cover", "toggle", { entity_id: this._entity });
+        callService(this.hass, "cover", "toggle", { entity_id: this._entity });
     }
     _showMoreInfo(e) {
         e.stopPropagation();
@@ -7890,7 +7886,7 @@ let HeaterTile = class HeaterTile extends h {
     }
     _toggleEntity(e) {
         e.stopPropagation();
-        callService(this, "water_heater", "toggle", { entity_id: this._entity });
+        callService(this.hass, "water_heater", "toggle", { entity_id: this._entity });
     }
     _showMoreInfo(e) {
         e.stopPropagation();
@@ -7969,7 +7965,7 @@ let LightTile = class LightTile extends h {
     }
     _toggleEntity(e) {
         e.stopPropagation();
-        callService(this, "light", "toggle", { entity_id: this._entity });
+        callService(this.hass, "light", "toggle", { entity_id: this._entity });
     }
     _showMoreInfo(e) {
         e.stopPropagation();
@@ -8151,7 +8147,7 @@ let LockTile = class LockTile extends h {
             return;
         const state = this._stateObj.state;
         this.hass.states[this._entity].state = state === "locked" ? "unlocking" : "locking";
-        callService(this, "lock", state == "locked" ? "unlock" : "lock", {
+        callService(this.hass, "lock", state == "locked" ? "unlock" : "lock", {
             entity_id: this._entity,
         });
     }
@@ -8250,13 +8246,13 @@ let OptionTile = class OptionTile extends h {
         if (!this.hass || !this._config || !this._stateObj)
             return;
         this._running = true;
-        callService(this, "input_select", "select_option", {
+        callService(this.hass, "input_select", "select_option", {
             entity_id: this._entity,
             option: this._config.option,
         });
         const trigger = this._config.trigger;
         if (trigger && trigger.startsWith("input_button.")) {
-            callService(this, "input_button", "press", {
+            callService(this.hass, "input_button", "press", {
                 entity_id: trigger,
             });
         }
@@ -8390,7 +8386,7 @@ let RobotTile = class RobotTile extends h {
         e.stopPropagation();
         const state = this._stateObj?.state || "unknown";
         const service = ["docked", "idle", "paused"].includes(state) ? "start" : "pause";
-        callService(this, "vacuum", service, {
+        callService(this.hass, "vacuum", service, {
             entity_id: this._entity,
         });
     }
@@ -8488,7 +8484,7 @@ let RokuTile = class RokuTile extends h {
     }
     _toggleEntity(e) {
         e.stopPropagation();
-        callService(this, "media_player", "toggle", { entity_id: this._entity });
+        callService(this.hass, "media_player", "toggle", { entity_id: this._entity });
     }
     _showMoreInfo(e) {
         e.stopPropagation();
@@ -8600,13 +8596,13 @@ let RoutineTile = class RoutineTile extends h {
         const domain = this._stateObj.entity_id.split(".")[0];
         switch (domain) {
             case "script":
-                callService(this, "script", "turn_on", { entity_id: this._entity });
+                callService(this.hass, "script", "turn_on", { entity_id: this._entity });
                 break;
             case "scene":
-                callService(this, "scene", "turn_on", { entity_id: this._entity });
+                callService(this.hass, "scene", "turn_on", { entity_id: this._entity });
                 break;
             case "automation":
-                callService(this, "automation", "trigger", { entity_id: this._entity });
+                callService(this.hass, "automation", "trigger", { entity_id: this._entity });
                 break;
             default:
                 console.error("Unsupported entity domain:", domain);
@@ -8902,7 +8898,7 @@ let PoolLightTile = class PoolLightTile extends h {
     }
     _toggleEntity(e) {
         e.stopPropagation();
-        callService(this, "light", "toggle", { entity_id: this._entity });
+        callService(this.hass, "light", "toggle", { entity_id: this._entity });
     }
     _showColorList(e) {
         e.stopPropagation();
@@ -9003,7 +8999,7 @@ let PoolLightSequencerTile = class PoolLightSequencerTile extends h {
         if (!this.hass || !this._stateObj)
             return;
         this._running = true;
-        await callService(this, "script", "system_color_light_sequence_selector", {
+        await callService(this.hass, "script", "system_color_light_sequence_selector", {
             entity: this._entity,
             count: this._sequenceObj.count,
         });
@@ -9122,20 +9118,20 @@ let ShadeTile = class ShadeTile extends h {
         }
         if (tilt >= 1 && tilt <= 100) {
             if (this._stateObj.attributes.current_position !== tilt) {
-                callService(this, "cover", "set_cover_position", {
+                callService(this.hass, "cover", "set_cover_position", {
                     entity_id: this._entity,
                     position: tilt,
                 });
             }
             else {
-                callService(this, "cover", "set_cover_position", {
+                callService(this.hass, "cover", "set_cover_position", {
                     entity_id: this._entity,
                     position: 0,
                 });
             }
         }
         else {
-            callService(this, "cover", "toggle", {
+            callService(this.hass, "cover", "toggle", {
                 entity_id: this._entity,
                 position: 0,
             });
@@ -9232,7 +9228,7 @@ let SwitchTile = class SwitchTile extends h {
     }
     _toggleEntity(e) {
         e.stopPropagation();
-        callService(this, "homeassistant", "toggle", { entity_id: this._entity });
+        callService(this.hass, "homeassistant", "toggle", { entity_id: this._entity });
     }
     _showMoreInfo(e) {
         e.stopPropagation();
@@ -9363,7 +9359,7 @@ let ThermostatTile = class ThermostatTile extends h {
     }
     _toggleEntity(e) {
         e.stopPropagation();
-        callService(this, "climate", "toggle", { entity_id: this._entity });
+        callService(this.hass, "climate", "toggle", { entity_id: this._entity });
     }
     _showMoreInfo(e) {
         e.stopPropagation();

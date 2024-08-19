@@ -1,5 +1,5 @@
 import { PropertyValues } from "lit";
-import { HomeAssistant, LovelaceCardConfig } from "../types";
+import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
 
 /**
  * Utility function to determine if a component should update.
@@ -16,7 +16,7 @@ export function shouldComponentUpdate(
     config: LovelaceCardConfig | undefined,
     entity: string | undefined,
     hass: HomeAssistant | undefined,
-    stateObj: any
+    stateObj: HassEntity | undefined
 ): boolean {
     if (!config) return false;
 

@@ -119,7 +119,7 @@ export class RobotTile extends LitElement {
         e.stopPropagation();
         const state = this._stateObj?.state || "unknown";
         const service = ["docked", "idle", "paused"].includes(state) ? "start" : "pause";
-        callService(this, "vacuum", service, {
+        callService(this.hass, "vacuum", service, {
             entity_id: this._entity,
         });
     }

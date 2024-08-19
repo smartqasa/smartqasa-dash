@@ -95,11 +95,11 @@ export class AllOffTile extends LitElement {
         if (!this.hass || !this._areaObj) return;
 
         this._running = true;
-        await callService(this, "light", "turn_off", {
+        await callService(this.hass, "light", "turn_off", {
             area_id: this._area,
             transition: 2,
         });
-        await callService(this, "fan", "turn_off", {
+        await callService(this.hass, "fan", "turn_off", {
             area_id: this._area,
         });
 

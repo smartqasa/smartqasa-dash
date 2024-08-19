@@ -313,7 +313,7 @@ export class TVRemoteCard extends LitElement {
     }
 
     private handlePower(): void {
-        callService(this, "remote", "send_command", { entity_id: this._entities.remote, command: "power" });
+        callService(this.hass, "remote", "send_command", { entity_id: this._entities.remote, command: "power" });
     }
 
     private handleVolume(button: string): void {
@@ -321,22 +321,22 @@ export class TVRemoteCard extends LitElement {
         if (entity) {
             const isMuted = this.hass!.states[entity].attributes.is_volume_muted;
             if (button === "volume_mute") {
-                callService(this, "media_player", "volume_mute", {
+                callService(this.hass, "media_player", "volume_mute", {
                     entity_id: entity,
                     is_volume_muted: !isMuted,
                 });
             } else {
                 if (!isMuted) {
-                    callService(this, "media_player", button, { entity_id: entity });
+                    callService(this.hass, "media_player", button, { entity_id: entity });
                 } else {
-                    callService(this, "media_player", "volume_mute", {
+                    callService(this.hass, "media_player", "volume_mute", {
                         entity_id: entity,
                         is_volume_muted: false,
                     });
                 }
             }
         } else {
-            callService(this, "remote", "send_command", {
+            callService(this.hass, "remote", "send_command", {
                 entity_id: this._entities.remote,
                 command: button,
             });
@@ -344,12 +344,12 @@ export class TVRemoteCard extends LitElement {
     }
 
     private handleCommand(button: string): void {
-        callService(this, "remote", "send_command", { entity_id: this._entities.remote, command: button });
+        callService(this.hass, "remote", "send_command", { entity_id: this._entities.remote, command: button });
     }
 
     private selectApp(app: string): void {
         if (!this.hass || !this._entity) return;
-        callService(this, "media_player", "select_source", {
+        callService(this.hass, "media_player", "select_source", {
             entity_id: this._entity,
             source: app,
         });

@@ -96,13 +96,13 @@ export class RoutineChip extends LitElement {
         const domain = this._stateObj.entity_id.split(".")[0];
         switch (domain) {
             case "script":
-                callService(this, "script", "turn_on", { entity_id: this._entity });
+                callService(this.hass, "script", "turn_on", { entity_id: this._entity });
                 break;
             case "scene":
-                callService(this, "scene", "turn_on", { entity_id: this._entity });
+                callService(this.hass, "scene", "turn_on", { entity_id: this._entity });
                 break;
             case "automation":
-                callService(this, "automation", "trigger", { entity_id: this._entity });
+                callService(this.hass, "automation", "trigger", { entity_id: this._entity });
                 break;
             default:
                 console.error("Unsupported entity domain:", domain);

@@ -126,18 +126,18 @@ export class ShadeTile extends LitElement {
         }
         if (tilt >= 1 && tilt <= 100) {
             if (this._stateObj.attributes.current_position !== tilt) {
-                callService(this, "cover", "set_cover_position", {
+                callService(this.hass, "cover", "set_cover_position", {
                     entity_id: this._entity,
                     position: tilt,
                 });
             } else {
-                callService(this, "cover", "set_cover_position", {
+                callService(this.hass, "cover", "set_cover_position", {
                     entity_id: this._entity,
                     position: 0,
                 });
             }
         } else {
-            callService(this, "cover", "toggle", {
+            callService(this.hass, "cover", "toggle", {
                 entity_id: this._entity,
                 position: 0,
             });

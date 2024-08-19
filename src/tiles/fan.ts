@@ -100,7 +100,7 @@ export class FanTile extends LitElement {
     private _toggleEntity(e: Event): void {
         e.stopPropagation();
         if (!this._stateObj) return;
-        callService(this, "fan", "toggle", { entity_id: this._entity });
+        callService(this.hass, "fan", "toggle", { entity_id: this._entity });
     }
 
     private _showMoreInfo(e: Event): void {

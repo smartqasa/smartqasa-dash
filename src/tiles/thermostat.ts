@@ -98,7 +98,7 @@ export class ThermostatTile extends LitElement {
 
     private _toggleEntity(e: Event): void {
         e.stopPropagation();
-        callService(this, "climate", "toggle", { entity_id: this._entity });
+        callService(this.hass, "climate", "toggle", { entity_id: this._entity });
     }
 
     private _showMoreInfo(e: Event): void {

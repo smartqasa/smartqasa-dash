@@ -96,6 +96,6 @@ export class MotionChip extends LitElement {
 
     private _toggleEntity(e: Event): void {
         e.stopPropagation();
-        callService(this, "automation", "toggle", { entity_id: this._entity });
+        callService(this.hass, "automation", "toggle", { entity_id: this._entity });
     }
 }

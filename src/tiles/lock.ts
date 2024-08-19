@@ -116,7 +116,7 @@ export class LockTile extends LitElement {
 
         const state = this._stateObj.state;
         this.hass.states[this._entity].state = state === "locked" ? "unlocking" : "locking";
-        callService(this, "lock", state == "locked" ? "unlock" : "lock", {
+        callService(this.hass, "lock", state == "locked" ? "unlock" : "lock", {
             entity_id: this._entity,
         });
     }

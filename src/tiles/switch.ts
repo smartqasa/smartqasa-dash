@@ -91,7 +91,7 @@ export class SwitchTile extends LitElement {
 
     private _toggleEntity(e: Event): void {
         e.stopPropagation();
-        callService(this, "homeassistant", "toggle", { entity_id: this._entity });
+        callService(this.hass, "homeassistant", "toggle", { entity_id: this._entity });
     }
 
     private _showMoreInfo(e: Event): void {

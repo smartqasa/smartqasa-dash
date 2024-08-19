@@ -90,7 +90,7 @@ export class PoolLightTile extends LitElement {
 
     private _toggleEntity(e: Event): void {
         e.stopPropagation();
-        callService(this, "light", "toggle", { entity_id: this._entity });
+        callService(this.hass, "light", "toggle", { entity_id: this._entity });
     }
 
     private _showColorList(e: Event): void {

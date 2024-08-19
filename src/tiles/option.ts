@@ -102,14 +102,14 @@ export class OptionTile extends LitElement {
         if (!this.hass || !this._config || !this._stateObj) return;
 
         this._running = true;
-        callService(this, "input_select", "select_option", {
+        callService(this.hass, "input_select", "select_option", {
             entity_id: this._entity,
             option: this._config.option,
         });
 
         const trigger = this._config.trigger;
         if (trigger && trigger.startsWith("input_button.")) {
-            callService(this, "input_button", "press", {
+            callService(this.hass, "input_button", "press", {
                 entity_id: trigger,
             });
         }

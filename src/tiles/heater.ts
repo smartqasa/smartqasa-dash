@@ -88,7 +88,7 @@ export class HeaterTile extends LitElement {
 
     private _toggleEntity(e: Event): void {
         e.stopPropagation();
-        callService(this, "water_heater", "toggle", { entity_id: this._entity });
+        callService(this.hass, "water_heater", "toggle", { entity_id: this._entity });
     }
 
     private _showMoreInfo(e: Event): void {

@@ -88,7 +88,7 @@ export class PoolLightSequencerTile extends LitElement {
 
         this._running = true;
 
-        await callService(this, "script", "system_color_light_sequence_selector", {
+        await callService(this.hass, "script", "system_color_light_sequence_selector", {
             entity: this._entity,
             count: this._sequenceObj.count,
         });
