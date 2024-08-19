@@ -4925,19 +4925,6 @@ CustomChip = __decorate([
     t$2("smartqasa-custom-chip")
 ], CustomChip);
 
-const listDialogStyle = {
-    margin: 0,
-    card_margin: 0,
-    "grid-template-columns": "1fr",
-    "grid-gap": "var(--sq-dialog-grid-gap)",
-};
-const gridDialogStyle = {
-    margin: 0,
-    card_margin: 0,
-    "grid-template-columns": deviceType === "phone" ? "repeat(2, 1fr)" : "repeat(3, var(--sq-tile-width-tablet, 20rem))",
-    "grid-gap": "var(--sq-dialog-grid-gap)",
-};
-
 const listDialogConfig = (dialogTitle, filterType, filterValue, tileType) => {
     return {
         title: dialogTitle,
@@ -4945,9 +4932,7 @@ const listDialogConfig = (dialogTitle, filterType, filterValue, tileType) => {
         content: {
             type: "custom:auto-entities",
             card: {
-                type: "custom:layout-card",
-                layout_type: "custom:grid-layout",
-                layout: listDialogStyle,
+                type: "custom:smartqasa-vertical-stack-card",
             },
             card_param: "cards",
             filter: {
@@ -4970,6 +4955,19 @@ const listDialogConfig = (dialogTitle, filterType, filterValue, tileType) => {
             },
         },
     };
+};
+
+const listDialogStyle = {
+    margin: 0,
+    card_margin: 0,
+    "grid-template-columns": "1fr",
+    "grid-gap": "var(--sq-dialog-grid-gap)",
+};
+const gridDialogStyle = {
+    margin: 0,
+    card_margin: 0,
+    "grid-template-columns": deviceType === "phone" ? "repeat(2, 1fr)" : "repeat(3, var(--sq-tile-width-tablet, 20rem))",
+    "grid-gap": "var(--sq-dialog-grid-gap)",
 };
 
 const dialogTable = {
@@ -9477,7 +9475,7 @@ PopupConfirmation = __decorate([
     t$2("popup-confirmation")
 ], PopupConfirmation);
 
-var version = "2024.8.17b-1";
+var version = "2024.8.19b-1";
 
 window.smartqasa = window.smartqasa || {};
 window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();

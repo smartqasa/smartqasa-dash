@@ -1,5 +1,3 @@
-import { listDialogStyle } from "../styles/dialog";
-
 export function selectOptionDialog(config: any, stateObj: any) {
     if (!stateObj) return;
 
