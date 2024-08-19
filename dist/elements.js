@@ -8069,10 +8069,6 @@ window.customCards.push({
     description: "A SmartQasa tile for controlling a lock entity.",
 });
 let LockTile = class LockTile extends h {
-    constructor() {
-        super(...arguments);
-        this._running = false;
-    }
     static { this.styles = [tileBaseStyle, tileStateStyle, tileIconBlinkStyle, tileIconSpinStyle]; }
     setConfig(config) {
         this._config = { ...config };
@@ -8081,8 +8077,7 @@ let LockTile = class LockTile extends h {
     shouldUpdate(changedProps) {
         if (!this._config)
             return false;
-        return !!(changedProps.has("_stateObj") ||
-            (changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
+        return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
             changedProps.has("_config"));
     }
     render() {
@@ -8174,9 +8169,6 @@ __decorate([
 __decorate([
     r$1()
 ], LockTile.prototype, "_stateObj", void 0);
-__decorate([
-    r$1()
-], LockTile.prototype, "_running", void 0);
 LockTile = __decorate([
     t$2("smartqasa-lock-tile")
 ], LockTile);

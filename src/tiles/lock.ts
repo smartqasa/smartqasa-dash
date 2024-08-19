@@ -24,7 +24,6 @@ export class LockTile extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() private _config?: Config;
     @state() private _stateObj?: HassEntity;
-    @state() private _running: boolean = false;
     private _entity?: string;
 
     static styles: CSSResultGroup = [tileBaseStyle, tileStateStyle, tileIconBlinkStyle, tileIconSpinStyle];
@@ -37,7 +36,6 @@ export class LockTile extends LitElement {
     protected shouldUpdate(changedProps: PropertyValues): boolean {
         if (!this._config) return false;
         return !!(
-            changedProps.has("_stateObj") ||
             (changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
             changedProps.has("_config")
         );
