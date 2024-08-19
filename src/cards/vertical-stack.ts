@@ -45,10 +45,14 @@ class VerticalStack extends LitElement {
         return changedProps.has("hass") || changedProps.has("_config");
     }
 
+    protected updated(changedProps: PropertyValues) {
+        if (changedProps.has("hass") || changedProps.has("_config")) {
+            this._createCards();
+        }
+    }
+
     protected render() {
         if (!this._config || !this.hass || !(this._cards.length > 0)) return html``;
-
-        this._createCards();
 
         return html`
             <div class="container">${this._cards.map((card) => html`<div class="element">${card}</div>`)}</div>

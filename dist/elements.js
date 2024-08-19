@@ -235,10 +235,14 @@ let VerticalStack = class VerticalStack extends h {
     shouldUpdate(changedProps) {
         return changedProps.has("hass") || changedProps.has("_config");
     }
+    updated(changedProps) {
+        if (changedProps.has("hass") || changedProps.has("_config")) {
+            this._createCards();
+        }
+    }
     render() {
         if (!this._config || !this.hass || !(this._cards.length > 0))
             return ke ``;
-        this._createCards();
         return ke `
             <div class="container">${this._cards.map((card) => ke `<div class="element">${card}</div>`)}</div>
         `;
