@@ -230,7 +230,6 @@ let VerticalStack = class VerticalStack extends h {
             throw new Error("You need to define 'cards'");
         }
         this._config = { ...config };
-        this._createCards();
     }
     shouldUpdate(changedProps) {
         return changedProps.has("hass") || changedProps.has("_config");
@@ -238,6 +237,7 @@ let VerticalStack = class VerticalStack extends h {
     render() {
         if (!this._config || !this.hass || !(this._cards.length > 0))
             return ke ``;
+        this._createCards();
         return ke `
             <div class="container">${this._cards.map((card) => ke `<div class="element">${card}</div>`)}</div>
         `;

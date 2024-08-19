@@ -38,8 +38,6 @@ class VerticalStack extends LitElement {
         }
 
         this._config = { ...config };
-
-        this._createCards();
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
@@ -48,6 +46,8 @@ class VerticalStack extends LitElement {
 
     protected render() {
         if (!this._config || !this.hass || !(this._cards.length > 0)) return html``;
+
+        this._createCards();
 
         return html`
             <div class="container">${this._cards.map((card) => html`<div class="element">${card}</div>`)}</div>
