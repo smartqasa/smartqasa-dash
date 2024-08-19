@@ -64,7 +64,7 @@ class VerticalStack extends LitElement {
 
         this._cards = this._config.cards.map((cardConfig) => {
             console.log("Card config", cardConfig);
-            const card = createThing(cardConfig) as LovelaceCard;
+            const card = createThing(cardConfig);
             card.hass = this.hass;
             return card;
         });
