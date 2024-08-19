@@ -1,4 +1,4 @@
-import { HASSDomEvent } from "../fire_event";
+import { HASSDomEvent } from "../fire-event";
 
 export interface ActionHandlerOptions {
     hasHold?: boolean;

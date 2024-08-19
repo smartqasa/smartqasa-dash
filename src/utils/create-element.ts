@@ -1,26 +1,12 @@
 import { LovelaceCard, LovelaceCardConfig } from "../types";
 
-export const createCardElement = (config: LovelaceCardConfig): LovelaceCard | undefined => {
-    try {
-        const tag = config.type;
-        if (customElements.get(tag)) {
-            const element = document.createElement(tag) as LovelaceCard;
-            element.setConfig(config);
+export const createElement = (config: LovelaceCardConfig): LovelaceCard | undefined => {
+    if (!config.type) return;
 
-            return element;
-        }
-        const element = document.createElement(tag) as LovelaceCard;
-        customElements.whenDefined(tag).then(() => {
-            try {
-                customElements.upgrade(element);
-                element.setConfig(config);
-            } catch (err) {
-                console.error("Error setting config for element:", err);
-            }
-        });
-        return element;
-    } catch (err) {
-        console.error("Error creating card element:", err);
-        return undefined;
-    }
+    const tag = config.type.startsWith("custom:") ? config.type.replace("custom:", "") : config.type;
+    if (!customElements.get(tag)) return;
+
+    const element = window.document.createElement(tag) as LovelaceCard;
+    if (!element.setConfig) return;
+    element.setConfig(config);
 };
