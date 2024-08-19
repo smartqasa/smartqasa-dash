@@ -252,6 +252,9 @@ let VerticalStack = class VerticalStack extends h {
         this._createCards();
     }
     update(changedProps) {
+        if (changedProps.has("_config") && this._config) {
+            this._createCards();
+        }
         if (changedProps.has("hass") && this.hass) {
             this._cards.forEach((card) => {
                 card.hass = this.hass;
