@@ -8065,6 +8065,10 @@ window.customCards.push({
     description: "A SmartQasa tile for controlling a lock entity.",
 });
 let LockTile = class LockTile extends h {
+    constructor() {
+        super(...arguments);
+        this._running = false;
+    }
     static { this.styles = [tileBaseStyle, tileStateStyle, tileIconBlinkStyle, tileIconSpinStyle]; }
     setConfig(config) {
         this._config = { ...config };
@@ -8074,7 +8078,8 @@ let LockTile = class LockTile extends h {
         if (!this._config)
             return false;
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
-            changedProps.has("_config"));
+            changedProps.has("_config") ||
+            changedProps.has("_running"));
     }
     render() {
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
@@ -8128,6 +8133,7 @@ let LockTile = class LockTile extends h {
                     icon = "hass:lock-alert";
                     iconAnimation = "none";
                     iconColor = "var(--sq-unavailable-rgb)";
+                    break;
             }
             name = this._config.name || this._stateObj.attributes.friendly_name || this._entity;
             stateFmtd = this.hass.formatEntityState(this._stateObj);
@@ -8143,13 +8149,17 @@ let LockTile = class LockTile extends h {
     }
     _toggleEntity(e) {
         e.stopPropagation();
-        if (!this.hass || !this._entity || !this._stateObj)
+        if (!this._stateObj)
             return;
         const state = this._stateObj.state;
-        this.hass.states[this._entity].state = state === "locked" ? "unlocking" : "locking";
+        this._running = true;
+        this._stateObj.state = state == "locked" ? "unlocking" : "locking";
         callService(this.hass, "lock", state == "locked" ? "unlock" : "lock", {
             entity_id: this._entity,
         });
+        setTimeout(() => {
+            this._running = false;
+        }, 500);
     }
     _showMoreInfo(e) {
         e.stopPropagation();
@@ -8165,6 +8175,9 @@ __decorate([
 __decorate([
     r$1()
 ], LockTile.prototype, "_stateObj", void 0);
+__decorate([
+    r$1()
+], LockTile.prototype, "_running", void 0);
 LockTile = __decorate([
     t$2("smartqasa-lock-tile")
 ], LockTile);

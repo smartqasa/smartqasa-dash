@@ -24,6 +24,7 @@ export class LockTile extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() private _config?: Config;
     @state() private _stateObj?: HassEntity;
+    @state() private _running: boolean = false;
     private _entity?: string;
 
     static styles: CSSResultGroup = [tileBaseStyle, tileStateStyle, tileIconBlinkStyle, tileIconSpinStyle];
@@ -37,7 +38,8 @@ export class LockTile extends LitElement {
         if (!this._config) return false;
         return !!(
             (changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
-            changedProps.has("_config")
+            changedProps.has("_config") ||
+            changedProps.has("_running")
         );
     }
 
@@ -96,6 +98,7 @@ export class LockTile extends LitElement {
                     icon = "hass:lock-alert";
                     iconAnimation = "none";
                     iconColor = "var(--sq-unavailable-rgb)";
+                    break;
             }
             name = this._config!.name || this._stateObj.attributes.friendly_name || this._entity;
             stateFmtd = this.hass!.formatEntityState(this._stateObj);
@@ -112,13 +115,18 @@ export class LockTile extends LitElement {
 
     private _toggleEntity(e: Event): void {
         e.stopPropagation();
-        if (!this.hass || !this._entity || !this._stateObj) return;
+        if (!this._stateObj) return;
 
         const state = this._stateObj.state;
-        this.hass.states[this._entity].state = state === "locked" ? "unlocking" : "locking";
+        this._running = true;
+        this._stateObj.state = state == "locked" ? "unlocking" : "locking";
         callService(this.hass, "lock", state == "locked" ? "unlock" : "lock", {
             entity_id: this._entity,
         });
+
+        setTimeout(() => {
+            this._running = false;
+        }, 500);
     }
 
     private _showMoreInfo(e: Event): void {
