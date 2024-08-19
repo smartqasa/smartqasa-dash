@@ -1,9 +1,10 @@
 import { LovelaceCard, LovelaceCardConfig } from "../types";
 
 export const createElement = (config: LovelaceCardConfig): LovelaceCard | undefined => {
-    console.log("Config", config);
-
-    if (!config.type) return undefined;
+    if (!config.type) {
+        console.error("Error: No type configured for element:", config);
+        return undefined;
+    }
 
     const tag = config.type.startsWith("custom:") ? config.type.replace("custom:", "") : config.type;
     if (!customElements.get(tag)) {

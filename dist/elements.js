@@ -202,9 +202,10 @@ PanelCard = __decorate([
 ], PanelCard);
 
 const createElement = (config) => {
-    console.log("Config", config);
-    if (!config.type)
+    if (!config.type) {
+        console.error("Error: No type configured for element:", config);
         return undefined;
+    }
     const tag = config.type.startsWith("custom:") ? config.type.replace("custom:", "") : config.type;
     if (!customElements.get(tag)) {
         console.error("Error: Custom element doesn't exist:", tag);
@@ -251,9 +252,11 @@ let VerticalStack = class VerticalStack extends h {
         this._createCards();
     }
     update(changedProps) {
+        /*
         if (changedProps.has("_config")) {
             this._createCards();
         }
+*/
         if (changedProps.has("hass") && this.hass) {
             this._cards.forEach((card) => {
                 card.hass = this.hass;
@@ -262,18 +265,17 @@ let VerticalStack = class VerticalStack extends h {
         super.update(changedProps);
     }
     render() {
-        if (!this._config || !this.hass || !(this._cards.length > 0))
-            return ke ``;
+        if (!this._config || !this.hass || !Array.isArray(this._cards))
+            return D;
         return ke `
             <div class="container">${this._cards.map((card) => ke `<div class="element">${card}</div>`)}</div>
         `;
     }
     _createCards() {
-        if (!this._config || !this.hass)
+        if (!this._config)
             return;
         this._cards = this._config.cards.map((cardConfig) => {
             const card = createElement(cardConfig);
-            card.hass = this.hass;
             return card;
         });
     }

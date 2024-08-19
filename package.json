@@ -3,7 +3,7 @@
     "version": "2024.8.19b-3",
     "description": "SmartQasa Dashboard Elements",
     "type": "module",
-    "author": "Tom BRuno",
+    "author": "Tom Bruno",
     "repository": {
         "type": "git",
         "url": "https://github.com/smartqasa/smartqasa-dash"
