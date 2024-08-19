@@ -233,6 +233,9 @@ let VerticalStack = class VerticalStack extends h {
         this._createCards();
     }
     update(changedProps) {
+        if (changedProps.has("_config")) {
+            this._createCards();
+        }
         if (changedProps.has("hass") && this.hass) {
             this._cards.forEach((card) => {
                 card.hass = this.hass;
@@ -251,7 +254,6 @@ let VerticalStack = class VerticalStack extends h {
         if (!this._config || !this.hass)
             return;
         this._cards = this._config.cards.map((cardConfig) => {
-            console.log("Card config", cardConfig);
             const card = oe(cardConfig);
             card.hass = this.hass;
             return card;
