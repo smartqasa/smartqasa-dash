@@ -202,6 +202,7 @@ PanelCard = __decorate([
 ], PanelCard);
 
 const createElement = (config) => {
+    console.log("Config", config);
     if (!config.type)
         return undefined;
     const tag = config.type.startsWith("custom:") ? config.type.replace("custom:", "") : config.type;
