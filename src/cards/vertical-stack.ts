@@ -16,8 +16,8 @@ window.customCards.push({
 
 @customElement("smartqasa-vertical-stack-card")
 class VerticalStack extends LitElement {
-    @property({ attribute: false }) private hass!: HomeAssistant;
-    @property() private _config?: Config;
+    @property({ attribute: false }) private hass?: HomeAssistant;
+    @state() private _config?: Config;
     @state() private _cards: LovelaceCard[] = [];
 
     static get styles() {
@@ -51,6 +51,13 @@ class VerticalStack extends LitElement {
         }
     }
 
+    protected render() {
+        if (!this._config || !this.hass || !(this._cards.length > 0)) return html``;
+
+        return html`
+            <div class="container">${this._cards.map((card) => html`<div class="element">${card}</div>`)}</div>
+        `;
+    }
     private _createCards() {
         if (!this.hass || !this._config) {
             return;
@@ -61,13 +68,5 @@ class VerticalStack extends LitElement {
             element.hass = this.hass;
             return element;
         });
-    }
-
-    protected render() {
-        if (!this._config || !this.hass || !(this._cards.length > 0)) return html``;
-
-        return html`
-            <div class="container">${this._cards.map((card) => html`<div class="element">${card}</div>`)}</div>
-        `;
     }
 }

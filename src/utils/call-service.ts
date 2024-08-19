@@ -2,7 +2,7 @@ import { HassEntity, HomeAssistant } from "../types";
 
 interface ServiceContext {
     hass: HomeAssistant;
-    _stateObj: HassEntity;
+    stateObj: HassEntity;
 }
 
 export const callService = async (
@@ -15,7 +15,7 @@ export const callService = async (
         console.error(`Error calling ${domain}.${service}:`, "Connection to Home Assistant is not available.");
         return;
     }
-    if (!context._stateObj) {
+    if (!context.stateObj) {
         console.error(`Error calling ${domain}.${service}:`, "The entity state object is not available.");
         return;
     }

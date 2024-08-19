@@ -68,37 +68,42 @@ export class LockTile extends LitElement {
 
         if (this._stateObj) {
             const state = this._stateObj.state || "unknown";
-            switch (state) {
-                case "locked":
-                    icon = "hass:lock";
-                    iconAnimation = "none";
-                    iconColor = "var(--sq-inactive-rgb)";
-                    break;
-                case "unlocking":
-                    icon = "hass:rotate-right";
-                    iconAnimation = "spin 1.0s linear infinite";
-                    iconColor = "var(--sq-lock-unlocking-rgb)";
-                    break;
-                case "unlocked":
-                    icon = "hass:lock-open";
-                    iconAnimation = "none";
-                    iconColor = "var(--sq-lock-unlocked-rgb)";
-                    break;
-                case "locking":
-                    icon = "hass:rotate-right";
-                    iconAnimation = "spin 1.0s linear infinite";
-                    iconColor = "var(--sq-lock-locking-rgb)";
-                    break;
-                case "jammed":
-                    icon = "hass:lock-open";
-                    iconAnimation = "blink 1.0s linear infinite";
-                    iconColor = "var(--sq-lock-jammed-rgb, 255, 0, 0)";
-                    break;
-                default:
-                    icon = "hass:lock-alert";
-                    iconAnimation = "none";
-                    iconColor = "var(--sq-unavailable-rgb)";
-                    break;
+            if (this._running) {
+                icon = "hass:rotate-right";
+                iconAnimation = "spin 1.0s linear infinite";
+                iconColor = "var(--sq-lock-locking-rgb)";
+            } else {
+                switch (state) {
+                    case "locked":
+                        icon = "hass:lock";
+                        iconAnimation = "none";
+                        iconColor = "var(--sq-inactive-rgb)";
+                        break;
+                    case "unlocking":
+                        icon = "hass:rotate-right";
+                        iconAnimation = "spin 1.0s linear infinite";
+                        iconColor = "var(--sq-lock-unlocking-rgb)";
+                        break;
+                    case "unlocked":
+                        icon = "hass:lock-open";
+                        iconAnimation = "none";
+                        iconColor = "var(--sq-lock-unlocked-rgb)";
+                        break;
+                    case "locking":
+                        icon = "hass:rotate-right";
+                        iconAnimation = "spin 1.0s linear infinite";
+                        iconColor = "var(--sq-lock-locking-rgb)";
+                        break;
+                    case "jammed":
+                        icon = "hass:lock-open";
+                        iconAnimation = "blink 1.0s linear infinite";
+                        iconColor = "var(--sq-lock-jammed-rgb, 255, 0, 0)";
+                        break;
+                    default:
+                        icon = "hass:lock-alert";
+                        iconAnimation = "none";
+                        iconColor = "var(--sq-unavailable-rgb)";
+                }
             }
             name = this._config!.name || this._stateObj.attributes.friendly_name || this._entity;
             stateFmtd = this.hass!.formatEntityState(this._stateObj);
@@ -119,14 +124,10 @@ export class LockTile extends LitElement {
 
         const state = this._stateObj.state;
         this._running = true;
-        this._stateObj.state = state == "locked" ? "unlocking" : "locking";
         callService(this, "lock", state == "locked" ? "unlock" : "lock", {
             entity_id: this._entity,
         });
-
-        setTimeout(() => {
-            this._running = false;
-        }, 250);
+        this._running = false;
     }
 
     private _showMoreInfo(e: Event): void {

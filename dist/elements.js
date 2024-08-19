@@ -240,6 +240,13 @@ let VerticalStack = class VerticalStack extends h {
             this._createCards();
         }
     }
+    render() {
+        if (!this._config || !this.hass || !(this._cards.length > 0))
+            return ke ``;
+        return ke `
+            <div class="container">${this._cards.map((card) => ke `<div class="element">${card}</div>`)}</div>
+        `;
+    }
     _createCards() {
         if (!this.hass || !this._config) {
             return;
@@ -250,19 +257,12 @@ let VerticalStack = class VerticalStack extends h {
             return element;
         });
     }
-    render() {
-        if (!this._config || !this.hass || !(this._cards.length > 0))
-            return ke ``;
-        return ke `
-            <div class="container">${this._cards.map((card) => ke `<div class="element">${card}</div>`)}</div>
-        `;
-    }
 };
 __decorate([
     n({ attribute: false })
 ], VerticalStack.prototype, "hass", void 0);
 __decorate([
-    n()
+    r$1()
 ], VerticalStack.prototype, "_config", void 0);
 __decorate([
     r$1()
@@ -276,7 +276,7 @@ const callService = async (context, domain, service, serviceData) => {
         console.error(`Error calling ${domain}.${service}:`, "Connection to Home Assistant is not available.");
         return;
     }
-    if (!context._stateObj) {
+    if (!context.stateObj) {
         console.error(`Error calling ${domain}.${service}:`, "The entity state object is not available.");
         return;
     }
@@ -8107,37 +8107,43 @@ let LockTile = class LockTile extends h {
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
         if (this._stateObj) {
             const state = this._stateObj.state || "unknown";
-            switch (state) {
-                case "locked":
-                    icon = "hass:lock";
-                    iconAnimation = "none";
-                    iconColor = "var(--sq-inactive-rgb)";
-                    break;
-                case "unlocking":
-                    icon = "hass:rotate-right";
-                    iconAnimation = "spin 1.0s linear infinite";
-                    iconColor = "var(--sq-lock-unlocking-rgb)";
-                    break;
-                case "unlocked":
-                    icon = "hass:lock-open";
-                    iconAnimation = "none";
-                    iconColor = "var(--sq-lock-unlocked-rgb)";
-                    break;
-                case "locking":
-                    icon = "hass:rotate-right";
-                    iconAnimation = "spin 1.0s linear infinite";
-                    iconColor = "var(--sq-lock-locking-rgb)";
-                    break;
-                case "jammed":
-                    icon = "hass:lock-open";
-                    iconAnimation = "blink 1.0s linear infinite";
-                    iconColor = "var(--sq-lock-jammed-rgb, 255, 0, 0)";
-                    break;
-                default:
-                    icon = "hass:lock-alert";
-                    iconAnimation = "none";
-                    iconColor = "var(--sq-unavailable-rgb)";
-                    break;
+            if (this._running) {
+                icon = "hass:rotate-right";
+                iconAnimation = "spin 1.0s linear infinite";
+                iconColor = "var(--sq-lock-locking-rgb)";
+            }
+            else {
+                switch (state) {
+                    case "locked":
+                        icon = "hass:lock";
+                        iconAnimation = "none";
+                        iconColor = "var(--sq-inactive-rgb)";
+                        break;
+                    case "unlocking":
+                        icon = "hass:rotate-right";
+                        iconAnimation = "spin 1.0s linear infinite";
+                        iconColor = "var(--sq-lock-unlocking-rgb)";
+                        break;
+                    case "unlocked":
+                        icon = "hass:lock-open";
+                        iconAnimation = "none";
+                        iconColor = "var(--sq-lock-unlocked-rgb)";
+                        break;
+                    case "locking":
+                        icon = "hass:rotate-right";
+                        iconAnimation = "spin 1.0s linear infinite";
+                        iconColor = "var(--sq-lock-locking-rgb)";
+                        break;
+                    case "jammed":
+                        icon = "hass:lock-open";
+                        iconAnimation = "blink 1.0s linear infinite";
+                        iconColor = "var(--sq-lock-jammed-rgb, 255, 0, 0)";
+                        break;
+                    default:
+                        icon = "hass:lock-alert";
+                        iconAnimation = "none";
+                        iconColor = "var(--sq-unavailable-rgb)";
+                }
             }
             name = this._config.name || this._stateObj.attributes.friendly_name || this._entity;
             stateFmtd = this.hass.formatEntityState(this._stateObj);
@@ -8157,13 +8163,10 @@ let LockTile = class LockTile extends h {
             return;
         const state = this._stateObj.state;
         this._running = true;
-        this._stateObj.state = state == "locked" ? "unlocking" : "locking";
         callService(this, "lock", state == "locked" ? "unlock" : "lock", {
             entity_id: this._entity,
         });
-        setTimeout(() => {
-            this._running = false;
-        }, 250);
+        this._running = false;
     }
     _showMoreInfo(e) {
         e.stopPropagation();
