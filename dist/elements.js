@@ -202,17 +202,21 @@ PanelCard = __decorate([
 ], PanelCard);
 
 const createElement = (config) => {
-    console.log("Config", config);
     if (!config.type)
-        return;
+        return undefined;
     const tag = config.type.startsWith("custom:") ? config.type.replace("custom:", "") : config.type;
-    if (!customElements.get(tag))
-        return;
+    if (!customElements.get(tag)) {
+        console.error("Error: Custom element doesn't exist:", tag);
+        return undefined;
+    }
     const element = window.document.createElement(tag);
-    if (!element.setConfig)
-        return;
-    element.setConfig(config);
-    console.log("Element", element);
+    try {
+        element.setConfig(config);
+    }
+    catch (err) {
+        console.error("Error setting config for element:", err);
+        return undefined;
+    }
     return element;
 };
 
