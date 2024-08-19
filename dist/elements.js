@@ -230,6 +230,7 @@ let VerticalStack = class VerticalStack extends h {
             throw new Error("You need to define 'cards'");
         }
         this._config = { ...config };
+        this._createCards();
     }
     shouldUpdate(changedProps) {
         return changedProps.has("hass") || changedProps.has("_config");
