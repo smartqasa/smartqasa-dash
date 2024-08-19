@@ -259,10 +259,8 @@ let VerticalStack = class VerticalStack extends h {
         super.update(changedProps);
     }
     render() {
-        // console.log("Render before checks");
         if (!this._config || !this.hass || !(this._cards.length > 0))
             return ke ``;
-        // console.log("Render after checks");
         return ke `
             <div class="container">${this._cards.map((card) => ke `<div class="element">${card}</div>`)}</div>
         `;
@@ -271,6 +269,7 @@ let VerticalStack = class VerticalStack extends h {
         if (!this._config || !this.hass)
             return;
         this._cards = this._config.cards.map((cardConfig) => {
+            console.log("Card config", cardConfig);
             const card = createElement(cardConfig);
             card.hass = this.hass;
             return card;

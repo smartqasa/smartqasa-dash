@@ -53,9 +53,7 @@ class VerticalStack extends LitElement {
     }
 
     protected render() {
-        // console.log("Render before checks");
         if (!this._config || !this.hass || !(this._cards.length > 0)) return html``;
-        // console.log("Render after checks");
         return html`
             <div class="container">${this._cards.map((card) => html`<div class="element">${card}</div>`)}</div>
         `;
@@ -65,6 +63,7 @@ class VerticalStack extends LitElement {
         if (!this._config || !this.hass) return;
 
         this._cards = this._config.cards.map((cardConfig) => {
+            console.log("Card config", cardConfig);
             const card = createElement(cardConfig) as LovelaceCard;
             card.hass = this.hass;
             return card;
