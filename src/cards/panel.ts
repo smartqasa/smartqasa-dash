@@ -104,6 +104,7 @@ export class PanelCard extends LitElement {
     }
 
     renderHeader() {
+        console.log("Header Chips:", this._headerChips);
         return html`
             <div class="header-content">
                 <smartqasa-time-date .hass=${this.hass}></smartqasa-time-date>

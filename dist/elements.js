@@ -4157,6 +4157,7 @@ let PanelCard = class PanelCard extends h {
         `;
     }
     renderHeader() {
+        console.log("Header Chips:", this._headerChips);
         return ke `
             <div class="header-content">
                 <smartqasa-time-date .hass=${this.hass}></smartqasa-time-date>
