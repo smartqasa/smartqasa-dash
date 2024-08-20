@@ -1,4 +1,4 @@
-import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult } from "lit";
+import { CSSResultGroup, html, LitElement, nothing, PropertyValues, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
@@ -49,8 +49,8 @@ export class DialogChip extends LitElement {
         );
     }
 
-    protected render(): TemplateResult {
-        if (!this._dialogObj) return html``;
+    protected render(): TemplateResult | typeof nothing {
+        if (!this._dialogObj) return nothing;
 
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
 
@@ -61,7 +61,7 @@ export class DialogChip extends LitElement {
             (this._dialog === "sensors_doors" && state === "off") ||
             (this._dialog === "sensors_windows" && state === "off")
         )
-            return html``;
+            return nothing;
 
         const containerStyle = {
             "grid-template-areas": this._label ? '"i t"' : '"i"',

@@ -5548,14 +5548,14 @@ let DialogChip = class DialogChip extends h {
     }
     render() {
         if (!this._dialogObj)
-            return ke ``;
+            return D;
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
         const state = this._stateObj?.state || "unknown";
         if ((this._dialog === "garages" && state === "closed") ||
             (this._dialog === "locks" && state === "locked") ||
             (this._dialog === "sensors_doors" && state === "off") ||
             (this._dialog === "sensors_windows" && state === "off"))
-            return ke ``;
+            return D;
         const containerStyle = {
             "grid-template-areas": this._label ? '"i t"' : '"i"',
         };
