@@ -4080,23 +4080,28 @@ var jsYaml = {
 	safeDump: safeDump
 };
 
-const loadYamlAsJson$1 = async (yamlFilePath) => {
+async function loadYamlAsJson(yamlFilePath) {
     try {
         const response = await fetch(yamlFilePath);
         if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
+            console.error(`HTTP error! Status: ${response.status}`);
+            return {
+                type: "custom:smartqasa-title-card",
+                title: "Missing file.",
+            };
         }
         const yamlContent = await response.text();
-        return jsYaml.load(yamlContent);
+        const jsonContent = jsYaml.load(yamlContent);
+        return jsonContent;
     }
-    catch (error) {
-        console.error("Error fetching and parsing YAML file:", error);
+    catch (e) {
+        console.error("Error fetching and parsing YAML file:", e);
         return {
             type: "custom:smartqasa-title-card",
             title: "Missing file.",
         };
     }
-};
+}
 
 window.customCards.push({
     type: "smartqasa-panel-card",
@@ -4120,13 +4125,25 @@ let PanelCard = class PanelCard extends h {
             align-items: center;
             justify-content: space-between;
         }
+        .chip-container {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-end;
+        }
+        .chip {
+            margin-left: 0.8rem;
+        }
+        .chip:first-child {
+            margin-left: 0;
+        }
     `; }
     async setConfig(config) {
         this._config = { ...config };
         this._area = this._config.area;
         const yamlFilePath = "/local/smartqasa/lists/chips.yaml";
-        this._headerChips = await loadYamlAsJson$1(yamlFilePath);
-        this.requestUpdate();
+        this._headerChips = (await loadYamlAsJson(yamlFilePath));
+        this.requestUpdate(); // Ensure re-render
     }
     shouldUpdate(changedProps) {
         if (!this._config)
@@ -4154,18 +4171,14 @@ let PanelCard = class PanelCard extends h {
         return ke `
             <div class="header-content">
                 <smartqasa-time-date .hass=${this.hass}></smartqasa-time-date>
-                ${this._headerChips
-            ? ke `
-                          <smartqasa-horizontal-stack
-                              .hass=${this.hass}
-                              .config=${{
-                type: "custom:smartqasa-horizontal-stack",
-                align_right: true,
-                cards: this._headerChips,
-            }}
-                          ></smartqasa-horizontal-stack>
-                      `
-            : D}
+                ${this._headerChips && this._headerChips.length > 0 ? this.renderHeaderChips() : D}
+            </div>
+        `;
+    }
+    renderHeaderChips() {
+        return ke `
+            <div class="chip-container">
+                ${this._headerChips.map((chip) => ke `<div class="chip">${createElement(chip)}</div>`)}
             </div>
         `;
     }
@@ -4856,29 +4869,6 @@ __decorate([
 TVRemoteCard = __decorate([
     t$1("smartqasa-tv-remote-card")
 ], TVRemoteCard);
-
-async function loadYamlAsJson(yamlFilePath) {
-    try {
-        const response = await fetch(yamlFilePath);
-        if (!response.ok) {
-            console.error(`HTTP error! Status: ${response.status}`);
-            return {
-                type: "custom:smartqasa-title-card",
-                title: "Missing file.",
-            };
-        }
-        const yamlContent = await response.text();
-        const jsonContent = jsYaml.load(yamlContent);
-        return jsonContent;
-    }
-    catch (e) {
-        console.error("Error fetching and parsing YAML file:", e);
-        return {
-            type: "custom:smartqasa-title-card",
-            title: "Missing file.",
-        };
-    }
-}
 
 const chipBaseStyle = i$3 `
     .container {
