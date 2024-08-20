@@ -5,7 +5,7 @@ import { createElement } from "../utils/create-element";
 
 interface Config extends LovelaceCardConfig {
     cards: LovelaceCardConfig[];
-    align_right?: boolean;
+    justify_right?: boolean;
 }
 
 window.customCards.push({
@@ -29,15 +29,8 @@ class HorizontalStack extends LitElement {
                 align-items: center;
                 justify-content: flex-start;
             }
-            .container.align-right {
+            .container.justify-right {
                 justify-content: flex-end;
-            }
-            .element {
-                margin-right: 0.8rem;
-            }
-            .align-right .element {
-                margin-right: 0;
-                margin-left: 0.8rem;
             }
         `;
     }
@@ -70,28 +63,24 @@ class HorizontalStack extends LitElement {
     protected render() {
         if (!this._config || !this.hass || !Array.isArray(this._cards)) return nothing;
 
-        const containerClass = this._config.align_right ? "container align-right" : "container";
+        const containerClass = this._config.justify_right ? "container justify-right" : "container";
 
         return html`
-            <div class="${containerClass}">
-                ${this._cards
-                    .filter((card) => card !== nothing) // Filter out any `nothing` cards
-                    .map((card) => html`<div class="element">${card}</div>`)}
-            </div>
+            <div class="${containerClass}">${this._cards.map((card) => html`<div class="element">${card}</div>`)}</div>
         `;
     }
 
     private _createCards() {
         if (!this._config || !this.hass) return;
 
-        this._cards = this._config.cards.map((cardConfig) => {
-            console.log(cardConfig);
-            if (cardConfig.empty) return nothing;
-
-            const card = createElement(cardConfig) as LovelaceCard | null;
+        this._cards = this._config.cards.map((cardConfig, index) => {
+            const card = createElement(cardConfig) as LovelaceCard;
 
             if (card) {
                 card.hass = this.hass;
+
+                (card as HTMLElement).style.marginLeft = "0.8rem";
+
                 return card;
             }
 
