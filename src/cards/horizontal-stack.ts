@@ -72,7 +72,6 @@ class HorizontalStack extends LitElement {
 
         const containerClass = this._config.align_right ? "container align-right" : "container";
 
-        console.log(this._cards);
         return html`
             <div class="${containerClass}">
                 ${this._cards
@@ -86,6 +85,7 @@ class HorizontalStack extends LitElement {
         if (!this._config || !this.hass) return;
 
         this._cards = this._config.cards.map((cardConfig) => {
+            console.log(cardConfig);
             if (cardConfig.empty) return nothing;
 
             const card = createElement(cardConfig) as LovelaceCard | null;
