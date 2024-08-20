@@ -118,14 +118,13 @@ let HorizontalStack = class HorizontalStack extends h {
             .element {
                 padding-right: 0.8rem;
             }
-            .element.align-right {
-                padding-right: 0;
-                padding-left: 0.8rem;
-            }
             .element:last-child {
                 padding-right: 0;
             }
-            .element.align-right:last-child {
+            .element-align-right {
+                padding-left: 0.8rem;
+            }
+            .element-align-right:last-child {
                 padding-left: 0;
             }
         `;
@@ -152,7 +151,7 @@ let HorizontalStack = class HorizontalStack extends h {
         if (!this._config || !this.hass || !Array.isArray(this._cards))
             return D;
         const containerClass = this._config.align_right ? "container align-right" : "container";
-        const elementClass = this._config.align_right ? "element align-right" : "element";
+        const elementClass = this._config.align_right ? "element-align-right" : "element";
         return ke `
             <div class="${containerClass}">
                 ${this._cards.map((card) => ke `<div class="${elementClass}">${card}</div>`)}
