@@ -6,17 +6,17 @@ export const chipBaseStyle = css`
         align-items: center;
         justify-content: center;
         width: max-content;
-        padding: 1rem;
         border: var(--sq-card-border);
         border-radius: var(--sq-chip-border-radius);
         background-color: var(--sq-card-background-color);
-        cursor: pointer;
         transition: var(--sq-icon-transition, none);
+        cursor: pointer;
     }
     .icon {
         display: flex;
         height: 1.8rem;
         width: 1.8rem;
+        padding: 1rem;
         color: rgb(var(--sq-primary-text-rgb));
         transition: var(--sq-icon-transition, none);
     }
@@ -27,12 +27,11 @@ export const chipTextStyle = css`
         display: flex;
         align-items: center;
         justify-content: flex-start;
-        padding: 1rem;
         border: var(--sq-card-border);
         border-radius: var(--sq-chip-border-radius);
         background-color: var(--sq-card-background-color);
-        cursor: pointer;
         transition: var(--sq-icon-transition, none);
+        cursor: pointer;
     }
     .icon {
         margin-right: 0.5rem;

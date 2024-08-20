@@ -1,4 +1,4 @@
-import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult } from "lit";
+import { CSSResultGroup, html, LitElement, nothing, PropertyValues, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
 import { selectOptionDialog } from "../utils/select-option-dialog";
@@ -25,7 +25,7 @@ export class SelectChip extends LitElement {
     private _entity?: string;
     private _stateObj?: HassEntity;
 
-    static styles: CSSResultGroup = [chipBaseStyle, chipTextStyle, chipDoubleStyle, chipIconSpinStyle];
+    static styles: CSSResultGroup = [chipBaseStyle];
 
     public setConfig(config: Config): void {
         this._config = { ...config };
@@ -40,8 +40,8 @@ export class SelectChip extends LitElement {
         );
     }
 
-    protected render(): TemplateResult {
-        if (!this._entity) return html``;
+    protected render(): TemplateResult | typeof nothing {
+        if (!this._entity) return nothing;
 
         let icon;
 
