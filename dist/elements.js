@@ -116,21 +116,11 @@ let HorizontalStack = class HorizontalStack extends h {
                 justify-content: flex-end;
             }
             .element {
-                margin-right: var(--sq-chip-spacing, 0.8rem);
-            }
-            .element:last-child {
-                margin-right: 0;
+                margin-right: 0.8rem;
             }
             .align-right .element {
                 margin-right: 0;
-                margin-left: var(--sq-chip-spacing, 0.8rem);
-            }
-            .align-right .element:first-child {
-                margin-left: 0;
-            }
-            .element.nothing {
-                margin-right: 0;
-                margin-left: 0;
+                margin-left: 0.8rem;
             }
         `;
     }
@@ -160,13 +150,7 @@ let HorizontalStack = class HorizontalStack extends h {
         const containerClass = this._config.align_right ? "container align-right" : "container";
         return ke `
             <div class="${containerClass}">
-                ${this._cards.map((card, index) => {
-            if (card === D) {
-                return ke `<div class="element nothing"></div>`;
-            }
-            const isLastChild = index === this._cards.length - 1;
-            return ke `<div class="element ${isLastChild ? "last-child" : ""}">${card}</div>`;
-        })}
+                ${this._cards.map((card) => (card !== D ? ke `<div class="element">${card}</div>` : D))}
             </div>
         `;
     }
@@ -175,7 +159,6 @@ let HorizontalStack = class HorizontalStack extends h {
             return;
         this._cards = this._config.cards.map((cardConfig) => {
             const card = createElement(cardConfig);
-            console.log("Chip:", card);
             if (card) {
                 card.hass = this.hass;
                 return card;

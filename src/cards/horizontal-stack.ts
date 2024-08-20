@@ -33,21 +33,11 @@ class HorizontalStack extends LitElement {
                 justify-content: flex-end;
             }
             .element {
-                margin-right: var(--sq-chip-spacing, 0.8rem);
-            }
-            .element:last-child {
-                margin-right: 0;
+                margin-right: 0.8rem;
             }
             .align-right .element {
                 margin-right: 0;
-                margin-left: var(--sq-chip-spacing, 0.8rem);
-            }
-            .align-right .element:first-child {
-                margin-left: 0;
-            }
-            .element.nothing {
-                margin-right: 0;
-                margin-left: 0;
+                margin-left: 0.8rem;
             }
         `;
     }
@@ -69,7 +59,7 @@ class HorizontalStack extends LitElement {
         if (changedProps.has("hass") && this.hass) {
             this._cards.forEach((card) => {
                 if (card !== nothing) {
-                    card.hass = this.hass;
+                    (card as LovelaceCard).hass = this.hass;
                 }
             });
         }
@@ -84,13 +74,7 @@ class HorizontalStack extends LitElement {
 
         return html`
             <div class="${containerClass}">
-                ${this._cards.map((card, index) => {
-                    if (card === nothing) {
-                        return html`<div class="element nothing"></div>`;
-                    }
-                    const isLastChild = index === this._cards.length - 1;
-                    return html`<div class="element ${isLastChild ? "last-child" : ""}">${card}</div>`;
-                })}
+                ${this._cards.map((card) => (card !== nothing ? html`<div class="element">${card}</div>` : nothing))}
             </div>
         `;
     }
@@ -99,12 +83,13 @@ class HorizontalStack extends LitElement {
         if (!this._config || !this.hass) return;
 
         this._cards = this._config.cards.map((cardConfig) => {
-            const card = createElement(cardConfig) as LovelaceCard;
-            console.log("Chip:", card);
+            const card = createElement(cardConfig) as LovelaceCard | null;
+
             if (card) {
                 card.hass = this.hass;
                 return card;
             }
+
             return nothing;
         });
     }
