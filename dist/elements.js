@@ -110,7 +110,6 @@ let HorizontalStack = class HorizontalStack extends h {
                 display: flex;
                 flex-direction: row;
                 align-items: center;
-                justify-content: flex-start;
             }
             .container.align-right {
                 justify-content: flex-end;

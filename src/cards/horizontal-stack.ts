@@ -27,7 +27,6 @@ class HorizontalStack extends LitElement {
                 display: flex;
                 flex-direction: row;
                 align-items: center;
-                justify-content: flex-start;
             }
             .container.align-right {
                 justify-content: flex-end;
