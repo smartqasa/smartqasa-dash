@@ -33,16 +33,17 @@ class HorizontalStack extends LitElement {
                 justify-content: flex-end;
             }
             .element {
-                padding-right: 0.8rem;
+                margin-right: 0.8rem;
             }
             .element:last-child {
-                padding-right: 0;
+                margin-right: 0;
             }
-            .element-align-right {
-                padding-left: 0.8rem;
+            .align-right .element {
+                margin-right: 0;
+                margin-left: 0.8rem;
             }
-            .element-align-right:last-child {
-                padding-left: 0;
+            .align-right .element:last-child {
+                margin-left: 0;
             }
         `;
     }
@@ -74,12 +75,9 @@ class HorizontalStack extends LitElement {
         if (!this._config || !this.hass || !Array.isArray(this._cards)) return nothing;
 
         const containerClass = this._config.align_right ? "container align-right" : "container";
-        const elementClass = this._config.align_right ? "element-align-right" : "element";
 
         return html`
-            <div class="${containerClass}">
-                ${this._cards.map((card) => html`<div class="${elementClass}">${card}</div>`)}
-            </div>
+            <div class="${containerClass}">${this._cards.map((card) => html`<div class="element">${card}</div>`)}</div>
         `;
     }
 
