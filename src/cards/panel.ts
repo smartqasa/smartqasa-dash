@@ -1,10 +1,32 @@
 import { css, html, LitElement, nothing, PropertyValues, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
-import { HassEntity } from "home-assistant-js-websocket";
 import { HassArea, HomeAssistant, LovelaceCardConfig } from "../types";
 import { deviceType } from "../const";
-import defaultImage from "../assets/images/default.png";
+import yaml from "js-yaml";
+
+// Function to load and parse the YAML file
+export async function loadYamlAsJson(yamlFilePath: string) {
+    try {
+        const response = await fetch(yamlFilePath);
+        if (!response.ok) {
+            console.error(`HTTP error! Status: ${response.status}`);
+            return {
+                type: "custom:smartqasa-title-card",
+                title: "Missing file.",
+            };
+        }
+        const yamlContent = await response.text();
+        const jsonContent = yaml.load(yamlContent);
+        return jsonContent;
+    } catch (e) {
+        console.error("Error fetching and parsing YAML file:", e);
+        return {
+            type: "custom:smartqasa-title-card",
+            title: "Missing file.",
+        };
+    }
+}
 
 interface Config extends LovelaceCardConfig {
     area: string;
@@ -25,6 +47,7 @@ export class PanelCard extends LitElement {
     @state() private _config?: Config;
     private _area?: string;
     private _areaObj?: HassArea;
+    private _headerChips?: LovelaceCardConfig[];
 
     static styles = css`
         :host {
@@ -46,18 +69,23 @@ export class PanelCard extends LitElement {
     public setConfig(config: Config): void {
         this._config = { ...config };
         this._area = this._config.area;
+
+        const yamlFilePath = "/config/www/smartqasa/lists/chips.yaml";
+        loadYamlAsJson(yamlFilePath).then((jsonConfig: unknown) => {
+            this._headerChips = jsonConfig as LovelaceCardConfig[];
+        });
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
         if (!this._config) return false;
         return !!(
             (changedProps.has("hass") && this._area && this.hass.areas[this._area] !== this._areaObj) ||
-            changedProps.has("_config")
+            changedProps.has("_config") ||
+            changedProps.has("headerCardsConfig")
         );
     }
 
     protected render(): TemplateResult {
-        const isAdmin = this.hass.user?.is_admin;
         const isPhone = deviceType === "phone";
 
         const containerStyles = {
@@ -79,6 +107,16 @@ export class PanelCard extends LitElement {
         return html`
             <div class="header-content">
                 <smartqasa-time-date .hass=${this.hass}></smartqasa-time-date>
+                ${this._headerChips &&
+                html`
+                    <smartqasa-horizontal-stack
+                        .hass=${this.hass}
+                        .config=${{
+                            align_right: true,
+                            cards: this._headerChips,
+                        }}
+                    ></smartqasa-horizontal-stack>
+                `}
             </div>
         `;
     }
