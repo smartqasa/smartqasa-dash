@@ -107,16 +107,18 @@ export class PanelCard extends LitElement {
         return html`
             <div class="header-content">
                 <smartqasa-time-date .hass=${this.hass}></smartqasa-time-date>
-                ${this._headerChips &&
-                html`
-                    <smartqasa-horizontal-stack
-                        .hass=${this.hass}
-                        .config=${{
-                            align_right: true,
-                            cards: this._headerChips,
-                        }}
-                    ></smartqasa-horizontal-stack>
-                `}
+                ${this._headerChips
+                    ? html`
+                          <smartqasa-horizontal-stack
+                              .hass=${this.hass}
+                              .config=${{
+                                  type: "custom:smartqasa-horizontal-stack",
+                                  align_right: true,
+                                  cards: this._headerChips,
+                              }}
+                          ></smartqasa-horizontal-stack>
+                      `
+                    : nothing}
             </div>
         `;
     }

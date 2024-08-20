@@ -4160,16 +4160,18 @@ let PanelCard = class PanelCard extends h {
         return ke `
             <div class="header-content">
                 <smartqasa-time-date .hass=${this.hass}></smartqasa-time-date>
-                ${this._headerChips &&
-            ke `
-                    <smartqasa-horizontal-stack
-                        .hass=${this.hass}
-                        .config=${{
+                ${this._headerChips
+            ? ke `
+                          <smartqasa-horizontal-stack
+                              .hass=${this.hass}
+                              .config=${{
+                type: "custom:smartqasa-horizontal-stack",
                 align_right: true,
                 cards: this._headerChips,
             }}
-                    ></smartqasa-horizontal-stack>
-                `}
+                          ></smartqasa-horizontal-stack>
+                      `
+            : D}
             </div>
         `;
     }
