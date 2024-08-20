@@ -175,6 +175,7 @@ let HorizontalStack = class HorizontalStack extends h {
             return;
         this._cards = this._config.cards.map((cardConfig) => {
             const card = createElement(cardConfig);
+            console.log("Chip:", card);
             if (card) {
                 card.hass = this.hass;
                 return card;
