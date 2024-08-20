@@ -72,6 +72,7 @@ class HorizontalStack extends LitElement {
 
         const containerClass = this._config.align_right ? "container align-right" : "container";
 
+        console.log(this._cards);
         return html`
             <div class="${containerClass}">
                 ${this._cards

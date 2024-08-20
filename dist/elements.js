@@ -148,6 +148,7 @@ let HorizontalStack = class HorizontalStack extends h {
         if (!this._config || !this.hass || !Array.isArray(this._cards))
             return D;
         const containerClass = this._config.align_right ? "container align-right" : "container";
+        console.log(this._cards);
         return ke `
             <div class="${containerClass}">
                 ${this._cards
