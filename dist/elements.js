@@ -4126,7 +4126,7 @@ let PanelCard = class PanelCard extends h {
         this._area = this._config.area;
         const yamlFilePath = "/local/smartqasa/lists/chips.yaml";
         this._headerChips = await loadYamlAsJson$1(yamlFilePath);
-        console.log("Header Chips:", this._headerChips);
+        this.requestUpdate();
     }
     shouldUpdate(changedProps) {
         if (!this._config)

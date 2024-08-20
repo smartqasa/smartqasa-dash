@@ -49,7 +49,7 @@ export class PanelCard extends LitElement {
 
         const yamlFilePath = "/local/smartqasa/lists/chips.yaml";
         this._headerChips = await loadYamlAsJson(yamlFilePath);
-        console.log("Header Chips:", this._headerChips);
+        this.requestUpdate();
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
