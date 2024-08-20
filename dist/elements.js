@@ -4128,6 +4128,9 @@ let PanelCard = class PanelCard extends h {
             align-items: center;
             justify-content: flex-end;
         }
+        .header-chip {
+            display: flex;
+        }
     `; }
     async setConfig(config) {
         this._config = { ...config };
@@ -4173,7 +4176,7 @@ let PanelCard = class PanelCard extends h {
             const chipElement = createElement(chip);
             chipElement.hass = this.hass;
             chipElement.style.marginLeft = "0.8rem";
-            return ke `<div class="header-chips">${chipElement}</div>`;
+            return ke `<div class="header-chip">${chipElement}</div>`;
         })}
             </div>
         `;

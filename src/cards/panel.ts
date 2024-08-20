@@ -48,6 +48,9 @@ export class PanelCard extends LitElement {
             align-items: center;
             justify-content: flex-end;
         }
+        .header-chip {
+            display: flex;
+        }
     `;
 
     public async setConfig(config: Config): Promise<void> {
@@ -102,7 +105,7 @@ export class PanelCard extends LitElement {
                     const chipElement = createElement(chip) as LovelaceCard;
                     chipElement.hass = this.hass;
                     chipElement.style.marginLeft = "0.8rem";
-                    return html`<div class="header-chips">${chipElement}</div>`;
+                    return html`<div class="header-chip">${chipElement}</div>`;
                 })}
             </div>
         `;
