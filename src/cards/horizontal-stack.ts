@@ -82,7 +82,8 @@ class HorizontalStack extends LitElement {
             if (card) {
                 card.hass = this.hass;
 
-                (card as HTMLElement).style.marginLeft = "0.8rem";
+                const marginProperty = this._config!.justify_right ? "marginLeft" : "marginRight";
+                (card as HTMLElement).style[marginProperty] = "var(--sq-chip-spacing, 0.8rem)";
 
                 return card;
             }

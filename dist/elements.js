@@ -155,7 +155,8 @@ let HorizontalStack = class HorizontalStack extends h {
             const card = createElement(cardConfig);
             if (card) {
                 card.hass = this.hass;
-                card.style.marginLeft = "0.8rem";
+                const marginProperty = this._config.justify_right ? "marginLeft" : "marginRight";
+                card.style[marginProperty] = "var(--sq-chip-spacing, 0.8rem)";
                 return card;
             }
             return D;
