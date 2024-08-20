@@ -150,7 +150,9 @@ let HorizontalStack = class HorizontalStack extends h {
         const containerClass = this._config.align_right ? "container align-right" : "container";
         return ke `
             <div class="${containerClass}">
-                ${this._cards.map((card) => (card !== D ? ke `<div class="element">${card}</div>` : D))}
+                ${this._cards
+            .filter((card) => card !== D) // Filter out any `nothing` cards
+            .map((card) => ke `<div class="element">${card}</div>`)}
             </div>
         `;
     }

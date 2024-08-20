@@ -74,7 +74,9 @@ class HorizontalStack extends LitElement {
 
         return html`
             <div class="${containerClass}">
-                ${this._cards.map((card) => (card !== nothing ? html`<div class="element">${card}</div>` : nothing))}
+                ${this._cards
+                    .filter((card) => card !== nothing) // Filter out any `nothing` cards
+                    .map((card) => html`<div class="element">${card}</div>`)}
             </div>
         `;
     }
