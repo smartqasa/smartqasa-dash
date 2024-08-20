@@ -116,16 +116,20 @@ let HorizontalStack = class HorizontalStack extends h {
                 justify-content: flex-end;
             }
             .element {
-                margin-right: 0.8rem;
+                margin-right: var(--sq-chip-spacing, 0.8rem);
             }
             .element:last-child {
                 margin-right: 0;
             }
             .align-right .element {
                 margin-right: 0;
-                margin-left: 0.8rem;
+                margin-left: var(--sq-chip-spacing, 0.8rem);
             }
             .align-right .element:first-child {
+                margin-left: 0;
+            }
+            .element.nothing {
+                margin-right: 0;
                 margin-left: 0;
             }
         `;
@@ -143,7 +147,9 @@ let HorizontalStack = class HorizontalStack extends h {
         }
         if (changedProps.has("hass") && this.hass) {
             this._cards.forEach((card) => {
-                card.hass = this.hass;
+                if (card !== D) {
+                    card.hass = this.hass;
+                }
             });
         }
         super.update(changedProps);
@@ -153,7 +159,15 @@ let HorizontalStack = class HorizontalStack extends h {
             return D;
         const containerClass = this._config.align_right ? "container align-right" : "container";
         return ke `
-            <div class="${containerClass}">${this._cards.map((card) => ke `<div class="element">${card}</div>`)}</div>
+            <div class="${containerClass}">
+                ${this._cards.map((card, index) => {
+            if (card === D) {
+                return ke `<div class="element nothing"></div>`;
+            }
+            const isLastChild = index === this._cards.length - 1;
+            return ke `<div class="element ${isLastChild ? "last-child" : ""}">${card}</div>`;
+        })}
+            </div>
         `;
     }
     _createCards() {
@@ -161,8 +175,11 @@ let HorizontalStack = class HorizontalStack extends h {
             return;
         this._cards = this._config.cards.map((cardConfig) => {
             const card = createElement(cardConfig);
-            card.hass = this.hass;
-            return card;
+            if (card) {
+                card.hass = this.hass;
+                return card;
+            }
+            return D;
         });
     }
 };
@@ -5861,7 +5878,7 @@ const chipBaseStyle = i$3 `
         display: flex;
         align-items: center;
         justify-content: center;
-        width: max-content;
+        width: fit-content;
         border: var(--sq-card-border);
         border-radius: var(--sq-chip-border-radius);
         background-color: var(--sq-card-background-color);
@@ -5870,9 +5887,9 @@ const chipBaseStyle = i$3 `
     }
     .icon {
         display: flex;
-        height: 1.8rem;
-        width: 1.8rem;
-        padding: 1rem;
+        height: var(--sq-chip-icon-size, 1.8rem);
+        width: var(--sq-chip-icon-size, 1.8rem);
+        padding: var(--sq-chip-padding, 1rem);
         color: rgb(var(--sq-primary-text-rgb));
         transition: var(--sq-icon-transition, none);
     }

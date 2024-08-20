@@ -19,7 +19,7 @@ window.customCards.push({
 class HorizontalStack extends LitElement {
     @property({ attribute: false }) private hass?: HomeAssistant;
     @state() private _config?: Config;
-    @state() private _cards: LovelaceCard[] = [];
+    @state() private _cards: (LovelaceCard | typeof nothing)[] = [];
 
     static get styles() {
         return css`
@@ -33,16 +33,20 @@ class HorizontalStack extends LitElement {
                 justify-content: flex-end;
             }
             .element {
-                margin-right: 0.8rem;
+                margin-right: var(--sq-chip-spacing, 0.8rem);
             }
             .element:last-child {
                 margin-right: 0;
             }
             .align-right .element {
                 margin-right: 0;
-                margin-left: 0.8rem;
+                margin-left: var(--sq-chip-spacing, 0.8rem);
             }
             .align-right .element:first-child {
+                margin-left: 0;
+            }
+            .element.nothing {
+                margin-right: 0;
                 margin-left: 0;
             }
         `;
@@ -64,7 +68,9 @@ class HorizontalStack extends LitElement {
 
         if (changedProps.has("hass") && this.hass) {
             this._cards.forEach((card) => {
-                card.hass = this.hass;
+                if (card !== nothing) {
+                    card.hass = this.hass;
+                }
             });
         }
 
@@ -77,7 +83,15 @@ class HorizontalStack extends LitElement {
         const containerClass = this._config.align_right ? "container align-right" : "container";
 
         return html`
-            <div class="${containerClass}">${this._cards.map((card) => html`<div class="element">${card}</div>`)}</div>
+            <div class="${containerClass}">
+                ${this._cards.map((card, index) => {
+                    if (card === nothing) {
+                        return html`<div class="element nothing"></div>`;
+                    }
+                    const isLastChild = index === this._cards.length - 1;
+                    return html`<div class="element ${isLastChild ? "last-child" : ""}">${card}</div>`;
+                })}
+            </div>
         `;
     }
 
@@ -86,8 +100,11 @@ class HorizontalStack extends LitElement {
 
         this._cards = this._config.cards.map((cardConfig) => {
             const card = createElement(cardConfig) as LovelaceCard;
-            card.hass = this.hass;
-            return card;
+            if (card) {
+                card.hass = this.hass;
+                return card;
+            }
+            return nothing;
         });
     }
 }

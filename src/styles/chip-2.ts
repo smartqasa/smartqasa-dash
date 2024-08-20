@@ -5,7 +5,7 @@ export const chipBaseStyle = css`
         display: flex;
         align-items: center;
         justify-content: center;
-        width: max-content;
+        width: fit-content;
         border: var(--sq-card-border);
         border-radius: var(--sq-chip-border-radius);
         background-color: var(--sq-card-background-color);
@@ -14,9 +14,9 @@ export const chipBaseStyle = css`
     }
     .icon {
         display: flex;
-        height: 1.8rem;
-        width: 1.8rem;
-        padding: 1rem;
+        height: var(--sq-chip-icon-size, 1.8rem);
+        width: var(--sq-chip-icon-size, 1.8rem);
+        padding: var(--sq-chip-padding, 1rem);
         color: rgb(var(--sq-primary-text-rgb));
         transition: var(--sq-icon-transition, none);
     }
