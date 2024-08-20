@@ -4178,7 +4178,11 @@ let PanelCard = class PanelCard extends h {
     renderHeaderChips() {
         return ke `
             <div class="chip-container">
-                ${this._headerChips.map((chip) => ke `<div class="chip">${createElement(chip)}</div>`)}
+                ${this._headerChips.map((chip) => {
+            const chipElement = createElement(chip);
+            chipElement.hass = this.hass;
+            return ke `<div class="chip">${chipElement}</div>`;
+        })}
             </div>
         `;
     }

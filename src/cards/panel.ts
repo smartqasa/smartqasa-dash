@@ -1,7 +1,7 @@
 import { css, html, LitElement, nothing, PropertyValues, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
-import { HassArea, HomeAssistant, LovelaceCardConfig } from "../types";
+import { HassArea, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 import { deviceType } from "../const";
 import { createElement } from "../utils/create-element";
 import { loadYamlAsJson } from "../utils/load-yaml-as-json";
@@ -104,7 +104,11 @@ export class PanelCard extends LitElement {
     private renderHeaderChips() {
         return html`
             <div class="chip-container">
-                ${this._headerChips!.map((chip) => html`<div class="chip">${createElement(chip)}</div>`)}
+                ${this._headerChips!.map((chip) => {
+                    const chipElement = createElement(chip) as LovelaceCard;
+                    chipElement.hass = this.hass;
+                    return html`<div class="chip">${chipElement}</div>`;
+                })}
             </div>
         `;
     }
