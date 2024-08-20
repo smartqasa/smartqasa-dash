@@ -5892,10 +5892,8 @@ i$3 `
         transition: var(--sq-icon-transition, none);
         cursor: pointer;
     }
-    .icon {
-        margin-right: 0.5rem;
-    }
     .text {
+        margin-left: 0.5rem;
         font-weight: var(--sq-primary-font-weight, 400);
         font-size: var(--sq-primary-font-size, 1.5rem);
         color: rgb(var(--sq-primary-font-rgb, 128, 128, 128));
