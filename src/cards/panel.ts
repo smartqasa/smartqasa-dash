@@ -3,7 +3,8 @@ import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HassArea, HomeAssistant, LovelaceCardConfig } from "../types";
 import { deviceType } from "../const";
-import { loadYamlAsJson } from "../utils/load-yaml-as-json-2";
+import { createElement } from "../utils/create-element";
+import { loadYamlAsJson } from "../utils/load-yaml-as-json";
 
 interface Config extends LovelaceCardConfig {
     area: string;
@@ -41,6 +42,18 @@ export class PanelCard extends LitElement {
             align-items: center;
             justify-content: space-between;
         }
+        .chip-container {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-end;
+        }
+        .chip {
+            margin-left: 0.8rem;
+        }
+        .chip:first-child {
+            margin-left: 0;
+        }
     `;
 
     public async setConfig(config: Config): Promise<void> {
@@ -48,8 +61,8 @@ export class PanelCard extends LitElement {
         this._area = this._config.area;
 
         const yamlFilePath = "/local/smartqasa/lists/chips.yaml";
-        this._headerChips = await loadYamlAsJson(yamlFilePath);
-        this.requestUpdate();
+        this._headerChips = (await loadYamlAsJson(yamlFilePath)) as LovelaceCardConfig[];
+        this.requestUpdate(); // Ensure re-render
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
@@ -78,23 +91,20 @@ export class PanelCard extends LitElement {
         `;
     }
 
-    renderHeader() {
+    private renderHeader() {
         console.log("Header Chips:", this._headerChips);
         return html`
             <div class="header-content">
                 <smartqasa-time-date .hass=${this.hass}></smartqasa-time-date>
-                ${this._headerChips
-                    ? html`
-                          <smartqasa-horizontal-stack
-                              .hass=${this.hass}
-                              .config=${{
-                                  type: "custom:smartqasa-horizontal-stack",
-                                  align_right: true,
-                                  cards: this._headerChips,
-                              }}
-                          ></smartqasa-horizontal-stack>
-                      `
-                    : nothing}
+                ${this._headerChips && this._headerChips.length > 0 ? this.renderHeaderChips() : nothing}
+            </div>
+        `;
+    }
+
+    private renderHeaderChips() {
+        return html`
+            <div class="chip-container">
+                ${this._headerChips!.map((chip) => html`<div class="chip">${createElement(chip)}</div>`)}
             </div>
         `;
     }
