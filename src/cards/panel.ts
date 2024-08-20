@@ -48,12 +48,6 @@ export class PanelCard extends LitElement {
             align-items: center;
             justify-content: flex-end;
         }
-        .header-chip {
-            margin-left: 0.8rem;
-        }
-        .header-chip:first-child {
-            margin-left: 0;
-        }
     `;
 
     public async setConfig(config: Config): Promise<void> {
@@ -107,7 +101,8 @@ export class PanelCard extends LitElement {
                 ${this._headerChips!.map((chip) => {
                     const chipElement = createElement(chip) as LovelaceCard;
                     chipElement.hass = this.hass;
-                    return html`<div class="header-chip">${chipElement}</div>`;
+                    chipElement.style.marginLeft = "0.8rem";
+                    return html`<div class="header-chips">${chipElement}</div>`;
                 })}
             </div>
         `;

@@ -4128,12 +4128,6 @@ let PanelCard = class PanelCard extends h {
             align-items: center;
             justify-content: flex-end;
         }
-        .header-chip {
-            margin-left: 0.8rem;
-        }
-        .header-chip:first-child {
-            margin-left: 0;
-        }
     `; }
     async setConfig(config) {
         this._config = { ...config };
@@ -4178,7 +4172,8 @@ let PanelCard = class PanelCard extends h {
                 ${this._headerChips.map((chip) => {
             const chipElement = createElement(chip);
             chipElement.hass = this.hass;
-            return ke `<div class="header-chip">${chipElement}</div>`;
+            chipElement.style.marginLeft = "0.8rem";
+            return ke `<div class="header-chips">${chipElement}</div>`;
         })}
             </div>
         `;
