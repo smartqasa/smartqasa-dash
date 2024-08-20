@@ -126,7 +126,7 @@ let HorizontalStack = class HorizontalStack extends h {
     }
     setConfig(config) {
         if (!config.cards || !Array.isArray(config.cards)) {
-            throw new Error("You need to define 'cards'");
+            return;
         }
         this._config = { ...config };
         this._createCards();
@@ -158,6 +158,8 @@ let HorizontalStack = class HorizontalStack extends h {
         if (!this._config || !this.hass)
             return;
         this._cards = this._config.cards.map((cardConfig) => {
+            if (cardConfig.empty)
+                return D;
             const card = createElement(cardConfig);
             if (card) {
                 card.hass = this.hass;
@@ -5531,15 +5533,17 @@ let DialogChip = class DialogChip extends h {
             changedProps.has("_config"));
     }
     render() {
-        if (!this._dialogObj)
+        if (!this._config || !this._dialogObj)
             return D;
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
         const state = this._stateObj?.state || "unknown";
         if ((this._dialog === "garages" && state === "closed") ||
             (this._dialog === "locks" && state === "locked") ||
             (this._dialog === "sensors_doors" && state === "off") ||
-            (this._dialog === "sensors_windows" && state === "off"))
+            (this._dialog === "sensors_windows" && state === "off")) {
+            this._config.empty = true;
             return D;
+        }
         const containerStyle = {
             "grid-template-areas": this._label ? '"i t"' : '"i"',
         };

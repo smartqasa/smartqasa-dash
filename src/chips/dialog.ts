@@ -10,6 +10,7 @@ interface Config extends LovelaceCardConfig {
     dialog: string;
     entity?: string;
     label?: string;
+    empty?: boolean;
 }
 
 window.customCards.push({
@@ -50,7 +51,7 @@ export class DialogChip extends LitElement {
     }
 
     protected render(): TemplateResult | typeof nothing {
-        if (!this._dialogObj) return nothing;
+        if (!this._config || !this._dialogObj) return nothing;
 
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
 
@@ -60,8 +61,10 @@ export class DialogChip extends LitElement {
             (this._dialog === "locks" && state === "locked") ||
             (this._dialog === "sensors_doors" && state === "off") ||
             (this._dialog === "sensors_windows" && state === "off")
-        )
+        ) {
+            this._config.empty = true;
             return nothing;
+        }
 
         const containerStyle = {
             "grid-template-areas": this._label ? '"i t"' : '"i"',

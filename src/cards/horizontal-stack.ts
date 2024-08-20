@@ -44,7 +44,7 @@ class HorizontalStack extends LitElement {
 
     public setConfig(config: Config): void {
         if (!config.cards || !Array.isArray(config.cards)) {
-            throw new Error("You need to define 'cards'");
+            return;
         }
 
         this._config = { ...config };
@@ -59,7 +59,7 @@ class HorizontalStack extends LitElement {
         if (changedProps.has("hass") && this.hass) {
             this._cards.forEach((card) => {
                 if (card !== nothing) {
-                    (card as LovelaceCard).hass = this.hass;
+                    card.hass = this.hass;
                 }
             });
         }
@@ -83,6 +83,8 @@ class HorizontalStack extends LitElement {
         if (!this._config || !this.hass) return;
 
         this._cards = this._config.cards.map((cardConfig) => {
+            if (cardConfig.empty) return nothing;
+
             const card = createElement(cardConfig) as LovelaceCard | null;
 
             if (card) {
