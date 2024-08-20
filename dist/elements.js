@@ -115,6 +115,9 @@ let HorizontalStack = class HorizontalStack extends h {
             .container.justify-right {
                 justify-content: flex-end;
             }
+            .element {
+                display: flex;
+            }
         `;
     }
     setConfig(config) {
