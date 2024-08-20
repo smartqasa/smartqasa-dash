@@ -10,7 +10,6 @@ interface Config extends LovelaceCardConfig {
     dialog: string;
     entity?: string;
     label?: string;
-    empty?: boolean;
 }
 
 window.customCards.push({
@@ -37,8 +36,8 @@ export class DialogChip extends LitElement {
         this._config = { ...config };
         this._dialog = this._config.dialog;
         this._dialogObj = this._dialog ? dialogTable[this._dialog] : undefined;
-        this._entity = this._dialogObj.entity;
-        this._icon = this._dialogObj.icon;
+        this._entity = this._dialogObj?.entity;
+        this._icon = this._dialogObj?.icon;
         this._label = this._config.label || "";
     }
 
@@ -62,20 +61,15 @@ export class DialogChip extends LitElement {
             (this._dialog === "sensors_doors" && state === "off") ||
             (this._dialog === "sensors_windows" && state === "off")
         ) {
-            this._config.empty = true;
             return nothing;
         }
 
-        const containerStyle = {
-            "grid-template-areas": this._label ? '"i t"' : '"i"',
-        };
-
         return html`
-            <div class="container" style="${styleMap(containerStyle)}" @click=${this._showDialog}>
+            <div class="container" @click=${this._showDialog}>
                 <div class="icon" style="color: rgb(var(--sq-rgb-orange));">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
-                ${this._label ? html`<div class="text">${this._label}</div>` : null}
+                ${this._label ? html`<div class="text">${this._label}</div>` : nothing}
             </div>
         `;
     }

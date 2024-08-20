@@ -5525,8 +5525,8 @@ let DialogChip = class DialogChip extends h {
         this._config = { ...config };
         this._dialog = this._config.dialog;
         this._dialogObj = this._dialog ? dialogTable[this._dialog] : undefined;
-        this._entity = this._dialogObj.entity;
-        this._icon = this._dialogObj.icon;
+        this._entity = this._dialogObj?.entity;
+        this._icon = this._dialogObj?.icon;
         this._label = this._config.label || "";
     }
     shouldUpdate(changedProps) {
@@ -5544,18 +5544,14 @@ let DialogChip = class DialogChip extends h {
             (this._dialog === "locks" && state === "locked") ||
             (this._dialog === "sensors_doors" && state === "off") ||
             (this._dialog === "sensors_windows" && state === "off")) {
-            this._config.empty = true;
             return D;
         }
-        const containerStyle = {
-            "grid-template-areas": this._label ? '"i t"' : '"i"',
-        };
         return ke `
-            <div class="container" style="${se(containerStyle)}" @click=${this._showDialog}>
+            <div class="container" @click=${this._showDialog}>
                 <div class="icon" style="color: rgb(var(--sq-rgb-orange));">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
-                ${this._label ? ke `<div class="text">${this._label}</div>` : null}
+                ${this._label ? ke `<div class="text">${this._label}</div>` : D}
             </div>
         `;
     }
