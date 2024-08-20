@@ -4989,7 +4989,6 @@ let CustomChip = class CustomChip extends h {
                 break;
         }
         const containerStyle = {
-            "margin-left": "0.7rem",
             "grid-template-areas": '"i t"',
         };
         const iconStyles = {
@@ -5514,7 +5513,6 @@ let DialogChip = class DialogChip extends h {
             (this._dialog === "sensors_windows" && state === "off"))
             return ke ``;
         const containerStyle = {
-            "margin-left": "0.7rem",
             "grid-template-areas": this._label ? '"i t"' : '"i"',
         };
         return ke `
@@ -5728,7 +5726,6 @@ let RoutineChip = class RoutineChip extends h {
             return ke ``;
         const { icon, iconAnimation, iconColor, name } = this._updateState();
         const containerStyle = {
-            "margin-left": "0.7rem",
             "grid-template-areas": name ? '"i t"' : '"i"',
         };
         const iconStyles = {
@@ -5865,11 +5862,8 @@ let SelectChip = class SelectChip extends h {
         else {
             icon = this._config?.icon || this._stateObj?.attributes?.icon || "hass:form-dropdown";
         }
-        const containerStyle = {
-            "margin-left": "0.7rem",
-        };
         return ke `
-            <div class="container" style="${se(containerStyle)}" @click=${this._showOptions}>
+            <div class="container" @click=${this._showOptions}>
                 <div class="icon">
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
@@ -6007,11 +6001,8 @@ let ThermostatChip = class ThermostatChip extends h {
             iconColor = "var(--sq-unavailable-rgb)";
             temperature = "??";
         }
-        const containerStyle = {
-            "margin-left": "0.7rem",
-        };
         return ke `
-            <div class="container" style="${se(containerStyle)}" @click=${this._showDialog}>
+            <div class="container" @click=${this._showDialog}>
                 <div class="icon" style="color: rgb(${iconColor});">
                     <ha-state-icon .hass=${this.hass} .stateObj=${this._stateObj}></ha-state-icon>
                 </div>

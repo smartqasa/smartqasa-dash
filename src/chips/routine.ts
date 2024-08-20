@@ -43,7 +43,6 @@ export class RoutineChip extends LitElement {
         const { icon, iconAnimation, iconColor, name } = this._updateState();
 
         const containerStyle = {
-            "margin-left": "0.7rem",
             "grid-template-areas": name ? '"i t"' : '"i"',
         };
 

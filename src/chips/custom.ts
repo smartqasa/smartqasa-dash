@@ -87,7 +87,6 @@ export class CustomChip extends LitElement {
         }
 
         const containerStyle = {
-            "margin-left": "0.7rem",
             "grid-template-areas": '"i t"',
         };
         const iconStyles = {

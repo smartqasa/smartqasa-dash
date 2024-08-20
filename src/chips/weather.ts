@@ -52,12 +52,8 @@ export class ThermostatChip extends LitElement {
             temperature = "??";
         }
 
-        const containerStyle = {
-            "margin-left": "0.7rem",
-        };
-
         return html`
-            <div class="container" style="${styleMap(containerStyle)}" @click=${this._showDialog}>
+            <div class="container" @click=${this._showDialog}>
                 <div class="icon" style="color: rgb(${iconColor});">
                     <ha-state-icon .hass=${this.hass} .stateObj=${this._stateObj}></ha-state-icon>
                 </div>

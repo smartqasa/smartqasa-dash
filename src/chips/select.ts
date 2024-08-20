@@ -58,12 +58,8 @@ export class SelectChip extends LitElement {
             icon = this._config?.icon || this._stateObj?.attributes?.icon || "hass:form-dropdown";
         }
 
-        const containerStyle = {
-            "margin-left": "0.7rem",
-        };
-
         return html`
-            <div class="container" style="${styleMap(containerStyle)}" @click=${this._showOptions}>
+            <div class="container" @click=${this._showOptions}>
                 <div class="icon">
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
