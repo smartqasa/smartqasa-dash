@@ -42,16 +42,16 @@ export class PanelCard extends LitElement {
             align-items: center;
             justify-content: space-between;
         }
-        .chip-container {
+        .header-chip-container {
             display: flex;
             flex-direction: row;
             align-items: center;
             justify-content: flex-end;
         }
-        .chip {
+        .header-chip {
             margin-left: 0.8rem;
         }
-        .chip:first-child {
+        .header-chip:first-child {
             margin-left: 0;
         }
     `;
@@ -103,11 +103,11 @@ export class PanelCard extends LitElement {
 
     private renderHeaderChips() {
         return html`
-            <div class="chip-container">
+            <div class="header-chip-container">
                 ${this._headerChips!.map((chip) => {
                     const chipElement = createElement(chip) as LovelaceCard;
                     chipElement.hass = this.hass;
-                    return html`<div class="chip">${chipElement}</div>`;
+                    return html`<div class="header-chip">${chipElement}</div>`;
                 })}
             </div>
         `;
