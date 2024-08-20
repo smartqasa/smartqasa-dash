@@ -4126,13 +4126,13 @@ let PanelCard = class PanelCard extends h {
         this._area = this._config.area;
         const yamlFilePath = "/local/smartqasa/lists/chips.yaml";
         this._headerChips = await loadYamlAsJson$1(yamlFilePath);
+        console.log("Header Chips:", this._headerChips);
     }
     shouldUpdate(changedProps) {
         if (!this._config)
             return false;
         return !!((changedProps.has("hass") && this._area && this.hass.areas[this._area] !== this._areaObj) ||
-            changedProps.has("_config") ||
-            changedProps.has("headerCardsConfig"));
+            changedProps.has("_config"));
     }
     render() {
         const isPhone = deviceType === "phone";
