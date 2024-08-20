@@ -72,6 +72,113 @@ const t$1=t=>(e,o)=>{void 0!==o?o.addInitializer((()=>{customElements.define(t,e
  * SPDX-License-Identifier: BSD-3-Clause
  */function r(r){return n({...r,state:!0,attribute:!1})}
 
+const createElement = (config) => {
+    if (!config.type) {
+        console.error("Error: No type configured for element:", config);
+        return undefined;
+    }
+    const tag = config.type.startsWith("custom:") ? config.type.replace("custom:", "") : config.type;
+    if (!customElements.get(tag)) {
+        console.error("Error: Custom element doesn't exist:", tag);
+        return undefined;
+    }
+    const element = window.document.createElement(tag);
+    try {
+        element.setConfig(config);
+        return element;
+    }
+    catch (err) {
+        console.error("Error setting config for element:", err);
+        return undefined;
+    }
+};
+
+window.customCards.push({
+    type: "smartqasa-horizontal-stack",
+    name: "SmartQasa Horizontal Stack",
+    preview: false,
+    description: "A SmartQasa element that displays other cards in a horizontal stack.",
+});
+let HorizontalStack = class HorizontalStack extends h {
+    constructor() {
+        super(...arguments);
+        this._cards = [];
+    }
+    static get styles() {
+        return i$3 `
+            .container {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: flex-start;
+            }
+            .container.align-right {
+                justify-content: flex-end;
+            }
+            .element {
+                padding-right: 0.8rem;
+            }
+            .container.align-right .element {
+                padding-right: 0;
+                padding-left: 0.8rem;
+            }
+            .element:last-child {
+                padding-right: 0;
+            }
+            .container.align-right .element:last-child {
+                padding-left: 0;
+            }
+        `;
+    }
+    setConfig(config) {
+        if (!config.cards || !Array.isArray(config.cards)) {
+            throw new Error("You need to define 'cards'");
+        }
+        this._config = { ...config };
+        this._createCards();
+    }
+    update(changedProps) {
+        if (changedProps.has("_config") && this._config) {
+            this._createCards();
+        }
+        if (changedProps.has("hass") && this.hass) {
+            this._cards.forEach((card) => {
+                card.hass = this.hass;
+            });
+        }
+        super.update(changedProps);
+    }
+    render() {
+        if (!this._config || !this.hass || !Array.isArray(this._cards))
+            return D;
+        const containerClass = this._config.align_right ? "container align-right" : "container";
+        return ke `
+            <div class="${containerClass}">${this._cards.map((card) => ke `<div class="element">${card}</div>`)}</div>
+        `;
+    }
+    _createCards() {
+        if (!this._config || !this.hass)
+            return;
+        this._cards = this._config.cards.map((cardConfig) => {
+            const card = createElement(cardConfig);
+            card.hass = this.hass;
+            return card;
+        });
+    }
+};
+__decorate([
+    n({ attribute: false })
+], HorizontalStack.prototype, "hass", void 0);
+__decorate([
+    r()
+], HorizontalStack.prototype, "_config", void 0);
+__decorate([
+    r()
+], HorizontalStack.prototype, "_cards", void 0);
+HorizontalStack = __decorate([
+    t$1("smartqasa-horizontal-stack")
+], HorizontalStack);
+
 /**
  * @license
  * Copyright 2017 Google LLC
@@ -200,27 +307,6 @@ __decorate([
 PanelCard = __decorate([
     t$1("smartqasa-panel-card")
 ], PanelCard);
-
-const createElement = (config) => {
-    if (!config.type) {
-        console.error("Error: No type configured for element:", config);
-        return undefined;
-    }
-    const tag = config.type.startsWith("custom:") ? config.type.replace("custom:", "") : config.type;
-    if (!customElements.get(tag)) {
-        console.error("Error: Custom element doesn't exist:", tag);
-        return undefined;
-    }
-    const element = window.document.createElement(tag);
-    try {
-        element.setConfig(config);
-    }
-    catch (err) {
-        console.error("Error setting config for element:", err);
-        return undefined;
-    }
-    return element;
-};
 
 window.customCards.push({
     type: "smartqasa-vertical-stack",

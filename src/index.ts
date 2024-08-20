@@ -27,6 +27,7 @@ window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split
 window.customCards = window.customCards ?? [];
 
 // Cards
+import "./cards/horizontal-stack";
 import "./cards/panel";
 import "./cards/vertical-stack";
 import "./cards/tv-remote";
