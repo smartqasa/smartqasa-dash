@@ -4890,7 +4890,7 @@ const chipBaseStyle$1 = i$3 `
         color: rgb(var(--sq-primary-text-rgb));
     }
 `;
-const chipTextStyle = i$3 `
+const chipTextStyle$1 = i$3 `
     .container {
         grid-template-areas: "i t";
         grid-column-gap: 0.5rem;
@@ -4961,7 +4961,7 @@ window.customCards.push({
     description: "A SmartQasa chip for custom configurations.",
 });
 let CustomChip = class CustomChip extends h {
-    static { this.styles = [chipBaseStyle$1, chipTextStyle]; }
+    static { this.styles = [chipBaseStyle$1, chipTextStyle$1]; }
     setConfig(config) {
         this._config = { ...config };
         this.loadDialogObj();
@@ -5500,6 +5500,84 @@ const dialogTable = {
     },
 };
 
+const chipBaseStyle = i$3 `
+    .container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: fit-content;
+        border: var(--sq-card-border);
+        border-radius: var(--sq-chip-border-radius);
+        background-color: var(--sq-card-background-color);
+        transition: var(--sq-icon-transition, none);
+        cursor: pointer;
+    }
+    .icon {
+        display: flex;
+        height: var(--sq-chip-icon-size, 1.8rem);
+        width: var(--sq-chip-icon-size, 1.8rem);
+        padding: var(--sq-chip-padding, 1rem);
+        color: rgb(var(--sq-primary-text-rgb));
+        transition: var(--sq-icon-transition, none);
+    }
+`;
+const chipTextStyle = i$3 `
+    .container {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        border: var(--sq-card-border);
+        border-radius: var(--sq-chip-border-radius);
+        background-color: var(--sq-card-background-color);
+        transition: var(--sq-icon-transition, none);
+        cursor: pointer;
+    }
+    .text {
+        margin-left: 0.5rem;
+        font-weight: var(--sq-primary-font-weight, 400);
+        font-size: var(--sq-primary-font-size, 1.5rem);
+        color: rgb(var(--sq-primary-font-rgb, 128, 128, 128));
+        text-align: left;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+`;
+i$3 `
+    .container {
+        display: flex;
+        align-items: center;
+        padding: 0.2rem;
+        border: var(--sq-card-border);
+        border-radius: var(--sq-chip-border-radius);
+        background-color: var(--sq-card-background-color);
+        cursor: pointer;
+    }
+    .container::after {
+        content: "";
+        width: 1px;
+        height: 90%;
+        margin: 0 0.7rem;
+        background-color: rgb(128, 128, 128);
+    }
+    .icon1,
+    .icon2 {
+        display: flex;
+        --mdc-icon-size: 3.4rem;
+        color: rgb(var(--sq-primary-text-rgb));
+    }
+`;
+i$3 `
+    @keyframes spin {
+        from {
+            transform: rotate(0deg);
+        }
+        to {
+            transform: rotate(360deg);
+        }
+    }
+`;
+
 window.customCards.push({
     type: "smartqasa-dialog-chip",
     name: "SmartQasa Dialog Chip",
@@ -5507,7 +5585,7 @@ window.customCards.push({
     description: "A SmartQasa chip for dialog.",
 });
 let DialogChip = class DialogChip extends h {
-    static { this.styles = [chipBaseStyle$1, chipTextStyle]; }
+    static { this.styles = [chipBaseStyle, chipTextStyle]; }
     setConfig(config) {
         this._config = { ...config };
         this._dialog = this._config.dialog;
@@ -5533,9 +5611,8 @@ let DialogChip = class DialogChip extends h {
             (this._dialog === "sensors_windows" && state === "off")) {
             return D;
         }
-        const marginClass = this._config.justify_right ? "justify-right" : "justify-left";
         return ke `
-            <div class="container ${marginClass}" @click=${this._showDialog}>
+            <div class="container" @click=${this._showDialog}>
                 <div class="icon" style="color: rgb(var(--sq-rgb-orange));">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
@@ -5570,7 +5647,7 @@ window.customCards.push({
     description: "A SmartQasa chip for toggling a motion sensor automation entity.",
 });
 let MotionChip = class MotionChip extends h {
-    static { this.styles = [chipBaseStyle$1, chipTextStyle]; }
+    static { this.styles = [chipBaseStyle$1, chipTextStyle$1]; }
     setConfig(config) {
         this._config = { ...config };
         this._entity = this._config.entity?.startsWith("automation.") ? this._config.entity : undefined;
@@ -5729,7 +5806,7 @@ let RoutineChip = class RoutineChip extends h {
         super(...arguments);
         this._running = false;
     }
-    static { this.styles = [chipBaseStyle$1, chipTextStyle, chipIconSpinStyle]; }
+    static { this.styles = [chipBaseStyle$1, chipTextStyle$1, chipIconSpinStyle]; }
     setConfig(config) {
         this._config = { ...config };
         this._entity = ["automation", "scene", "script"].includes(this._config.entity?.split(".")[0])
@@ -5848,84 +5925,6 @@ function selectOptionDialog(config, stateObj) {
     window.browser_mod?.service("popup", dialogConfig);
 }
 
-const chipBaseStyle = i$3 `
-    .container {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: fit-content;
-        border: var(--sq-card-border);
-        border-radius: var(--sq-chip-border-radius);
-        background-color: var(--sq-card-background-color);
-        transition: var(--sq-icon-transition, none);
-        cursor: pointer;
-    }
-    .icon {
-        display: flex;
-        height: var(--sq-chip-icon-size, 1.8rem);
-        width: var(--sq-chip-icon-size, 1.8rem);
-        padding: var(--sq-chip-padding, 1rem);
-        color: rgb(var(--sq-primary-text-rgb));
-        transition: var(--sq-icon-transition, none);
-    }
-`;
-i$3 `
-    .container {
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
-        border: var(--sq-card-border);
-        border-radius: var(--sq-chip-border-radius);
-        background-color: var(--sq-card-background-color);
-        transition: var(--sq-icon-transition, none);
-        cursor: pointer;
-    }
-    .text {
-        margin-left: 0.5rem;
-        font-weight: var(--sq-primary-font-weight, 400);
-        font-size: var(--sq-primary-font-size, 1.5rem);
-        color: rgb(var(--sq-primary-font-rgb, 128, 128, 128));
-        text-align: left;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-`;
-i$3 `
-    .container {
-        display: flex;
-        align-items: center;
-        padding: 0.2rem;
-        border: var(--sq-card-border);
-        border-radius: var(--sq-chip-border-radius);
-        background-color: var(--sq-card-background-color);
-        cursor: pointer;
-    }
-    .container::after {
-        content: "";
-        width: 1px;
-        height: 90%;
-        margin: 0 0.7rem;
-        background-color: rgb(128, 128, 128);
-    }
-    .icon1,
-    .icon2 {
-        display: flex;
-        --mdc-icon-size: 3.4rem;
-        color: rgb(var(--sq-primary-text-rgb));
-    }
-`;
-i$3 `
-    @keyframes spin {
-        from {
-            transform: rotate(0deg);
-        }
-        to {
-            transform: rotate(360deg);
-        }
-    }
-`;
-
 window.customCards.push({
     type: "smartqasa-select-chip",
     name: "SmartQasa Input Select Chip",
@@ -6010,7 +6009,7 @@ function moreInfoDialog(config, stateObj) {
 }
 
 let ThermostatChip$1 = class ThermostatChip extends h {
-    static { this.styles = [chipBaseStyle$1, chipTextStyle]; }
+    static { this.styles = [chipBaseStyle$1, chipTextStyle$1]; }
     setConfig(config) {
         this._config = { ...config };
         this._entity = this._config.entity?.startsWith("climate.") ? this._config.entity : undefined;
@@ -6076,7 +6075,7 @@ window.customCards.push({
     description: "A SmartQasa chip for displaying the weather.",
 });
 let ThermostatChip = class ThermostatChip extends h {
-    static { this.styles = [chipBaseStyle$1, chipTextStyle]; }
+    static { this.styles = [chipBaseStyle$1, chipTextStyle$1]; }
     setConfig(config) {
         this._config = { ...config };
         this._entity = this._config.entity?.startsWith("weather.") ? this._config.entity : undefined;

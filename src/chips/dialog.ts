@@ -2,14 +2,12 @@ import { CSSResultGroup, html, LitElement, nothing, PropertyValues, TemplateResu
 import { customElement, property, state } from "lit/decorators.js";
 import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
 import { dialogTable } from "../tables/dialogs";
-
-import { chipBaseStyle, chipTextStyle } from "../styles/chip";
+import { chipBaseStyle, chipTextStyle } from "../styles/chip-2";
 
 interface Config extends LovelaceCardConfig {
     dialog: string;
     entity?: string;
     label?: string;
-    justify_right?: boolean;
 }
 
 window.customCards.push({
@@ -64,10 +62,8 @@ export class DialogChip extends LitElement {
             return nothing;
         }
 
-        const marginClass = this._config.justify_right ? "justify-right" : "justify-left";
-
         return html`
-            <div class="container ${marginClass}" @click=${this._showDialog}>
+            <div class="container" @click=${this._showDialog}>
                 <div class="icon" style="color: rgb(var(--sq-rgb-orange));">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
