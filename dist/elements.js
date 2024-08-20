@@ -4080,28 +4080,23 @@ var jsYaml = {
 	safeDump: safeDump
 };
 
-async function loadYamlAsJson(yamlFilePath) {
+const loadYamlAsJson$1 = async (yamlFilePath) => {
     try {
         const response = await fetch(yamlFilePath);
         if (!response.ok) {
-            console.error(`HTTP error! Status: ${response.status}`);
-            return {
-                type: "custom:smartqasa-title-card",
-                title: "Missing file.",
-            };
+            throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const yamlContent = await response.text();
-        const jsonContent = jsYaml.load(yamlContent);
-        return jsonContent;
+        return jsYaml.load(yamlContent);
     }
-    catch (e) {
-        console.error("Error fetching and parsing YAML file:", e);
+    catch (error) {
+        console.error("Error fetching and parsing YAML file:", error);
         return {
             type: "custom:smartqasa-title-card",
             title: "Missing file.",
         };
     }
-}
+};
 
 window.customCards.push({
     type: "smartqasa-panel-card",
@@ -4126,13 +4121,11 @@ let PanelCard = class PanelCard extends h {
             justify-content: space-between;
         }
     `; }
-    setConfig(config) {
+    async setConfig(config) {
         this._config = { ...config };
         this._area = this._config.area;
         const yamlFilePath = "/local/smartqasa/lists/chips.yaml";
-        loadYamlAsJson(yamlFilePath).then((jsonConfig) => {
-            this._headerChips = jsonConfig;
-        });
+        this._headerChips = await loadYamlAsJson$1(yamlFilePath);
     }
     shouldUpdate(changedProps) {
         if (!this._config)
@@ -4863,6 +4856,29 @@ __decorate([
 TVRemoteCard = __decorate([
     t$1("smartqasa-tv-remote-card")
 ], TVRemoteCard);
+
+async function loadYamlAsJson(yamlFilePath) {
+    try {
+        const response = await fetch(yamlFilePath);
+        if (!response.ok) {
+            console.error(`HTTP error! Status: ${response.status}`);
+            return {
+                type: "custom:smartqasa-title-card",
+                title: "Missing file.",
+            };
+        }
+        const yamlContent = await response.text();
+        const jsonContent = jsYaml.load(yamlContent);
+        return jsonContent;
+    }
+    catch (e) {
+        console.error("Error fetching and parsing YAML file:", e);
+        return {
+            type: "custom:smartqasa-title-card",
+            title: "Missing file.",
+        };
+    }
+}
 
 const chipBaseStyle = i$3 `
     .container {
@@ -8315,14 +8331,14 @@ let OptionTile = class OptionTile extends h {
             (changedProps.has("_config") && this._config));
     }
     render() {
-        const { icon, iconAnimation, iconColor, name } = this.updateState();
+        const { icon, iconAnimation, iconColor, name } = this._updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
             backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
             animation: iconAnimation,
         };
         return ke `
-            <div class="container" @click=${this.selectOption}>
+            <div class="container" @click=${this._selectOption}>
                 <div class="icon" style="${se(iconStyles)}">
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
@@ -8330,7 +8346,7 @@ let OptionTile = class OptionTile extends h {
             </div>
         `;
     }
-    updateState() {
+    _updateState() {
         let icon, iconAnimation, iconColor, name;
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
         if (this._config && this.hass && this._stateObj) {
@@ -8365,18 +8381,18 @@ let OptionTile = class OptionTile extends h {
         }
         return { icon, iconAnimation, iconColor, name };
     }
-    selectOption(e) {
+    async _selectOption(e) {
         e.stopPropagation();
         if (!this.hass || !this._config || !this._stateObj)
             return;
         this._running = true;
-        callService(this.hass, "input_select", "select_option", {
+        await callService(this.hass, "input_select", "select_option", {
             entity_id: this._entity,
             option: this._config.option,
         });
         const trigger = this._config.trigger;
         if (trigger && trigger.startsWith("input_button.")) {
-            callService(this.hass, "input_button", "press", {
+            await callService(this.hass, "input_button", "press", {
                 entity_id: trigger,
             });
         }

@@ -46,14 +46,14 @@ export class OptionTile extends LitElement {
     }
 
     protected render(): TemplateResult {
-        const { icon, iconAnimation, iconColor, name } = this.updateState();
+        const { icon, iconAnimation, iconColor, name } = this._updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
             backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
             animation: iconAnimation,
         };
         return html`
-            <div class="container" @click=${this.selectOption}>
+            <div class="container" @click=${this._selectOption}>
                 <div class="icon" style="${styleMap(iconStyles)}">
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
@@ -62,7 +62,7 @@ export class OptionTile extends LitElement {
         `;
     }
 
-    private updateState() {
+    private _updateState() {
         let icon, iconAnimation, iconColor, name;
 
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
@@ -97,19 +97,19 @@ export class OptionTile extends LitElement {
         return { icon, iconAnimation, iconColor, name };
     }
 
-    private selectOption(e: Event): void {
+    private async _selectOption(e: Event): Promise<void> {
         e.stopPropagation();
         if (!this.hass || !this._config || !this._stateObj) return;
 
         this._running = true;
-        callService(this.hass, "input_select", "select_option", {
+        await callService(this.hass, "input_select", "select_option", {
             entity_id: this._entity,
             option: this._config.option,
         });
 
         const trigger = this._config.trigger;
         if (trigger && trigger.startsWith("input_button.")) {
-            callService(this.hass, "input_button", "press", {
+            await callService(this.hass, "input_button", "press", {
                 entity_id: trigger,
             });
         }

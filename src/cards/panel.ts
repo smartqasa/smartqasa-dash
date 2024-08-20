@@ -3,7 +3,7 @@ import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HassArea, HomeAssistant, LovelaceCardConfig } from "../types";
 import { deviceType } from "../const";
-import { loadYamlAsJson } from "../utils/load-yaml-as-json";
+import { loadYamlAsJson } from "../utils/load-yaml-as-json-2";
 
 interface Config extends LovelaceCardConfig {
     area: string;
@@ -43,14 +43,12 @@ export class PanelCard extends LitElement {
         }
     `;
 
-    public setConfig(config: Config): void {
+    public async setConfig(config: Config): Promise<void> {
         this._config = { ...config };
         this._area = this._config.area;
 
         const yamlFilePath = "/local/smartqasa/lists/chips.yaml";
-        loadYamlAsJson(yamlFilePath).then((jsonConfig: unknown) => {
-            this._headerChips = jsonConfig as any;
-        });
+        this._headerChips = await loadYamlAsJson(yamlFilePath);
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
