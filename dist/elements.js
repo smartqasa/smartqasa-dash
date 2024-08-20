@@ -4133,7 +4133,6 @@ let PanelCard = class PanelCard extends h {
         loadYamlAsJson(yamlFilePath).then((jsonConfig) => {
             this._headerChips = jsonConfig;
         });
-        console.log("Header Chips:", this._headerChips);
     }
     shouldUpdate(changedProps) {
         if (!this._config)
@@ -4158,6 +4157,7 @@ let PanelCard = class PanelCard extends h {
         `;
     }
     renderHeader() {
+        console.log("Header Chips:", this._headerChips);
         return ke `
             <div class="header-content">
                 <smartqasa-time-date .hass=${this.hass}></smartqasa-time-date>

@@ -51,7 +51,6 @@ export class PanelCard extends LitElement {
         loadYamlAsJson(yamlFilePath).then((jsonConfig: unknown) => {
             this._headerChips = jsonConfig as any;
         });
-        console.log("Header Chips:", this._headerChips);
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
@@ -82,6 +81,7 @@ export class PanelCard extends LitElement {
     }
 
     renderHeader() {
+        console.log("Header Chips:", this._headerChips);
         return html`
             <div class="header-content">
                 <smartqasa-time-date .hass=${this.hass}></smartqasa-time-date>
