@@ -4080,8 +4080,7 @@ var jsYaml = {
 	safeDump: safeDump
 };
 
-// Function to load and parse the YAML file
-async function loadYamlAsJson$1(yamlFilePath) {
+async function loadYamlAsJson(yamlFilePath) {
     try {
         const response = await fetch(yamlFilePath);
         if (!response.ok) {
@@ -4103,6 +4102,7 @@ async function loadYamlAsJson$1(yamlFilePath) {
         };
     }
 }
+
 window.customCards.push({
     type: "smartqasa-panel-card",
     name: "SmartQasa Panel Card",
@@ -4129,10 +4129,11 @@ let PanelCard = class PanelCard extends h {
     setConfig(config) {
         this._config = { ...config };
         this._area = this._config.area;
-        const yamlFilePath = "/config/www/smartqasa/lists/chips.yaml";
-        loadYamlAsJson$1(yamlFilePath).then((jsonConfig) => {
+        const yamlFilePath = "/local/smartqasa/lists/chips.yaml";
+        loadYamlAsJson(yamlFilePath).then((jsonConfig) => {
             this._headerChips = jsonConfig;
         });
+        console.log("Header Chips:", this._headerChips);
     }
     shouldUpdate(changedProps) {
         if (!this._config)
@@ -4157,7 +4158,6 @@ let PanelCard = class PanelCard extends h {
         `;
     }
     renderHeader() {
-        console.log("Header Chips:", this._headerChips);
         return ke `
             <div class="header-content">
                 <smartqasa-time-date .hass=${this.hass}></smartqasa-time-date>
@@ -4863,29 +4863,6 @@ __decorate([
 TVRemoteCard = __decorate([
     t$1("smartqasa-tv-remote-card")
 ], TVRemoteCard);
-
-async function loadYamlAsJson(yamlFilePath) {
-    try {
-        const response = await fetch(yamlFilePath);
-        if (!response.ok) {
-            console.error(`HTTP error! Status: ${response.status}`);
-            return {
-                type: "custom:smartqasa-title-card",
-                title: "Missing file.",
-            };
-        }
-        const yamlContent = await response.text();
-        const jsonContent = jsYaml.load(yamlContent);
-        return jsonContent;
-    }
-    catch (e) {
-        console.error("Error fetching and parsing YAML file:", e);
-        return {
-            type: "custom:smartqasa-title-card",
-            title: "Missing file.",
-        };
-    }
-}
 
 const chipBaseStyle = i$3 `
     .container {

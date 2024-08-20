@@ -3,30 +3,7 @@ import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HassArea, HomeAssistant, LovelaceCardConfig } from "../types";
 import { deviceType } from "../const";
-import yaml from "js-yaml";
-
-// Function to load and parse the YAML file
-export async function loadYamlAsJson(yamlFilePath: string) {
-    try {
-        const response = await fetch(yamlFilePath);
-        if (!response.ok) {
-            console.error(`HTTP error! Status: ${response.status}`);
-            return {
-                type: "custom:smartqasa-title-card",
-                title: "Missing file.",
-            };
-        }
-        const yamlContent = await response.text();
-        const jsonContent = yaml.load(yamlContent);
-        return jsonContent;
-    } catch (e) {
-        console.error("Error fetching and parsing YAML file:", e);
-        return {
-            type: "custom:smartqasa-title-card",
-            title: "Missing file.",
-        };
-    }
-}
+import { loadYamlAsJson } from "../utils/load-yaml-as-json";
 
 interface Config extends LovelaceCardConfig {
     area: string;
@@ -70,10 +47,11 @@ export class PanelCard extends LitElement {
         this._config = { ...config };
         this._area = this._config.area;
 
-        const yamlFilePath = "/config/www/smartqasa/lists/chips.yaml";
+        const yamlFilePath = "/local/smartqasa/lists/chips.yaml";
         loadYamlAsJson(yamlFilePath).then((jsonConfig: unknown) => {
-            this._headerChips = jsonConfig as LovelaceCardConfig[];
+            this._headerChips = jsonConfig as any;
         });
+        console.log("Header Chips:", this._headerChips);
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
@@ -104,7 +82,6 @@ export class PanelCard extends LitElement {
     }
 
     renderHeader() {
-        console.log("Header Chips:", this._headerChips);
         return html`
             <div class="header-content">
                 <smartqasa-time-date .hass=${this.hass}></smartqasa-time-date>
