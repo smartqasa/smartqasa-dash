@@ -125,7 +125,7 @@ let HorizontalStack = class HorizontalStack extends h {
                 margin-right: 0;
                 margin-left: 0.8rem;
             }
-            .align-right .element:last-child {
+            .align-right .element:first-child {
                 margin-left: 0;
             }
         `;
