@@ -4121,7 +4121,7 @@ let PanelCard = class PanelCard extends h {
             display: flex;
             flex-direction: row;
             margin-right: calc(var(--sq-chip-margin, 0.4rem) * -1);
-            align-items: center;
+            align-items: flex-start;
             justify-content: flex-end;
         }
         .header-chip {
@@ -4170,16 +4170,18 @@ let PanelCard = class PanelCard extends h {
         return ke `
             <div class="header-content">
                 <smartqasa-time-date .hass=${this.hass}></smartqasa-time-date>
-                ${this._headerChips ? this.renderHeaderChips() : D}
+                ${this.renderHeaderChips()}
             </div>
         `;
     }
     renderHeaderChips() {
+        if (!this._headerChips)
+            return D;
         return ke `
             <div class="header-chip-container">
                 ${this._headerChips.map((chip) => {
+            console.log("Chip", chip);
             const chipElement = createElement(chip);
-            console.log("chipElement", chipElement);
             chipElement.hass = this.hass;
             return chipElement;
         })}
@@ -4970,11 +4972,21 @@ let CustomChip = class CustomChip extends h {
             return;
         try {
             const path = `/local/smartqasa/dialogs/${this._config.dialog_file}`;
-            this._dialogObj = (await loadYamlAsJson(path));
-            this._entity = this._dialogObj.entity;
+            const loadedObj = (await loadYamlAsJson(path));
+            if (loadedObj) {
+                this._dialogObj = loadedObj;
+                this._entity = this._dialogObj.entity;
+            }
+            else {
+                console.error("Dialog object is null or undefined after loading.");
+            }
         }
         catch (error) {
             console.error("Failed to load YAML:", error);
+            this._dialogObj = undefined;
+        }
+        finally {
+            this.requestUpdate();
         }
     }
     shouldUpdate(changedProps) {
