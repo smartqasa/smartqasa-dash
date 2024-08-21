@@ -4102,6 +4102,10 @@ window.customCards.push({
     description: "A SmartQasa card for rendering Main Panel.",
 });
 let PanelCard = class PanelCard extends h {
+    constructor() {
+        super(...arguments);
+        this._headerChips = [];
+    }
     static { this.styles = i$3 `
         :host {
             height: 100%;
@@ -4119,27 +4123,14 @@ let PanelCard = class PanelCard extends h {
         .header-chips {
             display: flex;
             flex-direction: row;
-            //margin-right: calc(var(--sq-chip-margin, 0.4rem) * -1);
+            margin-right: calc(var(--sq-chip-margin, 0.4rem) * -1);
             align-items: flex-start;
             justify-content: flex-end;
-            gap: 0.8rem;
         }
         .chip {
             display: flex;
         }
     `; }
-    async setConfig(config) {
-        this._config = { ...config };
-        this._area = this._config.area;
-        try {
-            const yamlFilePath = "/local/smartqasa/lists/chips.yaml";
-            this._headerChipsConfig = (await loadYamlAsJson(yamlFilePath));
-        }
-        catch (error) {
-            console.error("Error loading header chips:", error);
-            this._headerChipsConfig = undefined;
-        }
-    }
     update(changedProps) {
         if (changedProps.has("hass") && this.hass && this._headerChips) {
             this._headerChips.forEach((chip) => {
@@ -4164,24 +4155,32 @@ let PanelCard = class PanelCard extends h {
         `;
     }
     _renderHeader() {
-        if (!this._headerChips)
+        if (!this._headerChips.length)
             this._createHeaderChips();
         return ke `
             <div class="header-content">
                 <smartqasa-time-date .hass=${this.hass}></smartqasa-time-date>
-                ${this._headerChips
-            ? ke `<div class="header-chips">
-                          ${this._headerChips.map((chip) => ke `<div class="chip">${chip}</div>`)}
-                      </div>`
-            : D}
+                <div class="header-chips">
+                    ${this._headerChips.map((chip) => ke `<div class="chip">${chip}</div>`)}
+                </div>
             </div>
         `;
     }
-    _createHeaderChips() {
-        if (!this._headerChipsConfig || !this.hass)
+    async _createHeaderChips() {
+        if (!this.hass)
             return;
-        this._headerChips = this._headerChipsConfig.map((cardConfig) => {
-            const card = createElement(cardConfig);
+        let chipsConfig;
+        try {
+            const yamlFilePath = "/local/smartqasa/lists/chips.yaml";
+            chipsConfig = (await loadYamlAsJson(yamlFilePath));
+        }
+        catch (error) {
+            console.error("Error loading header chips:", error);
+            this._headerChips = [];
+            return;
+        }
+        this._headerChips = chipsConfig.map((config) => {
+            const card = createElement(config);
             card.hass = this.hass;
             return card;
         });
@@ -4877,7 +4876,7 @@ TVRemoteCard = __decorate([
 const chipBaseStyle = i$3 `
     .container {
         display: flex;
-        //margin: 0 var(--sq-chip-margin, 0.4rem) 0 var(--sq-chip-margin, 0.4rem);
+        margin: 0 var(--sq-chip-margin, 0.4rem) 0 var(--sq-chip-margin, 0.4rem);
         align-items: center;
         justify-content: center;
         width: fit-content;

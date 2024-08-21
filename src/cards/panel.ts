@@ -25,8 +25,7 @@ export class PanelCard extends LitElement {
     @state() private _config?: Config;
     private _area?: string;
     private _areaObj?: HassArea;
-    private _headerChipsConfig?: LovelaceCardConfig[];
-    private _headerChips?: LovelaceCard[];
+    private _headerChips: LovelaceCard[] = [];
 
     static styles = css`
         :host {
@@ -45,28 +44,14 @@ export class PanelCard extends LitElement {
         .header-chips {
             display: flex;
             flex-direction: row;
-            //margin-right: calc(var(--sq-chip-margin, 0.4rem) * -1);
+            margin-right: calc(var(--sq-chip-margin, 0.4rem) * -1);
             align-items: flex-start;
             justify-content: flex-end;
-            gap: 0.8rem;
         }
         .chip {
             display: flex;
         }
     `;
-
-    public async setConfig(config: Config): Promise<void> {
-        this._config = { ...config };
-        this._area = this._config.area;
-
-        try {
-            const yamlFilePath = "/local/smartqasa/lists/chips.yaml";
-            this._headerChipsConfig = (await loadYamlAsJson(yamlFilePath)) as LovelaceCardConfig[];
-        } catch (error) {
-            console.error("Error loading header chips:", error);
-            this._headerChipsConfig = undefined;
-        }
-    }
 
     protected update(changedProps: PropertyValues) {
         if (changedProps.has("hass") && this.hass && this._headerChips) {
@@ -96,24 +81,33 @@ export class PanelCard extends LitElement {
     }
 
     private _renderHeader() {
-        if (!this._headerChips) this._createHeaderChips();
+        if (!this._headerChips.length) this._createHeaderChips();
         return html`
             <div class="header-content">
                 <smartqasa-time-date .hass=${this.hass}></smartqasa-time-date>
-                ${this._headerChips
-                    ? html`<div class="header-chips">
-                          ${this._headerChips.map((chip) => html`<div class="chip">${chip}</div>`)}
-                      </div>`
-                    : nothing}
+                <div class="header-chips">
+                    ${this._headerChips.map((chip) => html`<div class="chip">${chip}</div>`)}
+                </div>
             </div>
         `;
     }
 
-    private _createHeaderChips() {
-        if (!this._headerChipsConfig || !this.hass) return;
+    private async _createHeaderChips(): Promise<void> {
+        if (!this.hass) return;
 
-        this._headerChips = this._headerChipsConfig.map((cardConfig) => {
-            const card = createElement(cardConfig) as LovelaceCard;
+        let chipsConfig: LovelaceCardConfig[];
+
+        try {
+            const yamlFilePath = "/local/smartqasa/lists/chips.yaml";
+            chipsConfig = (await loadYamlAsJson(yamlFilePath)) as LovelaceCardConfig[];
+        } catch (error) {
+            console.error("Error loading header chips:", error);
+            this._headerChips = [];
+            return;
+        }
+
+        this._headerChips = chipsConfig.map((config) => {
+            const card = createElement(config) as LovelaceCard;
             card.hass = this.hass;
             return card;
         });
