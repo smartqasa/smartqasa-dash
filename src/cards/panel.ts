@@ -58,9 +58,6 @@ export class PanelCard extends LitElement {
     public async setConfig(config: Config) {
         this._config = { ...config };
         this._area = this._config.area;
-
-        await this._createHeaderChips();
-        this._loading = false;
     }
 
     protected update(changedProps: PropertyValues) {
@@ -73,10 +70,6 @@ export class PanelCard extends LitElement {
     }
 
     protected render(): TemplateResult {
-        if (this._loading) {
-            return html`<p>Loading...</p>`;
-        }
-
         const isPhone = deviceType === "phone";
 
         const containerStyles = {
@@ -95,6 +88,7 @@ export class PanelCard extends LitElement {
     }
 
     private _renderHeader() {
+        if (!this._headerChips.length) this._createHeaderChips();
         return html`
             <div class="header">
                 <smartqasa-time-date .hass=${this.hass}></smartqasa-time-date>
@@ -105,7 +99,7 @@ export class PanelCard extends LitElement {
         `;
     }
 
-    private async _createHeaderChips(): Promise<void> {
+    private async _createHeaderChips() {
         if (!this.hass) return;
 
         let chipsConfig: LovelaceCardConfig[];
