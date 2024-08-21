@@ -4108,7 +4108,7 @@ const panelStyle = i$3 `
     }
 
     // Header
-    .header {
+    .header-container {
         display: flex;
         align-items: flex-start;
         justify-content: space-between;
@@ -4171,9 +4171,8 @@ let PanelCard = class PanelCard extends h {
         }
     }
     render() {
-        if (this._loading) {
+        if (this._loading)
             return ke `<div>Loading...</div>`;
-        }
         const isPhone = deviceType === "phone";
         const containerStyles = {
             padding: isPhone ? "0.5rem" : "1rem",
@@ -4198,7 +4197,7 @@ let PanelCard = class PanelCard extends h {
         if (!this._headerChips.length)
             this._createHeaderChips();
         return ke `
-            <div class="header">
+            <div class="header-container">
                 <div class="header-time" @click=${this._launchClock}>
                     <div class="time">${time}</div>
                     <div class="date">${date}</div>

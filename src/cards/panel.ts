@@ -46,9 +46,7 @@ export class PanelCard extends LitElement {
     }
 
     protected render(): TemplateResult {
-        if (this._loading) {
-            return html`<div>Loading...</div>`;
-        }
+        if (this._loading) return html`<div>Loading...</div>`;
 
         const isPhone = deviceType === "phone";
 
@@ -77,7 +75,7 @@ export class PanelCard extends LitElement {
         let date = this.hass?.states["sensor.current_date"]?.state || "Loading...";
         if (!this._headerChips.length) this._createHeaderChips();
         return html`
-            <div class="header">
+            <div class="header-container">
                 <div class="header-time" @click=${this._launchClock}>
                     <div class="time">${time}</div>
                     <div class="date">${date}</div>
