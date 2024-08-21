@@ -82,8 +82,17 @@ class HorizontalStack extends LitElement {
             if (card) {
                 card.hass = this.hass;
 
-                const marginProperty = this._config!.justify_right ? "marginLeft" : "marginRight";
-                (card as HTMLElement).style[marginProperty] = "var(--sq-chip-spacing, 0.8rem)";
+                // Wait until the next frame to access the element's width
+                requestAnimationFrame(() => {
+                    const cardElement = card as HTMLElement;
+                    const cardWidth = cardElement.offsetWidth; // Get the width of the card
+
+                    console.log("Card width:", cardWidth);
+
+                    // Set the margin based on justify_right config
+                    const marginProperty = this._config!.justify_right ? "marginLeft" : "marginRight";
+                    cardElement.style[marginProperty] = "var(--sq-chip-spacing, 0.8rem)";
+                });
 
                 return card;
             }
