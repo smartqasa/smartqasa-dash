@@ -4944,18 +4944,10 @@ const chipDoubleStyle = i$3 `
         display: flex;
         align-items: center;
         justify-content: center;
-        height: var(--sq-chip-icon-size, 3.4rem);
-        width: var(--sq-chip-icon-size, 3.4rem);
+        --mdc-icon-size: 3.4rem;
+        padding: 0.2rem;
         color: rgb(var(--sq-primary-text-rgb));
         font-size: var(--sq-chip-icon-size, 3.4rem);
-    }
-    .icon1 {
-        padding: var(--sq-chip-padding, 1rem);
-        padding-right: calc(var(--sq-chip-padding, 1rem) / 2);
-    }
-    .icon2 {
-        padding: var(--sq-chip-padding, 1rem);
-        padding-left: calc(var(--sq-chip-padding, 1rem) / 2);
     }
 `;
 const chipIconSpinStyle = i$3 `
