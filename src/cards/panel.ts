@@ -5,6 +5,7 @@ import { HassArea, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../ty
 import { deviceType } from "../const";
 import { createElement } from "../utils/create-element";
 import { loadYamlAsJson } from "../utils/load-yaml-as-json";
+import defaultImage from "../assets/images/default.png";
 import { panelStyle } from "../styles/panel";
 
 interface Config extends LovelaceCardConfig {
@@ -120,7 +121,16 @@ export class PanelCard extends LitElement {
     }
 
     private _renderArea() {
-        return html`<p>Area content with dynamic data.</p>`;
+        const height = deviceType === "phone" ? "15vh" : "20vh";
+        const picture = this._config?.picture
+            ? `/local/smartqasa/images/${this._config.picture}`
+            : this._areaObj?.picture ?? defaultImage;
+
+        return html`
+            <div class="area-container">
+                <div class="area-image" style="background-image: url(${picture}); height: ${height};"></div>
+            </div>
+        `;
     }
 
     private _renderTiles(isPhone: boolean) {

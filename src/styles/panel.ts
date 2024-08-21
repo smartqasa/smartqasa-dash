@@ -26,12 +26,13 @@ export const panelStyle = css`
         white-space: nowrap;
     }
     .time {
-        line-height: var(--sq-title-font-size, 3.2rem);
+        line-height: 3rem;
         font-size: var(--sq-title-font-size, 3.2rem);
         font-weight: var(--sq-title-font-weight, 400);
         color: rgb(var(--sq-title-font-rgb, 128, 128, 128));
     }
     .date {
+        margin-top: 0.4rem;
         font-size: var(--sq-primary-font-size, 1.5rem);
         font-weight: var(--sq-primary-font-weight, 300);
         color: rgb(var(--sq-secondary-font-rgb, 128, 128, 128));
@@ -44,5 +45,24 @@ export const panelStyle = css`
     }
     .chip {
         display: flex;
+    }
+    .area-container {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+    }
+    .area-info {
+        display: flex;
+        flex-direction: column;
+    }
+    .area-image {
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center center;
+        border-radius: 4px;
+        border: none;
+        box-shadow: none;
+        background-color: transparent;
+        overflow: hidden;
     }
 `;
