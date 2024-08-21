@@ -73,10 +73,15 @@ export class PanelCard extends LitElement {
     }
 
     private _renderHeader() {
+        let time = this.hass?.states["sensor.current_time"]?.state || "Loading...";
+        let date = this.hass?.states["sensor.current_date"]?.state || "Loading...";
         if (!this._headerChips.length) this._createHeaderChips();
         return html`
             <div class="header">
-                <smartqasa-time-date .hass=${this.hass}></smartqasa-time-date>
+                <div class="header-time" @click=${this._launchClock}>
+                    <div class="time">${time}</div>
+                    <div class="date">${date}</div>
+                </div>
                 <div class="header-chips">
                     ${this._headerChips.map((chip) => html`<div class="chip">${chip}</div>`)}
                 </div>
@@ -103,6 +108,15 @@ export class PanelCard extends LitElement {
             card.hass = this.hass;
             return card;
         });
+    }
+
+    private _launchClock(e: Event) {
+        e.stopPropagation();
+        if (typeof window.fully !== "undefined" && window.fully.startApplication) {
+            window.fully.startApplication("com.google.android.deskclock");
+        } else {
+            console.warn("fully.startApplication is not available.");
+        }
     }
 
     private _renderArea() {
