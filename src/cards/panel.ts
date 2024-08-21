@@ -53,6 +53,11 @@ export class PanelCard extends LitElement {
         }
     `;
 
+    public setConfig(config: Config) {
+        this._config = { ...config };
+        this._area = this._config.area;
+    }
+
     protected update(changedProps: PropertyValues) {
         if (changedProps.has("hass") && this.hass && this._headerChips) {
             this._headerChips.forEach((chip) => {

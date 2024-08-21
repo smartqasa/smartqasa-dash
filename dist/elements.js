@@ -4131,6 +4131,10 @@ let PanelCard = class PanelCard extends h {
             display: flex;
         }
     `; }
+    setConfig(config) {
+        this._config = { ...config };
+        this._area = this._config.area;
+    }
     update(changedProps) {
         if (changedProps.has("hass") && this.hass && this._headerChips) {
             this._headerChips.forEach((chip) => {
