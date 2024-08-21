@@ -21,10 +21,12 @@ window.customCards.push({
 
 @customElement("smartqasa-panel-card")
 export class PanelCard extends LitElement {
-    @property({ attribute: false }) public hass!: HomeAssistant;
+    @property({ attribute: false }) public hass?: HomeAssistant;
     @state() private _config?: Config;
-    @state() private _headerChips: LovelaceCard[] = [];
-    @state() private _loading: boolean = true;
+    @state() private _loading = true;
+    private _area?: string;
+    private _areaObj?: HassArea;
+    private _headerChips: LovelaceCard[] = [];
 
     static styles = css`
         :host {
@@ -54,13 +56,11 @@ export class PanelCard extends LitElement {
 
     public async setConfig(config: Config) {
         this._config = { ...config };
-        this._loading = true;
-        await this._createHeaderChips();
-        this._loading = false;
+        this._area = this._config.area;
     }
 
     protected update(changedProps: PropertyValues) {
-        if (changedProps.has("hass") && this.hass && this._headerChips) {
+        if (changedProps.has("hass") && this.hass && this._headerChips.length) {
             this._headerChips.forEach((chip) => {
                 chip.hass = this.hass;
             });
@@ -68,12 +68,9 @@ export class PanelCard extends LitElement {
         super.update(changedProps);
     }
 
-    protected render(): TemplateResult {
-        if (this._loading) {
-            return html`<div class="container">Loading...</div>`;
-        }
-
+    protected async render(): Promise<TemplateResult> {
         const isPhone = deviceType === "phone";
+
         const containerStyles = {
             padding: isPhone ? "0.5rem" : "1rem",
             gridTemplateAreas: isPhone ? '"area" "phone_tiles" "footer"' : '"header" "area" "tablet_tiles" "footer"',
@@ -89,7 +86,8 @@ export class PanelCard extends LitElement {
         `;
     }
 
-    private _renderHeader() {
+    private async _renderHeader() {
+        if (!this._headerChips.length) this._createHeaderChips();
         return html`
             <div class="header">
                 <smartqasa-time-date .hass=${this.hass}></smartqasa-time-date>
@@ -100,7 +98,7 @@ export class PanelCard extends LitElement {
         `;
     }
 
-    private async _createHeaderChips() {
+    private async _createHeaderChips(): Promise<void> {
         if (!this.hass) return;
 
         let chipsConfig: LovelaceCardConfig[];
