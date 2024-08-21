@@ -5540,9 +5540,6 @@ const chipTextStyle = i$3 `
         transition: var(--sq-icon-transition, none);
         cursor: pointer;
     }
-    .icon {
-        padding-right: calc(var(--sq-chip-padding, 1rem) / 2);
-    }
     .text {
         padding-right: calc(var(--sq-chip-padding, 1rem) / 2);
         font-weight: var(--sq-primary-font-weight, 400);
@@ -5622,9 +5619,13 @@ let DialogChip = class DialogChip extends h {
             (this._dialog === "sensors_windows" && state === "off")) {
             return D;
         }
+        const iconStyles = {
+            color: `rgb(${this._dialogObj.color})`,
+            paddingRight: `${this._label ? "calc(var(--sq-chip-padding, 1rem) / 2)" : ""}`,
+        };
         return ke `
             <div class="container" @click=${this._showDialog}>
-                <div class="icon" style="color: rgb(var(--sq-rgb-orange));">
+                <div class="icon" style="${se(iconStyles)}">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
                 ${this._label ? ke `<div class="text">${this._label}</div>` : D}

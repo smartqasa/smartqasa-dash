@@ -2,6 +2,7 @@ import { CSSResultGroup, html, LitElement, nothing, PropertyValues, TemplateResu
 import { customElement, property, state } from "lit/decorators.js";
 import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
 import { dialogTable } from "../tables/dialogs";
+import { styleMap } from "lit/directives/style-map.js";
 import { chipBaseStyle, chipTextStyle } from "../styles/chip-2";
 
 interface Config extends LovelaceCardConfig {
@@ -62,9 +63,14 @@ export class DialogChip extends LitElement {
             return nothing;
         }
 
+        const iconStyles = {
+            color: `rgb(${this._dialogObj.color})`,
+            paddingRight: `${this._label ? "calc(var(--sq-chip-padding, 1rem) / 2)" : ""}`,
+        };
+
         return html`
             <div class="container" @click=${this._showDialog}>
-                <div class="icon" style="color: rgb(var(--sq-rgb-orange));">
+                <div class="icon" style="${styleMap(iconStyles)}">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
                 ${this._label ? html`<div class="text">${this._label}</div>` : nothing}
