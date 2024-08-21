@@ -2,57 +2,56 @@ import { css } from "lit";
 
 export const chipBaseStyle = css`
     .container {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: fit-content;
+        width: max-content;
+        place-self: center;
+        display: grid;
+        grid-template-areas: "i";
+        padding: 1rem;
         border: var(--sq-card-border);
         border-radius: var(--sq-chip-border-radius);
         background-color: var(--sq-card-background-color);
+        justify-content: center;
         transition: var(--sq-icon-transition, none);
         cursor: pointer;
     }
     .icon {
+        grid-area: i;
         display: flex;
-        height: var(--sq-chip-icon-size, 1.8rem);
-        width: var(--sq-chip-icon-size, 1.8rem);
-        padding: var(--sq-chip-padding, 1rem);
-        color: rgb(var(--sq-primary-text-rgb));
+        height: 1.8rem;
+        width: 1.8rem;
         transition: var(--sq-icon-transition, none);
+        color: rgb(var(--sq-primary-text-rgb));
     }
 `;
 
 export const chipTextStyle = css`
     .container {
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
-        border: var(--sq-card-border);
-        border-radius: var(--sq-chip-border-radius);
-        background-color: var(--sq-card-background-color);
-        transition: var(--sq-icon-transition, none);
-        cursor: pointer;
-    }
-    .icon {
-        padding-right: calc(var(--sq-chip-padding, 1rem) / 2);
+        grid-template-areas: "i t";
+        grid-column-gap: 0.5rem;
+        justify-content: start;
     }
     .text {
-        padding: var(--sq-chip-padding, 1rem);
-        padding-left: 0;
-        font-weight: var(--sq-primary-font-weight, 400);
-        font-size: var(--sq-primary-font-size, 1.5rem);
-        color: rgb(var(--sq-primary-font-rgb, 128, 128, 128));
+        grid-area: t;
+        place-self: center start;
         text-align: left;
         overflow: hidden;
         text-overflow: ellipsis;
-        white-space: nowrap;
+        white-space: normal;
+        font-weight: var(--sq-primary-font-weight, 400);
+        font-size: var(--sq-primary-font-size, 1.5rem);
+        color: rgb(var(--sq-primary-font-rgb, 128, 128, 128));
     }
 `;
 
 export const chipDoubleStyle = css`
     .container {
-        display: flex;
-        align-items: center;
+        width: fit-content;
+        place-self: center;
+        display: grid;
+        grid-template-areas: "i1 s i2";
+        grid-column-gap: 0.7rem;
+        margin-right: 0.7rem;
+        padding: 0.2rem;
         border: var(--sq-card-border);
         border-radius: var(--sq-chip-border-radius);
         background-color: var(--sq-card-background-color);
@@ -60,9 +59,17 @@ export const chipDoubleStyle = css`
     }
     .container::after {
         content: "";
+        grid-area: s;
         width: 1px;
-        height: 90%;
         background-color: rgb(128, 128, 128);
+        margin: auto;
+        height: 90%;
+    }
+    .icon1 {
+        grid-area: i1;
+    }
+    .icon2 {
+        grid-area: i2;
     }
     .icon1,
     .icon2 {

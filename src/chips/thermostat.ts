@@ -5,7 +5,7 @@ import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
 import { moreInfoDialog } from "../utils/more-info-dialog";
 import { thermostatIcons, thermostatColors } from "../const";
 
-import { chipBaseStyle, chipTextStyle } from "../styles/chip-2";
+import { chipBaseStyle, chipTextStyle } from "../styles/chip";
 
 interface Config extends LovelaceCardConfig {
     entity?: string;
