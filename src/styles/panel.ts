@@ -13,7 +13,7 @@ export const panelStyle = css`
     }
     .header-container {
         display: flex;
-        margin-bottom: 1rem;
+        margin-bottom: 2.5rem;
         justify-content: space-between;
     }
     .header-time {
@@ -53,9 +53,10 @@ export const panelStyle = css`
         justify-content: space-between;
     }
     .area-info {
-        flex: 1 1 50%;
+        flex-basis: 50%;
     }
     .area-name {
+        line-height: normal;
         text-align: left;
         font-size: var(--sq-title-font-size, 3.2rem);
         font-weight: var(--sq-title-font-weight, 400);
@@ -68,7 +69,7 @@ export const panelStyle = css`
         margin-left: calc(var(--sq-chip-margin, 0.4rem) * -1);
     }
     .area-image {
-        flex: 1 1 50%;
+        flex-basis: 50%;
         width: 100%;
         height: 100%;
         object-fit: cover;

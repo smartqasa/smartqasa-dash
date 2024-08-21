@@ -4110,7 +4110,7 @@ const panelStyle = i$3 `
     }
     .header-container {
         display: flex;
-        margin-bottom: 1rem;
+        margin-bottom: 2.5rem;
         justify-content: space-between;
     }
     .header-time {
@@ -4150,9 +4150,10 @@ const panelStyle = i$3 `
         justify-content: space-between;
     }
     .area-info {
-        flex: 1 1 50%;
+        flex-basis: 50%;
     }
     .area-name {
+        line-height: normal;
         text-align: left;
         font-size: var(--sq-title-font-size, 3.2rem);
         font-weight: var(--sq-title-font-weight, 400);
@@ -4165,7 +4166,7 @@ const panelStyle = i$3 `
         margin-left: calc(var(--sq-chip-margin, 0.4rem) * -1);
     }
     .area-image {
-        flex: 1 1 50%;
+        flex-basis: 50%;
         width: 100%;
         height: 100%;
         object-fit: cover;
@@ -4187,6 +4188,7 @@ let PanelCard = class PanelCard extends h {
         super(...arguments);
         this._loading = true;
         this._headerChips = [];
+        this._areaChips = [];
     }
     static { this.styles = panelStyle; }
     async setConfig(config) {
@@ -4244,8 +4246,6 @@ let PanelCard = class PanelCard extends h {
         `;
     }
     async _createHeaderChips() {
-        if (!this.hass)
-            return;
         let chipsConfig;
         try {
             const yamlFilePath = "/local/smartqasa/lists/chips.yaml";
@@ -4257,9 +4257,9 @@ let PanelCard = class PanelCard extends h {
             return;
         }
         this._headerChips = chipsConfig.map((config) => {
-            const card = createElement(config);
-            card.hass = this.hass;
-            return card;
+            const chip = createElement(config);
+            chip.hass = this.hass;
+            return chip;
         });
     }
     _launchClock(e) {
@@ -4274,6 +4274,8 @@ let PanelCard = class PanelCard extends h {
     _renderArea() {
         const name = this._config?.name ?? this._areaObj?.name ?? "Area";
         const height = deviceType === "phone" ? "15vh" : "20vh";
+        if (this._config?.area_chips && !this._headerChips.length)
+            this._createAreaChips();
         const picture = this._config?.picture
             ? `/local/smartqasa/images/${this._config.picture}`
             : this._areaObj?.picture ?? img$24;
@@ -4281,10 +4283,25 @@ let PanelCard = class PanelCard extends h {
             <div class="area-container">
                 <div class="area-info">
                     <div class="area-name">${name}</div>
+                    <div class="area-chips">
+                        ${this._areaChips.map((chip) => ke `<div class="chip">${chip}</div>`)}
+                    </div>
                 </div>
                 <img class="area-image" alt="Area picture..." src=${picture} style="max-height: ${height};" />
             </div>
         `;
+    }
+    async _createAreaChips() {
+        if (!this._config || !this._config.area_chips) {
+            this._areaChips = [];
+            return;
+        }
+        let chipsConfig = this._config.area_chips;
+        this._areaChips = chipsConfig.map((config) => {
+            const chip = createElement(config);
+            chip.hass = this.hass;
+            return chip;
+        });
     }
     _renderTiles(isPhone) {
         return isPhone ? ke `<p>Phone Tiles</p>` : ke `<p>Tablet Tiles</p>`;

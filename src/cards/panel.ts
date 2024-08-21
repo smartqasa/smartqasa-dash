@@ -29,6 +29,7 @@ export class PanelCard extends LitElement {
     private _area?: string;
     private _areaObj?: HassArea;
     private _headerChips: LovelaceCard[] = [];
+    private _areaChips: LovelaceCard[] = [];
 
     static styles: CSSResult = panelStyle;
 
@@ -94,8 +95,6 @@ export class PanelCard extends LitElement {
     }
 
     private async _createHeaderChips() {
-        if (!this.hass) return;
-
         let chipsConfig: LovelaceCardConfig[];
 
         try {
@@ -108,9 +107,9 @@ export class PanelCard extends LitElement {
         }
 
         this._headerChips = chipsConfig.map((config) => {
-            const card = createElement(config) as LovelaceCard;
-            card.hass = this.hass;
-            return card;
+            const chip = createElement(config) as LovelaceCard;
+            chip.hass = this.hass;
+            return chip;
         });
     }
 
@@ -126,6 +125,9 @@ export class PanelCard extends LitElement {
     private _renderArea() {
         const name = this._config?.name ?? this._areaObj?.name ?? "Area";
         const height = deviceType === "phone" ? "15vh" : "20vh";
+
+        if (this._config?.area_chips && !this._headerChips.length) this._createAreaChips();
+
         const picture = this._config?.picture
             ? `/local/smartqasa/images/${this._config.picture}`
             : this._areaObj?.picture ?? defaultImage;
@@ -134,10 +136,28 @@ export class PanelCard extends LitElement {
             <div class="area-container">
                 <div class="area-info">
                     <div class="area-name">${name}</div>
+                    <div class="area-chips">
+                        ${this._areaChips.map((chip) => html`<div class="chip">${chip}</div>`)}
+                    </div>
                 </div>
                 <img class="area-image" alt="Area picture..." src=${picture} style="max-height: ${height};" />
             </div>
         `;
+    }
+
+    private async _createAreaChips() {
+        if (!this._config || !this._config.area_chips) {
+            this._areaChips = [];
+            return;
+        }
+
+        let chipsConfig: LovelaceCardConfig[] = this._config.area_chips;
+
+        this._areaChips = chipsConfig.map((config) => {
+            const chip = createElement(config) as LovelaceCard;
+            chip.hass = this.hass;
+            return chip;
+        });
     }
 
     private _renderTiles(isPhone: boolean) {
