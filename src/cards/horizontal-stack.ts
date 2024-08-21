@@ -81,11 +81,15 @@ class HorizontalStack extends LitElement {
             card.hass = this.hass;
 
             const cardElement = card as HTMLElement;
-            console.log("Card Element", cardElement);
-            const containerElement = cardElement.querySelector(".container") as HTMLElement;
-            console.log("Container Element", containerElement);
-            if (containerElement) {
-                containerElement.style[justifyRight ? "marginLeft" : "marginRight"] = "var(--sq-chip-spacing, 0.8rem)";
+            const shadowRoot = cardElement.shadowRoot;
+
+            if (shadowRoot) {
+                const containerElement = shadowRoot.querySelector(".container") as HTMLElement;
+
+                if (containerElement) {
+                    containerElement.style[justifyRight ? "marginLeft" : "marginRight"] =
+                        "var(--sq-chip-spacing, 0.8rem)";
+                }
             }
 
             return card;

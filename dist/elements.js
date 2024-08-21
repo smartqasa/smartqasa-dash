@@ -154,11 +154,13 @@ let HorizontalStack = class HorizontalStack extends h {
             const card = createElement(cardConfig);
             card.hass = this.hass;
             const cardElement = card;
-            console.log("Card Element", cardElement);
-            const containerElement = cardElement.querySelector(".container");
-            console.log("Container Element", containerElement);
-            if (containerElement) {
-                containerElement.style[justifyRight ? "marginLeft" : "marginRight"] = "var(--sq-chip-spacing, 0.8rem)";
+            const shadowRoot = cardElement.shadowRoot;
+            if (shadowRoot) {
+                const containerElement = shadowRoot.querySelector(".container");
+                if (containerElement) {
+                    containerElement.style[justifyRight ? "marginLeft" : "marginRight"] =
+                        "var(--sq-chip-spacing, 0.8rem)";
+                }
             }
             return card;
         });
