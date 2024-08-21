@@ -13,7 +13,7 @@ export const panelStyle = css`
     }
     .header-container {
         display: flex;
-        width: 100%;
+        margin-bottom: 1rem;
         justify-content: space-between;
     }
     .header-time {
@@ -49,7 +49,6 @@ export const panelStyle = css`
     }
     .area-container {
         display: flex;
-        width: 100%;
         align-items: flex-start;
         justify-content: space-between;
     }

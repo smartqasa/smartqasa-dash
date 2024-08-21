@@ -4110,7 +4110,7 @@ const panelStyle = i$3 `
     }
     .header-container {
         display: flex;
-        width: 100%;
+        margin-bottom: 1rem;
         justify-content: space-between;
     }
     .header-time {
@@ -4146,7 +4146,6 @@ const panelStyle = i$3 `
     }
     .area-container {
         display: flex;
-        width: 100%;
         align-items: flex-start;
         justify-content: space-between;
     }
