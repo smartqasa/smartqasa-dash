@@ -3,6 +3,7 @@ import { css } from "lit";
 export const chipBaseStyle = css`
     .container {
         display: flex;
+        margin: 0 var(--sq-chip-margin, 0.4rem) 0 var(--sq-chip-margin, 0.4rem);
         align-items: center;
         justify-content: center;
         width: fit-content;
@@ -24,14 +25,7 @@ export const chipBaseStyle = css`
 
 export const chipTextStyle = css`
     .container {
-        display: flex;
-        align-items: center;
         justify-content: flex-start;
-        border: var(--sq-card-border);
-        border-radius: var(--sq-chip-border-radius);
-        background-color: var(--sq-card-background-color);
-        transition: var(--sq-icon-transition, none);
-        cursor: pointer;
     }
     .icon {
         padding-right: calc(var(--sq-chip-padding, 1rem) / 2);
@@ -52,6 +46,7 @@ export const chipTextStyle = css`
 export const chipDoubleStyle = css`
     .container {
         display: flex;
+        margin: 0 var(--sq-chip-margin, 0.4rem) 0 var(--sq-chip-margin, 0.4rem);
         align-items: center;
         border: var(--sq-card-border);
         border-radius: var(--sq-chip-border-radius);

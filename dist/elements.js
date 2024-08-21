@@ -111,9 +111,11 @@ let HorizontalStack = class HorizontalStack extends h {
                 flex-direction: row;
                 align-items: start;
                 justify-content: flex-start;
+                margin-left: calc(var(--sq-chip-margin, 0.4rem) * -1);
             }
             .container.justify-right {
                 justify-content: flex-end;
+                margin-right: calc(var(--sq-chip-margin, 0.4rem) * -1);
             }
             .element {
                 display: flex;
@@ -149,19 +151,9 @@ let HorizontalStack = class HorizontalStack extends h {
     _createCards() {
         if (!this._config || !this.hass)
             return;
-        const justifyRight = this._config.justify_right;
         this._cards = this._config.cards.map((cardConfig) => {
             const card = createElement(cardConfig);
             card.hass = this.hass;
-            const cardElement = card;
-            const shadowRoot = cardElement.shadowRoot;
-            if (shadowRoot) {
-                const containerElement = shadowRoot.querySelector(".container");
-                if (containerElement) {
-                    containerElement.style[justifyRight ? "marginLeft" : "marginRight"] =
-                        "var(--sq-chip-spacing, 0.8rem)";
-                }
-            }
             return card;
         });
     }
@@ -4875,6 +4867,7 @@ TVRemoteCard = __decorate([
 const chipBaseStyle = i$3 `
     .container {
         display: flex;
+        margin: 0 var(--sq-chip-margin, 0.4rem) 0 var(--sq-chip-margin, 0.4rem);
         align-items: center;
         justify-content: center;
         width: fit-content;
@@ -4895,14 +4888,7 @@ const chipBaseStyle = i$3 `
 `;
 const chipTextStyle = i$3 `
     .container {
-        display: flex;
-        align-items: center;
         justify-content: flex-start;
-        border: var(--sq-card-border);
-        border-radius: var(--sq-chip-border-radius);
-        background-color: var(--sq-card-background-color);
-        transition: var(--sq-icon-transition, none);
-        cursor: pointer;
     }
     .icon {
         padding-right: calc(var(--sq-chip-padding, 1rem) / 2);
@@ -4922,6 +4908,7 @@ const chipTextStyle = i$3 `
 const chipDoubleStyle = i$3 `
     .container {
         display: flex;
+        margin: 0 var(--sq-chip-margin, 0.4rem) 0 var(--sq-chip-margin, 0.4rem);
         align-items: center;
         border: var(--sq-card-border);
         border-radius: var(--sq-chip-border-radius);

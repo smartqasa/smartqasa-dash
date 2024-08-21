@@ -28,9 +28,11 @@ class HorizontalStack extends LitElement {
                 flex-direction: row;
                 align-items: start;
                 justify-content: flex-start;
+                margin-left: calc(var(--sq-chip-margin, 0.4rem) * -1);
             }
             .container.justify-right {
                 justify-content: flex-end;
+                margin-right: calc(var(--sq-chip-margin, 0.4rem) * -1);
             }
             .element {
                 display: flex;
@@ -73,25 +75,9 @@ class HorizontalStack extends LitElement {
 
     private _createCards() {
         if (!this._config || !this.hass) return;
-        const justifyRight = this._config.justify_right;
-
         this._cards = this._config.cards.map((cardConfig) => {
             const card = createElement(cardConfig) as LovelaceCard;
-
             card.hass = this.hass;
-
-            const cardElement = card as HTMLElement;
-            const shadowRoot = cardElement.shadowRoot;
-
-            if (shadowRoot) {
-                const containerElement = shadowRoot.querySelector(".container") as HTMLElement;
-
-                if (containerElement) {
-                    containerElement.style[justifyRight ? "marginLeft" : "marginRight"] =
-                        "var(--sq-chip-spacing, 0.8rem)";
-                }
-            }
-
             return card;
         });
     }
