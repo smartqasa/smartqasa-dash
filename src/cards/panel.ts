@@ -101,11 +101,11 @@ export class PanelCard extends LitElement {
     private renderHeaderChips() {
         return html`
             <div class="header-chip-container">
-                ${this._headerChips!.map((chip) => {
+                ${this._headerChips!.map((chip, index) => {
                     const chipElement = createElement(chip) as LovelaceCard;
                     chipElement.hass = this.hass;
-                    chipElement.style.marginLeft = "0.8rem";
-                    return html`<div class="header-chip">${chipElement}</div>`;
+                    chipElement.style.marginLeft = "var(--sq-chip-spacing, 0.8rem)";
+                    return chipElement;
                 })}
             </div>
         `;

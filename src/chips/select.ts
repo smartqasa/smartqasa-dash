@@ -3,7 +3,7 @@ import { customElement, property, state } from "lit/decorators.js";
 import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
 import { selectOptionDialog } from "../utils/select-option-dialog";
 import { phaseIcons, modeIcons } from "../const";
-import { chipBaseStyle, chipTextStyle, chipDoubleStyle, chipIconSpinStyle } from "../styles/chip-2";
+import { chipBaseStyle } from "../styles/chip-2";
 
 interface Config extends LovelaceCardConfig {
     entity: string;

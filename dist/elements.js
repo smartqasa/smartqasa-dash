@@ -4172,11 +4172,11 @@ let PanelCard = class PanelCard extends h {
     renderHeaderChips() {
         return ke `
             <div class="header-chip-container">
-                ${this._headerChips.map((chip) => {
+                ${this._headerChips.map((chip, index) => {
             const chipElement = createElement(chip);
             chipElement.hass = this.hass;
-            chipElement.style.marginLeft = "0.8rem";
-            return ke `<div class="header-chip">${chipElement}</div>`;
+            chipElement.style.marginLeft = "var(--sq-chip-spacing, 0.8rem)";
+            return chipElement;
         })}
             </div>
         `;
