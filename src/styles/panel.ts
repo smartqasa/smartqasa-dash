@@ -1,7 +1,6 @@
 import { css } from "lit";
 
 export const panelStyle = css`
-    // Container
     :host {
         display: block;
         height: 100%;
@@ -11,9 +10,7 @@ export const panelStyle = css`
         display: grid;
         grid-template-rows: auto auto 1fr auto;
     }
-
-    // Header
-    .header {
+    .header-container {
         display: flex;
         align-items: flex-start;
         justify-content: space-between;

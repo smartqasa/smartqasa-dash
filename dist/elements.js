@@ -4096,7 +4096,6 @@ async function loadYamlAsJson(yamlFilePath) {
 }
 
 const panelStyle = i$3 `
-    // Container
     :host {
         display: block;
         height: 100%;
@@ -4106,9 +4105,7 @@ const panelStyle = i$3 `
         display: grid;
         grid-template-rows: auto auto 1fr auto;
     }
-
-    // Header
-    .header {
+    .header-container {
         display: flex;
         align-items: flex-start;
         justify-content: space-between;
@@ -4198,7 +4195,7 @@ let PanelCard = class PanelCard extends h {
         if (!this._headerChips.length)
             this._createHeaderChips();
         return ke `
-            <div class="header">
+            <div class="header-container">
                 <div class="header-time" @click="${this._launchClock}">
                     <div class="time">${time}</div>
                     <div class="date">${date}</div>
