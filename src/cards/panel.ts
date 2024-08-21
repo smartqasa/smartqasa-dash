@@ -12,7 +12,8 @@ interface Config extends LovelaceCardConfig {
     area: string;
     name?: string;
     picture?: string;
-    area_chips?: LovelaceCardConfig[];
+    chips?: LovelaceCardConfig[];
+    tiles?: LovelaceCardConfig[];
 }
 
 @customElement("smartqasa-panel-card")
@@ -65,7 +66,7 @@ export class PanelCard extends LitElement {
     }
 
     protected render(): TemplateResult {
-        if (this._loading) return html`<div>Loading...</div>`; // Show loading state
+        if (this._loading) return html`<div>Loading...</div>`;
 
         const isPhone = deviceType === "phone";
         const containerStyles = {

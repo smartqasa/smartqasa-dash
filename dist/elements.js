@@ -4219,7 +4219,7 @@ let PanelCard = class PanelCard extends h {
     }
     render() {
         if (this._loading)
-            return ke `<div>Loading...</div>`; // Show loading state
+            return ke `<div>Loading...</div>`;
         const isPhone = deviceType === "phone";
         const containerStyles = {
             padding: isPhone ? "0.5rem" : "1rem",
