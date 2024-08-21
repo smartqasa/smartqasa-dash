@@ -117,11 +117,6 @@ let HorizontalStack = class HorizontalStack extends h {
             }
             .element {
                 display: flex;
-                margin-right: var(--sq-chip-spacing, 0.8rem);
-            }
-            .container.justify-right .element {
-                margin-right: 0;
-                margin-left: var(--sq-chip-spacing, 0.8rem);
             }
         `;
     }
@@ -154,9 +149,15 @@ let HorizontalStack = class HorizontalStack extends h {
     _createCards() {
         if (!this._config || !this.hass)
             return;
+        const justifyRight = this._config.justify_right;
         this._cards = this._config.cards.map((cardConfig) => {
             const card = createElement(cardConfig);
             card.hass = this.hass;
+            const cardElement = card;
+            const containerElement = cardElement.querySelector(".container");
+            if (containerElement) {
+                containerElement.style[justifyRight ? "marginLeft" : "marginRight"] = "var(--sq-chip-spacing, 0.8rem)";
+            }
             return card;
         });
     }
@@ -9577,7 +9578,7 @@ PopupConfirmation = __decorate([
     t$1("popup-confirmation")
 ], PopupConfirmation);
 
-var version = "2024.8.20b-1";
+var version = "2024.8.21b-1";
 
 window.smartqasa = window.smartqasa || {};
 window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();
