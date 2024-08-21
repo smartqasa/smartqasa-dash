@@ -30,6 +30,7 @@ export class PanelCard extends LitElement {
 
     static styles = css`
         :host {
+            display: block;
             height: 100%;
             background: var(--sq-panel-background);
         }
@@ -68,7 +69,7 @@ export class PanelCard extends LitElement {
         super.update(changedProps);
     }
 
-    protected async render(): Promise<TemplateResult> {
+    protected render(): TemplateResult {
         const isPhone = deviceType === "phone";
 
         const containerStyles = {
@@ -98,7 +99,7 @@ export class PanelCard extends LitElement {
         `;
     }
 
-    private async _createHeaderChips(): Promise<void> {
+    private async _createHeaderChips() {
         if (!this.hass) return;
 
         let chipsConfig: LovelaceCardConfig[];
