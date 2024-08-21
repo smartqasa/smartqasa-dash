@@ -149,21 +149,18 @@ let HorizontalStack = class HorizontalStack extends h {
     _createCards() {
         if (!this._config || !this.hass)
             return;
-        this._cards = this._config.cards
-            .map((cardConfig, index) => {
+        let justifyRight = this._config.justify_right;
+        this._cards = this._config.cards.map((cardConfig) => {
             const card = createElement(cardConfig);
-            if (card) {
-                card.hass = this.hass;
+            card.hass = this.hass;
+            requestAnimationFrame(() => {
                 const cardElement = card;
-                const marginProperty = this._config.justify_right ? "marginLeft" : "marginRight";
-                cardElement.style[marginProperty] = "var(--sq-chip-spacing, 0.8rem)";
-                const cardWidth = cardElement.offsetWidth;
-                cardElement.style.display = cardWidth == 0 ? "none" : "flex";
-                return card;
-            }
-            return D;
-        })
-            .filter((card) => card !== D);
+                cardElement.style[justifyRight ? "marginLeft" : "marginRight"] = "var(--sq-chip-spacing, 0.8rem)";
+                const cardWidth = cardElement.offsetWidth || 0;
+                cardElement.style.display = cardWidth === 0 ? "none" : "flex";
+            });
+            return card;
+        });
     }
 };
 __decorate([
