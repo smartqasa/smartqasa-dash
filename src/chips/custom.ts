@@ -42,22 +42,12 @@ export class CustomChip extends LitElement {
 
     private async loadDialogObj(): Promise<void> {
         if (!this._config?.dialog_file) return;
-
         try {
             const path = `/local/smartqasa/dialogs/${this._config.dialog_file}`;
-            const loadedObj = (await loadYamlAsJson(path)) as DialogObj;
-
-            if (loadedObj) {
-                this._dialogObj = loadedObj;
-                this._entity = this._dialogObj.entity;
-            } else {
-                console.error("Dialog object is null or undefined after loading.");
-            }
+            this._dialogObj = (await loadYamlAsJson(path)) as DialogObj;
+            this._entity = this._dialogObj.entity;
         } catch (error) {
             console.error("Failed to load YAML:", error);
-            this._dialogObj = undefined;
-        } finally {
-            this.requestUpdate();
         }
     }
 

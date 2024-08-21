@@ -3,7 +3,7 @@ import { css } from "lit";
 export const chipBaseStyle = css`
     .container {
         display: flex;
-        margin: 0 var(--sq-chip-margin, 0.4rem) 0 var(--sq-chip-margin, 0.4rem);
+        //margin: 0 var(--sq-chip-margin, 0.4rem) 0 var(--sq-chip-margin, 0.4rem);
         align-items: center;
         justify-content: center;
         width: fit-content;

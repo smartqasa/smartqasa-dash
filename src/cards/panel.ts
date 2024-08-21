@@ -25,11 +25,11 @@ export class PanelCard extends LitElement {
     @state() private _config?: Config;
     private _area?: string;
     private _areaObj?: HassArea;
-    private _headerChips?: LovelaceCardConfig[];
+    private _headerChipsConfig?: LovelaceCardConfig[];
+    private _headerChips?: LovelaceCard[];
 
     static styles = css`
         :host {
-            display: block;
             height: 100%;
             background: var(--sq-panel-background);
         }
@@ -37,19 +37,20 @@ export class PanelCard extends LitElement {
             display: grid;
             grid-template-rows: auto auto 1fr auto;
         }
-        .header-content {
+        .header {
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
-        .header-chip-container {
+        .header-chips {
             display: flex;
             flex-direction: row;
-            margin-right: calc(var(--sq-chip-margin, 0.4rem) * -1);
+            //margin-right: calc(var(--sq-chip-margin, 0.4rem) * -1);
             align-items: flex-start;
             justify-content: flex-end;
+            gap: 0.8rem;
         }
-        .header-chip {
+        .chip {
             display: flex;
         }
     `;
@@ -58,28 +59,21 @@ export class PanelCard extends LitElement {
         this._config = { ...config };
         this._area = this._config.area;
 
-        const yamlFilePath = "/local/smartqasa/lists/chips.yaml";
-        this._headerChips = ((await loadYamlAsJson(yamlFilePath)) as LovelaceCardConfig[]) || undefined;
-        this.requestUpdate(); // Ensure re-render
-    }
-
-    protected shouldUpdate(changedProps: PropertyValues): boolean {
-        if (!this._config) return false;
-        return !!(
-            (changedProps.has("hass") && this._area && this.hass.areas[this._area] !== this._areaObj) ||
-            changedProps.has("_config")
-        );
+        try {
+            const yamlFilePath = "/local/smartqasa/lists/chips.yaml";
+            this._headerChipsConfig = (await loadYamlAsJson(yamlFilePath)) as LovelaceCardConfig[];
+        } catch (error) {
+            console.error("Error loading header chips:", error);
+            this._headerChipsConfig = undefined;
+        }
     }
 
     protected update(changedProps: PropertyValues) {
-        if (changedProps.has("hass") && this.hass) {
-            if (this._headerChips) {
-                this._headerChips.forEach((card) => {
-                    card.hass = this.hass;
-                });
-            }
+        if (changedProps.has("hass") && this.hass && this._headerChips) {
+            this._headerChips.forEach((chip) => {
+                chip.hass = this.hass;
+            });
         }
-
         super.update(changedProps);
     }
 
@@ -93,46 +87,47 @@ export class PanelCard extends LitElement {
 
         return html`
             <div class="container" style="${styleMap(containerStyles)}">
-                <div style="grid-area: header;">${this.renderHeader()}</div>
-                <div style="grid-area: area;">${this.renderArea()}</div>
-                <div style="grid-area: ${isPhone ? "phone_tiles" : "tablet_tiles"};">${this.renderTiles(isPhone)}</div>
-                <div style="grid-area: footer;">${this.renderFooter()}</div>
+                <div style="grid-area: header;">${this._renderHeader()}</div>
+                <div style="grid-area: area;">${this._renderArea()}</div>
+                <div style="grid-area: ${isPhone ? "phone_tiles" : "tablet_tiles"};">${this._renderTiles(isPhone)}</div>
+                <div style="grid-area: footer;">${this._renderFooter()}</div>
             </div>
         `;
     }
 
-    private renderHeader() {
+    private _renderHeader() {
+        if (!this._headerChips) this._createHeaderChips();
         return html`
             <div class="header-content">
                 <smartqasa-time-date .hass=${this.hass}></smartqasa-time-date>
-                ${this.renderHeaderChips()}
+                ${this._headerChips
+                    ? html`<div class="header-chips">
+                          ${this._headerChips.map((chip) => html`<div class="chip">${chip}</div>`)}
+                      </div>`
+                    : nothing}
             </div>
         `;
     }
 
-    private renderHeaderChips() {
-        if (!this._headerChips) return nothing;
-        return html`
-            <div class="header-chip-container">
-                ${this._headerChips.map((chip) => {
-                    console.log("Chip", chip);
-                    const chipElement = createElement(chip) as LovelaceCard;
-                    chipElement.hass = this.hass;
-                    return chipElement;
-                })}
-            </div>
-        `;
+    private _createHeaderChips() {
+        if (!this._headerChipsConfig || !this.hass) return;
+
+        this._headerChips = this._headerChipsConfig.map((cardConfig) => {
+            const card = createElement(cardConfig) as LovelaceCard;
+            card.hass = this.hass;
+            return card;
+        });
     }
 
-    renderArea() {
+    private _renderArea() {
         return html`<p>Area content with dynamic data.</p>`;
     }
 
-    renderTiles(isPhone: boolean) {
+    private _renderTiles(isPhone: boolean) {
         return isPhone ? html`<p>Phone Tiles</p>` : html`<p>Tablet Tiles</p>`;
     }
 
-    renderFooter() {
+    private _renderFooter() {
         return html`<p>Footer content with dynamic data.</p>`;
     }
 }

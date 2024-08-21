@@ -4104,7 +4104,6 @@ window.customCards.push({
 let PanelCard = class PanelCard extends h {
     static { this.styles = i$3 `
         :host {
-            display: block;
             height: 100%;
             background: var(--sq-panel-background);
         }
@@ -4112,42 +4111,40 @@ let PanelCard = class PanelCard extends h {
             display: grid;
             grid-template-rows: auto auto 1fr auto;
         }
-        .header-content {
+        .header {
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
-        .header-chip-container {
+        .header-chips {
             display: flex;
             flex-direction: row;
-            margin-right: calc(var(--sq-chip-margin, 0.4rem) * -1);
+            //margin-right: calc(var(--sq-chip-margin, 0.4rem) * -1);
             align-items: flex-start;
             justify-content: flex-end;
+            gap: 0.8rem;
         }
-        .header-chip {
+        .chip {
             display: flex;
         }
     `; }
     async setConfig(config) {
         this._config = { ...config };
         this._area = this._config.area;
-        const yamlFilePath = "/local/smartqasa/lists/chips.yaml";
-        this._headerChips = (await loadYamlAsJson(yamlFilePath)) || undefined;
-        this.requestUpdate(); // Ensure re-render
-    }
-    shouldUpdate(changedProps) {
-        if (!this._config)
-            return false;
-        return !!((changedProps.has("hass") && this._area && this.hass.areas[this._area] !== this._areaObj) ||
-            changedProps.has("_config"));
+        try {
+            const yamlFilePath = "/local/smartqasa/lists/chips.yaml";
+            this._headerChipsConfig = (await loadYamlAsJson(yamlFilePath));
+        }
+        catch (error) {
+            console.error("Error loading header chips:", error);
+            this._headerChipsConfig = undefined;
+        }
     }
     update(changedProps) {
-        if (changedProps.has("hass") && this.hass) {
-            if (this._headerChips) {
-                this._headerChips.forEach((card) => {
-                    card.hass = this.hass;
-                });
-            }
+        if (changedProps.has("hass") && this.hass && this._headerChips) {
+            this._headerChips.forEach((chip) => {
+                chip.hass = this.hass;
+            });
         }
         super.update(changedProps);
     }
@@ -4159,42 +4156,43 @@ let PanelCard = class PanelCard extends h {
         };
         return ke `
             <div class="container" style="${se(containerStyles)}">
-                <div style="grid-area: header;">${this.renderHeader()}</div>
-                <div style="grid-area: area;">${this.renderArea()}</div>
-                <div style="grid-area: ${isPhone ? "phone_tiles" : "tablet_tiles"};">${this.renderTiles(isPhone)}</div>
-                <div style="grid-area: footer;">${this.renderFooter()}</div>
+                <div style="grid-area: header;">${this._renderHeader()}</div>
+                <div style="grid-area: area;">${this._renderArea()}</div>
+                <div style="grid-area: ${isPhone ? "phone_tiles" : "tablet_tiles"};">${this._renderTiles(isPhone)}</div>
+                <div style="grid-area: footer;">${this._renderFooter()}</div>
             </div>
         `;
     }
-    renderHeader() {
+    _renderHeader() {
+        if (!this._headerChips)
+            this._createHeaderChips();
         return ke `
             <div class="header-content">
                 <smartqasa-time-date .hass=${this.hass}></smartqasa-time-date>
-                ${this.renderHeaderChips()}
+                ${this._headerChips
+            ? ke `<div class="header-chips">
+                          ${this._headerChips.map((chip) => ke `<div class="chip">${chip}</div>`)}
+                      </div>`
+            : D}
             </div>
         `;
     }
-    renderHeaderChips() {
-        if (!this._headerChips)
-            return D;
-        return ke `
-            <div class="header-chip-container">
-                ${this._headerChips.map((chip) => {
-            console.log("Chip", chip);
-            const chipElement = createElement(chip);
-            chipElement.hass = this.hass;
-            return chipElement;
-        })}
-            </div>
-        `;
+    _createHeaderChips() {
+        if (!this._headerChipsConfig || !this.hass)
+            return;
+        this._headerChips = this._headerChipsConfig.map((cardConfig) => {
+            const card = createElement(cardConfig);
+            card.hass = this.hass;
+            return card;
+        });
     }
-    renderArea() {
+    _renderArea() {
         return ke `<p>Area content with dynamic data.</p>`;
     }
-    renderTiles(isPhone) {
+    _renderTiles(isPhone) {
         return isPhone ? ke `<p>Phone Tiles</p>` : ke `<p>Tablet Tiles</p>`;
     }
-    renderFooter() {
+    _renderFooter() {
         return ke `<p>Footer content with dynamic data.</p>`;
     }
 };
@@ -4879,7 +4877,7 @@ TVRemoteCard = __decorate([
 const chipBaseStyle = i$3 `
     .container {
         display: flex;
-        margin: 0 var(--sq-chip-margin, 0.4rem) 0 var(--sq-chip-margin, 0.4rem);
+        //margin: 0 var(--sq-chip-margin, 0.4rem) 0 var(--sq-chip-margin, 0.4rem);
         align-items: center;
         justify-content: center;
         width: fit-content;
@@ -4972,21 +4970,11 @@ let CustomChip = class CustomChip extends h {
             return;
         try {
             const path = `/local/smartqasa/dialogs/${this._config.dialog_file}`;
-            const loadedObj = (await loadYamlAsJson(path));
-            if (loadedObj) {
-                this._dialogObj = loadedObj;
-                this._entity = this._dialogObj.entity;
-            }
-            else {
-                console.error("Dialog object is null or undefined after loading.");
-            }
+            this._dialogObj = (await loadYamlAsJson(path));
+            this._entity = this._dialogObj.entity;
         }
         catch (error) {
             console.error("Failed to load YAML:", error);
-            this._dialogObj = undefined;
-        }
-        finally {
-            this.requestUpdate();
         }
     }
     shouldUpdate(changedProps) {
