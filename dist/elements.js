@@ -4180,12 +4180,6 @@ const panelStyle = i$3 `
     }
 `;
 
-window.customCards.push({
-    type: "smartqasa-panel-card",
-    name: "SmartQasa Panel Card",
-    preview: true,
-    description: "A SmartQasa card for rendering Main Panel.",
-});
 let PanelCard = class PanelCard extends h {
     constructor() {
         super(...arguments);
@@ -4197,6 +4191,15 @@ let PanelCard = class PanelCard extends h {
     async setConfig(config) {
         this._config = { ...config };
         this._area = this._config.area;
+        this._loading = true;
+    }
+    async firstUpdated(changedProps) {
+        super.firstUpdated(changedProps);
+        await this._loadHeaderChips();
+        if (this._config?.area_chips) {
+            this._areaChips = await this._createAreaChips(this._config.area_chips);
+        }
+        this._loading = false;
     }
     update(changedProps) {
         super.update(changedProps);
@@ -4216,7 +4219,7 @@ let PanelCard = class PanelCard extends h {
     }
     render() {
         if (this._loading)
-            return ke `<div>Loading...</div>`;
+            return ke `<div>Loading...</div>`; // Show loading state
         const isPhone = deviceType === "phone";
         const containerStyles = {
             padding: isPhone ? "0.5rem" : "1rem",
@@ -4231,15 +4234,35 @@ let PanelCard = class PanelCard extends h {
             </div>
         `;
     }
-    firstUpdated(changedProps) {
-        super.firstUpdated(changedProps);
-        this._loading = false;
+    async _loadHeaderChips() {
+        this._headerChips = await this._createHeaderChips();
+    }
+    async _createHeaderChips() {
+        let chipsConfig = [];
+        try {
+            const yamlFilePath = "/local/smartqasa/lists/chips.yaml";
+            chipsConfig = (await loadYamlAsJson(yamlFilePath));
+        }
+        catch (error) {
+            console.error("Error loading header chips:", error);
+            return [];
+        }
+        return chipsConfig.map((config) => {
+            const chip = createElement(config);
+            chip.hass = this.hass;
+            return chip;
+        });
+    }
+    async _createAreaChips(chipsConfig) {
+        return chipsConfig.map((config) => {
+            const chip = createElement(config);
+            chip.hass = this.hass;
+            return chip;
+        });
     }
     _renderHeader() {
         let time = this.hass?.states["sensor.current_time"]?.state || "Loading...";
         let date = this.hass?.states["sensor.current_date"]?.state || "Loading...";
-        if (!this._headerChips.length)
-            this._createHeaderChips();
         return ke `
             <div class="header-container">
                 <div class="header-time" @click="${this._launchClock}">
@@ -4251,23 +4274,6 @@ let PanelCard = class PanelCard extends h {
                 </div>
             </div>
         `;
-    }
-    async _createHeaderChips() {
-        let chipsConfig;
-        try {
-            const yamlFilePath = "/local/smartqasa/lists/chips.yaml";
-            chipsConfig = (await loadYamlAsJson(yamlFilePath));
-        }
-        catch (error) {
-            console.error("Error loading header chips:", error);
-            this._headerChips = [];
-            return;
-        }
-        this._headerChips = chipsConfig.map((config) => {
-            const chip = createElement(config);
-            chip.hass = this.hass;
-            return chip;
-        });
     }
     _launchClock(e) {
         e.stopPropagation();
@@ -4281,8 +4287,6 @@ let PanelCard = class PanelCard extends h {
     _renderArea() {
         const name = this._config?.name ?? this._areaObj?.name ?? "Area";
         const height = deviceType === "phone" ? "15vh" : "20vh";
-        if (this._config?.area_chips && !this._headerChips.length)
-            this._createAreaChips();
         const picture = this._config?.picture
             ? `/local/smartqasa/images/${this._config.picture}`
             : this._areaObj?.picture ?? img$24;
@@ -4297,18 +4301,6 @@ let PanelCard = class PanelCard extends h {
                 <img class="area-image" alt="Area picture..." src=${picture} style="max-height: ${height};" />
             </div>
         `;
-    }
-    async _createAreaChips() {
-        if (!this._config || !this._config.area_chips) {
-            this._areaChips = [];
-            return;
-        }
-        let chipsConfig = this._config.area_chips;
-        this._areaChips = chipsConfig.map((config) => {
-            const chip = createElement(config);
-            chip.hass = this.hass;
-            return chip;
-        });
     }
     _renderTiles(isPhone) {
         return isPhone ? ke `<p>Phone Tiles</p>` : ke `<p>Tablet Tiles</p>`;

@@ -1,4 +1,4 @@
-import { CSSResult, html, LitElement, nothing, PropertyValues, TemplateResult } from "lit";
+import { CSSResult, html, LitElement, PropertyValues, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HassArea, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
@@ -12,14 +12,8 @@ interface Config extends LovelaceCardConfig {
     area: string;
     name?: string;
     picture?: string;
+    area_chips?: LovelaceCardConfig[];
 }
-
-window.customCards.push({
-    type: "smartqasa-panel-card",
-    name: "SmartQasa Panel Card",
-    preview: true,
-    description: "A SmartQasa card for rendering Main Panel.",
-});
 
 @customElement("smartqasa-panel-card")
 export class PanelCard extends LitElement {
@@ -36,6 +30,19 @@ export class PanelCard extends LitElement {
     public async setConfig(config: Config) {
         this._config = { ...config };
         this._area = this._config.area;
+        this._loading = true;
+    }
+
+    protected async firstUpdated(changedProps: PropertyValues) {
+        super.firstUpdated(changedProps);
+
+        await this._loadHeaderChips();
+
+        if (this._config?.area_chips) {
+            this._areaChips = await this._createAreaChips(this._config.area_chips);
+        }
+
+        this._loading = false;
     }
 
     protected update(changedProps: PropertyValues) {
@@ -58,10 +65,9 @@ export class PanelCard extends LitElement {
     }
 
     protected render(): TemplateResult {
-        if (this._loading) return html`<div>Loading...</div>`;
+        if (this._loading) return html`<div>Loading...</div>`; // Show loading state
 
         const isPhone = deviceType === "phone";
-
         const containerStyles = {
             padding: isPhone ? "0.5rem" : "1rem",
             gridTemplateAreas: isPhone ? '"area" "phone_tiles" "footer"' : '"header" "area" "tablet_tiles" "footer"',
@@ -77,15 +83,39 @@ export class PanelCard extends LitElement {
         `;
     }
 
-    protected firstUpdated(changedProps: PropertyValues) {
-        super.firstUpdated(changedProps);
-        this._loading = false;
+    private async _loadHeaderChips() {
+        this._headerChips = await this._createHeaderChips();
+    }
+
+    private async _createHeaderChips(): Promise<LovelaceCard[]> {
+        let chipsConfig: LovelaceCardConfig[] = [];
+        try {
+            const yamlFilePath = "/local/smartqasa/lists/chips.yaml";
+            chipsConfig = (await loadYamlAsJson(yamlFilePath)) as LovelaceCardConfig[];
+        } catch (error) {
+            console.error("Error loading header chips:", error);
+            return [];
+        }
+
+        return chipsConfig.map((config) => {
+            const chip = createElement(config) as LovelaceCard;
+            chip.hass = this.hass;
+            return chip;
+        });
+    }
+
+    private async _createAreaChips(chipsConfig: LovelaceCardConfig[]): Promise<LovelaceCard[]> {
+        return chipsConfig.map((config) => {
+            const chip = createElement(config) as LovelaceCard;
+            chip.hass = this.hass;
+            return chip;
+        });
     }
 
     private _renderHeader() {
         let time = this.hass?.states["sensor.current_time"]?.state || "Loading...";
         let date = this.hass?.states["sensor.current_date"]?.state || "Loading...";
-        if (!this._headerChips.length) this._createHeaderChips();
+
         return html`
             <div class="header-container">
                 <div class="header-time" @click="${this._launchClock}">
@@ -97,25 +127,6 @@ export class PanelCard extends LitElement {
                 </div>
             </div>
         `;
-    }
-
-    private async _createHeaderChips() {
-        let chipsConfig: LovelaceCardConfig[];
-
-        try {
-            const yamlFilePath = "/local/smartqasa/lists/chips.yaml";
-            chipsConfig = (await loadYamlAsJson(yamlFilePath)) as LovelaceCardConfig[];
-        } catch (error) {
-            console.error("Error loading header chips:", error);
-            this._headerChips = [];
-            return;
-        }
-
-        this._headerChips = chipsConfig.map((config) => {
-            const chip = createElement(config) as LovelaceCard;
-            chip.hass = this.hass;
-            return chip;
-        });
     }
 
     private _launchClock(e: Event) {
@@ -130,9 +141,6 @@ export class PanelCard extends LitElement {
     private _renderArea() {
         const name = this._config?.name ?? this._areaObj?.name ?? "Area";
         const height = deviceType === "phone" ? "15vh" : "20vh";
-
-        if (this._config?.area_chips && !this._headerChips.length) this._createAreaChips();
-
         const picture = this._config?.picture
             ? `/local/smartqasa/images/${this._config.picture}`
             : this._areaObj?.picture ?? defaultImage;
@@ -148,21 +156,6 @@ export class PanelCard extends LitElement {
                 <img class="area-image" alt="Area picture..." src=${picture} style="max-height: ${height};" />
             </div>
         `;
-    }
-
-    private async _createAreaChips() {
-        if (!this._config || !this._config.area_chips) {
-            this._areaChips = [];
-            return;
-        }
-
-        let chipsConfig: LovelaceCardConfig[] = this._config.area_chips;
-
-        this._areaChips = chipsConfig.map((config) => {
-            const chip = createElement(config) as LovelaceCard;
-            chip.hass = this.hass;
-            return chip;
-        });
     }
 
     private _renderTiles(isPhone: boolean) {
