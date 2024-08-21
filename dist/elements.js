@@ -4136,6 +4136,8 @@ let PanelCard = class PanelCard extends h {
     async setConfig(config) {
         this._config = { ...config };
         this._area = this._config.area;
+        await this._createHeaderChips();
+        this._loading = false;
     }
     update(changedProps) {
         if (changedProps.has("hass") && this.hass && this._headerChips.length) {
@@ -4146,6 +4148,9 @@ let PanelCard = class PanelCard extends h {
         super.update(changedProps);
     }
     render() {
+        if (this._loading) {
+            return ke `<p>Loading...</p>`;
+        }
         const isPhone = deviceType === "phone";
         const containerStyles = {
             padding: isPhone ? "0.5rem" : "1rem",
@@ -4160,9 +4165,7 @@ let PanelCard = class PanelCard extends h {
             </div>
         `;
     }
-    async _renderHeader() {
-        if (!this._headerChips.length)
-            this._createHeaderChips();
+    _renderHeader() {
         return ke `
             <div class="header">
                 <smartqasa-time-date .hass=${this.hass}></smartqasa-time-date>
