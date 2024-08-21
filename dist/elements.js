@@ -4117,13 +4117,11 @@ const panelStyle = i$3 `
     }
     .time,
     .date {
-        display: flex;
         text-align: left;
-        line-height: normal;
         white-space: nowrap;
     }
     .time {
-        align-items: flex-start;
+        line-height: var(--sq-title-font-size, 3.2rem);
         font-size: var(--sq-title-font-size, 3.2rem);
         font-weight: var(--sq-title-font-weight, 400);
         color: rgb(var(--sq-title-font-rgb, 128, 128, 128));
