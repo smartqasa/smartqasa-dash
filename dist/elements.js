@@ -153,12 +153,8 @@ let HorizontalStack = class HorizontalStack extends h {
         this._cards = this._config.cards.map((cardConfig) => {
             const card = createElement(cardConfig);
             card.hass = this.hass;
-            requestAnimationFrame(() => {
-                const cardElement = card;
-                cardElement.style[justifyRight ? "marginLeft" : "marginRight"] = "var(--sq-chip-spacing, 0.8rem)";
-                const cardWidth = cardElement.offsetWidth || 0;
-                cardElement.style.display = cardWidth === 0 ? "none" : "flex";
-            });
+            const cardElement = card;
+            cardElement.style[justifyRight ? "marginLeft" : "marginRight"] = "var(--sq-chip-spacing, 0.8rem)";
             return card;
         });
     }
@@ -5524,18 +5520,21 @@ let DialogChip = class DialogChip extends h {
             return D;
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
         const state = this._stateObj?.state || "unknown";
-        if ((this._dialog === "garages" && state === "closed") ||
+        const display = (this._dialog === "garages" && state === "closed") ||
             (this._dialog === "locks" && state === "locked") ||
             (this._dialog === "sensors_doors" && state === "off") ||
-            (this._dialog === "sensors_windows" && state === "off")) {
-            return D;
-        }
+            (this._dialog === "sensors_windows" && state === "off")
+            ? "none"
+            : "flex";
+        const containerStyles = {
+            display: `${display}`,
+        };
         const iconStyles = {
             color: `rgb(${this._dialogObj.color || "var(--sq-rgb-orange)"})`,
             paddingRight: this._label ? "calc(var(--sq-chip-padding, 1rem) / 2)" : "var(--sq-chip-padding, 1rem)",
         };
         return ke `
-            <div class="container" @click=${this._showDialog}>
+            <div class="container" style="${se(containerStyles)}" @click=${this._showDialog}>
                 <div class="icon" style="${se(iconStyles)}">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>

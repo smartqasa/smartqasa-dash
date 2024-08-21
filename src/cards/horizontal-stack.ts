@@ -80,12 +80,8 @@ class HorizontalStack extends LitElement {
 
             card.hass = this.hass;
 
-            requestAnimationFrame(() => {
-                const cardElement = card as HTMLElement;
-                cardElement.style[justifyRight ? "marginLeft" : "marginRight"] = "var(--sq-chip-spacing, 0.8rem)";
-                const cardWidth = cardElement.offsetWidth || 0;
-                cardElement.style.display = cardWidth === 0 ? "none" : "flex";
-            });
+            const cardElement = card as HTMLElement;
+            cardElement.style[justifyRight ? "marginLeft" : "marginRight"] = "var(--sq-chip-spacing, 0.8rem)";
 
             return card;
         });

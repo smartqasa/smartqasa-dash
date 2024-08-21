@@ -54,14 +54,16 @@ export class DialogChip extends LitElement {
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
 
         const state = this._stateObj?.state || "unknown";
-        if (
+        const display =
             (this._dialog === "garages" && state === "closed") ||
             (this._dialog === "locks" && state === "locked") ||
             (this._dialog === "sensors_doors" && state === "off") ||
             (this._dialog === "sensors_windows" && state === "off")
-        ) {
-            return nothing;
-        }
+                ? "none"
+                : "flex";
+        const containerStyles = {
+            display: `${display}`,
+        };
 
         const iconStyles = {
             color: `rgb(${this._dialogObj.color || "var(--sq-rgb-orange)"})`,
@@ -69,7 +71,7 @@ export class DialogChip extends LitElement {
         };
 
         return html`
-            <div class="container" @click=${this._showDialog}>
+            <div class="container" style="${styleMap(containerStyles)}" @click=${this._showDialog}>
                 <div class="icon" style="${styleMap(iconStyles)}">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
