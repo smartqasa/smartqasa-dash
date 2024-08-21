@@ -81,14 +81,11 @@ class HorizontalStack extends LitElement {
                 if (card) {
                     card.hass = this.hass;
 
-                    requestAnimationFrame(() => {
-                        const cardElement = card as HTMLElement;
-                        const cardWidth = cardElement.offsetWidth;
-                        if (cardWidth > 0) {
-                            const marginProperty = this._config!.justify_right ? "marginLeft" : "marginRight";
-                            cardElement.style[marginProperty] = "var(--sq-chip-spacing, 0.8rem)";
-                        }
-                    });
+                    const cardElement = card as HTMLElement;
+                    const marginProperty = this._config!.justify_right ? "marginLeft" : "marginRight";
+                    cardElement.style[marginProperty] = "var(--sq-chip-spacing, 0.8rem)";
+                    const cardWidth = cardElement.offsetWidth;
+                    cardElement.style.display = cardWidth == 0 ? "none" : "flex";
 
                     return card;
                 }
