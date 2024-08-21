@@ -128,16 +128,18 @@ let HorizontalStack = class HorizontalStack extends h {
         this._createCards();
     }
     update(changedProps) {
-        if (changedProps.has("_config") && this._config) {
+        if ((changedProps.has("_config") && this._config) || (changedProps.has("hass") && this.hass)) {
             this._createCards();
         }
+        /*
         if (changedProps.has("hass") && this.hass) {
             this._cards.forEach((card) => {
-                if (card !== D) {
+                if (card !== nothing) {
                     card.hass = this.hass;
                 }
             });
         }
+*/
         super.update(changedProps);
     }
     render() {

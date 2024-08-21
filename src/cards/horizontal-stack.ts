@@ -48,10 +48,10 @@ class HorizontalStack extends LitElement {
     }
 
     protected update(changedProps: PropertyValues) {
-        if (changedProps.has("_config") && this._config) {
+        if ((changedProps.has("_config") && this._config) || (changedProps.has("hass") && this.hass)) {
             this._createCards();
         }
-
+        /*
         if (changedProps.has("hass") && this.hass) {
             this._cards.forEach((card) => {
                 if (card !== nothing) {
@@ -59,7 +59,7 @@ class HorizontalStack extends LitElement {
                 }
             });
         }
-
+*/
         super.update(changedProps);
     }
 
