@@ -4119,14 +4119,13 @@ let PanelCard = class PanelCard extends h {
         }
         .header {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: space-between;
         }
         .header-chips {
             display: flex;
             flex-direction: row;
             margin-right: calc(var(--sq-chip-margin, 0.4rem) * -1);
-            align-items: flex-start;
             justify-content: flex-end;
         }
         .chip {
@@ -4138,14 +4137,17 @@ let PanelCard = class PanelCard extends h {
         this._area = this._config.area;
     }
     update(changedProps) {
+        super.update(changedProps);
         if (changedProps.has("hass") && this.hass && this._headerChips.length) {
             this._headerChips.forEach((chip) => {
                 chip.hass = this.hass;
             });
         }
-        super.update(changedProps);
     }
     render() {
+        if (this._loading) {
+            return ke `<div>Loading...</div>`;
+        }
         const isPhone = deviceType === "phone";
         const containerStyles = {
             padding: isPhone ? "0.5rem" : "1rem",
@@ -4159,6 +4161,10 @@ let PanelCard = class PanelCard extends h {
                 <div style="grid-area: footer;">${this._renderFooter()}</div>
             </div>
         `;
+    }
+    firstUpdated(changedProps) {
+        super.firstUpdated(changedProps);
+        this._loading = false;
     }
     _renderHeader() {
         if (!this._headerChips.length)

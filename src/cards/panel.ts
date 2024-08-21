@@ -40,14 +40,13 @@ export class PanelCard extends LitElement {
         }
         .header {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: space-between;
         }
         .header-chips {
             display: flex;
             flex-direction: row;
             margin-right: calc(var(--sq-chip-margin, 0.4rem) * -1);
-            align-items: flex-start;
             justify-content: flex-end;
         }
         .chip {
@@ -61,15 +60,19 @@ export class PanelCard extends LitElement {
     }
 
     protected update(changedProps: PropertyValues) {
+        super.update(changedProps);
         if (changedProps.has("hass") && this.hass && this._headerChips.length) {
             this._headerChips.forEach((chip) => {
                 chip.hass = this.hass;
             });
         }
-        super.update(changedProps);
     }
 
     protected render(): TemplateResult {
+        if (this._loading) {
+            return html`<div>Loading...</div>`;
+        }
+
         const isPhone = deviceType === "phone";
 
         const containerStyles = {
@@ -85,6 +88,11 @@ export class PanelCard extends LitElement {
                 <div style="grid-area: footer;">${this._renderFooter()}</div>
             </div>
         `;
+    }
+
+    protected firstUpdated(changedProps: PropertyValues) {
+        super.firstUpdated(changedProps);
+        this._loading = false;
     }
 
     private _renderHeader() {
