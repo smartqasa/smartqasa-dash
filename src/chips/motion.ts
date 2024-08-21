@@ -4,7 +4,7 @@ import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
 import { callService } from "../utils/call-service";
 
-import { chipBaseStyle, chipTextStyle } from "../styles/chip";
+import { chipBaseStyle, chipTextStyle } from "../styles/chip-2";
 
 interface Config extends LovelaceCardConfig {
     entity?: string;
@@ -45,17 +45,13 @@ export class MotionChip extends LitElement {
 
         const { icon, iconColor, name } = this._updateState();
 
-        const containerStyle = {
-            "margin-right": "0.7rem",
-            "grid-template-areas": name ? '"i t"' : '"i"',
-        };
-
         const iconStyles = {
             color: `rgb(${iconColor})`,
+            paddingRight: name ? "calc(var(--sq-chip-padding, 1rem) / 2)" : "var(--sq-chip-padding, 1rem)",
         };
 
         return html`
-            <div class="container" style="${styleMap(containerStyle)}" @click=${this._toggleEntity}>
+            <div class="container" @click=${this._toggleEntity}>
                 <div class="icon" style="${styleMap(iconStyles)}">
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>

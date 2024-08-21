@@ -47,14 +47,11 @@ export class NavigateChip extends LitElement {
         this._areaObjPrev = this._areaPrev ? this.hass?.areas[this._areaPrev] : undefined;
         this._areaObjNext = this._areaNext ? this.hass?.areas[this._areaNext] : undefined;
 
-        const containerStyle = {
-            "margin-right": "0.7rem",
-        };
         const iconPrev = "hass:menu-left";
         const iconNext = "hass:menu-right";
 
         return html`
-            <div class="container" style="${styleMap(containerStyle)}">
+            <div class="container">
                 <div class="icon1" @click=${this._navigatePrev}>
                     <ha-icon .icon=${iconPrev}></ha-icon>
                 </div>
@@ -70,7 +67,6 @@ export class NavigateChip extends LitElement {
         if (this._areaObjPrev) {
             window.history.pushState(null, "", `/home-dash/${this._areaPrev}`);
             window.dispatchEvent(new CustomEvent("location-changed"));
-            // Assume browser_mod is correctly typed and included
         } else {
             console.error("Previous area is not found.");
         }

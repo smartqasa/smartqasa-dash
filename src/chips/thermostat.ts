@@ -5,7 +5,7 @@ import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
 import { moreInfoDialog } from "../utils/more-info-dialog";
 import { thermostatIcons, thermostatColors } from "../const";
 
-import { chipBaseStyle, chipTextStyle } from "../styles/chip";
+import { chipBaseStyle, chipTextStyle } from "../styles/chip-2";
 
 interface Config extends LovelaceCardConfig {
     entity?: string;
@@ -38,12 +38,8 @@ export class ThermostatChip extends LitElement {
 
         const { icon, iconColor, temperature } = this._updateState();
 
-        const containerStyle = {
-            "margin-right": "0.7rem",
-        };
-
         return html`
-            <div class="container" style="${styleMap(containerStyle)}" @click=${this._showMoreInfo}>
+            <div class="container" @click=${this._showMoreInfo}>
                 <div class="icon" id="icon" style="color: rgb(${iconColor});">
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>

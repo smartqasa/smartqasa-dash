@@ -1,10 +1,10 @@
-import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult } from "lit";
+import { CSSResultGroup, html, LitElement, nothing, PropertyValues, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
 import { callService } from "../utils/call-service";
 
-import { chipBaseStyle, chipTextStyle, chipIconSpinStyle } from "../styles/chip";
+import { chipBaseStyle, chipTextStyle, chipIconSpinStyle } from "../styles/chip-2";
 
 interface Config extends LovelaceCardConfig {
     entity: string;
@@ -37,22 +37,19 @@ export class RoutineChip extends LitElement {
         );
     }
 
-    protected render(): TemplateResult {
-        if (!this._entity) return html``;
+    protected render(): TemplateResult | typeof nothing {
+        if (!this._entity) return nothing;
 
         const { icon, iconAnimation, iconColor, name } = this._updateState();
-
-        const containerStyle = {
-            "grid-template-areas": name ? '"i t"' : '"i"',
-        };
 
         const iconStyles = {
             color: `rgb(${iconColor})`,
             animation: iconAnimation,
+            paddingRight: name ? "calc(var(--sq-chip-padding, 1rem) / 2)" : "var(--sq-chip-padding, 1rem)",
         };
 
         return html`
-            <div class="container" style="${styleMap(containerStyle)}" @click=${this._runRoutine}>
+            <div class="container" @click=${this._runRoutine}>
                 <div class="icon" style="${styleMap(iconStyles)}">
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>

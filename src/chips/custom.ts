@@ -3,7 +3,7 @@ import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
 import { loadYamlAsJson } from "../utils/load-yaml-as-json";
-import { chipBaseStyle, chipTextStyle } from "../styles/chip";
+import { chipBaseStyle, chipTextStyle } from "../styles/chip-2";
 
 interface Config extends LovelaceCardConfig {
     dialog_file: string;
@@ -85,16 +85,14 @@ export class CustomChip extends LitElement {
                 break;
         }
 
-        const containerStyle = {
-            "grid-template-areas": '"i t"',
-        };
         const iconStyles = {
             color: `rgb(${iconColor})`,
             backgroundColor: "transparent",
+            paddingRight: text ? "calc(var(--sq-chip-padding, 1rem) / 2)" : "var(--sq-chip-padding, 1rem)",
         };
 
         return html`
-            <div class="container" style="${styleMap(containerStyle)}" @click=${this._showDialog}>
+            <div class="container" @click=${this._showDialog}>
                 <div class="icon" style="${styleMap(iconStyles)}">
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
