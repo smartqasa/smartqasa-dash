@@ -71,6 +71,18 @@ export class PanelCard extends LitElement {
         );
     }
 
+    protected update(changedProps: PropertyValues) {
+        if (changedProps.has("hass") && this.hass) {
+            if (this._headerChips) {
+                this._headerChips.forEach((card) => {
+                    card.hass = this.hass;
+                });
+            }
+        }
+
+        super.update(changedProps);
+    }
+
     protected render(): TemplateResult {
         const isPhone = deviceType === "phone";
 
@@ -90,7 +102,6 @@ export class PanelCard extends LitElement {
     }
 
     private renderHeader() {
-        console.log("Header Chips:", this._headerChips);
         return html`
             <div class="header-content">
                 <smartqasa-time-date .hass=${this.hass}></smartqasa-time-date>
@@ -104,6 +115,7 @@ export class PanelCard extends LitElement {
             <div class="header-chip-container">
                 ${this._headerChips!.map((chip) => {
                     const chipElement = createElement(chip) as LovelaceCard;
+                    console.log("chipElement", chipElement);
                     chipElement.hass = this.hass;
                     return chipElement;
                 })}
