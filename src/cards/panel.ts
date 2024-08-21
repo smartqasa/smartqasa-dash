@@ -1,10 +1,11 @@
-import { css, html, LitElement, nothing, PropertyValues, TemplateResult } from "lit";
+import { CSSResult, html, LitElement, nothing, PropertyValues, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HassArea, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 import { deviceType } from "../const";
 import { createElement } from "../utils/create-element";
 import { loadYamlAsJson } from "../utils/load-yaml-as-json";
+import { panelStyle } from "../styles/panel";
 
 interface Config extends LovelaceCardConfig {
     area: string;
@@ -28,31 +29,7 @@ export class PanelCard extends LitElement {
     private _areaObj?: HassArea;
     private _headerChips: LovelaceCard[] = [];
 
-    static styles = css`
-        :host {
-            display: block;
-            height: 100%;
-            background: var(--sq-panel-background);
-        }
-        .container {
-            display: grid;
-            grid-template-rows: auto auto 1fr auto;
-        }
-        .header {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-        }
-        .header-chips {
-            display: flex;
-            flex-direction: row;
-            margin-right: calc(var(--sq-chip-margin, 0.4rem) * -1);
-            justify-content: flex-end;
-        }
-        .chip {
-            display: flex;
-        }
-    `;
+    static styles: CSSResult = panelStyle;
 
     public async setConfig(config: Config) {
         this._config = { ...config };

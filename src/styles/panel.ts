@@ -13,7 +13,7 @@ export const panelStyle = css`
     }
 
     // Header
-    .header-container {
+    .header {
         display: flex;
         align-items: flex-start;
         justify-content: space-between;
