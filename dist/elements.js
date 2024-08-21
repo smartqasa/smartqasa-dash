@@ -128,18 +128,14 @@ let HorizontalStack = class HorizontalStack extends h {
         this._createCards();
     }
     update(changedProps) {
-        if ((changedProps.has("_config") && this._config) || (changedProps.has("hass") && this.hass)) {
+        if (changedProps.has("_config") && this._config) {
             this._createCards();
         }
-        /*
         if (changedProps.has("hass") && this.hass) {
             this._cards.forEach((card) => {
-                if (card !== nothing) {
-                    card.hass = this.hass;
-                }
+                card.hass = this.hass;
             });
         }
-*/
         super.update(changedProps);
     }
     render() {
@@ -153,7 +149,8 @@ let HorizontalStack = class HorizontalStack extends h {
     _createCards() {
         if (!this._config || !this.hass)
             return;
-        this._cards = this._config.cards.map((cardConfig, index) => {
+        this._cards = this._config.cards
+            .map((cardConfig, index) => {
             const card = createElement(cardConfig);
             if (card) {
                 card.hass = this.hass;
@@ -168,7 +165,8 @@ let HorizontalStack = class HorizontalStack extends h {
                 return card;
             }
             return D;
-        });
+        })
+            .filter((card) => card !== D);
     }
 };
 __decorate([

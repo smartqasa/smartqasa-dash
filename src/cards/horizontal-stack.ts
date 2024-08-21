@@ -19,7 +19,7 @@ window.customCards.push({
 class HorizontalStack extends LitElement {
     @property({ attribute: false }) private hass?: HomeAssistant;
     @state() private _config?: Config;
-    @state() private _cards: (LovelaceCard | typeof nothing)[] = [];
+    @state() private _cards: LovelaceCard[] = [];
 
     static get styles() {
         return css`
@@ -48,18 +48,16 @@ class HorizontalStack extends LitElement {
     }
 
     protected update(changedProps: PropertyValues) {
-        if ((changedProps.has("_config") && this._config) || (changedProps.has("hass") && this.hass)) {
+        if (changedProps.has("_config") && this._config) {
             this._createCards();
         }
-        /*
+
         if (changedProps.has("hass") && this.hass) {
             this._cards.forEach((card) => {
-                if (card !== nothing) {
-                    card.hass = this.hass;
-                }
+                card.hass = this.hass;
             });
         }
-*/
+
         super.update(changedProps);
     }
 
@@ -76,25 +74,27 @@ class HorizontalStack extends LitElement {
     private _createCards() {
         if (!this._config || !this.hass) return;
 
-        this._cards = this._config.cards.map((cardConfig, index) => {
-            const card = createElement(cardConfig) as LovelaceCard;
+        this._cards = this._config.cards
+            .map((cardConfig, index) => {
+                const card = createElement(cardConfig) as LovelaceCard;
 
-            if (card) {
-                card.hass = this.hass;
+                if (card) {
+                    card.hass = this.hass;
 
-                requestAnimationFrame(() => {
-                    const cardElement = card as HTMLElement;
-                    const cardWidth = cardElement.offsetWidth;
-                    if (cardWidth > 0) {
-                        const marginProperty = this._config!.justify_right ? "marginLeft" : "marginRight";
-                        cardElement.style[marginProperty] = "var(--sq-chip-spacing, 0.8rem)";
-                    }
-                });
+                    requestAnimationFrame(() => {
+                        const cardElement = card as HTMLElement;
+                        const cardWidth = cardElement.offsetWidth;
+                        if (cardWidth > 0) {
+                            const marginProperty = this._config!.justify_right ? "marginLeft" : "marginRight";
+                            cardElement.style[marginProperty] = "var(--sq-chip-spacing, 0.8rem)";
+                        }
+                    });
 
-                return card;
-            }
+                    return card;
+                }
 
-            return nothing;
-        });
+                return nothing;
+            })
+            .filter((card) => card !== nothing);
     }
 }
