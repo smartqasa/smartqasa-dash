@@ -4150,9 +4150,7 @@ const panelStyle = i$3 `
         justify-content: space-between;
     }
     .area-info {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
+        flex: 1 1 50%;
     }
     .area-name {
         text-align: left;
@@ -4163,11 +4161,11 @@ const panelStyle = i$3 `
     .area-chps {
         display: flex;
         flex-direction: row;
-        margin-left: calc(var(--sq-chip-margin, 0.4rem) * -1);
         justify-content: flex-start;
+        margin-left: calc(var(--sq-chip-margin, 0.4rem) * -1);
     }
     .area-image {
-        flex: 1;
+        flex: 1 1 50%;
         width: 100%;
         height: 100%;
         object-fit: cover;
@@ -4197,10 +4195,13 @@ let PanelCard = class PanelCard extends h {
     }
     update(changedProps) {
         super.update(changedProps);
-        if (changedProps.has("hass") && this.hass && this._headerChips.length) {
-            this._headerChips.forEach((chip) => {
-                chip.hass = this.hass;
-            });
+        if (changedProps.has("hass") && this.hass) {
+            if (this._headerChips.length) {
+                this._headerChips.forEach((chip) => {
+                    chip.hass = this.hass;
+                });
+            }
+            this._areaObj = this._area ? this.hass.areas[this._area] : undefined;
         }
     }
     render() {
@@ -4271,6 +4272,7 @@ let PanelCard = class PanelCard extends h {
         }
     }
     _renderArea() {
+        const name = this._config?.name ?? this._areaObj?.name ?? "Area";
         const height = deviceType === "phone" ? "15vh" : "20vh";
         const picture = this._config?.picture
             ? `/local/smartqasa/images/${this._config.picture}`
@@ -4278,7 +4280,7 @@ let PanelCard = class PanelCard extends h {
         return ke `
             <div class="area-container">
                 <div class="area-info">
-                    <div class="area-name">${this._areaObj?.name}</div>
+                    <div class="area-name">${name}</div>
                 </div>
                 <img class="area-image" alt="Area picture..." src=${picture} style="max-height: ${height};" />
             </div>

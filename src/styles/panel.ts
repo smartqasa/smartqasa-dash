@@ -53,9 +53,7 @@ export const panelStyle = css`
         justify-content: space-between;
     }
     .area-info {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
+        flex: 1 1 50%;
     }
     .area-name {
         text-align: left;
@@ -66,11 +64,11 @@ export const panelStyle = css`
     .area-chps {
         display: flex;
         flex-direction: row;
-        margin-left: calc(var(--sq-chip-margin, 0.4rem) * -1);
         justify-content: flex-start;
+        margin-left: calc(var(--sq-chip-margin, 0.4rem) * -1);
     }
     .area-image {
-        flex: 1;
+        flex: 1 1 50%;
         width: 100%;
         height: 100%;
         object-fit: cover;

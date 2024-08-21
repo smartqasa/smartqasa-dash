@@ -39,10 +39,13 @@ export class PanelCard extends LitElement {
 
     protected update(changedProps: PropertyValues) {
         super.update(changedProps);
-        if (changedProps.has("hass") && this.hass && this._headerChips.length) {
-            this._headerChips.forEach((chip) => {
-                chip.hass = this.hass;
-            });
+        if (changedProps.has("hass") && this.hass) {
+            if (this._headerChips.length) {
+                this._headerChips.forEach((chip) => {
+                    chip.hass = this.hass;
+                });
+            }
+            this._areaObj = this._area ? this.hass.areas[this._area] : undefined;
         }
     }
 
@@ -121,6 +124,7 @@ export class PanelCard extends LitElement {
     }
 
     private _renderArea() {
+        const name = this._config?.name ?? this._areaObj?.name ?? "Area";
         const height = deviceType === "phone" ? "15vh" : "20vh";
         const picture = this._config?.picture
             ? `/local/smartqasa/images/${this._config.picture}`
@@ -129,7 +133,7 @@ export class PanelCard extends LitElement {
         return html`
             <div class="area-container">
                 <div class="area-info">
-                    <div class="area-name">${this._areaObj?.name}</div>
+                    <div class="area-name">${name}</div>
                 </div>
                 <img class="area-image" alt="Area picture..." src=${picture} style="max-height: ${height};" />
             </div>
