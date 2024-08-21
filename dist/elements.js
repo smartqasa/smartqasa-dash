@@ -5540,6 +5540,9 @@ const chipTextStyle = i$3 `
         transition: var(--sq-icon-transition, none);
         cursor: pointer;
     }
+    .icon {
+        padding-right: calc(var(--sq-chip-padding, 1rem) / 2);
+    }
     .text {
         padding: var(--sq-chip-padding, 1rem);
         padding-left: 0;
@@ -5622,7 +5625,7 @@ let DialogChip = class DialogChip extends h {
         }
         const iconStyles = {
             color: `rgb(${this._dialogObj.color})`,
-            paddingRight: `${this._label ? "calc(var(--sq-chip-padding, 1rem) / 2)" : ""}`,
+            paddingRight: `${this._label ? "calc(var(--sq-chip-padding, 1rem) / 2)" : "var(--sq-chip-padding, 1rem)"}`,
         };
         return ke `
             <div class="container" @click=${this._showDialog}>

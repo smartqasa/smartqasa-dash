@@ -65,7 +65,7 @@ export class DialogChip extends LitElement {
 
         const iconStyles = {
             color: `rgb(${this._dialogObj.color})`,
-            paddingRight: `${this._label ? "calc(var(--sq-chip-padding, 1rem) / 2)" : ""}`,
+            paddingRight: `${this._label ? "calc(var(--sq-chip-padding, 1rem) / 2)" : "var(--sq-chip-padding, 1rem)"}`,
         };
 
         return html`

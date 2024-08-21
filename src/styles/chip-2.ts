@@ -33,6 +33,9 @@ export const chipTextStyle = css`
         transition: var(--sq-icon-transition, none);
         cursor: pointer;
     }
+    .icon {
+        padding-right: calc(var(--sq-chip-padding, 1rem) / 2);
+    }
     .text {
         padding: var(--sq-chip-padding, 1rem);
         padding-left: 0;
