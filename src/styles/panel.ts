@@ -4,6 +4,7 @@ export const panelStyle = css`
     :host {
         display: block;
         height: 100%;
+        width: 100%;
         background: var(--sq-panel-background);
     }
     .container {
@@ -12,6 +13,7 @@ export const panelStyle = css`
     }
     .header-container {
         display: flex;
+        width: 100%;
         align-items: flex-start;
         justify-content: space-between;
     }
@@ -48,6 +50,7 @@ export const panelStyle = css`
     }
     .area-container {
         display: flex;
+        width: 100%;
         align-items: flex-start;
         justify-content: space-between;
     }
@@ -56,13 +59,12 @@ export const panelStyle = css`
         flex-direction: column;
     }
     .area-image {
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-position: center center;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
         border-radius: 4px;
         border: none;
         box-shadow: none;
         background-color: transparent;
-        overflow: hidden;
     }
 `;

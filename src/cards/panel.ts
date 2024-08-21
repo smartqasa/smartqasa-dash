@@ -128,7 +128,8 @@ export class PanelCard extends LitElement {
 
         return html`
             <div class="area-container">
-                <div class="area-image" style="background-image: url(${picture}); height: ${height};"></div>
+                <div class="area-name">${this._areaObj?.name}</div>
+                <img class="area-image" alt="Area picture..." src=${picture} style="max-height: ${height};" />
             </div>
         `;
     }
