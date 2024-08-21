@@ -117,6 +117,11 @@ let HorizontalStack = class HorizontalStack extends h {
             }
             .element {
                 display: flex;
+                margin-right: var(--sq-chip-spacing, 0.8rem);
+            }
+            .container.justify-right .element {
+                margin-right: 0;
+                margin-left: var(--sq-chip-spacing, 0.8rem);
             }
         `;
     }
@@ -149,12 +154,9 @@ let HorizontalStack = class HorizontalStack extends h {
     _createCards() {
         if (!this._config || !this.hass)
             return;
-        let justifyRight = this._config.justify_right;
         this._cards = this._config.cards.map((cardConfig) => {
             const card = createElement(cardConfig);
             card.hass = this.hass;
-            const cardElement = card;
-            cardElement.style[justifyRight ? "marginLeft" : "marginRight"] = "var(--sq-chip-spacing, 0.8rem)";
             return card;
         });
     }
