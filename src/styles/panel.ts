@@ -66,6 +66,8 @@ export const panelStyle = css`
     .area-chips {
         display: flex;
         flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
         justify-content: flex-start;
         margin-left: calc(var(--sq-chip-margin, 0.4rem) * -1);
     }

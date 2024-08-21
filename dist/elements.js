@@ -4163,6 +4163,8 @@ const panelStyle = i$3 `
     .area-chips {
         display: flex;
         flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
         justify-content: flex-start;
         margin-left: calc(var(--sq-chip-margin, 0.4rem) * -1);
     }
@@ -5059,9 +5061,8 @@ const chipDoubleStyle = i$3 `
         align-items: center;
         justify-content: center;
         --mdc-icon-size: 3.4rem;
-        padding: 0.2rem;
+        padding: 0.1rem;
         color: rgb(var(--sq-primary-text-rgb));
-        font-size: var(--sq-chip-icon-size, 3.4rem);
     }
 `;
 const chipIconSpinStyle = i$3 `
