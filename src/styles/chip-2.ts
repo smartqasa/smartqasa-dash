@@ -53,7 +53,6 @@ export const chipDoubleStyle = css`
     .container {
         display: flex;
         align-items: center;
-        padding: 0.2rem;
         border: var(--sq-card-border);
         border-radius: var(--sq-chip-border-radius);
         background-color: var(--sq-card-background-color);
@@ -63,7 +62,6 @@ export const chipDoubleStyle = css`
         content: "";
         width: 1px;
         height: 90%;
-        margin: 0 0.7rem;
         background-color: rgb(128, 128, 128);
     }
     .icon1,

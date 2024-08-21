@@ -3,7 +3,7 @@ import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HassArea, HomeAssistant, LovelaceCardConfig } from "../types";
 
-import { chipDoubleStyle } from "../styles/chip";
+import { chipDoubleStyle } from "../styles/chip-2";
 
 interface Config extends LovelaceCardConfig {
     area_prev?: string;

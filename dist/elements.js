@@ -4924,11 +4924,10 @@ const chipTextStyle = i$3 `
         white-space: nowrap;
     }
 `;
-i$3 `
+const chipDoubleStyle = i$3 `
     .container {
         display: flex;
         align-items: center;
-        padding: 0.2rem;
         border: var(--sq-card-border);
         border-radius: var(--sq-chip-border-radius);
         background-color: var(--sq-card-background-color);
@@ -4938,7 +4937,6 @@ i$3 `
         content: "";
         width: 1px;
         height: 90%;
-        margin: 0 0.7rem;
         background-color: rgb(128, 128, 128);
     }
     .icon1,
@@ -5645,93 +5643,6 @@ __decorate([
 MotionChip = __decorate([
     t$1("smartqasa-motion-chip")
 ], MotionChip);
-
-i$3 `
-    .container {
-        width: max-content;
-        place-self: center;
-        display: grid;
-        grid-template-areas: "i";
-        padding: 1rem;
-        border: var(--sq-card-border);
-        border-radius: var(--sq-chip-border-radius);
-        background-color: var(--sq-card-background-color);
-        justify-content: center;
-        transition: var(--sq-icon-transition, none);
-        cursor: pointer;
-    }
-    .icon {
-        grid-area: i;
-        display: flex;
-        height: 1.8rem;
-        width: 1.8rem;
-        transition: var(--sq-icon-transition, none);
-        color: rgb(var(--sq-primary-text-rgb));
-    }
-`;
-i$3 `
-    .container {
-        grid-template-areas: "i t";
-        grid-column-gap: 0.5rem;
-        justify-content: start;
-    }
-    .text {
-        grid-area: t;
-        place-self: center start;
-        text-align: left;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: normal;
-        font-weight: var(--sq-primary-font-weight, 400);
-        font-size: var(--sq-primary-font-size, 1.5rem);
-        color: rgb(var(--sq-primary-font-rgb, 128, 128, 128));
-    }
-`;
-const chipDoubleStyle = i$3 `
-    .container {
-        width: fit-content;
-        place-self: center;
-        display: grid;
-        grid-template-areas: "i1 s i2";
-        grid-column-gap: 0.7rem;
-        margin-right: 0.7rem;
-        padding: 0.2rem;
-        border: var(--sq-card-border);
-        border-radius: var(--sq-chip-border-radius);
-        background-color: var(--sq-card-background-color);
-        cursor: pointer;
-    }
-    .container::after {
-        content: "";
-        grid-area: s;
-        width: 1px;
-        background-color: rgb(128, 128, 128);
-        margin: auto;
-        height: 90%;
-    }
-    .icon1 {
-        grid-area: i1;
-    }
-    .icon2 {
-        grid-area: i2;
-    }
-    .icon1,
-    .icon2 {
-        display: flex;
-        --mdc-icon-size: 3.4rem;
-        color: rgb(var(--sq-primary-text-rgb));
-    }
-`;
-i$3 `
-    @keyframes spin {
-        from {
-            transform: rotate(0deg);
-        }
-        to {
-            transform: rotate(360deg);
-        }
-    }
-`;
 
 window.customCards.push({
     type: "smartqasa-navigate-chip",
