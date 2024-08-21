@@ -4120,6 +4120,7 @@ let PanelCard = class PanelCard extends h {
         .header-chip-container {
             display: flex;
             flex-direction: row;
+            margin-right: calc(var(--sq-chip-margin, 0.4rem) * -1);
             align-items: center;
             justify-content: flex-end;
         }
@@ -4131,7 +4132,7 @@ let PanelCard = class PanelCard extends h {
         this._config = { ...config };
         this._area = this._config.area;
         const yamlFilePath = "/local/smartqasa/lists/chips.yaml";
-        this._headerChips = (await loadYamlAsJson(yamlFilePath));
+        this._headerChips = (await loadYamlAsJson(yamlFilePath)) || undefined;
         this.requestUpdate(); // Ensure re-render
     }
     shouldUpdate(changedProps) {
@@ -4160,17 +4161,16 @@ let PanelCard = class PanelCard extends h {
         return ke `
             <div class="header-content">
                 <smartqasa-time-date .hass=${this.hass}></smartqasa-time-date>
-                ${this._headerChips && this._headerChips.length > 0 ? this.renderHeaderChips() : D}
+                ${this._headerChips ? this.renderHeaderChips() : D}
             </div>
         `;
     }
     renderHeaderChips() {
         return ke `
             <div class="header-chip-container">
-                ${this._headerChips.map((chip, index) => {
+                ${this._headerChips.map((chip) => {
             const chipElement = createElement(chip);
             chipElement.hass = this.hass;
-            chipElement.style.marginLeft = "var(--sq-chip-spacing, 0.8rem)";
             return chipElement;
         })}
             </div>

@@ -45,6 +45,7 @@ export class PanelCard extends LitElement {
         .header-chip-container {
             display: flex;
             flex-direction: row;
+            margin-right: calc(var(--sq-chip-margin, 0.4rem) * -1);
             align-items: center;
             justify-content: flex-end;
         }
@@ -58,7 +59,7 @@ export class PanelCard extends LitElement {
         this._area = this._config.area;
 
         const yamlFilePath = "/local/smartqasa/lists/chips.yaml";
-        this._headerChips = (await loadYamlAsJson(yamlFilePath)) as LovelaceCardConfig[];
+        this._headerChips = ((await loadYamlAsJson(yamlFilePath)) as LovelaceCardConfig[]) || undefined;
         this.requestUpdate(); // Ensure re-render
     }
 
@@ -93,7 +94,7 @@ export class PanelCard extends LitElement {
         return html`
             <div class="header-content">
                 <smartqasa-time-date .hass=${this.hass}></smartqasa-time-date>
-                ${this._headerChips && this._headerChips.length > 0 ? this.renderHeaderChips() : nothing}
+                ${this._headerChips ? this.renderHeaderChips() : nothing}
             </div>
         `;
     }
@@ -101,10 +102,9 @@ export class PanelCard extends LitElement {
     private renderHeaderChips() {
         return html`
             <div class="header-chip-container">
-                ${this._headerChips!.map((chip, index) => {
+                ${this._headerChips!.map((chip) => {
                     const chipElement = createElement(chip) as LovelaceCard;
                     chipElement.hass = this.hass;
-                    chipElement.style.marginLeft = "var(--sq-chip-spacing, 0.8rem)";
                     return chipElement;
                 })}
             </div>
