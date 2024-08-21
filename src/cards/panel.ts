@@ -1,4 +1,4 @@
-import { CSSResult, html, LitElement, PropertyValues, TemplateResult } from "lit";
+import { CSSResult, html, LitElement, nothing, PropertyValues, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HassArea, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
@@ -13,6 +13,7 @@ interface Config extends LovelaceCardConfig {
     name?: string;
     picture?: string;
     chips?: LovelaceCardConfig[];
+    columns?: number;
     tiles?: LovelaceCardConfig[];
 }
 
@@ -37,17 +38,36 @@ export class PanelCard extends LitElement {
     protected async firstUpdated(changedProps: PropertyValues) {
         super.firstUpdated(changedProps);
 
-        await this._loadHeaderChips();
+        this._headerChips = await this._createHeaderChips();
 
-        if (this._config?.area_chips) {
-            this._areaChips = await this._createAreaChips(this._config.area_chips);
+        if (this._config?.chips) {
+            this._areaChips = await this._createAreaChips(this._config.chips);
         }
 
         this._loading = false;
     }
 
-    protected update(changedProps: PropertyValues) {
-        super.update(changedProps);
+    protected render(): TemplateResult {
+        if (this._loading) return html`<div>Loading...</div>`;
+
+        const isPhone = deviceType === "phone";
+        const containerStyles = {
+            padding: isPhone ? "0.5rem" : "1rem",
+            gridTemplateAreas: isPhone ? '"area" "tiles" "footer"' : '"header" "area" "tiles" "footer"',
+        };
+
+        return html`
+            <div class="container" style="${styleMap(containerStyles)}">
+                <div style="grid-area: header;">${this._renderHeader()}</div>
+                <div style="grid-area: area;">${this._renderArea()}</div>
+                <div style="grid-area: tiles">${this._renderTiles()}</div>
+                <div style="grid-area: footer;">${this._renderFooter()}</div>
+            </div>
+        `;
+    }
+
+    protected updated(changedProps: PropertyValues) {
+        super.updated(changedProps);
         if (changedProps.has("hass") && this.hass) {
             if (this._headerChips.length) {
                 this._headerChips.forEach((chip) => {
@@ -63,29 +83,6 @@ export class PanelCard extends LitElement {
                 });
             }
         }
-    }
-
-    protected render(): TemplateResult {
-        if (this._loading) return html`<div>Loading...</div>`;
-
-        const isPhone = deviceType === "phone";
-        const containerStyles = {
-            padding: isPhone ? "0.5rem" : "1rem",
-            gridTemplateAreas: isPhone ? '"area" "phone_tiles" "footer"' : '"header" "area" "tablet_tiles" "footer"',
-        };
-
-        return html`
-            <div class="container" style="${styleMap(containerStyles)}">
-                <div style="grid-area: header;">${this._renderHeader()}</div>
-                <div style="grid-area: area;">${this._renderArea()}</div>
-                <div style="grid-area: ${isPhone ? "phone_tiles" : "tablet_tiles"};">${this._renderTiles(isPhone)}</div>
-                <div style="grid-area: footer;">${this._renderFooter()}</div>
-            </div>
-        `;
-    }
-
-    private async _loadHeaderChips() {
-        this._headerChips = await this._createHeaderChips();
     }
 
     private async _createHeaderChips(): Promise<LovelaceCard[]> {
@@ -159,8 +156,24 @@ export class PanelCard extends LitElement {
         `;
     }
 
-    private _renderTiles(isPhone: boolean) {
-        return isPhone ? html`<p>Phone Tiles</p>` : html`<p>Tablet Tiles</p>`;
+    private _renderTiles() {
+        if (!this._config?.tiles) return nothing;
+
+        const gridTemplateColumns = `repeat(${this._config.columns}, 1fr)`;
+        const tiles = this._config.tiles.map((config) => {
+            const tile = createElement(config) as LovelaceCard;
+            tile.hass = this.hass;
+            return html`<div class="tile">${tile}</div>`;
+        });
+
+        return html`
+            <div
+                class="tiles-container"
+                style="display: grid; grid-template-columns: ${gridTemplateColumns}; gap: 1rem;"
+            >
+                ${tiles}
+            </div>
+        `;
     }
 
     private _renderFooter() {

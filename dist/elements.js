@@ -4138,7 +4138,7 @@ const panelStyle = i$3 `
     .header-chips {
         display: flex;
         flex-direction: row;
-        margin-right: calc(var(--sq-chip-margin, 0.4rem) * -1);
+        margin-right: calc(var(--sq-chip-spacing, 0.4rem) * -1);
         justify-content: flex-end;
     }
     .chip {
@@ -4166,7 +4166,7 @@ const panelStyle = i$3 `
         flex-wrap: wrap;
         align-items: center;
         justify-content: flex-start;
-        margin-left: calc(var(--sq-chip-margin, 0.4rem) * -1);
+        margin-left: calc(var(--sq-chip-spacing, 0.4rem) * -1);
     }
     .area-image {
         flex-basis: 50%;
@@ -4177,6 +4177,13 @@ const panelStyle = i$3 `
         border: none;
         box-shadow: none;
         background-color: transparent;
+    }
+    .tiles-container {
+        display: grid;
+        gap: var(--sq-tile-spacing, 0.8rem);
+    }
+    .tile {
+        display: block;
     }
 `;
 
@@ -4195,14 +4202,31 @@ let PanelCard = class PanelCard extends h {
     }
     async firstUpdated(changedProps) {
         super.firstUpdated(changedProps);
-        await this._loadHeaderChips();
-        if (this._config?.area_chips) {
-            this._areaChips = await this._createAreaChips(this._config.area_chips);
+        this._headerChips = await this._createHeaderChips();
+        if (this._config?.chips) {
+            this._areaChips = await this._createAreaChips(this._config.chips);
         }
         this._loading = false;
     }
-    update(changedProps) {
-        super.update(changedProps);
+    render() {
+        if (this._loading)
+            return ke `<div>Loading...</div>`;
+        const isPhone = deviceType === "phone";
+        const containerStyles = {
+            padding: isPhone ? "0.5rem" : "1rem",
+            gridTemplateAreas: isPhone ? '"area" "tiles" "footer"' : '"header" "area" "tiles" "footer"',
+        };
+        return ke `
+            <div class="container" style="${se(containerStyles)}">
+                <div style="grid-area: header;">${this._renderHeader()}</div>
+                <div style="grid-area: area;">${this._renderArea()}</div>
+                <div style="grid-area: tiles">${this._renderTiles()}</div>
+                <div style="grid-area: footer;">${this._renderFooter()}</div>
+            </div>
+        `;
+    }
+    updated(changedProps) {
+        super.updated(changedProps);
         if (changedProps.has("hass") && this.hass) {
             if (this._headerChips.length) {
                 this._headerChips.forEach((chip) => {
@@ -4216,26 +4240,6 @@ let PanelCard = class PanelCard extends h {
                 });
             }
         }
-    }
-    render() {
-        if (this._loading)
-            return ke `<div>Loading...</div>`;
-        const isPhone = deviceType === "phone";
-        const containerStyles = {
-            padding: isPhone ? "0.5rem" : "1rem",
-            gridTemplateAreas: isPhone ? '"area" "phone_tiles" "footer"' : '"header" "area" "tablet_tiles" "footer"',
-        };
-        return ke `
-            <div class="container" style="${se(containerStyles)}">
-                <div style="grid-area: header;">${this._renderHeader()}</div>
-                <div style="grid-area: area;">${this._renderArea()}</div>
-                <div style="grid-area: ${isPhone ? "phone_tiles" : "tablet_tiles"};">${this._renderTiles(isPhone)}</div>
-                <div style="grid-area: footer;">${this._renderFooter()}</div>
-            </div>
-        `;
-    }
-    async _loadHeaderChips() {
-        this._headerChips = await this._createHeaderChips();
     }
     async _createHeaderChips() {
         let chipsConfig = [];
@@ -4302,8 +4306,23 @@ let PanelCard = class PanelCard extends h {
             </div>
         `;
     }
-    _renderTiles(isPhone) {
-        return isPhone ? ke `<p>Phone Tiles</p>` : ke `<p>Tablet Tiles</p>`;
+    _renderTiles() {
+        if (!this._config?.tiles)
+            return D;
+        const gridTemplateColumns = `repeat(${this._config.columns}, 1fr)`;
+        const tiles = this._config.tiles.map((config) => {
+            const tile = createElement(config);
+            tile.hass = this.hass;
+            return ke `<div class="tile">${tile}</div>`;
+        });
+        return ke `
+            <div
+                class="tiles-container"
+                style="display: grid; grid-template-columns: ${gridTemplateColumns}; gap: 1rem;"
+            >
+                ${tiles}
+            </div>
+        `;
     }
     _renderFooter() {
         return ke `<p>Footer content with dynamic data.</p>`;
@@ -4993,7 +5012,7 @@ TVRemoteCard = __decorate([
 const chipBaseStyle = i$3 `
     .container {
         display: flex;
-        margin: 0 var(--sq-chip-margin, 0.4rem) 0 var(--sq-chip-margin, 0.4rem);
+        margin: 0 var(--sq-chip-spacing, 0.4rem) 0 var(--sq-chip-spacing, 0.4rem);
         align-items: center;
         justify-content: center;
         width: fit-content;
@@ -5034,7 +5053,7 @@ const chipTextStyle = i$3 `
 const chipDoubleStyle = i$3 `
     .container {
         display: flex;
-        margin: 0 var(--sq-chip-margin, 0.4rem) 0 var(--sq-chip-margin, 0.4rem);
+        margin: 0 var(--sq-chip-spacing, 0.4rem) 0 var(--sq-chip-spacing, 0.4rem);
         align-items: center;
         border: var(--sq-card-border);
         border-radius: var(--sq-chip-border-radius);
@@ -6979,7 +6998,7 @@ const tileBaseStyle = i$3 `
         grid-template-columns: auto 1fr;
         grid-column-gap: 1rem;
         grid-row-gap: 0.4rem;
-        padding: 1rem;
+        padding: var(--sq-tile-padding, 1rem);
         background-color: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
         cursor: pointer;
     }
@@ -6988,9 +7007,9 @@ const tileBaseStyle = i$3 `
         display: flex;
         justify-content: center;
         align-self: center;
-        height: 1.8rem;
-        width: 1.8rem;
-        padding: 1rem;
+        height: var(--sq-tile-icon-size, 1.8rem);
+        width: var(--sq-tile-icon-size, 1.8rem);
+        padding: var(--sq-tile-padding, 1rem);
         border-radius: 50%;
         transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;
     }

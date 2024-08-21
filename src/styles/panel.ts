@@ -41,7 +41,7 @@ export const panelStyle = css`
     .header-chips {
         display: flex;
         flex-direction: row;
-        margin-right: calc(var(--sq-chip-margin, 0.4rem) * -1);
+        margin-right: calc(var(--sq-chip-spacing, 0.4rem) * -1);
         justify-content: flex-end;
     }
     .chip {
@@ -69,7 +69,7 @@ export const panelStyle = css`
         flex-wrap: wrap;
         align-items: center;
         justify-content: flex-start;
-        margin-left: calc(var(--sq-chip-margin, 0.4rem) * -1);
+        margin-left: calc(var(--sq-chip-spacing, 0.4rem) * -1);
     }
     .area-image {
         flex-basis: 50%;
@@ -80,5 +80,12 @@ export const panelStyle = css`
         border: none;
         box-shadow: none;
         background-color: transparent;
+    }
+    .tiles-container {
+        display: grid;
+        gap: var(--sq-tile-spacing, 0.8rem);
+    }
+    .tile {
+        display: block;
     }
 `;

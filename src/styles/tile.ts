@@ -10,7 +10,7 @@ export const tileBaseStyle = css`
         grid-template-columns: auto 1fr;
         grid-column-gap: 1rem;
         grid-row-gap: 0.4rem;
-        padding: 1rem;
+        padding: var(--sq-tile-padding, 1rem);
         background-color: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
         cursor: pointer;
     }
@@ -19,9 +19,9 @@ export const tileBaseStyle = css`
         display: flex;
         justify-content: center;
         align-self: center;
-        height: 1.8rem;
-        width: 1.8rem;
-        padding: 1rem;
+        height: var(--sq-tile-icon-size, 1.8rem);
+        width: var(--sq-tile-icon-size, 1.8rem);
+        padding: var(--sq-tile-padding, 1rem);
         border-radius: 50%;
         transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;
     }
