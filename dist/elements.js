@@ -4203,7 +4203,6 @@ let PanelCard = class PanelCard extends h {
                     <div class="time">${time}</div>
                     <div class="date">${date}</div>
                 </div>
-                <smartqasa-time-date .hass=${this.hass}></smartqasa-time-date>
                 <div class="header-chips">
                     ${this._headerChips.map((chip) => ke `<div class="chip">${chip}</div>`)}
                 </div>
