@@ -1,10 +1,9 @@
 import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
-import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
 import { dialogTable } from "../tables/dialogs";
 
-import { chipBaseStyle, chipTextStyle } from "../styles/chip";
+import { chipBaseStyle, chipTextStyle } from "../styles/chip-2";
 
 interface Config extends LovelaceCardConfig {
     entity?: string;
@@ -64,7 +63,6 @@ export class ThermostatChip extends LitElement {
 
     private _showDialog(e: Event): void {
         e.stopPropagation();
-
         const dialogObj = dialogTable.weather;
         const dialogConfig = { ...dialogObj.data };
         window.browser_mod?.service("popup", dialogConfig);

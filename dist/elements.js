@@ -6077,7 +6077,7 @@ window.customCards.push({
     description: "A SmartQasa chip for displaying the weather.",
 });
 let ThermostatChip = class ThermostatChip extends h {
-    static { this.styles = [chipBaseStyle$1, chipTextStyle$1]; }
+    static { this.styles = [chipBaseStyle, chipTextStyle]; }
     setConfig(config) {
         this._config = { ...config };
         this._entity = this._config.entity?.startsWith("weather.") ? this._config.entity : undefined;
