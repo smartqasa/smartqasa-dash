@@ -67,9 +67,12 @@ export const chipDoubleStyle = css`
     .icon1,
     .icon2 {
         display: flex;
+        align-items: center;
+        justify-content: center;
         height: var(--sq-chip-icon-size, 3.4rem);
         width: var(--sq-chip-icon-size, 3.4rem);
         color: rgb(var(--sq-primary-text-rgb));
+        font-size: var(--sq-chip-icon-size, 3.4rem);
     }
     .icon1 {
         padding: var(--sq-chip-padding, 1rem);
