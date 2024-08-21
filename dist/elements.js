@@ -4928,7 +4928,6 @@ const chipDoubleStyle = i$3 `
     .container {
         display: flex;
         align-items: center;
-        padding: 0.2rem;
         border: var(--sq-card-border);
         border-radius: var(--sq-chip-border-radius);
         background-color: var(--sq-card-background-color);
@@ -4938,14 +4937,22 @@ const chipDoubleStyle = i$3 `
         content: "";
         width: 1px;
         height: 90%;
-        margin: 0 0.7rem;
         background-color: rgb(128, 128, 128);
     }
     .icon1,
     .icon2 {
         display: flex;
-        --mdc-icon-size: 3.4rem;
+        height: var(--sq-chip-icon-size, 3.4rem);
+        width: var(--sq-chip-icon-size, 3.4rem);
         color: rgb(var(--sq-primary-text-rgb));
+    }
+    .icon1 {
+        padding: var(--sq-chip-padding, 1rem);
+        padding-right: calc(var(--sq-chip-padding, 1rem) / 2);
+    }
+    .icon2 {
+        padding: var(--sq-chip-padding, 1rem);
+        padding-left: calc(var(--sq-chip-padding, 1rem) / 2);
     }
 `;
 const chipIconSpinStyle = i$3 `
