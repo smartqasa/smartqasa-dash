@@ -46,14 +46,19 @@ export class PanelCard extends LitElement {
                     chip.hass = this.hass;
                 });
             }
+
             this._areaObj = this._area ? this.hass.areas[this._area] : undefined;
+
+            if (this._areaChips.length) {
+                this._areaChips.forEach((chip) => {
+                    chip.hass = this.hass;
+                });
+            }
         }
     }
 
     protected render(): TemplateResult {
-        if (this._loading) {
-            return html`<div>Loading...</div>`;
-        }
+        if (this._loading) return html`<div>Loading...</div>`;
 
         const isPhone = deviceType === "phone";
 

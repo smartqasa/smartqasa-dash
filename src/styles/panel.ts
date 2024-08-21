@@ -56,13 +56,14 @@ export const panelStyle = css`
         flex-basis: 50%;
     }
     .area-name {
+        margin-bottom: 0.4rem;
         line-height: normal;
         text-align: left;
         font-size: var(--sq-title-font-size, 3.2rem);
         font-weight: var(--sq-title-font-weight, 400);
         color: rgb(var(--sq-title-font-rgb, 128, 128, 128));
     }
-    .area-chps {
+    .area-chips {
         display: flex;
         flex-direction: row;
         justify-content: flex-start;

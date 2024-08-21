@@ -4153,13 +4153,14 @@ const panelStyle = i$3 `
         flex-basis: 50%;
     }
     .area-name {
+        margin-bottom: 0.4rem;
         line-height: normal;
         text-align: left;
         font-size: var(--sq-title-font-size, 3.2rem);
         font-weight: var(--sq-title-font-weight, 400);
         color: rgb(var(--sq-title-font-rgb, 128, 128, 128));
     }
-    .area-chps {
+    .area-chips {
         display: flex;
         flex-direction: row;
         justify-content: flex-start;
@@ -4204,12 +4205,16 @@ let PanelCard = class PanelCard extends h {
                 });
             }
             this._areaObj = this._area ? this.hass.areas[this._area] : undefined;
+            if (this._areaChips.length) {
+                this._areaChips.forEach((chip) => {
+                    chip.hass = this.hass;
+                });
+            }
         }
     }
     render() {
-        if (this._loading) {
+        if (this._loading)
             return ke `<div>Loading...</div>`;
-        }
         const isPhone = deviceType === "phone";
         const containerStyles = {
             padding: isPhone ? "0.5rem" : "1rem",
