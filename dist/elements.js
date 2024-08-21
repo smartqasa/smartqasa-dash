@@ -4095,56 +4095,6 @@ async function loadYamlAsJson(yamlFilePath) {
     }
 }
 
-const panelStyle = i$3 `
-    // Container
-    :host {
-        display: block;
-        height: 100%;
-        background: var(--sq-panel-background);
-    }
-    .container {
-        display: grid;
-        grid-template-rows: auto auto 1fr auto;
-    }
-
-    // Header
-    .header-container {
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-    }
-    .header-time {
-        display: flex;
-        flex-direction: column;
-        cursor: pointer;
-    }
-    .time,
-    .date {
-        text-align: left;
-        line-height: normal;
-        white-space: nowrap;
-    }
-    .time {
-        font-size: var(--sq-title-font-size, 3.2rem);
-        font-weight: var(--sq-title-font-weight, 400);
-        color: rgb(var(--sq-title-font-rgb, 128, 128, 128));
-    }
-    .date {
-        font-size: var(--sq-primary-font-size, 1.5rem);
-        font-weight: var(--sq-primary-font-weight, 300);
-        color: rgb(var(--sq-secondary-font-rgb, 128, 128, 128));
-    }
-    .header-chips {
-        display: flex;
-        flex-direction: row;
-        margin-right: calc(var(--sq-chip-margin, 0.4rem) * -1);
-        justify-content: flex-end;
-    }
-    .chip {
-        display: flex;
-    }
-`;
-
 window.customCards.push({
     type: "smartqasa-panel-card",
     name: "SmartQasa Panel Card",
@@ -4157,7 +4107,52 @@ let PanelCard = class PanelCard extends h {
         this._loading = true;
         this._headerChips = [];
     }
-    static { this.styles = panelStyle; }
+    static { this.styles = i$3 `
+        :host {
+            display: block;
+            height: 100%;
+            background: var(--sq-panel-background);
+        }
+        .container {
+            display: grid;
+            grid-template-rows: auto auto 1fr auto;
+        }
+        .header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+        }
+        .header-time {
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+        }
+        .time,
+        .date {
+            text-align: left;
+            line-height: normal;
+            white-space: nowrap;
+        }
+        .time {
+            font-size: var(--sq-title-font-size, 3.2rem);
+            font-weight: var(--sq-title-font-weight, 400);
+            color: rgb(var(--sq-title-font-rgb, 128, 128, 128));
+        }
+        .date {
+            font-size: var(--sq-primary-font-size, 1.5rem);
+            font-weight: var(--sq-primary-font-weight, 300);
+            color: rgb(var(--sq-secondary-font-rgb, 128, 128, 128));
+        }
+        .header-chips {
+            display: flex;
+            flex-direction: row;
+            margin-right: calc(var(--sq-chip-margin, 0.4rem) * -1);
+            justify-content: flex-end;
+        }
+        .chip {
+            display: flex;
+        }
+    `; }
     async setConfig(config) {
         this._config = { ...config };
         this._area = this._config.area;
@@ -4171,8 +4166,9 @@ let PanelCard = class PanelCard extends h {
         }
     }
     render() {
-        if (this._loading)
+        if (this._loading) {
             return ke `<div>Loading...</div>`;
+        }
         const isPhone = deviceType === "phone";
         const containerStyles = {
             padding: isPhone ? "0.5rem" : "1rem",
@@ -4192,16 +4188,11 @@ let PanelCard = class PanelCard extends h {
         this._loading = false;
     }
     _renderHeader() {
-        let time = this.hass?.states["sensor.current_time"]?.state || "Loading...";
-        let date = this.hass?.states["sensor.current_date"]?.state || "Loading...";
         if (!this._headerChips.length)
             this._createHeaderChips();
         return ke `
-            <div class="header-container">
-                <div class="header-time" @click=${this._launchClock}>
-                    <div class="time">${time}</div>
-                    <div class="date">${date}</div>
-                </div>
+            <div class="header">
+                <smartqasa-time-date .hass=${this.hass}></smartqasa-time-date>
                 <div class="header-chips">
                     ${this._headerChips.map((chip) => ke `<div class="chip">${chip}</div>`)}
                 </div>
@@ -4226,15 +4217,6 @@ let PanelCard = class PanelCard extends h {
             card.hass = this.hass;
             return card;
         });
-    }
-    _launchClock(e) {
-        e.stopPropagation();
-        if (typeof window.fully !== "undefined" && window.fully.startApplication) {
-            window.fully.startApplication("com.google.android.deskclock");
-        }
-        else {
-            console.warn("fully.startApplication is not available.");
-        }
     }
     _renderArea() {
         return ke `<p>Area content with dynamic data.</p>`;

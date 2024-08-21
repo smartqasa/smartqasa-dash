@@ -1,10 +1,11 @@
-import { css, html, LitElement, nothing, PropertyValues, TemplateResult } from "lit";
+import { CSSResult, html, LitElement, nothing, PropertyValues, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HassArea, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 import { deviceType } from "../const";
 import { createElement } from "../utils/create-element";
 import { loadYamlAsJson } from "../utils/load-yaml-as-json";
+import { panelStyle } from "../styles/panel";
 
 interface Config extends LovelaceCardConfig {
     area: string;
@@ -28,52 +29,7 @@ export class PanelCard extends LitElement {
     private _areaObj?: HassArea;
     private _headerChips: LovelaceCard[] = [];
 
-    static styles = css`
-        :host {
-            display: block;
-            height: 100%;
-            background: var(--sq-panel-background);
-        }
-        .container {
-            display: grid;
-            grid-template-rows: auto auto 1fr auto;
-        }
-        .header {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-        }
-        .header-time {
-            display: flex;
-            flex-direction: column;
-            cursor: pointer;
-        }
-        .time,
-        .date {
-            text-align: left;
-            line-height: normal;
-            white-space: nowrap;
-        }
-        .time {
-            font-size: var(--sq-title-font-size, 3.2rem);
-            font-weight: var(--sq-title-font-weight, 400);
-            color: rgb(var(--sq-title-font-rgb, 128, 128, 128));
-        }
-        .date {
-            font-size: var(--sq-primary-font-size, 1.5rem);
-            font-weight: var(--sq-primary-font-weight, 300);
-            color: rgb(var(--sq-secondary-font-rgb, 128, 128, 128));
-        }
-        .header-chips {
-            display: flex;
-            flex-direction: row;
-            margin-right: calc(var(--sq-chip-margin, 0.4rem) * -1);
-            justify-content: flex-end;
-        }
-        .chip {
-            display: flex;
-        }
-    `;
+    static styles: CSSResult = panelStyle;
 
     public async setConfig(config: Config) {
         this._config = { ...config };
@@ -90,9 +46,7 @@ export class PanelCard extends LitElement {
     }
 
     protected render(): TemplateResult {
-        if (this._loading) {
-            return html`<div>Loading...</div>`;
-        }
+        if (this._loading) return html`<div>Loading...</div>`;
 
         const isPhone = deviceType === "phone";
 
@@ -117,10 +71,15 @@ export class PanelCard extends LitElement {
     }
 
     private _renderHeader() {
+        let time = this.hass?.states["sensor.current_time"]?.state || "Loading...";
+        let date = this.hass?.states["sensor.current_date"]?.state || "Loading...";
         if (!this._headerChips.length) this._createHeaderChips();
         return html`
-            <div class="header">
-                <smartqasa-time-date .hass=${this.hass}></smartqasa-time-date>
+            <div class="header-container">
+                <div class="header-time" @click=${this._launchClock}>
+                    <div class="time">${time}</div>
+                    <div class="date">${date}</div>
+                </div>
                 <div class="header-chips">
                     ${this._headerChips.map((chip) => html`<div class="chip">${chip}</div>`)}
                 </div>
@@ -147,6 +106,15 @@ export class PanelCard extends LitElement {
             card.hass = this.hass;
             return card;
         });
+    }
+
+    private _launchClock(e: Event) {
+        e.stopPropagation();
+        if (typeof window.fully !== "undefined" && window.fully.startApplication) {
+            window.fully.startApplication("com.google.android.deskclock");
+        } else {
+            console.warn("fully.startApplication is not available.");
+        }
     }
 
     private _renderArea() {
