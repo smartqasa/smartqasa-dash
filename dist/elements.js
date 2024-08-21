@@ -4105,6 +4105,7 @@ let PanelCard = class PanelCard extends h {
     constructor() {
         super(...arguments);
         this._headerChips = [];
+        this._loading = true;
     }
     static { this.styles = i$3 `
         :host {
@@ -4131,9 +4132,11 @@ let PanelCard = class PanelCard extends h {
             display: flex;
         }
     `; }
-    setConfig(config) {
+    async setConfig(config) {
         this._config = { ...config };
-        this._area = this._config.area;
+        this._loading = true;
+        await this._createHeaderChips();
+        this._loading = false;
     }
     update(changedProps) {
         if (changedProps.has("hass") && this.hass && this._headerChips) {
@@ -4144,6 +4147,9 @@ let PanelCard = class PanelCard extends h {
         super.update(changedProps);
     }
     render() {
+        if (this._loading) {
+            return ke `<div class="container">Loading...</div>`;
+        }
         const isPhone = deviceType === "phone";
         const containerStyles = {
             padding: isPhone ? "0.5rem" : "1rem",
@@ -4159,10 +4165,8 @@ let PanelCard = class PanelCard extends h {
         `;
     }
     _renderHeader() {
-        if (!this._headerChips.length)
-            this._createHeaderChips();
         return ke `
-            <div class="header-content">
+            <div class="header">
                 <smartqasa-time-date .hass=${this.hass}></smartqasa-time-date>
                 <div class="header-chips">
                     ${this._headerChips.map((chip) => ke `<div class="chip">${chip}</div>`)}
@@ -4205,6 +4209,12 @@ __decorate([
 __decorate([
     r()
 ], PanelCard.prototype, "_config", void 0);
+__decorate([
+    r()
+], PanelCard.prototype, "_headerChips", void 0);
+__decorate([
+    r()
+], PanelCard.prototype, "_loading", void 0);
 PanelCard = __decorate([
     t$1("smartqasa-panel-card")
 ], PanelCard);

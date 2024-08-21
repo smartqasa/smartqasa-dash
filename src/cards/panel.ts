@@ -23,9 +23,8 @@ window.customCards.push({
 export class PanelCard extends LitElement {
     @property({ attribute: false }) public hass!: HomeAssistant;
     @state() private _config?: Config;
-    private _area?: string;
-    private _areaObj?: HassArea;
-    private _headerChips: LovelaceCard[] = [];
+    @state() private _headerChips: LovelaceCard[] = [];
+    @state() private _loading: boolean = true;
 
     static styles = css`
         :host {
@@ -53,9 +52,11 @@ export class PanelCard extends LitElement {
         }
     `;
 
-    public setConfig(config: Config) {
+    public async setConfig(config: Config) {
         this._config = { ...config };
-        this._area = this._config.area;
+        this._loading = true;
+        await this._createHeaderChips();
+        this._loading = false;
     }
 
     protected update(changedProps: PropertyValues) {
@@ -68,8 +69,11 @@ export class PanelCard extends LitElement {
     }
 
     protected render(): TemplateResult {
-        const isPhone = deviceType === "phone";
+        if (this._loading) {
+            return html`<div class="container">Loading...</div>`;
+        }
 
+        const isPhone = deviceType === "phone";
         const containerStyles = {
             padding: isPhone ? "0.5rem" : "1rem",
             gridTemplateAreas: isPhone ? '"area" "phone_tiles" "footer"' : '"header" "area" "tablet_tiles" "footer"',
@@ -86,9 +90,8 @@ export class PanelCard extends LitElement {
     }
 
     private _renderHeader() {
-        if (!this._headerChips.length) this._createHeaderChips();
         return html`
-            <div class="header-content">
+            <div class="header">
                 <smartqasa-time-date .hass=${this.hass}></smartqasa-time-date>
                 <div class="header-chips">
                     ${this._headerChips.map((chip) => html`<div class="chip">${chip}</div>`)}
@@ -97,7 +100,7 @@ export class PanelCard extends LitElement {
         `;
     }
 
-    private async _createHeaderChips(): Promise<void> {
+    private async _createHeaderChips() {
         if (!this.hass) return;
 
         let chipsConfig: LovelaceCardConfig[];
