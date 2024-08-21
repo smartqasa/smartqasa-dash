@@ -4111,7 +4111,6 @@ const panelStyle = i$3 `
     .header-container {
         display: flex;
         width: 100%;
-        align-items: flex-start;
         justify-content: space-between;
     }
     .header-time {
@@ -4152,10 +4151,24 @@ const panelStyle = i$3 `
         justify-content: space-between;
     }
     .area-info {
+        flex: 1;
         display: flex;
         flex-direction: column;
     }
+    .area-name {
+        text-align: left;
+        font-size: var(--sq-title-font-size, 3.2rem);
+        font-weight: var(--sq-title-font-weight, 400);
+        color: rgb(var(--sq-title-font-rgb, 128, 128, 128));
+    }
+    .area-chps {
+        display: flex;
+        flex-direction: row;
+        margin-left: calc(var(--sq-chip-margin, 0.4rem) * -1);
+        justify-content: flex-start;
+    }
     .area-image {
+        flex: 1;
         width: 100%;
         height: 100%;
         object-fit: cover;
@@ -4265,7 +4278,9 @@ let PanelCard = class PanelCard extends h {
             : this._areaObj?.picture ?? img$24;
         return ke `
             <div class="area-container">
-                <div class="area-name">${this._areaObj?.name}</div>
+                <div class="area-info">
+                    <div class="area-name">${this._areaObj?.name}</div>
+                </div>
                 <img class="area-image" alt="Area picture..." src=${picture} style="max-height: ${height};" />
             </div>
         `;
