@@ -5541,7 +5541,8 @@ const chipTextStyle = i$3 `
         cursor: pointer;
     }
     .text {
-        padding-right: calc(var(--sq-chip-padding, 1rem) / 2);
+        padding: var(--sq-chip-padding, 1rem);
+        padding-left: 0;
         font-weight: var(--sq-primary-font-weight, 400);
         font-size: var(--sq-primary-font-size, 1.5rem);
         color: rgb(var(--sq-primary-font-rgb, 128, 128, 128));
