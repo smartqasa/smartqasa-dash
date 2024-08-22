@@ -11423,10 +11423,13 @@ TitleCard = __decorate([
 ], TitleCard);
 
 const tileBaseStyle = i$3 `
+    :host {
+        height: 5.2rem;
+        width: 100%;
+        max-width: 19.5rem;
+    }
     .container {
         display: grid;
-        height: 5.2rem;
-        max-width: 19.5rem;
         border: var(--sq-card-border, none);
         border-radius: var(--sq-card-border-radius, 1.5rem);
         grid-template-areas: "i n";
