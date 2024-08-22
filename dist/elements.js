@@ -4100,7 +4100,7 @@ var img$24 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA+gAAAD6CAIAAAC9N/q+
 const panelStyle = i$3 `
     :host {
         display: block;
-        height: 100vh;
+        height: 100%;
         width: 100%;
         background: var(--sq-panel-background);
     }
@@ -7970,7 +7970,7 @@ let FanTile = class FanTile extends h {
         e.stopPropagation();
         if (!this.hass || !this._stateObj)
             return;
-        const group = this._config.group || `${this._entity}_group`;
+        const group = this._config.group || this._entity;
         const groupObj = this.hass.states[group];
         if (!groupObj)
             return;
@@ -9428,7 +9428,7 @@ let ShadeTile = class ShadeTile extends h {
         e.stopPropagation();
         if (!this.hass || !this._stateObj)
             return;
-        const group = this._config.group || `${this._entity}_group`;
+        const group = this._config.group || this._entity;
         const groupObj = this.hass.states[group];
         if (!groupObj)
             return;

@@ -153,7 +153,7 @@ export class ShadeTile extends LitElement {
         e.stopPropagation();
         if (!this.hass || !this._stateObj) return;
 
-        const group = this._config!.group || `${this._entity}_group`;
+        const group = this._config!.group || this._entity;
         const groupObj = this.hass.states[group];
         if (!groupObj) return;
 
