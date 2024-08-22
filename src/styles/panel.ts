@@ -12,7 +12,8 @@ export const panelStyle = css`
         grid-template-rows: auto auto 1fr auto;
     }
     .header-container {
-        display: flex;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
         margin-bottom: 2.5rem;
         justify-content: space-between;
     }
