@@ -5103,12 +5103,6 @@ const chipDoubleStyle = i$3 `
         background-color: var(--sq-card-background-color);
         cursor: pointer;
     }
-    .container::after {
-        content: "";
-        width: 1px;
-        height: 90%;
-        background-color: rgb(128, 128, 128);
-    }
     .icon1,
     .icon2 {
         display: flex;
@@ -5117,6 +5111,13 @@ const chipDoubleStyle = i$3 `
         --mdc-icon-size: 3.4rem;
         padding: 0.1rem;
         color: rgb(var(--sq-primary-text-rgb));
+    }
+    .icon1::after {
+        content: "";
+        width: 1px;
+        height: 90%;
+        background-color: rgb(128, 128, 128);
+        margin: 0 0.4rem;
     }
 `;
 const chipIconSpinStyle = i$3 `
