@@ -166,12 +166,13 @@ export class PanelCard extends LitElement {
         if (!swiperContainer) return;
 
         const swiperParams: SwiperOptions = {
-            direction: "horizontal",
-            loop: false,
             navigation: {
                 nextEl: ".swiper-button-next",
                 prevEl: ".swiper-button-prev",
             },
+            cssMode: true,
+            initialSlide: 0,
+            autoHeight: true,
         };
 
         this._swiper = new Swiper(swiperContainer as HTMLElement, swiperParams);

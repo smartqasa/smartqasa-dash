@@ -8501,8 +8501,8 @@ const panelStyle = i$3 `
     }
 
     .swiper {
-        width: 100%;
-        height: 100%;
+        width: 600px;
+        height: 300px;
     }
 
     .body-tiles {
@@ -8639,12 +8639,13 @@ let PanelCard = class PanelCard extends h {
         if (!swiperContainer)
             return;
         const swiperParams = {
-            direction: "horizontal",
-            loop: false,
             navigation: {
                 nextEl: ".swiper-button-next",
                 prevEl: ".swiper-button-prev",
             },
+            cssMode: true,
+            initialSlide: 0,
+            autoHeight: true,
         };
         this._swiper = new Swiper(swiperContainer, swiperParams);
     }
