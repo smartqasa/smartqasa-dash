@@ -9,6 +9,7 @@ export const panelStyle = css`
     }
     .container {
         display: grid;
+        height: 100%;
         grid-template-rows: auto auto 1fr auto;
     }
     .header-container {

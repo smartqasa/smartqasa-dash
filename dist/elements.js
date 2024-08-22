@@ -4106,6 +4106,7 @@ const panelStyle = i$3 `
     }
     .container {
         display: grid;
+        height: 100%;
         grid-template-rows: auto auto 1fr auto;
     }
     .header-container {
