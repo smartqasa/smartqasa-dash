@@ -8501,8 +8501,8 @@ const panelStyle = i$3 `
     }
 
     .swiper {
-        width: 600px;
-        height: 300px;
+        width: 100%;
+        height: 100%;
     }
 
     .body-tiles {
@@ -8696,23 +8696,16 @@ let PanelCard = class PanelCard extends h {
     _renderBody() {
         if (!this._config || !this._bodyTiles.length)
             return D;
-        const columns = this._config.columns && this._config.columns >= 2 && this._config.columns <= 4 ? this._config.columns : 3;
-        const bodyStyles = {
-            gridTemplateColumns: `repeat(${columns}, 1fr)`,
-        };
+        this._config.columns && this._config.columns >= 2 && this._config.columns <= 4 ? this._config.columns : 3;
         return ke `
             <!-- Slider main container -->
             <div class="swiper">
                 <!-- Additional required wrapper -->
                 <div class="swiper-wrapper">
                     <!-- Slides -->
-                    ${this._bodyTiles.map((page) => ke `
-                            <div class="swiper-slide">
-                                <div class="body-tiles" style="${se(bodyStyles)}">
-                                    ${page.map((tile) => ke `<div class="tile">${tile}</div>`)}
-                                </div>
-                            </div>
-                        `)}
+                    <div class="swiper-slide">Slide 1</div>
+                    <div class="swiper-slide">Slide 2</div>
+                    <div class="swiper-slide">Slide 3</div>
                 </div>
                 <!-- If we need pagination -->
                 <div class="swiper-pagination"></div>

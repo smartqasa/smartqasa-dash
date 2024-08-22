@@ -241,15 +241,9 @@ export class PanelCard extends LitElement {
                 <!-- Additional required wrapper -->
                 <div class="swiper-wrapper">
                     <!-- Slides -->
-                    ${this._bodyTiles.map(
-                        (page) => html`
-                            <div class="swiper-slide">
-                                <div class="body-tiles" style="${styleMap(bodyStyles)}">
-                                    ${page.map((tile) => html`<div class="tile">${tile}</div>`)}
-                                </div>
-                            </div>
-                        `
-                    )}
+                    <div class="swiper-slide">Slide 1</div>
+                    <div class="swiper-slide">Slide 2</div>
+                    <div class="swiper-slide">Slide 3</div>
                 </div>
                 <!-- If we need pagination -->
                 <div class="swiper-pagination"></div>

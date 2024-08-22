@@ -88,8 +88,8 @@ export const panelStyle = css`
     }
 
     .swiper {
-        width: 600px;
-        height: 300px;
+        width: 100%;
+        height: 100%;
     }
 
     .body-tiles {
