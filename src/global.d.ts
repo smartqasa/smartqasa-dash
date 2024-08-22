@@ -4,13 +4,13 @@ declare module "*.css" {
 }
 
 declare module "*.jpg" {
-    const content: string;
-    export default content;
+    const value: string;
+    export default value;
 }
 
 declare module "*.png" {
-    const content: string;
-    export default content;
+    const value: string;
+    export default value;
 }
 
 declare module "*.webp" {
