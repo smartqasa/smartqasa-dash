@@ -3,7 +3,7 @@ import { css } from "lit";
 export const panelStyle = css`
     :host {
         display: block;
-        height: 100%;
+        height: 100vh;
         width: 100%;
         background: var(--sq-panel-background);
     }

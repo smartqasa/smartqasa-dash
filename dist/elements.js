@@ -4100,7 +4100,7 @@ var img$24 = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA+gAAAD6CAIAAAC9N/q+
 const panelStyle = i$3 `
     :host {
         display: block;
-        height: 100%;
+        height: 100vh;
         width: 100%;
         background: var(--sq-panel-background);
     }
