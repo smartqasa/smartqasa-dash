@@ -2,6 +2,7 @@ import { css } from "lit";
 
 export const tileBaseStyle = css`
     :host {
+        display: block;
         height: 5.2rem;
         width: 100%;
         max-width: 19.5rem;

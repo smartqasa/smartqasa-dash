@@ -8496,16 +8496,15 @@ const panelStyle = i$3 `
         background-color: transparent;
     }
     .swiper {
-        width: 100%;
-        max-width: 100vw;
-        box-sizing: border-box;
+        display: flex;
+        height: 100%;
+        align-items: center;
+        justify-content: center;
     }
     .body-tiles {
         display: grid;
+        height: 100%;
         gap: var(--sq-tile-spacing, 0.8rem);
-    }
-    .tile {
-        display: block;
     }
 `;
 
@@ -8731,7 +8730,7 @@ let PanelCard = class PanelCard extends h {
             return D;
         const columns = this._config.columns && this._config.columns >= 2 && this._config.columns <= 4 ? this._config.columns : 3;
         const bodyStyles = {
-            gridTemplateColumns: `repeat(${columns}, 1fr)`,
+            gridTemplateColumns: `repeat(${columns}, min-content)`,
         };
         return ke `
             <div class="swiper">
@@ -11424,6 +11423,7 @@ TitleCard = __decorate([
 
 const tileBaseStyle = i$3 `
     :host {
+        display: block;
         height: 5.2rem;
         width: 100%;
         max-width: 19.5rem;

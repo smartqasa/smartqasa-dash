@@ -83,15 +83,14 @@ export const panelStyle = css`
         background-color: transparent;
     }
     .swiper {
-        width: 100%;
-        max-width: 100vw;
-        box-sizing: border-box;
+        display: flex;
+        height: 100%;
+        align-items: center;
+        justify-content: center;
     }
     .body-tiles {
         display: grid;
+        height: 100%;
         gap: var(--sq-tile-spacing, 0.8rem);
-    }
-    .tile {
-        display: block;
     }
 `;
