@@ -4349,14 +4349,33 @@ let PanelCard = class PanelCard extends h {
         const bodyStyles = {
             gridTemplateColumns: `repeat(${columns}, 1fr)`,
         };
+        // Split tiles into pages based on `page-break`
+        const pages = [];
+        let currentPage = [];
+        for (const tile of this._config.tiles || []) {
+            if (tile.type === "page-break") {
+                if (currentPage.length > 0) {
+                    pages.push(currentPage);
+                    currentPage = [];
+                }
+            }
+            else {
+                currentPage.push(tile);
+            }
+        }
+        if (currentPage.length > 0) {
+            pages.push(currentPage);
+        }
         return ke `
-            <div class="body-container">
-                ${this._bodyTiles.length > 0
-            ? ke ` <div class="body-tiles" style="${se(bodyStyles)}">
-                          ${this._bodyTiles.map((tile) => ke `<div class="tile">${tile}</div>`)}
-                      </div>`
-            : D}
-            </div>
+            <swiper-container class="swiper" slides-per-view="1" pagination>
+                ${pages.map((page) => ke `
+                        <swiper-slide class="slide">
+                            <div class="body-tiles" style="${se(bodyStyles)}">
+                                ${page.map((tile) => ke `<div class="tile">${tile}</div>`)}
+                            </div>
+                        </swiper-slide>
+                    `)}
+            </swiper-container>
         `;
     }
     _renderFooter() {

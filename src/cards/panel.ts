@@ -200,14 +200,36 @@ export class PanelCard extends LitElement {
             gridTemplateColumns: `repeat(${columns}, 1fr)`,
         };
 
+        // Split tiles into pages based on `page-break`
+        const pages: LovelaceCardConfig[][] = [];
+        let currentPage: LovelaceCardConfig[] = [];
+
+        for (const tile of this._config.tiles || []) {
+            if (tile.type === "page-break") {
+                if (currentPage.length > 0) {
+                    pages.push(currentPage);
+                    currentPage = [];
+                }
+            } else {
+                currentPage.push(tile);
+            }
+        }
+        if (currentPage.length > 0) {
+            pages.push(currentPage);
+        }
+
         return html`
-            <div class="body-container">
-                ${this._bodyTiles.length > 0
-                    ? html` <div class="body-tiles" style="${styleMap(bodyStyles)}">
-                          ${this._bodyTiles.map((tile) => html`<div class="tile">${tile}</div>`)}
-                      </div>`
-                    : nothing}
-            </div>
+            <swiper-container class="swiper" slides-per-view="1" pagination>
+                ${pages.map(
+                    (page) => html`
+                        <swiper-slide class="slide">
+                            <div class="body-tiles" style="${styleMap(bodyStyles)}">
+                                ${page.map((tile) => html`<div class="tile">${tile}</div>`)}
+                            </div>
+                        </swiper-slide>
+                    `
+                )}
+            </swiper-container>
         `;
     }
 
