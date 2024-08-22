@@ -6,7 +6,6 @@ export const chipBaseStyle = css`
         margin: 0 var(--sq-chip-spacing, 0.4rem);
         align-items: center;
         justify-content: center;
-        height: var(--sq-chip-height, 3.4rem); /* Consistent height */
         width: fit-content;
         border: var(--sq-card-border);
         border-radius: var(--sq-chip-border-radius);
@@ -21,25 +20,25 @@ export const chipBaseStyle = css`
         padding: var(--sq-chip-padding, 1rem);
         color: rgb(var(--sq-primary-text-rgb));
         transition: var(--sq-icon-transition, none);
-        align-items: center; /* Align icon vertically */
-        justify-content: center; /* Center icon horizontally */
+        align-items: center;
+        justify-content: center;
     }
 `;
 
 export const chipTextStyle = css`
     .container {
         justify-content: flex-start;
-        height: var(--sq-chip-height, 3.4rem); /* Ensure same height as base */
     }
     .icon {
         padding-right: calc(var(--sq-chip-padding, 1rem) / 2);
-        align-items: center; /* Align icon vertically */
-        justify-content: center; /* Center icon horizontally */
+        align-items: center;
+        justify-content: center;
     }
     .text {
         display: flex;
         padding: var(--sq-chip-padding, 1rem);
         padding-left: 0;
+        line-height: var(--sq-chip-icon-size, 1.8rem);
         font-weight: var(--sq-primary-font-weight, 400);
         font-size: var(--sq-primary-font-size, 1.5rem);
         color: rgb(var(--sq-primary-font-rgb, 128, 128, 128));
@@ -47,8 +46,7 @@ export const chipTextStyle = css`
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-
-        align-items: center; /* Align text vertically */
+        align-items: center;
     }
 `;
 
@@ -58,7 +56,6 @@ export const chipDoubleStyle = css`
         margin: 0 var(--sq-chip-spacing, 0.4rem);
         align-items: center;
         justify-content: center;
-        height: var(--sq-chip-height, 3.4rem); /* Consistent height */
         border: var(--sq-card-border);
         border-radius: var(--sq-chip-border-radius);
         background-color: var(--sq-card-background-color);
