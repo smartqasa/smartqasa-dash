@@ -3,8 +3,8 @@ import { css } from "lit";
 export const tileBaseStyle = css`
     .container {
         display: grid;
-        height: 5.2rem;
-        max-width: 19.5rem;
+        height: 100%;
+        width: 100%;
         border: var(--sq-card-border, none);
         border-radius: var(--sq-card-border-radius, 1.5rem);
         grid-template-areas: "i n";

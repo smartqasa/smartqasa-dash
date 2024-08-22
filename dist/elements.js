@@ -8504,6 +8504,7 @@ const panelStyle = i$3 `
     .body-tiles {
         display: grid;
         height: 100%;
+        grid-auto-rows: 5.2rem;
         gap: var(--sq-tile-spacing, 0.8rem);
     }
 `;
@@ -8730,7 +8731,7 @@ let PanelCard = class PanelCard extends h {
             return D;
         const columns = this._config.columns && this._config.columns >= 2 && this._config.columns <= 4 ? this._config.columns : 3;
         const bodyStyles = {
-            gridTemplateColumns: `repeat(${columns}, min-content)`,
+            gridTemplateColumns: `repeat(${columns}, min(21vw, 19.5rem))`,
         };
         return ke `
             <div class="swiper">
@@ -11424,8 +11425,8 @@ TitleCard = __decorate([
 const tileBaseStyle = i$3 `
     .container {
         display: grid;
-        height: 5.2rem;
-        max-width: 19.5rem;
+        height: 100%;
+        width: 100%;
         border: var(--sq-card-border, none);
         border-radius: var(--sq-card-border-radius, 1.5rem);
         grid-template-areas: "i n";
