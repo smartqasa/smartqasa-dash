@@ -13,6 +13,6 @@
         "types": ["node"],
         "useDefineForClassFields": false
     },
-    "include": ["src/**/*.ts", "custom.d.ts"],
+    "include": ["src/**/*.ts", "global.d.ts"],
     "exclude": ["node_modules"]
 }
