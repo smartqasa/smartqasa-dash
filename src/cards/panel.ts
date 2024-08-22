@@ -74,7 +74,11 @@ export class PanelCard extends LitElement {
     protected updated(changedProps: PropertyValues) {
         super.updated(changedProps);
 
-        if (!this._swiper) this._initializeSwiper();
+        if (!this._swiper) {
+            this._initializeSwiper();
+        } else {
+            this._swiper.update();
+        }
 
         if (changedProps.has("_config") && this._config) {
             this._area = this._config.area;

@@ -8556,8 +8556,12 @@ let PanelCard = class PanelCard extends h {
     }
     updated(changedProps) {
         super.updated(changedProps);
-        if (!this._swiper)
+        if (!this._swiper) {
             this._initializeSwiper();
+        }
+        else {
+            this._swiper.update();
+        }
         if (changedProps.has("_config") && this._config) {
             this._area = this._config.area;
             this._loadContent();
