@@ -8643,11 +8643,10 @@ let PanelCard = class PanelCard extends h {
             // Optional parameters
             direction: "horizontal",
             loop: false,
-            /* Pagination
+            // Pagination
             pagination: {
                 el: ".swiper-pagination",
             },
-            */
             // Navigation arrows
             navigation: {
                 nextEl: ".swiper-button-next",
@@ -8712,15 +8711,27 @@ let PanelCard = class PanelCard extends h {
             gridTemplateColumns: `repeat(${columns}, 1fr)`,
         };
         return ke `
-            <swiper-container class="swiper" slides-per-view="1" pagination>
-                ${this._bodyTiles.map((page) => ke `
-                        <swiper-slide class="slide">
-                            <div class="body-tiles" style="${se(bodyStyles)}">
-                                ${page.map((tile) => ke `<div class="tile">${tile}</div>`)}
+            <!-- Slider main container -->
+            <div class="swiper">
+                <!-- Additional required wrapper -->
+                <div class="swiper-wrapper">
+                    <!-- Slides -->
+                    ${this._bodyTiles.map((page) => ke `
+                            <div class="swiper-slide">
+                                <div class="body-tiles" style="${se(bodyStyles)}">
+                                    ${page.map((tile) => ke `<div class="tile">${tile}</div>`)}
+                                </div>
                             </div>
-                        </swiper-slide>
-                    `)}
-            </swiper-container>
+                        `)}
+                </div>
+
+                <!-- If we need pagination -->
+                <div class="swiper-pagination"></div>
+
+                <!-- If we need navigation buttons -->
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
+            </div>
         `;
     }
     _renderFooter() {
