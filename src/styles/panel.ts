@@ -84,7 +84,7 @@ export const panelStyle = css`
     }
 
     .body-container {
-        display: block;
+        display: flex;
     }
 
     .swiper {

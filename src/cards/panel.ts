@@ -51,8 +51,6 @@ export class PanelCard extends LitElement {
     protected render(): TemplateResult {
         if (this._loading) return html`<div>Loading...</div>`;
 
-        if (!this._swiper) this._initializeSwiper();
-
         const isPhone = deviceType === "phone";
         const containerStyles = {
             padding: isPhone ? "0.5rem" : "1rem",
@@ -71,6 +69,8 @@ export class PanelCard extends LitElement {
 
     protected updated(changedProps: PropertyValues) {
         super.updated(changedProps);
+
+        if (!this._swiper) this._initializeSwiper();
 
         if (changedProps.has("_config") && this._config) {
             this._area = this._config.area;

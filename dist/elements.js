@@ -8497,7 +8497,7 @@ const panelStyle = i$3 `
     }
 
     .body-container {
-        display: block;
+        display: flex;
     }
 
     .swiper {
@@ -8538,8 +8538,6 @@ let PanelCard = class PanelCard extends h {
     render() {
         if (this._loading)
             return ke `<div>Loading...</div>`;
-        if (!this._swiper)
-            this._initializeSwiper();
         const isPhone = deviceType === "phone";
         const containerStyles = {
             padding: isPhone ? "0.5rem" : "1rem",
@@ -8556,6 +8554,8 @@ let PanelCard = class PanelCard extends h {
     }
     updated(changedProps) {
         super.updated(changedProps);
+        if (!this._swiper)
+            this._initializeSwiper();
         if (changedProps.has("_config") && this._config) {
             this._area = this._config.area;
             this._loadContent();
