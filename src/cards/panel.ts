@@ -2,6 +2,11 @@ import { CSSResult, html, LitElement, nothing, PropertyValues, TemplateResult } 
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HassArea, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
+import Swiper from "swiper";
+import { Navigation, Pagination } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 import { deviceType } from "../const";
 import { createElement } from "../utils/create-element";
 import { loadYamlAsJson } from "../utils/load-yaml-as-json";
@@ -53,14 +58,14 @@ export class PanelCard extends LitElement {
         const isPhone = deviceType === "phone";
         const containerStyles = {
             padding: isPhone ? "0.5rem" : "1rem",
-            gridTemplateAreas: isPhone ? '"area" "tiles" "footer"' : '"header" "area" "tiles" "footer"',
+            gridTemplateAreas: isPhone ? '"area" "body" "footer"' : '"header" "area" "body" "footer"',
         };
 
         return html`
             <div class="container" style="${styleMap(containerStyles)}">
                 <div style="grid-area: header;">${this._renderHeader()}</div>
                 <div style="grid-area: area;">${this._renderArea()}</div>
-                <div style="grid-area: tiles">${this._renderTiles()}</div>
+                <div style="grid-area: body">${this._renderBody()}</div>
                 <div style="grid-area: footer;">${this._renderFooter()}</div>
             </div>
         `;
@@ -156,7 +161,7 @@ export class PanelCard extends LitElement {
         `;
     }
 
-    private _renderTiles() {
+    private _renderBody() {
         if (!this._config?.tiles) return nothing;
 
         const gridTemplateColumns = `repeat(${this._config.columns}, 1fr)`;
@@ -168,7 +173,7 @@ export class PanelCard extends LitElement {
 
         return html`
             <div
-                class="tiles-container"
+                class="body-container"
                 style="display: grid; grid-template-columns: ${gridTemplateColumns}; gap: 1rem;"
             >
                 ${tiles}

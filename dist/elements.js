@@ -4179,16 +4179,16 @@ const panelStyle = i$3 `
         box-shadow: none;
         background-color: transparent;
     }
-    .swiper-container {
+
+    .body-container {
+        display: block;
+    }
+
+    .swiper {
         width: 100%;
         height: 100%;
     }
-    .swiper-slide {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100%;
-    }
+
     .tiles-container {
         display: grid;
         gap: var(--sq-tile-spacing, 0.8rem);
@@ -4225,13 +4225,13 @@ let PanelCard = class PanelCard extends h {
         const isPhone = deviceType === "phone";
         const containerStyles = {
             padding: isPhone ? "0.5rem" : "1rem",
-            gridTemplateAreas: isPhone ? '"area" "tiles" "footer"' : '"header" "area" "tiles" "footer"',
+            gridTemplateAreas: isPhone ? '"area" "body" "footer"' : '"header" "area" "body" "footer"',
         };
         return ke `
             <div class="container" style="${se(containerStyles)}">
                 <div style="grid-area: header;">${this._renderHeader()}</div>
                 <div style="grid-area: area;">${this._renderArea()}</div>
-                <div style="grid-area: tiles">${this._renderTiles()}</div>
+                <div style="grid-area: body">${this._renderBody()}</div>
                 <div style="grid-area: footer;">${this._renderFooter()}</div>
             </div>
         `;
@@ -4317,7 +4317,7 @@ let PanelCard = class PanelCard extends h {
             </div>
         `;
     }
-    _renderTiles() {
+    _renderBody() {
         if (!this._config?.tiles)
             return D;
         const gridTemplateColumns = `repeat(${this._config.columns}, 1fr)`;
@@ -4328,7 +4328,7 @@ let PanelCard = class PanelCard extends h {
         });
         return ke `
             <div
-                class="tiles-container"
+                class="body-container"
                 style="display: grid; grid-template-columns: ${gridTemplateColumns}; gap: 1rem;"
             >
                 ${tiles}
