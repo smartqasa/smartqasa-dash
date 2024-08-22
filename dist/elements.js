@@ -8635,15 +8635,12 @@ let PanelCard = class PanelCard extends h {
         return pages;
     }
     async _initializeSwiper() {
-        const swiperContainer = this.shadowRoot?.querySelector(".swiper");
-        if (!swiperContainer)
-            return;
         // Initialize Swiper
-        new Swiper(swiperContainer, {
+        new Swiper(".swiper", {
             // Optional parameters
             direction: "horizontal",
             loop: false,
-            // Pagination
+            // If we need pagination
             pagination: {
                 el: ".swiper-pagination",
             },
@@ -8652,11 +8649,10 @@ let PanelCard = class PanelCard extends h {
                 nextEl: ".swiper-button-next",
                 prevEl: ".swiper-button-prev",
             },
-            /* Scrollbar
+            // And if we need scrollbar
             scrollbar: {
                 el: ".swiper-scrollbar",
             },
-            */
         });
     }
     _renderHeader() {

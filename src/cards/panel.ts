@@ -27,6 +27,7 @@ export class PanelCard extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() private _config?: Config;
     @state() private _loading = true;
+    private _swiperContainer?: HTMLElement;
     private _area?: string;
     private _areaObj?: HassArea;
     private _headerChips: LovelaceCard[] = [];
@@ -164,16 +165,13 @@ export class PanelCard extends LitElement {
     }
 
     private async _initializeSwiper() {
-        const swiperContainer = this.shadowRoot?.querySelector(".swiper");
-        if (!swiperContainer) return;
-
         // Initialize Swiper
-        const swiper = new Swiper(swiperContainer as HTMLElement, {
+        const swiper = new Swiper(".swiper", {
             // Optional parameters
             direction: "horizontal",
             loop: false,
 
-            // Pagination
+            // If we need pagination
             pagination: {
                 el: ".swiper-pagination",
             },
@@ -184,11 +182,10 @@ export class PanelCard extends LitElement {
                 prevEl: ".swiper-button-prev",
             },
 
-            /* Scrollbar
+            // And if we need scrollbar
             scrollbar: {
                 el: ".swiper-scrollbar",
             },
-            */
         });
     }
 
