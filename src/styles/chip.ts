@@ -3,9 +3,10 @@ import { css } from "lit";
 export const chipBaseStyle = css`
     .container {
         display: flex;
-        margin: 0 var(--sq-chip-spacing, 0.4rem) 0 var(--sq-chip-spacing, 0.4rem);
+        margin: 0 var(--sq-chip-spacing, 0.4rem);
         align-items: center;
         justify-content: center;
+        height: var(--sq-chip-height, 3.4rem); /* Consistent height */
         width: fit-content;
         border: var(--sq-card-border);
         border-radius: var(--sq-chip-border-radius);
@@ -20,17 +21,23 @@ export const chipBaseStyle = css`
         padding: var(--sq-chip-padding, 1rem);
         color: rgb(var(--sq-primary-text-rgb));
         transition: var(--sq-icon-transition, none);
+        align-items: center; /* Align icon vertically */
+        justify-content: center; /* Center icon horizontally */
     }
 `;
 
 export const chipTextStyle = css`
     .container {
         justify-content: flex-start;
+        height: var(--sq-chip-height, 3.4rem); /* Ensure same height as base */
     }
     .icon {
         padding-right: calc(var(--sq-chip-padding, 1rem) / 2);
+        align-items: center; /* Align icon vertically */
+        justify-content: center; /* Center icon horizontally */
     }
     .text {
+        display: flex;
         padding: var(--sq-chip-padding, 1rem);
         padding-left: 0;
         font-weight: var(--sq-primary-font-weight, 400);
@@ -40,14 +47,18 @@ export const chipTextStyle = css`
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+
+        align-items: center; /* Align text vertically */
     }
 `;
 
 export const chipDoubleStyle = css`
     .container {
         display: flex;
-        margin: 0 var(--sq-chip-spacing, 0.4rem) 0 var(--sq-chip-spacing, 0.4rem);
+        margin: 0 var(--sq-chip-spacing, 0.4rem);
         align-items: center;
+        justify-content: center;
+        height: var(--sq-chip-height, 3.4rem); /* Consistent height */
         border: var(--sq-card-border);
         border-radius: var(--sq-chip-border-radius);
         background-color: var(--sq-card-background-color);
