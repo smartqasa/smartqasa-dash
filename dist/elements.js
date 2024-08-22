@@ -8521,7 +8521,12 @@ let PanelCard = class PanelCard extends h {
         this._areaChips = [];
         this._bodyTiles = [];
     }
-    static { this.styles = panelStyle; }
+    static { this.styles = [
+        panelStyle,
+        i$3 `
+            @import "swiper/swiper-bundle.css";
+        `,
+    ]; }
     async setConfig(config) {
         this._config = { ...config };
         this._area = this._config.area;
