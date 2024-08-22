@@ -8635,9 +8635,6 @@ let PanelCard = class PanelCard extends h {
         return pages;
     }
     _initializeSwiper() {
-        const swiperContainer = this.shadowRoot?.querySelector(".swiper");
-        if (!swiperContainer)
-            return;
         const swiperParams = {
             navigation: {
                 nextEl: ".swiper-button-next",
@@ -8645,9 +8642,8 @@ let PanelCard = class PanelCard extends h {
             },
             cssMode: true,
             initialSlide: 0,
-            autoHeight: true,
         };
-        this._swiper = new Swiper(swiperContainer, swiperParams);
+        this._swiper = new Swiper(".swiper", swiperParams);
     }
     _renderHeader() {
         let time = this.hass?.states["sensor.current_time"]?.state || "Loading...";
@@ -8696,24 +8692,23 @@ let PanelCard = class PanelCard extends h {
     _renderBody() {
         if (!this._config || !this._bodyTiles.length)
             return D;
-        this._config.columns && this._config.columns >= 2 && this._config.columns <= 4 ? this._config.columns : 3;
+        const columns = this._config.columns && this._config.columns >= 2 && this._config.columns <= 4 ? this._config.columns : 3;
+        const bodyStyles = {
+            gridTemplateColumns: `repeat(${columns}, 1fr)`,
+        };
         return ke `
-            <!-- Slider main container -->
             <div class="swiper">
-                <!-- Additional required wrapper -->
                 <div class="swiper-wrapper">
-                    <!-- Slides -->
-                    <div class="swiper-slide">Slide 1</div>
-                    <div class="swiper-slide">Slide 2</div>
-                    <div class="swiper-slide">Slide 3</div>
+                    ${this._bodyTiles.map((page) => ke `
+                            <div class="swiper-slide">
+                                <div class="body-tiles" style="${se(bodyStyles)}">
+                                    ${page.map((tile) => ke `<div class="tile">${tile}</div>`)}
+                                </div>
+                            </div>
+                        `)}
                 </div>
-                <!-- If we need pagination -->
-                <div class="swiper-pagination"></div>
-                <!-- If we need navigation buttons -->
                 <div class="swiper-button-prev"></div>
                 <div class="swiper-button-next"></div>
-                <!-- If we need scrollbar -->
-                <div class="swiper-scrollbar"></div>
             </div>
         `;
     }

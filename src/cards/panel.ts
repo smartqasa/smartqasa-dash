@@ -162,9 +162,6 @@ export class PanelCard extends LitElement {
     }
 
     private _initializeSwiper() {
-        const swiperContainer = this.shadowRoot?.querySelector(".swiper");
-        if (!swiperContainer) return;
-
         const swiperParams: SwiperOptions = {
             navigation: {
                 nextEl: ".swiper-button-next",
@@ -172,10 +169,9 @@ export class PanelCard extends LitElement {
             },
             cssMode: true,
             initialSlide: 0,
-            autoHeight: true,
         };
 
-        this._swiper = new Swiper(swiperContainer as HTMLElement, swiperParams);
+        this._swiper = new Swiper(".swiper", swiperParams);
     }
 
     private _renderHeader() {
@@ -236,22 +232,20 @@ export class PanelCard extends LitElement {
         };
 
         return html`
-            <!-- Slider main container -->
             <div class="swiper">
-                <!-- Additional required wrapper -->
                 <div class="swiper-wrapper">
-                    <!-- Slides -->
-                    <div class="swiper-slide">Slide 1</div>
-                    <div class="swiper-slide">Slide 2</div>
-                    <div class="swiper-slide">Slide 3</div>
+                    ${this._bodyTiles.map(
+                        (page) => html`
+                            <div class="swiper-slide">
+                                <div class="body-tiles" style="${styleMap(bodyStyles)}">
+                                    ${page.map((tile) => html`<div class="tile">${tile}</div>`)}
+                                </div>
+                            </div>
+                        `
+                    )}
                 </div>
-                <!-- If we need pagination -->
-                <div class="swiper-pagination"></div>
-                <!-- If we need navigation buttons -->
                 <div class="swiper-button-prev"></div>
                 <div class="swiper-button-next"></div>
-                <!-- If we need scrollbar -->
-                <div class="swiper-scrollbar"></div>
             </div>
         `;
     }
