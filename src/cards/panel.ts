@@ -95,9 +95,6 @@ export class PanelCard extends LitElement {
                     });
                 });
             }
-
-            // Re-initialize Swiper after the content is updated
-            this._initializeSwiper();
         }
     }
 
@@ -170,20 +167,10 @@ export class PanelCard extends LitElement {
 
         const swiperParams: SwiperOptions = {
             direction: "horizontal",
-            loop: true,
-            slidesPerView: 1,
-            spaceBetween: 10,
-            pagination: {
-                el: ".swiper-pagination",
-                clickable: true,
-            },
+            loop: false,
             navigation: {
                 nextEl: ".swiper-button-next",
                 prevEl: ".swiper-button-prev",
-            },
-            scrollbar: {
-                el: ".swiper-scrollbar",
-                draggable: true,
             },
         };
 

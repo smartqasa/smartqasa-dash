@@ -8578,8 +8578,6 @@ let PanelCard = class PanelCard extends h {
                     });
                 });
             }
-            // Re-initialize Swiper after the content is updated
-            this._initializeSwiper();
         }
     }
     async _loadContent() {
@@ -8642,20 +8640,10 @@ let PanelCard = class PanelCard extends h {
             return;
         const swiperParams = {
             direction: "horizontal",
-            loop: true,
-            slidesPerView: 1,
-            spaceBetween: 10,
-            pagination: {
-                el: ".swiper-pagination",
-                clickable: true,
-            },
+            loop: false,
             navigation: {
                 nextEl: ".swiper-button-next",
                 prevEl: ".swiper-button-prev",
-            },
-            scrollbar: {
-                el: ".swiper-scrollbar",
-                draggable: true,
             },
         };
         this._swiper = new Swiper(swiperContainer, swiperParams);
