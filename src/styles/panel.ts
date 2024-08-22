@@ -54,7 +54,8 @@ export const panelStyle = css`
         margin-bottom: 2.5rem;
     }
     .area-info {
-        flex-basis: 50%;
+        display: flex;
+        flex-direction: column;
     }
     .area-name {
         margin-bottom: 0.4rem;
@@ -73,7 +74,6 @@ export const panelStyle = css`
         margin-left: calc(var(--sq-chip-spacing, 0.4rem) * -1);
     }
     .area-image {
-        flex-basis: 50%;
         width: 100%;
         height: 100%;
         object-fit: cover;
