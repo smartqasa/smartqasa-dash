@@ -5115,9 +5115,9 @@ const chipDoubleStyle = i$3 `
     .icon1::after {
         content: "";
         width: 1px;
-        height: 90%;
+        height: var(--sq-chip-icon-size, 1.8rem);
         background-color: rgb(128, 128, 128);
-        margin: 0 0.4rem;
+        margin-left: 0.3rem;
     }
 `;
 const chipIconSpinStyle = i$3 `
