@@ -4189,7 +4189,7 @@ const panelStyle = i$3 `
         height: 100%;
     }
 
-    .tiles-container {
+    .body-tiles {
         display: grid;
         gap: var(--sq-tile-spacing, 0.8rem);
     }
@@ -4204,6 +4204,7 @@ let PanelCard = class PanelCard extends h {
         this._loading = true;
         this._headerChips = [];
         this._areaChips = [];
+        this._bodyTiles = [];
     }
     static { this.styles = panelStyle; }
     async setConfig(config) {
@@ -4213,10 +4214,7 @@ let PanelCard = class PanelCard extends h {
     }
     async firstUpdated(changedProps) {
         super.firstUpdated(changedProps);
-        this._headerChips = await this._createHeaderChips();
-        if (this._config?.chips) {
-            this._areaChips = await this._createAreaChips(this._config.chips);
-        }
+        await this._loadContent();
         this._loading = false;
     }
     render() {
@@ -4238,21 +4236,39 @@ let PanelCard = class PanelCard extends h {
     }
     updated(changedProps) {
         super.updated(changedProps);
+        if (changedProps.has("_config") && this._config) {
+            this._area = this._config.area;
+            this._loadContent();
+        }
         if (changedProps.has("hass") && this.hass) {
+            this._areaObj = this._area ? this.hass.areas[this._area] : undefined;
             if (this._headerChips.length) {
                 this._headerChips.forEach((chip) => {
                     chip.hass = this.hass;
                 });
             }
-            this._areaObj = this._area ? this.hass.areas[this._area] : undefined;
             if (this._areaChips.length) {
                 this._areaChips.forEach((chip) => {
                     chip.hass = this.hass;
                 });
             }
+            if (this._bodyTiles.length) {
+                this._bodyTiles.forEach((tile) => {
+                    tile.hass = this.hass;
+                });
+            }
         }
     }
-    async _createHeaderChips() {
+    async _loadContent() {
+        this._headerChips = await this._loadHeaderChips();
+        if (this._config?.chips) {
+            this._areaChips = await this._loadAreaChips(this._config.chips);
+        }
+        if (this._config?.tiles) {
+            this._bodyTiles = await this._loadBodyTiles(this._config.tiles);
+        }
+    }
+    async _loadHeaderChips() {
         let chipsConfig = [];
         try {
             const yamlFilePath = "/local/smartqasa/lists/chips.yaml";
@@ -4268,11 +4284,18 @@ let PanelCard = class PanelCard extends h {
             return chip;
         });
     }
-    async _createAreaChips(chipsConfig) {
+    async _loadAreaChips(chipsConfig) {
         return chipsConfig.map((config) => {
             const chip = createElement(config);
             chip.hass = this.hass;
             return chip;
+        });
+    }
+    async _loadBodyTiles(tilesConfig) {
+        return tilesConfig.map((config) => {
+            const tile = createElement(config);
+            tile.hass = this.hass;
+            return tile;
         });
     }
     _renderHeader() {
@@ -4309,29 +4332,30 @@ let PanelCard = class PanelCard extends h {
             <div class="area-container">
                 <div class="area-info">
                     <div class="area-name">${name}</div>
-                    <div class="area-chips">
-                        ${this._areaChips.map((chip) => ke `<div class="chip">${chip}</div>`)}
-                    </div>
+                    ${this._areaChips.length > 0
+            ? ke ` <div class="area-chips">
+                              ${this._areaChips.map((chip) => ke `<div class="chip">${chip}</div>`)}
+                          </div>`
+            : D}
                 </div>
                 <img class="area-image" alt="Area picture..." src=${picture} style="max-height: ${height};" />
             </div>
         `;
     }
     _renderBody() {
-        if (!this._config?.tiles)
+        if (!this._config || !this._bodyTiles)
             return D;
-        const gridTemplateColumns = `repeat(${this._config.columns}, 1fr)`;
-        const tiles = this._config.tiles.map((config) => {
-            const tile = createElement(config);
-            tile.hass = this.hass;
-            return ke `<div class="tile">${tile}</div>`;
-        });
+        const columns = this._config.columns && this._config.columns >= 2 && this._config.columns <= 4 ? this._config.columns : 3;
+        const bodyStyles = {
+            gridTemplateColumns: `repeat(${columns}, 1fr)`,
+        };
         return ke `
-            <div
-                class="body-container"
-                style="display: grid; grid-template-columns: ${gridTemplateColumns}; gap: 1rem;"
-            >
-                ${tiles}
+            <div class="body-container">
+                ${this._bodyTiles.length > 0
+            ? ke ` <div class="body-tiles" style="${se(bodyStyles)}">
+                          ${this._bodyTiles.map((tile) => ke `<div class="tile">${tile}</div>`)}
+                      </div>`
+            : D}
             </div>
         `;
     }

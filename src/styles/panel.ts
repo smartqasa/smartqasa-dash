@@ -92,7 +92,7 @@ export const panelStyle = css`
         height: 100%;
     }
 
-    .tiles-container {
+    .body-tiles {
         display: grid;
         gap: var(--sq-tile-spacing, 0.8rem);
     }

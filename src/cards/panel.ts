@@ -7,7 +7,7 @@ import { Navigation, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { deviceType } from "../const";
+import { deviceType, thermostatIcons } from "../const";
 import { createElement } from "../utils/create-element";
 import { loadYamlAsJson } from "../utils/load-yaml-as-json";
 import defaultImage from "../assets/images/default.png";
@@ -18,7 +18,7 @@ interface Config extends LovelaceCardConfig {
     name?: string;
     picture?: string;
     chips?: LovelaceCardConfig[];
-    columns?: number;
+    columns?: number | undefined;
     tiles?: LovelaceCardConfig[];
 }
 
@@ -31,6 +31,7 @@ export class PanelCard extends LitElement {
     private _areaObj?: HassArea;
     private _headerChips: LovelaceCard[] = [];
     private _areaChips: LovelaceCard[] = [];
+    private _bodyTiles: LovelaceCard[] = [];
 
     static styles: CSSResult = panelStyle;
 
@@ -43,11 +44,7 @@ export class PanelCard extends LitElement {
     protected async firstUpdated(changedProps: PropertyValues) {
         super.firstUpdated(changedProps);
 
-        this._headerChips = await this._createHeaderChips();
-
-        if (this._config?.chips) {
-            this._areaChips = await this._createAreaChips(this._config.chips);
-        }
+        await this._loadContent();
 
         this._loading = false;
     }
@@ -73,24 +70,47 @@ export class PanelCard extends LitElement {
 
     protected updated(changedProps: PropertyValues) {
         super.updated(changedProps);
+        if (changedProps.has("_config") && this._config) {
+            this._area = this._config.area;
+            this._loadContent();
+        }
+
         if (changedProps.has("hass") && this.hass) {
+            this._areaObj = this._area ? this.hass.areas[this._area] : undefined;
+
             if (this._headerChips.length) {
                 this._headerChips.forEach((chip) => {
                     chip.hass = this.hass;
                 });
             }
 
-            this._areaObj = this._area ? this.hass.areas[this._area] : undefined;
-
             if (this._areaChips.length) {
                 this._areaChips.forEach((chip) => {
                     chip.hass = this.hass;
                 });
             }
+
+            if (this._bodyTiles.length) {
+                this._bodyTiles.forEach((tile) => {
+                    tile.hass = this.hass;
+                });
+            }
         }
     }
 
-    private async _createHeaderChips(): Promise<LovelaceCard[]> {
+    private async _loadContent() {
+        this._headerChips = await this._loadHeaderChips();
+
+        if (this._config?.chips) {
+            this._areaChips = await this._loadAreaChips(this._config.chips);
+        }
+
+        if (this._config?.tiles) {
+            this._bodyTiles = await this._loadBodyTiles(this._config.tiles);
+        }
+    }
+
+    private async _loadHeaderChips(): Promise<LovelaceCard[]> {
         let chipsConfig: LovelaceCardConfig[] = [];
         try {
             const yamlFilePath = "/local/smartqasa/lists/chips.yaml";
@@ -107,11 +127,19 @@ export class PanelCard extends LitElement {
         });
     }
 
-    private async _createAreaChips(chipsConfig: LovelaceCardConfig[]): Promise<LovelaceCard[]> {
+    private async _loadAreaChips(chipsConfig: LovelaceCardConfig[]): Promise<LovelaceCard[]> {
         return chipsConfig.map((config) => {
             const chip = createElement(config) as LovelaceCard;
             chip.hass = this.hass;
             return chip;
+        });
+    }
+
+    private async _loadBodyTiles(tilesConfig: LovelaceCardConfig[]): Promise<LovelaceCard[]> {
+        return tilesConfig.map((config) => {
+            const tile = createElement(config) as LovelaceCard;
+            tile.hass = this.hass;
+            return tile;
         });
     }
 
@@ -152,9 +180,11 @@ export class PanelCard extends LitElement {
             <div class="area-container">
                 <div class="area-info">
                     <div class="area-name">${name}</div>
-                    <div class="area-chips">
-                        ${this._areaChips.map((chip) => html`<div class="chip">${chip}</div>`)}
-                    </div>
+                    ${this._areaChips.length > 0
+                        ? html` <div class="area-chips">
+                              ${this._areaChips.map((chip) => html`<div class="chip">${chip}</div>`)}
+                          </div>`
+                        : nothing}
                 </div>
                 <img class="area-image" alt="Area picture..." src=${picture} style="max-height: ${height};" />
             </div>
@@ -162,21 +192,21 @@ export class PanelCard extends LitElement {
     }
 
     private _renderBody() {
-        if (!this._config?.tiles) return nothing;
+        if (!this._config || !this._bodyTiles) return nothing;
 
-        const gridTemplateColumns = `repeat(${this._config.columns}, 1fr)`;
-        const tiles = this._config.tiles.map((config) => {
-            const tile = createElement(config) as LovelaceCard;
-            tile.hass = this.hass;
-            return html`<div class="tile">${tile}</div>`;
-        });
+        const columns =
+            this._config.columns && this._config.columns >= 2 && this._config.columns <= 4 ? this._config.columns : 3;
+        const bodyStyles = {
+            gridTemplateColumns: `repeat(${columns}, 1fr)`,
+        };
 
         return html`
-            <div
-                class="body-container"
-                style="display: grid; grid-template-columns: ${gridTemplateColumns}; gap: 1rem;"
-            >
-                ${tiles}
+            <div class="body-container">
+                ${this._bodyTiles.length > 0
+                    ? html` <div class="body-tiles" style="${styleMap(bodyStyles)}">
+                          ${this._bodyTiles.map((tile) => html`<div class="tile">${tile}</div>`)}
+                      </div>`
+                    : nothing}
             </div>
         `;
     }
