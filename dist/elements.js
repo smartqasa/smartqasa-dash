@@ -4240,7 +4240,7 @@ let PanelCard = class PanelCard extends h {
             this._area = this._config.area;
             this._loadContent();
         }
-        if (changedProps.has("hass") && this.hass) {
+        else if (changedProps.has("hass") && this.hass) {
             this._areaObj = this._area ? this.hass.areas[this._area] : undefined;
             if (this._headerChips.length) {
                 this._headerChips.forEach((chip) => {
@@ -4253,13 +4253,16 @@ let PanelCard = class PanelCard extends h {
                 });
             }
             if (this._bodyTiles.length) {
-                this._bodyTiles.forEach((tile) => {
-                    tile.hass = this.hass;
+                this._bodyTiles.forEach((page) => {
+                    page.forEach((tile) => {
+                        tile.hass = this.hass;
+                    });
                 });
             }
         }
     }
     async _loadContent() {
+        this._areaObj = this._area ? this.hass?.areas[this._area] : undefined;
         this._headerChips = await this._loadHeaderChips();
         if (this._config?.chips) {
             this._areaChips = await this._loadAreaChips(this._config.chips);
@@ -4292,11 +4295,25 @@ let PanelCard = class PanelCard extends h {
         });
     }
     async _loadBodyTiles(tilesConfig) {
-        return tilesConfig.map((config) => {
-            const tile = createElement(config);
-            tile.hass = this.hass;
-            return tile;
-        });
+        const pages = [];
+        let currentPage = [];
+        for (const config of tilesConfig) {
+            if (config.type === "page-break") {
+                if (currentPage.length > 0) {
+                    pages.push(currentPage);
+                    currentPage = [];
+                }
+            }
+            else {
+                const tile = createElement(config);
+                tile.hass = this.hass;
+                currentPage.push(tile);
+            }
+        }
+        if (currentPage.length > 0) {
+            pages.push(currentPage);
+        }
+        return pages;
     }
     _renderHeader() {
         let time = this.hass?.states["sensor.current_time"]?.state || "Loading...";
@@ -4343,32 +4360,15 @@ let PanelCard = class PanelCard extends h {
         `;
     }
     _renderBody() {
-        if (!this._config || !this._bodyTiles)
+        if (!this._config || !this._bodyTiles.length)
             return D;
         const columns = this._config.columns && this._config.columns >= 2 && this._config.columns <= 4 ? this._config.columns : 3;
         const bodyStyles = {
             gridTemplateColumns: `repeat(${columns}, 1fr)`,
         };
-        // Split tiles into pages based on `page-break`
-        const pages = [];
-        let currentPage = [];
-        for (const tile of this._config.tiles || []) {
-            if (tile.type === "page-break") {
-                if (currentPage.length > 0) {
-                    pages.push(currentPage);
-                    currentPage = [];
-                }
-            }
-            else {
-                currentPage.push(tile);
-            }
-        }
-        if (currentPage.length > 0) {
-            pages.push(currentPage);
-        }
         return ke `
             <swiper-container class="swiper" slides-per-view="1" pagination>
-                ${pages.map((page) => ke `
+                ${this._bodyTiles.map((page) => ke `
                         <swiper-slide class="slide">
                             <div class="body-tiles" style="${se(bodyStyles)}">
                                 ${page.map((tile) => ke `<div class="tile">${tile}</div>`)}

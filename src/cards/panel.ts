@@ -31,7 +31,7 @@ export class PanelCard extends LitElement {
     private _areaObj?: HassArea;
     private _headerChips: LovelaceCard[] = [];
     private _areaChips: LovelaceCard[] = [];
-    private _bodyTiles: LovelaceCard[] = [];
+    private _bodyTiles: LovelaceCard[][] = [];
 
     static styles: CSSResult = panelStyle;
 
@@ -70,12 +70,11 @@ export class PanelCard extends LitElement {
 
     protected updated(changedProps: PropertyValues) {
         super.updated(changedProps);
+
         if (changedProps.has("_config") && this._config) {
             this._area = this._config.area;
             this._loadContent();
-        }
-
-        if (changedProps.has("hass") && this.hass) {
+        } else if (changedProps.has("hass") && this.hass) {
             this._areaObj = this._area ? this.hass.areas[this._area] : undefined;
 
             if (this._headerChips.length) {
@@ -91,14 +90,18 @@ export class PanelCard extends LitElement {
             }
 
             if (this._bodyTiles.length) {
-                this._bodyTiles.forEach((tile) => {
-                    tile.hass = this.hass;
+                this._bodyTiles.forEach((page) => {
+                    page.forEach((tile) => {
+                        tile.hass = this.hass;
+                    });
                 });
             }
         }
     }
 
     private async _loadContent() {
+        this._areaObj = this._area ? this.hass?.areas[this._area] : undefined;
+
         this._headerChips = await this._loadHeaderChips();
 
         if (this._config?.chips) {
@@ -135,12 +138,28 @@ export class PanelCard extends LitElement {
         });
     }
 
-    private async _loadBodyTiles(tilesConfig: LovelaceCardConfig[]): Promise<LovelaceCard[]> {
-        return tilesConfig.map((config) => {
-            const tile = createElement(config) as LovelaceCard;
-            tile.hass = this.hass;
-            return tile;
-        });
+    private async _loadBodyTiles(tilesConfig: LovelaceCardConfig[]): Promise<LovelaceCard[][]> {
+        const pages: LovelaceCard[][] = [];
+        let currentPage: LovelaceCard[] = [];
+
+        for (const config of tilesConfig) {
+            if (config.type === "page-break") {
+                if (currentPage.length > 0) {
+                    pages.push(currentPage);
+                    currentPage = [];
+                }
+            } else {
+                const tile = createElement(config) as LovelaceCard;
+                tile.hass = this.hass;
+                currentPage.push(tile);
+            }
+        }
+
+        if (currentPage.length > 0) {
+            pages.push(currentPage);
+        }
+
+        return pages;
     }
 
     private _renderHeader() {
@@ -192,7 +211,7 @@ export class PanelCard extends LitElement {
     }
 
     private _renderBody() {
-        if (!this._config || !this._bodyTiles) return nothing;
+        if (!this._config || !this._bodyTiles.length) return nothing;
 
         const columns =
             this._config.columns && this._config.columns >= 2 && this._config.columns <= 4 ? this._config.columns : 3;
@@ -200,27 +219,9 @@ export class PanelCard extends LitElement {
             gridTemplateColumns: `repeat(${columns}, 1fr)`,
         };
 
-        // Split tiles into pages based on `page-break`
-        const pages: LovelaceCardConfig[][] = [];
-        let currentPage: LovelaceCardConfig[] = [];
-
-        for (const tile of this._config.tiles || []) {
-            if (tile.type === "page-break") {
-                if (currentPage.length > 0) {
-                    pages.push(currentPage);
-                    currentPage = [];
-                }
-            } else {
-                currentPage.push(tile);
-            }
-        }
-        if (currentPage.length > 0) {
-            pages.push(currentPage);
-        }
-
         return html`
             <swiper-container class="swiper" slides-per-view="1" pagination>
-                ${pages.map(
+                ${this._bodyTiles.map(
                     (page) => html`
                         <swiper-slide class="slide">
                             <div class="body-tiles" style="${styleMap(bodyStyles)}">
