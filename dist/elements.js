@@ -8500,9 +8500,8 @@ const panelStyle = i$3 `
     }
     .swiper {
         height: 100%;
-        width: 100%;
     }
-    .swiper-slide {
+    .body-tiles {
         display: grid;
         gap: var(--sq-tile-spacing, 0.8rem);
     }
@@ -8739,12 +8738,13 @@ let PanelCard = class PanelCard extends h {
             <div class="swiper">
                 <div class="swiper-wrapper">
                     ${this._bodyTiles.map((page) => ke `
-                            <div class="swiper-slide" style="${se(bodyStyles)}">
-                                ${page.map((tile) => ke `<div class="tile">${tile}</div>`)}
+                            <div class="swiper-slide">
+                                <div class="body-tiles" style="${se(bodyStyles)}">
+                                    ${page.map((tile) => ke `<div class="tile">${tile}</div>`)}
+                                </div>
                             </div>
                         `)}
                 </div>
-                <!-- Navigation buttons -->
                 <div class="swiper-button-prev"></div>
                 <div class="swiper-button-next"></div>
             </div>
