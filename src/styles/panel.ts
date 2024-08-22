@@ -82,8 +82,7 @@ export const panelStyle = css`
         box-shadow: none;
         background-color: transparent;
     }
-    .body-container {
-        display: block;
+    .swiper {
         width: 100%;
         max-width: 100vw;
         box-sizing: border-box;
