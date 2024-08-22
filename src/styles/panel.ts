@@ -11,6 +11,8 @@ export const panelStyle = css`
         display: grid;
         height: 100%;
         grid-template-rows: auto auto 1fr auto;
+        max-width: 100vw;
+        margin: 0 auto;
     }
     .header-container {
         display: flex;
@@ -87,6 +89,9 @@ export const panelStyle = css`
     }
     .swiper {
         height: 100%;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
     }
     .body-tiles {
         display: grid;
