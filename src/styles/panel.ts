@@ -12,8 +12,7 @@ export const panelStyle = css`
         grid-template-rows: auto auto 1fr auto;
     }
     .header-container {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
+        display: flex;
         margin-bottom: 2.5rem;
         justify-content: space-between;
     }
@@ -49,10 +48,9 @@ export const panelStyle = css`
         display: flex;
     }
     .area-container {
-        display: flex;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
         margin-bottom: 2.5rem;
-        align-items: flex-start;
-        justify-content: space-between;
     }
     .area-info {
         flex-basis: 50%;
