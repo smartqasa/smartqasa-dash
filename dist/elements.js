@@ -8424,8 +8424,6 @@ const panelStyle = i$3 `
         display: grid;
         height: 100%;
         grid-template-rows: auto auto 1fr auto;
-        max-width: 100vw;
-        margin: 0 auto;
     }
     .header-container {
         display: flex;
@@ -8499,11 +8497,8 @@ const panelStyle = i$3 `
     }
     .body-container {
         display: block;
-    }
-    .swiper {
-        height: 100%;
         width: 100%;
-        max-width: 100%;
+        max-width: 100vw;
         box-sizing: border-box;
     }
     .body-tiles {
