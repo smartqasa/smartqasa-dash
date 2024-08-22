@@ -8635,15 +8635,21 @@ let PanelCard = class PanelCard extends h {
         return pages;
     }
     _initializeSwiper() {
+        const swiperContainer = this.shadowRoot?.querySelector(".swiper");
+        if (!swiperContainer) {
+            console.error("Swiper container not found!");
+            return;
+        }
+        console.log("Initializing Swiper...");
         const swiperParams = {
             navigation: {
                 nextEl: ".swiper-button-next",
                 prevEl: ".swiper-button-prev",
             },
-            cssMode: true,
             initialSlide: 0,
         };
         this._swiper = new Swiper(".swiper", swiperParams);
+        console.log("Swiper initialized:", this._swiper);
     }
     _renderHeader() {
         let time = this.hass?.states["sensor.current_time"]?.state || "Loading...";
@@ -8707,6 +8713,7 @@ let PanelCard = class PanelCard extends h {
                             </div>
                         `)}
                 </div>
+                <!-- Navigation buttons -->
                 <div class="swiper-button-prev"></div>
                 <div class="swiper-button-next"></div>
             </div>

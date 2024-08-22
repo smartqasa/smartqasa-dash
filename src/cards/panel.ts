@@ -162,16 +162,25 @@ export class PanelCard extends LitElement {
     }
 
     private _initializeSwiper() {
+        const swiperContainer = this.shadowRoot?.querySelector(".swiper");
+        if (!swiperContainer) {
+            console.error("Swiper container not found!");
+            return;
+        }
+
+        console.log("Initializing Swiper...");
+
         const swiperParams: SwiperOptions = {
             navigation: {
                 nextEl: ".swiper-button-next",
                 prevEl: ".swiper-button-prev",
             },
-            cssMode: true,
             initialSlide: 0,
         };
 
         this._swiper = new Swiper(".swiper", swiperParams);
+
+        console.log("Swiper initialized:", this._swiper);
     }
 
     private _renderHeader() {
@@ -244,6 +253,7 @@ export class PanelCard extends LitElement {
                         `
                     )}
                 </div>
+                <!-- Navigation buttons -->
                 <div class="swiper-button-prev"></div>
                 <div class="swiper-button-next"></div>
             </div>
