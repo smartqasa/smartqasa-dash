@@ -7,11 +7,11 @@ import { Navigation, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { deviceType, thermostatIcons } from "../const";
+import { deviceType } from "../const";
 import { createElement } from "../utils/create-element";
 import { loadYamlAsJson } from "../utils/load-yaml-as-json";
-import defaultImage from "../assets/images/default.png";
 import { panelStyle } from "../styles/panel";
+import defaultImage from "../assets/images/default.png";
 
 interface Config extends LovelaceCardConfig {
     area: string;
@@ -27,7 +27,7 @@ export class PanelCard extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() private _config?: Config;
     @state() private _loading = true;
-    private _swiperContainer?: HTMLElement;
+    private _swiper?: any;
     private _area?: string;
     private _areaObj?: HassArea;
     private _headerChips: LovelaceCard[] = [];
@@ -164,7 +164,7 @@ export class PanelCard extends LitElement {
         return pages;
     }
 
-    private async _initializeSwiper() {
+    private _initializeSwiper() {
         // Initialize Swiper
         const swiper = new Swiper(".swiper", {
             // Optional parameters
@@ -251,6 +251,9 @@ export class PanelCard extends LitElement {
             <div class="swiper">
                 <!-- Additional required wrapper -->
                 <div class="swiper-wrapper">
+                    <script>
+                        this._initializeSwiper;
+                    </script>
                     <!-- Slides -->
                     ${this._bodyTiles.map(
                         (page) => html`
@@ -261,14 +264,11 @@ export class PanelCard extends LitElement {
                             </div>
                         `
                     )}
+
+                    <div class="swiper-pagination"></div>
+                    <div class="swiper-button-prev"></div>
+                    <div class="swiper-button-next"></div>
                 </div>
-
-                <!-- If we need pagination -->
-                <div class="swiper-pagination"></div>
-
-                <!-- If we need navigation buttons -->
-                <div class="swiper-button-prev"></div>
-                <div class="swiper-button-next"></div>
             </div>
         `;
     }
