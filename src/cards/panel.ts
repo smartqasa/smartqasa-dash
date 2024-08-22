@@ -4,9 +4,7 @@ import { styleMap } from "lit/directives/style-map.js";
 import { HassArea, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 import Swiper from "swiper";
 import { Navigation, Pagination } from "swiper/modules";
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
+import "swiper/swiper-bundle.css";
 import { deviceType } from "../const";
 import { createElement } from "../utils/create-element";
 import { loadYamlAsJson } from "../utils/load-yaml-as-json";
@@ -252,7 +250,7 @@ export class PanelCard extends LitElement {
                 <!-- Additional required wrapper -->
                 <div class="swiper-wrapper">
                     <script>
-                        this._initializeSwiper;
+                        this._initializeSwiper();
                     </script>
                     <!-- Slides -->
                     ${this._bodyTiles.map(

@@ -8712,7 +8712,7 @@ let PanelCard = class PanelCard extends h {
                 <!-- Additional required wrapper -->
                 <div class="swiper-wrapper">
                     <script>
-                        this._initializeSwiper;
+                        this._initializeSwiper();
                     </script>
                     <!-- Slides -->
                     ${this._bodyTiles.map((page) => ke `
