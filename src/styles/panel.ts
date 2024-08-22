@@ -83,11 +83,7 @@ export const panelStyle = css`
         background-color: transparent;
     }
     .body-container {
-        display: flex;
-    }
-    .swiper {
-        width: 100%;
-        height: 100%;
+        display: block;
     }
     .body-tiles {
         display: grid;
