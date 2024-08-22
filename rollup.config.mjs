@@ -25,8 +25,7 @@ export default {
         image(),
         json(),
         postcss({
-            extract: true, // Extract CSS to a separate file
-            minimize: true, // Minify the CSS
+            extract: false,
         }),
         resolve({
             browser: true,

@@ -1,4 +1,4 @@
-import { css, CSSResultGroup, html, LitElement, nothing, PropertyValues, TemplateResult } from "lit";
+import { CSSResultGroup, html, LitElement, nothing, PropertyValues, TemplateResult, unsafeCSS } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HassArea, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
@@ -8,6 +8,7 @@ import { deviceType } from "../const";
 import { createElement } from "../utils/create-element";
 import { loadYamlAsJson } from "../utils/load-yaml-as-json";
 import { panelStyle } from "../styles/panel";
+import swiperStyle from "swiper/swiper-bundle.css";
 import defaultImage from "../assets/images/default.png";
 
 interface Config extends LovelaceCardConfig {
@@ -31,12 +32,7 @@ export class PanelCard extends LitElement {
     private _areaChips: LovelaceCard[] = [];
     private _bodyTiles: LovelaceCard[][] = [];
 
-    static styles: CSSResultGroup[] = [
-        panelStyle,
-        css`
-            @import "swiper/swiper-bundle.css";
-        `,
-    ];
+    static styles: CSSResultGroup = [panelStyle, unsafeCSS(swiperStyle)];
 
     public async setConfig(config: Config) {
         this._config = { ...config };
