@@ -8498,7 +8498,11 @@ const panelStyle = i$3 `
     .body-container {
         display: block;
     }
-    .body-tiles {
+    .swiper {
+        height: 100%;
+        width: 100%;
+    }
+    .swiper-slide {
         display: grid;
         gap: var(--sq-tile-spacing, 0.8rem);
     }
@@ -8732,21 +8736,17 @@ let PanelCard = class PanelCard extends h {
             gridTemplateColumns: `repeat(${columns}, 1fr)`,
         };
         return ke `
-            <div class="body-container">
-                <div class="swiper">
-                    <div class="swiper-wrapper">
-                        ${this._bodyTiles.map((page) => ke `
-                                <div class="swiper-slide">
-                                    <div class="body-tiles" style="${se(bodyStyles)}">
-                                        ${page.map((tile) => ke `<div class="tile">${tile}</div>`)}
-                                    </div>
-                                </div>
-                            `)}
-                    </div>
-                    <!-- Navigation buttons -->
-                    <div class="swiper-button-prev"></div>
-                    <div class="swiper-button-next"></div>
+            <div class="swiper">
+                <div class="swiper-wrapper">
+                    ${this._bodyTiles.map((page) => ke `
+                            <div class="swiper-slide" style="${se(bodyStyles)}">
+                                ${page.map((tile) => ke `<div class="tile">${tile}</div>`)}
+                            </div>
+                        `)}
                 </div>
+                <!-- Navigation buttons -->
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
             </div>
         `;
     }
@@ -11427,6 +11427,7 @@ const tileBaseStyle = i$3 `
     .container {
         display: grid;
         height: 5.2rem;
+        max-width: 19.5rem;
         border: var(--sq-card-border, none);
         border-radius: var(--sq-card-border-radius, 1.5rem);
         grid-template-areas: "i n";

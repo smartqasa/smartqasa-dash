@@ -85,7 +85,11 @@ export const panelStyle = css`
     .body-container {
         display: block;
     }
-    .body-tiles {
+    .swiper {
+        height: 100%;
+        width: 100%;
+    }
+    .swiper-slide {
         display: grid;
         gap: var(--sq-tile-spacing, 0.8rem);
     }
