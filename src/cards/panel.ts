@@ -3,13 +3,13 @@ import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HassArea, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 import Swiper from "swiper";
-import { Navigation, Pagination } from "swiper/modules";
-import "swiper/swiper-bundle.css";
+import { SwiperOptions } from "swiper/types";
 import { deviceType } from "../const";
 import { createElement } from "../utils/create-element";
 import { loadYamlAsJson } from "../utils/load-yaml-as-json";
 import { panelStyle } from "../styles/panel";
 import defaultImage from "../assets/images/default.png";
+import "swiper/swiper-bundle.css";
 
 interface Config extends LovelaceCardConfig {
     area: string;
@@ -25,7 +25,7 @@ export class PanelCard extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() private _config?: Config;
     @state() private _loading = true;
-    private _swiper?: any;
+    private _swiper?: Swiper;
     private _area?: string;
     private _areaObj?: HassArea;
     private _headerChips: LovelaceCard[] = [];
@@ -43,9 +43,8 @@ export class PanelCard extends LitElement {
     protected async firstUpdated(changedProps: PropertyValues) {
         super.firstUpdated(changedProps);
 
-        await this._initializeSwiper();
         await this._loadContent();
-
+        this._initializeSwiper();
         this._loading = false;
     }
 
@@ -96,6 +95,9 @@ export class PanelCard extends LitElement {
                     });
                 });
             }
+
+            // Re-initialize Swiper after the content is updated
+            this._initializeSwiper();
         }
     }
 
@@ -163,28 +165,29 @@ export class PanelCard extends LitElement {
     }
 
     private _initializeSwiper() {
-        // Initialize Swiper
-        const swiper = new Swiper(".swiper", {
-            // Optional parameters
-            direction: "horizontal",
-            loop: false,
+        const swiperContainer = this.shadowRoot?.querySelector(".swiper");
+        if (!swiperContainer) return;
 
-            // If we need pagination
+        const swiperParams: SwiperOptions = {
+            direction: "horizontal",
+            loop: true,
+            slidesPerView: 1,
+            spaceBetween: 10,
             pagination: {
                 el: ".swiper-pagination",
+                clickable: true,
             },
-
-            // Navigation arrows
             navigation: {
                 nextEl: ".swiper-button-next",
                 prevEl: ".swiper-button-prev",
             },
-
-            // And if we need scrollbar
             scrollbar: {
                 el: ".swiper-scrollbar",
+                draggable: true,
             },
-        });
+        };
+
+        this._swiper = new Swiper(swiperContainer as HTMLElement, swiperParams);
     }
 
     private _renderHeader() {
@@ -249,9 +252,6 @@ export class PanelCard extends LitElement {
             <div class="swiper">
                 <!-- Additional required wrapper -->
                 <div class="swiper-wrapper">
-                    <script>
-                        this._initializeSwiper();
-                    </script>
                     <!-- Slides -->
                     ${this._bodyTiles.map(
                         (page) => html`
@@ -262,11 +262,14 @@ export class PanelCard extends LitElement {
                             </div>
                         `
                     )}
-
-                    <div class="swiper-pagination"></div>
-                    <div class="swiper-button-prev"></div>
-                    <div class="swiper-button-next"></div>
                 </div>
+                <!-- If we need pagination -->
+                <div class="swiper-pagination"></div>
+                <!-- If we need navigation buttons -->
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
+                <!-- If we need scrollbar -->
+                <div class="swiper-scrollbar"></div>
             </div>
         `;
     }

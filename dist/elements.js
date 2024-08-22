@@ -8532,8 +8532,8 @@ let PanelCard = class PanelCard extends h {
     }
     async firstUpdated(changedProps) {
         super.firstUpdated(changedProps);
-        await this._initializeSwiper();
         await this._loadContent();
+        this._initializeSwiper();
         this._loading = false;
     }
     render() {
@@ -8578,6 +8578,8 @@ let PanelCard = class PanelCard extends h {
                     });
                 });
             }
+            // Re-initialize Swiper after the content is updated
+            this._initializeSwiper();
         }
     }
     async _loadContent() {
@@ -8635,25 +8637,28 @@ let PanelCard = class PanelCard extends h {
         return pages;
     }
     _initializeSwiper() {
-        // Initialize Swiper
-        new Swiper(".swiper", {
-            // Optional parameters
+        const swiperContainer = this.shadowRoot?.querySelector(".swiper");
+        if (!swiperContainer)
+            return;
+        const swiperParams = {
             direction: "horizontal",
-            loop: false,
-            // If we need pagination
+            loop: true,
+            slidesPerView: 1,
+            spaceBetween: 10,
             pagination: {
                 el: ".swiper-pagination",
+                clickable: true,
             },
-            // Navigation arrows
             navigation: {
                 nextEl: ".swiper-button-next",
                 prevEl: ".swiper-button-prev",
             },
-            // And if we need scrollbar
             scrollbar: {
                 el: ".swiper-scrollbar",
+                draggable: true,
             },
-        });
+        };
+        this._swiper = new Swiper(swiperContainer, swiperParams);
     }
     _renderHeader() {
         let time = this.hass?.states["sensor.current_time"]?.state || "Loading...";
@@ -8711,9 +8716,6 @@ let PanelCard = class PanelCard extends h {
             <div class="swiper">
                 <!-- Additional required wrapper -->
                 <div class="swiper-wrapper">
-                    <script>
-                        this._initializeSwiper();
-                    </script>
                     <!-- Slides -->
                     ${this._bodyTiles.map((page) => ke `
                             <div class="swiper-slide">
@@ -8722,11 +8724,14 @@ let PanelCard = class PanelCard extends h {
                                 </div>
                             </div>
                         `)}
-
-                    <div class="swiper-pagination"></div>
-                    <div class="swiper-button-prev"></div>
-                    <div class="swiper-button-next"></div>
                 </div>
+                <!-- If we need pagination -->
+                <div class="swiper-pagination"></div>
+                <!-- If we need navigation buttons -->
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
+                <!-- If we need scrollbar -->
+                <div class="swiper-scrollbar"></div>
             </div>
         `;
     }
