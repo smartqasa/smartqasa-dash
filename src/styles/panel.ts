@@ -49,6 +49,7 @@ export const panelStyle = css`
     }
     .area-container {
         display: flex;
+        margin-bottom: 2.5rem;
         align-items: flex-start;
         justify-content: space-between;
     }
@@ -80,6 +81,16 @@ export const panelStyle = css`
         border: none;
         box-shadow: none;
         background-color: transparent;
+    }
+    .swiper-container {
+        width: 100%;
+        height: 100%;
+    }
+    .swiper-slide {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
     }
     .tiles-container {
         display: grid;

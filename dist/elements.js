@@ -4146,6 +4146,7 @@ const panelStyle = i$3 `
     }
     .area-container {
         display: flex;
+        margin-bottom: 2.5rem;
         align-items: flex-start;
         justify-content: space-between;
     }
@@ -4177,6 +4178,16 @@ const panelStyle = i$3 `
         border: none;
         box-shadow: none;
         background-color: transparent;
+    }
+    .swiper-container {
+        width: 100%;
+        height: 100%;
+    }
+    .swiper-slide {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
     }
     .tiles-container {
         display: grid;
