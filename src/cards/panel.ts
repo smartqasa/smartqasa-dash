@@ -244,21 +244,23 @@ export class PanelCard extends LitElement {
         };
 
         return html`
-            <div class="swiper">
-                <div class="swiper-wrapper">
-                    ${this._bodyTiles.map(
-                        (page) => html`
-                            <div class="swiper-slide">
-                                <div class="body-tiles" style="${styleMap(bodyStyles)}">
-                                    ${page.map((tile) => html`<div class="tile">${tile}</div>`)}
+            <div class="body-container">
+                <div class="swiper">
+                    <div class="swiper-wrapper">
+                        ${this._bodyTiles.map(
+                            (page) => html`
+                                <div class="swiper-slide">
+                                    <div class="body-tiles" style="${styleMap(bodyStyles)}">
+                                        ${page.map((tile) => html`<div class="tile">${tile}</div>`)}
+                                    </div>
                                 </div>
-                            </div>
-                        `
-                    )}
+                            `
+                        )}
+                    </div>
+                    <!-- Navigation buttons -->
+                    <div class="swiper-button-prev"></div>
+                    <div class="swiper-button-next"></div>
                 </div>
-                <!-- Navigation buttons -->
-                <div class="swiper-button-prev"></div>
-                <div class="swiper-button-next"></div>
             </div>
         `;
     }

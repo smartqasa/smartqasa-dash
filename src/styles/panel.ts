@@ -82,16 +82,13 @@ export const panelStyle = css`
         box-shadow: none;
         background-color: transparent;
     }
-
     .body-container {
         display: flex;
     }
-
     .swiper {
         width: 100%;
         height: 100%;
     }
-
     .body-tiles {
         display: grid;
         gap: var(--sq-tile-spacing, 0.8rem);

@@ -8495,16 +8495,13 @@ const panelStyle = i$3 `
         box-shadow: none;
         background-color: transparent;
     }
-
     .body-container {
         display: flex;
     }
-
     .swiper {
         width: 100%;
         height: 100%;
     }
-
     .body-tiles {
         display: grid;
         gap: var(--sq-tile-spacing, 0.8rem);
@@ -8705,19 +8702,21 @@ let PanelCard = class PanelCard extends h {
             gridTemplateColumns: `repeat(${columns}, 1fr)`,
         };
         return ke `
-            <div class="swiper">
-                <div class="swiper-wrapper">
-                    ${this._bodyTiles.map((page) => ke `
-                            <div class="swiper-slide">
-                                <div class="body-tiles" style="${se(bodyStyles)}">
-                                    ${page.map((tile) => ke `<div class="tile">${tile}</div>`)}
+            <div class="body-container">
+                <div class="swiper">
+                    <div class="swiper-wrapper">
+                        ${this._bodyTiles.map((page) => ke `
+                                <div class="swiper-slide">
+                                    <div class="body-tiles" style="${se(bodyStyles)}">
+                                        ${page.map((tile) => ke `<div class="tile">${tile}</div>`)}
+                                    </div>
                                 </div>
-                            </div>
-                        `)}
+                            `)}
+                    </div>
+                    <!-- Navigation buttons -->
+                    <div class="swiper-button-prev"></div>
+                    <div class="swiper-button-next"></div>
                 </div>
-                <!-- Navigation buttons -->
-                <div class="swiper-button-prev"></div>
-                <div class="swiper-button-next"></div>
             </div>
         `;
     }
