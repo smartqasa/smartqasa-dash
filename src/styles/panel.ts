@@ -85,8 +85,18 @@ export const panelStyle = css`
     }
     .swiper {
         height: 100%;
+        width: 100%;
+        max-width: 100%;
         align-items: center;
         justify-content: center;
+    }
+    .swiper-wrapper {
+        width: 100%;
+        max-width: 100%;
+    }
+    .swiper-slide {
+        width: 100%;
+        max-width: 100%;
     }
     .body-tiles {
         display: grid;
