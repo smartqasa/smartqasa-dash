@@ -44,6 +44,7 @@ export class PanelCard extends LitElement {
     protected async firstUpdated(changedProps: PropertyValues) {
         super.firstUpdated(changedProps);
 
+        await this._initializeSwiper();
         await this._loadContent();
 
         this._loading = false;
@@ -160,6 +161,36 @@ export class PanelCard extends LitElement {
         }
 
         return pages;
+    }
+
+    private async _initializeSwiper() {
+        const swiperContainer = this.shadowRoot?.querySelector(".swiper");
+        if (!swiperContainer) return;
+
+        // Initialize Swiper
+        const swiper = new Swiper(swiperContainer as HTMLElement, {
+            // Optional parameters
+            direction: "horizontal",
+            loop: false,
+
+            /* Pagination
+            pagination: {
+                el: ".swiper-pagination",
+            },
+            */
+
+            // Navigation arrows
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+            },
+
+            /* Scrollbar
+            scrollbar: {
+                el: ".swiper-scrollbar",
+            },
+            */
+        });
     }
 
     private _renderHeader() {
