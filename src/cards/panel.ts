@@ -44,12 +44,14 @@ export class PanelCard extends LitElement {
         super.firstUpdated(changedProps);
 
         await this._loadContent();
-        this._initializeSwiper();
+
         this._loading = false;
     }
 
     protected render(): TemplateResult {
         if (this._loading) return html`<div>Loading...</div>`;
+
+        if (!this._swiper) this._initializeSwiper();
 
         const isPhone = deviceType === "phone";
         const containerStyles = {
@@ -163,6 +165,7 @@ export class PanelCard extends LitElement {
 
     private _initializeSwiper() {
         const swiperContainer = this.shadowRoot?.querySelector(".swiper");
+        console.log("Swiper container found:", swiperContainer); // Log to see the element
         if (!swiperContainer) {
             console.error("Swiper container not found!");
             return;
@@ -178,7 +181,7 @@ export class PanelCard extends LitElement {
             initialSlide: 0,
         };
 
-        this._swiper = new Swiper(".swiper", swiperParams);
+        this._swiper = new Swiper(swiperContainer as HTMLElement, swiperParams);
 
         console.log("Swiper initialized:", this._swiper);
     }
