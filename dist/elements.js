@@ -11434,7 +11434,7 @@ TitleCard = __decorate([
 const tileBaseStyle = i$3 `
     .container {
         display: grid;
-        height: 5.2rem;
+        height: 7rem;
         width: min(21vw, 19.5rem);
         box-sizing: border-box;
         border: var(--sq-card-border, none);
