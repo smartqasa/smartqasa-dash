@@ -105,8 +105,9 @@ export const panelStyles = css`
     }
     .body-tiles {
         display: grid;
-        gap: var(--sq-tile-spacing, 0.8rem);
+        width: min-content;
         margin: auto;
+        gap: var(--sq-tile-spacing, 0.8rem);
         overflow: hidden;
     }
     .footer-container {
