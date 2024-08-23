@@ -4,10 +4,13 @@ import { styleMap } from "lit/directives/style-map.js";
 import { HassArea, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 import Swiper from "swiper";
 import { SwiperOptions } from "swiper/types";
-import { Navigation, Pagination } from "swiper/modules";
+import { Navigation } from "swiper/modules";
 import { deviceType } from "../const";
 import { createElement } from "../utils/create-element";
 import { loadYamlAsJson } from "../utils/load-yaml-as-json";
+import { areasDialog } from "../misc/areas-dialog";
+import { entertainDialog } from "../misc/entertain-dialog";
+import { menuConfig } from "../misc/menu-config";
 import { panelStyles } from "../styles/panel";
 import swiperStyles from "swiper/swiper-bundle.css";
 import defaultImage from "../assets/images/default.png";
@@ -16,9 +19,19 @@ interface Config extends LovelaceCardConfig {
     area: string;
     name?: string;
     picture?: string;
+    audio_player: string;
+    video_player: string;
+    video_sound: string;
     chips?: LovelaceCardConfig[];
     columns?: number | undefined;
     tiles?: LovelaceCardConfig[];
+}
+
+interface ActionHandlers {
+    _handleHome: () => void;
+    _handleAreas: () => void;
+    _handleEntertain: () => void;
+    _handleMenu: () => void;
 }
 
 @customElement("smartqasa-panel-card")
@@ -176,7 +189,23 @@ export class PanelCard extends LitElement {
     }
 
     private _renderFooter() {
-        return html` <div class="footer-container">Footer content with dynamic data.</div>`;
+        return html`
+            <div class="grid">
+                ${this._renderFooterButton("hass:home", "Home", "_handleHome")}
+                ${this._renderFooterButton("hass:view-dashboard", "Areas", "_handleAreas")}
+                ${this._renderFooterButton("hass:music", "Entertainment", "_handleEntertain")}
+                ${this._renderFooterButton("hass:menu", "Menu", "_handleMenu")}
+            </div>
+        `;
+    }
+
+    private _renderFooterButton(icon: string, name: string, methodName: keyof ActionHandlers): TemplateResult {
+        return html`
+            <div class="footer-button" @click="${(e: Event) => this._handleFooterAction(e, methodName)}">
+                <ha-icon .icon=${icon}></ha-icon>
+                ${deviceType !== "phone" ? html`<span>${name}</span>` : ""}
+            </div>
+        `;
     }
 
     private _initializeSwiper() {
@@ -184,6 +213,7 @@ export class PanelCard extends LitElement {
         if (!swiperContainer) return;
 
         const swiperParams: SwiperOptions = {
+            modules: [Navigation],
             navigation: {
                 nextEl: ".swiper-button-next",
                 prevEl: ".swiper-button-prev",
@@ -265,6 +295,40 @@ export class PanelCard extends LitElement {
             window.fully.startApplication("com.google.android.deskclock");
         } else {
             console.warn("fully.startApplication is not available.");
+        }
+    }
+
+    private _handleFooterAction(e: Event, methodName: keyof ActionHandlers): void {
+        e.stopPropagation();
+        if (typeof this[methodName] === "function") {
+            this[methodName]();
+        } else {
+            console.error(`Method not found: ${methodName}`);
+        }
+    }
+
+    private _handleHome(): void {
+        const basePath = window.smartqasa.homePath;
+        window.smartqasa.viewMode = "area";
+        const path = location.href.endsWith("/" + basePath) ? "home" : basePath;
+        window.history.pushState(null, "", `/home-dash/${path}`);
+        window.dispatchEvent(new CustomEvent("location-changed"));
+    }
+
+    private _handleAreas(): void {
+        areasDialog(this.hass);
+    }
+
+    private _handleEntertain(): void {
+        entertainDialog(this._config, this.hass);
+    }
+
+    private async _handleMenu(): Promise<void> {
+        try {
+            const dialogConfig = await menuConfig(0);
+            window.browser_mod?.service("popup", dialogConfig);
+        } catch (error) {
+            console.error("Error loading menu configuration", error);
         }
     }
 }

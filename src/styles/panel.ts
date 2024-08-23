@@ -118,7 +118,22 @@ export const panelStyles = css`
         display: flex;
         justify-content: center;
         align-items: center;
-        text-align: center;
-        margin-top: 2.5rem;
+        margin: 2.5rem 0 1rem 0;
+    }
+
+    .footer-button {
+        display: flex;
+        padding: 1rem;
+        align-items: center;
+        justify-content: center;
+        column-gap: 0.5rem;
+        font-size: var(--sq-primary-font-size, 1.5rem);
+        font-weight: var(--sq-primary-font-weight, 400);
+        color: rgb(var(--sq-secondary-font-rgb));
+        cursor: pointer;
+    }
+    .footer-icon {
+        height: 1.8rem;
+        width: 1.8rem;
     }
 `;
