@@ -8740,7 +8740,7 @@ let PanelCard = class PanelCard extends h {
             return D;
         const columns = this._config.columns && this._config.columns >= 2 && this._config.columns <= 4 ? this._config.columns : 3;
         const bodyStyles = {
-            gridTemplateColumns: `repeat(${columns}, auto)`,
+            gridTemplateColumns: `repeat(${columns}, min-content)`,
         };
         return ke `
             <div class="swiper">
