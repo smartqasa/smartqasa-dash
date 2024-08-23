@@ -2,10 +2,8 @@ import { css } from "lit";
 
 export const panelStyles = css`
     :host {
-        display: flex;
         height: 100%;
         width: 100%;
-        max-width: 100vw;
         background: var(--sq-panel-background);
     }
     .container {
@@ -83,14 +81,12 @@ export const panelStyles = css`
         box-shadow: none;
         background-color: transparent;
     }
+    .body-container {
+        max-width: 100vw;
+    }
     .swiper {
-        height: 100%;
-        width: 100%;
-        max-width: 100%;
     }
     .swiper-slide {
-        display: flex;
-        flex-shrink: 1;
         align-items: center;
         justify-content: center;
     }
