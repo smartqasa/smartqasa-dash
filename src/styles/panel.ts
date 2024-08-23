@@ -15,12 +15,14 @@ export const panelStyles = css`
         box-sizing: border-box;
         justify-content: space-between;
     }
+    .top-wrapper {
+        display: flex;
+    }
 
     .header-container {
         display: flex;
         margin-bottom: 2.5rem;
         justify-content: space-between;
-        flex-shrink: 0;
     }
 
     .header-time-date {
@@ -63,7 +65,6 @@ export const panelStyles = css`
         display: grid;
         grid-template-columns: 1fr 1fr;
         margin-bottom: 2.5rem;
-        flex-shrink: 0;
     }
 
     .area-info {
@@ -117,7 +118,6 @@ export const panelStyles = css`
         justify-content: center;
         align-items: center;
         text-align: center;
-        margin-top: 1rem;
-        flex-shrink: 0;
+        margin-top: 2.5rem;
     }
 `;

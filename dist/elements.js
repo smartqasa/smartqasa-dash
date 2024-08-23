@@ -8428,12 +8428,14 @@ const panelStyles = i$3 `
         box-sizing: border-box;
         justify-content: space-between;
     }
+    .top-wrapper {
+        display: flex;
+    }
 
     .header-container {
         display: flex;
         margin-bottom: 2.5rem;
         justify-content: space-between;
-        flex-shrink: 0;
     }
 
     .header-time-date {
@@ -8476,7 +8478,6 @@ const panelStyles = i$3 `
         display: grid;
         grid-template-columns: 1fr 1fr;
         margin-bottom: 2.5rem;
-        flex-shrink: 0;
     }
 
     .area-info {
@@ -8530,8 +8531,7 @@ const panelStyles = i$3 `
         justify-content: center;
         align-items: center;
         text-align: center;
-        margin-top: 1rem;
-        flex-shrink: 0;
+        margin-top: 2.5rem;
     }
 `;
 
@@ -8595,8 +8595,10 @@ let PanelCard = class PanelCard extends h {
         };
         return ke `
             <div class="container" style="${se(containerStyles)}">
-                <div>${this._renderHeader()}</div>
-                <div>${this._renderArea()}</div>
+                <div class="top-wrapper">
+                    <div>${this._renderHeader()}</div>
+                    <div>${this._renderArea()}</div>
+                </div>
                 <div>${this._renderBody()}</div>
                 <div>${this._renderFooter()}</div>
             </div>
