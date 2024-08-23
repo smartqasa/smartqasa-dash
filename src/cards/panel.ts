@@ -195,7 +195,7 @@ export class PanelCard extends LitElement {
 
         return html`
             <div class="header-container">
-                <div class="header-time" @click="${this._launchClock}">
+                <div class="header-time-date" @click="${this._launchClock}">
                     <div class="time">${time}</div>
                     <div class="date">${date}</div>
                 </div>
