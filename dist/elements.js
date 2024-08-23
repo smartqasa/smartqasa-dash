@@ -8494,10 +8494,9 @@ const panelStyles = i$3 `
         box-shadow: none;
         background-color: transparent;
     }
-    .body-container {
-        max-width: 100vw;
-    }
     .swiper {
+        width: 100% !important;
+        max-width: 100vw !important;
     }
     .swiper-slide {
         align-items: center;
