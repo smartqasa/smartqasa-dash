@@ -40,14 +40,6 @@ export class PanelCard extends LitElement {
         this._loading = true;
     }
 
-    protected async firstUpdated(changedProps: PropertyValues) {
-        super.firstUpdated(changedProps);
-
-        await this._loadContent();
-
-        this._loading = false;
-    }
-
     protected render(): TemplateResult {
         if (this._loading) return html`<div>Loading...</div>`;
 
@@ -66,6 +58,51 @@ export class PanelCard extends LitElement {
                 <div>${this._renderFooter()}</div>
             </div>
         `;
+    }
+
+    protected async firstUpdated(changedProps: PropertyValues) {
+        super.firstUpdated(changedProps);
+
+        await this._loadContent();
+
+        this._loading = false;
+    }
+
+    protected updated(changedProps: PropertyValues) {
+        super.updated(changedProps);
+
+        if (!this._swiper) {
+            this._initializeSwiper();
+        } else {
+            this._swiper.update();
+        }
+
+        if (changedProps.has("_config") && this._config) {
+            this._area = this._config.area;
+            this._loadContent();
+        } else if (changedProps.has("hass") && this.hass) {
+            this._areaObj = this._area ? this.hass.areas[this._area] : undefined;
+
+            if (this._headerChips.length) {
+                this._headerChips.forEach((chip) => {
+                    chip.hass = this.hass;
+                });
+            }
+
+            if (this._areaChips.length) {
+                this._areaChips.forEach((chip) => {
+                    chip.hass = this.hass;
+                });
+            }
+
+            if (this._bodyTiles.length) {
+                this._bodyTiles.forEach((page) => {
+                    page.forEach((tile) => {
+                        tile.hass = this.hass;
+                    });
+                });
+            }
+        }
     }
 
     private _renderHeader() {
@@ -141,41 +178,26 @@ export class PanelCard extends LitElement {
         return html` <div class="footer-container">Footer content with dynamic data.</div>`;
     }
 
-    protected updated(changedProps: PropertyValues) {
-        super.updated(changedProps);
-
-        if (!this._swiper) {
-            this._initializeSwiper();
-        } else {
-            this._swiper.update();
+    private _initializeSwiper() {
+        const swiperContainer = this.shadowRoot?.querySelector(".swiper");
+        if (!swiperContainer) {
+            console.error("Swiper container not found!");
+            return;
         }
 
-        if (changedProps.has("_config") && this._config) {
-            this._area = this._config.area;
-            this._loadContent();
-        } else if (changedProps.has("hass") && this.hass) {
-            this._areaObj = this._area ? this.hass.areas[this._area] : undefined;
+        console.log("Initializing Swiper...");
 
-            if (this._headerChips.length) {
-                this._headerChips.forEach((chip) => {
-                    chip.hass = this.hass;
-                });
-            }
+        const swiperParams: SwiperOptions = {
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+            },
+            initialSlide: 0,
+        };
 
-            if (this._areaChips.length) {
-                this._areaChips.forEach((chip) => {
-                    chip.hass = this.hass;
-                });
-            }
+        this._swiper = new Swiper(swiperContainer as HTMLElement, swiperParams);
 
-            if (this._bodyTiles.length) {
-                this._bodyTiles.forEach((page) => {
-                    page.forEach((tile) => {
-                        tile.hass = this.hass;
-                    });
-                });
-            }
-        }
+        console.log("Swiper initialized:", this._swiper);
     }
 
     private async _loadContent() {
@@ -239,29 +261,6 @@ export class PanelCard extends LitElement {
         }
 
         return pages;
-    }
-
-    private _initializeSwiper() {
-        const swiperContainer = this.shadowRoot?.querySelector(".swiper");
-        console.log("Swiper container found:", swiperContainer); // Log to see the element
-        if (!swiperContainer) {
-            console.error("Swiper container not found!");
-            return;
-        }
-
-        console.log("Initializing Swiper...");
-
-        const swiperParams: SwiperOptions = {
-            navigation: {
-                nextEl: ".swiper-button-next",
-                prevEl: ".swiper-button-prev",
-            },
-            initialSlide: 0,
-        };
-
-        this._swiper = new Swiper(swiperContainer as HTMLElement, swiperParams);
-
-        console.log("Swiper initialized:", this._swiper);
     }
 
     private _launchClock(e: Event) {
