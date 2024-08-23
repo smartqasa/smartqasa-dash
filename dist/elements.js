@@ -11435,9 +11435,7 @@ TitleCard = __decorate([
 const tileBaseStyle = i$3 `
     .container {
         display: grid;
-        height: 100%;
-        width: 100%;
-        box-sizing: border-box;
+        width: min(21vw, 19.5rem);
         border: var(--sq-card-border, none);
         border-radius: var(--sq-card-border-radius, 1.5rem);
         grid-template-areas: "i n";
