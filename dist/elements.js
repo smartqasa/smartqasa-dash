@@ -9292,8 +9292,10 @@ let PanelCard = class PanelCard extends h {
             },
             initialSlide: 0,
         };
-        Swiper.use([Navigation]);
         this._swiper = new Swiper(swiperContainer, swiperParams);
+        if (this._swiper) {
+            Swiper.use([Navigation]);
+        }
     }
     async _loadContent() {
         this._areaObj = this._area ? this.hass?.areas[this._area] : undefined;

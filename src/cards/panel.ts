@@ -221,9 +221,11 @@ export class PanelCard extends LitElement {
             initialSlide: 0,
         };
 
-        Swiper.use([Navigation]);
-
         this._swiper = new Swiper(swiperContainer as HTMLElement, swiperParams);
+
+        if (this._swiper) {
+            Swiper.use([Navigation]);
+        }
     }
 
     private async _loadContent() {
