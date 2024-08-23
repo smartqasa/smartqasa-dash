@@ -8427,7 +8427,7 @@ const panelStyles = i$3 `
     }
     .header-container {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         flex-shrink: 0;
         margin-bottom: 2.5rem;
         justify-content: space-between;

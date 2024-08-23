@@ -14,7 +14,7 @@ export const panelStyles = css`
     }
     .header-container {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         flex-shrink: 0;
         margin-bottom: 2.5rem;
         justify-content: space-between;
