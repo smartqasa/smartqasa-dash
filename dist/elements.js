@@ -8415,7 +8415,7 @@ async function loadYamlAsJson(yamlFilePath) {
 
 const panelStyles = i$3 `
     :host {
-        display: block;
+        display: flex;
         height: 100%;
         width: 100%;
         background: var(--sq-panel-background);
@@ -8499,7 +8499,7 @@ const panelStyles = i$3 `
         background-color: transparent;
     }
     .swiper {
-        display: flex;
+        display: flex !important;
         flex-grow: 1;
     }
     .swiper-slide {
@@ -8514,6 +8514,7 @@ const panelStyles = i$3 `
         overflow: hidden;
     }
     .footer-container {
+        display: flex;
         flex-shrink: 0;
         margin-top: 1rem;
         text-align: center;

@@ -2,7 +2,7 @@ import { css } from "lit";
 
 export const panelStyles = css`
     :host {
-        display: block;
+        display: flex;
         height: 100%;
         width: 100%;
         background: var(--sq-panel-background);
@@ -86,7 +86,7 @@ export const panelStyles = css`
         background-color: transparent;
     }
     .swiper {
-        display: flex;
+        display: flex !important;
         flex-grow: 1;
     }
     .swiper-slide {
@@ -101,6 +101,7 @@ export const panelStyles = css`
         overflow: hidden;
     }
     .footer-container {
+        display: flex;
         flex-shrink: 0;
         margin-top: 1rem;
         text-align: center;
