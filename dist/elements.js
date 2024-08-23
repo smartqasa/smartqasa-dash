@@ -8518,8 +8518,9 @@ const panelStyles = i$3 `
     }
     .body-tiles {
         display: grid;
-        gap: var(--sq-tile-spacing, 0.8rem);
+        width: min-content;
         margin: auto;
+        gap: var(--sq-tile-spacing, 0.8rem);
         overflow: hidden;
     }
     .footer-container {
@@ -14171,7 +14172,7 @@ PopupConfirmation = __decorate([
     t$1("popup-confirmation")
 ], PopupConfirmation);
 
-var version = "2024.8.22b-12";
+var version = "2024.8.22b-13";
 
 window.smartqasa = window.smartqasa || {};
 window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();
