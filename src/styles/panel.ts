@@ -84,10 +84,9 @@ export const panelStyles = css`
     .body-container {
         display: flex;
         width: 100%;
-        max-width: 100vw !important;
+        max-width: 100vw;
     }
     .swiper {
-        width: 100% !important;
     }
     .swiper-slide {
         align-items: center;
@@ -95,6 +94,7 @@ export const panelStyles = css`
     }
     .body-tiles {
         display: grid;
+        width: min-content;
         grid-auto-rows: min-content;
         gap: var(--sq-tile-spacing, 0.8rem);
         overflow: hidden;

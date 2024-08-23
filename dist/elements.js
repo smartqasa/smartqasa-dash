@@ -8497,10 +8497,9 @@ const panelStyles = i$3 `
     .body-container {
         display: flex;
         width: 100%;
-        max-width: 100vw !important;
+        max-width: 100vw;
     }
     .swiper {
-        width: 100% !important;
     }
     .swiper-slide {
         align-items: center;
@@ -8508,6 +8507,7 @@ const panelStyles = i$3 `
     }
     .body-tiles {
         display: grid;
+        width: min-content;
         grid-auto-rows: min-content;
         gap: var(--sq-tile-spacing, 0.8rem);
         overflow: hidden;
@@ -8739,18 +8739,20 @@ let PanelCard = class PanelCard extends h {
             gridTemplateColumns: `repeat(${columns}, min-content)`,
         };
         return ke `
-            <div class="swiper">
-                <div class="swiper-wrapper">
-                    ${this._bodyTiles.map((page) => ke `
-                            <div class="swiper-slide">
-                                <div class="body-tiles" style="${se(bodyStyles)}">
-                                    ${page.map((tile) => ke `<div class="tile">${tile}</div>`)}
+            <div class="body-container">
+                <div class="swiper">
+                    <div class="swiper-wrapper">
+                        ${this._bodyTiles.map((page) => ke `
+                                <div class="swiper-slide">
+                                    <div class="body-tiles" style="${se(bodyStyles)}">
+                                        ${page.map((tile) => ke `<div class="tile">${tile}</div>`)}
+                                    </div>
                                 </div>
-                            </div>
-                        `)}
+                            `)}
+                    </div>
+                    <div class="swiper-button-prev"></div>
+                    <div class="swiper-button-next"></div>
                 </div>
-                <div class="swiper-button-prev"></div>
-                <div class="swiper-button-next"></div>
             </div>
         `;
     }
