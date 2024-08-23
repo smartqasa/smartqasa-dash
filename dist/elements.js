@@ -8514,6 +8514,7 @@ const panelStyle = i$3 `
     .body-tiles {
         display: grid;
         height: 100%;
+        grid-auto-rows: min-content;
         gap: var(--sq-tile-spacing, 0.8rem);
     }
 `;
