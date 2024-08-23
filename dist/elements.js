@@ -8417,6 +8417,7 @@ const panelStyles = i$3 `
     :host {
         height: 100%;
         width: 100%;
+        box-sizing: border-box;
         background: var(--sq-panel-background);
     }
 
