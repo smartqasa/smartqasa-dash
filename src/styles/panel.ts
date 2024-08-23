@@ -1,18 +1,21 @@
 import { css } from "lit";
 
 export const panelStyles = css`
-    .container {
-        display: flex;
-        flex-direction: column;
+    :host {
         height: 100%;
         width: 100%;
         background: var(--sq-panel-background);
     }
 
+    .container {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        width: 100%;
+    }
+
     .header-container {
         display: flex;
-        flex-direction: row;
-        flex-shrink: 0;
         margin-bottom: 2.5rem;
         justify-content: space-between;
     }
@@ -45,7 +48,6 @@ export const panelStyles = css`
 
     .header-chips {
         display: flex;
-        flex-direction: row;
         margin-right: calc(var(--sq-chip-spacing, 0.4rem) * -1);
         justify-content: flex-end;
     }
@@ -58,7 +60,6 @@ export const panelStyles = css`
         display: grid;
         grid-template-columns: 1fr 1fr;
         margin-bottom: 2.5rem;
-        flex-shrink: 0;
     }
 
     .area-info {
@@ -96,7 +97,7 @@ export const panelStyles = css`
 
     .body-container {
         display: flex;
-        flex-grow: 1; /* Allow the body to grow and fill the available space */
+        flex-grow: 1;
     }
 
     .body-tiles {
@@ -109,7 +110,6 @@ export const panelStyles = css`
 
     .footer-container {
         display: flex;
-        flex-shrink: 0;
         justify-content: center;
         align-items: center;
         text-align: center;

@@ -8414,18 +8414,21 @@ async function loadYamlAsJson(yamlFilePath) {
 }
 
 const panelStyles = i$3 `
-    .container {
-        display: flex;
-        flex-direction: column;
+    :host {
         height: 100%;
         width: 100%;
         background: var(--sq-panel-background);
     }
 
+    .container {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        width: 100%;
+    }
+
     .header-container {
         display: flex;
-        flex-direction: row;
-        flex-shrink: 0;
         margin-bottom: 2.5rem;
         justify-content: space-between;
     }
@@ -8458,7 +8461,6 @@ const panelStyles = i$3 `
 
     .header-chips {
         display: flex;
-        flex-direction: row;
         margin-right: calc(var(--sq-chip-spacing, 0.4rem) * -1);
         justify-content: flex-end;
     }
@@ -8471,7 +8473,6 @@ const panelStyles = i$3 `
         display: grid;
         grid-template-columns: 1fr 1fr;
         margin-bottom: 2.5rem;
-        flex-shrink: 0;
     }
 
     .area-info {
@@ -8509,7 +8510,7 @@ const panelStyles = i$3 `
 
     .body-container {
         display: flex;
-        flex-grow: 1; /* Allow the body to grow and fill the available space */
+        flex-grow: 1;
     }
 
     .body-tiles {
@@ -8522,7 +8523,6 @@ const panelStyles = i$3 `
 
     .footer-container {
         display: flex;
-        flex-shrink: 0;
         justify-content: center;
         align-items: center;
         text-align: center;
