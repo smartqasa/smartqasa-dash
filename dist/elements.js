@@ -8415,13 +8415,13 @@ async function loadYamlAsJson(yamlFilePath) {
 
 const panelStyles = i$3 `
     :host {
-        display: block;
         height: 100%;
         width: 100%;
         background: var(--sq-panel-background);
     }
     .container {
         display: flex;
+        flex-direction: column;
         height: 100%;
         width: 100%;
     }
