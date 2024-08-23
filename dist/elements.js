@@ -8420,9 +8420,8 @@ const panelStyles = i$3 `
         background: var(--sq-panel-background);
     }
     .container {
-        display: grid;
+        display: block;
         height: 100%;
-        grid-template-rows: auto auto 1fr auto;
     }
     .header-container {
         display: flex;
@@ -8496,6 +8495,7 @@ const panelStyles = i$3 `
     }
     .body-container {
         display: flex;
+        height: 1fr;
         width: 100%;
         max-width: 100vw;
     }
@@ -8571,14 +8571,13 @@ let PanelCard = class PanelCard extends h {
         const isPhone = deviceType === "phone";
         const containerStyles = {
             padding: isPhone ? "0.5rem" : "1rem",
-            gridTemplateAreas: isPhone ? '"area" "body" "footer"' : '"header" "area" "body" "footer"',
         };
         return ke `
             <div class="container" style="${se(containerStyles)}">
-                <div style="grid-area: header;">${this._renderHeader()}</div>
-                <div style="grid-area: area;">${this._renderArea()}</div>
-                <div style="grid-area: body">${this._renderBody()}</div>
-                <div style="grid-area: footer;">${this._renderFooter()}</div>
+                <div>${this._renderHeader()}</div>
+                <div>${this._renderArea()}</div>
+                <div>${this._renderBody()}</div>
+                <div>${this._renderFooter()}</div>
             </div>
         `;
     }

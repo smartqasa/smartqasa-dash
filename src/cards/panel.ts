@@ -54,15 +54,14 @@ export class PanelCard extends LitElement {
         const isPhone = deviceType === "phone";
         const containerStyles = {
             padding: isPhone ? "0.5rem" : "1rem",
-            gridTemplateAreas: isPhone ? '"area" "body" "footer"' : '"header" "area" "body" "footer"',
         };
 
         return html`
             <div class="container" style="${styleMap(containerStyles)}">
-                <div style="grid-area: header;">${this._renderHeader()}</div>
-                <div style="grid-area: area;">${this._renderArea()}</div>
-                <div style="grid-area: body">${this._renderBody()}</div>
-                <div style="grid-area: footer;">${this._renderFooter()}</div>
+                <div>${this._renderHeader()}</div>
+                <div>${this._renderArea()}</div>
+                <div>${this._renderBody()}</div>
+                <div>${this._renderFooter()}</div>
             </div>
         `;
     }

@@ -7,9 +7,8 @@ export const panelStyles = css`
         background: var(--sq-panel-background);
     }
     .container {
-        display: grid;
+        display: block;
         height: 100%;
-        grid-template-rows: auto auto 1fr auto;
     }
     .header-container {
         display: flex;
@@ -83,6 +82,7 @@ export const panelStyles = css`
     }
     .body-container {
         display: flex;
+        height: 1fr;
         width: 100%;
         max-width: 100vw;
     }
