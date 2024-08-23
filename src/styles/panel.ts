@@ -1,18 +1,12 @@
 import { css } from "lit";
 
 export const panelStyles = css`
-    :host {
-        display: flex;
-        height: 100%;
-        width: 100%;
-        background: var(--sq-panel-background);
-    }
-
     .container {
         display: flex;
         flex-direction: column;
         height: 100%;
         width: 100%;
+        background: var(--sq-panel-background);
     }
 
     .header-container {
@@ -64,7 +58,7 @@ export const panelStyles = css`
         display: grid;
         grid-template-columns: 1fr 1fr;
         margin-bottom: 2.5rem;
-        flex-shrink: 0; /* Ensure the area doesn't shrink */
+        flex-shrink: 0;
     }
 
     .area-info {
@@ -99,10 +93,12 @@ export const panelStyles = css`
         box-shadow: none;
         background-color: transparent;
     }
+
     .body-container {
         display: flex;
         flex-grow: 1; /* Allow the body to grow and fill the available space */
     }
+
     .body-tiles {
         display: grid;
         width: min-content;
@@ -110,6 +106,7 @@ export const panelStyles = css`
         gap: var(--sq-tile-spacing, 0.8rem);
         overflow: hidden;
     }
+
     .footer-container {
         display: flex;
         flex-shrink: 0;
