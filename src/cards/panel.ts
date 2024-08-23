@@ -268,6 +268,6 @@ export class PanelCard extends LitElement {
     }
 
     private _renderFooter() {
-        return html`<p>Footer content with dynamic data.</p>`;
+        return html` <div class="footer-container">Footer content with dynamic data.</div>`;
     }
 }

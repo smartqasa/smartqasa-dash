@@ -8772,7 +8772,7 @@ let PanelCard = class PanelCard extends h {
         `;
     }
     _renderFooter() {
-        return ke `<p>Footer content with dynamic data.</p>`;
+        return ke ` <div class="footer-container">Footer content with dynamic data.</div>`;
     }
 };
 __decorate([
