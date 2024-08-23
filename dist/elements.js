@@ -8494,9 +8494,13 @@ const panelStyles = i$3 `
         box-shadow: none;
         background-color: transparent;
     }
+    .body-container {
+        display: flex;
+        width: 100%;
+        max-width: 100vw !important;
+    }
     .swiper {
         width: 100% !important;
-        max-width: 100vw !important;
     }
     .swiper-slide {
         align-items: center;
@@ -8506,6 +8510,7 @@ const panelStyles = i$3 `
         display: grid;
         grid-auto-rows: min-content;
         gap: var(--sq-tile-spacing, 0.8rem);
+        overflow: hidden;
     }
 `;
 
