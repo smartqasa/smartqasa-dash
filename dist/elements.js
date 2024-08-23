@@ -8430,6 +8430,7 @@ const panelStyles = i$3 `
     }
     .top-wrapper {
         display: flex;
+        flex-direction: column;
     }
 
     .header-container {
@@ -8604,6 +8605,69 @@ let PanelCard = class PanelCard extends h {
             </div>
         `;
     }
+    _renderHeader() {
+        let time = this.hass?.states["sensor.current_time"]?.state || "Loading...";
+        let date = this.hass?.states["sensor.current_date"]?.state || "Loading...";
+        return ke `
+            <div class="header-container">
+                <div class="header-time-date" @click="${this._launchClock}">
+                    <div class="time">${time}</div>
+                    <div class="date">${date}</div>
+                </div>
+                <div class="header-chips">
+                    ${this._headerChips.map((chip) => ke `<div class="chip">${chip}</div>`)}
+                </div>
+            </div>
+        `;
+    }
+    _renderArea() {
+        const name = this._config?.name ?? this._areaObj?.name ?? "Area";
+        const height = deviceType === "phone" ? "15vh" : "20vh";
+        const picture = this._config?.picture
+            ? `/local/smartqasa/images/${this._config.picture}`
+            : this._areaObj?.picture ?? img$24;
+        return ke `
+            <div class="area-container">
+                <div class="area-info">
+                    <div class="area-name">${name}</div>
+                    ${this._areaChips.length > 0
+            ? ke ` <div class="area-chips">
+                              ${this._areaChips.map((chip) => ke `<div class="chip">${chip}</div>`)}
+                          </div>`
+            : D}
+                </div>
+                <img class="area-image" alt="Area picture..." src=${picture} style="max-height: ${height};" />
+            </div>
+        `;
+    }
+    _renderBody() {
+        if (!this._config || !this._bodyTiles.length)
+            return D;
+        const columns = this._config.columns && this._config.columns >= 2 && this._config.columns <= 4 ? this._config.columns : 3;
+        const bodyStyles = {
+            gridTemplateColumns: `repeat(${columns}, auto)`,
+        };
+        return ke `
+            <div class="body-container">
+                <div class="swiper">
+                    <div class="swiper-wrapper">
+                        ${this._bodyTiles.map((page) => ke `
+                                <div class="swiper-slide">
+                                    <div class="body-tiles" style="${se(bodyStyles)}">
+                                        ${page.map((tile) => ke `<div class="tile">${tile}</div>`)}
+                                    </div>
+                                </div>
+                            `)}
+                    </div>
+                    <div class="swiper-button-prev"></div>
+                    <div class="swiper-button-next"></div>
+                </div>
+            </div>
+        `;
+    }
+    _renderFooter() {
+        return ke ` <div class="footer-container">Footer content with dynamic data.</div>`;
+    }
     updated(changedProps) {
         super.updated(changedProps);
         if (!this._swiper) {
@@ -8709,21 +8773,6 @@ let PanelCard = class PanelCard extends h {
         this._swiper = new Swiper(swiperContainer, swiperParams);
         console.log("Swiper initialized:", this._swiper);
     }
-    _renderHeader() {
-        let time = this.hass?.states["sensor.current_time"]?.state || "Loading...";
-        let date = this.hass?.states["sensor.current_date"]?.state || "Loading...";
-        return ke `
-            <div class="header-container">
-                <div class="header-time-date" @click="${this._launchClock}">
-                    <div class="time">${time}</div>
-                    <div class="date">${date}</div>
-                </div>
-                <div class="header-chips">
-                    ${this._headerChips.map((chip) => ke `<div class="chip">${chip}</div>`)}
-                </div>
-            </div>
-        `;
-    }
     _launchClock(e) {
         e.stopPropagation();
         if (typeof window.fully !== "undefined" && window.fully.startApplication) {
@@ -8732,54 +8781,6 @@ let PanelCard = class PanelCard extends h {
         else {
             console.warn("fully.startApplication is not available.");
         }
-    }
-    _renderArea() {
-        const name = this._config?.name ?? this._areaObj?.name ?? "Area";
-        const height = deviceType === "phone" ? "15vh" : "20vh";
-        const picture = this._config?.picture
-            ? `/local/smartqasa/images/${this._config.picture}`
-            : this._areaObj?.picture ?? img$24;
-        return ke `
-            <div class="area-container">
-                <div class="area-info">
-                    <div class="area-name">${name}</div>
-                    ${this._areaChips.length > 0
-            ? ke ` <div class="area-chips">
-                              ${this._areaChips.map((chip) => ke `<div class="chip">${chip}</div>`)}
-                          </div>`
-            : D}
-                </div>
-                <img class="area-image" alt="Area picture..." src=${picture} style="max-height: ${height};" />
-            </div>
-        `;
-    }
-    _renderBody() {
-        if (!this._config || !this._bodyTiles.length)
-            return D;
-        const columns = this._config.columns && this._config.columns >= 2 && this._config.columns <= 4 ? this._config.columns : 3;
-        const bodyStyles = {
-            gridTemplateColumns: `repeat(${columns}, auto)`,
-        };
-        return ke `
-            <div class="body-container">
-                <div class="swiper">
-                    <div class="swiper-wrapper">
-                        ${this._bodyTiles.map((page) => ke `
-                                <div class="swiper-slide">
-                                    <div class="body-tiles" style="${se(bodyStyles)}">
-                                        ${page.map((tile) => ke `<div class="tile">${tile}</div>`)}
-                                    </div>
-                                </div>
-                            `)}
-                    </div>
-                    <div class="swiper-button-prev"></div>
-                    <div class="swiper-button-next"></div>
-                </div>
-            </div>
-        `;
-    }
-    _renderFooter() {
-        return ke ` <div class="footer-container">Footer content with dynamic data.</div>`;
     }
 };
 __decorate([

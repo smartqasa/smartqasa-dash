@@ -68,6 +68,79 @@ export class PanelCard extends LitElement {
         `;
     }
 
+    private _renderHeader() {
+        let time = this.hass?.states["sensor.current_time"]?.state || "Loading...";
+        let date = this.hass?.states["sensor.current_date"]?.state || "Loading...";
+
+        return html`
+            <div class="header-container">
+                <div class="header-time-date" @click="${this._launchClock}">
+                    <div class="time">${time}</div>
+                    <div class="date">${date}</div>
+                </div>
+                <div class="header-chips">
+                    ${this._headerChips.map((chip) => html`<div class="chip">${chip}</div>`)}
+                </div>
+            </div>
+        `;
+    }
+
+    private _renderArea() {
+        const name = this._config?.name ?? this._areaObj?.name ?? "Area";
+        const height = deviceType === "phone" ? "15vh" : "20vh";
+        const picture = this._config?.picture
+            ? `/local/smartqasa/images/${this._config.picture}`
+            : this._areaObj?.picture ?? defaultImage;
+
+        return html`
+            <div class="area-container">
+                <div class="area-info">
+                    <div class="area-name">${name}</div>
+                    ${this._areaChips.length > 0
+                        ? html` <div class="area-chips">
+                              ${this._areaChips.map((chip) => html`<div class="chip">${chip}</div>`)}
+                          </div>`
+                        : nothing}
+                </div>
+                <img class="area-image" alt="Area picture..." src=${picture} style="max-height: ${height};" />
+            </div>
+        `;
+    }
+
+    private _renderBody() {
+        if (!this._config || !this._bodyTiles.length) return nothing;
+
+        const columns =
+            this._config.columns && this._config.columns >= 2 && this._config.columns <= 4 ? this._config.columns : 3;
+        const bodyStyles = {
+            gridTemplateColumns: `repeat(${columns}, auto)`,
+        };
+
+        return html`
+            <div class="body-container">
+                <div class="swiper">
+                    <div class="swiper-wrapper">
+                        ${this._bodyTiles.map(
+                            (page) => html`
+                                <div class="swiper-slide">
+                                    <div class="body-tiles" style="${styleMap(bodyStyles)}">
+                                        ${page.map((tile) => html`<div class="tile">${tile}</div>`)}
+                                    </div>
+                                </div>
+                            `
+                        )}
+                    </div>
+                    <div class="swiper-button-prev"></div>
+                    <div class="swiper-button-next"></div>
+                </div>
+            </div>
+        `;
+    }
+
+    private _renderFooter() {
+        return html` <div class="footer-container">Footer content with dynamic data.</div>`;
+    }
+
     protected updated(changedProps: PropertyValues) {
         super.updated(changedProps);
 
@@ -191,23 +264,6 @@ export class PanelCard extends LitElement {
         console.log("Swiper initialized:", this._swiper);
     }
 
-    private _renderHeader() {
-        let time = this.hass?.states["sensor.current_time"]?.state || "Loading...";
-        let date = this.hass?.states["sensor.current_date"]?.state || "Loading...";
-
-        return html`
-            <div class="header-container">
-                <div class="header-time-date" @click="${this._launchClock}">
-                    <div class="time">${time}</div>
-                    <div class="date">${date}</div>
-                </div>
-                <div class="header-chips">
-                    ${this._headerChips.map((chip) => html`<div class="chip">${chip}</div>`)}
-                </div>
-            </div>
-        `;
-    }
-
     private _launchClock(e: Event) {
         e.stopPropagation();
         if (typeof window.fully !== "undefined" && window.fully.startApplication) {
@@ -215,61 +271,5 @@ export class PanelCard extends LitElement {
         } else {
             console.warn("fully.startApplication is not available.");
         }
-    }
-
-    private _renderArea() {
-        const name = this._config?.name ?? this._areaObj?.name ?? "Area";
-        const height = deviceType === "phone" ? "15vh" : "20vh";
-        const picture = this._config?.picture
-            ? `/local/smartqasa/images/${this._config.picture}`
-            : this._areaObj?.picture ?? defaultImage;
-
-        return html`
-            <div class="area-container">
-                <div class="area-info">
-                    <div class="area-name">${name}</div>
-                    ${this._areaChips.length > 0
-                        ? html` <div class="area-chips">
-                              ${this._areaChips.map((chip) => html`<div class="chip">${chip}</div>`)}
-                          </div>`
-                        : nothing}
-                </div>
-                <img class="area-image" alt="Area picture..." src=${picture} style="max-height: ${height};" />
-            </div>
-        `;
-    }
-
-    private _renderBody() {
-        if (!this._config || !this._bodyTiles.length) return nothing;
-
-        const columns =
-            this._config.columns && this._config.columns >= 2 && this._config.columns <= 4 ? this._config.columns : 3;
-        const bodyStyles = {
-            gridTemplateColumns: `repeat(${columns}, auto)`,
-        };
-
-        return html`
-            <div class="body-container">
-                <div class="swiper">
-                    <div class="swiper-wrapper">
-                        ${this._bodyTiles.map(
-                            (page) => html`
-                                <div class="swiper-slide">
-                                    <div class="body-tiles" style="${styleMap(bodyStyles)}">
-                                        ${page.map((tile) => html`<div class="tile">${tile}</div>`)}
-                                    </div>
-                                </div>
-                            `
-                        )}
-                    </div>
-                    <div class="swiper-button-prev"></div>
-                    <div class="swiper-button-next"></div>
-                </div>
-            </div>
-        `;
-    }
-
-    private _renderFooter() {
-        return html` <div class="footer-container">Footer content with dynamic data.</div>`;
     }
 }

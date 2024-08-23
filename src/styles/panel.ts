@@ -17,6 +17,7 @@ export const panelStyles = css`
     }
     .top-wrapper {
         display: flex;
+        flex-direction: column;
     }
 
     .header-container {
