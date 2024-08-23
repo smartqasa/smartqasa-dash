@@ -214,10 +214,7 @@ export class PanelCard extends LitElement {
 
         const swiperParams: SwiperOptions = {
             modules: [Navigation],
-            navigation: {
-                nextEl: ".swiper-button-next",
-                prevEl: ".swiper-button-prev",
-            },
+            navigation: {},
             initialSlide: 0,
         };
 

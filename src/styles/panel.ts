@@ -106,6 +106,10 @@ export const panelStyles = css`
         flex-grow: 2;
     }
 
+    .swiper-button-prev,
+    .swiper-button-next {
+    }
+
     .body-tiles {
         display: grid;
         width: min-content;

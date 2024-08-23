@@ -9067,6 +9067,10 @@ const panelStyles = i$3 `
         flex-grow: 2;
     }
 
+    .swiper-button-prev,
+    .swiper-button-next {
+    }
+
     .body-tiles {
         display: grid;
         width: min-content;
@@ -9286,10 +9290,7 @@ let PanelCard = class PanelCard extends h {
             return;
         const swiperParams = {
             modules: [Navigation],
-            navigation: {
-                nextEl: ".swiper-button-next",
-                prevEl: ".swiper-button-prev",
-            },
+            navigation: {},
             initialSlide: 0,
         };
         this._swiper = new Swiper(swiperContainer, swiperParams);
