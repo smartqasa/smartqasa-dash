@@ -8413,7 +8413,7 @@ async function loadYamlAsJson(yamlFilePath) {
     }
 }
 
-const panelStyle = i$3 `
+const panelStyles = i$3 `
     :host {
         display: flex;
         height: 100%;
@@ -8554,7 +8554,7 @@ let PanelCard = class PanelCard extends h {
         this._areaChips = [];
         this._bodyTiles = [];
     }
-    static { this.styles = [panelStyle, r$3(css_248z)]; }
+    static { this.styles = [r$3(css_248z), panelStyles]; }
     async setConfig(config) {
         this._config = { ...config };
         this._area = this._config.area;

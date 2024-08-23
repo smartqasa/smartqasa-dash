@@ -1,6 +1,6 @@
 import { css } from "lit";
 
-export const panelStyle = css`
+export const panelStyles = css`
     :host {
         display: flex;
         height: 100%;

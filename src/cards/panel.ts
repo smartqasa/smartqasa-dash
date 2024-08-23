@@ -7,8 +7,8 @@ import { SwiperOptions } from "swiper/types";
 import { deviceType } from "../const";
 import { createElement } from "../utils/create-element";
 import { loadYamlAsJson } from "../utils/load-yaml-as-json";
-import { panelStyle } from "../styles/panel";
-import swiperStyle from "swiper/swiper-bundle.css";
+import { panelStyles } from "../styles/panel";
+import swiperStyles from "swiper/swiper-bundle.css";
 import defaultImage from "../assets/images/default.png";
 
 interface Config extends LovelaceCardConfig {
@@ -32,7 +32,7 @@ export class PanelCard extends LitElement {
     private _areaChips: LovelaceCard[] = [];
     private _bodyTiles: LovelaceCard[][] = [];
 
-    static styles: CSSResultGroup = [panelStyle, unsafeCSS(swiperStyle)];
+    static styles: CSSResultGroup = [unsafeCSS(swiperStyles), panelStyles];
 
     public async setConfig(config: Config) {
         this._config = { ...config };
