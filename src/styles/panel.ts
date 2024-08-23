@@ -20,6 +20,7 @@ export const panelStyles = css`
         display: flex;
         margin-bottom: 2.5rem;
         justify-content: space-between;
+        flex-shrink: 0;
     }
 
     .header-time-date {
@@ -62,6 +63,7 @@ export const panelStyles = css`
         display: grid;
         grid-template-columns: 1fr 1fr;
         margin-bottom: 2.5rem;
+        flex-shrink: 0;
     }
 
     .area-info {
@@ -99,7 +101,7 @@ export const panelStyles = css`
 
     .body-container {
         display: flex;
-        flex-grow: 1;
+        flex-grow: 2;
     }
 
     .body-tiles {
@@ -115,6 +117,7 @@ export const panelStyles = css`
         justify-content: center;
         align-items: center;
         text-align: center;
-        margin-top: 1rem; /* Pushes the footer to the bottom */
+        margin-top: 1rem;
+        flex-shrink: 0;
     }
 `;
