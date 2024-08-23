@@ -8526,7 +8526,7 @@ const panelStyles = i$3 `
         justify-content: center;
         align-items: center;
         text-align: center;
-        margin-top: auto; /* Pushes the footer to the bottom */
+        margin-top: 1rem; /* Pushes the footer to the bottom */
     }
 `;
 
