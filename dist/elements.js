@@ -8500,20 +8500,15 @@ const panelStyle = i$3 `
         height: 100%;
         width: 100%;
         max-width: 100%;
+    }
+    .swiper-slide {
+        display: flex;
+        flex-shrink: 1;
         align-items: center;
         justify-content: center;
     }
-    .swiper-wrapper {
-        width: 100%;
-        max-width: 100%;
-    }
-    .swiper-slide {
-        width: 100%;
-        max-width: 100%;
-    }
     .body-tiles {
         display: grid;
-        height: 100%;
         grid-auto-rows: min-content;
         gap: var(--sq-tile-spacing, 0.8rem);
     }
