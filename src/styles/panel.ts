@@ -7,12 +7,14 @@ export const panelStyles = css`
         width: 100%;
         background: var(--sq-panel-background);
     }
+
     .container {
         display: flex;
         flex-direction: column;
         height: 100%;
         width: 100%;
     }
+
     .header-container {
         display: flex;
         flex-direction: row;
@@ -20,46 +22,56 @@ export const panelStyles = css`
         margin-bottom: 2.5rem;
         justify-content: space-between;
     }
+
     .header-time-date {
         display: flex;
         flex-direction: column;
         cursor: pointer;
     }
+
     .time,
     .date {
         text-align: left;
         white-space: nowrap;
     }
+
     .time {
         line-height: 3rem;
         font-size: var(--sq-title-font-size, 3.2rem);
         font-weight: var(--sq-title-font-weight, 400);
         color: rgb(var(--sq-title-font-rgb, 128, 128, 128));
     }
+
     .date {
         margin-top: 0.4rem;
         font-size: var(--sq-primary-font-size, 1.5rem);
         font-weight: var(--sq-primary-font-weight, 300);
         color: rgb(var(--sq-secondary-font-rgb, 128, 128, 128));
     }
+
     .header-chips {
         display: flex;
         flex-direction: row;
         margin-right: calc(var(--sq-chip-spacing, 0.4rem) * -1);
         justify-content: flex-end;
     }
+
     .chip {
         display: flex;
     }
+
     .area-container {
         display: grid;
         grid-template-columns: 1fr 1fr;
         margin-bottom: 2.5rem;
+        flex-shrink: 0; /* Ensure the area doesn't shrink */
     }
+
     .area-info {
         display: flex;
         flex-direction: column;
     }
+
     .area-name {
         margin-bottom: 0.4rem;
         line-height: normal;
@@ -68,6 +80,7 @@ export const panelStyles = css`
         font-weight: var(--sq-title-font-weight, 400);
         color: rgb(var(--sq-title-font-rgb, 128, 128, 128));
     }
+
     .area-chips {
         display: flex;
         flex-direction: row;
@@ -76,6 +89,7 @@ export const panelStyles = css`
         justify-content: flex-start;
         margin-left: calc(var(--sq-chip-spacing, 0.4rem) * -1);
     }
+
     .area-image {
         width: 100%;
         height: 100%;
@@ -85,25 +99,21 @@ export const panelStyles = css`
         box-shadow: none;
         background-color: transparent;
     }
-    .swiper {
-        display: flex !important;
-        flex-grow: 1;
-    }
-    .swiper-slide {
-        align-items: center;
-        justify-content: center;
+    .body-container {
+        display: flex;
+        flex-grow: 1; /* Allow the body to grow and fill the available space */
     }
     .body-tiles {
         display: grid;
-        width: min-content;
-        grid-auto-rows: min-content;
         gap: var(--sq-tile-spacing, 0.8rem);
         overflow: hidden;
     }
     .footer-container {
         display: flex;
         flex-shrink: 0;
-        margin-top: 1rem;
+        justify-content: center;
+        align-items: center;
         text-align: center;
+        margin-top: auto; /* Pushes the footer to the bottom */
     }
 `;

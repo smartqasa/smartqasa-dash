@@ -243,24 +243,26 @@ export class PanelCard extends LitElement {
         const columns =
             this._config.columns && this._config.columns >= 2 && this._config.columns <= 4 ? this._config.columns : 3;
         const bodyStyles = {
-            gridTemplateColumns: `repeat(${columns}, min-content)`,
+            gridTemplateColumns: `repeat(${columns}, auto)`,
         };
 
         return html`
-            <div class="swiper">
-                <div class="swiper-wrapper">
-                    ${this._bodyTiles.map(
-                        (page) => html`
-                            <div class="swiper-slide">
-                                <div class="body-tiles" style="${styleMap(bodyStyles)}">
-                                    ${page.map((tile) => html`<div class="tile">${tile}</div>`)}
+            <div class="body-container">
+                <div class="swiper">
+                    <div class="swiper-wrapper">
+                        ${this._bodyTiles.map(
+                            (page) => html`
+                                <div class="swiper-slide">
+                                    <div class="body-tiles" style="${styleMap(bodyStyles)}">
+                                        ${page.map((tile) => html`<div class="tile">${tile}</div>`)}
+                                    </div>
                                 </div>
-                            </div>
-                        `
-                    )}
+                            `
+                        )}
+                    </div>
+                    <div class="swiper-button-prev"></div>
+                    <div class="swiper-button-next"></div>
                 </div>
-                <div class="swiper-button-prev"></div>
-                <div class="swiper-button-next"></div>
             </div>
         `;
     }
