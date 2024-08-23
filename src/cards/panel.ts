@@ -59,7 +59,7 @@ export class PanelCard extends LitElement {
 
         const isPhone = deviceType === "phone";
         const containerStyles = {
-            padding: isPhone ? "0.5rem" : "1rem",
+            padding: isPhone ? "0.5rem 0.5rem 0 0.5rem" : "1rem 1rem 0 1rem",
         };
 
         return html`

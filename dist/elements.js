@@ -9077,14 +9077,15 @@ const panelStyles = i$3 `
 
     .footer-container {
         display: flex;
+        margin-top: 2.5rem;
+        gap: 3rem;
         justify-content: center;
         align-items: center;
-        margin: 2.5rem 0 1rem 0;
     }
 
     .footer-button {
         display: flex;
-        gap: 2.5rem;
+        gap: 0.5rem;
         padding: 1rem;
         align-items: center;
         justify-content: center;
@@ -9150,7 +9151,7 @@ let PanelCard = class PanelCard extends h {
             return ke `<div>Loading...</div>`;
         const isPhone = deviceType === "phone";
         const containerStyles = {
-            padding: isPhone ? "0.5rem" : "1rem",
+            padding: isPhone ? "0.5rem 0.5rem 0 0.5rem" : "1rem 1rem 0 1rem",
         };
         return ke `
             <div class="container" style="${se(containerStyles)}">

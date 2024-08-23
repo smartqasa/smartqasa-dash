@@ -116,14 +116,15 @@ export const panelStyles = css`
 
     .footer-container {
         display: flex;
+        margin-top: 2.5rem;
+        gap: 3rem;
         justify-content: center;
         align-items: center;
-        margin: 2.5rem 0 1rem 0;
     }
 
     .footer-button {
         display: flex;
-        gap: 2.5rem;
+        gap: 0.5rem;
         padding: 1rem;
         align-items: center;
         justify-content: center;
