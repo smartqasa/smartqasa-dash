@@ -116,7 +116,7 @@ export const panelStyles = css`
 
     .footer-container {
         display: flex;
-        margin-top: 2.5rem;
+        margin-top: 1.5rem;
         gap: 3rem;
         justify-content: center;
         align-items: center;
