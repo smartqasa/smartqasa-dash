@@ -8514,7 +8514,6 @@ const panelStyle = i$3 `
     .body-tiles {
         display: grid;
         height: 100%;
-        grid-auto-rows: 5.2rem;
         gap: var(--sq-tile-spacing, 0.8rem);
     }
 `;
@@ -8741,7 +8740,7 @@ let PanelCard = class PanelCard extends h {
             return D;
         const columns = this._config.columns && this._config.columns >= 2 && this._config.columns <= 4 ? this._config.columns : 3;
         const bodyStyles = {
-            gridTemplateColumns: `repeat(${columns}, min(21vw, 19.5rem))`,
+            gridTemplateColumns: `repeat(${columns}, auto)`,
         };
         return ke `
             <div class="swiper">

@@ -101,7 +101,6 @@ export const panelStyle = css`
     .body-tiles {
         display: grid;
         height: 100%;
-        grid-auto-rows: 5.2rem;
         gap: var(--sq-tile-spacing, 0.8rem);
     }
 `;
