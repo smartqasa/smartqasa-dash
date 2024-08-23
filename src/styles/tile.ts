@@ -21,8 +21,8 @@ export const tileBaseStyle = css`
         display: flex;
         justify-content: center;
         align-self: center;
-        height: var(--sq-tile-icon-size, 1.8rem);
-        width: var(--sq-tile-icon-size, 1.8rem);
+        height: var(--sq-icon-size, 1.8rem);
+        width: var(--sq-icon-size, 1.8rem);
         padding: var(--sq-tile-padding, 1rem);
         border-radius: 50%;
         transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;

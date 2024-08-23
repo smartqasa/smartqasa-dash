@@ -190,7 +190,7 @@ export class PanelCard extends LitElement {
 
     private _renderFooter() {
         return html`
-            <div class="grid">
+            <div class="footer-container">
                 ${this._renderFooterButton("hass:home", "Home", "_handleHome")}
                 ${this._renderFooterButton("hass:view-dashboard", "Areas", "_handleAreas")}
                 ${this._renderFooterButton("hass:music", "Entertainment", "_handleEntertain")}

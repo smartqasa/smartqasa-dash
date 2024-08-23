@@ -9084,18 +9084,18 @@ const panelStyles = i$3 `
 
     .footer-button {
         display: flex;
+        gap: 2.5rem;
         padding: 1rem;
         align-items: center;
         justify-content: center;
-        column-gap: 0.5rem;
         font-size: var(--sq-primary-font-size, 1.5rem);
         font-weight: var(--sq-primary-font-weight, 400);
         color: rgb(var(--sq-secondary-font-rgb));
         cursor: pointer;
     }
     .footer-icon {
-        height: 1.8rem;
-        width: 1.8rem;
+        height: var(--sq-icon-size, 1.8rem);
+        width: var(--sq-icon-size, 1.8rem);
     }
 `;
 
@@ -9263,7 +9263,7 @@ let PanelCard = class PanelCard extends h {
     }
     _renderFooter() {
         return ke `
-            <div class="grid">
+            <div class="footer-container">
                 ${this._renderFooterButton("hass:home", "Home", "_handleHome")}
                 ${this._renderFooterButton("hass:view-dashboard", "Areas", "_handleAreas")}
                 ${this._renderFooterButton("hass:music", "Entertainment", "_handleEntertain")}
@@ -10085,8 +10085,8 @@ const chipBaseStyle = i$3 `
     }
     .icon {
         display: flex;
-        height: var(--sq-chip-icon-size, 1.8rem);
-        width: var(--sq-chip-icon-size, 1.8rem);
+        height: var(--sq-icon-size, 1.8rem);
+        width: var(--sq-icon-size, 1.8rem);
         padding: var(--sq-chip-padding, 1rem);
         color: rgb(var(--sq-primary-text-rgb));
         transition: var(--sq-icon-transition, none);
@@ -10107,7 +10107,7 @@ const chipTextStyle = i$3 `
         display: flex;
         padding: var(--sq-chip-padding, 1rem);
         padding-left: 0;
-        line-height: var(--sq-chip-icon-size, 1.8rem);
+        line-height: var(--sq-icon-size, 1.8rem);
         font-weight: var(--sq-primary-font-weight, 400);
         font-size: var(--sq-primary-font-size, 1.5rem);
         color: rgb(var(--sq-primary-font-rgb, 128, 128, 128));
@@ -10141,7 +10141,7 @@ const chipDoubleStyle = i$3 `
     .icon1::after {
         content: "";
         width: 1px;
-        height: var(--sq-chip-icon-size, 1.8rem);
+        height: var(--sq-icon-size, 1.8rem);
         background-color: rgb(128, 128, 128);
         margin-left: 0.3rem;
     }
@@ -11748,8 +11748,8 @@ const tileBaseStyle = i$3 `
         display: flex;
         justify-content: center;
         align-self: center;
-        height: var(--sq-tile-icon-size, 1.8rem);
-        width: var(--sq-tile-icon-size, 1.8rem);
+        height: var(--sq-icon-size, 1.8rem);
+        width: var(--sq-icon-size, 1.8rem);
         padding: var(--sq-tile-padding, 1rem);
         border-radius: 50%;
         transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;

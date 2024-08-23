@@ -15,8 +15,8 @@ export const chipBaseStyle = css`
     }
     .icon {
         display: flex;
-        height: var(--sq-chip-icon-size, 1.8rem);
-        width: var(--sq-chip-icon-size, 1.8rem);
+        height: var(--sq-icon-size, 1.8rem);
+        width: var(--sq-icon-size, 1.8rem);
         padding: var(--sq-chip-padding, 1rem);
         color: rgb(var(--sq-primary-text-rgb));
         transition: var(--sq-icon-transition, none);
@@ -38,7 +38,7 @@ export const chipTextStyle = css`
         display: flex;
         padding: var(--sq-chip-padding, 1rem);
         padding-left: 0;
-        line-height: var(--sq-chip-icon-size, 1.8rem);
+        line-height: var(--sq-icon-size, 1.8rem);
         font-weight: var(--sq-primary-font-weight, 400);
         font-size: var(--sq-primary-font-size, 1.5rem);
         color: rgb(var(--sq-primary-font-rgb, 128, 128, 128));
@@ -73,7 +73,7 @@ export const chipDoubleStyle = css`
     .icon1::after {
         content: "";
         width: 1px;
-        height: var(--sq-chip-icon-size, 1.8rem);
+        height: var(--sq-icon-size, 1.8rem);
         background-color: rgb(128, 128, 128);
         margin-left: 0.3rem;
     }
