@@ -8519,6 +8519,7 @@ const panelStyles = i$3 `
     .body-tiles {
         display: grid;
         gap: var(--sq-tile-spacing, 0.8rem);
+        margin: auto;
         overflow: hidden;
     }
     .footer-container {
