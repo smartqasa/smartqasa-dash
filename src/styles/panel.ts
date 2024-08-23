@@ -2,6 +2,7 @@ import { css } from "lit";
 
 export const panelStyles = css`
     :host {
+        display: block;
         height: 100%;
         width: 100%;
         background: var(--sq-panel-background);

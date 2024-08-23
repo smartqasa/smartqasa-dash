@@ -8415,6 +8415,7 @@ async function loadYamlAsJson(yamlFilePath) {
 
 const panelStyles = i$3 `
     :host {
+        display: block;
         height: 100%;
         width: 100%;
         background: var(--sq-panel-background);
@@ -8747,20 +8748,18 @@ let PanelCard = class PanelCard extends h {
             gridTemplateColumns: `repeat(${columns}, min-content)`,
         };
         return ke `
-            <div class="body-container">
-                <div class="swiper">
-                    <div class="swiper-wrapper">
-                        ${this._bodyTiles.map((page) => ke `
-                                <div class="swiper-slide">
-                                    <div class="body-tiles" style="${se(bodyStyles)}">
-                                        ${page.map((tile) => ke `<div class="tile">${tile}</div>`)}
-                                    </div>
+            <div class="swiper">
+                <div class="swiper-wrapper">
+                    ${this._bodyTiles.map((page) => ke `
+                            <div class="swiper-slide">
+                                <div class="body-tiles" style="${se(bodyStyles)}">
+                                    ${page.map((tile) => ke `<div class="tile">${tile}</div>`)}
                                 </div>
-                            `)}
-                    </div>
-                    <div class="swiper-button-prev"></div>
-                    <div class="swiper-button-next"></div>
+                            </div>
+                        `)}
                 </div>
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
             </div>
         `;
     }
