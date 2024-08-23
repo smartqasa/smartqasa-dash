@@ -9261,7 +9261,7 @@ let PanelCard = class PanelCard extends h {
                             `)}
                     </div>
                     <div class="swiper-button-prev"></div>
-                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-next" @click=${this._swiperNext}></div>
                 </div>
             </div>
         `;
@@ -9290,7 +9290,10 @@ let PanelCard = class PanelCard extends h {
             return;
         const swiperParams = {
             modules: [Navigation],
-            navigation: {},
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+            },
             initialSlide: 0,
         };
         this._swiper = new Swiper(swiperContainer, swiperParams);
@@ -9359,6 +9362,12 @@ let PanelCard = class PanelCard extends h {
         }
         else {
             console.warn("fully.startApplication is not available.");
+        }
+    }
+    _swiperNext(e) {
+        e.stopPropagation();
+        if (this._swiper) {
+            this._swiper.slideNext();
         }
     }
     _handleFooterAction(e, methodName) {

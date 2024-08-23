@@ -182,7 +182,7 @@ export class PanelCard extends LitElement {
                         )}
                     </div>
                     <div class="swiper-button-prev"></div>
-                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-next" @click=${this._swiperNext}></div>
                 </div>
             </div>
         `;
@@ -214,7 +214,10 @@ export class PanelCard extends LitElement {
 
         const swiperParams: SwiperOptions = {
             modules: [Navigation],
-            navigation: {},
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+            },
             initialSlide: 0,
         };
 
@@ -294,6 +297,13 @@ export class PanelCard extends LitElement {
             window.fully.startApplication("com.google.android.deskclock");
         } else {
             console.warn("fully.startApplication is not available.");
+        }
+    }
+
+    private _swiperNext(e: Event) {
+        e.stopPropagation();
+        if (this._swiper) {
+            this._swiper.slideNext();
         }
     }
 
