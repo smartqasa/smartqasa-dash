@@ -9260,7 +9260,7 @@ let PanelCard = class PanelCard extends h {
                                 </div>
                             `)}
                     </div>
-                    <div class="swiper-button-prev"></div>
+                    <div class="swiper-button-prev" @click=${this._swiperPrev}></div>
                     <div class="swiper-button-next" @click=${this._swiperNext}></div>
                 </div>
             </div>
@@ -9289,12 +9289,13 @@ let PanelCard = class PanelCard extends h {
         if (!swiperContainer)
             return;
         const swiperParams = {
+            initialSlide: 0,
+            loop: true,
             modules: [Navigation],
             navigation: {
                 nextEl: ".swiper-button-next",
                 prevEl: ".swiper-button-prev",
             },
-            initialSlide: 0,
         };
         this._swiper = new Swiper(swiperContainer, swiperParams);
         if (this._swiper) {
@@ -9364,8 +9365,16 @@ let PanelCard = class PanelCard extends h {
             console.warn("fully.startApplication is not available.");
         }
     }
+    _swiperPrev(e) {
+        e.stopPropagation();
+        console.log("swiperPrev");
+        if (this._swiper) {
+            this._swiper.slidePrev();
+        }
+    }
     _swiperNext(e) {
         e.stopPropagation();
+        console.log("swiperNext");
         if (this._swiper) {
             this._swiper.slideNext();
         }

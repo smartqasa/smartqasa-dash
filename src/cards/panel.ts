@@ -181,7 +181,7 @@ export class PanelCard extends LitElement {
                             `
                         )}
                     </div>
-                    <div class="swiper-button-prev"></div>
+                    <div class="swiper-button-prev" @click=${this._swiperPrev}></div>
                     <div class="swiper-button-next" @click=${this._swiperNext}></div>
                 </div>
             </div>
@@ -213,12 +213,13 @@ export class PanelCard extends LitElement {
         if (!swiperContainer) return;
 
         const swiperParams: SwiperOptions = {
+            initialSlide: 0,
+            loop: true,
             modules: [Navigation],
             navigation: {
                 nextEl: ".swiper-button-next",
                 prevEl: ".swiper-button-prev",
             },
-            initialSlide: 0,
         };
 
         this._swiper = new Swiper(swiperContainer as HTMLElement, swiperParams);
@@ -300,8 +301,17 @@ export class PanelCard extends LitElement {
         }
     }
 
+    private _swiperPrev(e: Event) {
+        e.stopPropagation();
+        console.log("swiperPrev");
+        if (this._swiper) {
+            this._swiper.slidePrev();
+        }
+    }
+
     private _swiperNext(e: Event) {
         e.stopPropagation();
+        console.log("swiperNext");
         if (this._swiper) {
             this._swiper.slideNext();
         }
