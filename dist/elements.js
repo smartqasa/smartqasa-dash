@@ -9069,6 +9069,7 @@ const panelStyles = i$3 `
 
     .swiper-button-prev,
     .swiper-button-next {
+        position: absolute;
     }
 
     .body-tiles {
@@ -9260,14 +9261,8 @@ let PanelCard = class PanelCard extends h {
                                 </div>
                             `)}
                     </div>
-                    <div
-                        class="swiper-button-prev"
-                        @click=${(e) => this._handleSwiperNavigation(e, "prev")}
-                    ></div>
-                    <div
-                        class="swiper-button-next"
-                        @click=${(e) => this._handleSwiperNavigation(e, "next")}
-                    ></div>
+                    <div class="swiper-button-prev"></div>
+                    <div class="swiper-button-next"></div>
                 </div>
             </div>
         `;
@@ -9298,6 +9293,9 @@ let PanelCard = class PanelCard extends h {
             initialSlide: 0,
             loop: true,
             modules: [Navigation],
+            mousewheel: {
+                forceToAxis: true,
+            },
             navigation: {
                 nextEl: ".swiper-button-next",
                 prevEl: ".swiper-button-prev",
