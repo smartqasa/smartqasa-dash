@@ -9069,7 +9069,6 @@ const panelStyles = i$3 `
 
     .swiper-button-prev,
     .swiper-button-next {
-        color: rgb(var(--sq-secondary-font-rgb));
     }
 
     .body-tiles {
