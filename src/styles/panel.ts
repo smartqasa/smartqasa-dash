@@ -108,7 +108,6 @@ export const panelStyles = css`
 
     .swiper-button-prev,
     .swiper-button-next {
-        position: absolute;
     }
 
     .body-tiles {
