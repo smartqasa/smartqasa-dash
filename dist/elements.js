@@ -9069,6 +9069,7 @@ const panelStyles = i$3 `
 
     .swiper-button-prev,
     .swiper-button-next {
+        color: rgb(var(--sq-secondary-font-rgb));
     }
 
     .body-tiles {
@@ -9260,8 +9261,14 @@ let PanelCard = class PanelCard extends h {
                                 </div>
                             `)}
                     </div>
-                    <div class="swiper-button-prev" @click=${this._swiperPrev}></div>
-                    <div class="swiper-button-next" @click=${this._swiperNext}></div>
+                    <div
+                        class="swiper-button-prev"
+                        @click=${(e) => this._handleSwiperNavigation(e, "prev")}
+                    ></div>
+                    <div
+                        class="swiper-button-next"
+                        @click=${(e) => this._handleSwiperNavigation(e, "next")}
+                    ></div>
                 </div>
             </div>
         `;
@@ -9365,18 +9372,15 @@ let PanelCard = class PanelCard extends h {
             console.warn("fully.startApplication is not available.");
         }
     }
-    _swiperPrev(e) {
+    _handleSwiperNavigation(e, direction) {
         e.stopPropagation();
-        console.log("swiperPrev");
         if (this._swiper) {
-            this._swiper.slidePrev();
-        }
-    }
-    _swiperNext(e) {
-        e.stopPropagation();
-        console.log("swiperNext");
-        if (this._swiper) {
-            this._swiper.slideNext();
+            if (direction === "prev") {
+                this._swiper.slidePrev();
+            }
+            else {
+                this._swiper.slideNext();
+            }
         }
     }
     _handleFooterAction(e, methodName) {
