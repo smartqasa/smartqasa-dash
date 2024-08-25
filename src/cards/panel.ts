@@ -219,7 +219,7 @@ export class PanelCard extends LitElement {
         if (!swiperContainer) return;
 
         const swiperParams: SwiperOptions = {
-            autoHeight: true,
+            autoHeight: false,
             initialSlide: 0,
             loop: true,
             modules: [Navigation],
