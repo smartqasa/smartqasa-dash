@@ -4,7 +4,7 @@ export const tileBaseStyle = css`
     .container {
         display: grid;
         height: 7rem;
-        width: min(21vw, 19.5rem);
+        width: 100%;
         box-sizing: border-box;
         border: var(--sq-card-border, none);
         border-radius: var(--sq-card-border-radius, 1.5rem);

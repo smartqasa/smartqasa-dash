@@ -9247,7 +9247,7 @@ let PanelCard = class PanelCard extends h {
             return D;
         const columns = this._config.columns && this._config.columns >= 2 && this._config.columns <= 4 ? this._config.columns : 3;
         const bodyStyles = {
-            gridTemplateColumns: `repeat(${columns}, auto)`,
+            gridTemplateColumns: `repeat(${columns}, min(21vw, 19.5rem))`,
         };
         return ke `
             <div class="body-container">
@@ -11765,7 +11765,7 @@ const tileBaseStyle = i$3 `
     .container {
         display: grid;
         height: 7rem;
-        width: min(21vw, 19.5rem);
+        width: 100%;
         box-sizing: border-box;
         border: var(--sq-card-border, none);
         border-radius: var(--sq-card-border-radius, 1.5rem);
