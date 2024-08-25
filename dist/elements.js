@@ -8986,7 +8986,7 @@ const panelStyles = i$3 `
 
     .header-container {
         display: flex;
-        margin-bottom: 2.5rem;
+        margin-bottom: 2rem;
         justify-content: space-between;
     }
 
@@ -9079,7 +9079,6 @@ const panelStyles = i$3 `
         width: min-content;
         margin: auto;
         gap: var(--sq-tile-spacing, 0.8rem);
-        overflow: hidden;
     }
 
     .blank-tile {
@@ -9090,7 +9089,7 @@ const panelStyles = i$3 `
 
     .footer-container {
         display: flex;
-        margin-top: 1.5rem;
+        margin-top: 1rem;
         gap: 3rem;
         justify-content: center;
         align-items: center;
