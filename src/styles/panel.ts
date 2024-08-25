@@ -118,6 +118,7 @@ export const panelStyles = css`
         width: min-content;
         margin: auto;
         gap: var(--sq-tile-spacing, 0.8rem);
+        overflow: hidden;
     }
 
     .blank-tile {
