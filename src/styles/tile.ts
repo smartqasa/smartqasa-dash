@@ -3,8 +3,9 @@ import { css } from "lit";
 export const tileBaseStyle = css`
     .container {
         display: grid;
-        height: 7rem;
+        height: 100%;
         width: 100%;
+        min-height: var(--sq-tile-height, 7rem);
         box-sizing: border-box;
         border: var(--sq-card-border, none);
         border-radius: var(--sq-card-border-radius, 1.5rem);

@@ -116,6 +116,7 @@ export const panelStyles = css`
         display: grid;
         width: min-content;
         margin: auto;
+        grid-template-rows: var(--sq-tile-height, 7rem);
         gap: var(--sq-tile-spacing, 0.8rem);
     }
 
