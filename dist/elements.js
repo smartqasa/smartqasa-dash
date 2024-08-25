@@ -8976,22 +8976,12 @@ const panelStyles = i$3 `
         grid-template-rows: auto auto 1fr auto;
         grid-template-columns: 100%;
         box-sizing: border-box;
-        padding: 1rem 1rem 0 1rem;
-
-        @media (max-width: 600px) {
-            grid-template-rows: auto 1fr auto;
-            padding: 0.5rem 0.5rem 0 0.5rem;
-        }
     }
 
     .header-container {
         display: flex;
         margin-bottom: 2.5rem;
         justify-content: space-between;
-
-        @media (max-width: 600px) {
-            display: none;
-        }
     }
 
     .header-time-date {
@@ -9162,9 +9152,13 @@ let PanelCard = class PanelCard extends h {
     render() {
         if (this._loading)
             return ke `<div>Loading...</div>`;
+        const isPhone = deviceType === "phone";
+        const containerStyles = {
+            padding: isPhone ? "0.5rem 0.5rem 0 0.5rem" : "1rem 1rem 0 1rem",
+        };
         return ke `
-            <div class="container">
-                ${deviceType === "tablet" ? ke `<div>${this._renderHeader()}</div>` : D}
+            <div class="container" style="${se(containerStyles)}">
+                <div>${this._renderHeader()}</div>
                 <div>${this._renderArea()}</div>
                 <div>${this._renderBody()}</div>
                 <div>${this._renderFooter()}</div>
@@ -9190,7 +9184,7 @@ let PanelCard = class PanelCard extends h {
         }
         else if (changedProps.has("hass") && this.hass) {
             this._areaObj = this._area ? this.hass.areas[this._area] : undefined;
-            if (deviceType === "tablet" && this._headerChips.length) {
+            if (this._headerChips.length) {
                 this._headerChips.forEach((chip) => {
                     chip.hass = this.hass;
                 });
@@ -9234,12 +9228,11 @@ let PanelCard = class PanelCard extends h {
             <div class="area-container">
                 <div class="area-info">
                     <div class="area-name">${name}</div>
-                    ${this._areaChips.length &&
-            ke `
-                        <div class="area-chips">
-                            ${this._areaChips.map((chip) => ke `<div class="chip">${chip}</div>`)}
-                        </div>
-                    `}
+                    ${this._areaChips.length > 0
+            ? ke ` <div class="area-chips">
+                              ${this._areaChips.map((chip) => ke `<div class="chip">${chip}</div>`)}
+                          </div>`
+            : D}
                 </div>
                 <img class="area-image" alt="Area picture..." src=${picture} style="max-height: ${height};" />
             </div>
@@ -9316,8 +9309,8 @@ let PanelCard = class PanelCard extends h {
         }
     }
     async _loadContent() {
-        this._headerChips = deviceType === "tablet" ? await this._loadHeaderChips() : [];
         this._areaObj = this._area ? this.hass?.areas[this._area] : undefined;
+        this._headerChips = await this._loadHeaderChips();
         if (this._config?.chips) {
             this._areaChips = await this._loadAreaChips(this._config.chips);
         }
