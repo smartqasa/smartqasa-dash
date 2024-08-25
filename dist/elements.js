@@ -9378,10 +9378,10 @@ let PanelCard = class PanelCard extends h {
         e.stopPropagation();
         if (this._swiper) {
             if (direction === "prev") {
-                this._swiper.slidePrev();
+                this._swiper.slideNext();
             }
             else {
-                this._swiper.slideNext();
+                this._swiper.slidePrev();
             }
         }
     }
@@ -14480,7 +14480,7 @@ PopupConfirmation = __decorate([
     t$1("popup-confirmation")
 ], PopupConfirmation);
 
-var version = "2024.8.27b-1";
+var version = "2024.8.25b-1";
 
 window.smartqasa = window.smartqasa || {};
 window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();
