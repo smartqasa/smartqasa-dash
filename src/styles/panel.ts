@@ -8,19 +8,16 @@ export const panelStyles = css`
     }
 
     .container {
-        display: grid;
+        display: flex;
+        flex-direction: column;
         height: 100%;
         width: 100%;
-        max-width: 100%;
-        grid-template-rows: auto auto 1fr auto;
-        grid-template-columns: 100%;
         box-sizing: border-box;
-        padding: 1rem 1rem 0 1rem;
-
-        @media (max-width: 600px) {
-            grid-template-rows: auto 1fr auto;
-            padding: 0.5rem 0.5rem 0 0.5rem;
-        }
+        justify-content: space-between;
+    }
+    .top-wrapper {
+        display: flex;
+        flex-direction: column;
     }
 
     .header-container {
@@ -106,16 +103,17 @@ export const panelStyles = css`
 
     .body-container {
         display: flex;
-        height: 100%;
-        overflow: auto;
+        flex-grow: 2;
     }
 
-    .swiper-slide {
-        align-content: center;
+    .swiper-button-prev,
+    .swiper-button-next {
     }
 
     .body-tiles {
         display: grid;
+        width: min-content;
+        margin: auto;
         gap: var(--sq-tile-spacing, 0.8rem);
         overflow: hidden;
     }

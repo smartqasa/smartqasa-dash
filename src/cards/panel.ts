@@ -57,10 +57,17 @@ export class PanelCard extends LitElement {
     protected render(): TemplateResult {
         if (this._loading) return html`<div>Loading...</div>`;
 
+        const isPhone = deviceType === "phone";
+        const containerStyles = {
+            padding: isPhone ? "0.5rem 0.5rem 0 0.5rem" : "1rem 1rem 0 1rem",
+        };
+
         return html`
-            <div class="container">
-                ${deviceType === "tablet" ? html`<div>${this._renderHeader()}</div>` : nothing}
-                <div>${this._renderArea()}</div>
+            <div class="container" style="${styleMap(containerStyles)}">
+                <div class="top-wrapper">
+                    <div>${this._renderHeader()}</div>
+                    <div>${this._renderArea()}</div>
+                </div>
                 <div>${this._renderBody()}</div>
                 <div>${this._renderFooter()}</div>
             </div>
@@ -90,7 +97,7 @@ export class PanelCard extends LitElement {
         } else if (changedProps.has("hass") && this.hass) {
             this._areaObj = this._area ? this.hass.areas[this._area] : undefined;
 
-            if (deviceType === "tablet" && this._headerChips.length) {
+            if (this._headerChips.length) {
                 this._headerChips.forEach((chip) => {
                     chip.hass = this.hass;
                 });
@@ -140,12 +147,11 @@ export class PanelCard extends LitElement {
             <div class="area-container">
                 <div class="area-info">
                     <div class="area-name">${name}</div>
-                    ${this._areaChips.length &&
-                    html`
-                        <div class="area-chips">
-                            ${this._areaChips.map((chip) => html`<div class="chip">${chip}</div>`)}
-                        </div>
-                    `}
+                    ${this._areaChips.length > 0
+                        ? html` <div class="area-chips">
+                              ${this._areaChips.map((chip) => html`<div class="chip">${chip}</div>`)}
+                          </div>`
+                        : nothing}
                 </div>
                 <img class="area-image" alt="Area picture..." src=${picture} style="max-height: ${height};" />
             </div>
@@ -233,9 +239,9 @@ export class PanelCard extends LitElement {
     }
 
     private async _loadContent() {
-        this._headerChips = deviceType === "tablet" ? await this._loadHeaderChips() : [];
-
         this._areaObj = this._area ? this.hass?.areas[this._area] : undefined;
+
+        this._headerChips = await this._loadHeaderChips();
 
         if (this._config?.chips) {
             this._areaChips = await this._loadAreaChips(this._config.chips);
@@ -281,10 +287,6 @@ export class PanelCard extends LitElement {
                     pages.push(currentPage);
                     currentPage = [];
                 }
-            } else if (config.type === "blank-tile") {
-                const blankTile = document.createElement("div");
-                blankTile.classList.add("blank-tile");
-                currentPage.push(blankTile as unknown as LovelaceCard);
             } else {
                 const tile = createElement(config) as LovelaceCard;
                 tile.hass = this.hass;
@@ -312,9 +314,9 @@ export class PanelCard extends LitElement {
         e.stopPropagation();
         if (this._swiper) {
             if (direction === "prev") {
-                this._swiper.slideNext();
-            } else {
                 this._swiper.slidePrev();
+            } else {
+                this._swiper.slideNext();
             }
         }
     }
