@@ -9171,10 +9171,10 @@ let PanelCard = class PanelCard extends h {
     }
     updated(changedProps) {
         super.updated(changedProps);
-        if (this._config && this.hass && !this._swiper) {
+        if (!this._swiper) {
             this._initializeSwiper();
         }
-        else if (this._swiper) {
+        else {
             this._swiper.update();
         }
         if (changedProps.has("_config") && this._config) {
