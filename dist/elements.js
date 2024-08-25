@@ -9084,6 +9084,9 @@ const panelStyles = i$3 `
         margin: auto;
         grid-template-rows: var(--sq-tile-height, 7rem);
         gap: var(--sq-tile-spacing, 0.8rem);
+        @media (max-width: 600px) {
+            margin: 0;
+        }
     }
 
     .blank-tile {
