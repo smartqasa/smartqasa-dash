@@ -13,8 +13,8 @@ export const panelStyles = css`
         height: 100%;
         width: 100%;
         box-sizing: border-box;
-        justify-content: space-between;
     }
+
     .top-wrapper {
         display: flex;
         flex-direction: column;
@@ -101,9 +101,17 @@ export const panelStyles = css`
         background-color: transparent;
     }
 
+    .swiper-slide {
+        align-content: center;
+    }
+
     .body-container {
         display: flex;
-        flex-grow: 2;
+        flex-grow: 1;
+        flex-shrink: 1;
+        flex-basis: 0;
+        flex-direction: column;
+        overflow: auto;
     }
 
     .body-tiles {
@@ -136,5 +144,12 @@ export const panelStyles = css`
     .footer-icon {
         height: var(--sq-icon-size, 1.8rem);
         width: var(--sq-icon-size, 1.8rem);
+    }
+
+    .container,
+    .top-wrapper,
+    .footer-container,
+    .body-container {
+        display: flex !important;
     }
 `;

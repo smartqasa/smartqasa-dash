@@ -8974,8 +8974,8 @@ const panelStyles = i$3 `
         height: 100%;
         width: 100%;
         box-sizing: border-box;
-        justify-content: space-between;
     }
+
     .top-wrapper {
         display: flex;
         flex-direction: column;
@@ -9062,9 +9062,17 @@ const panelStyles = i$3 `
         background-color: transparent;
     }
 
+    .swiper-slide {
+        align-content: center;
+    }
+
     .body-container {
         display: flex;
-        flex-grow: 2;
+        flex-grow: 1;
+        flex-shrink: 1;
+        flex-basis: 0;
+        flex-direction: column;
+        overflow: auto;
     }
 
     .body-tiles {
@@ -9097,6 +9105,13 @@ const panelStyles = i$3 `
     .footer-icon {
         height: var(--sq-icon-size, 1.8rem);
         width: var(--sq-icon-size, 1.8rem);
+    }
+
+    .container,
+    .top-wrapper,
+    .footer-container,
+    .body-container {
+        display: flex !important;
     }
 `;
 
@@ -9291,7 +9306,6 @@ let PanelCard = class PanelCard extends h {
         if (!swiperContainer)
             return;
         const swiperParams = {
-            autoHeight: false,
             initialSlide: 0,
             loop: true,
             modules: [Navigation],
