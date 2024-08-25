@@ -8969,16 +8969,19 @@ const panelStyles = i$3 `
     }
 
     .container {
-        display: flex;
-        flex-direction: column;
+        display: grid;
         height: 100%;
         width: 100%;
+        max-width: 100%;
+        grid-template-rows: auto auto 1fr auto;
+        grid-template-columns: 100%;
         box-sizing: border-box;
-        justify-content: space-between;
-    }
-    .top-wrapper {
-        display: flex;
-        flex-direction: column;
+        padding: 1rem 1rem 0 1rem;
+
+        @media (max-width: 600px) {
+            grid-template-rows: auto 1fr auto;
+            padding: 0.5rem 0.5rem 0 0.5rem;
+        }
     }
 
     .header-container {
@@ -9064,11 +9067,11 @@ const panelStyles = i$3 `
 
     .body-container {
         display: flex;
-        flex-grow: 2;
+        height: 100%;
     }
 
-    .swiper-button-prev,
-    .swiper-button-next {
+    .swiper-slide {
+        align-content: center;
     }
 
     .body-tiles {
@@ -9077,6 +9080,12 @@ const panelStyles = i$3 `
         margin: auto;
         gap: var(--sq-tile-spacing, 0.8rem);
         overflow: hidden;
+    }
+
+    .blank-tile {
+        visibility: hidden;
+        width: 100%;
+        height: 100%;
     }
 
     .footer-container {
@@ -9153,16 +9162,10 @@ let PanelCard = class PanelCard extends h {
     render() {
         if (this._loading)
             return ke `<div>Loading...</div>`;
-        const isPhone = deviceType === "phone";
-        const containerStyles = {
-            padding: isPhone ? "0.5rem 0.5rem 0 0.5rem" : "1rem 1rem 0 1rem",
-        };
         return ke `
-            <div class="container" style="${se(containerStyles)}">
-                <div class="top-wrapper">
-                    <div>${this._renderHeader()}</div>
-                    <div>${this._renderArea()}</div>
-                </div>
+            <div class="container">
+                ${deviceType === "tablet" ? ke `<div>${this._renderHeader()}</div>` : D}
+                <div>${this._renderArea()}</div>
                 <div>${this._renderBody()}</div>
                 <div>${this._renderFooter()}</div>
             </div>
@@ -9231,11 +9234,12 @@ let PanelCard = class PanelCard extends h {
             <div class="area-container">
                 <div class="area-info">
                     <div class="area-name">${name}</div>
-                    ${this._areaChips.length > 0
-            ? ke ` <div class="area-chips">
-                              ${this._areaChips.map((chip) => ke `<div class="chip">${chip}</div>`)}
-                          </div>`
-            : D}
+                    ${this._areaChips.length &&
+            ke `
+                        <div class="area-chips">
+                            ${this._areaChips.map((chip) => ke `<div class="chip">${chip}</div>`)}
+                        </div>
+                    `}
                 </div>
                 <img class="area-image" alt="Area picture..." src=${picture} style="max-height: ${height};" />
             </div>
@@ -9349,10 +9353,15 @@ let PanelCard = class PanelCard extends h {
         let currentPage = [];
         for (const config of tilesConfig) {
             if (config.type === "page-break") {
-                if (currentPage.length > 0) {
+                if (currentPage.length) {
                     pages.push(currentPage);
                     currentPage = [];
                 }
+            }
+            else if (config.type === "blank-tile") {
+                const blankTile = document.createElement("div");
+                blankTile.classList.add("blank-tile");
+                currentPage.push(blankTile);
             }
             else {
                 const tile = createElement$1(config);
@@ -9360,7 +9369,7 @@ let PanelCard = class PanelCard extends h {
                 currentPage.push(tile);
             }
         }
-        if (currentPage.length > 0) {
+        if (currentPage.length) {
             pages.push(currentPage);
         }
         return pages;
@@ -9378,10 +9387,10 @@ let PanelCard = class PanelCard extends h {
         e.stopPropagation();
         if (this._swiper) {
             if (direction === "prev") {
-                this._swiper.slidePrev();
+                this._swiper.slideNext();
             }
             else {
-                this._swiper.slideNext();
+                this._swiper.slidePrev();
             }
         }
     }

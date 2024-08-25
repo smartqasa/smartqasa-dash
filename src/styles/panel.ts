@@ -8,16 +8,19 @@ export const panelStyles = css`
     }
 
     .container {
-        display: flex;
-        flex-direction: column;
+        display: grid;
         height: 100%;
         width: 100%;
+        max-width: 100%;
+        grid-template-rows: auto auto 1fr auto;
+        grid-template-columns: 100%;
         box-sizing: border-box;
-        justify-content: space-between;
-    }
-    .top-wrapper {
-        display: flex;
-        flex-direction: column;
+        padding: 1rem 1rem 0 1rem;
+
+        @media (max-width: 600px) {
+            grid-template-rows: auto 1fr auto;
+            padding: 0.5rem 0.5rem 0 0.5rem;
+        }
     }
 
     .header-container {
@@ -103,11 +106,11 @@ export const panelStyles = css`
 
     .body-container {
         display: flex;
-        flex-grow: 2;
+        height: 100%;
     }
 
-    .swiper-button-prev,
-    .swiper-button-next {
+    .swiper-slide {
+        align-content: center;
     }
 
     .body-tiles {
@@ -116,6 +119,12 @@ export const panelStyles = css`
         margin: auto;
         gap: var(--sq-tile-spacing, 0.8rem);
         overflow: hidden;
+    }
+
+    .blank-tile {
+        visibility: hidden;
+        width: 100%;
+        height: 100%;
     }
 
     .footer-container {
