@@ -9076,6 +9076,7 @@ const panelStyles = i$3 `
 
     .body-tiles {
         display: grid;
+        width: min-content;
         gap: var(--sq-tile-spacing, 0.8rem);
     }
 
