@@ -116,6 +116,7 @@ export const panelStyles = css`
     .body-tiles {
         display: grid;
         width: min-content;
+        margin: auto;
         gap: var(--sq-tile-spacing, 0.8rem);
     }
 
