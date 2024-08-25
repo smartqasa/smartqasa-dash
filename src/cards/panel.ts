@@ -206,10 +206,11 @@ export class PanelCard extends LitElement {
     }
 
     private _renderFooterButton(icon: string, name: string, methodName: keyof ActionHandlers): TemplateResult {
+        const isPhone = deviceType === "phone";
         return html`
             <div class="footer-button" @click="${(e: Event) => this._handleFooterAction(e, methodName)}">
                 <ha-icon .icon=${icon}></ha-icon>
-                ${deviceType !== "phone" ? html`<span>${name}</span>` : ""}
+                ${!isPhone ? html`<span>${name}</span>` : nothing}
             </div>
         `;
     }

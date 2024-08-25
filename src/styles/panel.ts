@@ -68,6 +68,11 @@ export const panelStyles = css`
         display: grid;
         grid-template-columns: 1fr 1fr;
         margin-bottom: 2.5rem;
+
+        @media (max-width: 600px) {
+            grid-template-columns: 1fr;
+            margin-bottom: 1rem;
+        }
     }
 
     .area-info {

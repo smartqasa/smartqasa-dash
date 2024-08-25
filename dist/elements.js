@@ -9029,6 +9029,11 @@ const panelStyles = i$3 `
         display: grid;
         grid-template-columns: 1fr 1fr;
         margin-bottom: 2.5rem;
+
+        @media (max-width: 600px) {
+            grid-template-columns: 1fr;
+            margin-bottom: 1rem;
+        }
     }
 
     .area-info {
@@ -9290,10 +9295,11 @@ let PanelCard = class PanelCard extends h {
         `;
     }
     _renderFooterButton(icon, name, methodName) {
+        const isPhone = deviceType === "phone";
         return ke `
             <div class="footer-button" @click="${(e) => this._handleFooterAction(e, methodName)}">
                 <ha-icon .icon=${icon}></ha-icon>
-                ${deviceType !== "phone" ? ke `<span>${name}</span>` : ""}
+                ${!isPhone ? ke `<span>${name}</span>` : D}
             </div>
         `;
     }
