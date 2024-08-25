@@ -158,7 +158,7 @@ export class ShadeTile extends LitElement {
         if (!groupObj) return;
 
         const entityIds = groupObj.attributes?.entity_id;
-        if (!Array.isArray(entityIds) || entityIds.length === 0) return;
+        if (entityIds.length) return;
 
         const friendlyName = this._stateObj.attributes?.friendly_name || "Unknown";
         entityListDialog(friendlyName, "group", group, "shade");

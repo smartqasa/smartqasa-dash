@@ -15,12 +15,22 @@ export const panelStyles = css`
         grid-template-rows: auto auto 1fr auto;
         grid-template-columns: 100%;
         box-sizing: border-box;
+        padding: 1rem 1rem 0 1rem;
+
+        @media (max-width: 600px) {
+            grid-template-rows: auto 1fr auto;
+            padding: 0.5rem 0.5rem 0 0.5rem;
+        }
     }
 
     .header-container {
         display: flex;
         margin-bottom: 2.5rem;
         justify-content: space-between;
+
+        @media (max-width: 600px) {
+            display: none;
+        }
     }
 
     .header-time-date {
@@ -104,16 +114,17 @@ export const panelStyles = css`
         overflow: auto;
     }
 
+    .swiper-wrapper {
+        max-height: 100%;
+    }
+
     .swiper-slide {
         align-content: center;
     }
 
     .body-tiles {
         display: grid;
-        width: min-content;
-        margin: auto;
         gap: var(--sq-tile-spacing, 0.8rem);
-        overflow: hidden;
     }
 
     .footer-container {

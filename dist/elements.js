@@ -8976,12 +8976,22 @@ const panelStyles = i$3 `
         grid-template-rows: auto auto 1fr auto;
         grid-template-columns: 100%;
         box-sizing: border-box;
+        padding: 1rem 1rem 0 1rem;
+
+        @media (max-width: 600px) {
+            grid-template-rows: auto 1fr auto;
+            padding: 0.5rem 0.5rem 0 0.5rem;
+        }
     }
 
     .header-container {
         display: flex;
         margin-bottom: 2.5rem;
         justify-content: space-between;
+
+        @media (max-width: 600px) {
+            display: none;
+        }
     }
 
     .header-time-date {
@@ -9065,16 +9075,17 @@ const panelStyles = i$3 `
         overflow: auto;
     }
 
+    .swiper-wrapper {
+        max-height: 100%;
+    }
+
     .swiper-slide {
         align-content: center;
     }
 
     .body-tiles {
         display: grid;
-        width: min-content;
-        margin: auto;
         gap: var(--sq-tile-spacing, 0.8rem);
-        overflow: hidden;
     }
 
     .footer-container {
@@ -9151,13 +9162,9 @@ let PanelCard = class PanelCard extends h {
     render() {
         if (this._loading)
             return ke `<div>Loading...</div>`;
-        const isPhone = deviceType === "phone";
-        const containerStyles = {
-            padding: isPhone ? "0.5rem 0.5rem 0 0.5rem" : "1rem 1rem 0 1rem",
-        };
         return ke `
-            <div class="container" style="${se(containerStyles)}">
-                <div>${this._renderHeader()}</div>
+            <div class="container">
+                ${deviceType === "tablet" ? ke `<div>${this._renderHeader()}</div>` : D}
                 <div>${this._renderArea()}</div>
                 <div>${this._renderBody()}</div>
                 <div>${this._renderFooter()}</div>
@@ -9183,7 +9190,7 @@ let PanelCard = class PanelCard extends h {
         }
         else if (changedProps.has("hass") && this.hass) {
             this._areaObj = this._area ? this.hass.areas[this._area] : undefined;
-            if (this._headerChips.length) {
+            if (deviceType === "tablet" && this._headerChips.length) {
                 this._headerChips.forEach((chip) => {
                     chip.hass = this.hass;
                 });
@@ -9227,11 +9234,12 @@ let PanelCard = class PanelCard extends h {
             <div class="area-container">
                 <div class="area-info">
                     <div class="area-name">${name}</div>
-                    ${this._areaChips.length > 0
-            ? ke ` <div class="area-chips">
-                              ${this._areaChips.map((chip) => ke `<div class="chip">${chip}</div>`)}
-                          </div>`
-            : D}
+                    ${this._areaChips.length &&
+            ke `
+                        <div class="area-chips">
+                            ${this._areaChips.map((chip) => ke `<div class="chip">${chip}</div>`)}
+                        </div>
+                    `}
                 </div>
                 <img class="area-image" alt="Area picture..." src=${picture} style="max-height: ${height};" />
             </div>
@@ -9308,8 +9316,8 @@ let PanelCard = class PanelCard extends h {
         }
     }
     async _loadContent() {
+        this._headerChips = deviceType === "tablet" ? await this._loadHeaderChips() : [];
         this._areaObj = this._area ? this.hass?.areas[this._area] : undefined;
-        this._headerChips = await this._loadHeaderChips();
         if (this._config?.chips) {
             this._areaChips = await this._loadAreaChips(this._config.chips);
         }
@@ -12710,7 +12718,7 @@ let FanTile = class FanTile extends h {
         if (!groupObj)
             return;
         const entityIds = groupObj.attributes?.entity_id;
-        if (!Array.isArray(entityIds) || entityIds.length === 0)
+        if (entityIds.length)
             return;
         const friendlyName = this._stateObj.attributes?.friendly_name || "Unknown";
         entityListDialog(friendlyName, "group", group, "fan");
@@ -12985,7 +12993,7 @@ let LightTile = class LightTile extends h {
         if (!groupObj)
             return;
         const entityIds = groupObj.attributes?.entity_id;
-        if (!Array.isArray(entityIds) || entityIds.length === 0)
+        if (entityIds.length)
             return;
         const friendlyName = this._stateObj.attributes?.friendly_name || "Unknown";
         entityListDialog(friendlyName, "group", group, "light");
@@ -14168,7 +14176,7 @@ let ShadeTile = class ShadeTile extends h {
         if (!groupObj)
             return;
         const entityIds = groupObj.attributes?.entity_id;
-        if (!Array.isArray(entityIds) || entityIds.length === 0)
+        if (entityIds.length)
             return;
         const friendlyName = this._stateObj.attributes?.friendly_name || "Unknown";
         entityListDialog(friendlyName, "group", group, "shade");
