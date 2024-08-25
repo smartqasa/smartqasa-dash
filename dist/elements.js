@@ -9247,6 +9247,7 @@ let PanelCard = class PanelCard extends h {
         if (!this._config || !this._bodyTiles.length)
             return D;
         const columns = this._config.columns && this._config.columns >= 2 && this._config.columns <= 4 ? this._config.columns : 3;
+        const isPhone = deviceType === "phone";
         const bodyStyles = {
             gridTemplateColumns: deviceType === "phone" ? "1fr 1fr" : `repeat(${columns}, min(21vw, 19.5rem))`,
         };
@@ -9262,14 +9263,18 @@ let PanelCard = class PanelCard extends h {
                                 </div>
                             `)}
                     </div>
-                    <div
-                        class="swiper-button-prev"
-                        @click=${(e) => this._handleSwiperNavigation(e, "prev")}
-                    ></div>
-                    <div
-                        class="swiper-button-next"
-                        @click=${(e) => this._handleSwiperNavigation(e, "next")}
-                    ></div>
+                    ${isPhone
+            ? D
+            : ke `
+                              <div
+                                  class="swiper-button-prev"
+                                  @click=${(e) => this._handleSwiperNavigation(e, "prev")}
+                              ></div>
+                              <div
+                                  class="swiper-button-next"
+                                  @click=${(e) => this._handleSwiperNavigation(e, "next")}
+                              ></div>
+                          `}
                 </div>
             </div>
         `;
@@ -9296,20 +9301,26 @@ let PanelCard = class PanelCard extends h {
         const swiperContainer = this.shadowRoot?.querySelector(".swiper");
         if (!swiperContainer)
             return;
+        const isPhone = deviceType === "phone";
         const swiperParams = {
             initialSlide: 0,
             loop: true,
-            modules: [Navigation],
+            modules: isPhone ? [] : [Navigation], // Exclude Navigation module for phones
             mousewheel: {
                 forceToAxis: true,
             },
-            navigation: {
-                nextEl: ".swiper-button-next",
-                prevEl: ".swiper-button-prev",
-            },
+            ...(isPhone
+                ? {}
+                : {
+                    // Add navigation only if not on phone
+                    navigation: {
+                        nextEl: ".swiper-button-next",
+                        prevEl: ".swiper-button-prev",
+                    },
+                }),
         };
         this._swiper = new Swiper(swiperContainer, swiperParams);
-        if (this._swiper) {
+        if (this._swiper && !isPhone) {
             Swiper.use([Navigation]);
         }
     }

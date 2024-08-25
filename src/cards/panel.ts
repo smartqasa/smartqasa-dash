@@ -157,6 +157,8 @@ export class PanelCard extends LitElement {
         const columns =
             this._config.columns && this._config.columns >= 2 && this._config.columns <= 4 ? this._config.columns : 3;
 
+        const isPhone = deviceType === "phone";
+
         const bodyStyles = {
             gridTemplateColumns: deviceType === "phone" ? "1fr 1fr" : `repeat(${columns}, min(21vw, 19.5rem))`,
         };
@@ -175,14 +177,18 @@ export class PanelCard extends LitElement {
                             `
                         )}
                     </div>
-                    <div
-                        class="swiper-button-prev"
-                        @click=${(e: Event) => this._handleSwiperNavigation(e, "prev")}
-                    ></div>
-                    <div
-                        class="swiper-button-next"
-                        @click=${(e: Event) => this._handleSwiperNavigation(e, "next")}
-                    ></div>
+                    ${isPhone
+                        ? nothing
+                        : html`
+                              <div
+                                  class="swiper-button-prev"
+                                  @click=${(e: Event) => this._handleSwiperNavigation(e, "prev")}
+                              ></div>
+                              <div
+                                  class="swiper-button-next"
+                                  @click=${(e: Event) => this._handleSwiperNavigation(e, "next")}
+                              ></div>
+                          `}
                 </div>
             </div>
         `;
@@ -212,22 +218,29 @@ export class PanelCard extends LitElement {
         const swiperContainer = this.shadowRoot?.querySelector(".swiper");
         if (!swiperContainer) return;
 
+        const isPhone = deviceType === "phone";
+
         const swiperParams: SwiperOptions = {
             initialSlide: 0,
             loop: true,
-            modules: [Navigation],
+            modules: isPhone ? [] : [Navigation], // Exclude Navigation module for phones
             mousewheel: {
                 forceToAxis: true,
             },
-            navigation: {
-                nextEl: ".swiper-button-next",
-                prevEl: ".swiper-button-prev",
-            },
+            ...(isPhone
+                ? {}
+                : {
+                      // Add navigation only if not on phone
+                      navigation: {
+                          nextEl: ".swiper-button-next",
+                          prevEl: ".swiper-button-prev",
+                      },
+                  }),
         };
 
         this._swiper = new Swiper(swiperContainer as HTMLElement, swiperParams);
 
-        if (this._swiper) {
+        if (this._swiper && !isPhone) {
             Swiper.use([Navigation]);
         }
     }
