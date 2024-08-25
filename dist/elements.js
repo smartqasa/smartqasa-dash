@@ -9291,6 +9291,7 @@ let PanelCard = class PanelCard extends h {
         if (!swiperContainer)
             return;
         const swiperParams = {
+            autoHeight: true,
             initialSlide: 0,
             loop: true,
             modules: [Navigation],
@@ -9351,8 +9352,9 @@ let PanelCard = class PanelCard extends h {
                 }
             }
             else if (config.type === "blank") {
-                // Skip adding a tile for blank types
-                continue;
+                const blankTile = document.createElement("div");
+                blankTile.classList.add("blank-tile");
+                currentPage.push(blankTile); // Cast to LovelaceCard for type compatibility
             }
             else {
                 const tile = createElement$1(config);
