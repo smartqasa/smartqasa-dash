@@ -8970,6 +8970,8 @@ const panelStyles = i$3 `
 
     .container {
         display: grid;
+        height: 100%;
+        width: 100%;
         grid-template-rows: auto auto 1fr auto;
         grid-template-columns: 100%;
         box-sizing: border-box;
@@ -9186,7 +9188,7 @@ let PanelCard = class PanelCard extends h {
         }
         else if (changedProps.has("hass") && this.hass) {
             this._areaObj = this._area ? this.hass.areas[this._area] : undefined;
-            if (this._headerChips.length) {
+            if (deviceType === "tablet" && this._headerChips.length) {
                 this._headerChips.forEach((chip) => {
                     chip.hass = this.hass;
                 });
@@ -9222,7 +9224,6 @@ let PanelCard = class PanelCard extends h {
     }
     _renderArea() {
         const name = this._config?.name ?? this._areaObj?.name ?? "Area";
-        const height = deviceType === "phone" ? "15vh" : "20vh";
         const picture = this._config?.picture
             ? `/local/smartqasa/images/${this._config.picture}`
             : this._areaObj?.picture ?? img$24;
@@ -9237,7 +9238,7 @@ let PanelCard = class PanelCard extends h {
                         </div>
                     `}
                 </div>
-                <img class="area-image" alt="Area picture..." src=${picture} style="max-height: ${height};" />
+                <img class="area-image" alt="Area picture..." src=${picture} />
             </div>
         `;
     }
