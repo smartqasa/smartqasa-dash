@@ -9247,7 +9247,7 @@ let PanelCard = class PanelCard extends h {
             return D;
         const columns = this._config.columns && this._config.columns >= 2 && this._config.columns <= 4 ? this._config.columns : 3;
         const bodyStyles = {
-            gridTemplateColumns: `repeat(${columns}, min(21vw, 19.5rem))`,
+            gridTemplateColumns: deviceType === "phone" ? "1fr 1fr" : `repeat(${columns}, min(21vw, 19.5rem))`,
         };
         return ke `
             <div class="body-container">
