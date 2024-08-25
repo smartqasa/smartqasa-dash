@@ -8969,16 +8969,13 @@ const panelStyles = i$3 `
     }
 
     .container {
-        display: flex;
-        flex-direction: column;
+        display: grid;
         height: 100%;
         width: 100%;
+        max-width: 100%;
+        grid-template-rows: auto auto 1fr auto;
+        grid-template-columns: 100%;
         box-sizing: border-box;
-    }
-
-    .top-wrapper {
-        display: flex;
-        flex-direction: column;
     }
 
     .header-container {
@@ -9064,17 +9061,8 @@ const panelStyles = i$3 `
 
     .body-container {
         display: flex;
-        flex-grow: 1;
-        flex-shrink: 1;
-        flex-basis: 0;
-        flex-direction: column;
+        height: 100%;
         overflow: auto;
-    }
-
-    .swiper {
-        max-width: 100%; /* Prevents horizontal overflow */
-        width: 100%; /* Ensure it fills the available horizontal space */
-        box-sizing: border-box; /* Ensures padding/border doesn't affect the width */
     }
 
     .swiper-slide {
@@ -9111,13 +9099,6 @@ const panelStyles = i$3 `
     .footer-icon {
         height: var(--sq-icon-size, 1.8rem);
         width: var(--sq-icon-size, 1.8rem);
-    }
-
-    .container,
-    .top-wrapper,
-    .footer-container,
-    .body-container {
-        display: flex !important;
     }
 `;
 
@@ -9176,10 +9157,8 @@ let PanelCard = class PanelCard extends h {
         };
         return ke `
             <div class="container" style="${se(containerStyles)}">
-                <div class="top-wrapper">
-                    <div>${this._renderHeader()}</div>
-                    <div>${this._renderArea()}</div>
-                </div>
+                <div>${this._renderHeader()}</div>
+                <div>${this._renderArea()}</div>
                 <div>${this._renderBody()}</div>
                 <div>${this._renderFooter()}</div>
             </div>
