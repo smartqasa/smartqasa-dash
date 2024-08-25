@@ -9067,10 +9067,6 @@ const panelStyles = i$3 `
         flex-grow: 2;
     }
 
-    .swiper-button-prev,
-    .swiper-button-next {
-    }
-
     .body-tiles {
         display: grid;
         width: min-content;
@@ -9175,10 +9171,10 @@ let PanelCard = class PanelCard extends h {
     }
     updated(changedProps) {
         super.updated(changedProps);
-        if (!this._swiper) {
+        if (!this._config && this.hass && !this._swiper) {
             this._initializeSwiper();
         }
-        else {
+        else if (this._swiper) {
             this._swiper.update();
         }
         if (changedProps.has("_config") && this._config) {
@@ -9353,6 +9349,10 @@ let PanelCard = class PanelCard extends h {
                     pages.push(currentPage);
                     currentPage = [];
                 }
+            }
+            else if (config.type === "blank") {
+                // Skip adding a tile for blank types
+                continue;
             }
             else {
                 const tile = createElement$1(config);

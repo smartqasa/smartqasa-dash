@@ -85,9 +85,9 @@ export class PanelCard extends LitElement {
     protected updated(changedProps: PropertyValues) {
         super.updated(changedProps);
 
-        if (!this._swiper) {
+        if (!this._config && this.hass && !this._swiper) {
             this._initializeSwiper();
-        } else {
+        } else if (this._swiper) {
             this._swiper.update();
         }
 
@@ -287,6 +287,9 @@ export class PanelCard extends LitElement {
                     pages.push(currentPage);
                     currentPage = [];
                 }
+            } else if (config.type === "blank") {
+                // Skip adding a tile for blank types
+                continue;
             } else {
                 const tile = createElement(config) as LovelaceCard;
                 tile.hass = this.hass;
