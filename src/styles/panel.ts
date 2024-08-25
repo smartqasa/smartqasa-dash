@@ -101,10 +101,6 @@ export const panelStyles = css`
         background-color: transparent;
     }
 
-    .swiper-slide {
-        align-content: center;
-    }
-
     .body-container {
         display: flex;
         flex-grow: 1;
@@ -112,6 +108,16 @@ export const panelStyles = css`
         flex-basis: 0;
         flex-direction: column;
         overflow: auto;
+    }
+
+    .swiper {
+        max-width: 100%; /* Prevents horizontal overflow */
+        width: 100%; /* Ensure it fills the available horizontal space */
+        box-sizing: border-box; /* Ensures padding/border doesn't affect the width */
+    }
+
+    .swiper-slide {
+        align-content: center;
     }
 
     .body-tiles {
