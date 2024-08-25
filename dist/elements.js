@@ -9065,17 +9065,16 @@ const panelStyles = i$3 `
         overflow: auto;
     }
 
-    .swiper-wrapper {
-        max-height: 100%;
-    }
-
     .swiper-slide {
         align-content: center;
     }
 
     .body-tiles {
         display: grid;
+        width: min-content;
+        margin: auto;
         gap: var(--sq-tile-spacing, 0.8rem);
+        overflow: hidden;
     }
 
     .footer-container {
@@ -9158,8 +9157,10 @@ let PanelCard = class PanelCard extends h {
         };
         return ke `
             <div class="container" style="${se(containerStyles)}">
-                <div>${this._renderHeader()}</div>
-                <div>${this._renderArea()}</div>
+                <div class="top-wrapper">
+                    <div>${this._renderHeader()}</div>
+                    <div>${this._renderArea()}</div>
+                </div>
                 <div>${this._renderBody()}</div>
                 <div>${this._renderFooter()}</div>
             </div>

@@ -64,8 +64,10 @@ export class PanelCard extends LitElement {
 
         return html`
             <div class="container" style="${styleMap(containerStyles)}">
-                <div>${this._renderHeader()}</div>
-                <div>${this._renderArea()}</div>
+                <div class="top-wrapper">
+                    <div>${this._renderHeader()}</div>
+                    <div>${this._renderArea()}</div>
+                </div>
                 <div>${this._renderBody()}</div>
                 <div>${this._renderFooter()}</div>
             </div>
