@@ -9069,7 +9069,6 @@ const panelStyles = i$3 `
 
     .swiper-button-prev,
     .swiper-button-next {
-        position: absolute;
     }
 
     .body-tiles {
@@ -9261,8 +9260,14 @@ let PanelCard = class PanelCard extends h {
                                 </div>
                             `)}
                     </div>
-                    <div class="swiper-button-prev"></div>
-                    <div class="swiper-button-next"></div>
+                    <div
+                        class="swiper-button-prev"
+                        @click=${(e) => this._handleSwiperNavigation(e, "prev")}
+                    ></div>
+                    <div
+                        class="swiper-button-next"
+                        @click=${(e) => this._handleSwiperNavigation(e, "next")}
+                    ></div>
                 </div>
             </div>
         `;
@@ -14475,7 +14480,7 @@ PopupConfirmation = __decorate([
     t$1("popup-confirmation")
 ], PopupConfirmation);
 
-var version = "2024.8.24b-1";
+var version = "2024.8.27b-1";
 
 window.smartqasa = window.smartqasa || {};
 window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();
