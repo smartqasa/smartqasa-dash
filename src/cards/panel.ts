@@ -85,7 +85,7 @@ export class PanelCard extends LitElement {
     protected updated(changedProps: PropertyValues) {
         super.updated(changedProps);
 
-        if (!this._config && this.hass && !this._swiper) {
+        if (this._config && this.hass && !this._swiper) {
             this._initializeSwiper();
         } else if (this._swiper) {
             this._swiper.update();
