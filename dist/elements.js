@@ -9059,7 +9059,8 @@ const panelStyles = i$3 `
         box-shadow: none;
         background-color: transparent;
     }
-    s .body-container {
+
+    .body-container {
         display: flex;
         height: 100%;
     }
@@ -9134,6 +9135,10 @@ const panelStyles = i$3 `
 
         .area-chips {
             margin-bottom: 0.5rem;
+        }
+
+        .body-container {
+            flex-direction: column;
         }
 
         .footer-button span {

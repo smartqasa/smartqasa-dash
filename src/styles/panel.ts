@@ -98,7 +98,8 @@ export const panelStyles = css`
         box-shadow: none;
         background-color: transparent;
     }
-    s .body-container {
+
+    .body-container {
         display: flex;
         height: 100%;
     }
@@ -173,6 +174,10 @@ export const panelStyles = css`
 
         .area-chips {
             margin-bottom: 0.5rem;
+        }
+
+        .body-container {
+            flex-direction: column;
         }
 
         .footer-button span {
