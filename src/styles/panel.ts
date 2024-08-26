@@ -173,11 +173,8 @@ export const panelStyles = css`
         }
 
         .area-chips {
+            margin-top: 0.5rem;
             margin-bottom: 0.5rem;
-        }
-
-        .body-container {
-            flex-direction: column;
         }
 
         .footer-button span {

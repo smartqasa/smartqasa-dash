@@ -9134,11 +9134,8 @@ const panelStyles = i$3 `
         }
 
         .area-chips {
+            margin-top: 0.5rem;
             margin-bottom: 0.5rem;
-        }
-
-        .body-container {
-            flex-direction: column;
         }
 
         .footer-button span {
