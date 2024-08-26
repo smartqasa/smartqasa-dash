@@ -9049,6 +9049,7 @@ const panelStyles = i$3 `
     .body-container {
         display: flex;
         height: 100%;
+        overflow-y: auto;
     }
 
     .swiper-slide {
@@ -9062,7 +9063,6 @@ const panelStyles = i$3 `
         grid-template-columns: repeat(3, var(--sq-tile-width, 19.5rem));
         grid-template-rows: var(--sq-tile-height, 7rem);
         gap: var(--sq-tile-spacing, 0.8rem);
-        overflow-y: auto;
     }
 
     .blank-tile {
