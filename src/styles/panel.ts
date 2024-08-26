@@ -148,35 +148,30 @@ export const panelStyles = css`
     }
 
     /* Phone Portrait */
-    @media (max-width: 600px) and (orientation: portrait) {
+    @media (max-width: 600px) {
         .container {
             grid-template-rows: auto 1fr auto;
             padding: 0.5rem 0.5rem 0 0.5rem;
         }
 
         .area-container {
-            display: grid;
             grid-template-areas:
                 "name"
                 "image"
                 "chips";
             grid-template-columns: 1fr;
-            grid-template-rows: auto 15vh auto;
             margin-bottom: 0.5rem;
         }
 
         .area-name {
-            grid-area: name;
             margin-bottom: 0.5rem;
         }
 
         .area-image {
-            grid-area: image;
             margin-bottom: 0.5rem;
         }
 
         .area-chips {
-            grid-area: chips;
             margin-bottom: 0.5rem;
         }
 
