@@ -8968,7 +8968,6 @@ const panelStyles = i$3 `
         background: var(--sq-panel-background);
     }
 
-    /* Default layout for larger devices */
     .container {
         display: grid;
         height: 100%;
@@ -8977,90 +8976,6 @@ const panelStyles = i$3 `
         grid-template-columns: 100%;
         box-sizing: border-box;
         padding: 1rem 1rem 0 1rem;
-    }
-
-    /* Phone Portrait */
-    @media (max-width: 600px) and (orientation: portrait) {
-        .container {
-            grid-template-rows: auto 1fr auto;
-            padding: 0.5rem 0.5rem 0 0.5rem;
-        }
-
-        .area-container {
-            grid-template-columns: 1fr;
-            margin-bottom: 1rem;
-        }
-
-        .body-container {
-            flex-direction: column;
-        }
-
-        .footer-button span {
-            display: none; /* Hide text in footer buttons */
-        }
-    }
-
-    /* Phone Landscape */
-    @media (max-width: 600px) and (orientation: landscape) {
-        .container {
-            grid-template-rows: auto 1fr auto;
-            padding: 0.5rem 1rem 0 1rem;
-        }
-
-        .area-container {
-            grid-template-columns: 1fr 1fr;
-            margin-bottom: 0.5rem;
-        }
-
-        .body-container {
-            flex-direction: row;
-        }
-
-        .footer-button span {
-            display: none; /* Hide text in footer buttons */
-        }
-    }
-
-    /* Tablet Portrait */
-    @media (min-width: 601px) and (max-width: 900px) and (orientation: portrait) {
-        .container {
-            grid-template-rows: auto auto 1fr auto;
-            padding: 1rem 1rem 0 1rem;
-        }
-
-        .area-container {
-            grid-template-columns: 1fr;
-            margin-bottom: 1rem;
-        }
-
-        .body-container {
-            flex-direction: column;
-        }
-
-        .footer-button span {
-            display: inline; /* Show text in footer buttons */
-        }
-    }
-
-    /* Tablet Landscape */
-    @media (min-width: 601px) and (max-width: 900px) and (orientation: landscape) {
-        .container {
-            grid-template-rows: auto auto 1fr auto;
-            padding: 1rem 1.5rem 0 1.5rem;
-        }
-
-        .area-container {
-            grid-template-columns: 1fr 1fr;
-            margin-bottom: 1rem;
-        }
-
-        .body-container {
-            flex-direction: row;
-        }
-
-        .footer-button span {
-            display: inline; /* Show text in footer buttons */
-        }
     }
 
     .header-container {
@@ -9107,16 +9022,16 @@ const panelStyles = i$3 `
 
     .area-container {
         display: grid;
+        grid-template-areas:
+            '"name" "image"'
+            '"chips" "image"';
         grid-template-columns: 1fr 1fr;
+        grid-template-rows: 20vh auto;
         margin-bottom: 2.5rem;
     }
 
-    .area-info {
-        display: flex;
-        flex-direction: column;
-    }
-
     .area-name {
+        grid-area: name;
         margin-bottom: 0.4rem;
         line-height: normal;
         text-align: left;
@@ -9126,6 +9041,7 @@ const panelStyles = i$3 `
     }
 
     .area-chips {
+        grid-area: chips;
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
@@ -9135,6 +9051,7 @@ const panelStyles = i$3 `
     }
 
     .area-image {
+        grid-area: image;
         width: 100%;
         height: 100%;
         object-fit: cover;
@@ -9190,6 +9107,48 @@ const panelStyles = i$3 `
     .footer-icon {
         height: var(--sq-icon-size, 1.8rem);
         width: var(--sq-icon-size, 1.8rem);
+    }
+
+    /* Phone Portrait */
+    @media (max-width: 600px) and (orientation: portrait) {
+        .container {
+            grid-template-rows: auto 1fr auto;
+            padding: 0.5rem 0.5rem 0 0.5rem;
+        }
+
+        .area-container {
+            display: grid;
+            grid-template-areas:
+                "name"
+                "image"
+                "chips";
+            grid-template-columns: 1fr; /* Single column for stacking */
+            grid-template-rows: auto 15vh auto;
+            margin-bottom: 0.5rem;
+        }
+
+        .area-name {
+            grid-area: name;
+            margin-bottom: 0.5rem;
+        }
+
+        .area-image {
+            grid-area: image;
+            margin-bottom: 0.5rem;
+        }
+
+        .area-chips {
+            grid-area: chips;
+            margin-bottom: 0.5rem;
+        }
+
+        .body-container {
+            flex-direction: column;
+        }
+
+        .footer-button span {
+            display: none; /* Hide text in footer buttons */
+        }
     }
 `;
 
@@ -9311,16 +9270,15 @@ let PanelCard = class PanelCard extends h {
             : this._areaObj?.picture ?? img$24;
         return ke `
             <div class="area-container">
-                <div class="area-info">
-                    <div class="area-name">${name}</div>
-                    ${this._areaChips.length &&
-            ke `
-                        <div class="area-chips">
-                            ${this._areaChips.map((chip) => ke `<div class="chip">${chip}</div>`)}
-                        </div>
-                    `}
-                </div>
-                <img class="area-image" alt="Area picture..." src=${picture} />
+                <div class="area-name" style="grid-area: name;">${name}</div>
+                <img class="area-image" style="grid-area: image;" alt="Area picture..." src=${picture} />
+                ${this._areaChips.length > 0
+            ? ke `
+                          <div class="area-chips" style="grid-area: chips;">
+                              ${this._areaChips.map((chip) => ke `<div class="chip">${chip}</div>`)}
+                          </div>
+                      `
+            : D}
             </div>
         `;
     }

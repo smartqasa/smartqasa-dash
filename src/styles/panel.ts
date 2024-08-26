@@ -7,7 +7,6 @@ export const panelStyles = css`
         background: var(--sq-panel-background);
     }
 
-    /* Default layout for larger devices */
     .container {
         display: grid;
         height: 100%;
@@ -16,90 +15,6 @@ export const panelStyles = css`
         grid-template-columns: 100%;
         box-sizing: border-box;
         padding: 1rem 1rem 0 1rem;
-    }
-
-    /* Phone Portrait */
-    @media (max-width: 600px) and (orientation: portrait) {
-        .container {
-            grid-template-rows: auto 1fr auto;
-            padding: 0.5rem 0.5rem 0 0.5rem;
-        }
-
-        .area-container {
-            grid-template-columns: 1fr;
-            margin-bottom: 1rem;
-        }
-
-        .body-container {
-            flex-direction: column;
-        }
-
-        .footer-button span {
-            display: none; /* Hide text in footer buttons */
-        }
-    }
-
-    /* Phone Landscape */
-    @media (max-width: 600px) and (orientation: landscape) {
-        .container {
-            grid-template-rows: auto 1fr auto;
-            padding: 0.5rem 1rem 0 1rem;
-        }
-
-        .area-container {
-            grid-template-columns: 1fr 1fr;
-            margin-bottom: 0.5rem;
-        }
-
-        .body-container {
-            flex-direction: row;
-        }
-
-        .footer-button span {
-            display: none; /* Hide text in footer buttons */
-        }
-    }
-
-    /* Tablet Portrait */
-    @media (min-width: 601px) and (max-width: 900px) and (orientation: portrait) {
-        .container {
-            grid-template-rows: auto auto 1fr auto;
-            padding: 1rem 1rem 0 1rem;
-        }
-
-        .area-container {
-            grid-template-columns: 1fr;
-            margin-bottom: 1rem;
-        }
-
-        .body-container {
-            flex-direction: column;
-        }
-
-        .footer-button span {
-            display: inline; /* Show text in footer buttons */
-        }
-    }
-
-    /* Tablet Landscape */
-    @media (min-width: 601px) and (max-width: 900px) and (orientation: landscape) {
-        .container {
-            grid-template-rows: auto auto 1fr auto;
-            padding: 1rem 1.5rem 0 1.5rem;
-        }
-
-        .area-container {
-            grid-template-columns: 1fr 1fr;
-            margin-bottom: 1rem;
-        }
-
-        .body-container {
-            flex-direction: row;
-        }
-
-        .footer-button span {
-            display: inline; /* Show text in footer buttons */
-        }
     }
 
     .header-container {
@@ -146,16 +61,16 @@ export const panelStyles = css`
 
     .area-container {
         display: grid;
+        grid-template-areas:
+            '"name" "image"'
+            '"chips" "image"';
         grid-template-columns: 1fr 1fr;
+        grid-template-rows: 20vh auto;
         margin-bottom: 2.5rem;
     }
 
-    .area-info {
-        display: flex;
-        flex-direction: column;
-    }
-
     .area-name {
+        grid-area: name;
         margin-bottom: 0.4rem;
         line-height: normal;
         text-align: left;
@@ -165,6 +80,7 @@ export const panelStyles = css`
     }
 
     .area-chips {
+        grid-area: chips;
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
@@ -174,6 +90,7 @@ export const panelStyles = css`
     }
 
     .area-image {
+        grid-area: image;
         width: 100%;
         height: 100%;
         object-fit: cover;
@@ -229,5 +146,47 @@ export const panelStyles = css`
     .footer-icon {
         height: var(--sq-icon-size, 1.8rem);
         width: var(--sq-icon-size, 1.8rem);
+    }
+
+    /* Phone Portrait */
+    @media (max-width: 600px) and (orientation: portrait) {
+        .container {
+            grid-template-rows: auto 1fr auto;
+            padding: 0.5rem 0.5rem 0 0.5rem;
+        }
+
+        .area-container {
+            display: grid;
+            grid-template-areas:
+                "name"
+                "image"
+                "chips";
+            grid-template-columns: 1fr; /* Single column for stacking */
+            grid-template-rows: auto 15vh auto;
+            margin-bottom: 0.5rem;
+        }
+
+        .area-name {
+            grid-area: name;
+            margin-bottom: 0.5rem;
+        }
+
+        .area-image {
+            grid-area: image;
+            margin-bottom: 0.5rem;
+        }
+
+        .area-chips {
+            grid-area: chips;
+            margin-bottom: 0.5rem;
+        }
+
+        .body-container {
+            flex-direction: column;
+        }
+
+        .footer-button span {
+            display: none; /* Hide text in footer buttons */
+        }
     }
 `;

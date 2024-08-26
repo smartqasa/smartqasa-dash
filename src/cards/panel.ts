@@ -137,16 +137,15 @@ export class PanelCard extends LitElement {
 
         return html`
             <div class="area-container">
-                <div class="area-info">
-                    <div class="area-name">${name}</div>
-                    ${this._areaChips.length &&
-                    html`
-                        <div class="area-chips">
-                            ${this._areaChips.map((chip) => html`<div class="chip">${chip}</div>`)}
-                        </div>
-                    `}
-                </div>
-                <img class="area-image" alt="Area picture..." src=${picture} />
+                <div class="area-name" style="grid-area: name;">${name}</div>
+                <img class="area-image" style="grid-area: image;" alt="Area picture..." src=${picture} />
+                ${this._areaChips.length > 0
+                    ? html`
+                          <div class="area-chips" style="grid-area: chips;">
+                              ${this._areaChips.map((chip) => html`<div class="chip">${chip}</div>`)}
+                          </div>
+                      `
+                    : nothing}
             </div>
         `;
     }
