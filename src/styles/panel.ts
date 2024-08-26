@@ -13,13 +13,12 @@ export const panelStyles = css`
         width: 100%;
         grid-template-rows: auto auto 1fr auto;
         grid-template-columns: 100%;
-        box-sizing: border-box;
+        row-gap: 2rem;
         padding: 1rem 1rem 0 1rem;
     }
 
     .header-container {
         display: flex;
-        margin-bottom: 2rem;
         justify-content: space-between;
     }
 
@@ -65,7 +64,6 @@ export const panelStyles = css`
             "name image"
             "chips image";
         grid-template-columns: 1fr 1fr;
-        margin-bottom: 2.5rem;
     }
 
     .area-name {
@@ -151,6 +149,7 @@ export const panelStyles = css`
     @media (max-width: 600px) and (orientation: portrait) {
         .container {
             grid-template-rows: auto 1fr auto;
+            row-gap: 0.5rem;
             padding: 0.5rem 0.5rem 0 0.5rem;
         }
 
@@ -160,21 +159,17 @@ export const panelStyles = css`
                 "image"
                 "chips";
             grid-template-columns: 1fr;
-            margin-bottom: 0.5rem;
+            row-gap: 0.5rem;
         }
 
         .area-name {
             height: 15vh;
-            margin-bottom: 2rem;
         }
 
         .area-image {
-            margin-bottom: 0.5rem;
         }
 
         .area-chips {
-            margin-top: 0.5rem;
-            margin-bottom: 0.5rem;
         }
 
         .footer-button span {
