@@ -9053,6 +9053,10 @@ const panelStyles = i$3 `
         overflow-y: auto;
     }
 
+    .swiper-slide {
+        height: auto !important;
+    }
+
     .body-tiles {
         display: grid;
         width: min-content;

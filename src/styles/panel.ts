@@ -105,6 +105,10 @@ export const panelStyles = css`
         overflow-y: auto;
     }
 
+    .swiper-slide {
+        height: auto !important;
+    }
+
     .body-tiles {
         display: grid;
         width: min-content;
