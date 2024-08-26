@@ -62,8 +62,8 @@ export const panelStyles = css`
     .area-container {
         display: grid;
         grid-template-areas:
-            '"name" "image"'
-            '"chips" "image"';
+            "name" "image"
+            "chips" "image";
         grid-template-columns: 1fr 1fr;
         margin-bottom: 2.5rem;
     }
@@ -160,7 +160,7 @@ export const panelStyles = css`
                 "name"
                 "image"
                 "chips";
-            grid-template-columns: 1fr; /* Single column for stacking */
+            grid-template-columns: 1fr;
             grid-template-rows: auto 15vh auto;
             margin-bottom: 0.5rem;
         }
