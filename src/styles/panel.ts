@@ -15,6 +15,7 @@ export const panelStyles = css`
         grid-template-columns: 100%;
         row-gap: 2rem;
         padding: 1rem 1rem 0 1rem;
+        box-sizing: border-box;
     }
 
     .header-container {
