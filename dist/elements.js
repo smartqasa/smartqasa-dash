@@ -8951,7 +8951,7 @@ async function menuConfig(menu_tab) {
 const panelStyles = i$3 `
     :host {
         display: flex;
-        height: 100vh;
+        height: 100%;
         width: 100%;
         background: var(--sq-panel-background);
     }
@@ -9051,10 +9051,6 @@ const panelStyles = i$3 `
         display: flex;
         height: 100%;
         overflow-y: auto;
-    }
-
-    .swiper-slide {
-        align-content: center;
     }
 
     .body-tiles {
