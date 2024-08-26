@@ -9242,7 +9242,7 @@ let PanelCard = class PanelCard extends h {
             : this._areaObj?.picture ?? img$24;
         return ke `
             <div class="area-container">
-                <div class="area-name" style="grid-area: name;">${name}</div>
+                <div class="area-name" style="grid-area: name;">${name} ${deviceType}</div>
                 <img class="area-image" style="grid-area: image;" alt="Area picture..." src=${picture} />
                 ${this._areaChips.length > 0
             ? ke `

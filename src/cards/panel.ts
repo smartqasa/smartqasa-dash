@@ -137,7 +137,7 @@ export class PanelCard extends LitElement {
 
         return html`
             <div class="area-container">
-                <div class="area-name" style="grid-area: name;">${name}</div>
+                <div class="area-name" style="grid-area: name;">${name} ${deviceType}</div>
                 <img class="area-image" style="grid-area: image;" alt="Area picture..." src=${picture} />
                 ${this._areaChips.length > 0
                     ? html`
@@ -152,7 +152,6 @@ export class PanelCard extends LitElement {
 
     private _renderBody() {
         if (!this._config || !this._bodyTiles.length) return nothing;
-
         if (deviceType === "phone") {
             return html`
                 <div class="body-container">
