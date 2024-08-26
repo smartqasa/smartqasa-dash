@@ -62,8 +62,8 @@ export const panelStyles = css`
     .area-container {
         display: grid;
         grid-template-areas:
-            "name" "image"
-            "chips" "image";
+            "name image"
+            "chips image";
         grid-template-columns: 1fr 1fr;
         margin-bottom: 2.5rem;
     }
