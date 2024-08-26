@@ -98,8 +98,7 @@ export const panelStyles = css`
         box-shadow: none;
         background-color: transparent;
     }
-
-    .body-container {
+    s .body-container {
         display: flex;
         height: 100%;
     }
@@ -148,7 +147,7 @@ export const panelStyles = css`
     }
 
     /* Phone Portrait */
-    @media (max-width: 6000px) {
+    @media (max-width: 600px) and (orientation: portrait) {
         .container {
             grid-template-rows: auto 1fr auto;
             padding: 0.5rem 0.5rem 0 0.5rem;
@@ -164,20 +163,16 @@ export const panelStyles = css`
         }
 
         .area-name {
-            margin-bottom: 0.5rem;
+            height: 15vh;
+            margin-bottom: 2rem;
         }
 
         .area-image {
-            height: 15vh;
             margin-bottom: 0.5rem;
         }
 
         .area-chips {
             margin-bottom: 0.5rem;
-        }
-
-        .body-container {
-            flex-direction: column;
         }
 
         .footer-button span {
