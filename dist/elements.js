@@ -9059,8 +9059,7 @@ const panelStyles = i$3 `
         box-shadow: none;
         background-color: transparent;
     }
-
-    .body-container {
+    s .body-container {
         display: flex;
         height: 100%;
     }
