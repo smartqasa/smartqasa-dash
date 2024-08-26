@@ -2,7 +2,8 @@ import { css } from "lit";
 
 export const panelStyles = css`
     :host {
-        height: 100%;
+        display: flex;
+        height: 100vh;
         width: 100%;
         background: var(--sq-panel-background);
     }
@@ -102,7 +103,7 @@ export const panelStyles = css`
 
     .body-container {
         grid-row: 3;
-        display: flex;
+        display: block;
         height: 100%;
         overflow-y: auto;
     }
