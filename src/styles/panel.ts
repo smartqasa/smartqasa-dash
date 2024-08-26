@@ -100,7 +100,7 @@ export const panelStyles = css`
     }
 
     .body-container {
-        display: block;
+        display: flex;
         height: 100%;
         overflow-y: auto;
     }

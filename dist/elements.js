@@ -9048,7 +9048,7 @@ const panelStyles = i$3 `
     }
 
     .body-container {
-        display: block;
+        display: flex;
         height: 100%;
         overflow-y: auto;
     }
