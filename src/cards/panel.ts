@@ -153,14 +153,18 @@ export class PanelCard extends LitElement {
     private _renderBody() {
         if (!this._config || !this._bodyTiles.length) return nothing;
 
+        if (deviceType === "phone") {
+            return html`
+                <div class="body-container">
+                    <div class="body-tiles">
+                        ${this._bodyTiles.flat().map((tile) => html`<div class="tile">${tile}</div>`)}
+                    </div>
+                </div>
+            `;
+        }
+
         const columns =
             this._config.columns && this._config.columns >= 2 && this._config.columns <= 4 ? this._config.columns : 3;
-
-        const isPhone = deviceType === "phone";
-
-        const bodyStyles = {
-            gridTemplateColumns: deviceType === "phone" ? "1fr 1fr" : `repeat(${columns}, min(21vw, 19.5rem))`,
-        };
 
         return html`
             <div class="body-container">
@@ -169,25 +173,24 @@ export class PanelCard extends LitElement {
                         ${this._bodyTiles.map(
                             (page) => html`
                                 <div class="swiper-slide">
-                                    <div class="body-tiles" style="${styleMap(bodyStyles)}">
+                                    <div
+                                        class="body-tiles"
+                                        style="grid-template-columns: repeat(${columns}, var(--sq-tile-width), 19.5rem)"
+                                    >
                                         ${page.map((tile) => html`<div class="tile">${tile}</div>`)}
                                     </div>
                                 </div>
                             `
                         )}
                     </div>
-                    ${isPhone
-                        ? nothing
-                        : html`
-                              <div
-                                  class="swiper-button-prev"
-                                  @click=${(e: Event) => this._handleSwiperNavigation(e, "prev")}
-                              ></div>
-                              <div
-                                  class="swiper-button-next"
-                                  @click=${(e: Event) => this._handleSwiperNavigation(e, "next")}
-                              ></div>
-                          `}
+                    <div
+                        class="swiper-button-prev"
+                        @click=${(e: Event) => this._handleSwiperNavigation(e, "prev")}
+                    ></div>
+                    <div
+                        class="swiper-button-next"
+                        @click=${(e: Event) => this._handleSwiperNavigation(e, "next")}
+                    ></div>
                 </div>
             </div>
         `;

@@ -172,19 +172,6 @@ HorizontalStack = __decorate([
 ], HorizontalStack);
 
 /**
- * @license
- * Copyright 2017 Google LLC
- * SPDX-License-Identifier: BSD-3-Clause
- */
-const t={ATTRIBUTE:1,CHILD:2,PROPERTY:3,BOOLEAN_ATTRIBUTE:4,EVENT:5,ELEMENT:6},e=t=>(...e)=>({_$litDirective$:t,values:e});let i$1 = class i{constructor(t){}get _$AU(){return this._$AM._$AU}_$AT(t,e,i){this.t=t,this._$AM=e,this.i=i;}_$AS(t,e){return this.update(t,e)}update(t,e){return this.render(...e)}};
-
-/**
- * @license
- * Copyright 2018 Google LLC
- * SPDX-License-Identifier: BSD-3-Clause
- */const ee="important",ie=" !"+ee,se=e(class extends i$1{constructor(e){if(super(e),e.type!==t.ATTRIBUTE||"style"!==e.name||e.strings?.length>2)throw Error("The `styleMap` directive must be used in the `style` attribute and must be the only part in the attribute.")}render(t){return Object.keys(t).reduce(((e,r)=>{const s=t[r];return null==s?e:e+`${r=r.includes("-")?r:r.replace(/(?:^(webkit|moz|ms|o)|)(?=[A-Z])/g,"-$&").toLowerCase()}:${s};`}),"")}update(t,[e]){const{style:r}=t.element;if(void 0===this.ft)return this.ft=new Set(Object.keys(e)),this.render(e);for(const t of this.ft)null==e[t]&&(this.ft.delete(t),t.includes("-")?r.removeProperty(t):r[t]=null);for(const t in e){const s=e[t];if(null!=s){this.ft.add(t);const e="string"==typeof s&&s.endsWith(ie);t.includes("-")||e?r.setProperty(t,e?s.slice(0,-11):s,e?ee:""):r[t]=s;}}return R}});
-
-/**
  * SSR Window 4.0.2
  * Better handling for window object in SSR environment
  * https://github.com/nolimits4web/ssr-window
@@ -5972,9 +5959,9 @@ function charFromCodepoint(c) {
 
 var simpleEscapeCheck = new Array(256); // integer, for fast access
 var simpleEscapeMap = new Array(256);
-for (var i = 0; i < 256; i++) {
-  simpleEscapeCheck[i] = simpleEscapeSequence(i) ? 1 : 0;
-  simpleEscapeMap[i] = simpleEscapeSequence(i);
+for (var i$1 = 0; i$1 < 256; i$1++) {
+  simpleEscapeCheck[i$1] = simpleEscapeSequence(i$1) ? 1 : 0;
+  simpleEscapeMap[i$1] = simpleEscapeSequence(i$1);
 }
 
 
@@ -9072,6 +9059,7 @@ const panelStyles = i$3 `
         display: grid;
         width: min-content;
         margin: auto;
+        grid-template-columns: repeat(3, var(--sq-tile-width, 19.5rem));
         grid-template-rows: var(--sq-tile-height, 7rem);
         gap: var(--sq-tile-spacing, 0.8rem);
     }
@@ -9121,6 +9109,13 @@ const panelStyles = i$3 `
                 "chips";
             grid-template-columns: 1fr;
             row-gap: 0.5rem;
+        }
+
+        .body-tiles {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: var(--sq-tile-height, 7rem);
+            gap: var(--sq-tile-spacing, 0.8rem);
         }
 
         .footer-button span {
@@ -9262,35 +9257,39 @@ let PanelCard = class PanelCard extends h {
     _renderBody() {
         if (!this._config || !this._bodyTiles.length)
             return D;
+        if (deviceType === "phone") {
+            return ke `
+                <div class="body-container">
+                    <div class="body-tiles">
+                        ${this._bodyTiles.flat().map((tile) => ke `<div class="tile">${tile}</div>`)}
+                    </div>
+                </div>
+            `;
+        }
         const columns = this._config.columns && this._config.columns >= 2 && this._config.columns <= 4 ? this._config.columns : 3;
-        const isPhone = deviceType === "phone";
-        const bodyStyles = {
-            gridTemplateColumns: deviceType === "phone" ? "1fr 1fr" : `repeat(${columns}, min(21vw, 19.5rem))`,
-        };
         return ke `
             <div class="body-container">
                 <div class="swiper">
                     <div class="swiper-wrapper">
                         ${this._bodyTiles.map((page) => ke `
                                 <div class="swiper-slide">
-                                    <div class="body-tiles" style="${se(bodyStyles)}">
+                                    <div
+                                        class="body-tiles"
+                                        style="grid-template-columns: repeat(${columns}, var(--sq-tile-width), 19.5rem)"
+                                    >
                                         ${page.map((tile) => ke `<div class="tile">${tile}</div>`)}
                                     </div>
                                 </div>
                             `)}
                     </div>
-                    ${isPhone
-            ? D
-            : ke `
-                              <div
-                                  class="swiper-button-prev"
-                                  @click=${(e) => this._handleSwiperNavigation(e, "prev")}
-                              ></div>
-                              <div
-                                  class="swiper-button-next"
-                                  @click=${(e) => this._handleSwiperNavigation(e, "next")}
-                              ></div>
-                          `}
+                    <div
+                        class="swiper-button-prev"
+                        @click=${(e) => this._handleSwiperNavigation(e, "prev")}
+                    ></div>
+                    <div
+                        class="swiper-button-next"
+                        @click=${(e) => this._handleSwiperNavigation(e, "next")}
+                    ></div>
                 </div>
             </div>
         `;
@@ -10132,6 +10131,19 @@ __decorate([
 TVRemoteCard = __decorate([
     t$1("smartqasa-tv-remote-card")
 ], TVRemoteCard);
+
+/**
+ * @license
+ * Copyright 2017 Google LLC
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+const t={ATTRIBUTE:1,CHILD:2,PROPERTY:3,BOOLEAN_ATTRIBUTE:4,EVENT:5,ELEMENT:6},e=t=>(...e)=>({_$litDirective$:t,values:e});class i{constructor(t){}get _$AU(){return this._$AM._$AU}_$AT(t,e,i){this.t=t,this._$AM=e,this.i=i;}_$AS(t,e){return this.update(t,e)}update(t,e){return this.render(...e)}}
+
+/**
+ * @license
+ * Copyright 2018 Google LLC
+ * SPDX-License-Identifier: BSD-3-Clause
+ */const ee="important",ie=" !"+ee,se=e(class extends i{constructor(e){if(super(e),e.type!==t.ATTRIBUTE||"style"!==e.name||e.strings?.length>2)throw Error("The `styleMap` directive must be used in the `style` attribute and must be the only part in the attribute.")}render(t){return Object.keys(t).reduce(((e,r)=>{const s=t[r];return null==s?e:e+`${r=r.includes("-")?r:r.replace(/(?:^(webkit|moz|ms|o)|)(?=[A-Z])/g,"-$&").toLowerCase()}:${s};`}),"")}update(t,[e]){const{style:r}=t.element;if(void 0===this.ft)return this.ft=new Set(Object.keys(e)),this.render(e);for(const t of this.ft)null==e[t]&&(this.ft.delete(t),t.includes("-")?r.removeProperty(t):r[t]=null);for(const t in e){const s=e[t];if(null!=s){this.ft.add(t);const e="string"==typeof s&&s.endsWith(ie);t.includes("-")||e?r.setProperty(t,e?s.slice(0,-11):s,e?ee:""):r[t]=s;}}return R}});
 
 const chipBaseStyle = i$3 `
     .container {
