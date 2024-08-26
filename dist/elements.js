@@ -9113,6 +9113,8 @@ const panelStyles = i$3 `
         }
 
         .body-tiles {
+            width: 100%;
+            margin: 0;
             grid-template-columns: 1fr 1fr;
             grid-template-rows: var(--sq-tile-height, 7rem);
             gap: var(--sq-tile-spacing, 0.8rem);
@@ -9412,10 +9414,10 @@ let PanelCard = class PanelCard extends h {
         e.stopPropagation();
         if (this._swiper) {
             if (direction === "prev") {
-                this._swiper.slideNext();
+                this._swiper.slidePrev();
             }
             else {
-                this._swiper.slidePrev();
+                this._swiper.slideNext();
             }
         }
     }

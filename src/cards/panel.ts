@@ -327,9 +327,9 @@ export class PanelCard extends LitElement {
         e.stopPropagation();
         if (this._swiper) {
             if (direction === "prev") {
-                this._swiper.slideNext();
-            } else {
                 this._swiper.slidePrev();
+            } else {
+                this._swiper.slideNext();
             }
         }
     }
