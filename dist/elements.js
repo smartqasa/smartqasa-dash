@@ -9062,6 +9062,7 @@ const panelStyles = i$3 `
         grid-template-columns: repeat(3, var(--sq-tile-width, 19.5rem));
         grid-template-rows: var(--sq-tile-height, 7rem);
         gap: var(--sq-tile-spacing, 0.8rem);
+        overflow-y: auto;
     }
 
     .blank-tile {
@@ -9112,7 +9113,6 @@ const panelStyles = i$3 `
         }
 
         .body-tiles {
-            display: grid;
             grid-template-columns: 1fr 1fr;
             grid-template-rows: var(--sq-tile-height, 7rem);
             gap: var(--sq-tile-spacing, 0.8rem);
