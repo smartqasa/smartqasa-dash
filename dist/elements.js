@@ -9084,7 +9084,6 @@ const panelStyles = i$3 `
 
     .footer-container {
         display: flex;
-        margin-top: 1rem;
         gap: 3rem;
         justify-content: center;
         align-items: center;
@@ -9122,16 +9121,6 @@ const panelStyles = i$3 `
                 "chips";
             grid-template-columns: 1fr;
             row-gap: 0.5rem;
-        }
-
-        .area-name {
-            height: 15vh;
-        }
-
-        .area-image {
-        }
-
-        .area-chips {
         }
 
         .footer-button span {
