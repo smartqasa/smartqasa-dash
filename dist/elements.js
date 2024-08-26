@@ -9054,7 +9054,7 @@ const panelStyles = i$3 `
     }
 
     .swiper-slide {
-        height: auto !important;
+        align-content: center;
     }
 
     .body-tiles {

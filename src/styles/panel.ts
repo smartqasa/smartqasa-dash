@@ -106,7 +106,7 @@ export const panelStyles = css`
     }
 
     .swiper-slide {
-        height: auto !important;
+        align-content: center;
     }
 
     .body-tiles {
