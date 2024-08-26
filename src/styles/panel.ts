@@ -65,7 +65,6 @@ export const panelStyles = css`
             '"name" "image"'
             '"chips" "image"';
         grid-template-columns: 1fr 1fr;
-        grid-template-rows: 20vh auto;
         margin-bottom: 2.5rem;
     }
 
