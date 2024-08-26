@@ -148,7 +148,7 @@ export const panelStyles = css`
     }
 
     /* Phone Portrait */
-    @media (max-width: 600px) {
+    @media (max-width: 6000px) {
         .container {
             grid-template-rows: auto 1fr auto;
             padding: 0.5rem 0.5rem 0 0.5rem;
