@@ -9129,6 +9129,7 @@ const panelStyles = i$3 `
         }
 
         .area-image {
+            padding-bottom: 0.5rem;
             margin-bottom: 0.5rem;
         }
 

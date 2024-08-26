@@ -168,6 +168,7 @@ export const panelStyles = css`
         }
 
         .area-image {
+            padding-bottom: 0.5rem;
             margin-bottom: 0.5rem;
         }
 
