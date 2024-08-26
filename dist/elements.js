@@ -9049,6 +9049,7 @@ const panelStyles = i$3 `
 
     .body-container {
         display: flex;
+        flex-grow: 1;
         height: 100%;
         overflow-y: auto;
     }
@@ -9060,6 +9061,8 @@ const panelStyles = i$3 `
     .body-tiles {
         display: grid;
         width: min-content;
+        max-height: 100%;
+        overflow: auto;
         margin: auto;
         grid-template-columns: repeat(3, var(--sq-tile-width, 19.5rem));
         grid-template-rows: var(--sq-tile-height, 7rem);
