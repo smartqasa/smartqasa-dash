@@ -101,10 +101,8 @@ export const panelStyles = css`
 
     .body-container {
         display: flex;
-        flex-grow: 0;
         height: 100%;
         overflow-y: auto;
-        max-height: 100%;
     }
 
     .swiper-slide {
@@ -169,8 +167,11 @@ export const panelStyles = css`
             row-gap: 0.5rem;
         }
 
+        .body-container {
+            display: block;
+            overflow-y: auto;
+        }
         .body-tiles {
-            width: 100%;
             margin: 0;
             grid-template-columns: 1fr 1fr;
             grid-template-rows: var(--sq-tile-height, 7rem);

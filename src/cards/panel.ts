@@ -226,19 +226,12 @@ export class PanelCard extends LitElement {
         const swiperParams: SwiperOptions = {
             initialSlide: 0,
             loop: true,
-            modules: isPhone ? [] : [Navigation], // Exclude Navigation module for phones
-            mousewheel: {
-                forceToAxis: true,
+            modules: [Navigation],
+            mousewheel: true,
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
             },
-            ...(isPhone
-                ? {}
-                : {
-                      // Add navigation only if not on phone
-                      navigation: {
-                          nextEl: ".swiper-button-next",
-                          prevEl: ".swiper-button-prev",
-                      },
-                  }),
         };
 
         this._swiper = new Swiper(swiperContainer as HTMLElement, swiperParams);

@@ -9049,10 +9049,8 @@ const panelStyles = i$3 `
 
     .body-container {
         display: flex;
-        flex-grow: 0;
         height: 100%;
         overflow-y: auto;
-        max-height: 100%;
     }
 
     .swiper-slide {
@@ -9117,8 +9115,11 @@ const panelStyles = i$3 `
             row-gap: 0.5rem;
         }
 
+        .body-container {
+            display: block;
+            overflow-y: auto;
+        }
         .body-tiles {
-            width: 100%;
             margin: 0;
             grid-template-columns: 1fr 1fr;
             grid-template-rows: var(--sq-tile-height, 7rem);
@@ -9336,19 +9337,12 @@ let PanelCard = class PanelCard extends h {
         const swiperParams = {
             initialSlide: 0,
             loop: true,
-            modules: isPhone ? [] : [Navigation], // Exclude Navigation module for phones
-            mousewheel: {
-                forceToAxis: true,
+            modules: [Navigation],
+            mousewheel: true,
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
             },
-            ...(isPhone
-                ? {}
-                : {
-                    // Add navigation only if not on phone
-                    navigation: {
-                        nextEl: ".swiper-button-next",
-                        prevEl: ".swiper-button-prev",
-                    },
-                }),
         };
         this._swiper = new Swiper(swiperContainer, swiperParams);
         if (this._swiper && !isPhone) {
