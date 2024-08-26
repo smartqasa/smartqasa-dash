@@ -9275,7 +9275,7 @@ let PanelCard = class PanelCard extends h {
                                 <div class="swiper-slide">
                                     <div
                                         class="body-tiles"
-                                        style="grid-template-columns: repeat(${columns}, var(--sq-tile-width), 19.5rem)"
+                                        style="grid-template-columns: repeat(${columns}, var(--sq-tile-width, 19.5rem))"
                                     >
                                         ${page.map((tile) => ke `<div class="tile">${tile}</div>`)}
                                     </div>
