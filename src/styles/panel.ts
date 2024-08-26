@@ -20,7 +20,6 @@ export const panelStyles = css`
     }
 
     .header-container {
-        grid-row: 1;
         display: flex;
         justify-content: space-between;
     }
@@ -62,7 +61,6 @@ export const panelStyles = css`
     }
 
     .area-container {
-        grid-row: 2;
         display: grid;
         grid-template-areas:
             "name image"
@@ -102,7 +100,6 @@ export const panelStyles = css`
     }
 
     .body-container {
-        grid-row: 3;
         display: block;
         height: 100%;
         overflow-y: auto;
@@ -128,7 +125,6 @@ export const panelStyles = css`
     }
 
     .footer-container {
-        grid-row: 4;
         position: sticky;
         bottom: 0;
         display: flex;
@@ -163,7 +159,6 @@ export const panelStyles = css`
         }
 
         .area-container {
-            grid-row: 1;
             grid-template-areas:
                 "name"
                 "image"
@@ -171,9 +166,6 @@ export const panelStyles = css`
             grid-template-columns: 1fr;
             row-gap: 0.5rem;
         }
-
-        .boby-container {
-            grid-row: 2;
 
         .body-tiles {
             width: 100%;
@@ -184,7 +176,6 @@ export const panelStyles = css`
         }
 
         .footer-container {
-            grid-row: 3;
             position: sticky;
             bottom: 0;
         }

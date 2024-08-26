@@ -8968,7 +8968,6 @@ const panelStyles = i$3 `
     }
 
     .header-container {
-        grid-row: 1;
         display: flex;
         justify-content: space-between;
     }
@@ -9010,7 +9009,6 @@ const panelStyles = i$3 `
     }
 
     .area-container {
-        grid-row: 2;
         display: grid;
         grid-template-areas:
             "name image"
@@ -9050,7 +9048,6 @@ const panelStyles = i$3 `
     }
 
     .body-container {
-        grid-row: 3;
         display: block;
         height: 100%;
         overflow-y: auto;
@@ -9076,7 +9073,6 @@ const panelStyles = i$3 `
     }
 
     .footer-container {
-        grid-row: 4;
         position: sticky;
         bottom: 0;
         display: flex;
@@ -9111,7 +9107,6 @@ const panelStyles = i$3 `
         }
 
         .area-container {
-            grid-row: 1;
             grid-template-areas:
                 "name"
                 "image"
@@ -9119,9 +9114,6 @@ const panelStyles = i$3 `
             grid-template-columns: 1fr;
             row-gap: 0.5rem;
         }
-
-        .boby-container {
-            grid-row: 2;
 
         .body-tiles {
             width: 100%;
@@ -9132,7 +9124,6 @@ const panelStyles = i$3 `
         }
 
         .footer-container {
-            grid-row: 3;
             position: sticky;
             bottom: 0;
         }
@@ -9204,18 +9195,21 @@ let PanelCard = class PanelCard extends h {
     async firstUpdated(changedProps) {
         super.firstUpdated(changedProps);
         await this._loadContent();
+        if (deviceType === "tablet")
+            this._initializeSwiper();
         this._loading = false;
     }
     updated(changedProps) {
         super.updated(changedProps);
-        if (!this._swiper) {
-            this._initializeSwiper();
-        }
-        else {
-            this._swiper.update();
+        if (deviceType === "tablet") {
+            if (this._swiper) {
+                this._swiper.update();
+            }
+            else {
+                this._initializeSwiper();
+            }
         }
         if (changedProps.has("_config") && this._config) {
-            this._area = this._config.area;
             this._loadContent();
         }
         else if (changedProps.has("hass") && this.hass) {

@@ -71,21 +71,22 @@ export class PanelCard extends LitElement {
         super.firstUpdated(changedProps);
 
         await this._loadContent();
-
+        if (deviceType === "tablet") this._initializeSwiper();
         this._loading = false;
     }
 
     protected updated(changedProps: PropertyValues) {
         super.updated(changedProps);
 
-        if (!this._swiper) {
-            this._initializeSwiper();
-        } else {
-            this._swiper.update();
+        if (deviceType === "tablet") {
+            if (this._swiper) {
+                this._swiper.update();
+            } else {
+                this._initializeSwiper();
+            }
         }
 
         if (changedProps.has("_config") && this._config) {
-            this._area = this._config.area;
             this._loadContent();
         } else if (changedProps.has("hass") && this.hass) {
             this._areaObj = this._area ? this.hass.areas[this._area] : undefined;
