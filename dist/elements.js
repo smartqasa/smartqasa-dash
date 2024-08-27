@@ -9257,6 +9257,7 @@ let PanelCard = class PanelCard extends h {
         super(...arguments);
         this._loading = true;
         this._isAdmin = false;
+        this._deviceOrientation = this._getDeviceOrientation();
         this._headerChips = [];
         this._areaChips = [];
         this._bodyTiles = [];
@@ -9278,7 +9279,7 @@ let PanelCard = class PanelCard extends h {
                 ${deviceType === "tablet" ? ke `<div>${this._renderHeader()}</div>` : D}
                 <div>${this._renderArea()}</div>
                 <div>${this._renderBody()}</div>
-                ${deviceType === "phone" && deviceOrientation === "landscape"
+                ${deviceType === "phone" && this._deviceOrientation === "landscape"
             ? D
             : ke `<div>${this._renderFooter()}</div>`}
             </div>
@@ -9290,6 +9291,7 @@ let PanelCard = class PanelCard extends h {
         if (deviceType === "tablet")
             this._initializeSwiper();
         this._loading = false;
+        window.addEventListener("orientationchange", this._handleOrientationChange.bind(this));
     }
     updated(changedProps) {
         super.updated(changedProps);
@@ -9326,6 +9328,16 @@ let PanelCard = class PanelCard extends h {
             }
         }
     }
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        window.removeEventListener("orientationchange", this._handleOrientationChange.bind(this));
+    }
+    _getDeviceOrientation() {
+        return window.screen.orientation.type.startsWith("portrait") ? "portrait" : "landscape";
+    }
+    _handleOrientationChange() {
+        this._deviceOrientation = this._getDeviceOrientation();
+    }
     _renderHeader() {
         let time = this.hass?.states["sensor.current_time"]?.state || "Loading...";
         let date = this.hass?.states["sensor.current_date"]?.state || "Loading...";
@@ -9349,7 +9361,7 @@ let PanelCard = class PanelCard extends h {
         return ke `
             <div class="area-container">
                 ${deviceType === "phone"
-            ? ke `<div class="area-name overlay">${deviceType} ${deviceOrientation}</div>`
+            ? ke `<div class="area-name overlay">${deviceType} ${this._deviceOrientation}</div>`
             : ke `<div class="area-name">${name}</div>`}
                 <img class="area-image" alt="Area picture..." src=${picture} />
                 ${this._areaChips.length > 0
@@ -9359,7 +9371,9 @@ let PanelCard = class PanelCard extends h {
                           </div>
                       `
             : D}
-                ${deviceType === "phone" && deviceOrientation === "landscape" ? ke `<div>TEST</div>` : D}
+                ${deviceType === "phone" && this._deviceOrientation === "landscape"
+            ? ke `<div>${this._renderFooter()}</div>`
+            : D}
             </div>
         `;
     }
@@ -9560,6 +9574,9 @@ __decorate([
 __decorate([
     r()
 ], PanelCard.prototype, "_isAdmin", void 0);
+__decorate([
+    r()
+], PanelCard.prototype, "_deviceOrientation", void 0);
 PanelCard = __decorate([
     t$1("smartqasa-panel-card")
 ], PanelCard);

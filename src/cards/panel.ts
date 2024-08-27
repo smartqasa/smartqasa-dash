@@ -5,7 +5,7 @@ import { HassArea, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../ty
 import Swiper from "swiper";
 import { SwiperOptions } from "swiper/types";
 import { Navigation } from "swiper/modules";
-import { deviceOrientation, deviceType } from "../const";
+import { deviceType } from "../const";
 import { createElement } from "../utils/create-element";
 import { loadYamlAsJson } from "../utils/load-yaml-as-json";
 import { areasDialog } from "../misc/areas-dialog";
@@ -40,6 +40,7 @@ export class PanelCard extends LitElement {
     @state() private _config?: Config;
     @state() private _loading = true;
     @state() private _isAdmin = false;
+    @state() private _deviceOrientation: string = this._getDeviceOrientation();
     private _swiper?: Swiper;
     private _area?: string;
     private _areaObj?: HassArea;
@@ -67,7 +68,7 @@ export class PanelCard extends LitElement {
                 ${deviceType === "tablet" ? html`<div>${this._renderHeader()}</div>` : nothing}
                 <div>${this._renderArea()}</div>
                 <div>${this._renderBody()}</div>
-                ${deviceType === "phone" && deviceOrientation === "landscape"
+                ${deviceType === "phone" && this._deviceOrientation === "landscape"
                     ? nothing
                     : html`<div>${this._renderFooter()}</div>`}
             </div>
@@ -80,6 +81,8 @@ export class PanelCard extends LitElement {
         await this._loadContent();
         if (deviceType === "tablet") this._initializeSwiper();
         this._loading = false;
+
+        window.addEventListener("orientationchange", this._handleOrientationChange.bind(this));
     }
 
     protected updated(changedProps: PropertyValues) {
@@ -122,6 +125,19 @@ export class PanelCard extends LitElement {
         }
     }
 
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        window.removeEventListener("orientationchange", this._handleOrientationChange.bind(this));
+    }
+
+    private _getDeviceOrientation(): string {
+        return window.screen.orientation.type.startsWith("portrait") ? "portrait" : "landscape";
+    }
+
+    private _handleOrientationChange() {
+        this._deviceOrientation = this._getDeviceOrientation();
+    }
+
     private _renderHeader() {
         let time = this.hass?.states["sensor.current_time"]?.state || "Loading...";
         let date = this.hass?.states["sensor.current_date"]?.state || "Loading...";
@@ -148,7 +164,7 @@ export class PanelCard extends LitElement {
         return html`
             <div class="area-container">
                 ${deviceType === "phone"
-                    ? html`<div class="area-name overlay">${deviceType} ${deviceOrientation}</div>`
+                    ? html`<div class="area-name overlay">${deviceType} ${this._deviceOrientation}</div>`
                     : html`<div class="area-name">${name}</div>`}
                 <img class="area-image" alt="Area picture..." src=${picture} />
                 ${this._areaChips.length > 0
@@ -158,7 +174,9 @@ export class PanelCard extends LitElement {
                           </div>
                       `
                     : nothing}
-                ${deviceType === "phone" && deviceOrientation === "landscape" ? html`<div>TEST</div>` : nothing}
+                ${deviceType === "phone" && this._deviceOrientation === "landscape"
+                    ? html`<div>${this._renderFooter()}</div>`
+                    : nothing}
             </div>
         `;
     }
