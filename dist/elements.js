@@ -9178,7 +9178,7 @@ const panelStyles = i$3 `
             grid-template-areas:
                 "image"
                 "chips"
-                "footer-phone-landscape";
+                "footer";
             grid-template-columns: 1fr;
             grid-template-rows: auto 100% auto;
             gap: 1rem;
@@ -9214,10 +9214,6 @@ const panelStyles = i$3 `
             grid-template-columns: 1fr 1fr;
             grid-template-rows: var(--sq-tile-height, 7rem);
             gap: var(--sq-tile-spacing, 0.8rem);
-        }
-
-        .footer-container {
-            grid-area: footer-phone-landscape;
         }
 
         .footer-button span {
@@ -9378,7 +9374,7 @@ let PanelCard = class PanelCard extends h {
                       `
             : D}
                 ${deviceType === "phone" && this._deviceOrientation === "landscape"
-            ? ke `<div>${this._renderFooter()}</div>`
+            ? ke `<div class="footer-container">${this._renderFooter()}</div>`
             : D}
             </div>
         `;

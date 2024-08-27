@@ -214,7 +214,7 @@ export const panelStyles = css`
             grid-template-areas:
                 "image"
                 "chips"
-                "footer-phone-landscape";
+                "footer";
             grid-template-columns: 1fr;
             grid-template-rows: auto 100% auto;
             gap: 1rem;
@@ -250,10 +250,6 @@ export const panelStyles = css`
             grid-template-columns: 1fr 1fr;
             grid-template-rows: var(--sq-tile-height, 7rem);
             gap: var(--sq-tile-spacing, 0.8rem);
-        }
-
-        .footer-container {
-            grid-area: footer-phone-landscape;
         }
 
         .footer-button span {

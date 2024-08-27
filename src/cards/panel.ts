@@ -175,7 +175,7 @@ export class PanelCard extends LitElement {
                       `
                     : nothing}
                 ${deviceType === "phone" && this._deviceOrientation === "landscape"
-                    ? html`<div>${this._renderFooter()}</div>`
+                    ? html`<div class="footer-container">${this._renderFooter()}</div>`
                     : nothing}
             </div>
         `;
