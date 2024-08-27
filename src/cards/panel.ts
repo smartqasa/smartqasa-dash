@@ -4,7 +4,7 @@ import { styleMap } from "lit/directives/style-map.js";
 import { HassArea, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 import Swiper from "swiper";
 import { SwiperOptions } from "swiper/types";
-import { Mousewheel, Navigation } from "swiper/modules";
+import { Navigation } from "swiper/modules";
 import { deviceType } from "../const";
 import { createElement } from "../utils/create-element";
 import { loadYamlAsJson } from "../utils/load-yaml-as-json";
@@ -231,7 +231,6 @@ export class PanelCard extends LitElement {
             initialSlide: 0,
             loop: true,
             modules: [Navigation],
-            mousewheel: true,
             navigation: {
                 nextEl: ".swiper-button-next",
                 prevEl: ".swiper-button-prev",

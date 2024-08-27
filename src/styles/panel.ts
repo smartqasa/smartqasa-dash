@@ -8,7 +8,7 @@ export const panelStyles = css`
         grid-template-rows: auto auto minmax(0, 1fr) auto;
         grid-template-columns: 100%;
         row-gap: 2rem;
-        padding: 1rem 1rem 0 1rem;
+        padding: 1rem 1rem 0.5 1rem;
         box-sizing: border-box;
         background: var(--sq-panel-background);
     }
@@ -148,7 +148,7 @@ export const panelStyles = css`
         .container {
             grid-template-rows: auto minmax(0, 1fr) auto;
             row-gap: 0.5rem;
-            padding: 0.5rem 0.5rem 0 0.5rem;
+            padding: 0.6rem 0.6rem 0.3rem 0.6rem;
         }
 
         .area-container {
