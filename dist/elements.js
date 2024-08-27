@@ -9350,7 +9350,7 @@ let PanelCard = class PanelCard extends h {
             <div class="area-container">
                 ${deviceType === "phone"
             ? ke `<div class="area-name overlay">name</div>`
-            : ke `<div class="area-name">name</div>`}
+            : ke `<div class="area-name">${deviceType}</div>`}
                 <img class="area-image" alt="Area picture..." src=${picture} />
                 ${this._areaChips.length > 0
             ? ke `
