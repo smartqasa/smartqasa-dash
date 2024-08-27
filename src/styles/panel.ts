@@ -173,6 +173,7 @@ export const panelStyles = css`
             overflow-y: auto;
         }
         .body-tiles {
+            width: 100%;
             margin: 0;
             grid-template-columns: 1fr 1fr;
             grid-template-rows: var(--sq-tile-height, 7rem);
