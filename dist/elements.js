@@ -8949,22 +8949,16 @@ async function menuConfig(menu_tab) {
 }
 
 const panelStyles = i$3 `
-    :host {
-        display: flex;
-        height: 100%;
-        width: 100%;
-        background: var(--sq-panel-background);
-    }
-
     .container {
         display: grid;
-        height: 100%;
+        height: 100vh;
         width: 100%;
         grid-template-rows: auto auto minmax(0, 1fr) auto;
         grid-template-columns: 100%;
         row-gap: 2rem;
         padding: 1rem 1rem 0 1rem;
         box-sizing: border-box;
+        background: var(--sq-panel-background);
     }
 
     .header-container {
