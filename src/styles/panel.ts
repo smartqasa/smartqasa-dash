@@ -4,7 +4,6 @@ export const panelStyles = css`
     :host {
         display: flex;
         height: 100%;
-        max-height: 100vh;
         width: 100%;
         background: var(--sq-panel-background);
     }

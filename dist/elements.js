@@ -8952,7 +8952,6 @@ const panelStyles = i$3 `
     :host {
         display: flex;
         height: 100%;
-        max-height: 100vh;
         width: 100%;
         background: var(--sq-panel-background);
     }
@@ -9191,6 +9190,7 @@ let PanelCard = class PanelCard extends h {
             return ke `<div>Loading...</div>`;
         return ke `
             <div class="container">
+                ${deviceType === "tablet" ? ke `<div>${this._renderHeader()}</div>` : D}
                 <div>${this._renderArea()}</div>
                 <div>${this._renderBody()}</div>
                 <div>${this._renderFooter()}</div>

@@ -59,6 +59,7 @@ export class PanelCard extends LitElement {
 
         return html`
             <div class="container">
+                ${deviceType === "tablet" ? html`<div>${this._renderHeader()}</div>` : nothing}
                 <div>${this._renderArea()}</div>
                 <div>${this._renderBody()}</div>
                 <div>${this._renderFooter()}</div>
