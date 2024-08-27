@@ -8981,7 +8981,7 @@ const panelStyles = i$3 `
             "area"
             "body"
             "footer";
-        row-gap: 2rem;
+        gap: 2rem;
         padding: 1rem 1rem 0.5rem 1rem;
         box-sizing: border-box;
         background: var(--sq-panel-background);
@@ -9125,7 +9125,7 @@ const panelStyles = i$3 `
     @media (max-width: 600px) and (orientation: portrait) {
         .container {
             grid-template-rows: auto minmax(0, 1fr) auto;
-            row-gap: 0.6rem;
+            gap: 1rem;
             padding: 0.6rem 0.6rem 0.3rem 0.6rem;
         }
 
@@ -9136,7 +9136,7 @@ const panelStyles = i$3 `
                 "chips";
             grid-template-columns: 1fr;
             grid-template-rows: auto auto auto;
-            row-gap: 0.6rem;
+            gap: 0.6rem;
         }
 
         .body-container {
@@ -9160,30 +9160,31 @@ const panelStyles = i$3 `
     /* Phone Landscape */
     @media (max-height: 600px) and (orientation: landscape) {
         .container {
-            grid-template-columns: 1fr 1fr;
-            grid-template-rows: auto minmax(0, 1fr) auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Two equal columns */
+            grid-template-rows: 1fr auto; /* Footer is auto-height, area takes up remaining space */
             grid-template-areas:
                 "area body"
                 "footer body";
-            row-gap: 0.6rem;
             padding: 0.6rem 0.6rem 0.3rem 0.6rem;
+            gap: 1rem; /* Space between columns */
         }
 
         .area-container {
-            grid-template-areas:
-                "name"
-                "image"
-                "chips";
-            grid-template-columns: 1fr;
-            grid-template-rows: auto auto auto;
-            row-gap: 0.5rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .footer-container {
+            align-self: end;
         }
 
         .body-container {
             display: block;
-            width: 100%;
             overflow-y: auto;
+            height: 100%; /* Ensure body-container takes full height of its column */
         }
+
         .body-tiles {
             width: 100%;
             margin: 0;
