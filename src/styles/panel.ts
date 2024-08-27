@@ -162,8 +162,8 @@ export const panelStyles = css`
         }
 
         .area-container {
-            grid-template-columns: 1fr;
-            grid-template-rows: auto auto auto;
+            grid-template-columns: 100%;
+            grid-template-rows: auto auto;
             gap: 0.6rem;
             position: relative;
         }
@@ -208,7 +208,7 @@ export const panelStyles = css`
         }
 
         .area-container {
-            grid-template-columns: 1fr;
+            grid-template-columns: 100%;
             grid-template-rows: auto auto 1fr;
             gap: 0.6rem;
             position: relative;
