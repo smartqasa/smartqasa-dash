@@ -100,6 +100,7 @@ export const panelStyles = css`
 
     .swiper-slide {
         align-content: center;
+        overflow-y: auto;
     }
 
     .body-tiles {

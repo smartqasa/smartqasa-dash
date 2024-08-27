@@ -9061,6 +9061,7 @@ const panelStyles = i$3 `
 
     .swiper-slide {
         align-content: center;
+        overflow-y: auto;
     }
 
     .body-tiles {
