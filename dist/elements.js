@@ -9359,9 +9359,7 @@ let PanelCard = class PanelCard extends h {
                           </div>
                       `
             : D}
-                ${deviceType === "phone" && deviceOrientation === "landscape"
-            ? ke `<div>${this._renderFooter()}</div>`
-            : D}
+                ${deviceType === "phone" && deviceOrientation === "landscape" ? ke `<div>TEST</div>` : D}
             </div>
         `;
     }
