@@ -1,15 +1,11 @@
-export const deviceType = (() => {
-    const width = window.screen.width;
-    const height = window.screen.height;
-    const orientation = window.screen.orientation.type.includes("portrait") ? "portrait" : "landscape";
+export const deviceOrientation = window.screen.orientation.type.startsWith("portrait") ? "portrait" : "landscape";
 
-    if (orientation === "portrait" && width < 600) {
+export const deviceType = (() => {
+    const { width, height } = window.screen;
+    if ((deviceOrientation === "portrait" && width < 600) || (deviceOrientation === "landscape" && height < 600)) {
         return "phone";
-    } else if (orientation === "landscape" && height < 600) {
-        return "phone";
-    } else {
-        return "tablet";
     }
+    return "tablet";
 })();
 
 export const heaterColors: Record<string, string> = {

@@ -204,27 +204,21 @@ export const panelStyles = css`
     /* Phone Landscape */
     @media (max-height: 600px) and (orientation: landscape) {
         .container {
-            display: grid;
-            height: 100vh;
-            width: 100%;
-            grid-template-columns: 45% 55%; /* Two columns: left for area and footer, right for body */
-            grid-template-rows: 1fr auto; /* One row for area, another row for footer */
-            grid-template-areas:
-                "area body"
-                "footer body"; /* Footer placed in the left column */
+            grid-template-columns: 45% 55%;
+            grid-template-rows: 100%;
             gap: 1rem;
-            padding: 0.6rem;
-            box-sizing: border-box;
-            background: var(--sq-panel-background);
+            padding: 0.6rem 0.6rem 0.3rem 0.6rem;
         }
 
         .area-container {
-            grid-area: area;
-            display: grid;
+            grid-template-areas:
+                "image"
+                "chips"
+                "footer-phone-landscape";
             grid-template-columns: 1fr;
-            grid-template-rows: auto 1fr;
-            gap: 0.5rem;
-            position: relative; /* Position relative for absolute positioning of name overlay */
+            grid-template-rows: auto auto auto;
+            gap: 0.6rem;
+            position: relative;
         }
 
         .area-name.overlay {
@@ -251,6 +245,10 @@ export const panelStyles = css`
             grid-template-columns: 1fr 1fr;
             grid-template-rows: var(--sq-tile-height, 7rem);
             gap: var(--sq-tile-spacing, 0.8rem);
+        }
+
+        .footer-container {
+            grid-area: footer-phone-landscape;
         }
 
         .footer-button span {

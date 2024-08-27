@@ -5,7 +5,7 @@ import { HassArea, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../ty
 import Swiper from "swiper";
 import { SwiperOptions } from "swiper/types";
 import { Navigation } from "swiper/modules";
-import { deviceType } from "../const";
+import { deviceOrientation, deviceType } from "../const";
 import { createElement } from "../utils/create-element";
 import { loadYamlAsJson } from "../utils/load-yaml-as-json";
 import { areasDialog } from "../misc/areas-dialog";
@@ -67,7 +67,9 @@ export class PanelCard extends LitElement {
                 ${deviceType === "tablet" ? html`<div>${this._renderHeader()}</div>` : nothing}
                 <div>${this._renderArea()}</div>
                 <div>${this._renderBody()}</div>
-                <div>${this._renderFooter()}</div>
+                ${deviceType === "phone" && deviceOrientation === "landscape"
+                    ? nothing
+                    : html`<div>${this._renderFooter()}</div>`}
             </div>
         `;
     }
@@ -155,6 +157,9 @@ export class PanelCard extends LitElement {
                               ${this._areaChips.map((chip) => html`<div class="chip">${chip}</div>`)}
                           </div>
                       `
+                    : nothing}
+                ${deviceType === "phone" && deviceOrientation === "landscape"
+                    ? html`<div>${this._renderFooter()}</div>`
                     : nothing}
             </div>
         `;
