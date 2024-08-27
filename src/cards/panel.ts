@@ -7,7 +7,7 @@ import { SwiperOptions } from "swiper/types";
 import { Mousewheel, Navigation } from "swiper/modules";
 import { deviceType } from "../const";
 import { createElement } from "../utils/create-element";
-import { loadYamlAsJson } from "../utils/load-yaml-as-json";
+import { loadYamlAsJson } from "../utils/load-yaml-as-json-2";
 import { areasDialog } from "../misc/areas-dialog";
 import { entertainDialog } from "../misc/entertain-dialog";
 import { menuConfig } from "../misc/menu-config";
