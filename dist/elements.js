@@ -9057,7 +9057,7 @@ const panelStyles = i$3 `
         width: 100%;
         height: 100%;
         object-fit: cover;
-        border-radius: 4px;
+        border-radius: 0.3rem;
         border: none;
         box-shadow: none;
         background-color: transparent;
@@ -9125,9 +9125,6 @@ const panelStyles = i$3 `
         }
 
         .area-container {
-            grid-template-areas:
-                "image"
-                "chips";
             grid-template-columns: 1fr;
             grid-template-rows: auto auto auto;
             gap: 0.6rem;
@@ -9143,7 +9140,7 @@ const panelStyles = i$3 `
             padding: 0.5rem;
             font-size: 2.8rem;
             font-weight: var(--sq-title-font-weight, 400);
-            border-radius: 0 0 5px 0;
+            border-radius: 0.3rem 0 0.3rem 0;
         }
 
         .body-container {
@@ -9174,10 +9171,6 @@ const panelStyles = i$3 `
         }
 
         .area-container {
-            grid-template-areas:
-                "image"
-                "chips"
-                "footer-phone-landscape";
             grid-template-columns: 1fr;
             grid-template-rows: auto auto 1fr;
             gap: 0.6rem;
@@ -9193,7 +9186,7 @@ const panelStyles = i$3 `
             padding: 0.5rem;
             font-size: 2.8rem;
             font-weight: var(--sq-title-font-weight, 400);
-            border-radius: 0 0 5px 0;
+            border-radius: 0.3rem 0 0.3rem 0;
         }
 
         .body-container {
