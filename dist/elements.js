@@ -9046,6 +9046,7 @@ const panelStyles = i$3 `
         font-size: var(--sq-title-font-size, 3.2rem);
         font-weight: var(--sq-title-font-weight, 400);
         color: rgb(var(--sq-title-font-rgb, 128, 128, 128));
+        color: blue;
     }
 
     .area-chips {
@@ -9140,6 +9141,10 @@ const panelStyles = i$3 `
             gap: 0.6rem;
         }
 
+        .area-name {
+            color: green;
+        }
+
         .body-container {
             display: block;
             width: 100%;
@@ -9177,11 +9182,16 @@ const panelStyles = i$3 `
             gap: 0.6rem;
         }
 
+        .area-name {
+            color: red;
+        }
+
         .body-container {
-            display: none;
+            display: block;
             width: 100%;
             overflow-y: auto;
         }
+
         .body-tiles {
             width: 100%;
             margin: 0;
