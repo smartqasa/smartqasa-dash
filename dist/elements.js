@@ -9342,15 +9342,15 @@ let PanelCard = class PanelCard extends h {
         `;
     }
     _renderArea() {
-        this._config?.name ?? this._areaObj?.name ?? "Area";
+        const name = this._config?.name ?? this._areaObj?.name ?? "Area";
         const picture = this._config?.picture
             ? `/local/smartqasa/images/${this._config.picture}`
             : this._areaObj?.picture ?? img$24;
         return ke `
             <div class="area-container">
                 ${deviceType === "phone"
-            ? ke `<div class="area-name overlay">name</div>`
-            : ke `<div class="area-name">${deviceType}</div>`}
+            ? ke `<div class="area-name overlay">${deviceType}</div>`
+            : ke `<div class="area-name">${name} ${deviceType}</div>`}
                 <img class="area-image" alt="Area picture..." src=${picture} />
                 ${this._areaChips.length > 0
             ? ke `
