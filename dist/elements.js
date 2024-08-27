@@ -8949,9 +8949,10 @@ async function menuConfig(menu_tab) {
 }
 
 const panelStyles = i$3 `
-    .top-container {
+    :host {
         display: flex;
         height: 100%;
+        max-height: 100vh;
         width: 100%;
         background: var(--sq-panel-background);
     }
@@ -8960,7 +8961,7 @@ const panelStyles = i$3 `
         display: grid;
         height: 100%;
         width: 100%;
-        grid-template-rows: auto auto 1fr auto;
+        grid-template-rows: auto auto minmax(0, 1fr) auto;
         grid-template-columns: 100%;
         row-gap: 2rem;
         padding: 1rem 1rem 0 1rem;
@@ -9189,13 +9190,10 @@ let PanelCard = class PanelCard extends h {
         if (this._loading)
             return ke `<div>Loading...</div>`;
         return ke `
-            <div class="top-container">
-                <div class="container">
-                    ${deviceType === "tablet" ? ke `<div>${this._renderHeader()}</div>` : D}
-                    <div>${this._renderArea()}</div>
-                    <div>${this._renderBody()}</div>
-                    <div>${this._renderFooter()}</div>
-                </div>
+            <div class="container">
+                <div>${this._renderArea()}</div>
+                <div>${this._renderBody()}</div>
+                <div>${this._renderFooter()}</div>
             </div>
         `;
     }
