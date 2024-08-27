@@ -9269,7 +9269,7 @@ let PanelCard = class PanelCard extends h {
     _renderBody() {
         if (!this._config || !this._bodyTiles.length)
             return D;
-        if (deviceType === "tablet") {
+        if (deviceType === "phone") {
             return ke `
                 <div class="body-container">
                     <div class="body-tiles">
@@ -9328,7 +9328,6 @@ let PanelCard = class PanelCard extends h {
         const swiperContainer = this.shadowRoot?.querySelector(".swiper");
         if (!swiperContainer)
             return;
-        const isPhone = deviceType === "phone";
         const swiperParams = {
             initialSlide: 0,
             loop: true,
@@ -9340,7 +9339,7 @@ let PanelCard = class PanelCard extends h {
             },
         };
         this._swiper = new Swiper(swiperContainer, swiperParams);
-        if (this._swiper && !isPhone) {
+        if (this._swiper) {
             Swiper.use([Navigation]);
         }
     }

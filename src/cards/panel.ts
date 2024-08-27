@@ -153,7 +153,7 @@ export class PanelCard extends LitElement {
 
     private _renderBody() {
         if (!this._config || !this._bodyTiles.length) return nothing;
-        if (deviceType === "tablet") {
+        if (deviceType === "phone") {
             return html`
                 <div class="body-container">
                     <div class="body-tiles">
@@ -220,8 +220,6 @@ export class PanelCard extends LitElement {
         const swiperContainer = this.shadowRoot?.querySelector(".swiper");
         if (!swiperContainer) return;
 
-        const isPhone = deviceType === "phone";
-
         const swiperParams: SwiperOptions = {
             initialSlide: 0,
             loop: true,
@@ -235,7 +233,7 @@ export class PanelCard extends LitElement {
 
         this._swiper = new Swiper(swiperContainer as HTMLElement, swiperParams);
 
-        if (this._swiper && !isPhone) {
+        if (this._swiper) {
             Swiper.use([Navigation]);
         }
     }
