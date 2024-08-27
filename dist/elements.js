@@ -9158,33 +9158,29 @@ const panelStyles = i$3 `
     }
 
     /* Phone Landscape */
-    @media (max-height: 600px) and (orientation: landscape) {
+    @media (max-width: 600px) and (orientation: landscape) {
         .container {
-            display: grid;
-            grid-template-columns: 1fr 1fr; /* Two equal columns */
-            grid-template-rows: 1fr auto; /* Footer is auto-height, area takes up remaining space */
-            grid-template-areas:
-                "area body"
-                "footer body";
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto minmax(0, 1fr) auto;
+            gap: 1rem;
             padding: 0.6rem 0.6rem 0.3rem 0.6rem;
-            gap: 1rem; /* Space between columns */
         }
 
         .area-container {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .footer-container {
-            align-self: end;
+            grid-template-areas:
+                "name"
+                "image"
+                "chips";
+            grid-template-columns: 1fr;
+            grid-template-rows: auto auto auto;
+            gap: 0.6rem;
         }
 
         .body-container {
             display: block;
+            width: 100%;
             overflow-y: auto;
-            height: 100%; /* Ensure body-container takes full height of its column */
         }
-
         .body-tiles {
             width: 100%;
             margin: 0;
@@ -10270,7 +10266,7 @@ const chipDoubleStyle = i$3 `
         display: flex;
         align-items: center;
         justify-content: center;
-        --mdc-icon-size: 3.4rem;
+        --mdc-icon-size: 3.5rem;
         padding: 0.1rem;
         color: rgb(var(--sq-primary-text-rgb));
     }

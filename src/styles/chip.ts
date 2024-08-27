@@ -66,7 +66,7 @@ export const chipDoubleStyle = css`
         display: flex;
         align-items: center;
         justify-content: center;
-        --mdc-icon-size: 3.4rem;
+        --mdc-icon-size: 3.5rem;
         padding: 0.1rem;
         color: rgb(var(--sq-primary-text-rgb));
     }
