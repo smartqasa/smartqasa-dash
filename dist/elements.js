@@ -8974,8 +8974,8 @@ const panelStyles = i$3 `
         display: grid;
         height: 100vh;
         width: 100%;
-        grid-template-rows: auto auto minmax(0, 1fr) auto;
         grid-template-columns: 100%;
+        grid-template-rows: auto auto minmax(0, 1fr) auto;
         grid-template-areas:
             "header"
             "area"
@@ -9124,6 +9124,7 @@ const panelStyles = i$3 `
     /* Phone Portrait */
     @media (max-width: 600px) and (orientation: portrait) {
         .container {
+            grid-template-columns: 100%;
             grid-template-rows: auto minmax(0, 1fr) auto;
             gap: 1rem;
             padding: 0.6rem 0.6rem 0.3rem 0.6rem;
@@ -9160,8 +9161,8 @@ const panelStyles = i$3 `
     /* Phone Landscape */
     @media (max-width: 600px) and (orientation: landscape) {
         .container {
-            grid-template-columns: 1fr 1fr;
-            grid-template-rows: auto minmax(0, 1fr) auto;
+            grid-template-columns: 50% 50%;
+            grid-template-rows: 100%;
             gap: 1rem;
             padding: 0.6rem 0.6rem 0.3rem 0.6rem;
         }
@@ -9177,7 +9178,7 @@ const panelStyles = i$3 `
         }
 
         .body-container {
-            display: block;
+            display: none;
             width: 100%;
             overflow-y: auto;
         }
