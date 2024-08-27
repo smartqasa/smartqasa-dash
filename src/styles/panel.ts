@@ -167,7 +167,7 @@ export const panelStyles = css`
                 "chips";
             grid-template-columns: 100%;
             grid-template-rows: auto auto;
-            gap: 0.6rem;
+            gap: 1rem;
             position: relative;
         }
 
@@ -217,7 +217,7 @@ export const panelStyles = css`
                 "footer-phone-landscape";
             grid-template-columns: 1fr;
             grid-template-rows: auto 100% auto;
-            gap: 0.6rem;
+            gap: 1rem;
             position: relative;
         }
 
@@ -235,7 +235,7 @@ export const panelStyles = css`
 
         .area-chips {
             grid-area: chips;
-            align-items: center;
+            align-items: flex-start;
         }
 
         .body-container {
