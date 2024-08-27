@@ -190,7 +190,7 @@ export const panelStyles = css`
     }
 
     /* Phone Landscape */
-    @media (max-width: 600px) and (orientation: landscape) {
+    @media (max-height: 600px) and (orientation: landscape) {
         .container {
             grid-template-columns: 50% 50%;
             grid-template-rows: 100%;
