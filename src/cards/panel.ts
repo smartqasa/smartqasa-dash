@@ -39,6 +39,7 @@ export class PanelCard extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() private _config?: Config;
     @state() private _loading = true;
+    @state() private _isAdmin = false;
     private _swiper?: Swiper;
     private _area?: string;
     private _areaObj?: HassArea;
@@ -57,8 +58,12 @@ export class PanelCard extends LitElement {
     protected render(): TemplateResult {
         if (this._loading) return html`<div>Loading...</div>`;
 
+        const containerStyle = {
+            height: this._isAdmin ? "calc(100vh - 56px)" : "100vh",
+        };
+
         return html`
-            <div class="container">
+            <div class="container" style=${styleMap(containerStyle)}>
                 ${deviceType === "tablet" ? html`<div>${this._renderHeader()}</div>` : nothing}
                 <div>${this._renderArea()}</div>
                 <div>${this._renderBody()}</div>
@@ -77,6 +82,8 @@ export class PanelCard extends LitElement {
 
     protected updated(changedProps: PropertyValues) {
         super.updated(changedProps);
+
+        this._isAdmin = this.hass?.user?.is_admin ?? false;
 
         if (deviceType === "tablet") {
             if (this._swiper) {

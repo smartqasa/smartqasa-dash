@@ -172,6 +172,19 @@ HorizontalStack = __decorate([
 ], HorizontalStack);
 
 /**
+ * @license
+ * Copyright 2017 Google LLC
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+const t={ATTRIBUTE:1,CHILD:2,PROPERTY:3,BOOLEAN_ATTRIBUTE:4,EVENT:5,ELEMENT:6},e=t=>(...e)=>({_$litDirective$:t,values:e});let i$1 = class i{constructor(t){}get _$AU(){return this._$AM._$AU}_$AT(t,e,i){this.t=t,this._$AM=e,this.i=i;}_$AS(t,e){return this.update(t,e)}update(t,e){return this.render(...e)}};
+
+/**
+ * @license
+ * Copyright 2018 Google LLC
+ * SPDX-License-Identifier: BSD-3-Clause
+ */const ee="important",ie=" !"+ee,se=e(class extends i$1{constructor(e){if(super(e),e.type!==t.ATTRIBUTE||"style"!==e.name||e.strings?.length>2)throw Error("The `styleMap` directive must be used in the `style` attribute and must be the only part in the attribute.")}render(t){return Object.keys(t).reduce(((e,r)=>{const s=t[r];return null==s?e:e+`${r=r.includes("-")?r:r.replace(/(?:^(webkit|moz|ms|o)|)(?=[A-Z])/g,"-$&").toLowerCase()}:${s};`}),"")}update(t,[e]){const{style:r}=t.element;if(void 0===this.ft)return this.ft=new Set(Object.keys(e)),this.render(e);for(const t of this.ft)null==e[t]&&(this.ft.delete(t),t.includes("-")?r.removeProperty(t):r[t]=null);for(const t in e){const s=e[t];if(null!=s){this.ft.add(t);const e="string"==typeof s&&s.endsWith(ie);t.includes("-")||e?r.setProperty(t,e?s.slice(0,-11):s,e?ee:""):r[t]=s;}}return R}});
+
+/**
  * SSR Window 4.0.2
  * Better handling for window object in SSR environment
  * https://github.com/nolimits4web/ssr-window
@@ -5959,9 +5972,9 @@ function charFromCodepoint(c) {
 
 var simpleEscapeCheck = new Array(256); // integer, for fast access
 var simpleEscapeMap = new Array(256);
-for (var i$1 = 0; i$1 < 256; i$1++) {
-  simpleEscapeCheck[i$1] = simpleEscapeSequence(i$1) ? 1 : 0;
-  simpleEscapeMap[i$1] = simpleEscapeSequence(i$1);
+for (var i = 0; i < 256; i++) {
+  simpleEscapeCheck[i] = simpleEscapeSequence(i) ? 1 : 0;
+  simpleEscapeMap[i] = simpleEscapeSequence(i);
 }
 
 
@@ -9169,6 +9182,7 @@ let PanelCard = class PanelCard extends h {
     constructor() {
         super(...arguments);
         this._loading = true;
+        this._isAdmin = false;
         this._headerChips = [];
         this._areaChips = [];
         this._bodyTiles = [];
@@ -9182,8 +9196,11 @@ let PanelCard = class PanelCard extends h {
     render() {
         if (this._loading)
             return ke `<div>Loading...</div>`;
+        const containerStyle = {
+            height: this._isAdmin ? "calc(100vh - 56px)" : "100vh",
+        };
         return ke `
-            <div class="container">
+            <div class="container" style=${se(containerStyle)}>
                 ${deviceType === "tablet" ? ke `<div>${this._renderHeader()}</div>` : D}
                 <div>${this._renderArea()}</div>
                 <div>${this._renderBody()}</div>
@@ -9200,6 +9217,7 @@ let PanelCard = class PanelCard extends h {
     }
     updated(changedProps) {
         super.updated(changedProps);
+        this._isAdmin = this.hass?.user?.is_admin ?? false;
         if (deviceType === "tablet") {
             if (this._swiper) {
                 this._swiper.update();
@@ -9463,6 +9481,9 @@ __decorate([
 __decorate([
     r()
 ], PanelCard.prototype, "_loading", void 0);
+__decorate([
+    r()
+], PanelCard.prototype, "_isAdmin", void 0);
 PanelCard = __decorate([
     t$1("smartqasa-panel-card")
 ], PanelCard);
@@ -10134,19 +10155,6 @@ __decorate([
 TVRemoteCard = __decorate([
     t$1("smartqasa-tv-remote-card")
 ], TVRemoteCard);
-
-/**
- * @license
- * Copyright 2017 Google LLC
- * SPDX-License-Identifier: BSD-3-Clause
- */
-const t={ATTRIBUTE:1,CHILD:2,PROPERTY:3,BOOLEAN_ATTRIBUTE:4,EVENT:5,ELEMENT:6},e=t=>(...e)=>({_$litDirective$:t,values:e});class i{constructor(t){}get _$AU(){return this._$AM._$AU}_$AT(t,e,i){this.t=t,this._$AM=e,this.i=i;}_$AS(t,e){return this.update(t,e)}update(t,e){return this.render(...e)}}
-
-/**
- * @license
- * Copyright 2018 Google LLC
- * SPDX-License-Identifier: BSD-3-Clause
- */const ee="important",ie=" !"+ee,se=e(class extends i{constructor(e){if(super(e),e.type!==t.ATTRIBUTE||"style"!==e.name||e.strings?.length>2)throw Error("The `styleMap` directive must be used in the `style` attribute and must be the only part in the attribute.")}render(t){return Object.keys(t).reduce(((e,r)=>{const s=t[r];return null==s?e:e+`${r=r.includes("-")?r:r.replace(/(?:^(webkit|moz|ms|o)|)(?=[A-Z])/g,"-$&").toLowerCase()}:${s};`}),"")}update(t,[e]){const{style:r}=t.element;if(void 0===this.ft)return this.ft=new Set(Object.keys(e)),this.render(e);for(const t of this.ft)null==e[t]&&(this.ft.delete(t),t.includes("-")?r.removeProperty(t):r[t]=null);for(const t in e){const s=e[t];if(null!=s){this.ft.add(t);const e="string"==typeof s&&s.endsWith(ie);t.includes("-")||e?r.setProperty(t,e?s.slice(0,-11):s,e?ee:""):r[t]=s;}}return R}});
 
 const chipBaseStyle = i$3 `
     .container {
