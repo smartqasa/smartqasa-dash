@@ -9118,7 +9118,7 @@ const panelStyles = i$3 `
     /* Phone Portrait */
     @media (max-width: 600px) and (orientation: portrait) {
         .container {
-            grid-template-columns: 1fr;
+            grid-template-columns: 100%;
             grid-template-rows: auto minmax(0, 1fr) auto;
             gap: 1rem;
             padding: 0.6rem 0.6rem 0.3rem 0.6rem;
@@ -9128,7 +9128,7 @@ const panelStyles = i$3 `
             grid-template-areas:
                 "image"
                 "chips";
-            grid-template-columns: 1fr;
+            grid-template-columns: 100%;
             grid-template-rows: auto auto;
             gap: 0.6rem;
             position: relative;
@@ -9141,7 +9141,7 @@ const panelStyles = i$3 `
             background-color: rgba(0, 0, 0, 0.5);
             color: white;
             padding: 0.5rem;
-            font-size: 2.5rem;
+            font-size: 2.8rem;
             font-weight: var(--sq-title-font-weight, 400);
             border-radius: 0.2rem 0 0 0;
         }
@@ -9168,7 +9168,7 @@ const panelStyles = i$3 `
     @media (max-height: 600px) and (orientation: landscape) {
         .container {
             grid-template-columns: 0.95fr 1fr;
-            grid-template-rows: 1fr;
+            grid-template-rows: 100%;
             gap: 1rem;
             padding: 0.6rem 0.6rem 0.3rem 0.6rem;
         }
@@ -9179,7 +9179,7 @@ const panelStyles = i$3 `
                 "chips"
                 "footer-phone-landscape";
             grid-template-columns: 1fr;
-            grid-template-rows: auto 1fr auto;
+            grid-template-rows: auto auto 1fr;
             gap: 0.6rem;
             position: relative;
         }
@@ -9191,7 +9191,7 @@ const panelStyles = i$3 `
             background-color: rgba(0, 0, 0, 0.5);
             color: white;
             padding: 0.5rem;
-            font-size: 2.5rem;
+            font-size: 2.8rem;
             font-weight: var(--sq-title-font-weight, 400);
             border-radius: 0.2rem 0 0 0;
         }
@@ -9212,7 +9212,6 @@ const panelStyles = i$3 `
 
         .footer-container {
             grid-area: footer-phone-landscape;
-            align-items: end;
         }
 
         .footer-button span {
