@@ -9179,7 +9179,7 @@ const panelStyles = i$3 `
                 "chips"
                 "footer-phone-landscape";
             grid-template-columns: 1fr;
-            grid-template-rows: auto 1fr auto;
+            grid-template-rows: auto auto 1fr;
             gap: 0.6rem;
             position: relative;
         }
@@ -9212,6 +9212,7 @@ const panelStyles = i$3 `
 
         .footer-container {
             grid-area: footer-phone-landscape;
+            align-self: end;
         }
 
         .footer-button span {
@@ -9494,7 +9495,7 @@ let PanelCard = class PanelCard extends h {
                     currentPage = [];
                 }
             }
-            else if (config.type === "blank-tile") {
+            else if (config.type === "blank-tile" && deviceType === "tablet") {
                 const blankTile = document.createElement("div");
                 blankTile.classList.add("blank-tile");
                 currentPage.push(blankTile);

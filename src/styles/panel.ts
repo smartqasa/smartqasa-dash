@@ -216,7 +216,7 @@ export const panelStyles = css`
                 "chips"
                 "footer-phone-landscape";
             grid-template-columns: 1fr;
-            grid-template-rows: auto 1fr auto;
+            grid-template-rows: auto auto 1fr;
             gap: 0.6rem;
             position: relative;
         }
@@ -249,6 +249,7 @@ export const panelStyles = css`
 
         .footer-container {
             grid-area: footer-phone-landscape;
+            align-self: end;
         }
 
         .footer-button span {

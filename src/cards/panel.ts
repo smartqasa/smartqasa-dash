@@ -315,7 +315,7 @@ export class PanelCard extends LitElement {
                     pages.push(currentPage);
                     currentPage = [];
                 }
-            } else if (config.type === "blank-tile") {
+            } else if (config.type === "blank-tile" && deviceType === "tablet") {
                 const blankTile = document.createElement("div");
                 blankTile.classList.add("blank-tile");
                 currentPage.push(blankTile as unknown as LovelaceCard);
