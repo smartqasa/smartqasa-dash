@@ -9047,7 +9047,7 @@ const panelStyles = i$3 `
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
-        align-items: center;
+        align-items: start;
         justify-content: flex-start;
         margin-left: calc(var(--sq-chip-spacing, 0.4rem) * -1);
     }
@@ -9179,7 +9179,7 @@ const panelStyles = i$3 `
                 "chips"
                 "footer-phone-landscape";
             grid-template-columns: 1fr;
-            grid-template-rows: auto auto auto;
+            grid-template-rows: auto minmax(0, 1fr) auto;
             gap: 0.6rem;
             position: relative;
         }
@@ -9361,7 +9361,7 @@ let PanelCard = class PanelCard extends h {
         return ke `
             <div class="area-container">
                 ${deviceType === "phone"
-            ? ke `<div class="area-name overlay">${deviceType} ${this._deviceOrientation}</div>`
+            ? ke `<div class="area-name overlay">${name}</div>`
             : ke `<div class="area-name">${name}</div>`}
                 <img class="area-image" alt="Area picture..." src=${picture} />
                 ${this._areaChips.length > 0
