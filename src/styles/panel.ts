@@ -79,18 +79,6 @@ export const panelStyles = css`
         color: rgb(var(--sq-title-font-rgb, 128, 128, 128));
     }
 
-    .area-name.overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        background-color: rgba(0, 0, 0, 0.5);
-        color: white;
-        padding: 0.5rem;
-        font-size: var(--sq-title-font-size, 3.2rem);
-        font-weight: var(--sq-title-font-weight, 400);
-        border-radius: 0 5px 0 0;
-    }
-
     .area-chips {
         grid-area: chips;
         display: flex;
@@ -183,6 +171,18 @@ export const panelStyles = css`
             position: relative;
         }
 
+        .area-name.overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 0.5rem;
+            font-size: 2.8rem;
+            font-weight: var(--sq-title-font-weight, 400);
+            border-radius: 0 0 5px 0;
+        }
+
         .body-container {
             display: block;
             width: 100%;
@@ -204,21 +204,39 @@ export const panelStyles = css`
     /* Phone Landscape */
     @media (max-height: 600px) and (orientation: landscape) {
         .container {
-            grid-template-columns: 50% 50%;
-            grid-template-rows: 100%;
+            display: grid;
+            height: 100vh;
+            width: 100%;
+            grid-template-columns: 45% 55%; /* Two columns: left for area and footer, right for body */
+            grid-template-rows: 1fr auto; /* One row for area, another row for footer */
+            grid-template-areas:
+                "area body"
+                "footer body"; /* Footer placed in the left column */
             gap: 1rem;
-            padding: 0.6rem 0.6rem 0.3rem 0.6rem;
+            padding: 0.6rem;
             box-sizing: border-box;
-            position: relative;
+            background: var(--sq-panel-background);
         }
 
         .area-container {
-            grid-template-areas:
-                "image"
-                "chips";
+            grid-area: area;
+            display: grid;
             grid-template-columns: 1fr;
-            grid-template-rows: auto auto auto;
-            gap: 0.6rem;
+            grid-template-rows: auto 1fr;
+            gap: 0.5rem;
+            position: relative; /* Position relative for absolute positioning of name overlay */
+        }
+
+        .area-name.overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 0.5rem;
+            font-size: 2.8rem;
+            font-weight: var(--sq-title-font-weight, 400);
+            border-radius: 0 0 5px 0;
         }
 
         .body-container {
