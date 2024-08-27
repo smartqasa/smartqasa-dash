@@ -120,8 +120,6 @@ export const panelStyles = css`
     }
 
     .footer-container {
-        position: sticky;
-        bottom: 0;
         display: flex;
         gap: 3rem;
         justify-content: center;
@@ -175,13 +173,8 @@ export const panelStyles = css`
             gap: var(--sq-tile-spacing, 0.8rem);
         }
 
-        .footer-container {
-            position: sticky;
-            bottom: 0;
-        }
-
         .footer-button span {
-            display: none; /* Hide text in footer buttons */
+            display: none;
         }
     }
 `;

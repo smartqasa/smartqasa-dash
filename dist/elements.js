@@ -9081,8 +9081,6 @@ const panelStyles = i$3 `
     }
 
     .footer-container {
-        position: sticky;
-        bottom: 0;
         display: flex;
         gap: 3rem;
         justify-content: center;
@@ -9136,13 +9134,8 @@ const panelStyles = i$3 `
             gap: var(--sq-tile-spacing, 0.8rem);
         }
 
-        .footer-container {
-            position: sticky;
-            bottom: 0;
-        }
-
         .footer-button span {
-            display: none; /* Hide text in footer buttons */
+            display: none;
         }
     }
 `;
@@ -14540,7 +14533,7 @@ PopupConfirmation = __decorate([
     t$1("popup-confirmation")
 ], PopupConfirmation);
 
-var version = "2024.8.26b-5";
+var version = "2024.8.26b-6";
 
 window.smartqasa = window.smartqasa || {};
 window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();
