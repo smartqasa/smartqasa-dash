@@ -1,7 +1,7 @@
 import { css } from "lit";
 
 export const panelStyles = css`
-    :host {
+    .top-container {
         display: flex;
         height: 100%;
         width: 100%;

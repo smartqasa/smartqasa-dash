@@ -8949,7 +8949,7 @@ async function menuConfig(menu_tab) {
 }
 
 const panelStyles = i$3 `
-    :host {
+    .top-container {
         display: flex;
         height: 100%;
         width: 100%;
@@ -9189,11 +9189,13 @@ let PanelCard = class PanelCard extends h {
         if (this._loading)
             return ke `<div>Loading...</div>`;
         return ke `
-            <div class="container">
-                ${deviceType === "tablet" ? ke `<div>${this._renderHeader()}</div>` : D}
-                <div>${this._renderArea()}</div>
-                <div>${this._renderBody()}</div>
-                <div>${this._renderFooter()}</div>
+            <div class="top-container">
+                <div class="container">
+                    ${deviceType === "tablet" ? ke `<div>${this._renderHeader()}</div>` : D}
+                    <div>${this._renderArea()}</div>
+                    <div>${this._renderBody()}</div>
+                    <div>${this._renderFooter()}</div>
+                </div>
             </div>
         `;
     }

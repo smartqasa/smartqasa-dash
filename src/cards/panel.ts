@@ -58,11 +58,13 @@ export class PanelCard extends LitElement {
         if (this._loading) return html`<div>Loading...</div>`;
 
         return html`
-            <div class="container">
-                ${deviceType === "tablet" ? html`<div>${this._renderHeader()}</div>` : nothing}
-                <div>${this._renderArea()}</div>
-                <div>${this._renderBody()}</div>
-                <div>${this._renderFooter()}</div>
+            <div class="top-container">
+                <div class="container">
+                    ${deviceType === "tablet" ? html`<div>${this._renderHeader()}</div>` : nothing}
+                    <div>${this._renderArea()}</div>
+                    <div>${this._renderBody()}</div>
+                    <div>${this._renderFooter()}</div>
+                </div>
             </div>
         `;
     }
