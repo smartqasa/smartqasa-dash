@@ -77,7 +77,18 @@ export const panelStyles = css`
         font-size: var(--sq-title-font-size, 3.2rem);
         font-weight: var(--sq-title-font-weight, 400);
         color: rgb(var(--sq-title-font-rgb, 128, 128, 128));
-        color: blue;
+    }
+
+    .area-name.overlay {
+        position: absolute;
+        top: 0;
+        right: 0;
+        background-color: rgba(0, 0, 0, 0.5); /* Optional: semi-transparent background for better readability */
+        color: white; /* Adjust text color for better visibility */
+        padding: 0.5rem;
+        font-size: var(--sq-title-font-size, 3.2rem);
+        font-weight: var(--sq-title-font-weight, 400);
+        border-radius: 0 0 0 4px; /* Rounded corner at the bottom left */
     }
 
     .area-chips {
@@ -164,16 +175,12 @@ export const panelStyles = css`
 
         .area-container {
             grid-template-areas:
-                "name"
                 "image"
                 "chips";
             grid-template-columns: 1fr;
             grid-template-rows: auto auto auto;
             gap: 0.6rem;
-        }
-
-        .area-name {
-            color: green;
+            position: relative;
         }
 
         .body-container {
@@ -201,20 +208,17 @@ export const panelStyles = css`
             grid-template-rows: 100%;
             gap: 1rem;
             padding: 0.6rem 0.6rem 0.3rem 0.6rem;
+            box-sizing: border-box;
+            position: relative;
         }
 
         .area-container {
             grid-template-areas:
-                "name"
                 "image"
                 "chips";
             grid-template-columns: 1fr;
             grid-template-rows: auto auto auto;
             gap: 0.6rem;
-        }
-
-        .area-name {
-            color: red;
         }
 
         .body-container {

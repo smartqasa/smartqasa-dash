@@ -9046,7 +9046,18 @@ const panelStyles = i$3 `
         font-size: var(--sq-title-font-size, 3.2rem);
         font-weight: var(--sq-title-font-weight, 400);
         color: rgb(var(--sq-title-font-rgb, 128, 128, 128));
-        color: blue;
+    }
+
+    .area-name.overlay {
+        position: absolute;
+        top: 0;
+        right: 0;
+        background-color: rgba(0, 0, 0, 0.5); /* Optional: semi-transparent background for better readability */
+        color: white; /* Adjust text color for better visibility */
+        padding: 0.5rem;
+        font-size: var(--sq-title-font-size, 3.2rem);
+        font-weight: var(--sq-title-font-weight, 400);
+        border-radius: 0 0 0 4px; /* Rounded corner at the bottom left */
     }
 
     .area-chips {
@@ -9133,16 +9144,12 @@ const panelStyles = i$3 `
 
         .area-container {
             grid-template-areas:
-                "name"
                 "image"
                 "chips";
             grid-template-columns: 1fr;
             grid-template-rows: auto auto auto;
             gap: 0.6rem;
-        }
-
-        .area-name {
-            color: green;
+            position: relative;
         }
 
         .body-container {
@@ -9170,20 +9177,17 @@ const panelStyles = i$3 `
             grid-template-rows: 100%;
             gap: 1rem;
             padding: 0.6rem 0.6rem 0.3rem 0.6rem;
+            box-sizing: border-box;
+            position: relative;
         }
 
         .area-container {
             grid-template-areas:
-                "name"
                 "image"
                 "chips";
             grid-template-columns: 1fr;
             grid-template-rows: auto auto auto;
             gap: 0.6rem;
-        }
-
-        .area-name {
-            color: red;
         }
 
         .body-container {
@@ -9332,7 +9336,9 @@ let PanelCard = class PanelCard extends h {
             : this._areaObj?.picture ?? img$24;
         return ke `
             <div class="area-container">
-                <div class="area-name">${name}</div>
+                ${deviceType === "phone"
+            ? ke `<div class="area-name overlay">${name}</div>`
+            : ke `<div class="area-name">${name}</div>`}
                 <img class="area-image" alt="Area picture..." src=${picture} />
                 ${this._areaChips.length > 0
             ? ke `
