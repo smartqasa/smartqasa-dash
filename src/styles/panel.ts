@@ -82,13 +82,13 @@ export const panelStyles = css`
     .area-name.overlay {
         position: absolute;
         top: 0;
-        right: 0;
-        background-color: rgba(0, 0, 0, 0.5); /* Optional: semi-transparent background for better readability */
-        color: white; /* Adjust text color for better visibility */
+        left: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
         padding: 0.5rem;
         font-size: var(--sq-title-font-size, 3.2rem);
         font-weight: var(--sq-title-font-weight, 400);
-        border-radius: 0 0 0 4px; /* Rounded corner at the bottom left */
+        border-radius: 0 5px 0 0;
     }
 
     .area-chips {
