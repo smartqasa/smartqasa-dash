@@ -9174,7 +9174,6 @@ const panelStyles = i$3 `
         }
 
         .area-container {
-            height: 100%;
             grid-template-areas:
                 "image"
                 "chips"

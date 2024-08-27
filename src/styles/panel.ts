@@ -211,7 +211,6 @@ export const panelStyles = css`
         }
 
         .area-container {
-            height: 100%;
             grid-template-areas:
                 "image"
                 "chips"
