@@ -8607,11 +8607,11 @@ var jsYaml = {
 	safeDump: safeDump
 };
 
-const loadYamlAsJson$1 = async (yamlFilePath) => {
+const loadYamlAsJson = async (yamlFilePath) => {
     try {
         const response = await fetch(yamlFilePath);
         if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
+            throw new Error(`Failed to fetch YAML file. HTTP Status: ${response.status} - ${response.statusText}`);
         }
         const yamlContent = await response.text();
         return jsYaml.load(yamlContent);
@@ -8657,29 +8657,6 @@ function areasDialog(hass) {
         },
     };
     window.browser_mod?.service("popup", dialogConfig);
-}
-
-async function loadYamlAsJson(yamlFilePath) {
-    try {
-        const response = await fetch(yamlFilePath);
-        if (!response.ok) {
-            console.error(`HTTP error! Status: ${response.status}`);
-            return {
-                type: "custom:smartqasa-title-card",
-                title: "Missing file.",
-            };
-        }
-        const yamlContent = await response.text();
-        const jsonContent = jsYaml.load(yamlContent);
-        return jsonContent;
-    }
-    catch (e) {
-        console.error("Error fetching and parsing YAML file:", e);
-        return {
-            type: "custom:smartqasa-title-card",
-            title: "Missing file.",
-        };
-    }
 }
 
 async function entertainDialog(config, hass) {
@@ -9388,7 +9365,7 @@ let PanelCard = class PanelCard extends h {
         let chipsConfig = [];
         try {
             const yamlFilePath = "/local/smartqasa/lists/chips.yaml";
-            chipsConfig = (await loadYamlAsJson$1(yamlFilePath));
+            chipsConfig = (await loadYamlAsJson(yamlFilePath));
         }
         catch (error) {
             console.error("Error loading header chips:", error);
@@ -10273,7 +10250,7 @@ let CustomChip = class CustomChip extends h {
             return;
         try {
             const path = `/local/smartqasa/dialogs/${this._config.dialog_file}`;
-            this._dialogObj = (await loadYamlAsJson$1(path));
+            this._dialogObj = (await loadYamlAsJson(path));
             this._entity = this._dialogObj.entity;
         }
         catch (error) {

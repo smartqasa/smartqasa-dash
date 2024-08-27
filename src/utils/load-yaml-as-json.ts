@@ -1,23 +1,21 @@
 import yaml from "js-yaml";
 
-export async function loadYamlAsJson(yamlFilePath: string) {
+export const loadYamlAsJson = async <T = any>(yamlFilePath: string): Promise<T> => {
     try {
         const response = await fetch(yamlFilePath);
+
         if (!response.ok) {
-            console.error(`HTTP error! Status: ${response.status}`);
-            return {
-                type: "custom:smartqasa-title-card",
-                title: "Missing file.",
-            };
+            throw new Error(`Failed to fetch YAML file. HTTP Status: ${response.status} - ${response.statusText}`);
         }
+
         const yamlContent = await response.text();
-        const jsonContent = yaml.load(yamlContent);
-        return jsonContent;
-    } catch (e) {
-        console.error("Error fetching and parsing YAML file:", e);
+        return yaml.load(yamlContent) as T;
+    } catch (error) {
+        console.error("Error fetching and parsing YAML file:", error);
+
         return {
             type: "custom:smartqasa-title-card",
             title: "Missing file.",
-        };
+        } as unknown as T;
     }
-}
+};
