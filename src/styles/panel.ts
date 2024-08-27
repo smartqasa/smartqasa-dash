@@ -5,7 +5,7 @@ export const panelStyles = css`
         display: grid;
         height: 100vh;
         width: 100%;
-        grid-template-rows: auto auto 1fr auto;
+        grid-template-rows: auto auto minmax(0, 1fr) auto;
         grid-template-columns: 100%;
         row-gap: 2rem;
         padding: 1rem 1rem 0 1rem;
@@ -146,7 +146,7 @@ export const panelStyles = css`
     /* Phone Portrait */
     @media (max-width: 600px) {
         .container {
-            grid-template-rows: auto 1fr auto;
+            grid-template-rows: auto minmax(0, 1fr) auto;
             row-gap: 0.5rem;
             padding: 0.5rem 0.5rem 0 0.5rem;
         }
