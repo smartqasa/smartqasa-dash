@@ -173,6 +173,8 @@ export class PanelCard extends LitElement {
         const columns =
             this._config.columns && this._config.columns >= 2 && this._config.columns <= 4 ? this._config.columns : 3;
 
+        document.documentElement.style.setProperty("--sq-body-columns", columns.toString());
+
         return html`
             <div class="body-container">
                 <div class="swiper">
@@ -180,10 +182,7 @@ export class PanelCard extends LitElement {
                         ${this._bodyTiles.map(
                             (page) => html`
                                 <div class="swiper-slide">
-                                    <div
-                                        class="body-tiles"
-                                        style="grid-template-columns: repeat(${columns}, var(--sq-tile-width, 19.5rem))"
-                                    >
+                                    <div class="body-tiles">
                                         ${page.map((tile) => html`<div class="tile">${tile}</div>`)}
                                     </div>
                                 </div>

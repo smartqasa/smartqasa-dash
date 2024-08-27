@@ -7,6 +7,11 @@ export const panelStyles = css`
         width: 100%;
         grid-template-rows: auto auto minmax(0, 1fr) auto;
         grid-template-columns: 100%;
+        grid-template-areas:
+            "header"
+            "area"
+            "body"
+            "footer";
         row-gap: 2rem;
         padding: 1rem 1rem 0.5 1rem;
         box-sizing: border-box;
@@ -14,6 +19,7 @@ export const panelStyles = css`
     }
 
     .header-container {
+        grid-area: header;
         display: flex;
         justify-content: space-between;
     }
@@ -55,12 +61,13 @@ export const panelStyles = css`
     }
 
     .area-container {
+        grid-area: area;
         display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: min-content 1fr;
         grid-template-areas:
             "name image"
             "chips image";
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: min-content 1fr;
     }
 
     .area-name {
@@ -94,6 +101,7 @@ export const panelStyles = css`
     }
 
     .body-container {
+        grid-area: body;
         display: flex;
         height: 100%;
     }
@@ -107,7 +115,7 @@ export const panelStyles = css`
         display: grid;
         width: min-content;
         margin: auto;
-        grid-template-columns: repeat(3, var(--sq-tile-width, 19.5rem));
+        grid-template-columns: repeat(var(--sq-body-columns, 3), var(--sq-tile-width, 19.5rem));
         grid-template-rows: var(--sq-tile-height, 7rem);
         gap: var(--sq-tile-spacing, 0.8rem);
         overflow-y: auto;
@@ -120,6 +128,7 @@ export const panelStyles = css`
     }
 
     .footer-container {
+        grid-area: footer;
         display: flex;
         gap: 3rem;
         justify-content: center;
@@ -144,10 +153,50 @@ export const panelStyles = css`
     }
 
     /* Phone Portrait */
-    @media (max-width: 600px) {
+    @media (max-width: 600px) and (orientation: portrait) {
         .container {
             grid-template-rows: auto minmax(0, 1fr) auto;
-            row-gap: 0.5rem;
+            row-gap: 0.6rem;
+            padding: 0.6rem 0.6rem 0.3rem 0.6rem;
+        }
+
+        .area-container {
+            grid-template-areas:
+                "name"
+                "image"
+                "chips";
+            grid-template-columns: 1fr;
+            grid-template-rows: auto auto auto;
+            row-gap: 0.6rem;
+        }
+
+        .body-container {
+            display: block;
+            width: 100%;
+            overflow-y: auto;
+        }
+        .body-tiles {
+            width: 100%;
+            margin: 0;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: var(--sq-tile-height, 7rem);
+            gap: var(--sq-tile-spacing, 0.8rem);
+        }
+
+        .footer-button span {
+            display: none;
+        }
+    }
+
+    /* Phone Landscape */
+    @media (max-height: 600px) and (orientation: landscape) {
+        .container {
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto minmax(0, 1fr) auto;
+            grid-template-areas:
+                "area body"
+                "footer body";
+            row-gap: 0.6rem;
             padding: 0.6rem 0.6rem 0.3rem 0.6rem;
         }
 
