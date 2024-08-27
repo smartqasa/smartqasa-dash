@@ -9125,7 +9125,6 @@ const panelStyles = i$3 `
         .body-container {
             display: block;
             width: 100%;
-            overflow-y: auto;
         }
         .body-tiles {
             width: 100%;
@@ -9133,6 +9132,7 @@ const panelStyles = i$3 `
             grid-template-columns: 1fr 1fr;
             grid-template-rows: var(--sq-tile-height, 7rem);
             gap: var(--sq-tile-spacing, 0.8rem);
+            overflow-y: auto;
         }
 
         .footer-container {
