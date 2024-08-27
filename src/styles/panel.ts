@@ -180,7 +180,7 @@ export const panelStyles = css`
             padding: 0.5rem;
             font-size: 2.8rem;
             font-weight: var(--sq-title-font-weight, 400);
-            border-radius: 0.3rem 0 0.3rem 0;
+            border-radius: 0.3rem 0 0 0;
         }
 
         .body-container {
@@ -230,7 +230,7 @@ export const panelStyles = css`
             padding: 0.5rem;
             font-size: 2.8rem;
             font-weight: var(--sq-title-font-weight, 400);
-            border-radius: 0.3rem 0 0.3rem 0;
+            border-radius: 0.3rem 0 0 0;
         }
 
         .body-container {
@@ -248,6 +248,7 @@ export const panelStyles = css`
         }
 
         .footer-container {
+            align-items: center;
             align-self: end;
         }
 

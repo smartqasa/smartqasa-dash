@@ -9143,7 +9143,7 @@ const panelStyles = i$3 `
             padding: 0.5rem;
             font-size: 2.8rem;
             font-weight: var(--sq-title-font-weight, 400);
-            border-radius: 0.3rem 0 0.3rem 0;
+            border-radius: 0.3rem 0 0 0;
         }
 
         .body-container {
@@ -9193,7 +9193,7 @@ const panelStyles = i$3 `
             padding: 0.5rem;
             font-size: 2.8rem;
             font-weight: var(--sq-title-font-weight, 400);
-            border-radius: 0.3rem 0 0.3rem 0;
+            border-radius: 0.3rem 0 0 0;
         }
 
         .body-container {
@@ -9211,6 +9211,7 @@ const panelStyles = i$3 `
         }
 
         .footer-container {
+            align-items: center;
             align-self: end;
         }
 
