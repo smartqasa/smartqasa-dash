@@ -9021,11 +9021,11 @@ const panelStyles = i$3 `
             "name image"
             "chips image";
         grid-template-columns: 1fr 1fr;
+        grid-template-rows: min-content 1fr;
     }
 
     .area-name {
         grid-area: name;
-        margin-bottom: 0.4rem;
         line-height: normal;
         text-align: left;
         font-size: var(--sq-title-font-size, 3.2rem);
@@ -9118,6 +9118,7 @@ const panelStyles = i$3 `
                 "image"
                 "chips";
             grid-template-columns: 1fr;
+            grid-template-rows: auto auto auto;
             row-gap: 0.5rem;
         }
 
