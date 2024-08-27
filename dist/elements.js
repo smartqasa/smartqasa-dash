@@ -9099,7 +9099,7 @@ const panelStyles = i$3 `
     }
 
     /* Phone Portrait */
-    @media (max-width: 600px) and (orientation: portrait) {
+    @media (max-width: 600px) {
         .container {
             grid-template-rows: auto 1fr auto;
             row-gap: 0.5rem;
