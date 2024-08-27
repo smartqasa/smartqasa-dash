@@ -9179,7 +9179,7 @@ const panelStyles = i$3 `
                 "chips"
                 "footer-phone-landscape";
             grid-template-columns: 1fr;
-            grid-template-rows: auto auto 1fr;
+            grid-template-rows: auto 100% auto;
             gap: 0.6rem;
             position: relative;
         }
@@ -9194,6 +9194,11 @@ const panelStyles = i$3 `
             font-size: 2.8rem;
             font-weight: var(--sq-title-font-weight, 400);
             border-radius: 0.2rem 0 0 0;
+        }
+
+        .area-chips {
+            grid-area: chips;
+            align-items: center;
         }
 
         .body-container {
