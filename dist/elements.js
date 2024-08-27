@@ -9558,6 +9558,7 @@ let PanelCard = class PanelCard extends h {
         areasDialog(this.hass);
     }
     _handleEntertain() {
+        console.log("Panel", this._config?.audio_player);
         entertainDialog(this._config, this.hass);
     }
     async _handleMenu() {
