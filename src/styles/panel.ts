@@ -205,18 +205,22 @@ export const panelStyles = css`
     @media (max-height: 600px) and (orientation: landscape) {
         .container {
             grid-template-columns: 45% 55%;
-            grid-template-rows: 100%;
+            grid-template-rows: auto 1fr;
             grid-template-areas:
-                "image"
-                "chips"
-                "footer";
+                "area body"
+                "footer body";
             gap: 1rem;
             padding: 0.6rem 0.6rem 0.3rem 0.6rem;
         }
 
         .area-container {
-            grid-template-columns: 100%;
-            grid-template-rows: auto auto 1fr;
+            grid-area: area;
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-template-rows: auto 1fr;
+            grid-template-areas:
+                "image"
+                "chips";
             gap: 0.6rem;
             position: relative;
         }
@@ -231,9 +235,22 @@ export const panelStyles = css`
             font-size: 2.8rem;
             font-weight: var(--sq-title-font-weight, 400);
             border-radius: 0.3rem 0 0 0;
+            z-index: 2;
+        }
+
+        .area-image {
+            grid-area: image;
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            border-radius: 0.3rem;
+            border: none;
+            box-shadow: none;
+            background-color: transparent;
         }
 
         .body-container {
+            grid-area: body;
             display: block;
             width: 100%;
             overflow-y: auto;
@@ -248,7 +265,12 @@ export const panelStyles = css`
         }
 
         .footer-container {
+            grid-area: footer;
             align-items: center;
+            justify-content: center;
+            display: flex;
+            gap: 3rem;
+            padding: 1rem;
             align-self: end;
         }
 
