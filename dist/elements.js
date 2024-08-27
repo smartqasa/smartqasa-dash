@@ -9127,6 +9127,9 @@ const panelStyles = i$3 `
         .area-container {
             grid-template-columns: 100%;
             grid-template-rows: auto auto;
+            grid-template-areas:
+                "image"
+                "chips";
             gap: 0.6rem;
             position: relative;
         }
@@ -9166,6 +9169,10 @@ const panelStyles = i$3 `
         .container {
             grid-template-columns: 45% 55%;
             grid-template-rows: 100%;
+            grid-template-areas:
+                "image"
+                "chips"
+                "footer";
             gap: 1rem;
             padding: 0.6rem 0.6rem 0.3rem 0.6rem;
         }
@@ -9204,7 +9211,6 @@ const panelStyles = i$3 `
         }
 
         .footer-container {
-            grid-area: footer-phone-landscape;
             align-self: end;
         }
 
