@@ -145,7 +145,7 @@ export class PanelCard extends LitElement {
 
         return html`
             <div class="area-container">
-                <div class="area-name" style="grid-area: name;">${name} ${deviceType}</div>
+                <div class="area-name" style="grid-area: name;">${name}</div>
                 <img class="area-image" style="grid-area: image;" alt="Area picture..." src=${picture} />
                 ${this._areaChips.length > 0
                     ? html`
