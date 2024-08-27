@@ -9362,7 +9362,7 @@ let PanelCard = class PanelCard extends h {
         return ke `
             <div class="area-container">
                 ${deviceType === "phone"
-            ? ke `<div class="area-name overlay">${name} XX</div>`
+            ? ke `<div class="area-name overlay">${name}</div>`
             : ke `<div class="area-name">${name}</div>`}
                 <img class="area-image" alt="Area picture..." src=${picture} />
                 ${this._areaChips.length > 0
@@ -9495,10 +9495,12 @@ let PanelCard = class PanelCard extends h {
                     currentPage = [];
                 }
             }
-            else if (config.type === "blank-tile" && deviceType === "tablet") {
-                const blankTile = document.createElement("div");
-                blankTile.classList.add("blank-tile");
-                currentPage.push(blankTile);
+            else if (config.type === "blank-tile") {
+                if (deviceType === "tablet") {
+                    const blankTile = document.createElement("div");
+                    blankTile.classList.add("blank-tile");
+                    currentPage.push(blankTile);
+                }
             }
             else {
                 const tile = createElement$1(config);

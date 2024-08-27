@@ -164,7 +164,7 @@ export class PanelCard extends LitElement {
         return html`
             <div class="area-container">
                 ${deviceType === "phone"
-                    ? html`<div class="area-name overlay">${name} XX</div>`
+                    ? html`<div class="area-name overlay">${name}</div>`
                     : html`<div class="area-name">${name}</div>`}
                 <img class="area-image" alt="Area picture..." src=${picture} />
                 ${this._areaChips.length > 0
@@ -315,10 +315,12 @@ export class PanelCard extends LitElement {
                     pages.push(currentPage);
                     currentPage = [];
                 }
-            } else if (config.type === "blank-tile" && deviceType === "tablet") {
-                const blankTile = document.createElement("div");
-                blankTile.classList.add("blank-tile");
-                currentPage.push(blankTile as unknown as LovelaceCard);
+            } else if (config.type === "blank-tile") {
+                if (deviceType === "tablet") {
+                    const blankTile = document.createElement("div");
+                    blankTile.classList.add("blank-tile");
+                    currentPage.push(blankTile as unknown as LovelaceCard);
+                }
             } else {
                 const tile = createElement(config) as LovelaceCard;
                 tile.hass = this.hass;
