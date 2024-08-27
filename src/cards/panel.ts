@@ -153,7 +153,7 @@ export class PanelCard extends LitElement {
 
     private _renderBody() {
         if (!this._config || !this._bodyTiles.length) return nothing;
-        if (deviceType === "phone") {
+        if (deviceType === "tablet") {
             return html`
                 <div class="body-container">
                     <div class="body-tiles">
@@ -208,11 +208,10 @@ export class PanelCard extends LitElement {
     }
 
     private _renderFooterButton(icon: string, name: string, methodName: keyof ActionHandlers): TemplateResult {
-        const isPhone = deviceType === "phone";
         return html`
             <div class="footer-button" @click="${(e: Event) => this._handleFooterAction(e, methodName)}">
                 <ha-icon .icon=${icon}></ha-icon>
-                ${!isPhone ? html`<span>${name}</span>` : nothing}
+                <span>${name}</span>
             </div>
         `;
     }

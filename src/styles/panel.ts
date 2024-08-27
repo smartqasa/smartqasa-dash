@@ -169,6 +169,7 @@ export const panelStyles = css`
 
         .body-container {
             display: block;
+            width: 100%;
             overflow-y: auto;
         }
         .body-tiles {

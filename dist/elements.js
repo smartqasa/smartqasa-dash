@@ -9117,6 +9117,7 @@ const panelStyles = i$3 `
 
         .body-container {
             display: block;
+            width: 100%;
             overflow-y: auto;
         }
         .body-tiles {
@@ -9273,7 +9274,7 @@ let PanelCard = class PanelCard extends h {
     _renderBody() {
         if (!this._config || !this._bodyTiles.length)
             return D;
-        if (deviceType === "phone") {
+        if (deviceType === "tablet") {
             return ke `
                 <div class="body-container">
                     <div class="body-tiles">
@@ -9321,11 +9322,10 @@ let PanelCard = class PanelCard extends h {
         `;
     }
     _renderFooterButton(icon, name, methodName) {
-        const isPhone = deviceType === "phone";
         return ke `
             <div class="footer-button" @click="${(e) => this._handleFooterAction(e, methodName)}">
                 <ha-icon .icon=${icon}></ha-icon>
-                ${!isPhone ? ke `<span>${name}</span>` : D}
+                <span>${name}</span>
             </div>
         `;
     }
