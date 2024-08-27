@@ -13,7 +13,7 @@ export const panelStyles = css`
             "body"
             "footer";
         row-gap: 2rem;
-        padding: 1rem 1rem 0.5 1rem;
+        padding: 1rem 1rem 0.5rem 1rem;
         box-sizing: border-box;
         background: var(--sq-panel-background);
     }
@@ -115,7 +115,7 @@ export const panelStyles = css`
         display: grid;
         width: min-content;
         margin: auto;
-        grid-template-columns: repeat(var(--sq-body-columns, 3), var(--sq-tile-width, 19.5rem));
+        grid-template-columns: repeat(var(--sq-panel-body-columns, 3), var(--sq-tile-width, 19.5rem));
         grid-template-rows: var(--sq-tile-height, 7rem);
         gap: var(--sq-tile-spacing, 0.8rem);
         overflow-y: auto;

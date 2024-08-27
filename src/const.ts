@@ -1,4 +1,16 @@
-export const deviceType = window.screen.width < 600 ? "phone" : "tablet";
+export const deviceType = (() => {
+    const width = window.screen.width;
+    const height = window.screen.height;
+    const orientation = window.screen.orientation.type.includes("portrait") ? "portrait" : "landscape";
+
+    if (orientation === "portrait" && width < 600) {
+        return "phone";
+    } else if (orientation === "landscape" && height < 600) {
+        return "phone";
+    } else {
+        return "tablet";
+    }
+})();
 
 export const heaterColors: Record<string, string> = {
     electric: "var(--sq-climate-heat-rgb, 250, 67, 54)",

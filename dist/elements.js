@@ -4719,7 +4719,20 @@ function Navigation(_ref) {
   });
 }
 
-const deviceType = window.screen.width < 600 ? "phone" : "tablet";
+const deviceType = (() => {
+    const width = window.screen.width;
+    const height = window.screen.height;
+    const orientation = window.screen.orientation.type.includes("portrait") ? "portrait" : "landscape";
+    if (orientation === "portrait" && width < 600) {
+        return "phone";
+    }
+    else if (orientation === "landscape" && height < 600) {
+        return "phone";
+    }
+    else {
+        return "tablet";
+    }
+})();
 const heaterColors = {
     electric: "var(--sq-climate-heat-rgb, 250, 67, 54)",
     heating: "var(--sq-climate-heat-rgb, 250, 67, 54)",
@@ -8969,7 +8982,7 @@ const panelStyles = i$3 `
             "body"
             "footer";
         row-gap: 2rem;
-        padding: 1rem 1rem 0.5 1rem;
+        padding: 1rem 1rem 0.5rem 1rem;
         box-sizing: border-box;
         background: var(--sq-panel-background);
     }
@@ -9071,7 +9084,7 @@ const panelStyles = i$3 `
         display: grid;
         width: min-content;
         margin: auto;
-        grid-template-columns: repeat(var(--sq-body-columns, 3), var(--sq-tile-width, 19.5rem));
+        grid-template-columns: repeat(var(--sq-panel-body-columns, 3), var(--sq-tile-width, 19.5rem));
         grid-template-rows: var(--sq-tile-height, 7rem);
         gap: var(--sq-tile-spacing, 0.8rem);
         overflow-y: auto;
@@ -9336,7 +9349,7 @@ let PanelCard = class PanelCard extends h {
             `;
         }
         const columns = this._config.columns && this._config.columns >= 2 && this._config.columns <= 4 ? this._config.columns : 3;
-        document.documentElement.style.setProperty("--sq-body-columns", columns.toString());
+        document.documentElement.style.setProperty("--sq-panel-body-columns", columns.toString());
         return ke `
             <div class="body-container">
                 <div class="swiper">

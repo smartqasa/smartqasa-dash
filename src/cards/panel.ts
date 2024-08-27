@@ -173,7 +173,7 @@ export class PanelCard extends LitElement {
         const columns =
             this._config.columns && this._config.columns >= 2 && this._config.columns <= 4 ? this._config.columns : 3;
 
-        document.documentElement.style.setProperty("--sq-body-columns", columns.toString());
+        document.documentElement.style.setProperty("--sq-panel-body-columns", columns.toString());
 
         return html`
             <div class="body-container">
