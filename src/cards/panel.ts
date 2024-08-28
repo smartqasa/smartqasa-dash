@@ -195,16 +195,22 @@ export class PanelCard extends LitElement {
     private _renderBody() {
         if (!this._config || !this._bodyTiles.length) return nothing;
 
+        if (this.deviceType === "phone") {
+            const gridStyle = { gridTemplateColumns: "1fr 1fr" };
+            return html`
+                <div class="body-tiles" style=${styleMap(gridStyle)}>
+                    ${this._bodyTiles.flat().map((tile) => html`<div class="tile">${tile}</div>`)}
+                </div>
+            `;
+        }
+
         return html`
             <div class="swiper">
                 <div class="swiper-wrapper">
                     ${this._bodyTiles.map((page, index) => {
-                        const gridStyle =
-                            this.deviceType === "tablet"
-                                ? {
-                                      gridTemplateColumns: `repeat(${this._bodyColumns[index]}, var(--sq-tile-width, 19.5rem))`,
-                                  }
-                                : { gridTemplateColumns: `repeat(2, 1fr)` };
+                        const gridStyle = {
+                            gridTemplateColumns: `repeat(${this._bodyColumns[index]}, var(--sq-tile-width, 19.5rem))`,
+                        };
 
                         return html`
                             <div class="swiper-slide">
@@ -220,42 +226,6 @@ export class PanelCard extends LitElement {
             </div>
         `;
     }
-
-    /*
-    private _renderBody() {
-        if (!this._config || !this._bodyTiles.length) return nothing;
-        if (this.deviceType === "phone") {
-            return html`
-                <div class="body-tiles">
-                    ${this._bodyTiles.flat().map((tile) => html`<div class="tile">${tile}</div>`)}
-                </div>
-            `;
-        }
-
-        const columns =
-            this._config.columns && this._config.columns >= 2 && this._config.columns <= 4 ? this._config.columns : 3;
-
-        document.documentElement.style.setProperty("--sq-panel-body-columns", columns.toString());
-
-        return html`
-            <div class="swiper">
-                <div class="swiper-wrapper">
-                    ${this._bodyTiles.map(
-                        (page) => html`
-                            <div class="swiper-slide">
-                                <div class="body-tiles">
-                                    ${page.map((tile) => html`<div class="tile">${tile}</div>`)}
-                                </div>
-                            </div>
-                        `
-                    )}
-                </div>
-                <div class="swiper-button-prev" @click=${(e: Event) => this._handleSwiperNavigation(e, "prev")}></div>
-                <div class="swiper-button-next" @click=${(e: Event) => this._handleSwiperNavigation(e, "next")}></div>
-            </div>
-        `;
-    }
-*/
 
     private _renderFooter() {
         return html`
