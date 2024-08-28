@@ -9382,9 +9382,8 @@ let PanelCard = class PanelCard extends h {
             <div class="area-container">
                 <div class="area-name ${this.deviceType === "phone" ? "overlay" : ""}">${name}</div>
                 <img class="area-image" alt="Area picture..." src=${picture} />
-                ${chipsTemplate}
+                ${chipsTemplate} ${isPhoneLandscape ? this._renderFooter() : D}
             </div>
-            ${isPhoneLandscape ? this._renderFooter() : D}
         `;
     }
     _renderBody() {
