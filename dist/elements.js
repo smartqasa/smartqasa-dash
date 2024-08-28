@@ -9085,7 +9085,6 @@ const panelStyles = i$3 `
         display: grid;
         width: min-content;
         margin: auto;
-        grid-template-columns: repeat(var(--sq-panel-body-columns, 3), var(--sq-tile-width, 19.5rem));
         grid-template-rows: var(--sq-tile-height, 7rem);
         gap: var(--sq-tile-spacing, 0.8rem);
         overflow-y: auto;
@@ -9288,6 +9287,7 @@ let PanelCard = class PanelCard extends h {
         this._headerChips = [];
         this._areaChips = [];
         this._bodyTiles = [];
+        this._bodyColumns = [];
     }
     static { this.styles = [r$3(css_248z), panelStyles]; }
     async setConfig(config) {
@@ -9318,8 +9318,8 @@ let PanelCard = class PanelCard extends h {
         await this._loadContent();
         if (this.deviceType === "tablet")
             this._initializeSwiper();
-        this._loading = false;
         ["orientationchange", "resize"].forEach((event) => window.addEventListener(event, this._handleDeviceChanges.bind(this)));
+        this._loading = false;
     }
     updated(changedProps) {
         super.updated(changedProps);
@@ -9405,31 +9405,62 @@ let PanelCard = class PanelCard extends h {
     _renderBody() {
         if (!this._config || !this._bodyTiles.length)
             return D;
-        if (this.deviceType === "phone") {
-            return ke `
-                <div class="body-tiles">
-                    ${this._bodyTiles.flat().map((tile) => ke `<div class="tile">${tile}</div>`)}
-                </div>
-            `;
-        }
-        const columns = this._config.columns && this._config.columns >= 2 && this._config.columns <= 4 ? this._config.columns : 3;
-        document.documentElement.style.setProperty("--sq-panel-body-columns", columns.toString());
         return ke `
             <div class="swiper">
+                <div class="swiper-button-prev" @click=${(e) => this._handleSwiperNavigation(e, "prev")}></div>
                 <div class="swiper-wrapper">
-                    ${this._bodyTiles.map((page) => ke `
+                    ${this._bodyTiles.map((page, index) => {
+            const gridStyle = {
+                gridTemplateColumns: `repeat(${this._bodyColumns[index]}, 1fr)`,
+            };
+            return ke `
                             <div class="swiper-slide">
-                                <div class="body-tiles">
+                                <div class="body-tiles" style=${se(gridStyle)}>
                                     ${page.map((tile) => ke `<div class="tile">${tile}</div>`)}
                                 </div>
                             </div>
-                        `)}
+                        `;
+        })}
                 </div>
-                <div class="swiper-button-prev" @click=${(e) => this._handleSwiperNavigation(e, "prev")}></div>
                 <div class="swiper-button-next" @click=${(e) => this._handleSwiperNavigation(e, "next")}></div>
             </div>
         `;
     }
+    /*
+    private _renderBody() {
+        if (!this._config || !this._bodyTiles.length) return nothing;
+        if (this.deviceType === "phone") {
+            return html`
+                <div class="body-tiles">
+                    ${this._bodyTiles.flat().map((tile) => html`<div class="tile">${tile}</div>`)}
+                </div>
+            `;
+        }
+
+        const columns =
+            this._config.columns && this._config.columns >= 2 && this._config.columns <= 4 ? this._config.columns : 3;
+
+        document.documentElement.style.setProperty("--sq-panel-body-columns", columns.toString());
+
+        return html`
+            <div class="swiper">
+                <div class="swiper-wrapper">
+                    ${this._bodyTiles.map(
+                        (page) => html`
+                            <div class="swiper-slide">
+                                <div class="body-tiles">
+                                    ${page.map((tile) => html`<div class="tile">${tile}</div>`)}
+                                </div>
+                            </div>
+                        `
+                    )}
+                </div>
+                <div class="swiper-button-prev" @click=${(e: Event) => this._handleSwiperNavigation(e, "prev")}></div>
+                <div class="swiper-button-next" @click=${(e: Event) => this._handleSwiperNavigation(e, "next")}></div>
+            </div>
+        `;
+    }
+*/
     _renderFooter() {
         return ke `
             ${this._renderFooterButton("hass:home", "Home", "_handleHome")}
@@ -9499,18 +9530,26 @@ let PanelCard = class PanelCard extends h {
     }
     async _loadBodyTiles(tilesConfig) {
         const pages = [];
+        this._bodyColumns = [];
         let currentPage = [];
+        let firstTile = true;
         for (const config of tilesConfig) {
-            if (config.type === "page-break") {
-                if (currentPage.length) {
+            if (firstTile) {
+                const columns = config.type === "page" && config.columns >= 2 && config.columns <= 4 ? config.columns : 3;
+                this._bodyColumns.push(columns);
+            }
+            if (config.type === "page") {
+                if (!firstTile && currentPage.length) {
                     pages.push(currentPage);
                     currentPage = [];
+                    const columns = config.type === "page" && config.columns >= 2 && config.columns <= 4 ? config.columns : 3;
+                    this._bodyColumns.push(columns);
                 }
             }
-            else if (config.type === "blank-tile") {
+            else if (config.type === "blank") {
                 if (this.deviceType === "tablet") {
                     const blankTile = document.createElement("div");
-                    blankTile.classList.add("blank-tile");
+                    blankTile.classList.add("blank");
                     currentPage.push(blankTile);
                 }
             }
@@ -9519,12 +9558,44 @@ let PanelCard = class PanelCard extends h {
                 tile.hass = this.hass;
                 currentPage.push(tile);
             }
+            firstTile = false;
         }
         if (currentPage.length) {
             pages.push(currentPage);
         }
         return pages;
     }
+    /*
+    private async _loadBodyTiles(tilesConfig: LovelaceCardConfig[]): Promise<LovelaceCard[][]> {
+        const pages: LovelaceCard[][] = [];
+        let currentPage: LovelaceCard[] = [];
+
+        for (const config of tilesConfig) {
+            if (config.type === "page-break") {
+                if (currentPage.length) {
+                    pages.push(currentPage);
+                    currentPage = [];
+                }
+            } else if (config.type === "blank-tile") {
+                if (this.deviceType === "tablet") {
+                    const blankTile = document.createElement("div");
+                    blankTile.classList.add("blank-tile");
+                    currentPage.push(blankTile as unknown as LovelaceCard);
+                }
+            } else {
+                const tile = createElement(config) as LovelaceCard;
+                tile.hass = this.hass;
+                currentPage.push(tile);
+            }
+        }
+
+        if (currentPage.length) {
+            pages.push(currentPage);
+        }
+
+        return pages;
+    }
+*/
     _launchClock(e) {
         e.stopPropagation();
         if (typeof window.fully !== "undefined" && window.fully.startApplication) {

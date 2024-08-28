@@ -53,6 +53,7 @@ export class PanelCard extends LitElement {
     private _headerChips: LovelaceCard[] = [];
     private _areaChips: LovelaceCard[] = [];
     private _bodyTiles: LovelaceCard[][] = [];
+    private _bodyColumns: number[] = [];
 
     static styles: CSSResultGroup = [unsafeCSS(swiperStyles), panelStyles];
 
@@ -87,12 +88,14 @@ export class PanelCard extends LitElement {
         super.firstUpdated(changedProps);
 
         await this._loadContent();
+
         if (this.deviceType === "tablet") this._initializeSwiper();
-        this._loading = false;
 
         ["orientationchange", "resize"].forEach((event) =>
             window.addEventListener(event, this._handleDeviceChanges.bind(this))
         );
+
+        this._loading = false;
     }
 
     protected updated(changedProps: PropertyValues) {
@@ -192,6 +195,33 @@ export class PanelCard extends LitElement {
 
     private _renderBody() {
         if (!this._config || !this._bodyTiles.length) return nothing;
+
+        return html`
+            <div class="swiper">
+                <div class="swiper-button-prev" @click=${(e: Event) => this._handleSwiperNavigation(e, "prev")}></div>
+                <div class="swiper-wrapper">
+                    ${this._bodyTiles.map((page, index) => {
+                        const gridStyle = {
+                            gridTemplateColumns: `repeat(${this._bodyColumns[index]}, 1fr)`,
+                        };
+
+                        return html`
+                            <div class="swiper-slide">
+                                <div class="body-tiles" style=${styleMap(gridStyle)}>
+                                    ${page.map((tile) => html`<div class="tile">${tile}</div>`)}
+                                </div>
+                            </div>
+                        `;
+                    })}
+                </div>
+                <div class="swiper-button-next" @click=${(e: Event) => this._handleSwiperNavigation(e, "next")}></div>
+            </div>
+        `;
+    }
+
+    /*
+    private _renderBody() {
+        if (!this._config || !this._bodyTiles.length) return nothing;
         if (this.deviceType === "phone") {
             return html`
                 <div class="body-tiles">
@@ -223,6 +253,7 @@ export class PanelCard extends LitElement {
             </div>
         `;
     }
+*/
 
     private _renderFooter() {
         return html`
@@ -304,6 +335,51 @@ export class PanelCard extends LitElement {
 
     private async _loadBodyTiles(tilesConfig: LovelaceCardConfig[]): Promise<LovelaceCard[][]> {
         const pages: LovelaceCard[][] = [];
+        this._bodyColumns = [];
+        let currentPage: LovelaceCard[] = [];
+        let firstTile = true;
+
+        for (const config of tilesConfig) {
+            if (firstTile) {
+                const columns =
+                    config.type === "page" && config.columns >= 2 && config.columns <= 4 ? config.columns : 3;
+                this._bodyColumns.push(columns);
+            }
+
+            if (config.type === "page") {
+                if (!firstTile && currentPage.length) {
+                    pages.push(currentPage);
+                    currentPage = [];
+
+                    const columns =
+                        config.type === "page" && config.columns >= 2 && config.columns <= 4 ? config.columns : 3;
+                    this._bodyColumns.push(columns);
+                }
+            } else if (config.type === "blank") {
+                if (this.deviceType === "tablet") {
+                    const blankTile = document.createElement("div");
+                    blankTile.classList.add("blank");
+                    currentPage.push(blankTile as unknown as LovelaceCard);
+                }
+            } else {
+                const tile = createElement(config) as LovelaceCard;
+                tile.hass = this.hass;
+                currentPage.push(tile);
+            }
+
+            firstTile = false;
+        }
+
+        if (currentPage.length) {
+            pages.push(currentPage);
+        }
+
+        return pages;
+    }
+
+    /*
+    private async _loadBodyTiles(tilesConfig: LovelaceCardConfig[]): Promise<LovelaceCard[][]> {
+        const pages: LovelaceCard[][] = [];
         let currentPage: LovelaceCard[] = [];
 
         for (const config of tilesConfig) {
@@ -331,6 +407,7 @@ export class PanelCard extends LitElement {
 
         return pages;
     }
+*/
 
     private _launchClock(e: Event) {
         e.stopPropagation();
