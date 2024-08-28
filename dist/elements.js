@@ -9281,9 +9281,6 @@ let PanelCard = class PanelCard extends h {
                 ${deviceType === "tablet" ? ke `<div>${this._renderHeader()}</div>` : ``}
                 <div>${this._renderArea()}</div>
                 <div>${this._renderBody()}</div>
-                ${deviceType === "phone" && this._deviceOrientation === "landscape"
-            ? ``
-            : ke `<div>${this._renderFooter()}</div>`}
             </div>
         `;
     }

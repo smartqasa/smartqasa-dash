@@ -68,9 +68,6 @@ export class PanelCard extends LitElement {
                 ${deviceType === "tablet" ? html`<div>${this._renderHeader()}</div>` : ``}
                 <div>${this._renderArea()}</div>
                 <div>${this._renderBody()}</div>
-                ${deviceType === "phone" && this._deviceOrientation === "landscape"
-                    ? ``
-                    : html`<div>${this._renderFooter()}</div>`}
             </div>
         `;
     }
