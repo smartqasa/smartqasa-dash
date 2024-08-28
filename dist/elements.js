@@ -9174,18 +9174,19 @@ const panelStyles = i$3 `
         .container {
             grid-template-columns: 0.95fr 1fr;
             grid-template-rows: 100%;
-            grid-template-areas: "area body";
+            grid-template-areas:
+                "area body"
+                "footer body";
             gap: 1rem;
             padding: 0.6rem 0.6rem 0.3rem 0.6rem;
         }
 
         .area-container {
+            grid-template-columns: 1fr;
+            grid-template-rows: auto auto;
             grid-template-areas:
                 "image"
-                "chips"
-                "footer";
-            grid-template-columns: 1fr;
-            grid-template-rows: auto 100% auto;
+                "chips";
             gap: 1rem;
             position: relative;
         }
@@ -9281,15 +9282,16 @@ let PanelCard = class PanelCard extends h {
         const containerStyle = {
             height: this._isAdmin ? "calc(100vh - 56px)" : "100vh",
         };
-        const isPhoneLandscape = this.deviceType === "phone" && this.deviceOrientation === "landscape";
+        //const isPhoneLandscape = this.deviceType === "phone" && this.deviceOrientation === "landscape";
         return ke `
             <div class="container" style=${se(containerStyle)}>
                 ${this.deviceType === "tablet" ? ke `<div>${this._renderHeader()}</div>` : D}
                 <div>${this._renderArea()}</div>
                 <div>${this._renderBody()}</div>
-                ${isPhoneLandscape ? D : this._renderFooter()}
+                <div>${this._renderFooter()}</div>
             </div>
         `;
+        //  ${isPhoneLandscape ? nothing : this._renderFooter()}
     }
     async firstUpdated(changedProps) {
         super.firstUpdated(changedProps);
@@ -9370,7 +9372,7 @@ let PanelCard = class PanelCard extends h {
         const picture = this._config?.picture
             ? `/local/smartqasa/images/${this._config.picture}`
             : this._areaObj?.picture ?? img$24;
-        const isPhoneLandscape = this.deviceType === "phone" && this.deviceOrientation === "landscape";
+        //const isPhoneLandscape = this.deviceType === "phone" && this.deviceOrientation === "landscape";
         const chipsTemplate = this._areaChips.length > 0
             ? ke `
                       <div class="area-chips">
@@ -9382,9 +9384,10 @@ let PanelCard = class PanelCard extends h {
             <div class="area-container">
                 <div class="area-name ${this.deviceType === "phone" ? "overlay" : ""}">${name}</div>
                 <img class="area-image" alt="Area picture..." src=${picture} />
-                ${chipsTemplate} ${isPhoneLandscape ? this._renderFooter() : D}
+                ${chipsTemplate}
             </div>
         `;
+        // ${isPhoneLandscape ? this._renderFooter() : nothing}
     }
     _renderBody() {
         if (!this._config || !this._bodyTiles.length)

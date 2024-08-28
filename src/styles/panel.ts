@@ -210,18 +210,19 @@ export const panelStyles = css`
         .container {
             grid-template-columns: 0.95fr 1fr;
             grid-template-rows: 100%;
-            grid-template-areas: "area body";
+            grid-template-areas:
+                "area body"
+                "footer body";
             gap: 1rem;
             padding: 0.6rem 0.6rem 0.3rem 0.6rem;
         }
 
         .area-container {
+            grid-template-columns: 1fr;
+            grid-template-rows: auto auto;
             grid-template-areas:
                 "image"
-                "chips"
-                "footer";
-            grid-template-columns: 1fr;
-            grid-template-rows: auto 100% auto;
+                "chips";
             gap: 1rem;
             position: relative;
         }

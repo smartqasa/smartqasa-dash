@@ -63,16 +63,17 @@ export class PanelCard extends LitElement {
             height: this._isAdmin ? "calc(100vh - 56px)" : "100vh",
         };
 
-        const isPhoneLandscape = this.deviceType === "phone" && this.deviceOrientation === "landscape";
+        //const isPhoneLandscape = this.deviceType === "phone" && this.deviceOrientation === "landscape";
 
         return html`
             <div class="container" style=${styleMap(containerStyle)}>
                 ${this.deviceType === "tablet" ? html`<div>${this._renderHeader()}</div>` : nothing}
                 <div>${this._renderArea()}</div>
                 <div>${this._renderBody()}</div>
-                ${isPhoneLandscape ? nothing : this._renderFooter()}
+                <div>${this._renderFooter()}</div>
             </div>
         `;
+        //  ${isPhoneLandscape ? nothing : this._renderFooter()}
     }
 
     protected async firstUpdated(changedProps: PropertyValues) {
@@ -170,7 +171,7 @@ export class PanelCard extends LitElement {
             ? `/local/smartqasa/images/${this._config.picture}`
             : this._areaObj?.picture ?? defaultImage;
 
-        const isPhoneLandscape = this.deviceType === "phone" && this.deviceOrientation === "landscape";
+        //const isPhoneLandscape = this.deviceType === "phone" && this.deviceOrientation === "landscape";
 
         const chipsTemplate =
             this._areaChips.length > 0
@@ -185,9 +186,11 @@ export class PanelCard extends LitElement {
             <div class="area-container">
                 <div class="area-name ${this.deviceType === "phone" ? "overlay" : ""}">${name}</div>
                 <img class="area-image" alt="Area picture..." src=${picture} />
-                ${chipsTemplate} ${isPhoneLandscape ? this._renderFooter() : nothing}
+                ${chipsTemplate}
             </div>
         `;
+
+        // ${isPhoneLandscape ? this._renderFooter() : nothing}
     }
 
     private _renderBody() {
