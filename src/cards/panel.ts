@@ -33,6 +33,12 @@ interface ActionHandlers {
     _handleMenu: () => void;
 }
 
+window.customCards.push({
+    type: "smartqasa-panel-card",
+    name: "SmartQasa Panel Card",
+    preview: true,
+    description: "A SmartQasa card for rendering an panel.",
+});
 @customElement("smartqasa-panel-card")
 export class PanelCard extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
