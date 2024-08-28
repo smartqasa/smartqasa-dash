@@ -62,15 +62,15 @@ export class PanelCard extends LitElement {
         const containerStyle = {
             height: this._isAdmin ? "calc(100vh - 56px)" : "100vh",
         };
-        console.log(this.deviceType, this.deviceOrientation);
+
+        const isPhoneLandscape = this.deviceType === "phone" && this.deviceOrientation === "landscape";
+
         return html`
             <div class="container" style=${styleMap(containerStyle)}>
                 ${this.deviceType === "tablet" ? html`<div>${this._renderHeader()}</div>` : nothing}
                 <div>${this._renderArea()}</div>
                 <div>${this._renderBody()}</div>
-                ${this.deviceType === "phone" && this.deviceOrientation === "landscape"
-                    ? nothing
-                    : html`<div>${this._renderFooter()}</div>`}
+                ${isPhoneLandscape ? nothing : this._renderFooter()}
             </div>
         `;
     }
@@ -172,10 +172,6 @@ export class PanelCard extends LitElement {
 
         const isPhoneLandscape = this.deviceType === "phone" && this.deviceOrientation === "landscape";
 
-        const footerTemplate = isPhoneLandscape
-            ? html`<div class="footer-container">${this._renderFooter()}</div>`
-            : nothing;
-
         const chipsTemplate =
             this._areaChips.length > 0
                 ? html`
@@ -189,8 +185,9 @@ export class PanelCard extends LitElement {
             <div class="area-container">
                 <div class="area-name ${this.deviceType === "phone" ? "overlay" : ""}">${name}</div>
                 <img class="area-image" alt="Area picture..." src=${picture} />
-                ${chipsTemplate} ${footerTemplate}
+                ${chipsTemplate}
             </div>
+            ${isPhoneLandscape ? this._renderFooter() : nothing}
         `;
     }
 

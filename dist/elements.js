@@ -9281,15 +9281,13 @@ let PanelCard = class PanelCard extends h {
         const containerStyle = {
             height: this._isAdmin ? "calc(100vh - 56px)" : "100vh",
         };
-        console.log(this.deviceType, this.deviceOrientation);
+        const isPhoneLandscape = this.deviceType === "phone" && this.deviceOrientation === "landscape";
         return ke `
             <div class="container" style=${se(containerStyle)}>
                 ${this.deviceType === "tablet" ? ke `<div>${this._renderHeader()}</div>` : D}
                 <div>${this._renderArea()}</div>
                 <div>${this._renderBody()}</div>
-                ${this.deviceType === "phone" && this.deviceOrientation === "landscape"
-            ? D
-            : ke `<div>${this._renderFooter()}</div>`}
+                ${isPhoneLandscape ? D : this._renderFooter()}
             </div>
         `;
     }
@@ -9373,9 +9371,6 @@ let PanelCard = class PanelCard extends h {
             ? `/local/smartqasa/images/${this._config.picture}`
             : this._areaObj?.picture ?? img$24;
         const isPhoneLandscape = this.deviceType === "phone" && this.deviceOrientation === "landscape";
-        const footerTemplate = isPhoneLandscape
-            ? ke `<div class="footer-container">${this._renderFooter()}</div>`
-            : D;
         const chipsTemplate = this._areaChips.length > 0
             ? ke `
                       <div class="area-chips">
@@ -9387,8 +9382,9 @@ let PanelCard = class PanelCard extends h {
             <div class="area-container">
                 <div class="area-name ${this.deviceType === "phone" ? "overlay" : ""}">${name}</div>
                 <img class="area-image" alt="Area picture..." src=${picture} />
-                ${chipsTemplate} ${footerTemplate}
+                ${chipsTemplate}
             </div>
+            ${isPhoneLandscape ? this._renderFooter() : D}
         `;
     }
     _renderBody() {
