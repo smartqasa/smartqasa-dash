@@ -161,22 +161,29 @@ export class PanelCard extends LitElement {
             ? `/local/smartqasa/images/${this._config.picture}`
             : this._areaObj?.picture ?? defaultImage;
 
+        // Determine if the device is a phone in landscape mode
+        const isPhoneLandscape = deviceType === "phone" && this._deviceOrientation === "landscape";
+
+        // Render the footer conditionally
+        const footerTemplate = isPhoneLandscape
+            ? html`<div class="footer-container">${this._renderFooter()}</div>`
+            : nothing;
+
+        // Render the area chips if available
+        const chipsTemplate =
+            this._areaChips.length > 0
+                ? html`
+                      <div class="area-chips">
+                          ${this._areaChips.map((chip) => html`<div class="chip">${chip}</div>`)}
+                      </div>
+                  `
+                : nothing;
+
         return html`
             <div class="area-container">
-                ${deviceType === "phone"
-                    ? html`<div class="area-name overlay">${name}</div>`
-                    : html`<div class="area-name">${name}</div>`}
+                <div class="area-name ${deviceType === "phone" ? "overlay" : ""}">${name}</div>
                 <img class="area-image" alt="Area picture..." src=${picture} />
-                ${this._areaChips.length > 0
-                    ? html`
-                          <div class="area-chips">
-                              ${this._areaChips.map((chip) => html`<div class="chip">${chip}</div>`)}
-                          </div>
-                      `
-                    : html``}
-                ${deviceType === "phone" && this._deviceOrientation === "landscape"
-                    ? html`<div class="footer-container">${this._renderFooter()}</div>`
-                    : html``}
+                ${chipsTemplate} ${footerTemplate}
             </div>
         `;
     }

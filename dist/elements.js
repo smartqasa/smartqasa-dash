@@ -9343,22 +9343,25 @@ let PanelCard = class PanelCard extends h {
         const picture = this._config?.picture
             ? `/local/smartqasa/images/${this._config.picture}`
             : this._areaObj?.picture ?? img$24;
+        // Determine if the device is a phone in landscape mode
+        const isPhoneLandscape = deviceType === "phone" && this._deviceOrientation === "landscape";
+        // Render the footer conditionally
+        const footerTemplate = isPhoneLandscape
+            ? ke `<div class="footer-container">${this._renderFooter()}</div>`
+            : D;
+        // Render the area chips if available
+        const chipsTemplate = this._areaChips.length > 0
+            ? ke `
+                      <div class="area-chips">
+                          ${this._areaChips.map((chip) => ke `<div class="chip">${chip}</div>`)}
+                      </div>
+                  `
+            : D;
         return ke `
             <div class="area-container">
-                ${deviceType === "phone"
-            ? ke `<div class="area-name overlay">${name}</div>`
-            : ke `<div class="area-name">${name}</div>`}
+                <div class="area-name ${deviceType === "phone" ? "overlay" : ""}">${name}</div>
                 <img class="area-image" alt="Area picture..." src=${picture} />
-                ${this._areaChips.length > 0
-            ? ke `
-                          <div class="area-chips">
-                              ${this._areaChips.map((chip) => ke `<div class="chip">${chip}</div>`)}
-                          </div>
-                      `
-            : ke ``}
-                ${deviceType === "phone" && this._deviceOrientation === "landscape"
-            ? ke `<div class="footer-container">${this._renderFooter()}</div>`
-            : ke ``}
+                ${chipsTemplate} ${footerTemplate}
             </div>
         `;
     }
