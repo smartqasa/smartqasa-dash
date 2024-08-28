@@ -9297,7 +9297,7 @@ let PanelCard = class PanelCard extends h {
             : D}
                 <div class="area-container">${this._renderArea()}</div>
                 <div class="body-container">${this._renderBody()}</div>
-                ${isPhoneLandscape ? D : ke `<div class="footer-container">this._renderFooter()</div>`}
+                ${isPhoneLandscape ? D : ke `<div class="footer-container">${this._renderFooter()}</div>`}
             </div>
         `;
     }
