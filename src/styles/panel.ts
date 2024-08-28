@@ -1,6 +1,13 @@
 import { css } from "lit";
 
 export const panelStyles = css`
+    :host {
+        background-attachment: fixed;
+        background-size: cover;
+        background-image: var(--sq-panel-image);
+        background-position: center;
+        background-repeat: no-repeat;
+    }
     .container {
         display: grid;
         height: 100vh;
@@ -15,7 +22,6 @@ export const panelStyles = css`
         gap: 2rem;
         padding: 1rem 1rem 0.5rem 1rem;
         box-sizing: border-box;
-        background: var(--sq-panel-background);
     }
 
     .header-container {
@@ -217,7 +223,7 @@ export const panelStyles = css`
 
         .area-container {
             grid-template-columns: 1fr;
-            grid-template-rows: auto auto auto;
+            grid-template-rows: auto 1fr auto;
             grid-template-areas:
                 "image"
                 "chips"
