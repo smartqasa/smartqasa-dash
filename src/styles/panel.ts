@@ -157,6 +157,10 @@ export const panelStyles = css`
         .container {
             grid-template-columns: 100%;
             grid-template-rows: auto minmax(0, 1fr) auto;
+            grid-template-areas:
+                "area"
+                "body"
+                "footer";
             gap: 1rem;
             padding: 0.6rem 0.6rem 0.3rem 0.6rem;
         }
@@ -206,6 +210,7 @@ export const panelStyles = css`
         .container {
             grid-template-columns: 0.95fr 1fr;
             grid-template-rows: 100%;
+            grid-template-areas: "area body";
             gap: 1rem;
             padding: 0.6rem 0.6rem 0.3rem 0.6rem;
         }
@@ -239,7 +244,6 @@ export const panelStyles = css`
         }
 
         .body-container {
-            display: block;
             width: 100%;
             overflow-y: auto;
         }

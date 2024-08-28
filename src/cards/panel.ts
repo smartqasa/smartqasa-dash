@@ -82,8 +82,9 @@ export class PanelCard extends LitElement {
         if (this.deviceType === "tablet") this._initializeSwiper();
         this._loading = false;
 
-        window.addEventListener("resize", this._handleDeviceChanges.bind(this));
-        window.addEventListener("orientationchange", this._handleDeviceChanges.bind(this));
+        ["orientationchange", "resize"].forEach((event) =>
+            window.addEventListener(event, this._handleDeviceChanges.bind(this))
+        );
     }
 
     protected updated(changedProps: PropertyValues) {
