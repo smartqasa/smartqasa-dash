@@ -199,9 +199,12 @@ export class PanelCard extends LitElement {
             <div class="swiper">
                 <div class="swiper-wrapper">
                     ${this._bodyTiles.map((page, index) => {
-                        const gridStyle = {
-                            gridTemplateColumns: `repeat(${this._bodyColumns[index]}, 1fr)`,
-                        };
+                        const gridStyle =
+                            this.deviceType === "tablet"
+                                ? {
+                                      gridTemplateColumns: `repeat(${this._bodyColumns[index]}, var(--sq-tile-width, 19.5rem))`,
+                                  }
+                                : { gridTemplateColumns: `repeat(2, 1fr)` };
 
                         return html`
                             <div class="swiper-slide">

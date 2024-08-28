@@ -9164,7 +9164,6 @@ const panelStyles = i$3 `
         .body-tiles {
             width: 100%;
             margin: 0;
-            grid-template-columns: 1fr 1fr;
             grid-template-rows: var(--sq-tile-height, 7rem);
             gap: var(--sq-tile-spacing, 0.8rem);
         }
@@ -9232,7 +9231,6 @@ const panelStyles = i$3 `
         .body-tiles {
             width: 100%;
             margin: 0;
-            grid-template-columns: 1fr 1fr;
             grid-template-rows: var(--sq-tile-height, 7rem);
             gap: var(--sq-tile-spacing, 0.8rem);
         }
@@ -9409,9 +9407,11 @@ let PanelCard = class PanelCard extends h {
             <div class="swiper">
                 <div class="swiper-wrapper">
                     ${this._bodyTiles.map((page, index) => {
-            const gridStyle = {
-                gridTemplateColumns: `repeat(${this._bodyColumns[index]}, 1fr)`,
-            };
+            const gridStyle = this.deviceType === "tablet"
+                ? {
+                    gridTemplateColumns: `repeat(${this._bodyColumns[index]}, var(--sq-tile-width, 19.5rem))`,
+                }
+                : { gridTemplateColumns: `repeat(2, 1fr)` };
             return ke `
                             <div class="swiper-slide">
                                 <div class="body-tiles" style=${se(gridStyle)}>

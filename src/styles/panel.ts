@@ -200,7 +200,6 @@ export const panelStyles = css`
         .body-tiles {
             width: 100%;
             margin: 0;
-            grid-template-columns: 1fr 1fr;
             grid-template-rows: var(--sq-tile-height, 7rem);
             gap: var(--sq-tile-spacing, 0.8rem);
         }
@@ -268,7 +267,6 @@ export const panelStyles = css`
         .body-tiles {
             width: 100%;
             margin: 0;
-            grid-template-columns: 1fr 1fr;
             grid-template-rows: var(--sq-tile-height, 7rem);
             gap: var(--sq-tile-spacing, 0.8rem);
         }
