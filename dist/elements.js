@@ -9277,6 +9277,7 @@ let PanelCard = class PanelCard extends h {
         const containerStyle = {
             height: this._isAdmin ? "calc(100vh - 56px)" : "100vh",
         };
+        console.log(this.deviceType, this.deviceOrientation);
         return ke `
             <div class="container" style=${se(containerStyle)}>
                 ${this.deviceType === "tablet" ? ke `<div>${this._renderHeader()}</div>` : D}

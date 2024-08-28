@@ -62,7 +62,7 @@ export class PanelCard extends LitElement {
         const containerStyle = {
             height: this._isAdmin ? "calc(100vh - 56px)" : "100vh",
         };
-
+        console.log(this.deviceType, this.deviceOrientation);
         return html`
             <div class="container" style=${styleMap(containerStyle)}>
                 ${this.deviceType === "tablet" ? html`<div>${this._renderHeader()}</div>` : nothing}
