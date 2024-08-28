@@ -65,9 +65,12 @@ export class PanelCard extends LitElement {
 
         return html`
             <div class="container" style=${styleMap(containerStyle)}>
-                ${deviceType === "tablet" ? html`<div>${this._renderHeader()}</div>` : ``}
+                ${deviceType === "tablet" ? html`<div>${this._renderHeader()}</div>` : html``}
                 <div>${this._renderArea()}</div>
                 <div>${this._renderBody()}</div>
+                ${deviceType === "phone" && this._deviceOrientation === "landscape"
+                    ? html``
+                    : html`<div>${this._renderFooter()}</div>`}
             </div>
         `;
     }
@@ -170,10 +173,10 @@ export class PanelCard extends LitElement {
                               ${this._areaChips.map((chip) => html`<div class="chip">${chip}</div>`)}
                           </div>
                       `
-                    : nothing}
+                    : html``}
                 ${deviceType === "phone" && this._deviceOrientation === "landscape"
                     ? html`<div class="footer-container">${this._renderFooter()}</div>`
-                    : nothing}
+                    : html``}
             </div>
         `;
     }

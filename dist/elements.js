@@ -9278,9 +9278,12 @@ let PanelCard = class PanelCard extends h {
         };
         return ke `
             <div class="container" style=${se(containerStyle)}>
-                ${deviceType === "tablet" ? ke `<div>${this._renderHeader()}</div>` : ``}
+                ${deviceType === "tablet" ? ke `<div>${this._renderHeader()}</div>` : ke ``}
                 <div>${this._renderArea()}</div>
                 <div>${this._renderBody()}</div>
+                ${deviceType === "phone" && this._deviceOrientation === "landscape"
+            ? ke ``
+            : ke `<div>${this._renderFooter()}</div>`}
             </div>
         `;
     }
@@ -9369,10 +9372,10 @@ let PanelCard = class PanelCard extends h {
                               ${this._areaChips.map((chip) => ke `<div class="chip">${chip}</div>`)}
                           </div>
                       `
-            : D}
+            : ke ``}
                 ${deviceType === "phone" && this._deviceOrientation === "landscape"
             ? ke `<div class="footer-container">${this._renderFooter()}</div>`
-            : D}
+            : ke ``}
             </div>
         `;
     }
