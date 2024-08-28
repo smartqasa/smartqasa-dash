@@ -178,7 +178,7 @@ export const panelStyles = css`
             background-color: rgba(0, 0, 0, 0.5);
             color: white;
             padding: 0.5rem;
-            font-size: 2.8rem;
+            font-size: 2.5rem;
             font-weight: var(--sq-title-font-weight, 400);
             border-radius: 0.2rem 0 0 0;
         }
@@ -228,7 +228,7 @@ export const panelStyles = css`
             background-color: rgba(0, 0, 0, 0.5);
             color: white;
             padding: 0.5rem;
-            font-size: 2.8rem;
+            font-size: 2.5rem;
             font-weight: var(--sq-title-font-weight, 400);
             border-radius: 0.2rem 0 0 0;
         }

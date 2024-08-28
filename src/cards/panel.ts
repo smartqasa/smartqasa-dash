@@ -65,11 +65,11 @@ export class PanelCard extends LitElement {
 
         return html`
             <div class="container" style=${styleMap(containerStyle)}>
-                ${deviceType === "tablet" ? html`<div>${this._renderHeader()}</div>` : nothing}
+                ${deviceType === "tablet" ? html`<div>${this._renderHeader()}</div>` : ``}
                 <div>${this._renderArea()}</div>
                 <div>${this._renderBody()}</div>
                 ${deviceType === "phone" && this._deviceOrientation === "landscape"
-                    ? nothing
+                    ? ``
                     : html`<div>${this._renderFooter()}</div>`}
             </div>
         `;
