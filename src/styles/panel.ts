@@ -210,19 +210,18 @@ export const panelStyles = css`
         .container {
             grid-template-columns: 0.95fr 1fr;
             grid-template-rows: 100%;
-            grid-template-areas:
-                "area body"
-                "footer body";
+            grid-template-areas: "area body";
             gap: 1rem;
             padding: 0.6rem 0.6rem 0.3rem 0.6rem;
         }
 
         .area-container {
             grid-template-columns: 1fr;
-            grid-template-rows: auto auto;
+            grid-template-rows: auto auto auto;
             grid-template-areas:
                 "image"
-                "chips";
+                "chips"
+                "footer-p-l";
             gap: 1rem;
             position: relative;
         }
@@ -244,6 +243,18 @@ export const panelStyles = css`
             align-items: flex-start;
         }
 
+        .footer-container {
+            grid-area: footer-p-l;
+            display: flex;
+            gap: 3rem;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .footer-button span {
+            display: none;
+        }
+
         .body-container {
             width: 100%;
             overflow-y: auto;
@@ -255,10 +266,6 @@ export const panelStyles = css`
             grid-template-columns: 1fr 1fr;
             grid-template-rows: var(--sq-tile-height, 7rem);
             gap: var(--sq-tile-spacing, 0.8rem);
-        }
-
-        .footer-button span {
-            display: none;
         }
     }
 `;

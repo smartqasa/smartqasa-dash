@@ -9174,19 +9174,18 @@ const panelStyles = i$3 `
         .container {
             grid-template-columns: 0.95fr 1fr;
             grid-template-rows: 100%;
-            grid-template-areas:
-                "area body"
-                "footer body";
+            grid-template-areas: "area body";
             gap: 1rem;
             padding: 0.6rem 0.6rem 0.3rem 0.6rem;
         }
 
         .area-container {
             grid-template-columns: 1fr;
-            grid-template-rows: auto auto;
+            grid-template-rows: auto auto auto;
             grid-template-areas:
                 "image"
-                "chips";
+                "chips"
+                "footer-p-l";
             gap: 1rem;
             position: relative;
         }
@@ -9208,6 +9207,18 @@ const panelStyles = i$3 `
             align-items: flex-start;
         }
 
+        .footer-container {
+            grid-area: footer-p-l;
+            display: flex;
+            gap: 3rem;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .footer-button span {
+            display: none;
+        }
+
         .body-container {
             width: 100%;
             overflow-y: auto;
@@ -9219,10 +9230,6 @@ const panelStyles = i$3 `
             grid-template-columns: 1fr 1fr;
             grid-template-rows: var(--sq-tile-height, 7rem);
             gap: var(--sq-tile-spacing, 0.8rem);
-        }
-
-        .footer-button span {
-            display: none;
         }
     }
 `;
@@ -9282,16 +9289,17 @@ let PanelCard = class PanelCard extends h {
         const containerStyle = {
             height: this._isAdmin ? "calc(100vh - 56px)" : "100vh",
         };
-        //const isPhoneLandscape = this.deviceType === "phone" && this.deviceOrientation === "landscape";
+        const isPhoneLandscape = this.deviceType === "phone" && this.deviceOrientation === "landscape";
         return ke `
             <div class="container" style=${se(containerStyle)}>
-                ${this.deviceType === "tablet" ? ke `<div>${this._renderHeader()}</div>` : D}
-                <div>${this._renderArea()}</div>
-                <div>${this._renderBody()}</div>
-                <div>${this._renderFooter()}</div>
+                ${this.deviceType === "tablet"
+            ? ke `<div class="header-container">${this._renderHeader()}</div>`
+            : D}
+                <div class="area-container">${this._renderArea()}</div>
+                <div class="body-container">${this._renderBody()}</div>
+                ${isPhoneLandscape ? D : ke `<div class="footer-container">this._renderFooter()</div>`}
             </div>
         `;
-        //  ${isPhoneLandscape ? nothing : this._renderFooter()}
     }
     async firstUpdated(changedProps) {
         super.firstUpdated(changedProps);
@@ -9356,15 +9364,11 @@ let PanelCard = class PanelCard extends h {
         let time = this.hass?.states["sensor.current_time"]?.state || "Loading...";
         let date = this.hass?.states["sensor.current_date"]?.state || "Loading...";
         return ke `
-            <div class="header-container">
-                <div class="header-time-date" @click="${this._launchClock}">
-                    <div class="time">${time}</div>
-                    <div class="date">${date}</div>
-                </div>
-                <div class="header-chips">
-                    ${this._headerChips.map((chip) => ke `<div class="chip">${chip}</div>`)}
-                </div>
+            <div class="header-time-date" @click="${this._launchClock}">
+                <div class="time">${time}</div>
+                <div class="date">${date}</div>
             </div>
+            <div class="header-chips">${this._headerChips.map((chip) => ke `<div class="chip">${chip}</div>`)}</div>
         `;
     }
     _renderArea() {
@@ -9372,69 +9376,54 @@ let PanelCard = class PanelCard extends h {
         const picture = this._config?.picture
             ? `/local/smartqasa/images/${this._config.picture}`
             : this._areaObj?.picture ?? img$24;
-        //const isPhoneLandscape = this.deviceType === "phone" && this.deviceOrientation === "landscape";
-        const chipsTemplate = this._areaChips.length > 0
+        const isPhoneLandscape = this.deviceType === "phone" && this.deviceOrientation === "landscape";
+        return ke `
+            <div class="area-name ${this.deviceType === "phone" ? "overlay" : ""}">${name}</div>
+            <img class="area-image" alt="Area picture..." src=${picture} />
+            ${this._areaChips.length > 0
             ? ke `
                       <div class="area-chips">
                           ${this._areaChips.map((chip) => ke `<div class="chip">${chip}</div>`)}
                       </div>
                   `
-            : D;
-        return ke `
-            <div class="area-container">
-                <div class="area-name ${this.deviceType === "phone" ? "overlay" : ""}">${name}</div>
-                <img class="area-image" alt="Area picture..." src=${picture} />
-                ${chipsTemplate}
-            </div>
+            : D}
+            ${isPhoneLandscape ? ke `<div class="footer-container">${this._renderFooter()}</div>` : D}
         `;
-        // ${isPhoneLandscape ? this._renderFooter() : nothing}
     }
     _renderBody() {
         if (!this._config || !this._bodyTiles.length)
             return D;
         if (this.deviceType === "phone") {
             return ke `
-                <div class="body-container">
-                    <div class="body-tiles">
-                        ${this._bodyTiles.flat().map((tile) => ke `<div class="tile">${tile}</div>`)}
-                    </div>
+                <div class="body-tiles">
+                    ${this._bodyTiles.flat().map((tile) => ke `<div class="tile">${tile}</div>`)}
                 </div>
             `;
         }
         const columns = this._config.columns && this._config.columns >= 2 && this._config.columns <= 4 ? this._config.columns : 3;
         document.documentElement.style.setProperty("--sq-panel-body-columns", columns.toString());
         return ke `
-            <div class="body-container">
-                <div class="swiper">
-                    <div class="swiper-wrapper">
-                        ${this._bodyTiles.map((page) => ke `
-                                <div class="swiper-slide">
-                                    <div class="body-tiles">
-                                        ${page.map((tile) => ke `<div class="tile">${tile}</div>`)}
-                                    </div>
+            <div class="swiper">
+                <div class="swiper-wrapper">
+                    ${this._bodyTiles.map((page) => ke `
+                            <div class="swiper-slide">
+                                <div class="body-tiles">
+                                    ${page.map((tile) => ke `<div class="tile">${tile}</div>`)}
                                 </div>
-                            `)}
-                    </div>
-                    <div
-                        class="swiper-button-prev"
-                        @click=${(e) => this._handleSwiperNavigation(e, "prev")}
-                    ></div>
-                    <div
-                        class="swiper-button-next"
-                        @click=${(e) => this._handleSwiperNavigation(e, "next")}
-                    ></div>
+                            </div>
+                        `)}
                 </div>
+                <div class="swiper-button-prev" @click=${(e) => this._handleSwiperNavigation(e, "prev")}></div>
+                <div class="swiper-button-next" @click=${(e) => this._handleSwiperNavigation(e, "next")}></div>
             </div>
         `;
     }
     _renderFooter() {
         return ke `
-            <div class="footer-container">
-                ${this._renderFooterButton("hass:home", "Home", "_handleHome")}
-                ${this._renderFooterButton("hass:view-dashboard", "Areas", "_handleAreas")}
-                ${this._renderFooterButton("hass:music", "Entertainment", "_handleEntertain")}
-                ${this._renderFooterButton("hass:menu", "Menu", "_handleMenu")}
-            </div>
+            ${this._renderFooterButton("hass:home", "Home", "_handleHome")}
+            ${this._renderFooterButton("hass:view-dashboard", "Areas", "_handleAreas")}
+            ${this._renderFooterButton("hass:music", "Entertainment", "_handleEntertain")}
+            ${this._renderFooterButton("hass:menu", "Menu", "_handleMenu")}
         `;
     }
     _renderFooterButton(icon, name, methodName) {

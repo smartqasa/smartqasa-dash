@@ -63,17 +63,18 @@ export class PanelCard extends LitElement {
             height: this._isAdmin ? "calc(100vh - 56px)" : "100vh",
         };
 
-        //const isPhoneLandscape = this.deviceType === "phone" && this.deviceOrientation === "landscape";
+        const isPhoneLandscape = this.deviceType === "phone" && this.deviceOrientation === "landscape";
 
         return html`
             <div class="container" style=${styleMap(containerStyle)}>
-                ${this.deviceType === "tablet" ? html`<div>${this._renderHeader()}</div>` : nothing}
-                <div>${this._renderArea()}</div>
-                <div>${this._renderBody()}</div>
-                <div>${this._renderFooter()}</div>
+                ${this.deviceType === "tablet"
+                    ? html`<div class="header-container">${this._renderHeader()}</div>`
+                    : nothing}
+                <div class="area-container">${this._renderArea()}</div>
+                <div class="body-container">${this._renderBody()}</div>
+                ${isPhoneLandscape ? nothing : html`<div class="footer-container">this._renderFooter()</div>`}
             </div>
         `;
-        //  ${isPhoneLandscape ? nothing : this._renderFooter()}
     }
 
     protected async firstUpdated(changedProps: PropertyValues) {
@@ -153,15 +154,11 @@ export class PanelCard extends LitElement {
         let date = this.hass?.states["sensor.current_date"]?.state || "Loading...";
 
         return html`
-            <div class="header-container">
-                <div class="header-time-date" @click="${this._launchClock}">
-                    <div class="time">${time}</div>
-                    <div class="date">${date}</div>
-                </div>
-                <div class="header-chips">
-                    ${this._headerChips.map((chip) => html`<div class="chip">${chip}</div>`)}
-                </div>
+            <div class="header-time-date" @click="${this._launchClock}">
+                <div class="time">${time}</div>
+                <div class="date">${date}</div>
             </div>
+            <div class="header-chips">${this._headerChips.map((chip) => html`<div class="chip">${chip}</div>`)}</div>
         `;
     }
 
@@ -171,36 +168,28 @@ export class PanelCard extends LitElement {
             ? `/local/smartqasa/images/${this._config.picture}`
             : this._areaObj?.picture ?? defaultImage;
 
-        //const isPhoneLandscape = this.deviceType === "phone" && this.deviceOrientation === "landscape";
+        const isPhoneLandscape = this.deviceType === "phone" && this.deviceOrientation === "landscape";
 
-        const chipsTemplate =
-            this._areaChips.length > 0
+        return html`
+            <div class="area-name ${this.deviceType === "phone" ? "overlay" : ""}">${name}</div>
+            <img class="area-image" alt="Area picture..." src=${picture} />
+            ${this._areaChips.length > 0
                 ? html`
                       <div class="area-chips">
                           ${this._areaChips.map((chip) => html`<div class="chip">${chip}</div>`)}
                       </div>
                   `
-                : nothing;
-
-        return html`
-            <div class="area-container">
-                <div class="area-name ${this.deviceType === "phone" ? "overlay" : ""}">${name}</div>
-                <img class="area-image" alt="Area picture..." src=${picture} />
-                ${chipsTemplate}
-            </div>
+                : nothing}
+            ${isPhoneLandscape ? html`<div class="footer-container">${this._renderFooter()}</div>` : nothing}
         `;
-
-        // ${isPhoneLandscape ? this._renderFooter() : nothing}
     }
 
     private _renderBody() {
         if (!this._config || !this._bodyTiles.length) return nothing;
         if (this.deviceType === "phone") {
             return html`
-                <div class="body-container">
-                    <div class="body-tiles">
-                        ${this._bodyTiles.flat().map((tile) => html`<div class="tile">${tile}</div>`)}
-                    </div>
+                <div class="body-tiles">
+                    ${this._bodyTiles.flat().map((tile) => html`<div class="tile">${tile}</div>`)}
                 </div>
             `;
         }
@@ -211,40 +200,30 @@ export class PanelCard extends LitElement {
         document.documentElement.style.setProperty("--sq-panel-body-columns", columns.toString());
 
         return html`
-            <div class="body-container">
-                <div class="swiper">
-                    <div class="swiper-wrapper">
-                        ${this._bodyTiles.map(
-                            (page) => html`
-                                <div class="swiper-slide">
-                                    <div class="body-tiles">
-                                        ${page.map((tile) => html`<div class="tile">${tile}</div>`)}
-                                    </div>
+            <div class="swiper">
+                <div class="swiper-wrapper">
+                    ${this._bodyTiles.map(
+                        (page) => html`
+                            <div class="swiper-slide">
+                                <div class="body-tiles">
+                                    ${page.map((tile) => html`<div class="tile">${tile}</div>`)}
                                 </div>
-                            `
-                        )}
-                    </div>
-                    <div
-                        class="swiper-button-prev"
-                        @click=${(e: Event) => this._handleSwiperNavigation(e, "prev")}
-                    ></div>
-                    <div
-                        class="swiper-button-next"
-                        @click=${(e: Event) => this._handleSwiperNavigation(e, "next")}
-                    ></div>
+                            </div>
+                        `
+                    )}
                 </div>
+                <div class="swiper-button-prev" @click=${(e: Event) => this._handleSwiperNavigation(e, "prev")}></div>
+                <div class="swiper-button-next" @click=${(e: Event) => this._handleSwiperNavigation(e, "next")}></div>
             </div>
         `;
     }
 
     private _renderFooter() {
         return html`
-            <div class="footer-container">
-                ${this._renderFooterButton("hass:home", "Home", "_handleHome")}
-                ${this._renderFooterButton("hass:view-dashboard", "Areas", "_handleAreas")}
-                ${this._renderFooterButton("hass:music", "Entertainment", "_handleEntertain")}
-                ${this._renderFooterButton("hass:menu", "Menu", "_handleMenu")}
-            </div>
+            ${this._renderFooterButton("hass:home", "Home", "_handleHome")}
+            ${this._renderFooterButton("hass:view-dashboard", "Areas", "_handleAreas")}
+            ${this._renderFooterButton("hass:music", "Entertainment", "_handleEntertain")}
+            ${this._renderFooterButton("hass:menu", "Menu", "_handleMenu")}
         `;
     }
 
