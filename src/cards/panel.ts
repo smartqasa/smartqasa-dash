@@ -22,7 +22,6 @@ interface Config extends LovelaceCardConfig {
     video_player: string;
     video_sound: string;
     chips?: LovelaceCardConfig[];
-    columns?: number | undefined;
     tiles?: LovelaceCardConfig[];
 }
 
@@ -198,7 +197,6 @@ export class PanelCard extends LitElement {
 
         return html`
             <div class="swiper">
-                <div class="swiper-button-prev" @click=${(e: Event) => this._handleSwiperNavigation(e, "prev")}></div>
                 <div class="swiper-wrapper">
                     ${this._bodyTiles.map((page, index) => {
                         const gridStyle = {
@@ -214,6 +212,7 @@ export class PanelCard extends LitElement {
                         `;
                     })}
                 </div>
+                <div class="swiper-button-prev" @click=${(e: Event) => this._handleSwiperNavigation(e, "prev")}></div>
                 <div class="swiper-button-next" @click=${(e: Event) => this._handleSwiperNavigation(e, "next")}></div>
             </div>
         `;
@@ -358,7 +357,7 @@ export class PanelCard extends LitElement {
             } else if (config.type === "blank") {
                 if (this.deviceType === "tablet") {
                     const blankTile = document.createElement("div");
-                    blankTile.classList.add("blank");
+                    blankTile.classList.add("blank-tile");
                     currentPage.push(blankTile as unknown as LovelaceCard);
                 }
             } else {

@@ -9407,7 +9407,6 @@ let PanelCard = class PanelCard extends h {
             return D;
         return ke `
             <div class="swiper">
-                <div class="swiper-button-prev" @click=${(e) => this._handleSwiperNavigation(e, "prev")}></div>
                 <div class="swiper-wrapper">
                     ${this._bodyTiles.map((page, index) => {
             const gridStyle = {
@@ -9422,6 +9421,7 @@ let PanelCard = class PanelCard extends h {
                         `;
         })}
                 </div>
+                <div class="swiper-button-prev" @click=${(e) => this._handleSwiperNavigation(e, "prev")}></div>
                 <div class="swiper-button-next" @click=${(e) => this._handleSwiperNavigation(e, "next")}></div>
             </div>
         `;
@@ -9549,7 +9549,7 @@ let PanelCard = class PanelCard extends h {
             else if (config.type === "blank") {
                 if (this.deviceType === "tablet") {
                     const blankTile = document.createElement("div");
-                    blankTile.classList.add("blank");
+                    blankTile.classList.add("blank-tile");
                     currentPage.push(blankTile);
                 }
             }
