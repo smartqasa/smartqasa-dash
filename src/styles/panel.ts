@@ -7,11 +7,7 @@ export const panelStyles = css`
         width: 100%;
         grid-template-columns: 100%;
         grid-template-rows: auto auto minmax(0, 1fr) auto;
-        grid-template-areas:
-            "header"
-            "area"
-            "body"
-            "footer";
+
         gap: 2rem;
         padding: 1rem 1rem 0.5rem 1rem;
         box-sizing: border-box;
@@ -19,7 +15,6 @@ export const panelStyles = css`
     }
 
     .header-container {
-        grid-area: header;
         display: flex;
         justify-content: space-between;
     }
@@ -61,7 +56,6 @@ export const panelStyles = css`
     }
 
     .area-container {
-        grid-area: area;
         display: grid;
         grid-template-columns: 1fr 1fr;
         grid-template-rows: min-content 1fr;
@@ -71,7 +65,6 @@ export const panelStyles = css`
     }
 
     .area-name {
-        grid-area: name;
         line-height: normal;
         text-align: left;
         font-size: var(--sq-title-font-size, 3.2rem);
@@ -80,7 +73,6 @@ export const panelStyles = css`
     }
 
     .area-chips {
-        grid-area: chips;
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
@@ -90,7 +82,6 @@ export const panelStyles = css`
     }
 
     .area-image {
-        grid-area: image;
         width: 100%;
         height: 100%;
         object-fit: cover;
@@ -128,7 +119,6 @@ export const panelStyles = css`
     }
 
     .footer-container {
-        grid-area: footer;
         display: flex;
         gap: 3rem;
         justify-content: center;
@@ -162,11 +152,9 @@ export const panelStyles = css`
         }
 
         .area-container {
-            grid-template-areas:
-                "image"
-                "chips";
             grid-template-columns: 100%;
             grid-template-rows: auto auto;
+
             gap: 1rem;
             position: relative;
         }
@@ -211,10 +199,6 @@ export const panelStyles = css`
         }
 
         .area-container {
-            grid-template-areas:
-                "image"
-                "chips"
-                "footer";
             grid-template-columns: 1fr;
             grid-template-rows: auto 100% auto;
             gap: 1rem;
@@ -234,7 +218,6 @@ export const panelStyles = css`
         }
 
         .area-chips {
-            grid-area: chips;
             align-items: flex-start;
         }
 

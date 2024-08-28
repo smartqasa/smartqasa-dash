@@ -8971,11 +8971,7 @@ const panelStyles = i$3 `
         width: 100%;
         grid-template-columns: 100%;
         grid-template-rows: auto auto minmax(0, 1fr) auto;
-        grid-template-areas:
-            "header"
-            "area"
-            "body"
-            "footer";
+
         gap: 2rem;
         padding: 1rem 1rem 0.5rem 1rem;
         box-sizing: border-box;
@@ -8983,7 +8979,6 @@ const panelStyles = i$3 `
     }
 
     .header-container {
-        grid-area: header;
         display: flex;
         justify-content: space-between;
     }
@@ -9025,7 +9020,6 @@ const panelStyles = i$3 `
     }
 
     .area-container {
-        grid-area: area;
         display: grid;
         grid-template-columns: 1fr 1fr;
         grid-template-rows: min-content 1fr;
@@ -9035,7 +9029,6 @@ const panelStyles = i$3 `
     }
 
     .area-name {
-        grid-area: name;
         line-height: normal;
         text-align: left;
         font-size: var(--sq-title-font-size, 3.2rem);
@@ -9044,7 +9037,6 @@ const panelStyles = i$3 `
     }
 
     .area-chips {
-        grid-area: chips;
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
@@ -9054,7 +9046,6 @@ const panelStyles = i$3 `
     }
 
     .area-image {
-        grid-area: image;
         width: 100%;
         height: 100%;
         object-fit: cover;
@@ -9092,7 +9083,6 @@ const panelStyles = i$3 `
     }
 
     .footer-container {
-        grid-area: footer;
         display: flex;
         gap: 3rem;
         justify-content: center;
@@ -9126,11 +9116,9 @@ const panelStyles = i$3 `
         }
 
         .area-container {
-            grid-template-areas:
-                "image"
-                "chips";
             grid-template-columns: 100%;
             grid-template-rows: auto auto;
+
             gap: 1rem;
             position: relative;
         }
@@ -9175,10 +9163,6 @@ const panelStyles = i$3 `
         }
 
         .area-container {
-            grid-template-areas:
-                "image"
-                "chips"
-                "footer";
             grid-template-columns: 1fr;
             grid-template-rows: auto 100% auto;
             gap: 1rem;
@@ -9198,7 +9182,6 @@ const panelStyles = i$3 `
         }
 
         .area-chips {
-            grid-area: chips;
             align-items: flex-start;
         }
 
