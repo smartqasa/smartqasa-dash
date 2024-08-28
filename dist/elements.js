@@ -4719,53 +4719,6 @@ function Navigation(_ref) {
   });
 }
 
-const deviceOrientation = window.screen.orientation.type.startsWith("portrait") ? "portrait" : "landscape";
-const deviceType = (() => {
-    const { width, height } = window.screen;
-    if ((deviceOrientation === "portrait" && width < 600) || (deviceOrientation === "landscape" && height < 600)) {
-        return "phone";
-    }
-    return "tablet";
-})();
-const heaterColors = {
-    electric: "var(--sq-climate-heat-rgb, 250, 67, 54)",
-    heating: "var(--sq-climate-heat-rgb, 250, 67, 54)",
-    idle: "var(--sq-idle-rgb, 128, 128, 128)",
-    off: "var(--sq-inactive-rgb, 128, 128, 128)",
-    default: "var(--sq-unavailable-rgb, 255, 0, 255)",
-};
-const modeIcons = {
-    Home: "hass:home-account",
-    Away: "hass:map-marker-radius",
-    Guest: "hass:account-multiple",
-    Entertain: "hass:glass-cocktail",
-    Vacation: "hass:airplane",
-    default: "hass:help-rhombus",
-};
-const phaseIcons = {
-    Morning: "hass:weather-sunset-up",
-    Day: "hass:white-balance-sunny",
-    Evening: "hass:weather-night",
-    Night: "hass:sleep",
-    default: "hass:help-rhombus",
-};
-const thermostatColors = {
-    cooling: "var(--sq-climate-cool-rgb, 3, 169, 244)",
-    heating: "var(--sq-climate-heat-rgb, 250, 67, 54)",
-    fan_only: "var(--sq-climate-fan_only-rgb, 0, 255, 0)",
-    idle: "var(--sq-idle-rgb, 128, 128, 128)",
-    off: "var(--sq-inactive-rgb, 128, 128, 128)",
-    default: "var(--sq-unavailable-rgb, 255, 0, 255)",
-};
-const thermostatIcons = {
-    auto: "hass:thermostat-auto",
-    cool: "hass:snowflake",
-    heat: "hass:fire",
-    heat_cool: "hass:sun-snowflake-variant",
-    off: "hass:power",
-    default: "hass:thermostat-cog",
-};
-
 /*! js-yaml 4.1.0 https://github.com/nodeca/js-yaml @license MIT */
 function isNothing(subject) {
   return (typeof subject === 'undefined') || (subject === null);
@@ -8632,6 +8585,53 @@ const loadYamlAsJson = async (yamlFilePath) => {
     }
 };
 
+const deviceOrientation = window.screen.orientation.type.startsWith("portrait") ? "portrait" : "landscape";
+const deviceType = (() => {
+    const { width, height } = window.screen;
+    if ((deviceOrientation === "portrait" && width < 600) || (deviceOrientation === "landscape" && height < 600)) {
+        return "phone";
+    }
+    return "tablet";
+})();
+const heaterColors = {
+    electric: "var(--sq-climate-heat-rgb, 250, 67, 54)",
+    heating: "var(--sq-climate-heat-rgb, 250, 67, 54)",
+    idle: "var(--sq-idle-rgb, 128, 128, 128)",
+    off: "var(--sq-inactive-rgb, 128, 128, 128)",
+    default: "var(--sq-unavailable-rgb, 255, 0, 255)",
+};
+const modeIcons = {
+    Home: "hass:home-account",
+    Away: "hass:map-marker-radius",
+    Guest: "hass:account-multiple",
+    Entertain: "hass:glass-cocktail",
+    Vacation: "hass:airplane",
+    default: "hass:help-rhombus",
+};
+const phaseIcons = {
+    Morning: "hass:weather-sunset-up",
+    Day: "hass:white-balance-sunny",
+    Evening: "hass:weather-night",
+    Night: "hass:sleep",
+    default: "hass:help-rhombus",
+};
+const thermostatColors = {
+    cooling: "var(--sq-climate-cool-rgb, 3, 169, 244)",
+    heating: "var(--sq-climate-heat-rgb, 250, 67, 54)",
+    fan_only: "var(--sq-climate-fan_only-rgb, 0, 255, 0)",
+    idle: "var(--sq-idle-rgb, 128, 128, 128)",
+    off: "var(--sq-inactive-rgb, 128, 128, 128)",
+    default: "var(--sq-unavailable-rgb, 255, 0, 255)",
+};
+const thermostatIcons = {
+    auto: "hass:thermostat-auto",
+    cool: "hass:snowflake",
+    heat: "hass:fire",
+    heat_cool: "hass:sun-snowflake-variant",
+    off: "hass:power",
+    default: "hass:thermostat-cog",
+};
+
 const listDialogStyle = {
     margin: 0,
     card_margin: 0,
@@ -9259,7 +9259,8 @@ let PanelCard = class PanelCard extends h {
         super(...arguments);
         this._loading = true;
         this._isAdmin = false;
-        this._deviceOrientation = this._getDeviceOrientation();
+        this.deviceOrientation = this._getDeviceOrientation();
+        this.deviceType = this._getDeviceType();
         this._headerChips = [];
         this._areaChips = [];
         this._bodyTiles = [];
@@ -9278,11 +9279,11 @@ let PanelCard = class PanelCard extends h {
         };
         return ke `
             <div class="container" style=${se(containerStyle)}>
-                ${deviceType === "tablet" ? ke `<div>${this._renderHeader()}</div>` : ke ``}
+                ${this.deviceType === "tablet" ? ke `<div>${this._renderHeader()}</div>` : D}
                 <div>${this._renderArea()}</div>
                 <div>${this._renderBody()}</div>
-                ${deviceType === "phone" && this._deviceOrientation === "landscape"
-            ? ke ``
+                ${this.deviceType === "phone" && this.deviceOrientation === "landscape"
+            ? D
             : ke `<div>${this._renderFooter()}</div>`}
             </div>
         `;
@@ -9290,15 +9291,16 @@ let PanelCard = class PanelCard extends h {
     async firstUpdated(changedProps) {
         super.firstUpdated(changedProps);
         await this._loadContent();
-        if (deviceType === "tablet")
+        if (this.deviceType === "tablet")
             this._initializeSwiper();
         this._loading = false;
-        window.addEventListener("orientationchange", this._handleOrientationChange.bind(this));
+        window.addEventListener("resize", this._handleDeviceChanges.bind(this));
+        window.addEventListener("orientationchange", this._handleDeviceChanges.bind(this));
     }
     updated(changedProps) {
         super.updated(changedProps);
         this._isAdmin = this.hass?.user?.is_admin ?? false;
-        if (deviceType === "tablet") {
+        if (this.deviceType === "tablet") {
             if (this._swiper) {
                 this._swiper.update();
             }
@@ -9311,7 +9313,7 @@ let PanelCard = class PanelCard extends h {
         }
         else if (changedProps.has("hass") && this.hass) {
             this._areaObj = this._area ? this.hass.areas[this._area] : undefined;
-            if (deviceType === "tablet" && this._headerChips.length) {
+            if (this.deviceType === "tablet" && this._headerChips.length) {
                 this._headerChips.forEach((chip) => {
                     chip.hass = this.hass;
                 });
@@ -9332,13 +9334,19 @@ let PanelCard = class PanelCard extends h {
     }
     disconnectedCallback() {
         super.disconnectedCallback();
-        window.removeEventListener("orientationchange", this._handleOrientationChange.bind(this));
+        window.removeEventListener("resize", this._handleDeviceChanges.bind(this));
+        window.removeEventListener("orientationchange", this._handleDeviceChanges.bind(this));
+    }
+    _handleDeviceChanges() {
+        this.deviceOrientation = this._getDeviceOrientation();
+        this.deviceType = this._getDeviceType();
     }
     _getDeviceOrientation() {
         return window.screen.orientation.type.startsWith("portrait") ? "portrait" : "landscape";
     }
-    _handleOrientationChange() {
-        this._deviceOrientation = this._getDeviceOrientation();
+    _getDeviceType() {
+        const { width, height } = window.screen;
+        return (this.deviceOrientation === "portrait" ? width : height) < 600 ? "phone" : "tablet";
     }
     _renderHeader() {
         let time = this.hass?.states["sensor.current_time"]?.state || "Loading...";
@@ -9360,13 +9368,10 @@ let PanelCard = class PanelCard extends h {
         const picture = this._config?.picture
             ? `/local/smartqasa/images/${this._config.picture}`
             : this._areaObj?.picture ?? img$24;
-        // Determine if the device is a phone in landscape mode
-        const isPhoneLandscape = deviceType === "phone" && this._deviceOrientation === "landscape";
-        // Render the footer conditionally
+        const isPhoneLandscape = this.deviceType === "phone" && this.deviceOrientation === "landscape";
         const footerTemplate = isPhoneLandscape
             ? ke `<div class="footer-container">${this._renderFooter()}</div>`
             : D;
-        // Render the area chips if available
         const chipsTemplate = this._areaChips.length > 0
             ? ke `
                       <div class="area-chips">
@@ -9376,7 +9381,7 @@ let PanelCard = class PanelCard extends h {
             : D;
         return ke `
             <div class="area-container">
-                <div class="area-name ${deviceType === "phone" ? "overlay" : ""}">${name}</div>
+                <div class="area-name ${this.deviceType === "phone" ? "overlay" : ""}">${name}</div>
                 <img class="area-image" alt="Area picture..." src=${picture} />
                 ${chipsTemplate} ${footerTemplate}
             </div>
@@ -9385,7 +9390,7 @@ let PanelCard = class PanelCard extends h {
     _renderBody() {
         if (!this._config || !this._bodyTiles.length)
             return D;
-        if (deviceType === "phone") {
+        if (this.deviceType === "phone") {
             return ke `
                 <div class="body-container">
                     <div class="body-tiles">
@@ -9500,7 +9505,7 @@ let PanelCard = class PanelCard extends h {
                 }
             }
             else if (config.type === "blank-tile") {
-                if (deviceType === "tablet") {
+                if (this.deviceType === "tablet") {
                     const blankTile = document.createElement("div");
                     blankTile.classList.add("blank-tile");
                     currentPage.push(blankTile);
@@ -9584,7 +9589,10 @@ __decorate([
 ], PanelCard.prototype, "_isAdmin", void 0);
 __decorate([
     r()
-], PanelCard.prototype, "_deviceOrientation", void 0);
+], PanelCard.prototype, "deviceOrientation", void 0);
+__decorate([
+    r()
+], PanelCard.prototype, "deviceType", void 0);
 PanelCard = __decorate([
     t$1("smartqasa-panel-card")
 ], PanelCard);

@@ -5,7 +5,6 @@ import { HassArea, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../ty
 import Swiper from "swiper";
 import { SwiperOptions } from "swiper/types";
 import { Navigation } from "swiper/modules";
-import { deviceType } from "../const";
 import { createElement } from "../utils/create-element";
 import { loadYamlAsJson } from "../utils/load-yaml-as-json";
 import { areasDialog } from "../misc/areas-dialog";
@@ -40,7 +39,8 @@ export class PanelCard extends LitElement {
     @state() private _config?: Config;
     @state() private _loading = true;
     @state() private _isAdmin = false;
-    @state() private _deviceOrientation: string = this._getDeviceOrientation();
+    @state() private deviceOrientation: string = this._getDeviceOrientation();
+    @state() private deviceType: string = this._getDeviceType();
     private _swiper?: Swiper;
     private _area?: string;
     private _areaObj?: HassArea;
@@ -65,11 +65,11 @@ export class PanelCard extends LitElement {
 
         return html`
             <div class="container" style=${styleMap(containerStyle)}>
-                ${deviceType === "tablet" ? html`<div>${this._renderHeader()}</div>` : html``}
+                ${this.deviceType === "tablet" ? html`<div>${this._renderHeader()}</div>` : nothing}
                 <div>${this._renderArea()}</div>
                 <div>${this._renderBody()}</div>
-                ${deviceType === "phone" && this._deviceOrientation === "landscape"
-                    ? html``
+                ${this.deviceType === "phone" && this.deviceOrientation === "landscape"
+                    ? nothing
                     : html`<div>${this._renderFooter()}</div>`}
             </div>
         `;
@@ -79,10 +79,11 @@ export class PanelCard extends LitElement {
         super.firstUpdated(changedProps);
 
         await this._loadContent();
-        if (deviceType === "tablet") this._initializeSwiper();
+        if (this.deviceType === "tablet") this._initializeSwiper();
         this._loading = false;
 
-        window.addEventListener("orientationchange", this._handleOrientationChange.bind(this));
+        window.addEventListener("resize", this._handleDeviceChanges.bind(this));
+        window.addEventListener("orientationchange", this._handleDeviceChanges.bind(this));
     }
 
     protected updated(changedProps: PropertyValues) {
@@ -90,7 +91,7 @@ export class PanelCard extends LitElement {
 
         this._isAdmin = this.hass?.user?.is_admin ?? false;
 
-        if (deviceType === "tablet") {
+        if (this.deviceType === "tablet") {
             if (this._swiper) {
                 this._swiper.update();
             } else {
@@ -103,7 +104,7 @@ export class PanelCard extends LitElement {
         } else if (changedProps.has("hass") && this.hass) {
             this._areaObj = this._area ? this.hass.areas[this._area] : undefined;
 
-            if (deviceType === "tablet" && this._headerChips.length) {
+            if (this.deviceType === "tablet" && this._headerChips.length) {
                 this._headerChips.forEach((chip) => {
                     chip.hass = this.hass;
                 });
@@ -127,15 +128,22 @@ export class PanelCard extends LitElement {
 
     disconnectedCallback() {
         super.disconnectedCallback();
-        window.removeEventListener("orientationchange", this._handleOrientationChange.bind(this));
+        window.removeEventListener("resize", this._handleDeviceChanges.bind(this));
+        window.removeEventListener("orientationchange", this._handleDeviceChanges.bind(this));
+    }
+
+    private _handleDeviceChanges() {
+        this.deviceOrientation = this._getDeviceOrientation();
+        this.deviceType = this._getDeviceType();
     }
 
     private _getDeviceOrientation(): string {
         return window.screen.orientation.type.startsWith("portrait") ? "portrait" : "landscape";
     }
 
-    private _handleOrientationChange() {
-        this._deviceOrientation = this._getDeviceOrientation();
+    private _getDeviceType(): string {
+        const { width, height } = window.screen;
+        return (this.deviceOrientation === "portrait" ? width : height) < 600 ? "phone" : "tablet";
     }
 
     private _renderHeader() {
@@ -161,15 +169,12 @@ export class PanelCard extends LitElement {
             ? `/local/smartqasa/images/${this._config.picture}`
             : this._areaObj?.picture ?? defaultImage;
 
-        // Determine if the device is a phone in landscape mode
-        const isPhoneLandscape = deviceType === "phone" && this._deviceOrientation === "landscape";
+        const isPhoneLandscape = this.deviceType === "phone" && this.deviceOrientation === "landscape";
 
-        // Render the footer conditionally
         const footerTemplate = isPhoneLandscape
             ? html`<div class="footer-container">${this._renderFooter()}</div>`
             : nothing;
 
-        // Render the area chips if available
         const chipsTemplate =
             this._areaChips.length > 0
                 ? html`
@@ -181,7 +186,7 @@ export class PanelCard extends LitElement {
 
         return html`
             <div class="area-container">
-                <div class="area-name ${deviceType === "phone" ? "overlay" : ""}">${name}</div>
+                <div class="area-name ${this.deviceType === "phone" ? "overlay" : ""}">${name}</div>
                 <img class="area-image" alt="Area picture..." src=${picture} />
                 ${chipsTemplate} ${footerTemplate}
             </div>
@@ -190,7 +195,7 @@ export class PanelCard extends LitElement {
 
     private _renderBody() {
         if (!this._config || !this._bodyTiles.length) return nothing;
-        if (deviceType === "phone") {
+        if (this.deviceType === "phone") {
             return html`
                 <div class="body-container">
                     <div class="body-tiles">
@@ -323,7 +328,7 @@ export class PanelCard extends LitElement {
                     currentPage = [];
                 }
             } else if (config.type === "blank-tile") {
-                if (deviceType === "tablet") {
+                if (this.deviceType === "tablet") {
                     const blankTile = document.createElement("div");
                     blankTile.classList.add("blank-tile");
                     currentPage.push(blankTile as unknown as LovelaceCard);
