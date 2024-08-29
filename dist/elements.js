@@ -9070,7 +9070,7 @@ const panelStyles = i$3 `
         background-color: transparent;
     }
 
-    .swiper {
+    .body-container {
         grid-area: body;
         height: 100%;
         width: 100%;
@@ -9418,7 +9418,7 @@ let PanelCard = class PanelCard extends h {
             `;
         }
         return ke `
-            <div class="swiper">
+            <div class="body-container">
                 <div class="swiper-wrapper">
                     ${this._bodyTiles.map((page, index) => {
             const gridStyle = {
@@ -9457,7 +9457,7 @@ let PanelCard = class PanelCard extends h {
         `;
     }
     _initializeSwiper() {
-        const swiperContainer = this.shadowRoot?.querySelector(".swiper");
+        const swiperContainer = this.shadowRoot?.querySelector(".body-container");
         if (!swiperContainer)
             return;
         const swiperParams = {

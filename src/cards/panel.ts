@@ -207,7 +207,7 @@ export class PanelCard extends LitElement {
         }
 
         return html`
-            <div class="swiper">
+            <div class="body-container">
                 <div class="swiper-wrapper">
                     ${this._bodyTiles.map((page, index) => {
                         const gridStyle = {
@@ -250,7 +250,7 @@ export class PanelCard extends LitElement {
     }
 
     private _initializeSwiper() {
-        const swiperContainer = this.shadowRoot?.querySelector(".swiper");
+        const swiperContainer = this.shadowRoot?.querySelector(".body-container");
         if (!swiperContainer) return;
 
         const swiperParams: SwiperOptions = {
