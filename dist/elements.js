@@ -8974,8 +8974,8 @@ const panelStyles = i$3 `
     }
     .container {
         display: grid;
-        height: 100vh;
-        width: 100vw;
+        height: 100%;
+        width: 100%;
         grid-template-columns: 100%;
         grid-template-rows: auto auto minmax(0, 1fr) auto;
         grid-template-areas:
