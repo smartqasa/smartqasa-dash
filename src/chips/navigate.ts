@@ -1,6 +1,7 @@
 import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
+import { navigateToArea } from "../utils/navigate-to-area";
 import { HassArea, HomeAssistant, LovelaceCardConfig } from "../types";
 
 import { chipDoubleStyle } from "../styles/chip";
@@ -64,9 +65,8 @@ export class NavigateChip extends LitElement {
 
     private _navigatePrev(e: Event): void {
         e.stopPropagation();
-        if (this._areaObjPrev) {
-            window.history.pushState(null, "", `/home-dash/${this._areaPrev}`);
-            window.dispatchEvent(new CustomEvent("location-changed"));
+        if (this._areaPrev && this._areaObjPrev) {
+            navigateToArea(this._areaPrev);
         } else {
             console.error("Previous area is not found.");
         }
@@ -74,9 +74,8 @@ export class NavigateChip extends LitElement {
 
     private _navigateNext(e: Event): void {
         e.stopPropagation();
-        if (this._areaObjNext) {
-            window.history.pushState(null, "", `/home-dash/${this._areaNext}`);
-            window.dispatchEvent(new CustomEvent("location-changed"));
+        if (this._areaNext && this._areaObjNext) {
+            navigateToArea(this._areaNext);
         } else {
             console.error("Next area is not found.");
         }

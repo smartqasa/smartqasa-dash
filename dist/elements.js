@@ -10397,7 +10397,7 @@ const chipDoubleStyle = i$3 `
         display: flex;
         align-items: center;
         justify-content: center;
-        --mdc-icon-size: 3.5rem;
+        --mdc-icon-size: 3.6rem;
         padding: 0.1rem;
         color: rgb(var(--sq-primary-text-rgb));
     }
@@ -11136,9 +11136,8 @@ let NavigateChip = class NavigateChip extends h {
     }
     _navigatePrev(e) {
         e.stopPropagation();
-        if (this._areaObjPrev) {
-            window.history.pushState(null, "", `/home-dash/${this._areaPrev}`);
-            window.dispatchEvent(new CustomEvent("location-changed"));
+        if (this._areaPrev && this._areaObjPrev) {
+            navigateToArea(this._areaPrev);
         }
         else {
             console.error("Previous area is not found.");
@@ -11146,9 +11145,8 @@ let NavigateChip = class NavigateChip extends h {
     }
     _navigateNext(e) {
         e.stopPropagation();
-        if (this._areaObjNext) {
-            window.history.pushState(null, "", `/home-dash/${this._areaNext}`);
-            window.dispatchEvent(new CustomEvent("location-changed"));
+        if (this._areaNext && this._areaObjNext) {
+            navigateToArea(this._areaNext);
         }
         else {
             console.error("Next area is not found.");
