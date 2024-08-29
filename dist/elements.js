@@ -9576,19 +9576,13 @@ let PanelCard = class PanelCard extends h {
     _handleHome() {
         const basePath = window.smartqasa.homePath || "home";
         window.smartqasa.viewMode = "area";
-        // Create a new URL object based on the current URL
         const url = new URL(location.href);
-        // Get the last part of the pathname
         const pathSegments = url.pathname.split("/");
         const lastPart = pathSegments.pop();
-        // Determine the new path based on the last part
         const newPath = lastPart === basePath ? "home" : basePath;
-        // Update the last segment with the new path
         pathSegments.push(newPath);
         url.pathname = pathSegments.join("/");
-        // Update the URL without reloading the page
         window.history.pushState(null, "", url.toString());
-        // Dispatch the custom event to notify other components about the URL change
         window.dispatchEvent(new CustomEvent("location-changed"));
     }
     _handleAreas() {
@@ -12721,21 +12715,14 @@ let AreaTile = class AreaTile extends h {
             return;
         this._running = true;
         window.smartqasa.viewMode = "area";
-        // Create a new URL object based on the current URL
         const url = new URL(location.href);
-        // Split the pathname into segments, modify the last segment, and update the URL
         const pathSegments = url.pathname.split("/");
-        // Remove the last segment
         pathSegments.pop();
-        // Add the new area segment
         pathSegments.push(this._area || "home");
-        // Update the pathname with the modified segments
         url.pathname = pathSegments.join("/");
-        // Update the URL without reloading the page
+        console.log("Navigating to", url.toString());
         window.history.pushState(null, "", url.toString());
-        // Dispatch the custom event to notify other components about the URL change
         window.dispatchEvent(new CustomEvent("location-changed"));
-        // Set a timeout to perform post-navigation actions
         setTimeout(() => {
             this._running = false;
             window.browser_mod?.service("close_popup", {});
