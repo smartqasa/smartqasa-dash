@@ -10395,7 +10395,7 @@ const chipDoubleStyle = i$3 `
 
     .container:active,
     .container:focus {
-        background-color: trasparent; /* Ensure consistent background */
+        background-color: red; /* Ensure consistent background */
         border-radius: var(--sq-chip-border-radius); /* Ensure border radius is applied */
         outline: none; /* Remove any default outline */
     }
