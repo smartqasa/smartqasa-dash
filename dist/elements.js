@@ -9158,6 +9158,7 @@ const panelStyles = i$3 `
 
         .body-container {
             display: flex;
+            width: 100%;
             overflow-y: auto;
         }
 
@@ -9224,6 +9225,7 @@ const panelStyles = i$3 `
         }
 
         .body-container {
+            display: flex;
             width: 100%;
             overflow-y: auto;
         }
@@ -9436,19 +9438,19 @@ let PanelCard = class PanelCard extends h {
     }
     _renderFooter() {
         return ke `
-            ${this._renderFooterButton("hass:home", "Home", "_handleHome")}
-            ${this._renderFooterButton("hass:view-dashboard", "Areas", "_handleAreas")}
-            ${this._renderFooterButton("hass:music", "Entertainment", "_handleEntertain")}
-            ${this._renderFooterButton("hass:menu", "Menu", "_handleMenu")}
+            <div class="footer-container">
+                ${this._renderFooterButton("hass:home", "Home", "_handleHome")}
+                ${this._renderFooterButton("hass:view-dashboard", "Areas", "_handleAreas")}
+                ${this._renderFooterButton("hass:music", "Entertainment", "_handleEntertain")}
+                ${this._renderFooterButton("hass:menu", "Menu", "_handleMenu")}
+            </div>
         `;
     }
     _renderFooterButton(icon, name, methodName) {
         return ke `
-            <div class="footer-container">
-                <div class="footer-button" @click="${(e) => this._handleFooterAction(e, methodName)}">
-                    <ha-icon .icon=${icon}></ha-icon>
-                    <span>${name}</span>
-                </div>
+            <div class="footer-button" @click="${(e) => this._handleFooterAction(e, methodName)}">
+                <ha-icon .icon=${icon}></ha-icon>
+                <span>${name}</span>
             </div>
         `;
     }

@@ -194,6 +194,7 @@ export const panelStyles = css`
 
         .body-container {
             display: flex;
+            width: 100%;
             overflow-y: auto;
         }
 
@@ -260,6 +261,7 @@ export const panelStyles = css`
         }
 
         .body-container {
+            display: flex;
             width: 100%;
             overflow-y: auto;
         }

@@ -231,20 +231,20 @@ export class PanelCard extends LitElement {
 
     private _renderFooter() {
         return html`
-            ${this._renderFooterButton("hass:home", "Home", "_handleHome")}
-            ${this._renderFooterButton("hass:view-dashboard", "Areas", "_handleAreas")}
-            ${this._renderFooterButton("hass:music", "Entertainment", "_handleEntertain")}
-            ${this._renderFooterButton("hass:menu", "Menu", "_handleMenu")}
+            <div class="footer-container">
+                ${this._renderFooterButton("hass:home", "Home", "_handleHome")}
+                ${this._renderFooterButton("hass:view-dashboard", "Areas", "_handleAreas")}
+                ${this._renderFooterButton("hass:music", "Entertainment", "_handleEntertain")}
+                ${this._renderFooterButton("hass:menu", "Menu", "_handleMenu")}
+            </div>
         `;
     }
 
     private _renderFooterButton(icon: string, name: string, methodName: keyof ActionHandlers): TemplateResult {
         return html`
-            <div class="footer-container">
-                <div class="footer-button" @click="${(e: Event) => this._handleFooterAction(e, methodName)}">
-                    <ha-icon .icon=${icon}></ha-icon>
-                    <span>${name}</span>
-                </div>
+            <div class="footer-button" @click="${(e: Event) => this._handleFooterAction(e, methodName)}">
+                <ha-icon .icon=${icon}></ha-icon>
+                <span>${name}</span>
             </div>
         `;
     }
