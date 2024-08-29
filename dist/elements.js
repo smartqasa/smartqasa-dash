@@ -12013,6 +12013,7 @@ const tileBaseStyle = i$3 `
         grid-row-gap: 0.4rem;
         padding: var(--sq-tile-padding, 1rem);
         background-color: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
+        overflow: hidden;
         cursor: pointer;
     }
     .icon {
