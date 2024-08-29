@@ -9446,8 +9446,18 @@ let PanelCard = class PanelCard extends h {
                         `;
         })}
                 </div>
-                <div class="swiper-button-prev" @click=${(e) => this._handleSwiperNavigation(e, "prev")}></div>
-                <div class="swiper-button-next" @click=${(e) => this._handleSwiperNavigation(e, "next")}></div>
+                ${this._bodyTiles.length > 1
+            ? ke `
+                          <div
+                              class="swiper-button-prev"
+                              @click=${(e) => this._handleSwiperNavigation(e, "prev")}
+                          ></div>
+                          <div
+                              class="swiper-button-next"
+                              @click=${(e) => this._handleSwiperNavigation(e, "next")}
+                          ></div>
+                      `
+            : D}
             </div>
         `;
     }
@@ -9470,6 +9480,9 @@ let PanelCard = class PanelCard extends h {
         `;
     }
     _initializeSwiper() {
+        if (this._bodyTiles.length <= 1) {
+            return;
+        }
         const swiperContainer = this.shadowRoot?.querySelector(".swiper");
         if (!swiperContainer)
             return;
