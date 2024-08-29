@@ -106,21 +106,15 @@ export const panelStyles = css`
         background-color: transparent;
     }
 
-    .body-container {
+    .swiper {
         grid-area: body;
-        display: inline-flex;
         height: 100%;
-        width: 100%;
-    }
-
-    .swiper-wrapper {
         width: 100%;
     }
 
     .swiper-slide {
         align-content: center;
         overflow-y: auto;
-        width: 100%;
     }
 
     .body-tiles {
@@ -199,6 +193,7 @@ export const panelStyles = css`
         }
 
         .body-container {
+            display: flex;
             overflow-y: auto;
         }
 

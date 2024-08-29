@@ -77,7 +77,7 @@ export class PanelCard extends LitElement {
                     ? html`<div class="header-container">${this._renderHeader()}</div>`
                     : nothing}
                 <div class="area-container">${this._renderArea()}</div>
-                <div class="body-container">${this._renderBody()}</div>
+                ${this._renderBody()}
                 ${isPhoneLandscape ? nothing : html`<div class="footer-container">${this._renderFooter()}</div>`}
             </div>
         `;

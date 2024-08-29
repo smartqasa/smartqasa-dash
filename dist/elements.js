@@ -9070,21 +9070,15 @@ const panelStyles = i$3 `
         background-color: transparent;
     }
 
-    .body-container {
+    .swiper {
         grid-area: body;
-        display: inline-flex;
         height: 100%;
-        width: 100%;
-    }
-
-    .swiper-wrapper {
         width: 100%;
     }
 
     .swiper-slide {
         align-content: center;
         overflow-y: auto;
-        width: 100%;
     }
 
     .body-tiles {
@@ -9163,6 +9157,7 @@ const panelStyles = i$3 `
         }
 
         .body-container {
+            display: flex;
             overflow-y: auto;
         }
 
@@ -9311,7 +9306,7 @@ let PanelCard = class PanelCard extends h {
             ? ke `<div class="header-container">${this._renderHeader()}</div>`
             : D}
                 <div class="area-container">${this._renderArea()}</div>
-                <div class="body-container">${this._renderBody()}</div>
+                ${this._renderBody()}
                 ${isPhoneLandscape ? D : ke `<div class="footer-container">${this._renderFooter()}</div>`}
             </div>
         `;
