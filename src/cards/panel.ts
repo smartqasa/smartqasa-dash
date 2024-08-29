@@ -48,6 +48,7 @@ export class PanelCard extends LitElement {
     @state() private deviceOrientation: string = this._getDeviceOrientation();
     @state() private deviceType: string = this._getDeviceType();
     private _swiper?: Swiper;
+    private _resetTimer?: ReturnType<typeof setTimeout>;
     private _area?: string;
     private _areaObj?: HassArea;
     private _headerChips: LovelaceCard[] = [];
@@ -90,6 +91,8 @@ export class PanelCard extends LitElement {
         ["orientationchange", "resize"].forEach((event) =>
             window.addEventListener(event, this._handleDeviceChanges.bind(this))
         );
+
+        this._startResetTimer();
 
         this._loading = false;
     }
@@ -285,6 +288,27 @@ export class PanelCard extends LitElement {
         }
     }
 
+    private _startResetTimer() {
+        // Clear any existing timer
+        if (this._resetTimer) {
+            clearTimeout(this._resetTimer);
+        }
+
+        // Set a new 5-minute timer
+        this._resetTimer = setTimeout(() => {
+            this._resetToFirstPage();
+        }, 1 * 60 * 1000); // 5 minutes
+    }
+
+    private _resetToFirstPage() {
+        if (this._swiper && this._swiper.activeIndex !== 0) {
+            this._swiper.slideTo(0); // Reset to the first page
+        }
+
+        // Restart the timer after resetting
+        this._startResetTimer();
+    }
+
     private async _loadContent() {
         this._areaObj = this._area ? this.hass?.areas[this._area] : undefined;
 
@@ -389,6 +413,8 @@ export class PanelCard extends LitElement {
             } else {
                 this._swiper.slideNext();
             }
+
+            this._startResetTimer();
         }
     }
 

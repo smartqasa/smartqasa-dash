@@ -9338,6 +9338,7 @@ let PanelCard = class PanelCard extends h {
         if (this.deviceType === "tablet")
             this._initializeSwiper();
         ["orientationchange", "resize"].forEach((event) => window.addEventListener(event, this._handleDeviceChanges.bind(this)));
+        this._startResetTimer();
         this._loading = false;
     }
     updated(changedProps) {
@@ -9508,6 +9509,23 @@ let PanelCard = class PanelCard extends h {
             Swiper.use([Navigation]);
         }
     }
+    _startResetTimer() {
+        // Clear any existing timer
+        if (this._resetTimer) {
+            clearTimeout(this._resetTimer);
+        }
+        // Set a new 5-minute timer
+        this._resetTimer = setTimeout(() => {
+            this._resetToFirstPage();
+        }, 1 * 60 * 1000); // 5 minutes
+    }
+    _resetToFirstPage() {
+        if (this._swiper && this._swiper.activeIndex !== 0) {
+            this._swiper.slideTo(0); // Reset to the first page
+        }
+        // Restart the timer after resetting
+        this._startResetTimer();
+    }
     async _loadContent() {
         this._areaObj = this._area ? this.hass?.areas[this._area] : undefined;
         this._headerChips = await this._loadHeaderChips();
@@ -9601,6 +9619,7 @@ let PanelCard = class PanelCard extends h {
             else {
                 this._swiper.slideNext();
             }
+            this._startResetTimer();
         }
     }
     _handleFooterAction(e, methodName) {
