@@ -10382,6 +10382,9 @@ const chipTextStyle = i$3 `
     }
 `;
 const chipDoubleStyle = i$3 `
+    :host {
+        border-radius: var(--sq-chip-border-radius);
+    }
     .container {
         display: flex;
         margin: 0 var(--sq-chip-spacing, 0.4rem);
