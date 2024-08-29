@@ -223,16 +223,11 @@ export class PanelCard extends LitElement {
                         `;
                     })}
                 </div>
-                <div class="swiper-button-prev"></div>
-                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev" @click=${(e: Event) => this._handleSwiperNavigation(e, "prev")}></div>
+                <div class="swiper-button-next" @click=${(e: Event) => this._handleSwiperNavigation(e, "next")}></div>
             </div>
         `;
     }
-    /*
-                <div class="swiper-button-prev" @click=${(e: Event) => this._handleSwiperNavigation(e, "prev")}></div>
-                <div class="swiper-button-next" @click=${(e: Event) => this._handleSwiperNavigation(e, "next")}></div>
-
-*/
 
     private _renderFooter() {
         return html`

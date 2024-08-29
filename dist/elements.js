@@ -9433,16 +9433,11 @@ let PanelCard = class PanelCard extends h {
                         `;
         })}
                 </div>
-                <div class="swiper-button-prev"></div>
-                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev" @click=${(e) => this._handleSwiperNavigation(e, "prev")}></div>
+                <div class="swiper-button-next" @click=${(e) => this._handleSwiperNavigation(e, "next")}></div>
             </div>
         `;
     }
-    /*
-                <div class="swiper-button-prev" @click=${(e: Event) => this._handleSwiperNavigation(e, "prev")}></div>
-                <div class="swiper-button-next" @click=${(e: Event) => this._handleSwiperNavigation(e, "next")}></div>
-
-*/
     _renderFooter() {
         return ke `
             <div class="footer-container">
