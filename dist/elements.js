@@ -9072,7 +9072,7 @@ const panelStyles = i$3 `
 
     .body-container {
         grid-area: body;
-        display: flex;
+        display: inline-flex;
         height: 100%;
         width: 100%;
     }
@@ -9163,10 +9163,9 @@ const panelStyles = i$3 `
         }
 
         .body-container {
-            display: block;
-            width: 100%;
             overflow-y: auto;
         }
+
         .body-tiles {
             width: 100%;
             margin: 0;

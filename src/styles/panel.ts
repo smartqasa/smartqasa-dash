@@ -108,7 +108,7 @@ export const panelStyles = css`
 
     .body-container {
         grid-area: body;
-        display: flex;
+        display: inline-flex;
         height: 100%;
         width: 100%;
     }
@@ -199,10 +199,9 @@ export const panelStyles = css`
         }
 
         .body-container {
-            display: block;
-            width: 100%;
             overflow-y: auto;
         }
+
         .body-tiles {
             width: 100%;
             margin: 0;
