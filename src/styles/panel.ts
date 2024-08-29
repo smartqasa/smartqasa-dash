@@ -180,6 +180,10 @@ export const panelStyles = css`
             position: relative;
         }
 
+        .area-image {
+            height: 15vh;
+        }
+
         .area-name.overlay {
             position: absolute;
             top: 0;
@@ -230,6 +234,10 @@ export const panelStyles = css`
                 "footer-p-l";
             gap: 1rem;
             position: relative;
+        }
+
+        .area-image {
+            height: 35vh;
         }
 
         .area-name.overlay {

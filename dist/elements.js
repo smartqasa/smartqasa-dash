@@ -9157,6 +9157,10 @@ const panelStyles = i$3 `
             position: relative;
         }
 
+        .area-image {
+            height: 15vh;
+        }
+
         .area-name.overlay {
             position: absolute;
             top: 0;
@@ -9207,6 +9211,10 @@ const panelStyles = i$3 `
                 "footer-p-l";
             gap: 1rem;
             position: relative;
+        }
+
+        .area-image {
+            height: 35vh;
         }
 
         .area-name.overlay {
