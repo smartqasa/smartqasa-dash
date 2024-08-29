@@ -2,6 +2,7 @@ import { CSSResultGroup, html, LitElement, nothing, PropertyValues, TemplateResu
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HassArea, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
+import { navigateToArea } from "../utils/navigate-to-area";
 import Swiper from "swiper";
 import { SwiperOptions } from "swiper/types";
 import { Navigation } from "swiper/modules";
@@ -383,16 +384,18 @@ export class PanelCard extends LitElement {
     }
 
     private _handleHome(): void {
-        const basePath = window.smartqasa.homePath || "home";
-        window.smartqasa.viewMode = "area";
+        const startArea = window.smartqasa.startArea;
+        if (!startArea) return;
+
         const url = new URL(location.href);
         const pathSegments = url.pathname.split("/");
-        const lastPart = pathSegments.pop();
-        const newPath = lastPart === basePath ? "home" : basePath;
-        pathSegments.push(newPath);
-        url.pathname = pathSegments.join("/");
-        window.history.pushState(null, "", url.toString());
-        window.dispatchEvent(new CustomEvent("location-changed"));
+        const currentArea = pathSegments.pop();
+
+        if (currentArea !== startArea) {
+            navigateToArea(startArea);
+        } else {
+            navigateToArea("home");
+        }
     }
 
     private _handleAreas(): void {

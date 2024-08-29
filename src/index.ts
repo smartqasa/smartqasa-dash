@@ -9,6 +9,7 @@ declare global {
         };
         smartqasa: {
             homePath?: string;
+            startArea?: string;
             menuConfig?: any;
             viewMode: "area" | "entertain";
         };
@@ -23,6 +24,7 @@ declare global {
 
 window.smartqasa = window.smartqasa || {};
 window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();
+window.smartqasa.startArea = window.smartqasa.startArea || location.pathname.split("/").pop();
 
 window.customCards = window.customCards ?? [];
 

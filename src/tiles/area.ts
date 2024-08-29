@@ -2,7 +2,7 @@ import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult } from
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HassArea, HomeAssistant, LovelaceCardConfig } from "../types";
-
+import { navigateToArea } from "../utils/navigate-to-area";
 import { tileBaseStyle, tileIconSpinStyle } from "../styles/tile";
 
 interface Config extends LovelaceCardConfig {
@@ -86,18 +86,11 @@ export class AreaTile extends LitElement {
 
     private _navigateToArea(e: Event): void {
         e.stopPropagation();
-        if (!this._areaObj) return;
+        if (!this._area) return;
 
         this._running = true;
-        window.smartqasa.viewMode = "area";
-        const url = new URL(location.href);
-        const pathSegments = url.pathname.split("/");
-        pathSegments.pop();
-        pathSegments.push(this._area || "home");
-        url.pathname = pathSegments.join("/");
-        console.log("Navigating to", url.toString());
-        window.history.pushState(null, "", url.toString());
-        window.dispatchEvent(new CustomEvent("location-changed"));
+
+        navigateToArea(this._area);
 
         setTimeout(() => {
             this._running = false;

@@ -184,6 +184,19 @@ const t={ATTRIBUTE:1,CHILD:2,PROPERTY:3,BOOLEAN_ATTRIBUTE:4,EVENT:5,ELEMENT:6},e
  * SPDX-License-Identifier: BSD-3-Clause
  */const ee="important",ie=" !"+ee,se=e(class extends i$1{constructor(e){if(super(e),e.type!==t.ATTRIBUTE||"style"!==e.name||e.strings?.length>2)throw Error("The `styleMap` directive must be used in the `style` attribute and must be the only part in the attribute.")}render(t){return Object.keys(t).reduce(((e,r)=>{const s=t[r];return null==s?e:e+`${r=r.includes("-")?r:r.replace(/(?:^(webkit|moz|ms|o)|)(?=[A-Z])/g,"-$&").toLowerCase()}:${s};`}),"")}update(t,[e]){const{style:r}=t.element;if(void 0===this.ft)return this.ft=new Set(Object.keys(e)),this.render(e);for(const t of this.ft)null==e[t]&&(this.ft.delete(t),t.includes("-")?r.removeProperty(t):r[t]=null);for(const t in e){const s=e[t];if(null!=s){this.ft.add(t);const e="string"==typeof s&&s.endsWith(ie);t.includes("-")||e?r.setProperty(t,e?s.slice(0,-11):s,e?ee:""):r[t]=s;}}return R}});
 
+function navigateToArea(area) {
+    if (!area)
+        return;
+    const url = new URL(location.href);
+    const pathSegments = url.pathname.split("/");
+    pathSegments.pop();
+    pathSegments.push(area);
+    url.pathname = pathSegments.join("/");
+    window.history.pushState(null, "", url.toString());
+    window.dispatchEvent(new CustomEvent("location-changed"));
+    window.smartqasa.viewMode = "area";
+}
+
 /**
  * SSR Window 4.0.2
  * Better handling for window object in SSR environment
@@ -9574,16 +9587,18 @@ let PanelCard = class PanelCard extends h {
         }
     }
     _handleHome() {
-        const basePath = window.smartqasa.homePath || "home";
-        window.smartqasa.viewMode = "area";
+        const startArea = window.smartqasa.startArea;
+        if (!startArea)
+            return;
         const url = new URL(location.href);
         const pathSegments = url.pathname.split("/");
-        const lastPart = pathSegments.pop();
-        const newPath = lastPart === basePath ? "home" : basePath;
-        pathSegments.push(newPath);
-        url.pathname = pathSegments.join("/");
-        window.history.pushState(null, "", url.toString());
-        window.dispatchEvent(new CustomEvent("location-changed"));
+        const currentArea = pathSegments.pop();
+        if (currentArea !== startArea) {
+            navigateToArea(startArea);
+        }
+        else {
+            navigateToArea("home");
+        }
     }
     _handleAreas() {
         areasDialog(this.hass);
@@ -12711,18 +12726,10 @@ let AreaTile = class AreaTile extends h {
     }
     _navigateToArea(e) {
         e.stopPropagation();
-        if (!this._areaObj)
+        if (!this._area)
             return;
         this._running = true;
-        window.smartqasa.viewMode = "area";
-        const url = new URL(location.href);
-        const pathSegments = url.pathname.split("/");
-        pathSegments.pop();
-        pathSegments.push(this._area || "home");
-        url.pathname = pathSegments.join("/");
-        console.log("Navigating to", url.toString());
-        window.history.pushState(null, "", url.toString());
-        window.dispatchEvent(new CustomEvent("location-changed"));
+        navigateToArea(this._area);
         setTimeout(() => {
             this._running = false;
             window.browser_mod?.service("close_popup", {});
@@ -14685,5 +14692,6 @@ var version = "2024.8.29b-1";
 
 window.smartqasa = window.smartqasa || {};
 window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();
+window.smartqasa.startArea = window.smartqasa.startArea || location.pathname.split("/").pop();
 window.customCards = window.customCards ?? [];
 console.info(`%c SmartQasa ⏏ ${version} `, "background-color: #0000ff; color: #ffffff; font-weight: 700;");
