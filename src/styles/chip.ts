@@ -11,8 +11,17 @@ export const chipBaseStyle = css`
         border-radius: var(--sq-chip-border-radius);
         background-color: var(--sq-card-background-color);
         transition: var(--sq-icon-transition, none);
+        overflow: hidden;
+        -webkit-tap-highlight-color: transparent;
         cursor: pointer;
     }
+
+    .container:focus,
+    .container:active {
+        background-color: inherit;
+        outline: none;
+    }
+
     .icon {
         display: flex;
         height: var(--sq-icon-size, 1.8rem);
@@ -29,11 +38,13 @@ export const chipTextStyle = css`
     .container {
         justify-content: flex-start;
     }
+
     .icon {
         padding-right: calc(var(--sq-chip-padding, 1rem) / 2);
         align-items: center;
         justify-content: center;
     }
+
     .text {
         display: flex;
         padding: var(--sq-chip-padding, 1rem);

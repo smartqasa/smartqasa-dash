@@ -11,8 +11,17 @@ export default css`
         border: var(--sq-card-border);
         border-radius: var(--sq-chip-border-radius);
         background-color: transparent;
+        overflow: hidden;
+        -webkit-tap-highlight-color: transparent;
         cursor: pointer;
     }
+
+    .container:focus,
+    .container:active {
+        background-color: inherit;
+        outline: none;
+    }
+
     .icon {
         grid-area: i;
         display: flex;
@@ -20,6 +29,7 @@ export default css`
         width: 1.8rem;
         transition: var(--sq-icon-transition, none);
     }
+
     .text {
         grid-area: t;
         place-self: center start;
