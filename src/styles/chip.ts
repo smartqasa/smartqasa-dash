@@ -59,14 +59,15 @@ export const chipDoubleStyle = css`
         border: var(--sq-card-border);
         border-radius: var(--sq-chip-border-radius);
         background-color: var(--sq-card-background-color);
+        overflow: hidden;
+        -webkit-tap-highlight-color: transparent;
         cursor: pointer;
     }
 
-    .container:active,
-    .container:focus {
-        background-color: red; /* Ensure consistent background */
-        border-radius: var(--sq-chip-border-radius); /* Ensure border radius is applied */
-        outline: none; /* Remove any default outline */
+    .container:focus,
+    .container:active {
+        background-color: inherit;
+        outline: none;
     }
 
     .icon1,
