@@ -340,8 +340,12 @@ export class PanelCard extends LitElement {
                 }
             } else {
                 const tile = createElement(config) as LovelaceCard;
-                tile.hass = this.hass;
-                currentPage.push(tile);
+                if (tile) {
+                    tile.hass = this.hass;
+                    currentPage.push(tile);
+                } else {
+                    console.error("Failed to create tile for config:", config);
+                }
             }
 
             firstTile = false;

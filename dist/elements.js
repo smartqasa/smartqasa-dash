@@ -9547,8 +9547,13 @@ let PanelCard = class PanelCard extends h {
             }
             else {
                 const tile = createElement$1(config);
-                tile.hass = this.hass;
-                currentPage.push(tile);
+                if (tile) {
+                    tile.hass = this.hass;
+                    currentPage.push(tile);
+                }
+                else {
+                    console.error("Failed to create tile for config:", config);
+                }
             }
             firstTile = false;
         }
