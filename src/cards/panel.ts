@@ -289,23 +289,20 @@ export class PanelCard extends LitElement {
     }
 
     private _startResetTimer() {
-        // Clear any existing timer
         if (this._resetTimer) {
             clearTimeout(this._resetTimer);
         }
 
-        // Set a new 5-minute timer
         this._resetTimer = setTimeout(() => {
             this._resetToFirstPage();
-        }, 1 * 60 * 1000); // 5 minutes
+        }, 5 * 60 * 1000); // 5 minutes
     }
 
     private _resetToFirstPage() {
         if (this._swiper && this._swiper.activeIndex !== 0) {
-            this._swiper.slideTo(0); // Reset to the first page
+            this._swiper.slideTo(0);
         }
 
-        // Restart the timer after resetting
         this._startResetTimer();
     }
 
