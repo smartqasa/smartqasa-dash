@@ -383,10 +383,27 @@ export class PanelCard extends LitElement {
     }
 
     private _handleHome(): void {
-        const basePath = window.smartqasa.homePath;
+        const basePath = window.smartqasa.homePath || "home";
         window.smartqasa.viewMode = "area";
-        const path = location.href.endsWith("/" + basePath) ? "home" : basePath;
-        window.history.pushState(null, "", `/home-dash/${path}`);
+
+        // Create a new URL object based on the current URL
+        const url = new URL(location.href);
+
+        // Get the last part of the pathname
+        const pathSegments = url.pathname.split("/");
+        const lastPart = pathSegments.pop();
+
+        // Determine the new path based on the last part
+        const newPath = lastPart === basePath ? "home" : basePath;
+
+        // Update the last segment with the new path
+        pathSegments.push(newPath);
+        url.pathname = pathSegments.join("/");
+
+        // Update the URL without reloading the page
+        window.history.pushState(null, "", url.toString());
+
+        // Dispatch the custom event to notify other components about the URL change
         window.dispatchEvent(new CustomEvent("location-changed"));
     }
 
