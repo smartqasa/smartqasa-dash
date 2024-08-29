@@ -9302,12 +9302,8 @@ let PanelCard = class PanelCard extends h {
         const isPhoneLandscape = this.deviceType === "phone" && this.deviceOrientation === "landscape";
         return ke `
             <div class="container" style=${se(containerStyle)}>
-                ${this.deviceType === "tablet"
-            ? ke `<div class="header-container">${this._renderHeader()}</div>`
-            : D}
-                <div class="area-container">${this._renderArea()}</div>
-                ${this._renderBody()}
-                ${isPhoneLandscape ? D : ke `<div class="footer-container">${this._renderFooter()}</div>`}
+                ${this.deviceType === "tablet" ? this._renderHeader() : D} ${this._renderArea()}
+                ${this._renderBody()} ${isPhoneLandscape ? D : this._renderFooter()}
             </div>
         `;
     }
@@ -9374,11 +9370,15 @@ let PanelCard = class PanelCard extends h {
         let time = this.hass?.states["sensor.current_time"]?.state || "Loading...";
         let date = this.hass?.states["sensor.current_date"]?.state || "Loading...";
         return ke `
-            <div class="header-time-date" @click="${this._launchClock}">
-                <div class="time">${time}</div>
-                <div class="date">${date}</div>
+            <div class="header-container">
+                <div class="header-time-date" @click="${this._launchClock}">
+                    <div class="time">${time}</div>
+                    <div class="date">${date}</div>
+                </div>
+                <div class="header-chips">
+                    ${this._headerChips.map((chip) => ke `<div class="chip">${chip}</div>`)}
+                </div>
             </div>
-            <div class="header-chips">${this._headerChips.map((chip) => ke `<div class="chip">${chip}</div>`)}</div>
         `;
     }
     _renderArea() {
@@ -9388,16 +9388,18 @@ let PanelCard = class PanelCard extends h {
             : this._areaObj?.picture ?? img$24;
         const isPhoneLandscape = this.deviceType === "phone" && this.deviceOrientation === "landscape";
         return ke `
-            <div class="area-name ${this.deviceType === "phone" ? "overlay" : ""}">${name}</div>
-            <img class="area-image" alt="Area picture..." src=${picture} />
-            ${this._areaChips.length > 0
+            <div class="area-container">
+                <div class="area-name ${this.deviceType === "phone" ? "overlay" : ""}">${name}</div>
+                <img class="area-image" alt="Area picture..." src=${picture} />
+                ${this._areaChips.length > 0
             ? ke `
-                      <div class="area-chips">
-                          ${this._areaChips.map((chip) => ke `<div class="chip">${chip}</div>`)}
-                      </div>
-                  `
+                          <div class="area-chips">
+                              ${this._areaChips.map((chip) => ke `<div class="chip">${chip}</div>`)}
+                          </div>
+                      `
             : D}
-            ${isPhoneLandscape ? ke `<div class="footer-container">${this._renderFooter()}</div>` : D}
+                ${isPhoneLandscape ? ke `<div class="footer-container">${this._renderFooter()}</div>` : D}
+            </div>
         `;
     }
     _renderBody() {
@@ -9442,9 +9444,11 @@ let PanelCard = class PanelCard extends h {
     }
     _renderFooterButton(icon, name, methodName) {
         return ke `
-            <div class="footer-button" @click="${(e) => this._handleFooterAction(e, methodName)}">
-                <ha-icon .icon=${icon}></ha-icon>
-                <span>${name}</span>
+            <div class="footer-container">
+                <div class="footer-button" @click="${(e) => this._handleFooterAction(e, methodName)}">
+                    <ha-icon .icon=${icon}></ha-icon>
+                    <span>${name}</span>
+                </div>
             </div>
         `;
     }

@@ -73,12 +73,8 @@ export class PanelCard extends LitElement {
 
         return html`
             <div class="container" style=${styleMap(containerStyle)}>
-                ${this.deviceType === "tablet"
-                    ? html`<div class="header-container">${this._renderHeader()}</div>`
-                    : nothing}
-                <div class="area-container">${this._renderArea()}</div>
-                ${this._renderBody()}
-                ${isPhoneLandscape ? nothing : html`<div class="footer-container">${this._renderFooter()}</div>`}
+                ${this.deviceType === "tablet" ? this._renderHeader() : nothing} ${this._renderArea()}
+                ${this._renderBody()} ${isPhoneLandscape ? nothing : this._renderFooter()}
             </div>
         `;
     }
@@ -162,11 +158,15 @@ export class PanelCard extends LitElement {
         let date = this.hass?.states["sensor.current_date"]?.state || "Loading...";
 
         return html`
-            <div class="header-time-date" @click="${this._launchClock}">
-                <div class="time">${time}</div>
-                <div class="date">${date}</div>
+            <div class="header-container">
+                <div class="header-time-date" @click="${this._launchClock}">
+                    <div class="time">${time}</div>
+                    <div class="date">${date}</div>
+                </div>
+                <div class="header-chips">
+                    ${this._headerChips.map((chip) => html`<div class="chip">${chip}</div>`)}
+                </div>
             </div>
-            <div class="header-chips">${this._headerChips.map((chip) => html`<div class="chip">${chip}</div>`)}</div>
         `;
     }
 
@@ -179,16 +179,18 @@ export class PanelCard extends LitElement {
         const isPhoneLandscape = this.deviceType === "phone" && this.deviceOrientation === "landscape";
 
         return html`
-            <div class="area-name ${this.deviceType === "phone" ? "overlay" : ""}">${name}</div>
-            <img class="area-image" alt="Area picture..." src=${picture} />
-            ${this._areaChips.length > 0
-                ? html`
-                      <div class="area-chips">
-                          ${this._areaChips.map((chip) => html`<div class="chip">${chip}</div>`)}
-                      </div>
-                  `
-                : nothing}
-            ${isPhoneLandscape ? html`<div class="footer-container">${this._renderFooter()}</div>` : nothing}
+            <div class="area-container">
+                <div class="area-name ${this.deviceType === "phone" ? "overlay" : ""}">${name}</div>
+                <img class="area-image" alt="Area picture..." src=${picture} />
+                ${this._areaChips.length > 0
+                    ? html`
+                          <div class="area-chips">
+                              ${this._areaChips.map((chip) => html`<div class="chip">${chip}</div>`)}
+                          </div>
+                      `
+                    : nothing}
+                ${isPhoneLandscape ? html`<div class="footer-container">${this._renderFooter()}</div>` : nothing}
+            </div>
         `;
     }
 
@@ -238,9 +240,11 @@ export class PanelCard extends LitElement {
 
     private _renderFooterButton(icon: string, name: string, methodName: keyof ActionHandlers): TemplateResult {
         return html`
-            <div class="footer-button" @click="${(e: Event) => this._handleFooterAction(e, methodName)}">
-                <ha-icon .icon=${icon}></ha-icon>
-                <span>${name}</span>
+            <div class="footer-container">
+                <div class="footer-button" @click="${(e: Event) => this._handleFooterAction(e, methodName)}">
+                    <ha-icon .icon=${icon}></ha-icon>
+                    <span>${name}</span>
+                </div>
             </div>
         `;
     }
