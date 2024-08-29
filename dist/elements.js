@@ -9070,7 +9070,7 @@ const panelStyles = i$3 `
         background-color: transparent;
     }
 
-    .body-container {
+    .swiper {
         grid-area: body;
         height: 100%;
         width: 100%;
@@ -9418,7 +9418,7 @@ let PanelCard = class PanelCard extends h {
             `;
         }
         return ke `
-            <div class="body-container">
+            <div class="swiper">
                 <div class="swiper-wrapper">
                     ${this._bodyTiles.map((page, index) => {
             const gridStyle = {
@@ -9433,11 +9433,16 @@ let PanelCard = class PanelCard extends h {
                         `;
         })}
                 </div>
-                <div class="swiper-button-prev" @click=${(e) => this._handleSwiperNavigation(e, "prev")}></div>
-                <div class="swiper-button-next" @click=${(e) => this._handleSwiperNavigation(e, "next")}></div>
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
             </div>
         `;
     }
+    /*
+                <div class="swiper-button-prev" @click=${(e: Event) => this._handleSwiperNavigation(e, "prev")}></div>
+                <div class="swiper-button-next" @click=${(e: Event) => this._handleSwiperNavigation(e, "next")}></div>
+
+*/
     _renderFooter() {
         return ke `
             <div class="footer-container">
@@ -9457,7 +9462,7 @@ let PanelCard = class PanelCard extends h {
         `;
     }
     _initializeSwiper() {
-        const swiperContainer = this.shadowRoot?.querySelector(".body-container");
+        const swiperContainer = this.shadowRoot?.querySelector(".swiper");
         if (!swiperContainer)
             return;
         const swiperParams = {
