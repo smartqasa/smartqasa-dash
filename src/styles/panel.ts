@@ -98,7 +98,7 @@ export const panelStyles = css`
     .area-image {
         grid-area: image;
         width: 100%;
-        height: 100%;
+        height: 20vh;
         object-fit: cover;
         border-radius: 0.2rem;
         border: none;
