@@ -106,7 +106,7 @@ export const panelStyles = css`
         background-color: transparent;
     }
 
-    .body-container {
+    .swiper {
         grid-area: body;
         height: 100%;
         width: 100%;
