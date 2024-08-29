@@ -12017,6 +12017,13 @@ const tileBaseStyle = i$3 `
         -webkit-tap-highlight-color: transparent;
         cursor: pointer;
     }
+
+    .container:focus,
+    .container:active {
+        background-color: inherit;
+        outline: none;
+    }
+
     .icon {
         grid-area: i;
         display: flex;
