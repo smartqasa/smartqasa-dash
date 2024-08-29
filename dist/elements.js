@@ -9176,7 +9176,7 @@ const panelStyles = i$3 `
     /* Phone Landscape */
     @media (max-height: 600px) and (orientation: landscape) {
         .container {
-            grid-template-columns: 0.95fr 1fr;
+            grid-template-columns: 1fr 1fr;
             grid-template-rows: 100%;
             grid-template-areas: "area body";
             gap: 1rem;
@@ -9536,37 +9536,6 @@ let PanelCard = class PanelCard extends h {
         }
         return pages;
     }
-    /*
-    private async _loadBodyTiles(tilesConfig: LovelaceCardConfig[]): Promise<LovelaceCard[][]> {
-        const pages: LovelaceCard[][] = [];
-        let currentPage: LovelaceCard[] = [];
-
-        for (const config of tilesConfig) {
-            if (config.type === "page-break") {
-                if (currentPage.length) {
-                    pages.push(currentPage);
-                    currentPage = [];
-                }
-            } else if (config.type === "blank-tile") {
-                if (this.deviceType === "tablet") {
-                    const blankTile = document.createElement("div");
-                    blankTile.classList.add("blank-tile");
-                    currentPage.push(blankTile as unknown as LovelaceCard);
-                }
-            } else {
-                const tile = createElement(config) as LovelaceCard;
-                tile.hass = this.hass;
-                currentPage.push(tile);
-            }
-        }
-
-        if (currentPage.length) {
-            pages.push(currentPage);
-        }
-
-        return pages;
-    }
-*/
     _launchClock(e) {
         e.stopPropagation();
         if (typeof window.fully !== "undefined" && window.fully.startApplication) {
