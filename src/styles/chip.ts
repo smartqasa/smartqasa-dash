@@ -51,9 +51,6 @@ export const chipTextStyle = css`
 `;
 
 export const chipDoubleStyle = css`
-    :host {
-        border-radius: var(--sq-chip-border-radius);
-    }
     .container {
         display: flex;
         margin: 0 var(--sq-chip-spacing, 0.4rem);
@@ -64,6 +61,14 @@ export const chipDoubleStyle = css`
         background-color: var(--sq-card-background-color);
         cursor: pointer;
     }
+
+    .container:active,
+    .container:focus {
+        background-color: trasparent; /* Ensure consistent background */
+        border-radius: var(--sq-chip-border-radius); /* Ensure border radius is applied */
+        outline: none; /* Remove any default outline */
+    }
+
     .icon1,
     .icon2 {
         display: flex;
@@ -73,6 +78,7 @@ export const chipDoubleStyle = css`
         padding: 0.1rem;
         color: rgb(var(--sq-primary-text-rgb));
     }
+
     .icon1::after {
         content: "";
         width: 1px;
