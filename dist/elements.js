@@ -184,17 +184,28 @@ const t={ATTRIBUTE:1,CHILD:2,PROPERTY:3,BOOLEAN_ATTRIBUTE:4,EVENT:5,ELEMENT:6},e
  * SPDX-License-Identifier: BSD-3-Clause
  */const ee="important",ie=" !"+ee,se=e(class extends i$1{constructor(e){if(super(e),e.type!==t.ATTRIBUTE||"style"!==e.name||e.strings?.length>2)throw Error("The `styleMap` directive must be used in the `style` attribute and must be the only part in the attribute.")}render(t){return Object.keys(t).reduce(((e,r)=>{const s=t[r];return null==s?e:e+`${r=r.includes("-")?r:r.replace(/(?:^(webkit|moz|ms|o)|)(?=[A-Z])/g,"-$&").toLowerCase()}:${s};`}),"")}update(t,[e]){const{style:r}=t.element;if(void 0===this.ft)return this.ft=new Set(Object.keys(e)),this.render(e);for(const t of this.ft)null==e[t]&&(this.ft.delete(t),t.includes("-")?r.removeProperty(t):r[t]=null);for(const t in e){const s=e[t];if(null!=s){this.ft.add(t);const e="string"==typeof s&&s.endsWith(ie);t.includes("-")||e?r.setProperty(t,e?s.slice(0,-11):s,e?ee:""):r[t]=s;}}return R}});
 
-function navigateToArea(area) {
+async function navigateToArea(area) {
     if (!area)
         return;
     const url = new URL(location.href);
     const pathSegments = url.pathname.split("/");
     pathSegments.pop();
+    pathSegments.push(area);
     url.pathname = pathSegments.join("/");
-    console.log("Path:", url.toString());
-    window.history.pushState(null, "", url.toString());
-    window.dispatchEvent(new CustomEvent("location-changed"));
-    window.smartqasa.viewMode = "area";
+    try {
+        const response = await fetch(url.toString(), { method: "HEAD" });
+        if (response.ok) {
+            window.history.pushState(null, "", url.toString());
+            window.dispatchEvent(new CustomEvent("location-changed"));
+            window.smartqasa.viewMode = "area";
+        }
+        else {
+            console.error("URL does not exist:", url.toString());
+        }
+    }
+    catch (error) {
+        console.error("Failed to check URL:", error);
+    }
 }
 
 /**
@@ -9135,7 +9146,8 @@ const panelStyles = i$3 `
     }
 
     /* Phone Portrait */
-    @media (orientation: portrait) and (max-width: 600px) {
+    @media (orientation: portrait) and (max-width: 534px),
+        (orientation: portrait) and (min-width: 535px) and (max-width: 600px) {
         .container {
             grid-template-columns: 100%;
             grid-template-rows: auto minmax(0, 1fr) auto;
@@ -9193,7 +9205,8 @@ const panelStyles = i$3 `
     }
 
     /* Phone Landscape */
-    @media (orientation: landscape) and (max-height: 600px) and (height: not(534px)) {
+    @media (orientation: landscape) and (max-height: 534px),
+        (orientation: landscape) and (min-height: 535px) and (max-height: 600px) {
         .container {
             grid-template-columns: 1fr 1fr;
             grid-template-rows: 100%;

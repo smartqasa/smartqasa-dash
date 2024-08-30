@@ -158,7 +158,8 @@ export const panelStyles = css`
     }
 
     /* Phone Portrait */
-    @media (orientation: portrait) and (max-width: 600px) {
+    @media (orientation: portrait) and (max-width: 534px),
+        (orientation: portrait) and (min-width: 535px) and (max-width: 600px) {
         .container {
             grid-template-columns: 100%;
             grid-template-rows: auto minmax(0, 1fr) auto;
@@ -216,7 +217,8 @@ export const panelStyles = css`
     }
 
     /* Phone Landscape */
-    @media (orientation: landscape) and (max-height: 600px) and (height: not(534px)) {
+    @media (orientation: landscape) and (max-height: 534px),
+        (orientation: landscape) and (min-height: 535px) and (max-height: 600px) {
         .container {
             grid-template-columns: 1fr 1fr;
             grid-template-rows: 100%;
