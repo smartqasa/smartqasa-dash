@@ -11661,14 +11661,14 @@ let ScreenSaver = class ScreenSaver extends h {
                 white-space: nowrap;
             }
             .time {
-                font-size: var(--sq-title-font-size, 3.2rem);
-                font-weight: var(--sq-title-font-weight, 400);
-                color: rgb(var(--sq-title-font-rgb, 128, 128, 128));
+                font-size: 3.2rem;
+                font-weight: 300;
+                color: rgb(150, 150, 150);
             }
             .date {
-                font-size: var(--sq-primary-font-size, 1.5rem);
-                font-weight: var(--sq-primary-font-weight, 300);
-                color: rgb(var(--sq-secondary-font-rgb, 128, 128, 128));
+                font-size: 1.5rem;
+                font-weight: 300;
+                color: rgb(150, 150, 150);
             }
             @keyframes fade-in-out {
                 0% {
