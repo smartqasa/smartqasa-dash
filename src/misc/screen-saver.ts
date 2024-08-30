@@ -63,6 +63,7 @@ export class ScreenSaver extends LitElement {
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
         if (changedProps.has("hass") && this.hass) {
+            console.log("Screen saver hass updated");
             const newTime = this.hass.states["sensor.current_time"]?.state;
             const newDate = this.hass.states["sensor.current_date"]?.state;
 
