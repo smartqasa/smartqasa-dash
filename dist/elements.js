@@ -9006,22 +9006,6 @@ let PanelCard = class PanelCard extends h {
         this._area = this._config.area;
         this._loading = true;
     }
-    render() {
-        if (this._loading)
-            return ke `<div>Loading...</div>`;
-        console.log("Orientation", this._deviceOrientation);
-        console.log("Type", this._deviceType);
-        const containerStyle = {
-            height: this._isAdmin ? "calc(100vh - 56px)" : "100vh",
-        };
-        const isPhoneLandscape = this._deviceType === "phone" && this._deviceOrientation === "landscape";
-        return ke `
-            <div class="container" style=${se(containerStyle)}>
-                ${this._deviceType === "tablet" ? this._renderHeader() : D} ${this._renderArea()}
-                ${this._renderBody()} ${isPhoneLandscape ? D : this._renderFooter()}
-            </div>
-        `;
-    }
     async firstUpdated(changedProps) {
         super.firstUpdated(changedProps);
         await this._loadContent();
@@ -9073,6 +9057,24 @@ let PanelCard = class PanelCard extends h {
     _handleDeviceChanges() {
         this._deviceOrientation = getDeviceOrientation();
         this._deviceType = getDeviceType();
+    }
+    render() {
+        if (this._loading)
+            return ke `<div>Loading...</div>`;
+        /*
+        console.log("Orientation", this._deviceOrientation);
+        console.log("Type", this._deviceType);
+        */
+        const containerStyle = {
+            height: this._isAdmin ? "calc(100vh - 56px)" : "100vh",
+        };
+        const isPhoneLandscape = this._deviceType === "phone" && this._deviceOrientation === "landscape";
+        return ke `
+            <div class="container" style=${se(containerStyle)}>
+                ${this._deviceType === "tablet" ? this._renderHeader() : D} ${this._renderArea()}
+                ${this._renderBody()} ${isPhoneLandscape ? D : this._renderFooter()}
+            </div>
+        `;
     }
     _renderHeader() {
         let time = this.hass?.states["sensor.current_time"]?.state || "Loading...";
@@ -11703,6 +11705,7 @@ let ScreenSaver = class ScreenSaver extends h {
     updated(changedProps) {
         super.updated(changedProps);
         if (changedProps.has("hass") && this.hass) {
+            console.log("Time: ", this.hass.states["sensor.current_time"]?.state);
             this._time = this.hass.states["sensor.current_time"]?.state || "Loading...";
             this._date = this.hass.states["sensor.current_date"]?.state || "Loading...";
         }

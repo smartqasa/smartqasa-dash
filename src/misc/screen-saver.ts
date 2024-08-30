@@ -81,6 +81,7 @@ export class ScreenSaver extends LitElement {
     protected updated(changedProps: PropertyValues) {
         super.updated(changedProps);
         if (changedProps.has("hass") && this.hass) {
+            console.log("Time: ", this.hass.states["sensor.current_time"]?.state);
             this._time = this.hass.states["sensor.current_time"]?.state || "Loading...";
             this._date = this.hass.states["sensor.current_date"]?.state || "Loading...";
         }

@@ -66,26 +66,6 @@ export class PanelCard extends LitElement {
         this._loading = true;
     }
 
-    protected render(): TemplateResult {
-        if (this._loading) return html`<div>Loading...</div>`;
-
-        console.log("Orientation", this._deviceOrientation);
-        console.log("Type", this._deviceType);
-
-        const containerStyle = {
-            height: this._isAdmin ? "calc(100vh - 56px)" : "100vh",
-        };
-
-        const isPhoneLandscape = this._deviceType === "phone" && this._deviceOrientation === "landscape";
-
-        return html`
-            <div class="container" style=${styleMap(containerStyle)}>
-                ${this._deviceType === "tablet" ? this._renderHeader() : nothing} ${this._renderArea()}
-                ${this._renderBody()} ${isPhoneLandscape ? nothing : this._renderFooter()}
-            </div>
-        `;
-    }
-
     protected async firstUpdated(changedProps: PropertyValues) {
         super.firstUpdated(changedProps);
 
@@ -152,6 +132,28 @@ export class PanelCard extends LitElement {
     private _handleDeviceChanges() {
         this._deviceOrientation = getDeviceOrientation();
         this._deviceType = getDeviceType();
+    }
+
+    protected render(): TemplateResult {
+        if (this._loading) return html`<div>Loading...</div>`;
+
+        /*
+        console.log("Orientation", this._deviceOrientation);
+        console.log("Type", this._deviceType);
+        */
+
+        const containerStyle = {
+            height: this._isAdmin ? "calc(100vh - 56px)" : "100vh",
+        };
+
+        const isPhoneLandscape = this._deviceType === "phone" && this._deviceOrientation === "landscape";
+
+        return html`
+            <div class="container" style=${styleMap(containerStyle)}>
+                ${this._deviceType === "tablet" ? this._renderHeader() : nothing} ${this._renderArea()}
+                ${this._renderBody()} ${isPhoneLandscape ? nothing : this._renderFooter()}
+            </div>
+        `;
     }
 
     private _renderHeader() {
