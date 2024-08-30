@@ -184,6 +184,22 @@ const t={ATTRIBUTE:1,CHILD:2,PROPERTY:3,BOOLEAN_ATTRIBUTE:4,EVENT:5,ELEMENT:6},e
  * SPDX-License-Identifier: BSD-3-Clause
  */const ee="important",ie=" !"+ee,se=e(class extends i$1{constructor(e){if(super(e),e.type!==t.ATTRIBUTE||"style"!==e.name||e.strings?.length>2)throw Error("The `styleMap` directive must be used in the `style` attribute and must be the only part in the attribute.")}render(t){return Object.keys(t).reduce(((e,r)=>{const s=t[r];return null==s?e:e+`${r=r.includes("-")?r:r.replace(/(?:^(webkit|moz|ms|o)|)(?=[A-Z])/g,"-$&").toLowerCase()}:${s};`}),"")}update(t,[e]){const{style:r}=t.element;if(void 0===this.ft)return this.ft=new Set(Object.keys(e)),this.render(e);for(const t of this.ft)null==e[t]&&(this.ft.delete(t),t.includes("-")?r.removeProperty(t):r[t]=null);for(const t in e){const s=e[t];if(null!=s){this.ft.add(t);const e="string"==typeof s&&s.endsWith(ie);t.includes("-")||e?r.setProperty(t,e?s.slice(0,-11):s,e?ee:""):r[t]=s;}}return R}});
 
+function getDeviceOrientation() {
+    return window.screen.orientation.type.startsWith("portrait") ? "portrait" : "landscape";
+}
+function getDeviceType() {
+    const { width, height } = window.screen;
+    const orientation = window.screen.orientation.type.startsWith("portrait") ? "portrait" : "landscape";
+    if ((orientation === "portrait" && width < 600 && width != 534) ||
+        (orientation === "landscape" && height < 600 && height != 534)) {
+        return "phone";
+    }
+    else {
+        return "tablet";
+    }
+}
+let deviceType$1 = getDeviceType();
+
 function navigateToArea(area) {
     if (!area)
         return;
@@ -8598,6 +8614,40 @@ const loadYamlAsJson = async (yamlFilePath) => {
     }
 };
 
+const listDialogStyle = {
+    margin: 0,
+    card_margin: 0,
+    "grid-template-columns": "1fr",
+    "grid-gap": "var(--sq-dialog-grid-gap)",
+};
+const gridDialogStyle = {
+    margin: 0,
+    card_margin: 0,
+    "grid-template-columns": deviceType$1 === "phone" ? "repeat(2, 1fr)" : "repeat(3, var(--sq-tile-width-tablet, 20rem))",
+    "grid-gap": "var(--sq-dialog-grid-gap)",
+};
+
+function areasDialog(hass) {
+    if (!hass)
+        return;
+    const areas = Object.values(hass.areas).filter((area) => area?.labels.includes("visible"));
+    const cards = areas?.map((area) => ({
+        type: "custom:smartqasa-area-tile",
+        area: area.area_id,
+    }));
+    const dialogConfig = {
+        title: "Areas",
+        timeout: 60000,
+        content: {
+            type: "custom:layout-card",
+            layout_type: "custom:grid-layout",
+            layout: gridDialogStyle,
+            cards: cards,
+        },
+    };
+    window.browser_mod?.service("popup", dialogConfig);
+}
+
 const deviceOrientation = window.screen.orientation.type.startsWith("portrait") ? "portrait" : "landscape";
 const deviceType = (() => {
     const { width, height } = window.screen;
@@ -8644,40 +8694,6 @@ const thermostatIcons = {
     off: "hass:power",
     default: "hass:thermostat-cog",
 };
-
-const listDialogStyle = {
-    margin: 0,
-    card_margin: 0,
-    "grid-template-columns": "1fr",
-    "grid-gap": "var(--sq-dialog-grid-gap)",
-};
-const gridDialogStyle = {
-    margin: 0,
-    card_margin: 0,
-    "grid-template-columns": deviceType === "phone" ? "repeat(2, 1fr)" : "repeat(3, var(--sq-tile-width-tablet, 20rem))",
-    "grid-gap": "var(--sq-dialog-grid-gap)",
-};
-
-function areasDialog(hass) {
-    if (!hass)
-        return;
-    const areas = Object.values(hass.areas).filter((area) => area?.labels.includes("visible"));
-    const cards = areas?.map((area) => ({
-        type: "custom:smartqasa-area-tile",
-        area: area.area_id,
-    }));
-    const dialogConfig = {
-        title: "Areas",
-        timeout: 60000,
-        content: {
-            type: "custom:layout-card",
-            layout_type: "custom:grid-layout",
-            layout: gridDialogStyle,
-            cards: cards,
-        },
-    };
-    window.browser_mod?.service("popup", dialogConfig);
-}
 
 async function entertainDialog(config, hass) {
     if (!config || !hass)
@@ -8814,15 +8830,15 @@ async function entertainDialog(config, hass) {
 async function menuConfig(menu_tab) {
     function createAttributes(icon, label) {
         return {
-            icon: deviceType === "phone" ? icon : null,
-            label: deviceType === "tablet" ? label : null,
+            icon: deviceType$1 === "phone" ? icon : null,
+            label: deviceType$1 === "tablet" ? label : null,
         };
     }
     const layout = {
         margin: 0,
         card_margin: 0,
         padding: "1rem 0 0 0",
-        "grid-template-columns": deviceType === "phone" ? "repeat(2, 1fr)" : "repeat(3, var(--sq-tile-width-tablet, 20rem))",
+        "grid-template-columns": deviceType$1 === "phone" ? "repeat(2, 1fr)" : "repeat(3, var(--sq-tile-width-tablet, 20rem))",
         "grid-gap": "var(--sq-dialog-grid-gap)",
     };
     const favoMenuTiles = await loadYamlAsJson("/local/smartqasa/menus/favorites.yaml");
@@ -9307,8 +9323,8 @@ let PanelCard = class PanelCard extends h {
         super(...arguments);
         this._loading = true;
         this._isAdmin = false;
-        this.deviceOrientation = this._getDeviceOrientation();
-        this.deviceType = this._getDeviceType();
+        this._deviceOrientation = getDeviceOrientation();
+        this._deviceType = getDeviceType();
         this._headerChips = [];
         this._areaChips = [];
         this._bodyTiles = [];
@@ -9326,10 +9342,10 @@ let PanelCard = class PanelCard extends h {
         const containerStyle = {
             height: this._isAdmin ? "calc(100vh - 56px)" : "100vh",
         };
-        const isPhoneLandscape = this.deviceType === "phone" && this.deviceOrientation === "landscape";
+        const isPhoneLandscape = this._deviceType === "phone" && this._deviceOrientation === "landscape";
         return ke `
             <div class="container" style=${se(containerStyle)}>
-                ${this.deviceType === "tablet" ? this._renderHeader() : D} ${this._renderArea()}
+                ${this._deviceType === "tablet" ? this._renderHeader() : D} ${this._renderArea()}
                 ${this._renderBody()} ${isPhoneLandscape ? D : this._renderFooter()}
             </div>
         `;
@@ -9337,7 +9353,7 @@ let PanelCard = class PanelCard extends h {
     async firstUpdated(changedProps) {
         super.firstUpdated(changedProps);
         await this._loadContent();
-        if (this.deviceType === "tablet")
+        if (this._deviceType === "tablet")
             this._initializeSwiper();
         ["orientationchange", "resize"].forEach((event) => window.addEventListener(event, this._handleDeviceChanges.bind(this)));
         this._startResetTimer();
@@ -9346,7 +9362,7 @@ let PanelCard = class PanelCard extends h {
     updated(changedProps) {
         super.updated(changedProps);
         this._isAdmin = this.hass?.user?.is_admin ?? false;
-        if (this.deviceType === "tablet") {
+        if (this._deviceType === "tablet") {
             if (this._swiper) {
                 this._swiper.update();
             }
@@ -9359,7 +9375,7 @@ let PanelCard = class PanelCard extends h {
         }
         else if (changedProps.has("hass") && this.hass) {
             this._areaObj = this._area ? this.hass.areas[this._area] : undefined;
-            if (this.deviceType === "tablet" && this._headerChips.length) {
+            if (this._deviceType === "tablet" && this._headerChips.length) {
                 this._headerChips.forEach((chip) => {
                     chip.hass = this.hass;
                 });
@@ -9380,25 +9396,11 @@ let PanelCard = class PanelCard extends h {
     }
     disconnectedCallback() {
         super.disconnectedCallback();
-        window.removeEventListener("resize", this._handleDeviceChanges.bind(this));
-        window.removeEventListener("orientationchange", this._handleDeviceChanges.bind(this));
+        ["orientationchange", "resize"].forEach((event) => window.removeEventListener(event, this._handleDeviceChanges.bind(this)));
     }
     _handleDeviceChanges() {
-        this.deviceOrientation = this._getDeviceOrientation();
-        this.deviceType = this._getDeviceType();
-    }
-    _getDeviceOrientation() {
-        return window.screen.orientation.type.startsWith("portrait") ? "portrait" : "landscape";
-    }
-    _getDeviceType() {
-        const { width, height } = window.screen;
-        if ((this.deviceOrientation === "portrait" && width < 600 && width != 534) ||
-            (this.deviceOrientation === "landscape" && height < 600 && height != 534)) {
-            return "phone";
-        }
-        else {
-            return "tablet";
-        }
+        this._deviceOrientation = getDeviceOrientation();
+        this._deviceType = getDeviceType();
     }
     _renderHeader() {
         let time = this.hass?.states["sensor.current_time"]?.state || "Loading...";
@@ -9420,10 +9422,10 @@ let PanelCard = class PanelCard extends h {
         const picture = this._config?.picture
             ? `/local/smartqasa/images/${this._config.picture}`
             : this._areaObj?.picture ?? img$24;
-        const isPhoneLandscape = this.deviceType === "phone" && this.deviceOrientation === "landscape";
+        const isPhoneLandscape = this._deviceType === "phone" && this._deviceOrientation === "landscape";
         return ke `
             <div class="area-container">
-                <div class="area-name ${this.deviceType === "phone" ? "overlay" : ""}">${name}</div>
+                <div class="area-name ${this._deviceType === "phone" ? "overlay" : ""}">${name}</div>
                 <img class="area-image" alt="Area picture..." src=${picture} />
                 ${this._areaChips.length > 0
             ? ke `
@@ -9439,7 +9441,7 @@ let PanelCard = class PanelCard extends h {
     _renderBody() {
         if (!this._config || !this._bodyTiles.length)
             return D;
-        if (this.deviceType === "phone") {
+        if (this._deviceType === "phone") {
             const gridStyle = { gridTemplateColumns: "1fr 1fr" };
             return ke `
                 <div class="body-tiles" style=${se(gridStyle)}>
@@ -9583,7 +9585,7 @@ let PanelCard = class PanelCard extends h {
                 }
             }
             else if (config.type === "blank") {
-                if (this.deviceType === "tablet") {
+                if (this._deviceType === "tablet") {
                     const blankTile = document.createElement("div");
                     blankTile.classList.add("blank-tile");
                     currentPage.push(blankTile);
@@ -9681,10 +9683,10 @@ __decorate([
 ], PanelCard.prototype, "_isAdmin", void 0);
 __decorate([
     r()
-], PanelCard.prototype, "deviceOrientation", void 0);
+], PanelCard.prototype, "_deviceOrientation", void 0);
 __decorate([
     r()
-], PanelCard.prototype, "deviceType", void 0);
+], PanelCard.prototype, "_deviceType", void 0);
 PanelCard = __decorate([
     t$1("smartqasa-panel-card")
 ], PanelCard);

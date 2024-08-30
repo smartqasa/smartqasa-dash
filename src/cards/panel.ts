@@ -2,6 +2,7 @@ import { CSSResultGroup, html, LitElement, nothing, PropertyValues, TemplateResu
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HassArea, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
+import { getDeviceOrientation, getDeviceType } from "../utils/device-info";
 import { navigateToArea } from "../utils/navigate-to-area";
 import Swiper from "swiper";
 import { SwiperOptions } from "swiper/types";
@@ -45,8 +46,8 @@ export class PanelCard extends LitElement {
     @state() private _config?: Config;
     @state() private _loading = true;
     @state() private _isAdmin = false;
-    @state() private deviceOrientation: string = this._getDeviceOrientation();
-    @state() private deviceType: string = this._getDeviceType();
+    @state() private _deviceOrientation: string = getDeviceOrientation();
+    @state() private _deviceType: string = getDeviceType();
     private _swiper?: Swiper;
     private _resetTimer?: ReturnType<typeof setTimeout>;
     private _area?: string;
@@ -71,11 +72,11 @@ export class PanelCard extends LitElement {
             height: this._isAdmin ? "calc(100vh - 56px)" : "100vh",
         };
 
-        const isPhoneLandscape = this.deviceType === "phone" && this.deviceOrientation === "landscape";
+        const isPhoneLandscape = this._deviceType === "phone" && this._deviceOrientation === "landscape";
 
         return html`
             <div class="container" style=${styleMap(containerStyle)}>
-                ${this.deviceType === "tablet" ? this._renderHeader() : nothing} ${this._renderArea()}
+                ${this._deviceType === "tablet" ? this._renderHeader() : nothing} ${this._renderArea()}
                 ${this._renderBody()} ${isPhoneLandscape ? nothing : this._renderFooter()}
             </div>
         `;
@@ -86,7 +87,7 @@ export class PanelCard extends LitElement {
 
         await this._loadContent();
 
-        if (this.deviceType === "tablet") this._initializeSwiper();
+        if (this._deviceType === "tablet") this._initializeSwiper();
 
         ["orientationchange", "resize"].forEach((event) =>
             window.addEventListener(event, this._handleDeviceChanges.bind(this))
@@ -102,7 +103,7 @@ export class PanelCard extends LitElement {
 
         this._isAdmin = this.hass?.user?.is_admin ?? false;
 
-        if (this.deviceType === "tablet") {
+        if (this._deviceType === "tablet") {
             if (this._swiper) {
                 this._swiper.update();
             } else {
@@ -115,7 +116,7 @@ export class PanelCard extends LitElement {
         } else if (changedProps.has("hass") && this.hass) {
             this._areaObj = this._area ? this.hass.areas[this._area] : undefined;
 
-            if (this.deviceType === "tablet" && this._headerChips.length) {
+            if (this._deviceType === "tablet" && this._headerChips.length) {
                 this._headerChips.forEach((chip) => {
                     chip.hass = this.hass;
                 });
@@ -139,29 +140,14 @@ export class PanelCard extends LitElement {
 
     disconnectedCallback() {
         super.disconnectedCallback();
-        window.removeEventListener("resize", this._handleDeviceChanges.bind(this));
-        window.removeEventListener("orientationchange", this._handleDeviceChanges.bind(this));
+        ["orientationchange", "resize"].forEach((event) =>
+            window.removeEventListener(event, this._handleDeviceChanges.bind(this))
+        );
     }
 
     private _handleDeviceChanges() {
-        this.deviceOrientation = this._getDeviceOrientation();
-        this.deviceType = this._getDeviceType();
-    }
-
-    private _getDeviceOrientation(): string {
-        return window.screen.orientation.type.startsWith("portrait") ? "portrait" : "landscape";
-    }
-
-    private _getDeviceType(): string {
-        const { width, height } = window.screen;
-        if (
-            (this.deviceOrientation === "portrait" && width < 600 && width != 534) ||
-            (this.deviceOrientation === "landscape" && height < 600 && height != 534)
-        ) {
-            return "phone";
-        } else {
-            return "tablet";
-        }
+        this._deviceOrientation = getDeviceOrientation();
+        this._deviceType = getDeviceType();
     }
 
     private _renderHeader() {
@@ -187,11 +173,11 @@ export class PanelCard extends LitElement {
             ? `/local/smartqasa/images/${this._config.picture}`
             : this._areaObj?.picture ?? defaultImage;
 
-        const isPhoneLandscape = this.deviceType === "phone" && this.deviceOrientation === "landscape";
+        const isPhoneLandscape = this._deviceType === "phone" && this._deviceOrientation === "landscape";
 
         return html`
             <div class="area-container">
-                <div class="area-name ${this.deviceType === "phone" ? "overlay" : ""}">${name}</div>
+                <div class="area-name ${this._deviceType === "phone" ? "overlay" : ""}">${name}</div>
                 <img class="area-image" alt="Area picture..." src=${picture} />
                 ${this._areaChips.length > 0
                     ? html`
@@ -208,7 +194,7 @@ export class PanelCard extends LitElement {
     private _renderBody() {
         if (!this._config || !this._bodyTiles.length) return nothing;
 
-        if (this.deviceType === "phone") {
+        if (this._deviceType === "phone") {
             const gridStyle = { gridTemplateColumns: "1fr 1fr" };
             return html`
                 <div class="body-tiles" style=${styleMap(gridStyle)}>
@@ -375,7 +361,7 @@ export class PanelCard extends LitElement {
                     this._bodyColumns.push(columns);
                 }
             } else if (config.type === "blank") {
-                if (this.deviceType === "tablet") {
+                if (this._deviceType === "tablet") {
                     const blankTile = document.createElement("div");
                     blankTile.classList.add("blank-tile");
                     currentPage.push(blankTile as unknown as LovelaceCard);

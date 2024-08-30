@@ -1,5 +1,5 @@
 import { loadYamlAsJson } from "../utils/load-yaml-as-json";
-import { deviceType } from "../const";
+import { deviceType } from "../utils/device-info";
 
 export async function menuConfig(menu_tab?: number): Promise<any> {
     function createAttributes(icon: string, label: string) {
