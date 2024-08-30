@@ -51,6 +51,7 @@ import "./dialogs/more-info";
 // Misc
 import "./misc/area-picture";
 import "./misc/panel-footer";
+import "./misc/screen-saver";
 import "./misc/time-date";
 import "./misc/title";
 
@@ -80,6 +81,30 @@ import "./tiles/thermostat";
 
 // Utils
 import "./utils/popup-confirmation";
+
+// Idle timer logic
+let idleTimer: number;
+
+function startIdleTimer() {
+    idleTimer = window.setTimeout(() => {
+        const screenSaver = document.createElement("smartqasa-screen-saver");
+        document.body.appendChild(screenSaver);
+    }, 30000); // Show screen saver after 30 seconds of inactivity
+}
+
+function resetIdleTimer() {
+    clearTimeout(idleTimer);
+    const existingScreenSaver = document.querySelector("smartqasa-screen-saver");
+    if (existingScreenSaver) {
+        existingScreenSaver.remove();
+    }
+    startIdleTimer();
+}
+
+window.addEventListener("mousemove", resetIdleTimer);
+window.addEventListener("keypress", resetIdleTimer);
+
+startIdleTimer();
 
 import { version } from "../package.json";
 console.info(`%c SmartQasa ⏏ ${version} `, "background-color: #0000ff; color: #ffffff; font-weight: 700;");

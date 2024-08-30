@@ -11627,6 +11627,133 @@ PanelFooter = __decorate([
     t$1("smartqasa-panel-footer")
 ], PanelFooter);
 
+let ScreenSaver = class ScreenSaver extends h {
+    constructor() {
+        super(...arguments);
+        this._visible = true;
+        this._time = "Loading...";
+        this._date = "Loading...";
+    }
+    static get styles() {
+        return i$3 `
+            :host {
+                display: block;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: black;
+                z-index: 9999;
+                pointer-events: none;
+            }
+            .time-date-container {
+                position: absolute;
+                animation: fade-in-out 5s ease-in-out infinite;
+            }
+            .time {
+                font-size: 3.2rem;
+                font-weight: 400;
+                color: rgb(255, 255, 255);
+                text-align: left;
+                line-height: normal;
+                white-space: nowrap;
+            }
+            .date {
+                font-size: 1.5rem;
+                font-weight: 300;
+                color: rgb(255, 255, 255);
+                text-align: left;
+                line-height: normal;
+                white-space: nowrap;
+            }
+            @keyframes fade-in-out {
+                0% {
+                    opacity: 0;
+                }
+                10% {
+                    opacity: 1;
+                }
+                90% {
+                    opacity: 1;
+                }
+                100% {
+                    opacity: 0;
+                }
+            }
+        `;
+    }
+    firstUpdated() {
+        this._updateTimeAndDate();
+        this._moveTimeDate();
+        window.addEventListener("mousemove", this._resetTimer.bind(this));
+        window.addEventListener("keypress", this._resetTimer.bind(this));
+        this._startTimer();
+    }
+    _updateTimeAndDate() {
+        if (this.hass) {
+            this._time = this.hass.states["sensor.current_time"]?.state || "Loading...";
+            this._date = this.hass.states["sensor.current_date"]?.state || "Loading...";
+        }
+        setTimeout(() => this._updateTimeAndDate(), 60000); // Update every minute
+    }
+    _moveTimeDate() {
+        const container = this.shadowRoot?.querySelector(".time-date-container");
+        if (container) {
+            const maxWidth = window.innerWidth - container.clientWidth;
+            const maxHeight = window.innerHeight - container.clientHeight;
+            const randomX = Math.floor(Math.random() * maxWidth);
+            const randomY = Math.floor(Math.random() * maxHeight);
+            container.style.left = `${randomX}px`;
+            container.style.top = `${randomY}px`;
+        }
+        setTimeout(() => {
+            this._moveTimeDate();
+        }, 5000); // Change position every 5 seconds
+    }
+    _startTimer() {
+        this._visible = true;
+        this._hideScreenSaverAfterTimeout();
+    }
+    _hideScreenSaverAfterTimeout() {
+        setTimeout(() => {
+            this._visible = false;
+            this.requestUpdate();
+        }, 30000); // Show screen saver after 30 seconds of inactivity
+    }
+    _resetTimer() {
+        this._visible = true;
+        this.requestUpdate();
+        clearTimeout(this._hideScreenSaverAfterTimeout);
+        this._hideScreenSaverAfterTimeout();
+    }
+    render() {
+        if (!this._visible)
+            return ke ``;
+        return ke `
+            <div class="time-date-container">
+                <div class="time">${this._time}</div>
+                <div class="date">${this._date}</div>
+            </div>
+        `;
+    }
+};
+__decorate([
+    n({ attribute: false })
+], ScreenSaver.prototype, "hass", void 0);
+__decorate([
+    r()
+], ScreenSaver.prototype, "_visible", void 0);
+__decorate([
+    r()
+], ScreenSaver.prototype, "_time", void 0);
+__decorate([
+    r()
+], ScreenSaver.prototype, "_date", void 0);
+ScreenSaver = __decorate([
+    t$1("smartqasa-screen-saver")
+], ScreenSaver);
+
 let TimeDate = class TimeDate extends h {
     constructor() {
         super(...arguments);
@@ -14485,4 +14612,23 @@ window.smartqasa = window.smartqasa || {};
 window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();
 window.smartqasa.startArea = window.smartqasa.startArea || location.pathname.split("/").pop();
 window.customCards = window.customCards ?? [];
+// Idle timer logic
+let idleTimer;
+function startIdleTimer() {
+    idleTimer = window.setTimeout(() => {
+        const screenSaver = document.createElement("smartqasa-screen-saver");
+        document.body.appendChild(screenSaver);
+    }, 30000); // Show screen saver after 30 seconds of inactivity
+}
+function resetIdleTimer() {
+    clearTimeout(idleTimer);
+    const existingScreenSaver = document.querySelector("smartqasa-screen-saver");
+    if (existingScreenSaver) {
+        existingScreenSaver.remove();
+    }
+    startIdleTimer();
+}
+window.addEventListener("mousemove", resetIdleTimer);
+window.addEventListener("keypress", resetIdleTimer);
+startIdleTimer();
 console.info(`%c SmartQasa ⏏ ${version} `, "background-color: #0000ff; color: #ffffff; font-weight: 700;");
