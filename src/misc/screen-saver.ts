@@ -26,21 +26,21 @@ export class ScreenSaver extends LitElement {
                 position: absolute;
                 animation: fade-in-out 5s ease-in-out infinite;
             }
-            .time,
-            .date {
+            .time {
+                font-size: 3.2rem;
+                font-weight: 400;
+                color: rgb(255, 255, 255);
                 text-align: left;
                 line-height: normal;
                 white-space: nowrap;
             }
-            .time {
-                font-size: 3.2rem;
-                font-weight: 300;
-                color: rgb(150, 150, 150);
-            }
             .date {
                 font-size: 1.5rem;
                 font-weight: 300;
-                color: rgb(150, 150, 150);
+                color: rgb(255, 255, 255);
+                text-align: left;
+                line-height: normal;
+                white-space: nowrap;
             }
             @keyframes fade-in-out {
                 0% {
@@ -91,10 +91,12 @@ export class ScreenSaver extends LitElement {
     private _updateTimeAndDate(): void {
         const now = new Date();
 
+        // Time format: h:mm (no leading zero for hours)
         const hours = now.getHours();
         const minutes = now.getMinutes();
         this._time = `${hours % 12 || 12}:${minutes < 10 ? "0" + minutes : minutes}`;
 
+        // Date format: day-of-week, month (3 letters), day
         const options: Intl.DateTimeFormatOptions = { weekday: "long", month: "short", day: "numeric" };
         this._date = now.toLocaleDateString(undefined, options);
     }
