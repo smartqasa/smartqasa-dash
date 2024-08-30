@@ -11712,7 +11712,8 @@ let ScreenSaver = class ScreenSaver extends h {
     }
     render() {
         if (!this._visible)
-            return ke ``;
+            return D;
+        console.log("Screen saver rednered", this._time, this._date);
         return ke `
             <div class="time-date-container">
                 <div class="time">${this._time}</div>

@@ -1,4 +1,4 @@
-import { css, CSSResultGroup, html, LitElement, PropertyValues, TemplateResult } from "lit";
+import { css, CSSResultGroup, html, LitElement, nothing, PropertyValues, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { HomeAssistant } from "../types";
 
@@ -89,8 +89,9 @@ export class ScreenSaver extends LitElement {
         super.disconnectedCallback();
     }
 
-    protected render(): TemplateResult {
-        if (!this._visible) return html``;
+    protected render(): TemplateResult | typeof nothing {
+        if (!this._visible) return nothing;
+        console.log("Screen saver rednered", this._time, this._date);
         return html`
             <div class="time-date-container">
                 <div class="time">${this._time}</div>
