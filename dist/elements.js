@@ -9103,6 +9103,14 @@ const panelStyles = i$3 `
         width: var(--sq-icon-size, 1.8rem);
     }
 
+    /* Tablet Portrait */
+
+    @media (orientation: portrait) and (min-width: 601px), (orientation: portrait) and (width: 534px) {
+        .area-image {
+            height: 10vh;
+        }
+    }
+
     /* Phone Portrait */
     @media (orientation: portrait) and (max-width: 534px),
         (orientation: portrait) and (min-width: 535px) and (max-width: 600px) {
