@@ -1,3 +1,5 @@
+import { deviceType } from "./utils/device-info";
+
 declare global {
     interface Window {
         browser_mod?: {
@@ -86,13 +88,17 @@ import "./utils/popup-confirmation";
 let idleTimer: number;
 
 function startIdleTimer() {
-    idleTimer = window.setTimeout(() => {
-        const screenSaver = document.createElement("smartqasa-screen-saver");
-        document.body.appendChild(screenSaver);
-    }, 30000); // Show screen saver after 30 seconds of inactivity
+    if (deviceType === "tablet") {
+        idleTimer = window.setTimeout(() => {
+            const screenSaver = document.createElement("smartqasa-screen-saver");
+            document.body.appendChild(screenSaver);
+        }, 30000); // Show screen saver after 30 seconds of inactivity
+    }
 }
 
 function resetIdleTimer() {
+    if (deviceType !== "tablet") return;
+
     clearTimeout(idleTimer);
     const existingScreenSaver = document.querySelector("smartqasa-screen-saver");
     if (existingScreenSaver) {

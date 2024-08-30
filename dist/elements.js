@@ -1,3 +1,19 @@
+function getDeviceOrientation() {
+    return window.screen.orientation.type.startsWith("portrait") ? "portrait" : "landscape";
+}
+function getDeviceType() {
+    const { width, height } = window.screen;
+    const orientation = window.screen.orientation.type.startsWith("portrait") ? "portrait" : "landscape";
+    if ((orientation === "portrait" && width < 600 && width != 534) ||
+        (orientation === "landscape" && height < 600 && height != 534)) {
+        return "phone";
+    }
+    else {
+        return "tablet";
+    }
+}
+let deviceType = getDeviceType();
+
 /******************************************************************************
 Copyright (c) Microsoft Corporation.
 
@@ -183,22 +199,6 @@ const t={ATTRIBUTE:1,CHILD:2,PROPERTY:3,BOOLEAN_ATTRIBUTE:4,EVENT:5,ELEMENT:6},e
  * Copyright 2018 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
  */const ee="important",ie=" !"+ee,se=e(class extends i$1{constructor(e){if(super(e),e.type!==t.ATTRIBUTE||"style"!==e.name||e.strings?.length>2)throw Error("The `styleMap` directive must be used in the `style` attribute and must be the only part in the attribute.")}render(t){return Object.keys(t).reduce(((e,r)=>{const s=t[r];return null==s?e:e+`${r=r.includes("-")?r:r.replace(/(?:^(webkit|moz|ms|o)|)(?=[A-Z])/g,"-$&").toLowerCase()}:${s};`}),"")}update(t,[e]){const{style:r}=t.element;if(void 0===this.ft)return this.ft=new Set(Object.keys(e)),this.render(e);for(const t of this.ft)null==e[t]&&(this.ft.delete(t),t.includes("-")?r.removeProperty(t):r[t]=null);for(const t in e){const s=e[t];if(null!=s){this.ft.add(t);const e="string"==typeof s&&s.endsWith(ie);t.includes("-")||e?r.setProperty(t,e?s.slice(0,-11):s,e?ee:""):r[t]=s;}}return R}});
-
-function getDeviceOrientation() {
-    return window.screen.orientation.type.startsWith("portrait") ? "portrait" : "landscape";
-}
-function getDeviceType() {
-    const { width, height } = window.screen;
-    const orientation = window.screen.orientation.type.startsWith("portrait") ? "portrait" : "landscape";
-    if ((orientation === "portrait" && width < 600 && width != 534) ||
-        (orientation === "landscape" && height < 600 && height != 534)) {
-        return "phone";
-    }
-    else {
-        return "tablet";
-    }
-}
-let deviceType = getDeviceType();
 
 function navigateToArea(area) {
     if (!area)
@@ -14625,12 +14625,16 @@ window.customCards = window.customCards ?? [];
 // Idle timer logic
 let idleTimer;
 function startIdleTimer() {
-    idleTimer = window.setTimeout(() => {
-        const screenSaver = document.createElement("smartqasa-screen-saver");
-        document.body.appendChild(screenSaver);
-    }, 30000); // Show screen saver after 30 seconds of inactivity
+    if (deviceType === "tablet") {
+        idleTimer = window.setTimeout(() => {
+            const screenSaver = document.createElement("smartqasa-screen-saver");
+            document.body.appendChild(screenSaver);
+        }, 30000); // Show screen saver after 30 seconds of inactivity
+    }
 }
 function resetIdleTimer() {
+    if (deviceType !== "tablet")
+        return;
     clearTimeout(idleTimer);
     const existingScreenSaver = document.querySelector("smartqasa-screen-saver");
     if (existingScreenSaver) {
