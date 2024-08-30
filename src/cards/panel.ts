@@ -443,7 +443,6 @@ export class PanelCard extends LitElement {
     }
 
     private _handleEntertain(): void {
-        console.log("Panel", this._config?.audio_player);
         entertainDialog(this._config, this.hass);
     }
 
