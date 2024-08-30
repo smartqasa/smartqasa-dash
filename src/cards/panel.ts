@@ -154,7 +154,14 @@ export class PanelCard extends LitElement {
 
     private _getDeviceType(): string {
         const { width, height } = window.screen;
-        return (this.deviceOrientation === "portrait" ? width : height) < 500 ? "phone" : "tablet";
+        if (
+            (this.deviceOrientation === "portrait" && width < 600 && width != 534) ||
+            (this.deviceOrientation === "landscape" && height < 600 && height != 534)
+        ) {
+            return "phone";
+        } else {
+            return "tablet";
+        }
     }
 
     private _renderHeader() {

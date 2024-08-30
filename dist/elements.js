@@ -9135,7 +9135,7 @@ const panelStyles = i$3 `
     }
 
     /* Phone Portrait */
-    @media (max-width: 500px) and (orientation: portrait) {
+    @media (orientation: portrait) and (max-width: 600px) and (width: not(534px)) {
         .container {
             grid-template-columns: 100%;
             grid-template-rows: auto minmax(0, 1fr) auto;
@@ -9193,7 +9193,7 @@ const panelStyles = i$3 `
     }
 
     /* Phone Landscape */
-    @media (max-height: 500px) and (orientation: landscape) {
+    @media (orientation: landscape) and (max-height: 600px) and (height: not(534px)) {
         .container {
             grid-template-columns: 1fr 1fr;
             grid-template-rows: 100%;
@@ -9390,7 +9390,13 @@ let PanelCard = class PanelCard extends h {
     }
     _getDeviceType() {
         const { width, height } = window.screen;
-        return (this.deviceOrientation === "portrait" ? width : height) < 500 ? "phone" : "tablet";
+        if ((this.deviceOrientation === "portrait" && width < 600 && width != 534) ||
+            (this.deviceOrientation === "landscape" && height < 600 && height != 534)) {
+            return "phone";
+        }
+        else {
+            return "tablet";
+        }
     }
     _renderHeader() {
         let time = this.hass?.states["sensor.current_time"]?.state || "Loading...";
