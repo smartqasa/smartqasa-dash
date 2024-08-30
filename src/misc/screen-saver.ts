@@ -26,21 +26,21 @@ export class ScreenSaver extends LitElement {
                 position: absolute;
                 animation: fade-in-out 5s ease-in-out infinite;
             }
-            .time {
-                font-size: 3.2rem;
-                font-weight: 400;
-                color: rgb(255, 255, 255);
+            .time,
+            .date {
                 text-align: left;
                 line-height: normal;
                 white-space: nowrap;
             }
+            .time {
+                font-size: var(--sq-title-font-size, 3.2rem);
+                font-weight: var(--sq-title-font-weight, 400);
+                color: rgb(var(--sq-title-font-rgb, 128, 128, 128));
+            }
             .date {
-                font-size: 1.5rem;
-                font-weight: 300;
-                color: rgb(255, 255, 255);
-                text-align: left;
-                line-height: normal;
-                white-space: nowrap;
+                font-size: var(--sq-primary-font-size, 1.5rem);
+                font-weight: var(--sq-primary-font-weight, 300);
+                color: rgb(var(--sq-secondary-font-rgb, 128, 128, 128));
             }
             @keyframes fade-in-out {
                 0% {
@@ -90,9 +90,13 @@ export class ScreenSaver extends LitElement {
 
     private _updateTimeAndDate(): void {
         const now = new Date();
-        this._time = now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-        this._date = now.toLocaleDateString();
-        console.log("Updated time and date", this._time, this._date);
+
+        const hours = now.getHours();
+        const minutes = now.getMinutes();
+        this._time = `${hours % 12 || 12}:${minutes < 10 ? "0" + minutes : minutes}`;
+
+        const options: Intl.DateTimeFormatOptions = { weekday: "long", month: "short", day: "numeric" };
+        this._date = now.toLocaleDateString(undefined, options);
     }
 
     private _startTimer(): void {
