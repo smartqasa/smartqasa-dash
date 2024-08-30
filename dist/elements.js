@@ -11654,21 +11654,21 @@ let ScreenSaver = class ScreenSaver extends h {
                 position: absolute;
                 animation: fade-in-out 5s ease-in-out infinite;
             }
-            .time {
-                font-size: 3.2rem;
-                font-weight: 400;
-                color: rgb(255, 255, 255);
+            .time,
+            .date {
                 text-align: left;
                 line-height: normal;
                 white-space: nowrap;
             }
+            .time {
+                font-size: 3.6rem;
+                font-weight: 400;
+                color: rgb(180, 180, 180);
+            }
             .date {
-                font-size: 1.5rem;
+                font-size: 1.8rem;
                 font-weight: 300;
                 color: rgb(255, 255, 255);
-                text-align: left;
-                line-height: normal;
-                white-space: nowrap;
             }
             @keyframes fade-in-out {
                 0% {
@@ -14632,7 +14632,7 @@ function startIdleTimer() {
         idleTimer = window.setTimeout(() => {
             const screenSaver = document.createElement("smartqasa-screen-saver");
             document.body.appendChild(screenSaver);
-        }, 30000); // Show screen saver after 30 seconds of inactivity
+        }, 300000); // Show screen saver after 30 seconds of inactivity
     }
 }
 function resetIdleTimer() {

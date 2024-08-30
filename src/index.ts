@@ -93,7 +93,7 @@ function startIdleTimer() {
         idleTimer = window.setTimeout(() => {
             const screenSaver = document.createElement("smartqasa-screen-saver");
             document.body.appendChild(screenSaver);
-        }, 30000); // Show screen saver after 30 seconds of inactivity
+        }, 300000); // Show screen saver after 30 seconds of inactivity
     }
 }
 
