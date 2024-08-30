@@ -190,8 +190,8 @@ function navigateToArea(area) {
     const url = new URL(location.href);
     const pathSegments = url.pathname.split("/");
     pathSegments.pop();
-    //pathSegments.push(area.replace(/_/g, "-"));
     url.pathname = pathSegments.join("/");
+    console.log("Path:", url.toString());
     window.history.pushState(null, "", url.toString());
     window.dispatchEvent(new CustomEvent("location-changed"));
     window.smartqasa.viewMode = "area";
@@ -9135,7 +9135,7 @@ const panelStyles = i$3 `
     }
 
     /* Phone Portrait */
-    @media (orientation: portrait) and (max-width: 600px) and (width: not(534px)) {
+    @media (orientation: portrait) and (max-width: 600px) {
         .container {
             grid-template-columns: 100%;
             grid-template-rows: auto minmax(0, 1fr) auto;
@@ -9414,14 +9414,14 @@ let PanelCard = class PanelCard extends h {
         `;
     }
     _renderArea() {
-        this._config?.name ?? this._areaObj?.name ?? "Area";
+        const name = this._config?.name ?? this._areaObj?.name ?? "Area";
         const picture = this._config?.picture
             ? `/local/smartqasa/images/${this._config.picture}`
             : this._areaObj?.picture ?? img$24;
         const isPhoneLandscape = this.deviceType === "phone" && this.deviceOrientation === "landscape";
         return ke `
             <div class="area-container">
-                <div class="area-name ${this.deviceType === "phone" ? "overlay" : ""}">${window.screen.height}</div>
+                <div class="area-name ${this.deviceType === "phone" ? "overlay" : ""}">${name}</div>
                 <img class="area-image" alt="Area picture..." src=${picture} />
                 ${this._areaChips.length > 0
             ? ke `

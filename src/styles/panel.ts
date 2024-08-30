@@ -158,7 +158,7 @@ export const panelStyles = css`
     }
 
     /* Phone Portrait */
-    @media (orientation: portrait) and (max-width: 600px) and (width: not(534px)) {
+    @media (orientation: portrait) and (max-width: 600px) {
         .container {
             grid-template-columns: 100%;
             grid-template-rows: auto minmax(0, 1fr) auto;
