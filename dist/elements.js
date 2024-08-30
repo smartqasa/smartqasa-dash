@@ -11633,6 +11633,7 @@ let ScreenSaver = class ScreenSaver extends h {
         this._visible = true;
         this._time = "Loading...";
         this._date = "Loading...";
+        this._resetTimerBound = this._resetTimer.bind(this);
     }
     static get styles() {
         return i$3 `
@@ -11683,19 +11684,49 @@ let ScreenSaver = class ScreenSaver extends h {
             }
         `;
     }
+    render() {
+        if (!this._visible)
+            return ke ``;
+        return ke `
+            <div class="time-date-container">
+                <div class="time">${this._time}</div>
+                <div class="date">${this._date}</div>
+            </div>
+        `;
+    }
     firstUpdated() {
-        this._updateTimeAndDate();
         this._moveTimeDate();
         window.addEventListener("mousemove", this._resetTimer.bind(this));
         window.addEventListener("keypress", this._resetTimer.bind(this));
         this._startTimer();
     }
-    _updateTimeAndDate() {
-        if (this.hass) {
+    updated(changedProps) {
+        super.updated(changedProps);
+        if (changedProps.has("hass") && this.hass) {
             this._time = this.hass.states["sensor.current_time"]?.state || "Loading...";
             this._date = this.hass.states["sensor.current_date"]?.state || "Loading...";
         }
-        setTimeout(() => this._updateTimeAndDate(), 60000); // Update every minute
+    }
+    disconnectedCallback() {
+        window.removeEventListener("mousemove", this._resetTimerBound);
+        window.removeEventListener("keypress", this._resetTimerBound);
+        super.disconnectedCallback();
+    }
+    _startTimer() {
+        this._visible = true;
+        this._hideScreenSaverAfterTimeout();
+    }
+    _resetTimer() {
+        this._visible = true;
+        this.requestUpdate();
+        clearTimeout(this._hideScreenSaverAfterTimeout);
+        this._hideScreenSaverAfterTimeout();
+    }
+    _hideScreenSaverAfterTimeout() {
+        setTimeout(() => {
+            this._visible = false;
+            this.requestUpdate();
+        }, 30000);
     }
     _moveTimeDate() {
         const container = this.shadowRoot?.querySelector(".time-date-container");
@@ -11709,33 +11740,7 @@ let ScreenSaver = class ScreenSaver extends h {
         }
         setTimeout(() => {
             this._moveTimeDate();
-        }, 5000); // Change position every 5 seconds
-    }
-    _startTimer() {
-        this._visible = true;
-        this._hideScreenSaverAfterTimeout();
-    }
-    _hideScreenSaverAfterTimeout() {
-        setTimeout(() => {
-            this._visible = false;
-            this.requestUpdate();
-        }, 30000); // Show screen saver after 30 seconds of inactivity
-    }
-    _resetTimer() {
-        this._visible = true;
-        this.requestUpdate();
-        clearTimeout(this._hideScreenSaverAfterTimeout);
-        this._hideScreenSaverAfterTimeout();
-    }
-    render() {
-        if (!this._visible)
-            return ke ``;
-        return ke `
-            <div class="time-date-container">
-                <div class="time">${this._time}</div>
-                <div class="date">${this._date}</div>
-            </div>
-        `;
+        }, 5000);
     }
 };
 __decorate([
