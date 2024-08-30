@@ -48,6 +48,7 @@ export class PanelCard extends LitElement {
     @state() private _isAdmin = false;
     @state() private _deviceOrientation: string = getDeviceOrientation();
     @state() private _deviceType: string = getDeviceType();
+    private _boundHandleDeviceChanges = this._handleDeviceChanges.bind(this);
     private _swiper?: Swiper;
     private _resetTimer?: ReturnType<typeof setTimeout>;
     private _area?: string;
@@ -67,6 +68,9 @@ export class PanelCard extends LitElement {
 
     protected render(): TemplateResult {
         if (this._loading) return html`<div>Loading...</div>`;
+
+        console.log("Orientation", this._deviceOrientation);
+        console.log("Type", this._deviceType);
 
         const containerStyle = {
             height: this._isAdmin ? "calc(100vh - 56px)" : "100vh",
@@ -90,7 +94,7 @@ export class PanelCard extends LitElement {
         if (this._deviceType === "tablet") this._initializeSwiper();
 
         ["orientationchange", "resize"].forEach((event) =>
-            window.addEventListener(event, this._handleDeviceChanges.bind(this))
+            window.addEventListener(event, this._boundHandleDeviceChanges)
         );
 
         this._startResetTimer();
@@ -141,7 +145,7 @@ export class PanelCard extends LitElement {
     disconnectedCallback() {
         super.disconnectedCallback();
         ["orientationchange", "resize"].forEach((event) =>
-            window.removeEventListener(event, this._handleDeviceChanges.bind(this))
+            window.removeEventListener(event, this._boundHandleDeviceChanges)
         );
     }
 

@@ -9278,6 +9278,7 @@ let PanelCard = class PanelCard extends h {
         this._isAdmin = false;
         this._deviceOrientation = getDeviceOrientation();
         this._deviceType = getDeviceType();
+        this._boundHandleDeviceChanges = this._handleDeviceChanges.bind(this);
         this._headerChips = [];
         this._areaChips = [];
         this._bodyTiles = [];
@@ -9292,6 +9293,8 @@ let PanelCard = class PanelCard extends h {
     render() {
         if (this._loading)
             return ke `<div>Loading...</div>`;
+        console.log("Orientation", this._deviceOrientation);
+        console.log("Type", this._deviceType);
         const containerStyle = {
             height: this._isAdmin ? "calc(100vh - 56px)" : "100vh",
         };
@@ -9308,7 +9311,7 @@ let PanelCard = class PanelCard extends h {
         await this._loadContent();
         if (this._deviceType === "tablet")
             this._initializeSwiper();
-        ["orientationchange", "resize"].forEach((event) => window.addEventListener(event, this._handleDeviceChanges.bind(this)));
+        ["orientationchange", "resize"].forEach((event) => window.addEventListener(event, this._boundHandleDeviceChanges));
         this._startResetTimer();
         this._loading = false;
     }
@@ -9349,7 +9352,7 @@ let PanelCard = class PanelCard extends h {
     }
     disconnectedCallback() {
         super.disconnectedCallback();
-        ["orientationchange", "resize"].forEach((event) => window.removeEventListener(event, this._handleDeviceChanges.bind(this)));
+        ["orientationchange", "resize"].forEach((event) => window.removeEventListener(event, this._boundHandleDeviceChanges));
     }
     _handleDeviceChanges() {
         this._deviceOrientation = getDeviceOrientation();
