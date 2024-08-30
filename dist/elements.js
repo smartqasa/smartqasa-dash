@@ -9415,7 +9415,7 @@ let PanelCard = class PanelCard extends h {
         const isPhoneLandscape = this.deviceType === "phone" && this.deviceOrientation === "landscape";
         return ke `
             <div class="area-container">
-                <div class="area-name ${this.deviceType === "phone" ? "overlay" : ""}">${window.screen.width}</div>
+                <div class="area-name ${this.deviceType === "phone" ? "overlay" : ""}">${window.screen.height}</div>
                 <img class="area-image" alt="Area picture..." src=${picture} />
                 ${this._areaChips.length > 0
             ? ke `
