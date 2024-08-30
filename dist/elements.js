@@ -11686,24 +11686,13 @@ let ScreenSaver = class ScreenSaver extends h {
             }
         `;
     }
-    shouldUpdate(changedProps) {
-        if (changedProps.has("hass") && this.hass) {
-            console.log("Screen saver hass updated");
-            const newTime = this.hass.states["sensor.current_time"]?.state;
-            const newDate = this.hass.states["sensor.current_date"]?.state;
-            if (this._time !== newTime || this._date !== newDate) {
-                this._time = newTime || "Loading...";
-                this._date = newDate || "Loading...";
-                return true;
-            }
-        }
-        return false;
-    }
     firstUpdated() {
+        this._updateTimeAndDate(); // Update time and date immediately
         this._moveTimeDate();
         window.addEventListener("mousemove", this._resetTimerBound);
         window.addEventListener("keypress", this._resetTimerBound);
         this._startTimer();
+        setInterval(() => this._updateTimeAndDate(), 60000); // Update time and date every minute
     }
     disconnectedCallback() {
         window.removeEventListener("mousemove", this._resetTimerBound);
@@ -11711,13 +11700,23 @@ let ScreenSaver = class ScreenSaver extends h {
         super.disconnectedCallback();
     }
     render() {
-        console.log("Rendering basic HTML");
+        if (!this._visible) {
+            console.log("Screen saver not visible");
+            return D;
+        }
+        console.log("Render called with time and date", this._time, this._date);
         return ke `
             <div class="time-date-container">
-                <div class="time">Test Time</div>
-                <div class="date">Test Date</div>
+                <div class="time">${this._time}</div>
+                <div class="date">${this._date}</div>
             </div>
         `;
+    }
+    _updateTimeAndDate() {
+        const now = new Date();
+        this._time = now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+        this._date = now.toLocaleDateString();
+        console.log("Updated time and date", this._time, this._date);
     }
     _startTimer() {
         this._visible = true;
@@ -11750,9 +11749,6 @@ let ScreenSaver = class ScreenSaver extends h {
         }, 5000);
     }
 };
-__decorate([
-    n({ attribute: false })
-], ScreenSaver.prototype, "hass", void 0);
 __decorate([
     r()
 ], ScreenSaver.prototype, "_visible", void 0);

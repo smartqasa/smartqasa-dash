@@ -1,10 +1,8 @@
-import { css, CSSResultGroup, html, LitElement, nothing, PropertyValues, TemplateResult } from "lit";
-import { customElement, property, state } from "lit/decorators.js";
-import { HomeAssistant } from "../types";
+import { css, CSSResultGroup, html, LitElement, nothing, TemplateResult } from "lit";
+import { customElement, state } from "lit/decorators.js";
 
 @customElement("smartqasa-screen-saver")
 export class ScreenSaver extends LitElement {
-    @property({ attribute: false }) public hass?: HomeAssistant;
     @state() private _visible: boolean = true;
     @state() private _time: string = "Loading...";
     @state() private _date: string = "Loading...";
@@ -61,26 +59,13 @@ export class ScreenSaver extends LitElement {
         `;
     }
 
-    protected shouldUpdate(changedProps: PropertyValues): boolean {
-        if (changedProps.has("hass") && this.hass) {
-            console.log("Screen saver hass updated");
-            const newTime = this.hass.states["sensor.current_time"]?.state;
-            const newDate = this.hass.states["sensor.current_date"]?.state;
-
-            if (this._time !== newTime || this._date !== newDate) {
-                this._time = newTime || "Loading...";
-                this._date = newDate || "Loading...";
-                return true;
-            }
-        }
-        return false;
-    }
-
     protected firstUpdated(): void {
+        this._updateTimeAndDate(); // Update time and date immediately
         this._moveTimeDate();
         window.addEventListener("mousemove", this._resetTimerBound);
         window.addEventListener("keypress", this._resetTimerBound);
         this._startTimer();
+        setInterval(() => this._updateTimeAndDate(), 60000); // Update time and date every minute
     }
 
     public disconnectedCallback(): void {
@@ -89,14 +74,25 @@ export class ScreenSaver extends LitElement {
         super.disconnectedCallback();
     }
 
-    protected render(): TemplateResult {
-        console.log("Rendering basic HTML");
+    protected render(): TemplateResult | typeof nothing {
+        if (!this._visible) {
+            console.log("Screen saver not visible");
+            return nothing;
+        }
+        console.log("Render called with time and date", this._time, this._date);
         return html`
             <div class="time-date-container">
-                <div class="time">Test Time</div>
-                <div class="date">Test Date</div>
+                <div class="time">${this._time}</div>
+                <div class="date">${this._date}</div>
             </div>
         `;
+    }
+
+    private _updateTimeAndDate(): void {
+        const now = new Date();
+        this._time = now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+        this._date = now.toLocaleDateString();
+        console.log("Updated time and date", this._time, this._date);
     }
 
     private _startTimer(): void {
