@@ -12,7 +12,7 @@ import { loadYamlAsJson } from "../utils/load-yaml-as-json";
 import { areasDialog } from "../misc/areas-dialog";
 import { entertainDialog } from "../misc/entertain-dialog";
 import { menuConfig } from "../misc/menu-config";
-import { panelStyles } from "../styles/panel";
+import panelStyles from "../styles/panel.css";
 import swiperStyles from "swiper/swiper-bundle.css";
 import defaultImage from "../assets/images/default.png";
 
@@ -58,7 +58,7 @@ export class PanelCard extends LitElement {
     private _bodyTiles: LovelaceCard[][] = [];
     private _bodyColumns: number[] = [];
 
-    static styles: CSSResultGroup = [unsafeCSS(swiperStyles), panelStyles];
+    static styles: CSSResultGroup = [unsafeCSS(swiperStyles), unsafeCSS(panelStyles)];
 
     public async setConfig(config: Config) {
         this._config = { ...config };
