@@ -4,7 +4,7 @@ import { HomeAssistant, LovelaceCardConfig } from "../types";
 import { areasDialog } from "./areas-dialog";
 import { entertainDialog } from "./entertain-dialog";
 import { menuConfig } from "./menu-config";
-import { deviceType } from "../const";
+import { deviceType } from "../utils/device-info";
 
 interface Config extends LovelaceCardConfig {
     audio_player: string;

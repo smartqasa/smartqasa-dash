@@ -1,5 +1,5 @@
 import { loadYamlAsJson } from "../utils/load-yaml-as-json";
-import { deviceType } from "../const";
+import { deviceType } from "../utils/device-info";
 
 export async function entertainDialog(config: any, hass: any): Promise<void> {
     if (!config || !hass) return;

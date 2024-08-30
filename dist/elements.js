@@ -198,7 +198,7 @@ function getDeviceType() {
         return "tablet";
     }
 }
-let deviceType$1 = getDeviceType();
+let deviceType = getDeviceType();
 
 function navigateToArea(area) {
     if (!area)
@@ -8623,7 +8623,7 @@ const listDialogStyle = {
 const gridDialogStyle = {
     margin: 0,
     card_margin: 0,
-    "grid-template-columns": deviceType$1 === "phone" ? "repeat(2, 1fr)" : "repeat(3, var(--sq-tile-width-tablet, 20rem))",
+    "grid-template-columns": deviceType === "phone" ? "repeat(2, 1fr)" : "repeat(3, var(--sq-tile-width-tablet, 20rem))",
     "grid-gap": "var(--sq-dialog-grid-gap)",
 };
 
@@ -8647,53 +8647,6 @@ function areasDialog(hass) {
     };
     window.browser_mod?.service("popup", dialogConfig);
 }
-
-const deviceOrientation = window.screen.orientation.type.startsWith("portrait") ? "portrait" : "landscape";
-const deviceType = (() => {
-    const { width, height } = window.screen;
-    if ((deviceOrientation === "portrait" && width < 600) || (deviceOrientation === "landscape" && height < 600)) {
-        return "phone";
-    }
-    return "tablet";
-})();
-const heaterColors = {
-    electric: "var(--sq-climate-heat-rgb, 250, 67, 54)",
-    heating: "var(--sq-climate-heat-rgb, 250, 67, 54)",
-    idle: "var(--sq-idle-rgb, 128, 128, 128)",
-    off: "var(--sq-inactive-rgb, 128, 128, 128)",
-    default: "var(--sq-unavailable-rgb, 255, 0, 255)",
-};
-const modeIcons = {
-    Home: "hass:home-account",
-    Away: "hass:map-marker-radius",
-    Guest: "hass:account-multiple",
-    Entertain: "hass:glass-cocktail",
-    Vacation: "hass:airplane",
-    default: "hass:help-rhombus",
-};
-const phaseIcons = {
-    Morning: "hass:weather-sunset-up",
-    Day: "hass:white-balance-sunny",
-    Evening: "hass:weather-night",
-    Night: "hass:sleep",
-    default: "hass:help-rhombus",
-};
-const thermostatColors = {
-    cooling: "var(--sq-climate-cool-rgb, 3, 169, 244)",
-    heating: "var(--sq-climate-heat-rgb, 250, 67, 54)",
-    fan_only: "var(--sq-climate-fan_only-rgb, 0, 255, 0)",
-    idle: "var(--sq-idle-rgb, 128, 128, 128)",
-    off: "var(--sq-inactive-rgb, 128, 128, 128)",
-    default: "var(--sq-unavailable-rgb, 255, 0, 255)",
-};
-const thermostatIcons = {
-    auto: "hass:thermostat-auto",
-    cool: "hass:snowflake",
-    heat: "hass:fire",
-    heat_cool: "hass:sun-snowflake-variant",
-    off: "hass:power",
-    default: "hass:thermostat-cog",
-};
 
 async function entertainDialog(config, hass) {
     if (!config || !hass)
@@ -8830,15 +8783,15 @@ async function entertainDialog(config, hass) {
 async function menuConfig(menu_tab) {
     function createAttributes(icon, label) {
         return {
-            icon: deviceType$1 === "phone" ? icon : null,
-            label: deviceType$1 === "tablet" ? label : null,
+            icon: deviceType === "phone" ? icon : null,
+            label: deviceType === "tablet" ? label : null,
         };
     }
     const layout = {
         margin: 0,
         card_margin: 0,
         padding: "1rem 0 0 0",
-        "grid-template-columns": deviceType$1 === "phone" ? "repeat(2, 1fr)" : "repeat(3, var(--sq-tile-width-tablet, 20rem))",
+        "grid-template-columns": deviceType === "phone" ? "repeat(2, 1fr)" : "repeat(3, var(--sq-tile-width-tablet, 20rem))",
         "grid-gap": "var(--sq-dialog-grid-gap)",
     };
     const favoMenuTiles = await loadYamlAsJson("/local/smartqasa/menus/favorites.yaml");
@@ -11340,6 +11293,45 @@ function selectOptionDialog(config, stateObj) {
     };
     window.browser_mod?.service("popup", dialogConfig);
 }
+
+const heaterColors = {
+    electric: "var(--sq-climate-heat-rgb, 250, 67, 54)",
+    heating: "var(--sq-climate-heat-rgb, 250, 67, 54)",
+    idle: "var(--sq-idle-rgb, 128, 128, 128)",
+    off: "var(--sq-inactive-rgb, 128, 128, 128)",
+    default: "var(--sq-unavailable-rgb, 255, 0, 255)",
+};
+const modeIcons = {
+    Home: "hass:home-account",
+    Away: "hass:map-marker-radius",
+    Guest: "hass:account-multiple",
+    Entertain: "hass:glass-cocktail",
+    Vacation: "hass:airplane",
+    default: "hass:help-rhombus",
+};
+const phaseIcons = {
+    Morning: "hass:weather-sunset-up",
+    Day: "hass:white-balance-sunny",
+    Evening: "hass:weather-night",
+    Night: "hass:sleep",
+    default: "hass:help-rhombus",
+};
+const thermostatColors = {
+    cooling: "var(--sq-climate-cool-rgb, 3, 169, 244)",
+    heating: "var(--sq-climate-heat-rgb, 250, 67, 54)",
+    fan_only: "var(--sq-climate-fan_only-rgb, 0, 255, 0)",
+    idle: "var(--sq-idle-rgb, 128, 128, 128)",
+    off: "var(--sq-inactive-rgb, 128, 128, 128)",
+    default: "var(--sq-unavailable-rgb, 255, 0, 255)",
+};
+const thermostatIcons = {
+    auto: "hass:thermostat-auto",
+    cool: "hass:snowflake",
+    heat: "hass:fire",
+    heat_cool: "hass:sun-snowflake-variant",
+    off: "hass:power",
+    default: "hass:thermostat-cog",
+};
 
 window.customCards.push({
     type: "smartqasa-select-chip",

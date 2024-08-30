@@ -1,7 +1,7 @@
 import { css, CSSResultGroup, html, LitElement, PropertyValues, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { HassArea, HomeAssistant, LovelaceCardConfig } from "../types";
-import { deviceType } from "../const";
+import { deviceType } from "../utils/device-info";
 import defaultImage from "../assets/images/default.png";
 
 interface Config extends LovelaceCardConfig {

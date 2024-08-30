@@ -1,13 +1,3 @@
-export const deviceOrientation = window.screen.orientation.type.startsWith("portrait") ? "portrait" : "landscape";
-
-export const deviceType = (() => {
-    const { width, height } = window.screen;
-    if ((deviceOrientation === "portrait" && width < 600) || (deviceOrientation === "landscape" && height < 600)) {
-        return "phone";
-    }
-    return "tablet";
-})();
-
 export const heaterColors: Record<string, string> = {
     electric: "var(--sq-climate-heat-rgb, 250, 67, 54)",
     heating: "var(--sq-climate-heat-rgb, 250, 67, 54)",
