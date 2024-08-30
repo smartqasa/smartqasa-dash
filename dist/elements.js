@@ -9135,7 +9135,7 @@ const panelStyles = i$3 `
     }
 
     /* Phone Portrait */
-    @media (max-width: 600px) and (orientation: portrait) {
+    @media (max-width: 500px) and (orientation: portrait) {
         .container {
             grid-template-columns: 100%;
             grid-template-rows: auto minmax(0, 1fr) auto;
@@ -9193,7 +9193,7 @@ const panelStyles = i$3 `
     }
 
     /* Phone Landscape */
-    @media (max-height: 600px) and (orientation: landscape) {
+    @media (max-height: 500px) and (orientation: landscape) {
         .container {
             grid-template-columns: 1fr 1fr;
             grid-template-rows: 100%;
@@ -9390,7 +9390,7 @@ let PanelCard = class PanelCard extends h {
     }
     _getDeviceType() {
         const { width, height } = window.screen;
-        return (this.deviceOrientation === "portrait" ? width : height) < 600 ? "phone" : "tablet";
+        return (this.deviceOrientation === "portrait" ? width : height) < 500 ? "phone" : "tablet";
     }
     _renderHeader() {
         let time = this.hass?.states["sensor.current_time"]?.state || "Loading...";
@@ -9415,9 +9415,7 @@ let PanelCard = class PanelCard extends h {
         const isPhoneLandscape = this.deviceType === "phone" && this.deviceOrientation === "landscape";
         return ke `
             <div class="area-container">
-                <div class="area-name ${this.deviceType === "phone" ? "overlay" : ""}">
-                    ${this.deviceType} ${this.deviceOrientation}
-                </div>
+                <div class="area-name ${this.deviceType === "phone" ? "overlay" : ""}">${window.screen.width}</div>
                 <img class="area-image" alt="Area picture..." src=${picture} />
                 ${this._areaChips.length > 0
             ? ke `

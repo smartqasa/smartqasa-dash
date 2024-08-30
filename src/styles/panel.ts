@@ -158,7 +158,7 @@ export const panelStyles = css`
     }
 
     /* Phone Portrait */
-    @media (max-width: 600px) and (orientation: portrait) {
+    @media (max-width: 500px) and (orientation: portrait) {
         .container {
             grid-template-columns: 100%;
             grid-template-rows: auto minmax(0, 1fr) auto;
@@ -216,7 +216,7 @@ export const panelStyles = css`
     }
 
     /* Phone Landscape */
-    @media (max-height: 600px) and (orientation: landscape) {
+    @media (max-height: 500px) and (orientation: landscape) {
         .container {
             grid-template-columns: 1fr 1fr;
             grid-template-rows: 100%;

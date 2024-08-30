@@ -154,7 +154,7 @@ export class PanelCard extends LitElement {
 
     private _getDeviceType(): string {
         const { width, height } = window.screen;
-        return (this.deviceOrientation === "portrait" ? width : height) < 600 ? "phone" : "tablet";
+        return (this.deviceOrientation === "portrait" ? width : height) < 500 ? "phone" : "tablet";
     }
 
     private _renderHeader() {
@@ -184,9 +184,7 @@ export class PanelCard extends LitElement {
 
         return html`
             <div class="area-container">
-                <div class="area-name ${this.deviceType === "phone" ? "overlay" : ""}">
-                    ${this.deviceType} ${this.deviceOrientation}
-                </div>
+                <div class="area-name ${this.deviceType === "phone" ? "overlay" : ""}">${window.screen.width}</div>
                 <img class="area-image" alt="Area picture..." src=${picture} />
                 ${this._areaChips.length > 0
                     ? html`
