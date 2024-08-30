@@ -14627,7 +14627,6 @@ window.customCards = window.customCards ?? [];
 // Idle timer logic
 let idleTimer;
 function startIdleTimer() {
-    console.log("Starting idle timer", deviceType);
     if (deviceType === "tablet") {
         idleTimer = window.setTimeout(() => {
             const screenSaver = document.createElement("smartqasa-screen-saver");

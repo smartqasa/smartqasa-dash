@@ -88,7 +88,6 @@ import "./utils/popup-confirmation";
 let idleTimer: number;
 
 function startIdleTimer() {
-    console.log("Starting idle timer", deviceType);
     if (deviceType === "tablet") {
         idleTimer = window.setTimeout(() => {
             const screenSaver = document.createElement("smartqasa-screen-saver");
