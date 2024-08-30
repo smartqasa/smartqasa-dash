@@ -184,7 +184,7 @@ const t={ATTRIBUTE:1,CHILD:2,PROPERTY:3,BOOLEAN_ATTRIBUTE:4,EVENT:5,ELEMENT:6},e
  * SPDX-License-Identifier: BSD-3-Clause
  */const ee="important",ie=" !"+ee,se=e(class extends i$1{constructor(e){if(super(e),e.type!==t.ATTRIBUTE||"style"!==e.name||e.strings?.length>2)throw Error("The `styleMap` directive must be used in the `style` attribute and must be the only part in the attribute.")}render(t){return Object.keys(t).reduce(((e,r)=>{const s=t[r];return null==s?e:e+`${r=r.includes("-")?r:r.replace(/(?:^(webkit|moz|ms|o)|)(?=[A-Z])/g,"-$&").toLowerCase()}:${s};`}),"")}update(t,[e]){const{style:r}=t.element;if(void 0===this.ft)return this.ft=new Set(Object.keys(e)),this.render(e);for(const t of this.ft)null==e[t]&&(this.ft.delete(t),t.includes("-")?r.removeProperty(t):r[t]=null);for(const t in e){const s=e[t];if(null!=s){this.ft.add(t);const e="string"==typeof s&&s.endsWith(ie);t.includes("-")||e?r.setProperty(t,e?s.slice(0,-11):s,e?ee:""):r[t]=s;}}return R}});
 
-async function navigateToArea(area) {
+function navigateToArea(area) {
     if (!area)
         return;
     const url = new URL(location.href);
@@ -192,20 +192,9 @@ async function navigateToArea(area) {
     pathSegments.pop();
     pathSegments.push(area);
     url.pathname = pathSegments.join("/");
-    try {
-        const response = await fetch(url.toString(), { method: "HEAD" });
-        if (response.ok) {
-            window.history.pushState(null, "", url.toString());
-            window.dispatchEvent(new CustomEvent("location-changed"));
-            window.smartqasa.viewMode = "area";
-        }
-        else {
-            console.error("URL does not exist:", url.toString());
-        }
-    }
-    catch (error) {
-        console.error("Failed to check URL:", error);
-    }
+    window.history.pushState(null, "", url.toString());
+    window.dispatchEvent(new CustomEvent("location-changed"));
+    window.smartqasa.viewMode = "area";
 }
 
 /**

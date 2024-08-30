@@ -1,4 +1,4 @@
-export async function navigateToArea(area: any) {
+export function navigateToArea(area: any) {
     if (!area) return;
 
     const url = new URL(location.href);
@@ -7,17 +7,8 @@ export async function navigateToArea(area: any) {
     pathSegments.push(area);
     url.pathname = pathSegments.join("/");
 
-    try {
-        const response = await fetch(url.toString(), { method: "HEAD" });
+    window.history.pushState(null, "", url.toString());
+    window.dispatchEvent(new CustomEvent("location-changed"));
 
-        if (response.ok) {
-            window.history.pushState(null, "", url.toString());
-            window.dispatchEvent(new CustomEvent("location-changed"));
-            window.smartqasa.viewMode = "area";
-        } else {
-            console.error("URL does not exist:", url.toString());
-        }
-    } catch (error) {
-        console.error("Failed to check URL:", error);
-    }
+    window.smartqasa.viewMode = "area";
 }
