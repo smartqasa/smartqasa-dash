@@ -61,6 +61,33 @@ export class ScreenSaver extends LitElement {
         `;
     }
 
+    protected shouldUpdate(changedProps: PropertyValues): boolean {
+        if (changedProps.has("hass") && this.hass) {
+            const newTime = this.hass.states["sensor.current_time"]?.state;
+            const newDate = this.hass.states["sensor.current_date"]?.state;
+
+            if (this._time !== newTime || this._date !== newDate) {
+                this._time = newTime || "Loading...";
+                this._date = newDate || "Loading...";
+                return true;
+            }
+        }
+        return false;
+    }
+
+    protected firstUpdated(): void {
+        this._moveTimeDate();
+        window.addEventListener("mousemove", this._resetTimerBound);
+        window.addEventListener("keypress", this._resetTimerBound);
+        this._startTimer();
+    }
+
+    public disconnectedCallback(): void {
+        window.removeEventListener("mousemove", this._resetTimerBound);
+        window.removeEventListener("keypress", this._resetTimerBound);
+        super.disconnectedCallback();
+    }
+
     protected render(): TemplateResult {
         if (!this._visible) return html``;
         return html`
@@ -69,28 +96,6 @@ export class ScreenSaver extends LitElement {
                 <div class="date">${this._date}</div>
             </div>
         `;
-    }
-
-    protected firstUpdated(): void {
-        this._moveTimeDate();
-        window.addEventListener("mousemove", this._resetTimer.bind(this));
-        window.addEventListener("keypress", this._resetTimer.bind(this));
-        this._startTimer();
-    }
-
-    protected updated(changedProps: PropertyValues) {
-        super.updated(changedProps);
-        if (changedProps.has("hass") && this.hass) {
-            console.log("Time: ", this.hass.states["sensor.current_time"]?.state);
-            this._time = this.hass.states["sensor.current_time"]?.state || "Loading...";
-            this._date = this.hass.states["sensor.current_date"]?.state || "Loading...";
-        }
-    }
-
-    public disconnectedCallback(): void {
-        window.removeEventListener("mousemove", this._resetTimerBound);
-        window.removeEventListener("keypress", this._resetTimerBound);
-        super.disconnectedCallback();
     }
 
     private _startTimer(): void {
@@ -111,6 +116,7 @@ export class ScreenSaver extends LitElement {
             this.requestUpdate();
         }, 30000);
     }
+
     private _moveTimeDate(): void {
         const container = this.shadowRoot?.querySelector(".time-date-container") as HTMLElement;
         if (container) {

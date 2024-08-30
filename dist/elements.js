@@ -11686,6 +11686,29 @@ let ScreenSaver = class ScreenSaver extends h {
             }
         `;
     }
+    shouldUpdate(changedProps) {
+        if (changedProps.has("hass") && this.hass) {
+            const newTime = this.hass.states["sensor.current_time"]?.state;
+            const newDate = this.hass.states["sensor.current_date"]?.state;
+            if (this._time !== newTime || this._date !== newDate) {
+                this._time = newTime || "Loading...";
+                this._date = newDate || "Loading...";
+                return true;
+            }
+        }
+        return false;
+    }
+    firstUpdated() {
+        this._moveTimeDate();
+        window.addEventListener("mousemove", this._resetTimerBound);
+        window.addEventListener("keypress", this._resetTimerBound);
+        this._startTimer();
+    }
+    disconnectedCallback() {
+        window.removeEventListener("mousemove", this._resetTimerBound);
+        window.removeEventListener("keypress", this._resetTimerBound);
+        super.disconnectedCallback();
+    }
     render() {
         if (!this._visible)
             return ke ``;
@@ -11695,25 +11718,6 @@ let ScreenSaver = class ScreenSaver extends h {
                 <div class="date">${this._date}</div>
             </div>
         `;
-    }
-    firstUpdated() {
-        this._moveTimeDate();
-        window.addEventListener("mousemove", this._resetTimer.bind(this));
-        window.addEventListener("keypress", this._resetTimer.bind(this));
-        this._startTimer();
-    }
-    updated(changedProps) {
-        super.updated(changedProps);
-        if (changedProps.has("hass") && this.hass) {
-            console.log("Time: ", this.hass.states["sensor.current_time"]?.state);
-            this._time = this.hass.states["sensor.current_time"]?.state || "Loading...";
-            this._date = this.hass.states["sensor.current_date"]?.state || "Loading...";
-        }
-    }
-    disconnectedCallback() {
-        window.removeEventListener("mousemove", this._resetTimerBound);
-        window.removeEventListener("keypress", this._resetTimerBound);
-        super.disconnectedCallback();
     }
     _startTimer() {
         this._visible = true;
