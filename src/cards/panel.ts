@@ -184,7 +184,9 @@ export class PanelCard extends LitElement {
 
         return html`
             <div class="area-container">
-                <div class="area-name ${this.deviceType === "phone" ? "overlay" : ""}">${name}</div>
+                <div class="area-name ${this.deviceType === "phone" ? "overlay" : ""}">
+                    ${this.deviceType} ${this.deviceOrientation}
+                </div>
                 <img class="area-image" alt="Area picture..." src=${picture} />
                 ${this._areaChips.length > 0
                     ? html`

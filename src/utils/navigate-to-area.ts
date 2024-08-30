@@ -4,7 +4,7 @@ export function navigateToArea(area: any) {
     const url = new URL(location.href);
     const pathSegments = url.pathname.split("/");
     pathSegments.pop();
-    pathSegments.push(area.replace(/_/g, "-"));
+    //pathSegments.push(area.replace(/_/g, "-"));
     url.pathname = pathSegments.join("/");
     window.history.pushState(null, "", url.toString());
     window.dispatchEvent(new CustomEvent("location-changed"));

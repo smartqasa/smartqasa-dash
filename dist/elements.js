@@ -190,7 +190,7 @@ function navigateToArea(area) {
     const url = new URL(location.href);
     const pathSegments = url.pathname.split("/");
     pathSegments.pop();
-    pathSegments.push(area.replace(/_/g, "-"));
+    //pathSegments.push(area.replace(/_/g, "-"));
     url.pathname = pathSegments.join("/");
     window.history.pushState(null, "", url.toString());
     window.dispatchEvent(new CustomEvent("location-changed"));
@@ -9408,14 +9408,16 @@ let PanelCard = class PanelCard extends h {
         `;
     }
     _renderArea() {
-        const name = this._config?.name ?? this._areaObj?.name ?? "Area";
+        this._config?.name ?? this._areaObj?.name ?? "Area";
         const picture = this._config?.picture
             ? `/local/smartqasa/images/${this._config.picture}`
             : this._areaObj?.picture ?? img$24;
         const isPhoneLandscape = this.deviceType === "phone" && this.deviceOrientation === "landscape";
         return ke `
             <div class="area-container">
-                <div class="area-name ${this.deviceType === "phone" ? "overlay" : ""}">${name}</div>
+                <div class="area-name ${this.deviceType === "phone" ? "overlay" : ""}">
+                    ${this.deviceType} ${this.deviceOrientation}
+                </div>
                 <img class="area-image" alt="Area picture..." src=${picture} />
                 ${this._areaChips.length > 0
             ? ke `
