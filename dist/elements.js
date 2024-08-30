@@ -11711,13 +11711,11 @@ let ScreenSaver = class ScreenSaver extends h {
         super.disconnectedCallback();
     }
     render() {
-        if (!this._visible)
-            return D;
-        console.log("Screen saver rednered", this._time, this._date);
+        console.log("Rendering basic HTML");
         return ke `
             <div class="time-date-container">
-                <div class="time">${this._time}</div>
-                <div class="date">${this._date}</div>
+                <div class="time">Test Time</div>
+                <div class="date">Test Date</div>
             </div>
         `;
     }

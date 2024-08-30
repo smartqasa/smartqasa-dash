@@ -89,13 +89,12 @@ export class ScreenSaver extends LitElement {
         super.disconnectedCallback();
     }
 
-    protected render(): TemplateResult | typeof nothing {
-        if (!this._visible) return nothing;
-        console.log("Screen saver rednered", this._time, this._date);
+    protected render(): TemplateResult {
+        console.log("Rendering basic HTML");
         return html`
             <div class="time-date-container">
-                <div class="time">${this._time}</div>
-                <div class="date">${this._date}</div>
+                <div class="time">Test Time</div>
+                <div class="date">Test Date</div>
             </div>
         `;
     }
