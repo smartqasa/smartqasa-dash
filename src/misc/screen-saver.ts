@@ -93,7 +93,7 @@ export class ScreenSaver extends LitElement {
 
     protected render(): TemplateResult {
         return html`
-            <div class="overlay" @touchstart="${this._hideScreenSaver}">
+            <div class="overlay" @click="${this._hideScreenSaver}">
                 <div class="container">
                     <div class="time">${this._time}</div>
                     <div class="date">${this._date}</div>
@@ -104,7 +104,6 @@ export class ScreenSaver extends LitElement {
 
     private _hideScreenSaver(event: Event): void {
         event.stopPropagation();
-        event.preventDefault();
         clearTimeout(this._animationTimeout);
 
         this.parentNode?.removeChild(this);
@@ -162,14 +161,9 @@ export class ScreenSaver extends LitElement {
     }
 }
 
-export function initializeScreenSaver(): void {
-    startIdleTimer();
-}
-
 let idleTimer: number;
 
-function startIdleTimer(): void {
-    console.log("Starting idle timer");
+export function startIdleTimer(): void {
     idleTimer = window.setTimeout(() => {
         const screenSaver = document.createElement("smartqasa-screen-saver");
         document.body.appendChild(screenSaver);

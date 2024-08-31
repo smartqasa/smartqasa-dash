@@ -11013,7 +11013,7 @@ function selectOptionDialog(config, stateObj) {
     window.browser_mod?.service("popup", dialogConfig);
 }
 
-const SS_HIDE_EVENTS = ["mousemove", "touchstart", "keypress", "orientationchange", "resize"];
+const SS_HIDE_EVENTS = ["mousemove", "keypress", "orientationchange", "resize"];
 const SS_IDLE_TIMER = 10000; // 10 seconds
 const SS_CYCLE_TIMER = 15000; // 15 seconds
 const heaterColors = {
@@ -14563,7 +14563,7 @@ let ScreenSaver = class ScreenSaver extends h {
     }
     render() {
         return ke `
-            <div class="overlay" @touchstart="${this._hideScreenSaver}">
+            <div class="overlay" @click="${this._hideScreenSaver}">
                 <div class="container">
                     <div class="time">${this._time}</div>
                     <div class="date">${this._date}</div>
@@ -14573,7 +14573,6 @@ let ScreenSaver = class ScreenSaver extends h {
     }
     _hideScreenSaver(event) {
         event.stopPropagation();
-        event.preventDefault();
         clearTimeout(this._animationTimeout);
         this.parentNode?.removeChild(this);
     }
@@ -14628,12 +14627,8 @@ __decorate([
 ScreenSaver = __decorate([
     t$1("smartqasa-screen-saver")
 ], ScreenSaver);
-function initializeScreenSaver() {
-    startIdleTimer();
-}
 let idleTimer;
 function startIdleTimer() {
-    console.log("Starting idle timer");
     idleTimer = window.setTimeout(() => {
         const screenSaver = document.createElement("smartqasa-screen-saver");
         document.body.appendChild(screenSaver);
@@ -14659,6 +14654,6 @@ if (deviceType === "tablet") {
     SS_HIDE_EVENTS.forEach((event) => {
         window.addEventListener(event, resetIdleTimer);
     });
-    initializeScreenSaver();
+    startIdleTimer();
 }
 console.info(`%c SmartQasa ⏏ ${version} `, "background-color: #0000ff; color: #ffffff; font-weight: 700;");

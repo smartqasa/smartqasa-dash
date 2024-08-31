@@ -83,7 +83,7 @@ import "./utils/popup-confirmation";
 
 // Screen Saver
 import { SS_HIDE_EVENTS } from "./const";
-import { initializeScreenSaver, resetIdleTimer } from "./misc/screen-saver";
+import { startIdleTimer, resetIdleTimer } from "./misc/screen-saver";
 import { deviceType } from "./utils/device-info";
 
 if (deviceType === "tablet") {
@@ -91,7 +91,7 @@ if (deviceType === "tablet") {
         window.addEventListener(event, resetIdleTimer);
     });
 
-    initializeScreenSaver();
+    startIdleTimer();
 }
 
 import { version } from "../package.json";
