@@ -1,6 +1,6 @@
 import { css, CSSResultGroup, html, LitElement, nothing, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
-import { HIDE_EVENTS, IDLE_TIMEOUT } from "../const"; // Assuming these are defined in const.ts
+import { SS_HIDE_EVENTS, SS_IDLE_TIMEOUT } from "../const"; // Assuming these are defined in const.ts
 
 @customElement("smartqasa-screen-saver")
 export class ScreenSaver extends LitElement {
@@ -71,7 +71,7 @@ export class ScreenSaver extends LitElement {
     }
 
     private _addEventListeners(): void {
-        HIDE_EVENTS.forEach((event) =>
+        SS_HIDE_EVENTS.forEach((event) =>
             window.addEventListener(event, this._hideScreenSaver.bind(this), { capture: true })
         );
     }
@@ -83,12 +83,12 @@ export class ScreenSaver extends LitElement {
     }
 
     private _removeEventListeners(): void {
-        HIDE_EVENTS.forEach((event) =>
+        SS_HIDE_EVENTS.forEach((event) =>
             window.removeEventListener(event, this._hideScreenSaver.bind(this), { capture: true })
         );
     }
 
-    protected render(): TemplateResult | typeof nothing {
+    protected render(): TemplateResult {
         return html`
             <div class="container" @touchstart="${this._hideScreenSaver}">
                 <div class="time">${this._time}</div>
@@ -118,11 +118,12 @@ export class ScreenSaver extends LitElement {
         if (this._time !== formattedTime || this._date !== formattedDate) {
             this._time = formattedTime;
             this._date = formattedDate;
-            this.requestUpdate();
+            //this.requestUpdate();
         }
     }
 
     private _cycle(): void {
+        console.log("Cycling screen saver");
         this._moveElement();
 
         const container = this.shadowRoot?.querySelector(".container") as HTMLElement;
@@ -130,7 +131,6 @@ export class ScreenSaver extends LitElement {
             container.style.animation = "fade-in 1.5s forwards";
         }
 
-        // Combined waiting and fade-out logic
         this._animationTimeout = window.setTimeout(() => {
             if (container) {
                 container.style.animation = "fade-out 1.5s forwards";
@@ -152,17 +152,24 @@ export class ScreenSaver extends LitElement {
             container.style.left = `${randomX}px`;
             container.style.top = `${randomY}px`;
 
+            console.log("Moving screen saver to", randomX, randomY);
             this._updateElement();
         }
-    }
-
-    public showScreenSaver(): void {
-        this._cycle();
     }
 }
 
 export function initializeScreenSaver(): void {
     startIdleTimer();
+}
+
+let idleTimer: number;
+
+function startIdleTimer(): void {
+    console.log("Starting idle timer");
+    idleTimer = window.setTimeout(() => {
+        const screenSaver = document.createElement("smartqasa-screen-saver");
+        document.body.appendChild(screenSaver);
+    }, SS_IDLE_TIMEOUT);
 }
 
 export function resetIdleTimer(): void {
@@ -172,13 +179,4 @@ export function resetIdleTimer(): void {
         existingScreenSaver.remove();
     }
     startIdleTimer();
-}
-
-let idleTimer: number;
-
-function startIdleTimer(): void {
-    idleTimer = window.setTimeout(() => {
-        const screenSaver = document.createElement("smartqasa-screen-saver");
-        document.body.appendChild(screenSaver);
-    }, IDLE_TIMEOUT);
 }

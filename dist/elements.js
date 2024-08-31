@@ -11013,8 +11013,8 @@ function selectOptionDialog(config, stateObj) {
     window.browser_mod?.service("popup", dialogConfig);
 }
 
-const HIDE_EVENTS = ["mousemove", "touchstart", "keypress", "orientationchange", "resize"];
-const IDLE_TIMEOUT = 10000; // 10 seconds
+const SS_HIDE_EVENTS = ["mousemove", "touchstart", "keypress", "orientationchange", "resize"];
+const SS_IDLE_TIMEOUT = 10000; // 10 seconds
 const heaterColors = {
     electric: "var(--sq-climate-heat-rgb, 250, 67, 54)",
     heating: "var(--sq-climate-heat-rgb, 250, 67, 54)",
@@ -14547,7 +14547,7 @@ let ScreenSaver = class ScreenSaver extends h {
         this._addEventListeners();
     }
     _addEventListeners() {
-        HIDE_EVENTS.forEach((event) => window.addEventListener(event, this._hideScreenSaver.bind(this), { capture: true }));
+        SS_HIDE_EVENTS.forEach((event) => window.addEventListener(event, this._hideScreenSaver.bind(this), { capture: true }));
     }
     disconnectedCallback() {
         this._removeEventListeners();
@@ -14555,7 +14555,7 @@ let ScreenSaver = class ScreenSaver extends h {
         super.disconnectedCallback();
     }
     _removeEventListeners() {
-        HIDE_EVENTS.forEach((event) => window.removeEventListener(event, this._hideScreenSaver.bind(this), { capture: true }));
+        SS_HIDE_EVENTS.forEach((event) => window.removeEventListener(event, this._hideScreenSaver.bind(this), { capture: true }));
     }
     render() {
         return ke `
@@ -14581,16 +14581,16 @@ let ScreenSaver = class ScreenSaver extends h {
         if (this._time !== formattedTime || this._date !== formattedDate) {
             this._time = formattedTime;
             this._date = formattedDate;
-            this.requestUpdate();
+            //this.requestUpdate();
         }
     }
     _cycle() {
+        console.log("Cycling screen saver");
         this._moveElement();
         const container = this.shadowRoot?.querySelector(".container");
         if (container) {
             container.style.animation = "fade-in 1.5s forwards";
         }
-        // Combined waiting and fade-out logic
         this._animationTimeout = window.setTimeout(() => {
             if (container) {
                 container.style.animation = "fade-out 1.5s forwards";
@@ -14609,11 +14609,9 @@ let ScreenSaver = class ScreenSaver extends h {
             const randomY = Math.floor(Math.random() * maxHeight);
             container.style.left = `${randomX}px`;
             container.style.top = `${randomY}px`;
+            console.log("Moving screen saver to", randomX, randomY);
             this._updateElement();
         }
-    }
-    showScreenSaver() {
-        this._cycle();
     }
 };
 __decorate([
@@ -14628,6 +14626,14 @@ ScreenSaver = __decorate([
 function initializeScreenSaver() {
     startIdleTimer();
 }
+let idleTimer;
+function startIdleTimer() {
+    console.log("Starting idle timer");
+    idleTimer = window.setTimeout(() => {
+        const screenSaver = document.createElement("smartqasa-screen-saver");
+        document.body.appendChild(screenSaver);
+    }, SS_IDLE_TIMEOUT);
+}
 function resetIdleTimer() {
     clearTimeout(idleTimer);
     const existingScreenSaver = document.querySelector("smartqasa-screen-saver");
@@ -14635,13 +14641,6 @@ function resetIdleTimer() {
         existingScreenSaver.remove();
     }
     startIdleTimer();
-}
-let idleTimer;
-function startIdleTimer() {
-    idleTimer = window.setTimeout(() => {
-        const screenSaver = document.createElement("smartqasa-screen-saver");
-        document.body.appendChild(screenSaver);
-    }, IDLE_TIMEOUT);
 }
 
 var version = "2024.8.30b-2";
@@ -14651,11 +14650,9 @@ window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split
 window.smartqasa.startArea = window.smartqasa.startArea || location.pathname.split("/").pop();
 window.customCards = window.customCards ?? [];
 if (deviceType === "tablet") {
-    // Use HIDE_EVENTS to add event listeners for resetting the idle timer
-    HIDE_EVENTS.forEach((event) => {
+    SS_HIDE_EVENTS.forEach((event) => {
         window.addEventListener(event, resetIdleTimer);
     });
-    // Start the screen saver logic
     initializeScreenSaver();
 }
 console.info(`%c SmartQasa ⏏ ${version} `, "background-color: #0000ff; color: #ffffff; font-weight: 700;");

@@ -82,17 +82,15 @@ import "./tiles/thermostat";
 import "./utils/popup-confirmation";
 
 // Screen Saver
-import { HIDE_EVENTS } from "./const"; // Assuming these are defined in const.ts
+import { SS_HIDE_EVENTS } from "./const";
 import { initializeScreenSaver, resetIdleTimer } from "./misc/screen-saver";
 import { deviceType } from "./utils/device-info";
 
 if (deviceType === "tablet") {
-    // Use HIDE_EVENTS to add event listeners for resetting the idle timer
-    HIDE_EVENTS.forEach((event) => {
+    SS_HIDE_EVENTS.forEach((event) => {
         window.addEventListener(event, resetIdleTimer);
     });
 
-    // Start the screen saver logic
     initializeScreenSaver();
 }
 
