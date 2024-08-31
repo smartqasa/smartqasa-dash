@@ -75,7 +75,7 @@ export class ScreenSaver extends LitElement {
 
     private _addEventListeners(): void {
         SS_HIDE_EVENTS.forEach((event) =>
-            window.addEventListener(event, this._hideScreenSaver.bind(this), { capture: true })
+            window.addEventListener(event, this._hideScreenSaver.bind(this), { capture: true, passive: true })
         );
     }
 
