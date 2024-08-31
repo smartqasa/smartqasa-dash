@@ -9114,8 +9114,8 @@ let PanelCard = class PanelCard extends h {
             return ke `
                 <div class="screen-element" @click="${this._hideSsPanel}">
                     <div class="ss-container">
-                        <div class="ss-time">${this._formattedTime}</div>
-                        <div class="ss-date">${this._formattedDate}</div>
+                        <div class="ss-time">${this._formattedTime()}</div>
+                        <div class="ss-date">${this._formattedDate()}</div>
                     </div>
                 </div>
             `;
