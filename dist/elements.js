@@ -11627,6 +11627,7 @@ PanelFooter = __decorate([
     t$1("smartqasa-panel-footer")
 ], PanelFooter);
 
+const HIDE_EVENTS = ["mousemove", "touchstart", "keypress"];
 let ScreenSaver = class ScreenSaver extends h {
     constructor() {
         super(...arguments);
@@ -11649,7 +11650,8 @@ let ScreenSaver = class ScreenSaver extends h {
             }
             .container {
                 position: absolute;
-                animation: fade-in-out 5s ease-in-out infinite;
+                opacity: 0;
+                animation: fade-in 1.5s forwards;
             }
             .time,
             .date {
@@ -11667,14 +11669,16 @@ let ScreenSaver = class ScreenSaver extends h {
                 font-weight: 200;
                 color: rgb(180, 180, 180);
             }
-            @keyframes fade-in-out {
+            @keyframes fade-in {
                 0% {
                     opacity: 0;
                 }
-                10% {
+                100% {
                     opacity: 1;
                 }
-                90% {
+            }
+            @keyframes fade-out {
+                0% {
                     opacity: 1;
                 }
                 100% {
@@ -11683,12 +11687,22 @@ let ScreenSaver = class ScreenSaver extends h {
             }
         `;
     }
+    _addEventListeners() {
+        const hideHandler = this._hideScreenSaver.bind(this);
+        HIDE_EVENTS.forEach((event) => window.addEventListener(event, hideHandler));
+    }
+    _removeEventListeners() {
+        const hideHandler = this._hideScreenSaver.bind(this);
+        HIDE_EVENTS.forEach((event) => window.removeEventListener(event, hideHandler));
+    }
     firstUpdated() {
         this._updateElement();
-        this._moveElement();
-        setInterval(() => this._updateElement(), 60000); // Update time and date every minute
+        this._fadeIn(); // Directly call _fadeIn to start the cycle
+        this._addEventListeners();
     }
     disconnectedCallback() {
+        this._removeEventListeners();
+        clearTimeout(this._animationTimeout);
         super.disconnectedCallback();
     }
     render() {
@@ -11706,24 +11720,57 @@ let ScreenSaver = class ScreenSaver extends h {
         const now = new Date();
         const hours = now.getHours();
         const minutes = now.getMinutes();
-        this._time = `${hours % 12 || 12}:${minutes < 10 ? "0" + minutes : minutes}`;
+        const formattedTime = `${hours % 12 || 12}:${minutes < 10 ? "0" + minutes : minutes}`;
         const options = { weekday: "long", month: "short", day: "numeric" };
-        this._date = now.toLocaleDateString(undefined, options);
+        const formattedDate = now.toLocaleDateString(undefined, options);
+        if (this._time !== formattedTime || this._date !== formattedDate) {
+            this._time = formattedTime;
+            this._date = formattedDate;
+            this.requestUpdate();
+        }
+    }
+    _fadeIn() {
+        const container = this.shadowRoot?.querySelector(".container");
+        if (container) {
+            container.style.animation = "fade-in 1.5s forwards";
+        }
+        this._animationTimeout = window.setTimeout(() => {
+            this._waitBeforeFadeOut();
+        }, 1500); // Wait for fade-in to complete
+    }
+    _waitBeforeFadeOut() {
+        this._animationTimeout = window.setTimeout(() => {
+            this._fadeOut();
+        }, 15000); // Display for 15 seconds before fading out
+    }
+    _fadeOut() {
+        const container = this.shadowRoot?.querySelector(".container");
+        if (container) {
+            container.style.animation = "fade-out 1.5s forwards";
+        }
+        this._animationTimeout = window.setTimeout(() => {
+            this._moveElement();
+        }, 1500); // Wait for fade-out to complete
     }
     _moveElement() {
-        const move = () => {
-            const container = this.shadowRoot?.querySelector(".container");
-            if (container) {
-                const maxWidth = Math.max(0, window.innerWidth - container.clientWidth);
-                const maxHeight = Math.max(0, window.innerHeight - container.clientHeight);
-                const randomX = Math.floor(Math.random() * maxWidth);
-                const randomY = Math.floor(Math.random() * maxHeight);
-                container.style.left = `${randomX}px`;
-                container.style.top = `${randomY}px`;
-            }
-            setTimeout(move, 15000);
-        };
-        move();
+        const container = this.shadowRoot?.querySelector(".container");
+        if (container) {
+            const maxWidth = Math.max(0, window.innerWidth - container.clientWidth);
+            const maxHeight = Math.max(0, window.innerHeight - container.clientHeight);
+            const randomX = Math.floor(Math.random() * maxWidth);
+            const randomY = Math.floor(Math.random() * maxHeight);
+            container.style.left = `${randomX}px`;
+            container.style.top = `${randomY}px`;
+            this._updateElement(); // Update time and date before the next fade-in
+        }
+        this._animationTimeout = window.setTimeout(() => {
+            this._fadeIn();
+        }, 500); // Short pause before fading in again
+    }
+    _hideScreenSaver() {
+        this._visible = false;
+        clearTimeout(this._animationTimeout);
+        this.requestUpdate();
     }
 };
 __decorate([
