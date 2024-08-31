@@ -8945,6 +8945,7 @@ async function menuConfig(menu_tab) {
     return menuConfig;
 }
 
+const SS_HIDE_EVENTS = ["keypress", "mousemove", "orientationchange", "resize", "touchstart"];
 const SS_IDLE_TIMER = 10000; // 10 seconds
 const SS_CYCLE_TIMER = 15000; // 15 seconds
 const heaterColors = {
@@ -9057,7 +9058,7 @@ let PanelCard = class PanelCard extends h {
         ["orientationchange", "resize"].forEach((event) => window.addEventListener(event, this._boundHandleDeviceChanges));
         this._syncTime();
         this._startSsIdleTimer();
-        //SS_HIDE_EVENTS.forEach((event) => window.addEventListener(event, () => this._resetSsIdleTimer()));
+        SS_HIDE_EVENTS.forEach((event) => window.addEventListener(event, () => this._resetSsIdleTimer()));
         this._loading = false;
     }
     updated(changedProps) {
@@ -9102,21 +9103,18 @@ let PanelCard = class PanelCard extends h {
         }
         ["orientationchange", "resize"].forEach((event) => window.removeEventListener(event, this._boundHandleDeviceChanges));
     }
-    _handleDeviceChanges() {
-        this._deviceOrientation = getDeviceOrientation();
-        this._deviceType = getDeviceType();
-    }
     render() {
         if (this._loading)
             return ke `<div>Loading...</div>`;
         if (this._screenSaverActive) {
             return ke `
-                <div class="screen-saver" @touchstart="${this._hideSsPanel}">
+                <div class="screen-saver">
                     <div class="ss-element">
                         <div class="ss-time">${this._formattedTime()}</div>
                         <div class="ss-date">${this._formattedDate()}</div>
                     </div>
                 </div>
+                <div class="container" style="display: none;"></div>
             `;
         }
         const containerStyle = {
@@ -9129,6 +9127,10 @@ let PanelCard = class PanelCard extends h {
                 ${this._renderBody()} ${isPhoneLandscape ? D : this._renderFooter()}
             </div>
         `;
+    }
+    _handleDeviceChanges() {
+        this._deviceOrientation = getDeviceOrientation();
+        this._deviceType = getDeviceType();
     }
     _renderHeader() {
         return ke `

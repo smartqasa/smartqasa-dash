@@ -90,7 +90,7 @@ export class PanelCard extends LitElement {
 
         this._startSsIdleTimer();
 
-        //SS_HIDE_EVENTS.forEach((event) => window.addEventListener(event, () => this._resetSsIdleTimer()));
+        SS_HIDE_EVENTS.forEach((event) => window.addEventListener(event, () => this._resetSsIdleTimer()));
 
         this._loading = false;
     }
@@ -146,22 +146,18 @@ export class PanelCard extends LitElement {
         );
     }
 
-    private _handleDeviceChanges() {
-        this._deviceOrientation = getDeviceOrientation();
-        this._deviceType = getDeviceType();
-    }
-
     protected render(): TemplateResult {
         if (this._loading) return html`<div>Loading...</div>`;
 
         if (this._screenSaverActive) {
             return html`
-                <div class="screen-saver" @touchstart="${this._hideSsPanel}">
+                <div class="screen-saver">
                     <div class="ss-element">
                         <div class="ss-time">${this._formattedTime()}</div>
                         <div class="ss-date">${this._formattedDate()}</div>
                     </div>
                 </div>
+                <div class="container" style="display: none;"></div>
             `;
         }
 
@@ -177,6 +173,11 @@ export class PanelCard extends LitElement {
                 ${this._renderBody()} ${isPhoneLandscape ? nothing : this._renderFooter()}
             </div>
         `;
+    }
+
+    private _handleDeviceChanges() {
+        this._deviceOrientation = getDeviceOrientation();
+        this._deviceType = getDeviceType();
     }
 
     private _renderHeader() {
