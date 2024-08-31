@@ -258,11 +258,15 @@
     display: block;
     height: 100%;
     width: 100%;
+    position: fixed; /* Ensures it covers the entire viewport */
+    top: 0;
+    left: 0;
     background-color: black;
     z-index: 9999;
-    pointer-events: all;
+    pointer-events: all; /* Block all pointer events */
 }
 .ss-element {
+    position: absolute;
     padding: 2rem;
     background-color: transparent;
     animation: fade-in 1.5s forwards;
@@ -275,7 +279,7 @@
 }
 .ss-time {
     font-size: 6rem;
-    font-weight: 400;
+    font-weight: 300;
     color: rgb(180, 180, 180);
 }
 .ss-date {
