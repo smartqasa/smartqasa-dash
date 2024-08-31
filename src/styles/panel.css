@@ -258,13 +258,11 @@
     display: block;
     height: 100%;
     width: 100%;
-    position: absolute;
     background-color: black;
     z-index: 9999;
     pointer-events: all;
 }
 .ss-element {
-    position: absolute;
     padding: 2rem;
     background-color: transparent;
     animation: fade-in 1.5s forwards;
