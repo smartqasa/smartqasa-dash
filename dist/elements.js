@@ -11013,9 +11013,8 @@ function selectOptionDialog(config, stateObj) {
     window.browser_mod?.service("popup", dialogConfig);
 }
 
+const HIDE_EVENTS = ["mousemove", "touchstart", "keypress", "orientationchange", "resize"];
 const IDLE_TIMEOUT = 10000; // 10 seconds
-const FADE_DURATION = 1.5; // 1.5 seconds
-const DISPLAY_DURATION = 15000; // 15 seconds
 const heaterColors = {
     electric: "var(--sq-climate-heat-rgb, 250, 67, 54)",
     heating: "var(--sq-climate-heat-rgb, 250, 67, 54)",
@@ -14482,7 +14481,6 @@ PopupConfirmation = __decorate([
     t$1("popup-confirmation")
 ], PopupConfirmation);
 
-const HIDE_EVENTS = ["mousemove", "touchstart", "keypress", "orientationchange", "resize"];
 let ScreenSaver = class ScreenSaver extends h {
     constructor() {
         super(...arguments);
@@ -14590,17 +14588,17 @@ let ScreenSaver = class ScreenSaver extends h {
         this._moveElement();
         const container = this.shadowRoot?.querySelector(".container");
         if (container) {
-            container.style.animation = `fade-in ${FADE_DURATION}s forwards`;
+            container.style.animation = "fade-in 1.5s forwards";
         }
         // Combined waiting and fade-out logic
         this._animationTimeout = window.setTimeout(() => {
             if (container) {
-                container.style.animation = `fade-out ${FADE_DURATION}s forwards`;
+                container.style.animation = "fade-out 1.5s forwards";
             }
             this._animationTimeout = window.setTimeout(() => {
                 this._cycle(); // Start the cycle again
-            }, FADE_DURATION * 1000); // Wait for fade-out to complete
-        }, DISPLAY_DURATION); // FADE_DURATION ms fade-in + DISPLAY_DURATION display time
+            }, 1500); // Wait for fade-out to complete
+        }, 16500); // 1500ms fade-in + 15000ms display time
     }
     _moveElement() {
         const container = this.shadowRoot?.querySelector(".container");
@@ -14627,19 +14625,8 @@ __decorate([
 ScreenSaver = __decorate([
     t$1("smartqasa-screen-saver")
 ], ScreenSaver);
-
-var version = "2024.8.30b-2";
-
-window.smartqasa = window.smartqasa || {};
-window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();
-window.smartqasa.startArea = window.smartqasa.startArea || location.pathname.split("/").pop();
-window.customCards = window.customCards ?? [];
-let idleTimer;
-function startIdleTimer() {
-    idleTimer = window.setTimeout(() => {
-        const screenSaver = document.createElement("smartqasa-screen-saver");
-        document.body.appendChild(screenSaver);
-    }, IDLE_TIMEOUT);
+function initializeScreenSaver() {
+    startIdleTimer();
 }
 function resetIdleTimer() {
     clearTimeout(idleTimer);
@@ -14649,9 +14636,26 @@ function resetIdleTimer() {
     }
     startIdleTimer();
 }
+let idleTimer;
+function startIdleTimer() {
+    idleTimer = window.setTimeout(() => {
+        const screenSaver = document.createElement("smartqasa-screen-saver");
+        document.body.appendChild(screenSaver);
+    }, IDLE_TIMEOUT);
+}
+
+var version = "2024.8.30b-2";
+
+window.smartqasa = window.smartqasa || {};
+window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();
+window.smartqasa.startArea = window.smartqasa.startArea || location.pathname.split("/").pop();
+window.customCards = window.customCards ?? [];
 if (deviceType === "tablet") {
-    window.addEventListener("mousemove", resetIdleTimer);
-    window.addEventListener("keypress", resetIdleTimer);
-    startIdleTimer();
+    // Use HIDE_EVENTS to add event listeners for resetting the idle timer
+    HIDE_EVENTS.forEach((event) => {
+        window.addEventListener(event, resetIdleTimer);
+    });
+    // Start the screen saver logic
+    initializeScreenSaver();
 }
 console.info(`%c SmartQasa ⏏ ${version} `, "background-color: #0000ff; color: #ffffff; font-weight: 700;");

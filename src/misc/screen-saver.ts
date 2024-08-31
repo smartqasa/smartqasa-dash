@@ -1,8 +1,7 @@
 import { css, CSSResultGroup, html, LitElement, nothing, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
-import { FADE_DURATION, DISPLAY_DURATION } from "../const";
+import { HIDE_EVENTS, IDLE_TIMEOUT } from "../const"; // Assuming these are defined in const.ts
 
-const HIDE_EVENTS = ["mousemove", "touchstart", "keypress", "orientationchange", "resize"] as const;
 @customElement("smartqasa-screen-saver")
 export class ScreenSaver extends LitElement {
     @state() private _time: string = "Loading...";
@@ -102,14 +101,17 @@ export class ScreenSaver extends LitElement {
         event.stopPropagation();
         event.preventDefault();
         clearTimeout(this._animationTimeout);
+
         this.parentNode?.removeChild(this);
     }
 
     private _updateElement(): void {
         const now = new Date();
+
         const hours = now.getHours();
         const minutes = now.getMinutes();
         const formattedTime = `${hours % 12 || 12}:${minutes < 10 ? "0" + minutes : minutes}`;
+
         const options: Intl.DateTimeFormatOptions = { weekday: "long", month: "short", day: "numeric" };
         const formattedDate = now.toLocaleDateString(undefined, options);
 
@@ -125,19 +127,19 @@ export class ScreenSaver extends LitElement {
 
         const container = this.shadowRoot?.querySelector(".container") as HTMLElement;
         if (container) {
-            container.style.animation = `fade-in ${FADE_DURATION}s forwards`;
+            container.style.animation = "fade-in 1.5s forwards";
         }
 
         // Combined waiting and fade-out logic
         this._animationTimeout = window.setTimeout(() => {
             if (container) {
-                container.style.animation = `fade-out ${FADE_DURATION}s forwards`;
+                container.style.animation = "fade-out 1.5s forwards";
             }
 
             this._animationTimeout = window.setTimeout(() => {
                 this._cycle(); // Start the cycle again
-            }, FADE_DURATION * 1000); // Wait for fade-out to complete
-        }, DISPLAY_DURATION); // FADE_DURATION ms fade-in + DISPLAY_DURATION display time
+            }, 1500); // Wait for fade-out to complete
+        }, 16500); // 1500ms fade-in + 15000ms display time
     }
 
     private _moveElement(): void {
@@ -157,4 +159,26 @@ export class ScreenSaver extends LitElement {
     public showScreenSaver(): void {
         this._cycle();
     }
+}
+
+export function initializeScreenSaver(): void {
+    startIdleTimer();
+}
+
+export function resetIdleTimer(): void {
+    clearTimeout(idleTimer);
+    const existingScreenSaver = document.querySelector("smartqasa-screen-saver");
+    if (existingScreenSaver) {
+        existingScreenSaver.remove();
+    }
+    startIdleTimer();
+}
+
+let idleTimer: number;
+
+function startIdleTimer(): void {
+    idleTimer = window.setTimeout(() => {
+        const screenSaver = document.createElement("smartqasa-screen-saver");
+        document.body.appendChild(screenSaver);
+    }, IDLE_TIMEOUT);
 }

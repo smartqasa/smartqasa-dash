@@ -82,33 +82,18 @@ import "./tiles/thermostat";
 import "./utils/popup-confirmation";
 
 // Screen Saver
+import { HIDE_EVENTS } from "./const"; // Assuming these are defined in const.ts
+import { initializeScreenSaver, resetIdleTimer } from "./misc/screen-saver";
 import { deviceType } from "./utils/device-info";
-import { IDLE_TIMEOUT } from "./const";
-import "./misc/screen-saver";
-
-let idleTimer: number;
-
-function startIdleTimer() {
-    idleTimer = window.setTimeout(() => {
-        const screenSaver = document.createElement("smartqasa-screen-saver");
-        document.body.appendChild(screenSaver);
-    }, IDLE_TIMEOUT);
-}
-
-function resetIdleTimer() {
-    clearTimeout(idleTimer);
-    const existingScreenSaver = document.querySelector("smartqasa-screen-saver");
-    if (existingScreenSaver) {
-        existingScreenSaver.remove();
-    }
-    startIdleTimer();
-}
 
 if (deviceType === "tablet") {
-    window.addEventListener("mousemove", resetIdleTimer);
-    window.addEventListener("keypress", resetIdleTimer);
+    // Use HIDE_EVENTS to add event listeners for resetting the idle timer
+    HIDE_EVENTS.forEach((event) => {
+        window.addEventListener(event, resetIdleTimer);
+    });
 
-    startIdleTimer();
+    // Start the screen saver logic
+    initializeScreenSaver();
 }
 
 import { version } from "../package.json";
