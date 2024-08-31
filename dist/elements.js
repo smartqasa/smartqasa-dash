@@ -11663,8 +11663,8 @@ let ScreenSaver = class ScreenSaver extends h {
                 color: rgb(180, 180, 180);
             }
             .date {
-                font-size: 2.5rem;
-                font-weight: 300;
+                font-size: 2rem;
+                font-weight: 200;
                 color: rgb(180, 180, 180);
             }
             @keyframes fade-in-out {
@@ -11721,11 +11721,9 @@ let ScreenSaver = class ScreenSaver extends h {
                 container.style.left = `${randomX}px`;
                 container.style.top = `${randomY}px`;
             }
-            setTimeout(() => {
-                requestAnimationFrame(move);
-            }, 15000);
+            setTimeout(move, 15000);
         };
-        requestAnimationFrame(move);
+        move();
     }
 };
 __decorate([

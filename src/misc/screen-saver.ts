@@ -36,8 +36,8 @@ export class ScreenSaver extends LitElement {
                 color: rgb(180, 180, 180);
             }
             .date {
-                font-size: 2.5rem;
-                font-weight: 300;
+                font-size: 2rem;
+                font-weight: 200;
                 color: rgb(180, 180, 180);
             }
             @keyframes fade-in-out {
@@ -102,11 +102,9 @@ export class ScreenSaver extends LitElement {
                 container.style.top = `${randomY}px`;
             }
 
-            setTimeout(() => {
-                requestAnimationFrame(move);
-            }, 15000);
+            setTimeout(move, 15000);
         };
 
-        requestAnimationFrame(move);
+        move();
     }
 }
