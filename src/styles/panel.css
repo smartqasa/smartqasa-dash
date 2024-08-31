@@ -261,7 +261,6 @@
     position: absolute; /* Ensures it covers the entire viewport */
     background-color: black;
     z-index: 9999;
-    pointer-events: all; /* Block all pointer events */
 }
 .ss-element {
     position: absolute;
