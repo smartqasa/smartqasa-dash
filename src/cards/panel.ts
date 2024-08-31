@@ -90,7 +90,7 @@ export class PanelCard extends LitElement {
 
         this._startSsIdleTimer();
 
-        SS_HIDE_EVENTS.forEach((event) => window.addEventListener(event, () => this._resetSsIdleTimer()));
+        //SS_HIDE_EVENTS.forEach((event) => window.addEventListener(event, () => this._resetSsIdleTimer()));
 
         this._loading = false;
     }
