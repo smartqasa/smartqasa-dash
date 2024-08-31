@@ -258,9 +258,8 @@
     display: block;
     height: 100%;
     width: 100%;
-    position: absolute; /* Ensures it covers the entire viewport */
+    position: absolute;
     background-color: black;
-    z-index: 9999;
 }
 .ss-element {
     position: absolute;
