@@ -14558,6 +14558,7 @@ let ScreenSaver = class ScreenSaver extends h {
         SS_HIDE_EVENTS.forEach((event) => window.removeEventListener(event, this._hideScreenSaver.bind(this), { capture: true }));
     }
     render() {
+        console.log("Rendering screen saver");
         return ke `
             <div class="container" @touchstart="${this._hideScreenSaver}">
                 <div class="time">${this._time}</div>

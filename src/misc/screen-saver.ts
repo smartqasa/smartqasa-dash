@@ -89,6 +89,7 @@ export class ScreenSaver extends LitElement {
     }
 
     protected render(): TemplateResult {
+        console.log("Rendering screen saver");
         return html`
             <div class="container" @touchstart="${this._hideScreenSaver}">
                 <div class="time">${this._time}</div>
