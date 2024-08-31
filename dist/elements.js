@@ -11766,9 +11766,10 @@ let ScreenSaver = class ScreenSaver extends h {
             this._fadeIn();
         }, 500); // Short pause before fading in again
     }
-    _hideScreenSaver() {
+    _hideScreenSaver(event) {
+        event.stopPropagation(); // Stop the event from propagating to underlying elements
+        event.preventDefault(); // Prevent the default action for the event
         this._visible = false;
-        this.style.pointerEvents = "none"; // Ensure events pass through to elements underneath
         clearTimeout(this._animationTimeout);
         this.requestUpdate();
     }

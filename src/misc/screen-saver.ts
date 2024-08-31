@@ -160,9 +160,10 @@ export class ScreenSaver extends LitElement {
         }, 500); // Short pause before fading in again
     }
 
-    private _hideScreenSaver(): void {
+    private _hideScreenSaver(event: Event): void {
+        event.stopPropagation(); // Stop the event from propagating to underlying elements
+        event.preventDefault(); // Prevent the default action for the event
         this._visible = false;
-        this.style.pointerEvents = "none"; // Ensure events pass through to elements underneath
         clearTimeout(this._animationTimeout);
         this.requestUpdate();
     }
