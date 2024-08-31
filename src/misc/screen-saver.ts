@@ -1,17 +1,14 @@
-// screen-saver.ts
 import { css, CSSResultGroup, html, LitElement, nothing, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
-import { screenSaverTimeout, screenSaverMovement } from "../const";
+import { FADE_DURATION, DISPLAY_DURATION } from "../const";
 
 const HIDE_EVENTS = ["mousemove", "touchstart", "keypress", "orientationchange", "resize"] as const;
-
 @customElement("smartqasa-screen-saver")
 export class ScreenSaver extends LitElement {
     @state() private _time: string = "Loading...";
     @state() private _date: string = "Loading...";
 
     private _animationTimeout: number | undefined;
-    private _idleTimer: number | undefined;
 
     static get styles(): CSSResultGroup {
         return css`
@@ -68,40 +65,28 @@ export class ScreenSaver extends LitElement {
         `;
     }
 
-    public initScreenSaver(): void {
-        this._startIdleTimer();
+    protected firstUpdated(): void {
+        this._updateElement();
+        this._cycle();
         this._addEventListeners();
-    }
-
-    private _startIdleTimer(): void {
-        this._idleTimer = window.setTimeout(() => {
-            this.showScreenSaver();
-        }, screenSaverTimeout);
-    }
-
-    private _resetIdleTimer(): void {
-        clearTimeout(this._idleTimer);
-        this._removeExistingScreenSaver();
-        this._startIdleTimer();
     }
 
     private _addEventListeners(): void {
         HIDE_EVENTS.forEach((event) =>
-            window.addEventListener(event, this._resetIdleTimer.bind(this), { capture: true })
-        );
-    }
-
-    private _removeEventListeners(): void {
-        HIDE_EVENTS.forEach((event) =>
-            window.removeEventListener(event, this._resetIdleTimer.bind(this), { capture: true })
+            window.addEventListener(event, this._hideScreenSaver.bind(this), { capture: true })
         );
     }
 
     public disconnectedCallback(): void {
         this._removeEventListeners();
         clearTimeout(this._animationTimeout);
-        clearTimeout(this._idleTimer);
         super.disconnectedCallback();
+    }
+
+    private _removeEventListeners(): void {
+        HIDE_EVENTS.forEach((event) =>
+            window.removeEventListener(event, this._hideScreenSaver.bind(this), { capture: true })
+        );
     }
 
     protected render(): TemplateResult | typeof nothing {
@@ -117,14 +102,7 @@ export class ScreenSaver extends LitElement {
         event.stopPropagation();
         event.preventDefault();
         clearTimeout(this._animationTimeout);
-        this._removeExistingScreenSaver();
-    }
-
-    private _removeExistingScreenSaver(): void {
-        const existingScreenSaver = document.querySelector("smartqasa-screen-saver");
-        if (existingScreenSaver) {
-            existingScreenSaver.remove();
-        }
+        this.parentNode?.removeChild(this);
     }
 
     private _updateElement(): void {
@@ -132,7 +110,6 @@ export class ScreenSaver extends LitElement {
         const hours = now.getHours();
         const minutes = now.getMinutes();
         const formattedTime = `${hours % 12 || 12}:${minutes < 10 ? "0" + minutes : minutes}`;
-
         const options: Intl.DateTimeFormatOptions = { weekday: "long", month: "short", day: "numeric" };
         const formattedDate = now.toLocaleDateString(undefined, options);
 
@@ -148,18 +125,19 @@ export class ScreenSaver extends LitElement {
 
         const container = this.shadowRoot?.querySelector(".container") as HTMLElement;
         if (container) {
-            container.style.animation = "fade-in 1.5s forwards";
+            container.style.animation = `fade-in ${FADE_DURATION}s forwards`;
         }
 
+        // Combined waiting and fade-out logic
         this._animationTimeout = window.setTimeout(() => {
             if (container) {
-                container.style.animation = "fade-out 1.5s forwards";
+                container.style.animation = `fade-out ${FADE_DURATION}s forwards`;
             }
 
             this._animationTimeout = window.setTimeout(() => {
-                this._cycle();
-            }, 1500);
-        }, screenSaverMovement + 1500);
+                this._cycle(); // Start the cycle again
+            }, FADE_DURATION * 1000); // Wait for fade-out to complete
+        }, DISPLAY_DURATION); // FADE_DURATION ms fade-in + DISPLAY_DURATION display time
     }
 
     private _moveElement(): void {
