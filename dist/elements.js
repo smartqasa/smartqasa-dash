@@ -9057,6 +9057,8 @@ let PanelCard = class PanelCard extends h {
         }
         ["orientationchange", "resize"].forEach((event) => window.addEventListener(event, this._boundHandleDeviceChanges));
         this._syncTime();
+        this._startSsIdleTimer();
+        SS_HIDE_EVENTS.forEach((event) => window.addEventListener(event, () => this._resetSsIdleTimer()));
         this._loading = false;
     }
     updated(changedProps) {
@@ -9415,9 +9417,16 @@ let PanelCard = class PanelCard extends h {
             console.error("Error loading menu configuration", error);
         }
     }
+    _startSsIdleTimer() {
+        this._sSidleTimer = window.setTimeout(() => {
+            this._screenSaverActive = true;
+            this.requestUpdate();
+            this._runSsCycle();
+        }, SS_IDLE_TIMER);
+    }
     _runSsCycle() {
         this._moveSsElement();
-        const container = this.shadowRoot?.querySelector(".container");
+        const container = this.shadowRoot?.querySelector(".ss-element");
         if (container) {
             container.style.animation = "fade-in 1.5s forwards";
         }
@@ -9431,7 +9440,7 @@ let PanelCard = class PanelCard extends h {
         }, SS_CYCLE_TIMER + 1500);
     }
     _moveSsElement() {
-        const container = this.shadowRoot?.querySelector(".container");
+        const container = this.shadowRoot?.querySelector(".ss-element");
         if (container) {
             const maxWidth = Math.max(0, window.innerWidth - container.clientWidth);
             const maxHeight = Math.max(0, window.innerHeight - container.clientHeight);
@@ -9442,25 +9451,16 @@ let PanelCard = class PanelCard extends h {
             console.log("Container position:", randomX, randomY);
         }
     }
-    _startSsIdleTimer() {
-        this._sSidleTimer = window.setTimeout(() => {
-            const screenSaver = document.createElement("smartqasa-screen-saver");
-            document.body.appendChild(screenSaver);
-        }, SS_IDLE_TIMER);
-    }
     _hideSsPanel(e) {
         e.stopPropagation();
+        this._screenSaverActive = false;
+        this.requestUpdate();
         clearTimeout(this._sSanimationTimer);
         this._resetSsIdleTimer();
-        this.parentNode?.removeChild(this);
     }
     _resetSsIdleTimer() {
         console.log("Resetting idle timer");
         clearTimeout(this._sSidleTimer);
-        const existingScreenSaver = document.querySelector("smartqasa-screen-saver");
-        if (existingScreenSaver) {
-            existingScreenSaver.remove();
-        }
         this._startSsIdleTimer();
     }
 };
@@ -14563,180 +14563,10 @@ PopupConfirmation = __decorate([
     t$1("popup-confirmation")
 ], PopupConfirmation);
 
-let ScreenSaver = class ScreenSaver extends h {
-    constructor() {
-        super(...arguments);
-        this._time = "Loading...";
-        this._date = "Loading...";
-    }
-    static get styles() {
-        return i$3 `
-            :host {
-                display: block;
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background-color: black;
-                z-index: 9999;
-                pointer-events: all;
-            }
-            .overlay {
-                width: 100%;
-                height: 100%;
-                pointer-events: all;
-            }
-            .container {
-                position: absolute;
-                padding: 2rem;
-                background-color: transparent;
-                animation: fade-in 1.5s forwards;
-            }
-            .time,
-            .date {
-                text-align: center;
-                line-height: normal;
-                white-space: nowrap;
-            }
-            .time {
-                font-size: 5rem;
-                font-weight: 400;
-                color: rgb(180, 180, 180);
-            }
-            .date {
-                font-size: 2rem;
-                font-weight: 200;
-                color: rgb(180, 180, 180);
-            }
-            @keyframes fade-in {
-                0% {
-                    opacity: 0;
-                }
-                100% {
-                    opacity: 1;
-                }
-            }
-            @keyframes fade-out {
-                0% {
-                    opacity: 1;
-                }
-                100% {
-                    opacity: 0;
-                }
-            }
-        `;
-    }
-    firstUpdated() {
-        this._updateElement();
-        this._cycle();
-        this._addEventListeners();
-    }
-    _addEventListeners() {
-        SS_HIDE_EVENTS.forEach((event) => window.addEventListener(event, this._hideScreenSaver.bind(this), { capture: true, passive: true }));
-    }
-    disconnectedCallback() {
-        this._removeEventListeners();
-        clearTimeout(this._animationTimeout);
-        super.disconnectedCallback();
-    }
-    _removeEventListeners() {
-        SS_HIDE_EVENTS.forEach((event) => window.removeEventListener(event, this._hideScreenSaver.bind(this)));
-    }
-    render() {
-        return ke `
-            <div class="overlay" @click="${this._hideScreenSaver}" @touchstart="${this._hideScreenSaver}">
-                <div class="container">
-                    <div class="time">${this._time}</div>
-                    <div class="date">${this._date}</div>
-                </div>
-            </div>
-        `;
-    }
-    _hideScreenSaver(e) {
-        e.stopPropagation();
-        clearTimeout(this._animationTimeout);
-        resetIdleTimer();
-        this.parentNode?.removeChild(this);
-    }
-    _updateElement() {
-        const now = new Date();
-        const hours = now.getHours();
-        const minutes = now.getMinutes();
-        const formattedTime = `${hours % 12 || 12}:${minutes < 10 ? "0" + minutes : minutes}`;
-        const options = { weekday: "long", month: "short", day: "numeric" };
-        const formattedDate = now.toLocaleDateString(undefined, options);
-        if (this._time !== formattedTime || this._date !== formattedDate) {
-            this._time = formattedTime;
-            this._date = formattedDate;
-            //this.requestUpdate();
-        }
-    }
-    _cycle() {
-        this._moveElement();
-        const container = this.shadowRoot?.querySelector(".container");
-        if (container) {
-            container.style.animation = "fade-in 1.5s forwards";
-        }
-        this._animationTimeout = window.setTimeout(() => {
-            if (container) {
-                container.style.animation = "fade-out 1.5s forwards";
-            }
-            this._animationTimeout = window.setTimeout(() => {
-                this._cycle();
-            }, 1500);
-        }, SS_CYCLE_TIMER + 1500);
-    }
-    _moveElement() {
-        const container = this.shadowRoot?.querySelector(".container");
-        if (container) {
-            const maxWidth = Math.max(0, window.innerWidth - container.clientWidth);
-            const maxHeight = Math.max(0, window.innerHeight - container.clientHeight);
-            const randomX = Math.floor(Math.random() * maxWidth);
-            const randomY = Math.floor(Math.random() * maxHeight);
-            container.style.left = `${randomX}px`;
-            container.style.top = `${randomY}px`;
-            console.log("Container position:", randomX, randomY);
-            this._updateElement();
-        }
-    }
-};
-__decorate([
-    r()
-], ScreenSaver.prototype, "_time", void 0);
-__decorate([
-    r()
-], ScreenSaver.prototype, "_date", void 0);
-ScreenSaver = __decorate([
-    t$1("smartqasa-screen-saver")
-], ScreenSaver);
-let idleTimer;
-function startIdleTimer() {
-    idleTimer = window.setTimeout(() => {
-        const screenSaver = document.createElement("smartqasa-screen-saver");
-        document.body.appendChild(screenSaver);
-    }, SS_IDLE_TIMER);
-}
-function resetIdleTimer() {
-    console.log("Resetting idle timer");
-    clearTimeout(idleTimer);
-    const existingScreenSaver = document.querySelector("smartqasa-screen-saver");
-    if (existingScreenSaver) {
-        existingScreenSaver.remove();
-    }
-    startIdleTimer();
-}
-
 var version = "2024.8.31b-2";
 
 window.smartqasa = window.smartqasa || {};
 window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();
 window.smartqasa.startArea = window.smartqasa.startArea || location.pathname.split("/").pop();
 window.customCards = window.customCards ?? [];
-if (deviceType === "tablet") {
-    SS_HIDE_EVENTS.forEach((event) => {
-        window.addEventListener(event, resetIdleTimer);
-    });
-    startIdleTimer();
-}
 console.info(`%c SmartQasa ⏏ ${version} `, "background-color: #0000ff; color: #ffffff; font-weight: 700;");

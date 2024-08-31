@@ -88,6 +88,10 @@ export class PanelCard extends LitElement {
 
         this._syncTime();
 
+        this._startSsIdleTimer();
+
+        SS_HIDE_EVENTS.forEach((event) => window.addEventListener(event, () => this._resetSsIdleTimer()));
+
         this._loading = false;
     }
 
@@ -499,10 +503,18 @@ export class PanelCard extends LitElement {
         }
     }
 
+    private _startSsIdleTimer(): void {
+        this._sSidleTimer = window.setTimeout(() => {
+            this._screenSaverActive = true;
+            this.requestUpdate();
+            this._runSsCycle();
+        }, SS_IDLE_TIMER);
+    }
+
     private _runSsCycle(): void {
         this._moveSsElement();
 
-        const container = this.shadowRoot?.querySelector(".container") as HTMLElement;
+        const container = this.shadowRoot?.querySelector(".ss-element") as HTMLElement;
         if (container) {
             container.style.animation = "fade-in 1.5s forwards";
         }
@@ -519,7 +531,7 @@ export class PanelCard extends LitElement {
     }
 
     private _moveSsElement(): void {
-        const container = this.shadowRoot?.querySelector(".container") as HTMLElement;
+        const container = this.shadowRoot?.querySelector(".ss-element") as HTMLElement;
         if (container) {
             const maxWidth = Math.max(0, window.innerWidth - container.clientWidth);
             const maxHeight = Math.max(0, window.innerHeight - container.clientHeight);
@@ -532,27 +544,17 @@ export class PanelCard extends LitElement {
         }
     }
 
-    private _startSsIdleTimer(): void {
-        this._sSidleTimer = window.setTimeout(() => {
-            const screenSaver = document.createElement("smartqasa-screen-saver");
-            document.body.appendChild(screenSaver);
-        }, SS_IDLE_TIMER);
-    }
-
     private _hideSsPanel(e: Event): void {
         e.stopPropagation();
+        this._screenSaverActive = false;
+        this.requestUpdate();
         clearTimeout(this._sSanimationTimer);
         this._resetSsIdleTimer();
-        this.parentNode?.removeChild(this);
     }
 
     private _resetSsIdleTimer(): void {
         console.log("Resetting idle timer");
         clearTimeout(this._sSidleTimer);
-        const existingScreenSaver = document.querySelector("smartqasa-screen-saver");
-        if (existingScreenSaver) {
-            existingScreenSaver.remove();
-        }
         this._startSsIdleTimer();
     }
 }
