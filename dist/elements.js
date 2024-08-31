@@ -14502,9 +14502,8 @@ let ScreenSaver = class ScreenSaver extends h {
             }
             .container {
                 position: absolute;
-                width: 100%;
-                height: 100%;
-                opacity: 0;
+                padding: 2rem;
+                background-color: transparent;
                 animation: fade-in 1.5s forwards;
             }
             .time,
@@ -14558,7 +14557,6 @@ let ScreenSaver = class ScreenSaver extends h {
         SS_HIDE_EVENTS.forEach((event) => window.removeEventListener(event, this._hideScreenSaver.bind(this), { capture: true }));
     }
     render() {
-        console.log("Rendering screen saver");
         return ke `
             <div class="container" @touchstart="${this._hideScreenSaver}">
                 <div class="time">${this._time}</div>
@@ -14586,7 +14584,6 @@ let ScreenSaver = class ScreenSaver extends h {
         }
     }
     _cycle() {
-        console.log("Cycling screen saver");
         this._moveElement();
         const container = this.shadowRoot?.querySelector(".container");
         if (container) {
@@ -14604,13 +14601,13 @@ let ScreenSaver = class ScreenSaver extends h {
     _moveElement() {
         const container = this.shadowRoot?.querySelector(".container");
         if (container) {
-            const maxWidth = Math.max(0, window.innerWidth - container.clientWidth);
-            const maxHeight = Math.max(0, window.innerHeight - container.clientHeight);
+            const maxWidth = window.innerWidth - container.clientWidth;
+            const maxHeight = window.innerHeight - container.clientHeight;
             const randomX = Math.floor(Math.random() * maxWidth);
             const randomY = Math.floor(Math.random() * maxHeight);
             container.style.left = `${randomX}px`;
             container.style.top = `${randomY}px`;
-            console.log("Moving screen saver", maxWidth, maxHeight);
+            console.log("Container position:", randomX, randomY);
             this._updateElement();
         }
     }

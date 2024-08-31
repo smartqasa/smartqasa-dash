@@ -24,9 +24,8 @@ export class ScreenSaver extends LitElement {
             }
             .container {
                 position: absolute;
-                width: 100%;
-                height: 100%;
-                opacity: 0;
+                padding: 2rem;
+                background-color: transparent;
                 animation: fade-in 1.5s forwards;
             }
             .time,
@@ -89,7 +88,6 @@ export class ScreenSaver extends LitElement {
     }
 
     protected render(): TemplateResult {
-        console.log("Rendering screen saver");
         return html`
             <div class="container" @touchstart="${this._hideScreenSaver}">
                 <div class="time">${this._time}</div>
@@ -124,7 +122,6 @@ export class ScreenSaver extends LitElement {
     }
 
     private _cycle(): void {
-        console.log("Cycling screen saver");
         this._moveElement();
 
         const container = this.shadowRoot?.querySelector(".container") as HTMLElement;
@@ -146,14 +143,14 @@ export class ScreenSaver extends LitElement {
     private _moveElement(): void {
         const container = this.shadowRoot?.querySelector(".container") as HTMLElement;
         if (container) {
-            const maxWidth = Math.max(0, window.innerWidth - container.clientWidth);
-            const maxHeight = Math.max(0, window.innerHeight - container.clientHeight);
+            const maxWidth = window.innerWidth - container.clientWidth;
+            const maxHeight = window.innerHeight - container.clientHeight;
             const randomX = Math.floor(Math.random() * maxWidth);
             const randomY = Math.floor(Math.random() * maxHeight);
             container.style.left = `${randomX}px`;
             container.style.top = `${randomY}px`;
 
-            console.log("Moving screen saver", maxWidth, maxHeight);
+            console.log("Container position:", randomX, randomY);
             this._updateElement();
         }
     }
