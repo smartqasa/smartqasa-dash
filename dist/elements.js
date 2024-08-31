@@ -14500,6 +14500,10 @@ let ScreenSaver = class ScreenSaver extends h {
                 z-index: 9999;
                 pointer-events: all;
             }
+            .overlay {
+                width: 100%;
+                height: 100%;
+            }
             .container {
                 position: absolute;
                 padding: 2rem;
@@ -14558,9 +14562,11 @@ let ScreenSaver = class ScreenSaver extends h {
     }
     render() {
         return ke `
-            <div class="container" @touchstart="${this._hideScreenSaver}">
-                <div class="time">${this._time}</div>
-                <div class="date">${this._date}</div>
+            <div class="overlay" @touchstart="${this._hideScreenSaver}">
+                <div class="container">
+                    <div class="time">${this._time}</div>
+                    <div class="date">${this._date}</div>
+                </div>
             </div>
         `;
     }

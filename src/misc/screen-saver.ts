@@ -22,6 +22,10 @@ export class ScreenSaver extends LitElement {
                 z-index: 9999;
                 pointer-events: all;
             }
+            .overlay {
+                width: 100%;
+                height: 100%;
+            }
             .container {
                 position: absolute;
                 padding: 2rem;
@@ -89,9 +93,11 @@ export class ScreenSaver extends LitElement {
 
     protected render(): TemplateResult {
         return html`
-            <div class="container" @touchstart="${this._hideScreenSaver}">
-                <div class="time">${this._time}</div>
-                <div class="date">${this._date}</div>
+            <div class="overlay" @touchstart="${this._hideScreenSaver}">
+                <div class="container">
+                    <div class="time">${this._time}</div>
+                    <div class="date">${this._date}</div>
+                </div>
             </div>
         `;
     }
