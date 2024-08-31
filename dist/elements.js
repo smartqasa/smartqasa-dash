@@ -14552,7 +14552,7 @@ let ScreenSaver = class ScreenSaver extends h {
         this._addEventListeners();
     }
     _addEventListeners() {
-        SS_HIDE_EVENTS.forEach((event) => window.addEventListener(event, this._hideScreenSaver.bind(this), { capture: true, passive: false }));
+        SS_HIDE_EVENTS.forEach((event) => window.addEventListener(event, this._hideScreenSaver.bind(this), { capture: true, passive: true }));
     }
     disconnectedCallback() {
         this._removeEventListeners();
