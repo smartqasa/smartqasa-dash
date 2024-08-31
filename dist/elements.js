@@ -11013,7 +11013,7 @@ function selectOptionDialog(config, stateObj) {
     window.browser_mod?.service("popup", dialogConfig);
 }
 
-const SS_HIDE_EVENTS = ["mousemove", "keypress", "orientationchange", "resize"];
+const SS_HIDE_EVENTS = ["keypress", "mousemove", "orientationchange", "resize", "touchstart"];
 const SS_IDLE_TIMER = 10000; // 10 seconds
 const SS_CYCLE_TIMER = 15000; // 15 seconds
 const heaterColors = {
@@ -14552,7 +14552,7 @@ let ScreenSaver = class ScreenSaver extends h {
         this._addEventListeners();
     }
     _addEventListeners() {
-        SS_HIDE_EVENTS.forEach((event) => window.addEventListener(event, this._hideScreenSaver.bind(this), { capture: true }));
+        SS_HIDE_EVENTS.forEach((event) => window.addEventListener(event, this._hideScreenSaver.bind(this), { capture: true, passive: false }));
     }
     disconnectedCallback() {
         this._removeEventListeners();
