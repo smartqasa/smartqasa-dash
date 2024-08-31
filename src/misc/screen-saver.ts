@@ -24,7 +24,6 @@ export class ScreenSaver extends LitElement {
             .overlay {
                 width: 100%;
                 height: 100%;
-                pointer-events: all;
             }
             .container {
                 position: absolute;
@@ -74,9 +73,7 @@ export class ScreenSaver extends LitElement {
     }
 
     private _addEventListeners(): void {
-        SS_HIDE_EVENTS.forEach((event) =>
-            window.addEventListener(event, this._hideScreenSaver.bind(this), { capture: true, passive: true })
-        );
+        SS_HIDE_EVENTS.forEach((event) => window.addEventListener(event, this._hideScreenSaver.bind(this)));
     }
 
     public disconnectedCallback(): void {
@@ -86,9 +83,7 @@ export class ScreenSaver extends LitElement {
     }
 
     private _removeEventListeners(): void {
-        SS_HIDE_EVENTS.forEach((event) =>
-            window.removeEventListener(event, this._hideScreenSaver.bind(this), { capture: true })
-        );
+        SS_HIDE_EVENTS.forEach((event) => window.removeEventListener(event, this._hideScreenSaver.bind(this)));
     }
 
     protected render(): TemplateResult {
@@ -102,10 +97,10 @@ export class ScreenSaver extends LitElement {
         `;
     }
 
-    private _hideScreenSaver(event: Event): void {
-        event.stopPropagation();
+    private _hideScreenSaver(e: Event): void {
+        e.stopPropagation();
         clearTimeout(this._animationTimeout);
-
+        resetIdleTimer();
         this.parentNode?.removeChild(this);
     }
 

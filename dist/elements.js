@@ -14503,7 +14503,6 @@ let ScreenSaver = class ScreenSaver extends h {
             .overlay {
                 width: 100%;
                 height: 100%;
-                pointer-events: all;
             }
             .container {
                 position: absolute;
@@ -14551,7 +14550,7 @@ let ScreenSaver = class ScreenSaver extends h {
         this._addEventListeners();
     }
     _addEventListeners() {
-        SS_HIDE_EVENTS.forEach((event) => window.addEventListener(event, this._hideScreenSaver.bind(this), { capture: true, passive: true }));
+        SS_HIDE_EVENTS.forEach((event) => window.addEventListener(event, this._hideScreenSaver.bind(this)));
     }
     disconnectedCallback() {
         this._removeEventListeners();
@@ -14559,7 +14558,7 @@ let ScreenSaver = class ScreenSaver extends h {
         super.disconnectedCallback();
     }
     _removeEventListeners() {
-        SS_HIDE_EVENTS.forEach((event) => window.removeEventListener(event, this._hideScreenSaver.bind(this), { capture: true }));
+        SS_HIDE_EVENTS.forEach((event) => window.removeEventListener(event, this._hideScreenSaver.bind(this)));
     }
     render() {
         return ke `
@@ -14571,9 +14570,10 @@ let ScreenSaver = class ScreenSaver extends h {
             </div>
         `;
     }
-    _hideScreenSaver(event) {
-        event.stopPropagation();
+    _hideScreenSaver(e) {
+        e.stopPropagation();
         clearTimeout(this._animationTimeout);
+        resetIdleTimer();
         this.parentNode?.removeChild(this);
     }
     _updateElement() {
