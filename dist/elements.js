@@ -1,19 +1,3 @@
-function getDeviceOrientation() {
-    return window.screen.orientation.type.startsWith("portrait") ? "portrait" : "landscape";
-}
-function getDeviceType() {
-    const { width, height } = window.screen;
-    const orientation = window.screen.orientation.type.startsWith("portrait") ? "portrait" : "landscape";
-    if ((orientation === "portrait" && width < 600 && width != 534) ||
-        (orientation === "landscape" && height < 600 && height != 534)) {
-        return "phone";
-    }
-    else {
-        return "tablet";
-    }
-}
-let deviceType = getDeviceType();
-
 /******************************************************************************
 Copyright (c) Microsoft Corporation.
 
@@ -199,6 +183,22 @@ const t={ATTRIBUTE:1,CHILD:2,PROPERTY:3,BOOLEAN_ATTRIBUTE:4,EVENT:5,ELEMENT:6},e
  * Copyright 2018 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
  */const ee="important",ie=" !"+ee,se=e(class extends i$1{constructor(e){if(super(e),e.type!==t.ATTRIBUTE||"style"!==e.name||e.strings?.length>2)throw Error("The `styleMap` directive must be used in the `style` attribute and must be the only part in the attribute.")}render(t){return Object.keys(t).reduce(((e,r)=>{const s=t[r];return null==s?e:e+`${r=r.includes("-")?r:r.replace(/(?:^(webkit|moz|ms|o)|)(?=[A-Z])/g,"-$&").toLowerCase()}:${s};`}),"")}update(t,[e]){const{style:r}=t.element;if(void 0===this.ft)return this.ft=new Set(Object.keys(e)),this.render(e);for(const t of this.ft)null==e[t]&&(this.ft.delete(t),t.includes("-")?r.removeProperty(t):r[t]=null);for(const t in e){const s=e[t];if(null!=s){this.ft.add(t);const e="string"==typeof s&&s.endsWith(ie);t.includes("-")||e?r.setProperty(t,e?s.slice(0,-11):s,e?ee:""):r[t]=s;}}return R}});
+
+function getDeviceOrientation() {
+    return window.screen.orientation.type.startsWith("portrait") ? "portrait" : "landscape";
+}
+function getDeviceType() {
+    const { width, height } = window.screen;
+    const orientation = window.screen.orientation.type.startsWith("portrait") ? "portrait" : "landscape";
+    if ((orientation === "portrait" && width < 600 && width != 534) ||
+        (orientation === "landscape" && height < 600 && height != 534)) {
+        return "phone";
+    }
+    else {
+        return "tablet";
+    }
+}
+let deviceType = getDeviceType();
 
 function navigateToArea(area) {
     if (!area)
@@ -11633,7 +11633,6 @@ let ScreenSaver = class ScreenSaver extends h {
         this._visible = true;
         this._time = "Loading...";
         this._date = "Loading...";
-        this._resetTimerBound = this._resetTimer.bind(this);
     }
     static get styles() {
         return i$3 `
@@ -11648,25 +11647,25 @@ let ScreenSaver = class ScreenSaver extends h {
                 z-index: 9999;
                 pointer-events: none;
             }
-            .time-date-container {
+            .container {
                 position: absolute;
                 animation: fade-in-out 5s ease-in-out infinite;
             }
             .time,
             .date {
-                text-align: left;
+                text-align: center;
                 line-height: normal;
                 white-space: nowrap;
             }
             .time {
-                font-size: 3.6rem;
+                font-size: 5rem;
                 font-weight: 400;
                 color: rgb(180, 180, 180);
             }
             .date {
-                font-size: 1.8rem;
+                font-size: 2.5rem;
                 font-weight: 300;
-                color: rgb(255, 255, 255);
+                color: rgb(180, 180, 180);
             }
             @keyframes fade-in-out {
                 0% {
@@ -11685,70 +11684,48 @@ let ScreenSaver = class ScreenSaver extends h {
         `;
     }
     firstUpdated() {
-        this._updateTimeAndDate(); // Update time and date immediately
-        this._moveTimeDate();
-        window.addEventListener("mousemove", this._resetTimerBound);
-        window.addEventListener("keypress", this._resetTimerBound);
-        this._startTimer();
-        setInterval(() => this._updateTimeAndDate(), 60000); // Update time and date every minute
+        this._updateElement();
+        this._moveElement();
+        setInterval(() => this._updateElement(), 60000); // Update time and date every minute
     }
     disconnectedCallback() {
-        window.removeEventListener("mousemove", this._resetTimerBound);
-        window.removeEventListener("keypress", this._resetTimerBound);
         super.disconnectedCallback();
     }
     render() {
         if (!this._visible) {
-            console.log("Screen saver not visible");
             return D;
         }
-        console.log("Render called with time and date", this._time, this._date);
         return ke `
-            <div class="time-date-container">
+            <div class="container">
                 <div class="time">${this._time}</div>
                 <div class="date">${this._date}</div>
             </div>
         `;
     }
-    _updateTimeAndDate() {
+    _updateElement() {
         const now = new Date();
-        // Time format: h:mm (no leading zero for hours)
         const hours = now.getHours();
         const minutes = now.getMinutes();
         this._time = `${hours % 12 || 12}:${minutes < 10 ? "0" + minutes : minutes}`;
-        // Date format: day-of-week, month (3 letters), day
         const options = { weekday: "long", month: "short", day: "numeric" };
         this._date = now.toLocaleDateString(undefined, options);
     }
-    _startTimer() {
-        this._visible = true;
-        this._hideScreenSaverAfterTimeout();
-    }
-    _resetTimer() {
-        this._visible = true;
-        this.requestUpdate();
-        clearTimeout(this._hideScreenSaverAfterTimeout);
-        this._hideScreenSaverAfterTimeout();
-    }
-    _hideScreenSaverAfterTimeout() {
-        setTimeout(() => {
-            this._visible = false;
-            this.requestUpdate();
-        }, 30000);
-    }
-    _moveTimeDate() {
-        const container = this.shadowRoot?.querySelector(".time-date-container");
-        if (container) {
-            const maxWidth = window.innerWidth - container.clientWidth;
-            const maxHeight = window.innerHeight - container.clientHeight;
-            const randomX = Math.floor(Math.random() * maxWidth);
-            const randomY = Math.floor(Math.random() * maxHeight);
-            container.style.left = `${randomX}px`;
-            container.style.top = `${randomY}px`;
-        }
-        setTimeout(() => {
-            this._moveTimeDate();
-        }, 5000);
+    _moveElement() {
+        const move = () => {
+            const container = this.shadowRoot?.querySelector(".container");
+            if (container) {
+                const maxWidth = Math.max(0, window.innerWidth - container.clientWidth);
+                const maxHeight = Math.max(0, window.innerHeight - container.clientHeight);
+                const randomX = Math.floor(Math.random() * maxWidth);
+                const randomY = Math.floor(Math.random() * maxHeight);
+                container.style.left = `${randomX}px`;
+                container.style.top = `${randomY}px`;
+            }
+            setTimeout(() => {
+                requestAnimationFrame(move);
+            }, 15000);
+        };
+        requestAnimationFrame(move);
     }
 };
 __decorate([
@@ -14622,19 +14599,14 @@ window.smartqasa = window.smartqasa || {};
 window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();
 window.smartqasa.startArea = window.smartqasa.startArea || location.pathname.split("/").pop();
 window.customCards = window.customCards ?? [];
-// Idle timer logic
 let idleTimer;
 function startIdleTimer() {
-    if (deviceType === "tabletxx") {
-        idleTimer = window.setTimeout(() => {
-            const screenSaver = document.createElement("smartqasa-screen-saver");
-            document.body.appendChild(screenSaver);
-        }, 300000); // Show screen saver after 30 seconds of inactivity
-    }
+    idleTimer = window.setTimeout(() => {
+        const screenSaver = document.createElement("smartqasa-screen-saver");
+        document.body.appendChild(screenSaver);
+    }, 10000);
 }
 function resetIdleTimer() {
-    if (deviceType !== "tablet")
-        return;
     clearTimeout(idleTimer);
     const existingScreenSaver = document.querySelector("smartqasa-screen-saver");
     if (existingScreenSaver) {
@@ -14642,7 +14614,9 @@ function resetIdleTimer() {
     }
     startIdleTimer();
 }
-window.addEventListener("mousemove", resetIdleTimer);
-window.addEventListener("keypress", resetIdleTimer);
-startIdleTimer();
+if (deviceType === "tablet") {
+    window.addEventListener("mousemove", resetIdleTimer);
+    window.addEventListener("keypress", resetIdleTimer);
+    startIdleTimer();
+}
 console.info(`%c SmartQasa ⏏ ${version} `, "background-color: #0000ff; color: #ffffff; font-weight: 700;");

@@ -1,5 +1,3 @@
-import { deviceType } from "./utils/device-info";
-
 declare global {
     interface Window {
         browser_mod?: {
@@ -84,21 +82,18 @@ import "./tiles/thermostat";
 // Utils
 import "./utils/popup-confirmation";
 
-// Idle timer logic
+// Screen Saver
+import { deviceType } from "./utils/device-info";
 let idleTimer: number;
 
 function startIdleTimer() {
-    if (deviceType === "tabletxx") {
-        idleTimer = window.setTimeout(() => {
-            const screenSaver = document.createElement("smartqasa-screen-saver");
-            document.body.appendChild(screenSaver);
-        }, 300000); // Show screen saver after 30 seconds of inactivity
-    }
+    idleTimer = window.setTimeout(() => {
+        const screenSaver = document.createElement("smartqasa-screen-saver");
+        document.body.appendChild(screenSaver);
+    }, 10000);
 }
 
 function resetIdleTimer() {
-    if (deviceType !== "tablet") return;
-
     clearTimeout(idleTimer);
     const existingScreenSaver = document.querySelector("smartqasa-screen-saver");
     if (existingScreenSaver) {
@@ -107,10 +102,12 @@ function resetIdleTimer() {
     startIdleTimer();
 }
 
-window.addEventListener("mousemove", resetIdleTimer);
-window.addEventListener("keypress", resetIdleTimer);
+if (deviceType === "tablet") {
+    window.addEventListener("mousemove", resetIdleTimer);
+    window.addEventListener("keypress", resetIdleTimer);
 
-startIdleTimer();
+    startIdleTimer();
+}
 
 import { version } from "../package.json";
 console.info(`%c SmartQasa ⏏ ${version} `, "background-color: #0000ff; color: #ffffff; font-weight: 700;");

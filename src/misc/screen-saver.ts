@@ -7,8 +7,6 @@ export class ScreenSaver extends LitElement {
     @state() private _time: string = "Loading...";
     @state() private _date: string = "Loading...";
 
-    private _resetTimerBound = this._resetTimer.bind(this);
-
     static get styles(): CSSResultGroup {
         return css`
             :host {
@@ -22,25 +20,25 @@ export class ScreenSaver extends LitElement {
                 z-index: 9999;
                 pointer-events: none;
             }
-            .time-date-container {
+            .container {
                 position: absolute;
                 animation: fade-in-out 5s ease-in-out infinite;
             }
             .time,
             .date {
-                text-align: left;
+                text-align: center;
                 line-height: normal;
                 white-space: nowrap;
             }
             .time {
-                font-size: 3.6rem;
+                font-size: 5rem;
                 font-weight: 400;
                 color: rgb(180, 180, 180);
             }
             .date {
-                font-size: 1.8rem;
+                font-size: 2.5rem;
                 font-weight: 300;
-                color: rgb(255, 255, 255);
+                color: rgb(180, 180, 180);
             }
             @keyframes fade-in-out {
                 0% {
@@ -60,79 +58,55 @@ export class ScreenSaver extends LitElement {
     }
 
     protected firstUpdated(): void {
-        this._updateTimeAndDate(); // Update time and date immediately
-        this._moveTimeDate();
-        window.addEventListener("mousemove", this._resetTimerBound);
-        window.addEventListener("keypress", this._resetTimerBound);
-        this._startTimer();
-        setInterval(() => this._updateTimeAndDate(), 60000); // Update time and date every minute
+        this._updateElement();
+        this._moveElement();
+        setInterval(() => this._updateElement(), 60000); // Update time and date every minute
     }
 
     public disconnectedCallback(): void {
-        window.removeEventListener("mousemove", this._resetTimerBound);
-        window.removeEventListener("keypress", this._resetTimerBound);
         super.disconnectedCallback();
     }
 
     protected render(): TemplateResult | typeof nothing {
         if (!this._visible) {
-            console.log("Screen saver not visible");
             return nothing;
         }
-        console.log("Render called with time and date", this._time, this._date);
         return html`
-            <div class="time-date-container">
+            <div class="container">
                 <div class="time">${this._time}</div>
                 <div class="date">${this._date}</div>
             </div>
         `;
     }
 
-    private _updateTimeAndDate(): void {
+    private _updateElement(): void {
         const now = new Date();
 
-        // Time format: h:mm (no leading zero for hours)
         const hours = now.getHours();
         const minutes = now.getMinutes();
         this._time = `${hours % 12 || 12}:${minutes < 10 ? "0" + minutes : minutes}`;
 
-        // Date format: day-of-week, month (3 letters), day
         const options: Intl.DateTimeFormatOptions = { weekday: "long", month: "short", day: "numeric" };
         this._date = now.toLocaleDateString(undefined, options);
     }
 
-    private _startTimer(): void {
-        this._visible = true;
-        this._hideScreenSaverAfterTimeout();
-    }
+    private _moveElement(): void {
+        const move = () => {
+            const container = this.shadowRoot?.querySelector(".container") as HTMLElement;
+            if (container) {
+                const maxWidth = Math.max(0, window.innerWidth - container.clientWidth);
+                const maxHeight = Math.max(0, window.innerHeight - container.clientHeight);
+                const randomX = Math.floor(Math.random() * maxWidth);
+                const randomY = Math.floor(Math.random() * maxHeight);
+                container.style.left = `${randomX}px`;
+                container.style.top = `${randomY}px`;
+            }
 
-    private _resetTimer(): void {
-        this._visible = true;
-        this.requestUpdate();
-        clearTimeout(this._hideScreenSaverAfterTimeout as unknown as number);
-        this._hideScreenSaverAfterTimeout();
-    }
+            setTimeout(() => {
+                requestAnimationFrame(move);
+            }, 15000);
+        };
 
-    private _hideScreenSaverAfterTimeout(): void {
-        setTimeout(() => {
-            this._visible = false;
-            this.requestUpdate();
-        }, 30000);
-    }
-
-    private _moveTimeDate(): void {
-        const container = this.shadowRoot?.querySelector(".time-date-container") as HTMLElement;
-        if (container) {
-            const maxWidth = window.innerWidth - container.clientWidth;
-            const maxHeight = window.innerHeight - container.clientHeight;
-            const randomX = Math.floor(Math.random() * maxWidth);
-            const randomY = Math.floor(Math.random() * maxHeight);
-            container.style.left = `${randomX}px`;
-            container.style.top = `${randomY}px`;
-        }
-
-        setTimeout(() => {
-            this._moveTimeDate();
-        }, 5000);
+        requestAnimationFrame(move);
     }
 }
