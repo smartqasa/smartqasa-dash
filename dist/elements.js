@@ -1,3 +1,19 @@
+function getDeviceOrientation() {
+    return window.screen.orientation.type.startsWith("portrait") ? "portrait" : "landscape";
+}
+function getDeviceType() {
+    const { width, height } = window.screen;
+    const orientation = window.screen.orientation.type.startsWith("portrait") ? "portrait" : "landscape";
+    if ((orientation === "portrait" && width < 600 && width != 534) ||
+        (orientation === "landscape" && height < 600 && height != 534)) {
+        return "phone";
+    }
+    else {
+        return "tablet";
+    }
+}
+let deviceType = getDeviceType();
+
 /******************************************************************************
 Copyright (c) Microsoft Corporation.
 
@@ -71,6 +87,210 @@ const t$1=t=>(e,o)=>{void 0!==o?o.addInitializer((()=>{customElements.define(t,e
  * Copyright 2017 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
  */function r(r){return n({...r,state:!0,attribute:!1})}
+
+const screenSaverTimeout = 10000;
+const screenSaverMovement = 15000;
+const heaterColors = {
+    electric: "var(--sq-climate-heat-rgb, 250, 67, 54)",
+    heating: "var(--sq-climate-heat-rgb, 250, 67, 54)",
+    idle: "var(--sq-idle-rgb, 128, 128, 128)",
+    off: "var(--sq-inactive-rgb, 128, 128, 128)",
+    default: "var(--sq-unavailable-rgb, 255, 0, 255)",
+};
+const modeIcons = {
+    Home: "hass:home-account",
+    Away: "hass:map-marker-radius",
+    Guest: "hass:account-multiple",
+    Entertain: "hass:glass-cocktail",
+    Vacation: "hass:airplane",
+    default: "hass:help-rhombus",
+};
+const phaseIcons = {
+    Morning: "hass:weather-sunset-up",
+    Day: "hass:white-balance-sunny",
+    Evening: "hass:weather-night",
+    Night: "hass:sleep",
+    default: "hass:help-rhombus",
+};
+const thermostatColors = {
+    cooling: "var(--sq-climate-cool-rgb, 3, 169, 244)",
+    heating: "var(--sq-climate-heat-rgb, 250, 67, 54)",
+    fan_only: "var(--sq-climate-fan_only-rgb, 0, 255, 0)",
+    idle: "var(--sq-idle-rgb, 128, 128, 128)",
+    off: "var(--sq-inactive-rgb, 128, 128, 128)",
+    default: "var(--sq-unavailable-rgb, 255, 0, 255)",
+};
+const thermostatIcons = {
+    auto: "hass:thermostat-auto",
+    cool: "hass:snowflake",
+    heat: "hass:fire",
+    heat_cool: "hass:sun-snowflake-variant",
+    off: "hass:power",
+    default: "hass:thermostat-cog",
+};
+
+const HIDE_EVENTS = ["mousemove", "touchstart", "keypress", "orientationchange", "resize"];
+let ScreenSaver = class ScreenSaver extends h {
+    constructor() {
+        super(...arguments);
+        this._time = "Loading...";
+        this._date = "Loading...";
+    }
+    static get styles() {
+        return i$3 `
+            :host {
+                display: block;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: black;
+                z-index: 9999;
+                pointer-events: all;
+            }
+            .container {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                opacity: 0;
+                animation: fade-in 1.5s forwards;
+            }
+            .time,
+            .date {
+                text-align: center;
+                line-height: normal;
+                white-space: nowrap;
+            }
+            .time {
+                font-size: 5rem;
+                font-weight: 400;
+                color: rgb(180, 180, 180);
+            }
+            .date {
+                font-size: 2rem;
+                font-weight: 200;
+                color: rgb(180, 180, 180);
+            }
+            @keyframes fade-in {
+                0% {
+                    opacity: 0;
+                }
+                100% {
+                    opacity: 1;
+                }
+            }
+            @keyframes fade-out {
+                0% {
+                    opacity: 1;
+                }
+                100% {
+                    opacity: 0;
+                }
+            }
+        `;
+    }
+    initScreenSaver() {
+        this._startIdleTimer();
+        this._addEventListeners();
+    }
+    _startIdleTimer() {
+        this._idleTimer = window.setTimeout(() => {
+            this.showScreenSaver();
+        }, screenSaverTimeout);
+    }
+    _resetIdleTimer() {
+        clearTimeout(this._idleTimer);
+        this._removeExistingScreenSaver();
+        this._startIdleTimer();
+    }
+    _addEventListeners() {
+        HIDE_EVENTS.forEach((event) => window.addEventListener(event, this._resetIdleTimer.bind(this), { capture: true }));
+    }
+    _removeEventListeners() {
+        HIDE_EVENTS.forEach((event) => window.removeEventListener(event, this._resetIdleTimer.bind(this), { capture: true }));
+    }
+    disconnectedCallback() {
+        this._removeEventListeners();
+        clearTimeout(this._animationTimeout);
+        clearTimeout(this._idleTimer);
+        super.disconnectedCallback();
+    }
+    render() {
+        return ke `
+            <div class="container" @touchstart="${this._hideScreenSaver}">
+                <div class="time">${this._time}</div>
+                <div class="date">${this._date}</div>
+            </div>
+        `;
+    }
+    _hideScreenSaver(event) {
+        event.stopPropagation();
+        event.preventDefault();
+        clearTimeout(this._animationTimeout);
+        this._removeExistingScreenSaver();
+    }
+    _removeExistingScreenSaver() {
+        const existingScreenSaver = document.querySelector("smartqasa-screen-saver");
+        if (existingScreenSaver) {
+            existingScreenSaver.remove();
+        }
+    }
+    _updateElement() {
+        const now = new Date();
+        const hours = now.getHours();
+        const minutes = now.getMinutes();
+        const formattedTime = `${hours % 12 || 12}:${minutes < 10 ? "0" + minutes : minutes}`;
+        const options = { weekday: "long", month: "short", day: "numeric" };
+        const formattedDate = now.toLocaleDateString(undefined, options);
+        if (this._time !== formattedTime || this._date !== formattedDate) {
+            this._time = formattedTime;
+            this._date = formattedDate;
+            this.requestUpdate();
+        }
+    }
+    _cycle() {
+        this._moveElement();
+        const container = this.shadowRoot?.querySelector(".container");
+        if (container) {
+            container.style.animation = "fade-in 1.5s forwards";
+        }
+        this._animationTimeout = window.setTimeout(() => {
+            if (container) {
+                container.style.animation = "fade-out 1.5s forwards";
+            }
+            this._animationTimeout = window.setTimeout(() => {
+                this._cycle();
+            }, 1500);
+        }, screenSaverMovement + 1500);
+    }
+    _moveElement() {
+        const container = this.shadowRoot?.querySelector(".container");
+        if (container) {
+            const maxWidth = Math.max(0, window.innerWidth - container.clientWidth);
+            const maxHeight = Math.max(0, window.innerHeight - container.clientHeight);
+            const randomX = Math.floor(Math.random() * maxWidth);
+            const randomY = Math.floor(Math.random() * maxHeight);
+            container.style.left = `${randomX}px`;
+            container.style.top = `${randomY}px`;
+            this._updateElement();
+        }
+    }
+    showScreenSaver() {
+        this._cycle();
+    }
+};
+__decorate([
+    r()
+], ScreenSaver.prototype, "_time", void 0);
+__decorate([
+    r()
+], ScreenSaver.prototype, "_date", void 0);
+ScreenSaver = __decorate([
+    t$1("smartqasa-screen-saver")
+], ScreenSaver);
+
+var version = "2024.8.30b-2";
 
 const createElement$1 = (config) => {
     if (!config.type) {
@@ -183,22 +403,6 @@ const t={ATTRIBUTE:1,CHILD:2,PROPERTY:3,BOOLEAN_ATTRIBUTE:4,EVENT:5,ELEMENT:6},e
  * Copyright 2018 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
  */const ee="important",ie=" !"+ee,se=e(class extends i$1{constructor(e){if(super(e),e.type!==t.ATTRIBUTE||"style"!==e.name||e.strings?.length>2)throw Error("The `styleMap` directive must be used in the `style` attribute and must be the only part in the attribute.")}render(t){return Object.keys(t).reduce(((e,r)=>{const s=t[r];return null==s?e:e+`${r=r.includes("-")?r:r.replace(/(?:^(webkit|moz|ms|o)|)(?=[A-Z])/g,"-$&").toLowerCase()}:${s};`}),"")}update(t,[e]){const{style:r}=t.element;if(void 0===this.ft)return this.ft=new Set(Object.keys(e)),this.render(e);for(const t of this.ft)null==e[t]&&(this.ft.delete(t),t.includes("-")?r.removeProperty(t):r[t]=null);for(const t in e){const s=e[t];if(null!=s){this.ft.add(t);const e="string"==typeof s&&s.endsWith(ie);t.includes("-")||e?r.setProperty(t,e?s.slice(0,-11):s,e?ee:""):r[t]=s;}}return R}});
-
-function getDeviceOrientation() {
-    return window.screen.orientation.type.startsWith("portrait") ? "portrait" : "landscape";
-}
-function getDeviceType() {
-    const { width, height } = window.screen;
-    const orientation = window.screen.orientation.type.startsWith("portrait") ? "portrait" : "landscape";
-    if ((orientation === "portrait" && width < 600 && width != 534) ||
-        (orientation === "landscape" && height < 600 && height != 534)) {
-        return "phone";
-    }
-    else {
-        return "tablet";
-    }
-}
-let deviceType = getDeviceType();
 
 function navigateToArea(area) {
     if (!area)
@@ -11013,45 +11217,6 @@ function selectOptionDialog(config, stateObj) {
     window.browser_mod?.service("popup", dialogConfig);
 }
 
-const heaterColors = {
-    electric: "var(--sq-climate-heat-rgb, 250, 67, 54)",
-    heating: "var(--sq-climate-heat-rgb, 250, 67, 54)",
-    idle: "var(--sq-idle-rgb, 128, 128, 128)",
-    off: "var(--sq-inactive-rgb, 128, 128, 128)",
-    default: "var(--sq-unavailable-rgb, 255, 0, 255)",
-};
-const modeIcons = {
-    Home: "hass:home-account",
-    Away: "hass:map-marker-radius",
-    Guest: "hass:account-multiple",
-    Entertain: "hass:glass-cocktail",
-    Vacation: "hass:airplane",
-    default: "hass:help-rhombus",
-};
-const phaseIcons = {
-    Morning: "hass:weather-sunset-up",
-    Day: "hass:white-balance-sunny",
-    Evening: "hass:weather-night",
-    Night: "hass:sleep",
-    default: "hass:help-rhombus",
-};
-const thermostatColors = {
-    cooling: "var(--sq-climate-cool-rgb, 3, 169, 244)",
-    heating: "var(--sq-climate-heat-rgb, 250, 67, 54)",
-    fan_only: "var(--sq-climate-fan_only-rgb, 0, 255, 0)",
-    idle: "var(--sq-idle-rgb, 128, 128, 128)",
-    off: "var(--sq-inactive-rgb, 128, 128, 128)",
-    default: "var(--sq-unavailable-rgb, 255, 0, 255)",
-};
-const thermostatIcons = {
-    auto: "hass:thermostat-auto",
-    cool: "hass:snowflake",
-    heat: "hass:fire",
-    heat_cool: "hass:sun-snowflake-variant",
-    off: "hass:power",
-    default: "hass:thermostat-cog",
-};
-
 window.customCards.push({
     type: "smartqasa-select-chip",
     name: "SmartQasa Input Select Chip",
@@ -11626,162 +11791,6 @@ __decorate([
 PanelFooter = __decorate([
     t$1("smartqasa-panel-footer")
 ], PanelFooter);
-
-const HIDE_EVENTS = ["mousemove", "touchstart", "keypress", "orientationchange", "resize"];
-let ScreenSaver = class ScreenSaver extends h {
-    constructor() {
-        super(...arguments);
-        this._time = "Loading...";
-        this._date = "Loading...";
-    }
-    static get styles() {
-        return i$3 `
-            :host {
-                display: block;
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background-color: black;
-                z-index: 9999;
-                pointer-events: all;
-            }
-            .container {
-                position: absolute;
-                width: 100%;
-                height: 100%;
-                opacity: 0;
-                animation: fade-in 1.5s forwards;
-            }
-            .time,
-            .date {
-                text-align: center;
-                line-height: normal;
-                white-space: nowrap;
-            }
-            .time {
-                font-size: 5rem;
-                font-weight: 400;
-                color: rgb(180, 180, 180);
-            }
-            .date {
-                font-size: 2rem;
-                font-weight: 200;
-                color: rgb(180, 180, 180);
-            }
-            @keyframes fade-in {
-                0% {
-                    opacity: 0;
-                }
-                100% {
-                    opacity: 1;
-                }
-            }
-            @keyframes fade-out {
-                0% {
-                    opacity: 1;
-                }
-                100% {
-                    opacity: 0;
-                }
-            }
-        `;
-    }
-    firstUpdated() {
-        this._updateElement();
-        this._fadeIn();
-        this._addEventListeners();
-    }
-    _addEventListeners() {
-        HIDE_EVENTS.forEach((event) => window.addEventListener(event, this._hideScreenSaver.bind(this), { capture: true }));
-    }
-    _removeEventListeners() {
-        HIDE_EVENTS.forEach((event) => window.removeEventListener(event, this._hideScreenSaver.bind(this), { capture: true }));
-    }
-    disconnectedCallback() {
-        this._removeEventListeners();
-        clearTimeout(this._animationTimeout);
-        super.disconnectedCallback();
-    }
-    render() {
-        return ke `
-            <div class="container" @touchstart="${this._hideScreenSaver}">
-                <div class="time">${this._time}</div>
-                <div class="date">${this._date}</div>
-            </div>
-        `;
-    }
-    _hideScreenSaver(event) {
-        event.stopPropagation();
-        event.preventDefault();
-        clearTimeout(this._animationTimeout);
-        this.parentNode?.removeChild(this);
-    }
-    _updateElement() {
-        const now = new Date();
-        const hours = now.getHours();
-        const minutes = now.getMinutes();
-        const formattedTime = `${hours % 12 || 12}:${minutes < 10 ? "0" + minutes : minutes}`;
-        const options = { weekday: "long", month: "short", day: "numeric" };
-        const formattedDate = now.toLocaleDateString(undefined, options);
-        if (this._time !== formattedTime || this._date !== formattedDate) {
-            this._time = formattedTime;
-            this._date = formattedDate;
-            this.requestUpdate();
-        }
-    }
-    _fadeIn() {
-        const container = this.shadowRoot?.querySelector(".container");
-        if (container) {
-            container.style.animation = "fade-in 1.5s forwards";
-        }
-        this._animationTimeout = window.setTimeout(() => {
-            this._waitBeforeFadeOut();
-        }, 1500); // Wait for fade-in to complete
-    }
-    _waitBeforeFadeOut() {
-        this._animationTimeout = window.setTimeout(() => {
-            this._fadeOut();
-        }, 15000); // Display for 15 seconds before fading out
-    }
-    _fadeOut() {
-        const container = this.shadowRoot?.querySelector(".container");
-        if (container) {
-            container.style.animation = "fade-out 1.5s forwards";
-        }
-        this._animationTimeout = window.setTimeout(() => {
-            this._moveElement();
-        }, 1500); // Wait for fade-out to complete
-    }
-    _moveElement() {
-        const container = this.shadowRoot?.querySelector(".container");
-        if (container) {
-            const maxWidth = Math.max(0, window.innerWidth - container.clientWidth);
-            const maxHeight = Math.max(0, window.innerHeight - container.clientHeight);
-            const randomX = Math.floor(Math.random() * maxWidth);
-            const randomY = Math.floor(Math.random() * maxHeight);
-            container.style.left = `${randomX}px`;
-            container.style.top = `${randomY}px`;
-            this._updateElement(); // Update time and date before the next fade-in
-        }
-        this._animationTimeout = window.setTimeout(() => {
-            this._fadeIn();
-        }, 500); // Short pause before fading in again
-    }
-    showScreenSaver() {
-        this._fadeIn();
-    }
-};
-__decorate([
-    r()
-], ScreenSaver.prototype, "_time", void 0);
-__decorate([
-    r()
-], ScreenSaver.prototype, "_date", void 0);
-ScreenSaver = __decorate([
-    t$1("smartqasa-screen-saver")
-], ScreenSaver);
 
 let TimeDate = class TimeDate extends h {
     constructor() {
@@ -14635,30 +14644,15 @@ PopupConfirmation = __decorate([
     t$1("popup-confirmation")
 ], PopupConfirmation);
 
-var version = "2024.8.30b-2";
-
+// Import global types and interfaces
+// Initialize SmartQasa
 window.smartqasa = window.smartqasa || {};
 window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();
 window.smartqasa.startArea = window.smartqasa.startArea || location.pathname.split("/").pop();
-window.customCards = window.customCards ?? [];
-let idleTimer;
-function startIdleTimer() {
-    idleTimer = window.setTimeout(() => {
-        const screenSaver = document.createElement("smartqasa-screen-saver");
-        document.body.appendChild(screenSaver);
-    }, 10000);
-}
-function resetIdleTimer() {
-    clearTimeout(idleTimer);
-    const existingScreenSaver = document.querySelector("smartqasa-screen-saver");
-    if (existingScreenSaver) {
-        existingScreenSaver.remove();
-    }
-    startIdleTimer();
-}
+// Initialize Screen Saver
 if (deviceType === "tablet") {
-    window.addEventListener("mousemove", resetIdleTimer);
-    window.addEventListener("keypress", resetIdleTimer);
-    startIdleTimer();
+    const screenSaver = new ScreenSaver();
+    screenSaver.initScreenSaver(); // Initialize the screen saver logic
 }
+// Log Version
 console.info(`%c SmartQasa ⏏ ${version} `, "background-color: #0000ff; color: #ffffff; font-weight: 700;");

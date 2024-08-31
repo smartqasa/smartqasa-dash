@@ -1,3 +1,6 @@
+export const screenSaverTimeout = 10000;
+export const screenSaverMovement = 15000;
+
 export const heaterColors: Record<string, string> = {
     electric: "var(--sq-climate-heat-rgb, 250, 67, 54)",
     heating: "var(--sq-climate-heat-rgb, 250, 67, 54)",
