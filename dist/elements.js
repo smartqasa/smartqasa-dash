@@ -11627,11 +11627,10 @@ PanelFooter = __decorate([
     t$1("smartqasa-panel-footer")
 ], PanelFooter);
 
-const HIDE_EVENTS = ["mousemove", "touchstart", "keypress"];
+const HIDE_EVENTS = ["mousemove", "touchstart", "keypress", "orientationchange", "resize"];
 let ScreenSaver = class ScreenSaver extends h {
     constructor() {
         super(...arguments);
-        this._visible = true;
         this._time = "Loading...";
         this._date = "Loading...";
     }
@@ -11706,9 +11705,6 @@ let ScreenSaver = class ScreenSaver extends h {
         super.disconnectedCallback();
     }
     render() {
-        if (!this._visible) {
-            return D;
-        }
         return ke `
             <div class="container" @touchstart="${this._hideScreenSaver}">
                 <div class="time">${this._time}</div>
@@ -11719,9 +11715,8 @@ let ScreenSaver = class ScreenSaver extends h {
     _hideScreenSaver(event) {
         event.stopPropagation();
         event.preventDefault();
-        this._visible = false;
         clearTimeout(this._animationTimeout);
-        this.requestUpdate();
+        this.parentNode?.removeChild(this);
     }
     _updateElement() {
         const now = new Date();
@@ -11775,13 +11770,9 @@ let ScreenSaver = class ScreenSaver extends h {
         }, 500); // Short pause before fading in again
     }
     showScreenSaver() {
-        this._visible = true;
         this._fadeIn();
     }
 };
-__decorate([
-    r()
-], ScreenSaver.prototype, "_visible", void 0);
 __decorate([
     r()
 ], ScreenSaver.prototype, "_time", void 0);

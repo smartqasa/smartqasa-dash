@@ -1,11 +1,10 @@
 import { css, CSSResultGroup, html, LitElement, nothing, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
 
-const HIDE_EVENTS = ["mousemove", "touchstart", "keypress"] as const;
+const HIDE_EVENTS = ["mousemove", "touchstart", "keypress", "orientationchange", "resize"] as const;
 
 @customElement("smartqasa-screen-saver")
 export class ScreenSaver extends LitElement {
-    @state() private _visible: boolean = true;
     @state() private _time: string = "Loading...";
     @state() private _date: string = "Loading...";
 
@@ -91,9 +90,6 @@ export class ScreenSaver extends LitElement {
     }
 
     protected render(): TemplateResult | typeof nothing {
-        if (!this._visible) {
-            return nothing;
-        }
         return html`
             <div class="container" @touchstart="${this._hideScreenSaver}">
                 <div class="time">${this._time}</div>
@@ -105,9 +101,9 @@ export class ScreenSaver extends LitElement {
     private _hideScreenSaver(event: Event): void {
         event.stopPropagation();
         event.preventDefault();
-        this._visible = false;
         clearTimeout(this._animationTimeout);
-        this.requestUpdate();
+
+        this.parentNode?.removeChild(this);
     }
 
     private _updateElement(): void {
@@ -174,7 +170,6 @@ export class ScreenSaver extends LitElement {
     }
 
     public showScreenSaver(): void {
-        this._visible = true;
         this._fadeIn();
     }
 }
