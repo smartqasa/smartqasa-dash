@@ -9058,7 +9058,7 @@ let PanelCard = class PanelCard extends h {
         ["orientationchange", "resize"].forEach((event) => window.addEventListener(event, this._boundHandleDeviceChanges));
         this._syncTime();
         this._startSsIdleTimer();
-        SS_HIDE_EVENTS.forEach((event) => window.addEventListener(event, () => this._clearResetSs()));
+        SS_HIDE_EVENTS.forEach((event) => window.addEventListener(event, () => this._resetSsIdleTimer()));
         this._loading = false;
     }
     updated(changedProps) {
@@ -9112,7 +9112,7 @@ let PanelCard = class PanelCard extends h {
             return ke `<div>Loading...</div>`;
         if (this._screenSaverActive) {
             return ke `
-                <div class="screen-saver" @click="${this._clearResetSs}">
+                <div class="screen-saver" @click="${this._hideSsPanel}">
                     <div class="ss-element">
                         <div class="ss-time">${this._formattedTime()}</div>
                         <div class="ss-date">${this._formattedDate()}</div>
@@ -9451,10 +9451,11 @@ let PanelCard = class PanelCard extends h {
             console.log("Container position:", randomX, randomY);
         }
     }
-    _clearResetSs(e) {
-        console.log("Resetting idle timer");
-        if (e)
-            e.stopPropagation();
+    _hideSsPanel(e) {
+        e.stopPropagation();
+        this._resetSsIdleTimer();
+    }
+    _resetSsIdleTimer() {
         if (this._screenSaverActive) {
             this._screenSaverActive = false;
             this.requestUpdate();
