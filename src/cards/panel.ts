@@ -90,7 +90,7 @@ export class PanelCard extends LitElement {
 
         this._startSsIdleTimer();
 
-        SS_HIDE_EVENTS.forEach((event) => window.addEventListener(event, () => this._resetSsIdleTimer()));
+        SS_HIDE_EVENTS.forEach((event) => window.addEventListener(event, () => this._clearResetSs()));
 
         this._loading = false;
     }
@@ -156,7 +156,7 @@ export class PanelCard extends LitElement {
 
         if (this._screenSaverActive) {
             return html`
-                <div class="screen-saver" @click="${this._hideSsPanel}">
+                <div class="screen-saver" @click="${this._clearResetSs}">
                     <div class="ss-element">
                         <div class="ss-time">${this._formattedTime()}</div>
                         <div class="ss-date">${this._formattedDate()}</div>
@@ -544,16 +544,16 @@ export class PanelCard extends LitElement {
         }
     }
 
-    private _hideSsPanel(e: Event): void {
-        e.stopPropagation();
-        this._screenSaverActive = false;
-        this.requestUpdate();
-        clearTimeout(this._sSanimationTimer);
-        this._resetSsIdleTimer();
-    }
-
-    private _resetSsIdleTimer(): void {
+    private _clearResetSs(e?: Event): void {
         console.log("Resetting idle timer");
+        if (e) e.stopPropagation();
+
+        if (this._screenSaverActive) {
+            this._screenSaverActive = false;
+            this.requestUpdate();
+            clearTimeout(this._sSanimationTimer);
+        }
+
         clearTimeout(this._sSidleTimer);
         this._startSsIdleTimer();
     }
