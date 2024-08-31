@@ -14499,10 +14499,12 @@ let ScreenSaver = class ScreenSaver extends h {
                 height: 100%;
                 background-color: black;
                 z-index: 9999;
+                pointer-events: none;
             }
             .overlay {
                 width: 100%;
                 height: 100%;
+                pointer-events: all;
             }
             .container {
                 position: absolute;
@@ -14550,7 +14552,7 @@ let ScreenSaver = class ScreenSaver extends h {
         this._addEventListeners();
     }
     _addEventListeners() {
-        SS_HIDE_EVENTS.forEach((event) => window.addEventListener(event, this._hideScreenSaver.bind(this)));
+        SS_HIDE_EVENTS.forEach((event) => window.addEventListener(event, this._hideScreenSaver.bind(this), { capture: true }));
     }
     disconnectedCallback() {
         this._removeEventListeners();
@@ -14562,7 +14564,7 @@ let ScreenSaver = class ScreenSaver extends h {
     }
     render() {
         return ke `
-            <div class="overlay" @click="${this._hideScreenSaver}">
+            <div class="overlay" @click="${this._hideScreenSaver}" @touchstart="${this._hideScreenSaver}">
                 <div class="container">
                     <div class="time">${this._time}</div>
                     <div class="date">${this._date}</div>
