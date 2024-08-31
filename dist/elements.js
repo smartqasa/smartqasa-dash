@@ -11646,9 +11646,12 @@ let ScreenSaver = class ScreenSaver extends h {
                 height: 100%;
                 background-color: black;
                 z-index: 9999;
+                pointer-events: all;
             }
             .container {
                 position: absolute;
+                width: 100%;
+                height: 100%;
                 opacity: 0;
                 animation: fade-in 1.5s forwards;
             }
@@ -11686,18 +11689,16 @@ let ScreenSaver = class ScreenSaver extends h {
             }
         `;
     }
-    _addEventListeners() {
-        const hideHandler = this._hideScreenSaver.bind(this);
-        HIDE_EVENTS.forEach((event) => window.addEventListener(event, hideHandler));
-    }
-    _removeEventListeners() {
-        const hideHandler = this._hideScreenSaver.bind(this);
-        HIDE_EVENTS.forEach((event) => window.removeEventListener(event, hideHandler));
-    }
     firstUpdated() {
         this._updateElement();
         this._fadeIn();
         this._addEventListeners();
+    }
+    _addEventListeners() {
+        HIDE_EVENTS.forEach((event) => window.addEventListener(event, this._hideScreenSaver.bind(this), { capture: true }));
+    }
+    _removeEventListeners() {
+        HIDE_EVENTS.forEach((event) => window.removeEventListener(event, this._hideScreenSaver.bind(this), { capture: true }));
     }
     disconnectedCallback() {
         this._removeEventListeners();
@@ -11709,11 +11710,18 @@ let ScreenSaver = class ScreenSaver extends h {
             return D;
         }
         return ke `
-            <div class="container">
+            <div class="container" @touchstart="${this._hideScreenSaver}">
                 <div class="time">${this._time}</div>
                 <div class="date">${this._date}</div>
             </div>
         `;
+    }
+    _hideScreenSaver(event) {
+        event.stopPropagation();
+        event.preventDefault();
+        this._visible = false;
+        clearTimeout(this._animationTimeout);
+        this.requestUpdate();
     }
     _updateElement() {
         const now = new Date();
@@ -11766,16 +11774,8 @@ let ScreenSaver = class ScreenSaver extends h {
             this._fadeIn();
         }, 500); // Short pause before fading in again
     }
-    _hideScreenSaver(event) {
-        event.stopPropagation(); // Stop the event from propagating to underlying elements
-        event.preventDefault(); // Prevent the default action for the event
-        this._visible = false;
-        clearTimeout(this._animationTimeout);
-        this.requestUpdate();
-    }
     showScreenSaver() {
         this._visible = true;
-        this.style.pointerEvents = "all"; // Capture touch/mouse events to prevent them from triggering elements underneath
         this._fadeIn();
     }
 };

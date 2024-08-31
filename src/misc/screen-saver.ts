@@ -22,9 +22,12 @@ export class ScreenSaver extends LitElement {
                 height: 100%;
                 background-color: black;
                 z-index: 9999;
+                pointer-events: all;
             }
             .container {
                 position: absolute;
+                width: 100%;
+                height: 100%;
                 opacity: 0;
                 animation: fade-in 1.5s forwards;
             }
@@ -63,20 +66,22 @@ export class ScreenSaver extends LitElement {
         `;
     }
 
-    private _addEventListeners(): void {
-        const hideHandler = this._hideScreenSaver.bind(this);
-        HIDE_EVENTS.forEach((event) => window.addEventListener(event, hideHandler));
-    }
-
-    private _removeEventListeners(): void {
-        const hideHandler = this._hideScreenSaver.bind(this);
-        HIDE_EVENTS.forEach((event) => window.removeEventListener(event, hideHandler));
-    }
-
     protected firstUpdated(): void {
         this._updateElement();
         this._fadeIn();
         this._addEventListeners();
+    }
+
+    private _addEventListeners(): void {
+        HIDE_EVENTS.forEach((event) =>
+            window.addEventListener(event, this._hideScreenSaver.bind(this), { capture: true })
+        );
+    }
+
+    private _removeEventListeners(): void {
+        HIDE_EVENTS.forEach((event) =>
+            window.removeEventListener(event, this._hideScreenSaver.bind(this), { capture: true })
+        );
     }
 
     public disconnectedCallback(): void {
@@ -90,11 +95,19 @@ export class ScreenSaver extends LitElement {
             return nothing;
         }
         return html`
-            <div class="container">
+            <div class="container" @touchstart="${this._hideScreenSaver}">
                 <div class="time">${this._time}</div>
                 <div class="date">${this._date}</div>
             </div>
         `;
+    }
+
+    private _hideScreenSaver(event: Event): void {
+        event.stopPropagation();
+        event.preventDefault();
+        this._visible = false;
+        clearTimeout(this._animationTimeout);
+        this.requestUpdate();
     }
 
     private _updateElement(): void {
@@ -160,17 +173,8 @@ export class ScreenSaver extends LitElement {
         }, 500); // Short pause before fading in again
     }
 
-    private _hideScreenSaver(event: Event): void {
-        event.stopPropagation(); // Stop the event from propagating to underlying elements
-        event.preventDefault(); // Prevent the default action for the event
-        this._visible = false;
-        clearTimeout(this._animationTimeout);
-        this.requestUpdate();
-    }
-
     public showScreenSaver(): void {
         this._visible = true;
-        this.style.pointerEvents = "all"; // Capture touch/mouse events to prevent them from triggering elements underneath
         this._fadeIn();
     }
 }
