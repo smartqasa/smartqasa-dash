@@ -14499,7 +14499,7 @@ let ScreenSaver = class ScreenSaver extends h {
                 height: 100%;
                 background-color: black;
                 z-index: 9999;
-                pointer-events: none;
+                pointer-events: all;
             }
             .overlay {
                 width: 100%;
