@@ -11646,7 +11646,6 @@ let ScreenSaver = class ScreenSaver extends h {
                 height: 100%;
                 background-color: black;
                 z-index: 9999;
-                pointer-events: none;
             }
             .container {
                 position: absolute;
@@ -11697,7 +11696,7 @@ let ScreenSaver = class ScreenSaver extends h {
     }
     firstUpdated() {
         this._updateElement();
-        this._fadeIn(); // Directly call _fadeIn to start the cycle
+        this._fadeIn();
         this._addEventListeners();
     }
     disconnectedCallback() {
@@ -11769,8 +11768,14 @@ let ScreenSaver = class ScreenSaver extends h {
     }
     _hideScreenSaver() {
         this._visible = false;
+        this.style.pointerEvents = "none"; // Ensure events pass through to elements underneath
         clearTimeout(this._animationTimeout);
         this.requestUpdate();
+    }
+    showScreenSaver() {
+        this._visible = true;
+        this.style.pointerEvents = "all"; // Capture touch/mouse events to prevent them from triggering elements underneath
+        this._fadeIn();
     }
 };
 __decorate([

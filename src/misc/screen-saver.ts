@@ -22,7 +22,6 @@ export class ScreenSaver extends LitElement {
                 height: 100%;
                 background-color: black;
                 z-index: 9999;
-                pointer-events: none;
             }
             .container {
                 position: absolute;
@@ -76,7 +75,7 @@ export class ScreenSaver extends LitElement {
 
     protected firstUpdated(): void {
         this._updateElement();
-        this._fadeIn(); // Directly call _fadeIn to start the cycle
+        this._fadeIn();
         this._addEventListeners();
     }
 
@@ -163,7 +162,14 @@ export class ScreenSaver extends LitElement {
 
     private _hideScreenSaver(): void {
         this._visible = false;
+        this.style.pointerEvents = "none"; // Ensure events pass through to elements underneath
         clearTimeout(this._animationTimeout);
         this.requestUpdate();
+    }
+
+    public showScreenSaver(): void {
+        this._visible = true;
+        this.style.pointerEvents = "all"; // Capture touch/mouse events to prevent them from triggering elements underneath
+        this._fadeIn();
     }
 }
