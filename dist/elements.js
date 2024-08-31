@@ -14610,7 +14610,7 @@ let ScreenSaver = class ScreenSaver extends h {
             const randomY = Math.floor(Math.random() * maxHeight);
             container.style.left = `${randomX}px`;
             container.style.top = `${randomY}px`;
-            console.log("Moving screen saver to", randomX, randomY);
+            console.log("Moving screen saver", maxWidth, maxHeight);
             this._updateElement();
         }
     }

@@ -153,7 +153,7 @@ export class ScreenSaver extends LitElement {
             container.style.left = `${randomX}px`;
             container.style.top = `${randomY}px`;
 
-            console.log("Moving screen saver to", randomX, randomY);
+            console.log("Moving screen saver", maxWidth, maxHeight);
             this._updateElement();
         }
     }
