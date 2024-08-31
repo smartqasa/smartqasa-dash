@@ -156,8 +156,8 @@ export class PanelCard extends LitElement {
 
         if (this._screenSaverActive) {
             return html`
-                <div class="screen-element" @click="${this._hideSsPanel}">
-                    <div class="ss-container">
+                <div class="screen-saver" @click="${this._hideSsPanel}">
+                    <div class="ss-element">
                         <div class="ss-time">${this._formattedTime()}</div>
                         <div class="ss-date">${this._formattedDate()}</div>
                     </div>
