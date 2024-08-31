@@ -12,6 +12,7 @@ import { loadYamlAsJson } from "../utils/load-yaml-as-json";
 import { areasDialog } from "../misc/areas-dialog";
 import { entertainDialog } from "../misc/entertain-dialog";
 import { menuConfig } from "../misc/menu-config";
+import { SS_CYCLE_TIMER, SS_HIDE_EVENTS, SS_IDLE_TIMER } from "../const";
 import panelStyles from "../styles/panel.css";
 import swiperStyles from "swiper/swiper-bundle.css";
 import defaultImage from "../assets/images/default.png";
@@ -48,6 +49,7 @@ export class PanelCard extends LitElement {
     @state() private _isAdmin = false;
     @state() private _deviceOrientation: string = getDeviceOrientation();
     @state() private _deviceType: string = getDeviceType();
+    private _timeIntervalId: number | undefined;
     private _boundHandleDeviceChanges = this._handleDeviceChanges.bind(this);
     private _swiper?: Swiper;
     private _resetTimer?: ReturnType<typeof setTimeout>;
@@ -57,6 +59,10 @@ export class PanelCard extends LitElement {
     private _areaChips: LovelaceCard[] = [];
     private _bodyTiles: LovelaceCard[][] = [];
     private _bodyColumns: number[] = [];
+
+    private _screenSaverActive = false;
+    private _sSidleTimer: number | undefined;
+    private _sSanimationTimer: number | undefined;
 
     static styles: CSSResultGroup = [unsafeCSS(swiperStyles), unsafeCSS(panelStyles)];
 
@@ -71,13 +77,16 @@ export class PanelCard extends LitElement {
 
         await this._loadContent();
 
-        if (this._deviceType === "tablet") this._initializeSwiper();
+        if (this._deviceType === "tablet") {
+            this._initializeSwiper();
+            this._startResetTimer();
+        }
 
         ["orientationchange", "resize"].forEach((event) =>
             window.addEventListener(event, this._boundHandleDeviceChanges)
         );
 
-        this._startResetTimer();
+        this._syncTime();
 
         this._loading = false;
     }
@@ -124,6 +133,10 @@ export class PanelCard extends LitElement {
 
     disconnectedCallback() {
         super.disconnectedCallback();
+        if (this._timeIntervalId !== undefined) {
+            clearInterval(this._timeIntervalId);
+        }
+
         ["orientationchange", "resize"].forEach((event) =>
             window.removeEventListener(event, this._boundHandleDeviceChanges)
         );
@@ -137,10 +150,16 @@ export class PanelCard extends LitElement {
     protected render(): TemplateResult {
         if (this._loading) return html`<div>Loading...</div>`;
 
-        /*
-        console.log("Orientation", this._deviceOrientation);
-        console.log("Type", this._deviceType);
-        */
+        if (this._screenSaverActive) {
+            return html`
+                <div class="screen-element" @click="${this._hideSsPanel}">
+                    <div class="ss-container">
+                        <div class="ss-time">${this._formattedTime}</div>
+                        <div class="ss-date">${this._formattedDate}</div>
+                    </div>
+                </div>
+            `;
+        }
 
         const containerStyle = {
             height: this._isAdmin ? "calc(100vh - 56px)" : "100vh",
@@ -157,14 +176,11 @@ export class PanelCard extends LitElement {
     }
 
     private _renderHeader() {
-        let time = this.hass?.states["sensor.current_time"]?.state || "Loading...";
-        let date = this.hass?.states["sensor.current_date"]?.state || "Loading...";
-
         return html`
             <div class="header-container">
                 <div class="header-time-date" @click="${this._launchClock}">
-                    <div class="time">${time}</div>
-                    <div class="date">${date}</div>
+                    <div class="time">${this._formattedTime()}</div>
+                    <div class="date">${this._formattedDate()}</div>
                 </div>
                 <div class="header-chips">
                     ${this._headerChips.map((chip) => html`<div class="chip">${chip}</div>`)}
@@ -260,6 +276,34 @@ export class PanelCard extends LitElement {
                 <span>${name}</span>
             </div>
         `;
+    }
+
+    private _syncTime() {
+        const syncTime = () => {
+            const now = new Date();
+            const millisecondsUntilNextSecond = 1000 - now.getMilliseconds();
+
+            setTimeout(() => {
+                requestAnimationFrame(syncTime);
+            }, millisecondsUntilNextSecond);
+        };
+
+        syncTime();
+    }
+
+    private _formattedTime(): string {
+        const now = new Date();
+        const hours = now.getHours();
+        const minutes = now.getMinutes();
+        const formattedTime = `${hours % 12 || 12}:${minutes < 10 ? "0" + minutes : minutes}`;
+        return formattedTime;
+    }
+
+    private _formattedDate(): string {
+        const now = new Date();
+        const options: Intl.DateTimeFormatOptions = { weekday: "long", month: "short", day: "numeric" };
+        const formattedDate = now.toLocaleDateString(undefined, options);
+        return formattedDate;
     }
 
     private _initializeSwiper() {
@@ -453,5 +497,62 @@ export class PanelCard extends LitElement {
         } catch (error) {
             console.error("Error loading menu configuration", error);
         }
+    }
+
+    private _runSsCycle(): void {
+        this._moveSsElement();
+
+        const container = this.shadowRoot?.querySelector(".container") as HTMLElement;
+        if (container) {
+            container.style.animation = "fade-in 1.5s forwards";
+        }
+
+        this._sSanimationTimer = window.setTimeout(() => {
+            if (container) {
+                container.style.animation = "fade-out 1.5s forwards";
+            }
+
+            this._sSanimationTimer = window.setTimeout(() => {
+                this._runSsCycle();
+            }, 1500);
+        }, SS_CYCLE_TIMER + 1500);
+    }
+
+    private _moveSsElement(): void {
+        const container = this.shadowRoot?.querySelector(".container") as HTMLElement;
+        if (container) {
+            const maxWidth = Math.max(0, window.innerWidth - container.clientWidth);
+            const maxHeight = Math.max(0, window.innerHeight - container.clientHeight);
+            const randomX = Math.floor(Math.random() * maxWidth);
+            const randomY = Math.floor(Math.random() * maxHeight);
+            container.style.left = `${randomX}px`;
+            container.style.top = `${randomY}px`;
+
+            console.log("Container position:", randomX, randomY);
+        }
+    }
+
+    private _startSsIdleTimer(): void {
+        this._sSidleTimer = window.setTimeout(() => {
+            const screenSaver = document.createElement("smartqasa-screen-saver");
+            document.body.appendChild(screenSaver);
+        }, SS_IDLE_TIMER);
+    }
+
+    private _hideSsPanel(e: Event): void {
+        e.stopPropagation();
+        clearTimeout(this._sSanimationTimer);
+        this._resetSsIdleTimer();
+        this.parentNode?.removeChild(this);
+    }
+
+    private _resetSsIdleTimer(): void {
+        console.log("Resetting idle timer");
+        clearTimeout(this._sSidleTimer);
+        const existingScreenSaver = document.querySelector("smartqasa-screen-saver");
+        if (existingScreenSaver) {
+            existingScreenSaver.remove();
+        }
+        this._startSsIdleTimer();
     }
 }
