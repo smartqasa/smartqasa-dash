@@ -1,6 +1,6 @@
 import { css, CSSResultGroup, html, LitElement, nothing, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
-import { SS_HIDE_EVENTS, SS_IDLE_TIMEOUT } from "../const"; // Assuming these are defined in const.ts
+import { SS_CYCLE_TIMER, SS_HIDE_EVENTS, SS_IDLE_TIMER } from "../const";
 
 @customElement("smartqasa-screen-saver")
 export class ScreenSaver extends LitElement {
@@ -20,11 +20,11 @@ export class ScreenSaver extends LitElement {
                 height: 100%;
                 background-color: black;
                 z-index: 9999;
-                pointer-events: all;
             }
             .overlay {
                 width: 100%;
                 height: 100%;
+                pointer-events: all;
             }
             .container {
                 position: absolute;
@@ -141,16 +141,16 @@ export class ScreenSaver extends LitElement {
             }
 
             this._animationTimeout = window.setTimeout(() => {
-                this._cycle(); // Start the cycle again
-            }, 1500); // Wait for fade-out to complete
-        }, 16500); // 1500ms fade-in + 15000ms display time
+                this._cycle();
+            }, 1500);
+        }, SS_CYCLE_TIMER + 1500);
     }
 
     private _moveElement(): void {
         const container = this.shadowRoot?.querySelector(".container") as HTMLElement;
         if (container) {
-            const maxWidth = window.innerWidth - container.clientWidth;
-            const maxHeight = window.innerHeight - container.clientHeight;
+            const maxWidth = Math.max(0, window.innerWidth - container.clientWidth);
+            const maxHeight = Math.max(0, window.innerHeight - container.clientHeight);
             const randomX = Math.floor(Math.random() * maxWidth);
             const randomY = Math.floor(Math.random() * maxHeight);
             container.style.left = `${randomX}px`;
@@ -173,10 +173,11 @@ function startIdleTimer(): void {
     idleTimer = window.setTimeout(() => {
         const screenSaver = document.createElement("smartqasa-screen-saver");
         document.body.appendChild(screenSaver);
-    }, SS_IDLE_TIMEOUT);
+    }, SS_IDLE_TIMER);
 }
 
 export function resetIdleTimer(): void {
+    console.log("Resetting idle timer");
     clearTimeout(idleTimer);
     const existingScreenSaver = document.querySelector("smartqasa-screen-saver");
     if (existingScreenSaver) {

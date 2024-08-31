@@ -1,7 +1,6 @@
 export const SS_HIDE_EVENTS = ["mousemove", "touchstart", "keypress", "orientationchange", "resize"] as const;
-export const SS_IDLE_TIMEOUT = 10000; // 10 seconds
-export const FADE_DURATION = 1.5; // 1.5 seconds
-export const DISPLAY_DURATION = 15000; // 15 seconds
+export const SS_IDLE_TIMER = 10000; // 10 seconds
+export const SS_CYCLE_TIMER = 15000; // 15 seconds
 
 export const heaterColors: Record<string, string> = {
     electric: "var(--sq-climate-heat-rgb, 250, 67, 54)",

@@ -11014,7 +11014,8 @@ function selectOptionDialog(config, stateObj) {
 }
 
 const SS_HIDE_EVENTS = ["mousemove", "touchstart", "keypress", "orientationchange", "resize"];
-const SS_IDLE_TIMEOUT = 10000; // 10 seconds
+const SS_IDLE_TIMER = 10000; // 10 seconds
+const SS_CYCLE_TIMER = 15000; // 15 seconds
 const heaterColors = {
     electric: "var(--sq-climate-heat-rgb, 250, 67, 54)",
     heating: "var(--sq-climate-heat-rgb, 250, 67, 54)",
@@ -14498,11 +14499,11 @@ let ScreenSaver = class ScreenSaver extends h {
                 height: 100%;
                 background-color: black;
                 z-index: 9999;
-                pointer-events: all;
             }
             .overlay {
                 width: 100%;
                 height: 100%;
+                pointer-events: all;
             }
             .container {
                 position: absolute;
@@ -14600,15 +14601,15 @@ let ScreenSaver = class ScreenSaver extends h {
                 container.style.animation = "fade-out 1.5s forwards";
             }
             this._animationTimeout = window.setTimeout(() => {
-                this._cycle(); // Start the cycle again
-            }, 1500); // Wait for fade-out to complete
-        }, 16500); // 1500ms fade-in + 15000ms display time
+                this._cycle();
+            }, 1500);
+        }, SS_CYCLE_TIMER + 1500);
     }
     _moveElement() {
         const container = this.shadowRoot?.querySelector(".container");
         if (container) {
-            const maxWidth = window.innerWidth - container.clientWidth;
-            const maxHeight = window.innerHeight - container.clientHeight;
+            const maxWidth = Math.max(0, window.innerWidth - container.clientWidth);
+            const maxHeight = Math.max(0, window.innerHeight - container.clientHeight);
             const randomX = Math.floor(Math.random() * maxWidth);
             const randomY = Math.floor(Math.random() * maxHeight);
             container.style.left = `${randomX}px`;
@@ -14636,9 +14637,10 @@ function startIdleTimer() {
     idleTimer = window.setTimeout(() => {
         const screenSaver = document.createElement("smartqasa-screen-saver");
         document.body.appendChild(screenSaver);
-    }, SS_IDLE_TIMEOUT);
+    }, SS_IDLE_TIMER);
 }
 function resetIdleTimer() {
+    console.log("Resetting idle timer");
     clearTimeout(idleTimer);
     const existingScreenSaver = document.querySelector("smartqasa-screen-saver");
     if (existingScreenSaver) {
