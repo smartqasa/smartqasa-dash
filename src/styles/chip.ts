@@ -18,7 +18,7 @@ export const chipBaseStyle = css`
 
     .container:focus,
     .container:active {
-        background-color: var(--sq-card-ripple-color);
+        background-color: var(--sq-ripple-color);
         border-radius: var(--sq-chip-border-radius);
         outline: none;
     }

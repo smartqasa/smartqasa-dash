@@ -10179,7 +10179,7 @@ const chipBaseStyle = i$3 `
 
     .container:focus,
     .container:active {
-        background-color: var(--sq-card-ripple-color);
+        background-color: var(--sq-ripple-color);
         border-radius: var(--sq-chip-border-radius);
         outline: none;
     }
@@ -11860,7 +11860,7 @@ const tileBaseStyle = i$3 `
 
     .container:focus,
     .container:active {
-        background-color: var(--sq-card-ripple-color);
+        background-color: var(--sq-ripple-color);
         border-radius: var(--sq-card-border-radius, 1.5rem);
         outline: none;
     }
