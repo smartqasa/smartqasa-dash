@@ -90,7 +90,7 @@ export class PanelCard extends LitElement {
 
         this._startSsIdleTimer();
 
-        SS_HIDE_EVENTS.forEach((event) => window.addEventListener(event, () => this._resetSsIdleTimer()));
+        //SS_HIDE_EVENTS.forEach((event) => window.addEventListener(event, () => this._resetSsIdleTimer()));
 
         this._loading = false;
     }
@@ -153,6 +153,16 @@ export class PanelCard extends LitElement {
 
         return html`
             <div
+                class="screen-saver"
+                @click=${this._hideSsPanel}
+                style="display: ${this._screenSaverActive ? "block" : "none"};"
+            >
+                <div class="ss-element">
+                    <div class="ss-time">${this._formattedTime()}</div>
+                    <div class="ss-date">${this._formattedDate()}</div>
+                </div>
+            </div>
+            <div
                 class="container"
                 style="display: ${!this._screenSaverActive ? "grid" : "none"}; height: ${this._isAdmin
                     ? "calc(100vh - 56px)"
@@ -160,12 +170,6 @@ export class PanelCard extends LitElement {
             >
                 ${this._deviceType === "tablet" ? this._renderHeader() : nothing} ${this._renderArea()}
                 ${this._renderBody()} ${isPhoneLandscape ? nothing : this._renderFooter()}
-            </div>
-            <div class="screen-saver" style="display: ${this._screenSaverActive ? "block" : "none"};">
-                <div class="ss-element">
-                    <div class="ss-time">${this._formattedTime()}</div>
-                    <div class="ss-date">${this._formattedDate()}</div>
-                </div>
             </div>
         `;
     }

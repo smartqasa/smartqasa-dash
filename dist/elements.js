@@ -8945,7 +8945,6 @@ async function menuConfig(menu_tab) {
     return menuConfig;
 }
 
-const SS_HIDE_EVENTS = ["keypress", "mousemove", "orientationchange", "resize", "touchstart"];
 const SS_IDLE_TIMER = 10000; // 10 seconds
 const SS_CYCLE_TIMER = 15000; // 15 seconds
 const heaterColors = {
@@ -9058,7 +9057,7 @@ let PanelCard = class PanelCard extends h {
         ["orientationchange", "resize"].forEach((event) => window.addEventListener(event, this._boundHandleDeviceChanges));
         this._syncTime();
         this._startSsIdleTimer();
-        SS_HIDE_EVENTS.forEach((event) => window.addEventListener(event, () => this._resetSsIdleTimer()));
+        //SS_HIDE_EVENTS.forEach((event) => window.addEventListener(event, () => this._resetSsIdleTimer()));
         this._loading = false;
     }
     updated(changedProps) {
@@ -9109,6 +9108,16 @@ let PanelCard = class PanelCard extends h {
         const isPhoneLandscape = this._deviceType === "phone" && this._deviceOrientation === "landscape";
         return ke `
             <div
+                class="screen-saver"
+                @click=${this._hideSsPanel}
+                style="display: ${this._screenSaverActive ? "block" : "none"};"
+            >
+                <div class="ss-element">
+                    <div class="ss-time">${this._formattedTime()}</div>
+                    <div class="ss-date">${this._formattedDate()}</div>
+                </div>
+            </div>
+            <div
                 class="container"
                 style="display: ${!this._screenSaverActive ? "grid" : "none"}; height: ${this._isAdmin
             ? "calc(100vh - 56px)"
@@ -9116,12 +9125,6 @@ let PanelCard = class PanelCard extends h {
             >
                 ${this._deviceType === "tablet" ? this._renderHeader() : D} ${this._renderArea()}
                 ${this._renderBody()} ${isPhoneLandscape ? D : this._renderFooter()}
-            </div>
-            <div class="screen-saver" style="display: ${this._screenSaverActive ? "block" : "none"};">
-                <div class="ss-element">
-                    <div class="ss-time">${this._formattedTime()}</div>
-                    <div class="ss-date">${this._formattedDate()}</div>
-                </div>
             </div>
         `;
     }
