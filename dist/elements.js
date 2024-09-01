@@ -9416,7 +9416,7 @@ let ScreenSaver = class ScreenSaver extends h {
                 position: absolute;
                 padding: 2rem;
                 background-color: transparent;
-                opacity: 0; /* Start as invisible */
+                opacity: 0;
                 animation: fade-in 1.5s forwards;
             }
             .time,
@@ -9424,14 +9424,15 @@ let ScreenSaver = class ScreenSaver extends h {
                 text-align: center;
                 line-height: normal;
                 white-space: nowrap;
+                transition: all 0.5s ease-in-out;
             }
             .time {
-                font-size: 6rem;
+                font-size: 7rem;
                 font-weight: 300;
                 color: rgb(140, 140, 140);
             }
             .date {
-                font-size: 2rem;
+                font-size: 2.5rem;
                 font-weight: 200;
                 color: rgb(140, 140, 140);
             }
@@ -9474,7 +9475,7 @@ let ScreenSaver = class ScreenSaver extends h {
     _startClock() {
         this._timeIntervalId = window.setInterval(() => {
             this._updateElement();
-        }, 1000); // Update time every second
+        }, 1000);
     }
     _cycleElement() {
         const element = this.shadowRoot?.querySelector(".element");
@@ -9482,16 +9483,16 @@ let ScreenSaver = class ScreenSaver extends h {
         if (element) {
             element.style.animation = "fade-in 1.5s forwards";
             setTimeout(() => {
-                element.style.animation = ""; // Clear fade-in animation
+                element.style.animation = "";
                 setTimeout(() => {
                     element.style.animation = "fade-out 1.5s forwards";
                     setTimeout(() => {
                         this._moveElement();
                         element.style.animation = "fade-in 1.5s forwards";
-                        this._cycleElement(); // Repeat the cycle
-                    }, 1500); // Wait for fade-out to complete
-                }, moveTimer); // Wait for move_timer duration
-            }, 1500); // Wait for initial fade-in to complete
+                        this._cycleElement();
+                    }, 1500);
+                }, moveTimer);
+            }, 1500);
         }
     }
     _updateElement() {
