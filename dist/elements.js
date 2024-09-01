@@ -9452,9 +9452,13 @@ let ScreenSaver = class ScreenSaver extends h {
             }
         `;
     }
+    setConfig(config) {
+        this._config = { ...config };
+    }
     firstUpdated() {
         this._updateElement();
         this._startClock();
+        this._startMoveElement();
     }
     render() {
         return ke `
@@ -9467,9 +9471,16 @@ let ScreenSaver = class ScreenSaver extends h {
         `;
     }
     _startClock() {
-        this._intervalId = window.setInterval(() => {
+        this._timeIntervalId = window.setInterval(() => {
             this._updateElement();
-        }, 1000); // Check every second
+        }, 1000);
+    }
+    _startMoveElement() {
+        this._moveElement();
+        const moveTimer = (this._config?.move_timer ?? 30) * 1000;
+        this._moveIntervalId = window.setInterval(() => {
+            this._moveElement();
+        }, moveTimer);
     }
     _updateElement() {
         const now = new Date();
@@ -9489,12 +9500,18 @@ let ScreenSaver = class ScreenSaver extends h {
         }
     }
     disconnectedCallback() {
-        if (this._intervalId !== undefined) {
-            window.clearInterval(this._intervalId);
+        if (this._timeIntervalId !== undefined) {
+            window.clearInterval(this._timeIntervalId);
+        }
+        if (this._moveIntervalId !== undefined) {
+            window.clearInterval(this._moveIntervalId);
         }
         super.disconnectedCallback();
     }
 };
+__decorate([
+    r()
+], ScreenSaver.prototype, "_config", void 0);
 __decorate([
     r()
 ], ScreenSaver.prototype, "_time", void 0);

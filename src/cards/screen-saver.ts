@@ -1,6 +1,11 @@
 import { css, CSSResultGroup, html, LitElement, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
+import { LovelaceCardConfig } from "../types";
 import { formattedDate, formattedTime } from "../utils/format-date-time";
+
+interface Config extends LovelaceCardConfig {
+    move_timer?: number;
+}
 
 window.customCards.push({
     type: "smartqasa-screen-saver",
@@ -11,10 +16,12 @@ window.customCards.push({
 
 @customElement("smartqasa-screen-saver")
 export class ScreenSaver extends LitElement {
+    @state() private _config?: Config;
     @state() private _time: string = "Loading...";
     @state() private _date: string = "Loading...";
 
-    private _intervalId: number | undefined;
+    private _timeIntervalId: number | undefined;
+    private _moveIntervalId: number | undefined;
 
     static get styles(): CSSResultGroup {
         return css`
@@ -71,9 +78,14 @@ export class ScreenSaver extends LitElement {
         `;
     }
 
+    public setConfig(config: Config) {
+        this._config = { ...config };
+    }
+
     protected firstUpdated(): void {
         this._updateElement();
         this._startClock();
+        this._startMoveElement();
     }
 
     protected render(): TemplateResult {
@@ -88,9 +100,19 @@ export class ScreenSaver extends LitElement {
     }
 
     private _startClock(): void {
-        this._intervalId = window.setInterval(() => {
+        this._timeIntervalId = window.setInterval(() => {
             this._updateElement();
-        }, 1000); // Check every second
+        }, 1000);
+    }
+
+    private _startMoveElement(): void {
+        this._moveElement();
+
+        const moveTimer = (this._config?.move_timer ?? 30) * 1000;
+
+        this._moveIntervalId = window.setInterval(() => {
+            this._moveElement();
+        }, moveTimer);
     }
 
     private _updateElement(): void {
@@ -116,8 +138,11 @@ export class ScreenSaver extends LitElement {
     }
 
     disconnectedCallback(): void {
-        if (this._intervalId !== undefined) {
-            window.clearInterval(this._intervalId);
+        if (this._timeIntervalId !== undefined) {
+            window.clearInterval(this._timeIntervalId);
+        }
+        if (this._moveIntervalId !== undefined) {
+            window.clearInterval(this._moveIntervalId);
         }
         super.disconnectedCallback();
     }
