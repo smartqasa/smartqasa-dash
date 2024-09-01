@@ -31,6 +31,7 @@ window.customCards = window.customCards ?? [];
 // Cards
 import "./cards/horizontal-stack";
 import "./cards/panel";
+import "./cards/screen-saver";
 import "./cards/vertical-stack";
 import "./cards/tv-remote";
 

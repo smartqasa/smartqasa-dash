@@ -9387,6 +9387,125 @@ PanelCard = __decorate([
 ], PanelCard);
 
 window.customCards.push({
+    type: "smartqasa-screen-saver",
+    name: "SmartQasa Screen Saver Card",
+    preview: true,
+    description: "A SmartQasa card for displaying a screen saver.",
+});
+let ScreenSaver = class ScreenSaver extends h {
+    constructor() {
+        super(...arguments);
+        this._time = "Loading...";
+        this._date = "Loading...";
+    }
+    static get styles() {
+        return i$3 `
+            :host {
+                display: block;
+                width: 100%;
+                height: 100%;
+                background-color: black;
+                box-sizing: border-box;
+            }
+            .container {
+                width: 100%;
+                height: 100%;
+                position: relative;
+            }
+            .element {
+                position: absolute;
+                padding: 2rem;
+                background-color: transparent;
+                animation: fade-in 1.5s forwards;
+            }
+            .time,
+            .date {
+                text-align: center;
+                line-height: normal;
+                white-space: nowrap;
+            }
+            .time {
+                font-size: 6rem;
+                font-weight: 300;
+                color: rgb(140, 140, 140);
+            }
+            .date {
+                font-size: 2rem;
+                font-weight: 200;
+                color: rgb(140, 140, 140);
+            }
+            @keyframes fade-in {
+                0% {
+                    opacity: 0;
+                }
+                100% {
+                    opacity: 1;
+                }
+            }
+            @keyframes fade-out {
+                0% {
+                    opacity: 1;
+                }
+                100% {
+                    opacity: 0;
+                }
+            }
+        `;
+    }
+    firstUpdated() {
+        this._updateElement();
+        this._startClock();
+    }
+    render() {
+        return ke `
+            <div class="container">
+                <div class="element">
+                    <div class="time">${this._time}</div>
+                    <div class="date">${this._date}</div>
+                </div>
+            </div>
+        `;
+    }
+    _startClock() {
+        this._intervalId = window.setInterval(() => {
+            this._updateElement();
+        }, 1000); // Check every second
+    }
+    _updateElement() {
+        const now = new Date();
+        this._time = formattedTime(now);
+        this._date = formattedDate(now);
+    }
+    _moveElement() {
+        const container = this.shadowRoot?.querySelector(".container");
+        const element = this.shadowRoot?.querySelector(".element");
+        if (container && element) {
+            const maxWidth = container.clientWidth - element.clientWidth;
+            const maxHeight = container.clientHeight - element.clientHeight;
+            const randomX = Math.max(0, Math.floor(Math.random() * maxWidth));
+            const randomY = Math.max(0, Math.floor(Math.random() * maxHeight));
+            element.style.left = `${randomX}px`;
+            element.style.top = `${randomY}px`;
+        }
+    }
+    disconnectedCallback() {
+        if (this._intervalId !== undefined) {
+            window.clearInterval(this._intervalId);
+        }
+        super.disconnectedCallback();
+    }
+};
+__decorate([
+    r()
+], ScreenSaver.prototype, "_time", void 0);
+__decorate([
+    r()
+], ScreenSaver.prototype, "_date", void 0);
+ScreenSaver = __decorate([
+    t$1("smartqasa-screen-saver")
+], ScreenSaver);
+
+window.customCards.push({
     type: "smartqasa-vertical-stack",
     name: "SmartQasa Vertical Stack",
     preview: false,
