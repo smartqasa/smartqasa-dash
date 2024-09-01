@@ -1,11 +1,12 @@
-import { CSSResultGroup, html, LitElement, nothing, PropertyValues, TemplateResult } from "lit";
+import { CSSResultGroup, html, LitElement, nothing, PropertyValues, TemplateResult, unsafeCSS } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
 import { callService } from "../utils/call-service";
 import { moreInfoDialog } from "../utils/more-info-dialog";
 import { entityListDialog } from "../utils/entity-list-dialog";
-import { tileBaseStyle, tileStateStyle } from "../styles/tile";
+import tileBaseStyle from "../styles/tile-base.css";
+import tileStateStyle from "../styles/tile-state.css";
 
 interface Config extends LovelaceCardConfig {
     entity: string;
@@ -28,7 +29,7 @@ export class LightTile extends LitElement {
     private _entity?: string;
     private _stateObj?: HassEntity;
 
-    static styles: CSSResultGroup = [tileBaseStyle, tileStateStyle];
+    static styles: CSSResultGroup = [unsafeCSS(tileBaseStyle), unsafeCSS(tileStateStyle)];
 
     public setConfig(config: Config): void {
         this._config = { ...config };
