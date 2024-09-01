@@ -1,11 +1,12 @@
-import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult } from "lit";
+import { CSSResult, html, LitElement, PropertyValues, TemplateResult, unsafeCSS } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
+
 import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
 import { callService } from "../utils/call-service";
 import { sequenceTable } from "../tables/pool-light-sequences";
 
-import { tileBaseStyle, tileIconSpinStyle } from "../styles/tile";
+import tileBaseStyle from "../styles/tile-base.css";
 
 interface Config extends LovelaceCardConfig {
     sequence: string;
@@ -21,7 +22,7 @@ export class PoolLightSequencerTile extends LitElement {
     private _stateObj?: HassEntity;
     private _entity?: string;
 
-    static styles: CSSResultGroup = [tileBaseStyle, tileIconSpinStyle];
+    static styles: CSSResult = unsafeCSS(tileBaseStyle);
 
     public setConfig(config: Config): void {
         this._config = { ...config };

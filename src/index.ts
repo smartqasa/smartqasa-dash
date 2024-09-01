@@ -81,19 +81,5 @@ import "./tiles/thermostat";
 // Utils
 import "./utils/popup-confirmation";
 
-// Screen Saver
-/*
-import { SS_HIDE_EVENTS } from "./const";
-import { startIdleTimer, resetIdleTimer } from "./misc/screen-saver";
-import { deviceType } from "./utils/device-info";
-
-if (deviceType === "tablet") {
-    SS_HIDE_EVENTS.forEach((event) => {
-        window.addEventListener(event, resetIdleTimer);
-    });
-
-    startIdleTimer();
-}
-*/
 import { version } from "../package.json";
 console.info(`%c SmartQasa ⏏ ${version} `, "background-color: #0000ff; color: #ffffff; font-weight: 700;");

@@ -1,9 +1,11 @@
-import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult } from "lit";
+import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult, unsafeCSS } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
+
 import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
 import { dialogTable } from "../tables/dialogs";
 
-import { chipBaseStyle, chipTextStyle } from "../styles/chip";
+import chipBaseStyle from "../styles/chip-base.css";
+import chipTextStyle from "../styles/chip-text.css";
 
 interface Config extends LovelaceCardConfig {
     entity?: string;
@@ -23,7 +25,7 @@ export class ThermostatChip extends LitElement {
     private _entity?: string;
     private _stateObj?: HassEntity;
 
-    static styles: CSSResultGroup = [chipBaseStyle, chipTextStyle];
+    static styles: CSSResultGroup = [unsafeCSS(chipBaseStyle), unsafeCSS(chipTextStyle)];
 
     public setConfig(config: Config): void {
         this._config = { ...config };

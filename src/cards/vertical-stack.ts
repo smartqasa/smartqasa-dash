@@ -1,5 +1,6 @@
 import { css, html, LitElement, nothing, PropertyValues } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
+
 import { HomeAssistant, LovelaceCardConfig, LovelaceCard } from "../types";
 import { createElement } from "../utils/create-element";
 

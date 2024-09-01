@@ -1,5 +1,6 @@
 import { LitElement, html, css, CSSResultGroup, PropertyValues, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
+
 import { HomeAssistant, LovelaceCardConfig } from "../types";
 import { areasDialog } from "./areas-dialog";
 import { entertainDialog } from "./entertain-dialog";

@@ -1,6 +1,7 @@
 import { css, html, LitElement } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
+
 import { HomeAssistant, LovelaceCardConfig } from "../types";
 
 interface Config extends LovelaceCardConfig {

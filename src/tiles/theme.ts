@@ -1,9 +1,10 @@
-import { CSSResultGroup, html, LitElement, TemplateResult } from "lit";
+import { CSSResult, html, LitElement, TemplateResult, unsafeCSS } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
+
 import { LovelaceCardConfig } from "../types";
 
-import { tileBaseStyle, tileIconSpinStyle } from "../styles/tile";
+import tileBaseStyle from "../styles/tile-base.css";
 
 interface Config extends LovelaceCardConfig {
     icon: string;
@@ -22,7 +23,7 @@ window.customCards.push({
 export class ThemeTile extends LitElement {
     @state() private _config?: Config;
 
-    static styles: CSSResultGroup = [tileBaseStyle, tileIconSpinStyle];
+    static styles: CSSResult = unsafeCSS(tileBaseStyle);
 
     public setConfig(config: Config): void {
         this._config = { ...config };

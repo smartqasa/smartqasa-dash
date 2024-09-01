@@ -1,10 +1,11 @@
-import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult } from "lit";
+import { CSSResult, html, LitElement, PropertyValues, TemplateResult, unsafeCSS } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
+
 import { navigateToArea } from "../utils/navigate-to-area";
 import { HassArea, HomeAssistant, LovelaceCardConfig } from "../types";
 
-import { chipDoubleStyle } from "../styles/chip";
+import chipDoubleStyle from "../styles/chip-double.css";
 
 interface Config extends LovelaceCardConfig {
     area_prev?: string;
@@ -25,7 +26,7 @@ export class NavigateChip extends LitElement {
     @state() private _areaObjPrev?: HassArea;
     @state() private _areaObjNext?: HassArea;
 
-    static styles: CSSResultGroup = [chipDoubleStyle];
+    static styles: CSSResult = unsafeCSS(chipDoubleStyle);
 
     public setConfig(config: Config): void {
         this._areaPrev = config.area_prev || undefined;

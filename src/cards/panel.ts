@@ -1,6 +1,7 @@
 import { CSSResultGroup, html, LitElement, nothing, PropertyValues, TemplateResult, unsafeCSS } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
+
 import { HassArea, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 import { getDeviceOrientation, getDeviceType } from "../utils/device-info";
 import { navigateToArea } from "../utils/navigate-to-area";
@@ -13,6 +14,7 @@ import { areasDialog } from "../misc/areas-dialog";
 import { entertainDialog } from "../misc/entertain-dialog";
 import { menuConfig } from "../misc/menu-config";
 import { SS_CYCLE_TIMER, SS_HIDE_EVENTS, SS_IDLE_TIMER } from "../const";
+
 import panelStyles from "../styles/panel.css";
 import swiperStyles from "swiper/swiper-bundle.css";
 import defaultImage from "../assets/images/default.png";
