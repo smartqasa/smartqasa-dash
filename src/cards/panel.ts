@@ -137,13 +137,27 @@ export class PanelCard extends LitElement {
 
     disconnectedCallback() {
         super.disconnectedCallback();
+
         if (this._timeIntervalId !== undefined) {
             clearInterval(this._timeIntervalId);
+        }
+
+        if (this._resetTimer) {
+            clearTimeout(this._resetTimer);
         }
 
         ["orientationchange", "resize"].forEach((event) =>
             window.removeEventListener(event, this._boundHandleDeviceChanges)
         );
+
+        SS_HIDE_EVENTS.forEach((event) => window.removeEventListener(event, () => this._resetScreenSaver()));
+
+        if (this._sSidleTimer) {
+            clearTimeout(this._sSidleTimer);
+        }
+        if (this._sSanimationTimer) {
+            clearTimeout(this._sSanimationTimer);
+        }
     }
 
     protected render(): TemplateResult {
@@ -548,7 +562,7 @@ export class PanelCard extends LitElement {
                 this._screenSaverActive = false;
                 this.requestUpdate();
                 clearTimeout(this._sSanimationTimer);
-            }, 150);
+            }, 250);
         }
         clearTimeout(this._sSidleTimer);
         this._startSsIdleTimer();

@@ -8946,8 +8946,8 @@ async function menuConfig(menu_tab) {
 }
 
 const SS_HIDE_EVENTS = ["keypress", "mousemove", "orientationchange", "resize", "touchstart"];
-const SS_IDLE_TIMER = 10000; // 10 seconds
-const SS_CYCLE_TIMER = 15000; // 15 seconds
+const SS_IDLE_TIMER = 300000; // 10 seconds
+const SS_CYCLE_TIMER = 30000; // 15 seconds
 const heaterColors = {
     electric: "var(--sq-climate-heat-rgb, 250, 67, 54)",
     heating: "var(--sq-climate-heat-rgb, 250, 67, 54)",
@@ -9101,7 +9101,17 @@ let PanelCard = class PanelCard extends h {
         if (this._timeIntervalId !== undefined) {
             clearInterval(this._timeIntervalId);
         }
+        if (this._resetTimer) {
+            clearTimeout(this._resetTimer);
+        }
         ["orientationchange", "resize"].forEach((event) => window.removeEventListener(event, this._boundHandleDeviceChanges));
+        SS_HIDE_EVENTS.forEach((event) => window.removeEventListener(event, () => this._resetScreenSaver()));
+        if (this._sSidleTimer) {
+            clearTimeout(this._sSidleTimer);
+        }
+        if (this._sSanimationTimer) {
+            clearTimeout(this._sSanimationTimer);
+        }
     }
     render() {
         if (this._loading)
@@ -9455,7 +9465,7 @@ let PanelCard = class PanelCard extends h {
                 this._screenSaverActive = false;
                 this.requestUpdate();
                 clearTimeout(this._sSanimationTimer);
-            }, 150);
+            }, 250);
         }
         clearTimeout(this._sSidleTimer);
         this._startSsIdleTimer();
