@@ -18,7 +18,8 @@ export default css`
 
     .container:focus,
     .container:active {
-        background-color: inherit;
+        background-color: var(--sq-card-ripple-color);
+        border-radius: var(--sq-chip-border-radius);
         outline: none;
     }
 

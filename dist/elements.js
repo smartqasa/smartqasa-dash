@@ -10179,7 +10179,8 @@ const chipBaseStyle = i$3 `
 
     .container:focus,
     .container:active {
-        background-color: inherit;
+        background-color: var(--sq-card-ripple-color);
+        border-radius: var(--sq-chip-border-radius);
         outline: none;
     }
 
@@ -11853,13 +11854,13 @@ const tileBaseStyle = i$3 `
         padding: var(--sq-tile-padding, 1rem);
         background-color: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
         overflow: hidden;
-        -webkit-tap-highlight-color: blue;
+        -webkit-tap-highlight-color: transparent;
         cursor: pointer;
     }
 
     .container:focus,
     .container:active {
-        background-color: green;
+        background-color: var(--sq-card-ripple-color);
         border-radius: var(--sq-card-border-radius, 1.5rem);
         outline: none;
     }
