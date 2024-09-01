@@ -551,9 +551,11 @@ export class PanelCard extends LitElement {
 
     private _resetSsIdleTimer(): void {
         if (this._screenSaverActive) {
-            this._screenSaverActive = false;
-            this.requestUpdate();
-            clearTimeout(this._sSanimationTimer);
+            setTimeout(() => {
+                this._screenSaverActive = false;
+                this.requestUpdate();
+                clearTimeout(this._sSanimationTimer);
+            }, 100);
         }
         clearTimeout(this._sSidleTimer);
         this._startSsIdleTimer();
