@@ -8813,15 +8813,14 @@ async function menuConfig(menu_tab) {
         },
         {
             type: "custom:smartqasa-action-tile",
+            icon: "mdi:wiper",
+            name: "Clear Cache",
             actions: [
                 {
                     action: "browser_mod.javascript",
                     data: {
                         code: "fully.clearCache()",
                     },
-                },
-                {
-                    action: "browser_mod.refresh",
                 },
             ],
         },
@@ -8845,13 +8844,8 @@ async function menuConfig(menu_tab) {
                 },
             },
             card: {
-                type: "custom:smartqasa-action-tile",
-                actions: [
-                    {
-                        action: "call-service",
-                        service: "hassio.host_reboot",
-                    },
-                ],
+                type: "custom:button-card",
+                template: "system-reboot-tile",
             },
         },
         {
