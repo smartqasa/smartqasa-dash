@@ -500,6 +500,7 @@ export class PanelCard extends LitElement {
     }
 
     private _startSsIdleTimer(): void {
+        console.log("Starting screen saver idle timer...");
         this._sSidleTimer = window.setTimeout(() => {
             this._screenSaverActive = true;
             this.requestUpdate();
@@ -508,6 +509,7 @@ export class PanelCard extends LitElement {
     }
 
     private _runSsCycle(): void {
+        console.log("Running screen saver cycle...");
         this._moveSsElement();
 
         const container = this.shadowRoot?.querySelector(".ss-element") as HTMLElement;

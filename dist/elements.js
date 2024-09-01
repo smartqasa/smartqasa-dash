@@ -9416,6 +9416,7 @@ let PanelCard = class PanelCard extends h {
         }
     }
     _startSsIdleTimer() {
+        console.log("Starting screen saver idle timer...");
         this._sSidleTimer = window.setTimeout(() => {
             this._screenSaverActive = true;
             this.requestUpdate();
@@ -9423,6 +9424,7 @@ let PanelCard = class PanelCard extends h {
         }, SS_IDLE_TIMER);
     }
     _runSsCycle() {
+        console.log("Running screen saver cycle...");
         this._moveSsElement();
         const container = this.shadowRoot?.querySelector(".ss-element");
         if (container) {
