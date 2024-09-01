@@ -11859,7 +11859,8 @@ const tileBaseStyle = i$3 `
 
     .container:focus,
     .container:active {
-        background-color: inherit;
+        background-color: red;
+        border-radius: var(--sq-card-border-radius, 1.5rem);
         outline: none;
     }
 
