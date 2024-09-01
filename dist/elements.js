@@ -8844,8 +8844,10 @@ async function menuConfig(menu_tab) {
                 },
             },
             card: {
-                type: "custom:button-card",
-                template: "system-reboot-tile",
+                type: "custom:smartqasa-action-tile",
+                icon: "mdi:restart",
+                name: "Reboot System",
+                action: "hassio.host_reboot",
             },
         },
         {
@@ -8863,8 +8865,10 @@ async function menuConfig(menu_tab) {
                 },
             },
             card: {
-                type: "custom:button-card",
-                template: "system-power-down-tile",
+                type: "custom:smartqasa-action-tile",
+                icon: "mdi:power",
+                name: "Shutdown System",
+                action: "hassio.host_shutdown",
             },
         },
         {
