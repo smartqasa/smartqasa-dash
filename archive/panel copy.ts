@@ -14,6 +14,7 @@ import { areasDialog } from "../misc/areas-dialog";
 import { entertainDialog } from "../misc/entertain-dialog";
 import { menuConfig } from "../misc/menu-config";
 import { formattedTime, formattedDate } from "../utils/format-date-time";
+import { SS_CYCLE_TIMER, SS_HIDE_EVENTS, SS_IDLE_TIMER } from "../const";
 
 import panelStyles from "../styles/panel.css";
 import swiperStyles from "swiper/swiper-bundle.css";
@@ -62,6 +63,10 @@ export class PanelCard extends LitElement {
     private _bodyTiles: LovelaceCard[][] = [];
     private _bodyColumns: number[] = [];
 
+    private _screenSaverActive = false;
+    private _sSidleTimer: number | undefined;
+    private _sSanimationTimer: number | undefined;
+
     static styles: CSSResultGroup = [unsafeCSS(swiperStyles), unsafeCSS(panelStyles)];
 
     public async setConfig(config: Config) {
@@ -85,6 +90,10 @@ export class PanelCard extends LitElement {
         );
 
         this._syncTime();
+
+        this._startSsIdleTimer();
+
+        SS_HIDE_EVENTS.forEach((event) => window.addEventListener(event, () => this._resetScreenSaver()));
 
         this._loading = false;
     }
@@ -143,6 +152,15 @@ export class PanelCard extends LitElement {
         ["orientationchange", "resize"].forEach((event) =>
             window.removeEventListener(event, this._boundHandleDeviceChanges)
         );
+
+        SS_HIDE_EVENTS.forEach((event) => window.removeEventListener(event, () => this._resetScreenSaver()));
+
+        if (this._sSidleTimer) {
+            clearTimeout(this._sSidleTimer);
+        }
+        if (this._sSanimationTimer) {
+            clearTimeout(this._sSanimationTimer);
+        }
     }
 
     protected render(): TemplateResult {
@@ -151,7 +169,18 @@ export class PanelCard extends LitElement {
         const isPhoneLandscape = this._deviceType === "phone" && this._deviceOrientation === "landscape";
 
         return html`
-            <div class="container" style="display: height: ${this._isAdmin ? "calc(100vh - 56px)" : "100vh"};">
+            <div class="screen-saver" style="display: ${this._screenSaverActive ? "block" : "none"};">
+                <div class="ss-element">
+                    <div class="ss-time">${formattedTime()}</div>
+                    <div class="ss-date">${formattedDate()}</div>
+                </div>
+            </div>
+            <div
+                class="container"
+                style="display: ${!this._screenSaverActive ? "grid" : "none"}; height: ${this._isAdmin
+                    ? "calc(100vh - 56px)"
+                    : "100vh"};"
+            >
                 ${this._deviceType === "tablet" ? this._renderHeader() : nothing} ${this._renderArea()}
                 ${this._renderBody()} ${isPhoneLandscape ? nothing : this._renderFooter()}
             </div>
@@ -470,5 +499,60 @@ export class PanelCard extends LitElement {
         } catch (error) {
             console.error("Error loading menu configuration", error);
         }
+    }
+
+    private _startSsIdleTimer(): void {
+        this._sSidleTimer = window.setTimeout(() => {
+            this._screenSaverActive = true;
+            this.requestUpdate();
+            this._runSsCycle();
+        }, SS_IDLE_TIMER);
+    }
+
+    private _runSsCycle(): void {
+        this._moveSsElement();
+
+        const container = this.shadowRoot?.querySelector(".ss-element") as HTMLElement;
+        if (container) {
+            container.style.animation = "fade-in 1.5s forwards";
+        }
+
+        this._sSanimationTimer = window.setTimeout(() => {
+            if (container) {
+                container.style.animation = "fade-out 1.5s forwards";
+            }
+
+            this._sSanimationTimer = window.setTimeout(() => {
+                this._runSsCycle();
+            }, 1500);
+        }, SS_CYCLE_TIMER + 1500);
+    }
+
+    private _moveSsElement(): void {
+        const container = this.shadowRoot?.querySelector(".screen-saver") as HTMLElement;
+        const element = this.shadowRoot?.querySelector(".ss-element") as HTMLElement;
+
+        if (container && element) {
+            const maxWidth = container.clientWidth - element.clientWidth;
+            const maxHeight = container.clientHeight - element.clientHeight;
+
+            const randomX = Math.max(0, Math.floor(Math.random() * maxWidth));
+            const randomY = Math.max(0, Math.floor(Math.random() * maxHeight));
+
+            element.style.left = `${randomX}px`;
+            element.style.top = `${randomY}px`;
+        }
+    }
+
+    private _resetScreenSaver(): void {
+        if (this._screenSaverActive) {
+            setTimeout(() => {
+                this._screenSaverActive = false;
+                this.requestUpdate();
+                clearTimeout(this._sSanimationTimer);
+            }, 250);
+        }
+        clearTimeout(this._sSidleTimer);
+        this._startSsIdleTimer();
     }
 }
