@@ -8945,7 +8945,7 @@ async function menuConfig(menu_tab) {
     return menuConfig;
 }
 
-const SS_HIDE_EVENTS = ["keypress", "mousemove", "orientationchange", "resize", "touchstart"];
+const SS_HIDE_EVENTS = ["keypress", "mousemove", "orientationchange", "resize"];
 const SS_IDLE_TIMER = 10000; // 10 seconds
 const SS_CYCLE_TIMER = 15000; // 15 seconds
 const heaterColors = {
@@ -9108,7 +9108,11 @@ let PanelCard = class PanelCard extends h {
             return ke `<div>Loading...</div>`;
         const isPhoneLandscape = this._deviceType === "phone" && this._deviceOrientation === "landscape";
         return ke `
-            <div class="screen-saver" style="display: ${this._screenSaverActive ? "block" : "none"};">
+            <div
+                class="screen-saver"
+                @click="${this._hideSsPanel}"
+                style="display: ${this._screenSaverActive ? "block" : "none"};"
+            >
                 <div class="ss-element">
                     <div class="ss-time">${this._formattedTime()}</div>
                     <div class="ss-date">${this._formattedDate()}</div>
