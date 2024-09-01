@@ -9456,11 +9456,9 @@ let PanelCard = class PanelCard extends h {
     }
     _resetSsIdleTimer() {
         if (this._screenSaverActive) {
-            setTimeout(() => {
-                this._screenSaverActive = false;
-                this.requestUpdate();
-                clearTimeout(this._sSanimationTimer);
-            }, 100);
+            this._screenSaverActive = false;
+            this.requestUpdate();
+            clearTimeout(this._sSanimationTimer);
         }
         clearTimeout(this._sSidleTimer);
         this._startSsIdleTimer();
