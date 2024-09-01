@@ -1,9 +1,10 @@
-import { CSSResultGroup, html, LitElement, TemplateResult } from "lit";
+import { CSSResult, html, LitElement, TemplateResult, unsafeCSS } from "lit";
 import { customElement, state } from "lit/decorators.js";
+
 import { LovelaceCardConfig } from "../types";
-import { tileBaseStyle } from "../styles/tile";
 import appTable from "../tables/apps";
 
+import tileBaseStyle from "../styles/tile-base.css";
 interface Config extends LovelaceCardConfig {
     app: string;
     icon?: string;
@@ -22,7 +23,7 @@ export class AppTile extends LitElement {
     @state() private _config?: Config;
     private _appObj?: any;
 
-    static styles: CSSResultGroup = tileBaseStyle;
+    static styles: CSSResult = unsafeCSS(tileBaseStyle);
 
     public setConfig(config: Config): void {
         if (!config.app) throw new Error("A valid app must be specified.");

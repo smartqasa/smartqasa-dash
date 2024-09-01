@@ -1,10 +1,11 @@
-import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult } from "lit";
+import { CSSResult, html, LitElement, PropertyValues, TemplateResult, unsafeCSS } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
+
 import { HassArea, HomeAssistant, LovelaceCardConfig } from "../types";
 import { callService } from "../utils/call-service";
 
-import { tileBaseStyle, tileIconSpinStyle } from "../styles/tile";
+import tileBaseStyle from "../styles/tile-base.css";
 
 interface Config extends LovelaceCardConfig {
     area: string;
@@ -21,17 +22,13 @@ window.customCards.push({
 
 @customElement("smartqasa-all-off-tile")
 export class AllOffTile extends LitElement {
-    getCardSize(): number {
-        return 1;
-    }
-
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() private _config?: Config;
     @state() private _running: boolean = false;
     private _area?: string;
     private _areaObj?: HassArea;
 
-    static styles: CSSResultGroup = [tileBaseStyle, tileIconSpinStyle];
+    static styles: CSSResult = unsafeCSS(tileBaseStyle);
 
     public setConfig(config: Config): void {
         this._config = { ...config };

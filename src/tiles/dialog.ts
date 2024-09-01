@@ -1,11 +1,12 @@
-import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult } from "lit";
+import { CSSResult, html, LitElement, PropertyValues, TemplateResult, unsafeCSS } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
+
 import { LovelaceCardConfig } from "../types";
 import { dialogTable } from "../tables/dialogs";
 import { menuConfig } from "../misc/menu-config";
 
-import { tileBaseStyle } from "../styles/tile";
+import tileBaseStyle from "../styles/tile-base.css";
 
 interface Config extends LovelaceCardConfig {
     dialog: string;
@@ -30,7 +31,7 @@ export class DialogTile extends LitElement {
     @state() private config?: Config;
     @state() private dialogObj?: any;
 
-    static styles: CSSResultGroup = [tileBaseStyle];
+    static styles: CSSResult = unsafeCSS(tileBaseStyle);
 
     setConfig(config: Config): void {
         this.config = { ...config };

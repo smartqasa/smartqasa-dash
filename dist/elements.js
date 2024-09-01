@@ -11838,95 +11838,8 @@ TitleCard = __decorate([
     t$1("smartqasa-title-card")
 ], TitleCard);
 
-const tileBaseStyle = i$3 `
-    .container {
-        display: grid;
-        height: 100%;
-        width: 100%;
-        min-height: var(--sq-tile-height, 7rem);
-        box-sizing: border-box;
-        border: var(--sq-card-border, none);
-        border-radius: var(--sq-card-border-radius, 1.5rem);
-        grid-template-areas: "i n";
-        grid-template-columns: auto 1fr;
-        grid-column-gap: 1rem;
-        grid-row-gap: 0.4rem;
-        padding: var(--sq-tile-padding, 1rem);
-        background-color: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
-        overflow: hidden;
-        -webkit-tap-highlight-color: transparent;
-        cursor: pointer;
-    }
-
-    .container:focus,
-    .container:active {
-        background-color: var(--sq-ripple-color);
-        border-radius: var(--sq-card-border-radius, 1.5rem);
-        outline: none;
-    }
-
-    .icon {
-        grid-area: i;
-        display: flex;
-        justify-content: center;
-        align-self: center;
-        height: var(--sq-icon-size, 1.8rem);
-        width: var(--sq-icon-size, 1.8rem);
-        padding: var(--sq-tile-padding, 1rem);
-        border-radius: 50%;
-        transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;
-    }
-    .name {
-        grid-area: n;
-        place-self: center start;
-        max-height: 3.6rem;
-        line-height: 1.2;
-        max-width: 100%;
-        text-align: left;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: normal;
-        font-weight: var(--sq-primary-font-weight, 400);
-        font-size: var(--sq-primary-font-size, 1.5rem);
-        color: rgb(var(--sq-primary-font-rgb, 128, 128, 128));
-    }
-`;
-const tileStateStyle = i$3 `
-    .container {
-        grid-template-areas: "i n" "i s";
-        grid-row-gap: 0.3rem;
-    }
-    .name {
-        place-self: end start;
-    }
-    .state {
-        grid-area: s;
-        align-self: start;
-        text-align: left;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        font-weight: var(--sq-secondary-font-weight, 300);
-        font-size: var(--sq-secondary-font-size, 1rem);
-        color: rgb(var(--sq-secondary-font-rgb, 0, 0, 0));
-    }
-`;
-const tileIconBlinkStyle = i$3 `
-    @keyframes blink {
-        50% {
-            opacity: 0.25;
-        }
-    }
-`;
-const tileIconSpinStyle = i$3 `
-    @keyframes spin {
-        from {
-            transform: rotate(0deg);
-        }
-        to {
-            transform: rotate(360deg);
-        }
-    }
-`;
+var css_248z$1 = ".container {\n    display: grid;\n    height: 100%;\n    width: 100%;\n    min-height: var(--sq-tile-height, 7rem);\n    box-sizing: border-box;\n    border: var(--sq-card-border, none);\n    border-radius: var(--sq-card-border-radius, 1.5rem);\n    grid-template-areas: \"i n\";\n    grid-template-columns: auto 1fr;\n    grid-column-gap: 1rem;\n    grid-row-gap: 0.4rem;\n    padding: var(--sq-tile-padding, 1rem);\n    background-color: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));\n    overflow: hidden;\n    -webkit-tap-highlight-color: transparent;\n    cursor: pointer;\n}\n\n.container:focus,\n.container:active {\n    background-color: var(--sq-ripple-color);\n    border-radius: var(--sq-card-border-radius, 1.5rem);\n    outline: none;\n}\n\n.icon {\n    grid-area: i;\n    display: flex;\n    justify-content: center;\n    align-self: center;\n    height: var(--sq-icon-size, 1.8rem);\n    width: var(--sq-icon-size, 1.8rem);\n    padding: var(--sq-tile-padding, 1rem);\n    border-radius: 50%;\n    transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;\n}\n.name {\n    grid-area: n;\n    place-self: center start;\n    max-height: 3.6rem;\n    line-height: 1.2;\n    max-width: 100%;\n    text-align: left;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: normal;\n    font-weight: var(--sq-primary-font-weight, 400);\n    font-size: var(--sq-primary-font-size, 1.5rem);\n    color: rgb(var(--sq-primary-font-rgb, 128, 128, 128));\n}\n\n@keyframes blink {\n    50% {\n        opacity: 0.25;\n    }\n}\n\n@keyframes spin {\n    from {\n        transform: rotate(0deg);\n    }\n    to {\n        transform: rotate(360deg);\n    }\n}\n";
+styleInject(css_248z$1);
 
 window.customCards.push({
     type: "smartqasa-all-off-tile",
@@ -11939,10 +11852,7 @@ let AllOffTile = class AllOffTile extends h {
         super(...arguments);
         this._running = false;
     }
-    getCardSize() {
-        return 1;
-    }
-    static { this.styles = [tileBaseStyle, tileIconSpinStyle]; }
+    static { this.styles = r$3(css_248z$1); }
     setConfig(config) {
         this._config = { ...config };
         this._area = this._config?.area;
@@ -12484,7 +12394,7 @@ window.customCards.push({
     description: "A SmartQasa tile for launching applications from the dashboard",
 });
 let AppTile = class AppTile extends h {
-    static { this.styles = tileBaseStyle; }
+    static { this.styles = r$3(css_248z$1); }
     setConfig(config) {
         if (!config.app)
             throw new Error("A valid app must be specified.");
@@ -12558,7 +12468,7 @@ let AreaTile = class AreaTile extends h {
         super(...arguments);
         this._running = false;
     }
-    static { this.styles = [tileBaseStyle, tileIconSpinStyle]; }
+    static { this.styles = r$3(css_248z$1); }
     setConfig(config) {
         this._config = { ...config };
         this._area = this._config.area;
@@ -12643,7 +12553,7 @@ let DialogTile = class DialogTile extends h {
     getCardSize() {
         return 1;
     }
-    static { this.styles = [tileBaseStyle]; }
+    static { this.styles = r$3(css_248z$1); }
     setConfig(config) {
         this.config = { ...config };
         this.dialogObj = dialogTable[config.dialog];
@@ -12715,6 +12625,9 @@ function entityListDialog(dialogTitle, filterType, filterValue, tileType) {
     window.browser_mod?.service("popup", dialogConfig);
 }
 
+var css_248z = ".container {\n    grid-template-areas: \"i n\" \"i s\";\n    grid-row-gap: 0.3rem;\n}\n.name {\n    place-self: end start;\n}\n.state {\n    grid-area: s;\n    align-self: start;\n    text-align: left;\n    text-overflow: ellipsis;\n    overflow: hidden;\n    font-weight: var(--sq-secondary-font-weight, 300);\n    font-size: var(--sq-secondary-font-size, 1rem);\n    color: rgb(var(--sq-secondary-font-rgb, 0, 0, 0));\n}\n";
+styleInject(css_248z);
+
 window.customCards.push({
     type: "smartqasa-fan-tile",
     name: "SmartQasa Fan Tile",
@@ -12722,7 +12635,7 @@ window.customCards.push({
     description: "A SmartQasa tile for controlling a fan entity.",
 });
 let FanTile = class FanTile extends h {
-    static { this.styles = [tileBaseStyle, tileStateStyle, tileIconSpinStyle]; }
+    static { this.styles = [r$3(css_248z$1), r$3(css_248z)]; }
     setConfig(config) {
         this._config = { ...config };
         this._entity = this._config.entity.startsWith("fan.") ? this._config.entity : undefined;
@@ -12816,6 +12729,96 @@ __decorate([
 FanTile = __decorate([
     t$1("smartqasa-fan-tile")
 ], FanTile);
+
+const tileBaseStyle = i$3 `
+    .container {
+        display: grid;
+        height: 100%;
+        width: 100%;
+        min-height: var(--sq-tile-height, 7rem);
+        box-sizing: border-box;
+        border: var(--sq-card-border, none);
+        border-radius: var(--sq-card-border-radius, 1.5rem);
+        grid-template-areas: "i n";
+        grid-template-columns: auto 1fr;
+        grid-column-gap: 1rem;
+        grid-row-gap: 0.4rem;
+        padding: var(--sq-tile-padding, 1rem);
+        background-color: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
+        overflow: hidden;
+        -webkit-tap-highlight-color: transparent;
+        cursor: pointer;
+    }
+
+    .container:focus,
+    .container:active {
+        background-color: var(--sq-ripple-color);
+        border-radius: var(--sq-card-border-radius, 1.5rem);
+        outline: none;
+    }
+
+    .icon {
+        grid-area: i;
+        display: flex;
+        justify-content: center;
+        align-self: center;
+        height: var(--sq-icon-size, 1.8rem);
+        width: var(--sq-icon-size, 1.8rem);
+        padding: var(--sq-tile-padding, 1rem);
+        border-radius: 50%;
+        transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;
+    }
+    .name {
+        grid-area: n;
+        place-self: center start;
+        max-height: 3.6rem;
+        line-height: 1.2;
+        max-width: 100%;
+        text-align: left;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: normal;
+        font-weight: var(--sq-primary-font-weight, 400);
+        font-size: var(--sq-primary-font-size, 1.5rem);
+        color: rgb(var(--sq-primary-font-rgb, 128, 128, 128));
+    }
+`;
+const tileStateStyle = i$3 `
+    .container {
+        grid-template-areas: "i n" "i s";
+        grid-row-gap: 0.3rem;
+    }
+    .name {
+        place-self: end start;
+    }
+    .state {
+        grid-area: s;
+        align-self: start;
+        text-align: left;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        font-weight: var(--sq-secondary-font-weight, 300);
+        font-size: var(--sq-secondary-font-size, 1rem);
+        color: rgb(var(--sq-secondary-font-rgb, 0, 0, 0));
+    }
+`;
+const tileIconBlinkStyle = i$3 `
+    @keyframes blink {
+        50% {
+            opacity: 0.25;
+        }
+    }
+`;
+const tileIconSpinStyle = i$3 `
+    @keyframes spin {
+        from {
+            transform: rotate(0deg);
+        }
+        to {
+            transform: rotate(360deg);
+        }
+    }
+`;
 
 window.customCards.push({
     type: "smartqasa-garage-tile",
@@ -13001,12 +13004,6 @@ __decorate([
 HeaterTile = __decorate([
     t$1("smartqasa-heater-tile")
 ], HeaterTile);
-
-var css_248z$1 = ".container {\n    display: grid;\n    height: 100%;\n    width: 100%;\n    min-height: var(--sq-tile-height, 7rem);\n    box-sizing: border-box;\n    border: var(--sq-card-border, none);\n    border-radius: var(--sq-card-border-radius, 1.5rem);\n    grid-template-areas: \"i n\";\n    grid-template-columns: auto 1fr;\n    grid-column-gap: 1rem;\n    grid-row-gap: 0.4rem;\n    padding: var(--sq-tile-padding, 1rem);\n    background-color: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));\n    overflow: hidden;\n    -webkit-tap-highlight-color: transparent;\n    cursor: pointer;\n}\n\n.container:focus,\n.container:active {\n    background-color: var(--sq-ripple-color);\n    border-radius: var(--sq-card-border-radius, 1.5rem);\n    outline: none;\n}\n\n.icon {\n    grid-area: i;\n    display: flex;\n    justify-content: center;\n    align-self: center;\n    height: var(--sq-icon-size, 1.8rem);\n    width: var(--sq-icon-size, 1.8rem);\n    padding: var(--sq-tile-padding, 1rem);\n    border-radius: 50%;\n    transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;\n}\n.name {\n    grid-area: n;\n    place-self: center start;\n    max-height: 3.6rem;\n    line-height: 1.2;\n    max-width: 100%;\n    text-align: left;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: normal;\n    font-weight: var(--sq-primary-font-weight, 400);\n    font-size: var(--sq-primary-font-size, 1.5rem);\n    color: rgb(var(--sq-primary-font-rgb, 128, 128, 128));\n}\n\n@keyframes blink {\n    50% {\n        opacity: 0.25;\n    }\n}\n\n@keyframes spin {\n    from {\n        transform: rotate(0deg);\n    }\n    to {\n        transform: rotate(360deg);\n    }\n}\n";
-styleInject(css_248z$1);
-
-var css_248z = ".container {\n    grid-template-areas: \"i n\" \"i s\";\n    grid-row-gap: 0.3rem;\n}\n.name {\n    place-self: end start;\n}\n.state {\n    grid-area: s;\n    align-self: start;\n    text-align: left;\n    text-overflow: ellipsis;\n    overflow: hidden;\n    font-weight: var(--sq-secondary-font-weight, 300);\n    font-size: var(--sq-secondary-font-size, 1rem);\n    color: rgb(var(--sq-secondary-font-rgb, 0, 0, 0));\n}\n";
-styleInject(css_248z);
 
 window.customCards.push({
     type: "smartqasa-light-tile",
