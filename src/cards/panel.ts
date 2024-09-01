@@ -149,26 +149,21 @@ export class PanelCard extends LitElement {
     protected render(): TemplateResult {
         if (this._loading) return html`<div>Loading...</div>`;
 
-        if (this._screenSaverActive) {
-            return html`
-                <div class="screen-saver">
-                    <div class="ss-element">
-                        <div class="ss-time">${this._formattedTime()}</div>
-                        <div class="ss-date">${this._formattedDate()}</div>
-                    </div>
-                </div>
-                <div class="container" style="display: none;"></div>
-            `;
-        }
-
-        const containerStyle = {
-            height: this._isAdmin ? "calc(100vh - 56px)" : "100vh",
-        };
-
         const isPhoneLandscape = this._deviceType === "phone" && this._deviceOrientation === "landscape";
 
         return html`
-            <div class="container" style=${styleMap(containerStyle)}>
+            <div class="screen-saver" style="visibility: ${this._screenSaverActive ? "visible" : "hidden"};">
+                <div class="ss-element">
+                    <div class="ss-time">${this._formattedTime()}</div>
+                    <div class="ss-date">${this._formattedDate()}</div>
+                </div>
+            </div>
+            <div
+                class="container"
+                style="visibility: ${!this._screenSaverActive ? "visible" : "hidden"}; height: ${this._isAdmin
+                    ? "calc(100vh - 56px)"
+                    : "100vh"};"
+            >
                 ${this._deviceType === "tablet" ? this._renderHeader() : nothing} ${this._renderArea()}
                 ${this._renderBody()} ${isPhoneLandscape ? nothing : this._renderFooter()}
             </div>

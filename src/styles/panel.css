@@ -260,6 +260,8 @@
     width: 100%;
     position: absolute;
     background-color: black;
+    z-index: 9999;
+    pointer-events: all;
 }
 .ss-element {
     position: absolute;
