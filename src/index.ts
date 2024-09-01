@@ -56,6 +56,7 @@ import "./misc/time-date";
 import "./misc/title";
 
 // Tiles
+import "./tiles/action";
 import "./tiles/all-off";
 import "./tiles/app";
 import "./tiles/area";

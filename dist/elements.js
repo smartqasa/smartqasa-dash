@@ -11932,6 +11932,95 @@ var css_248z$1 = ".container {\n    display: grid;\n    height: 100%;\n    width
 styleInject(css_248z$1);
 
 window.customCards.push({
+    type: "smartqasa-action-tile",
+    name: "SmartQasa Action Tile",
+    preview: true,
+    description: "A SmartQasa tile for executing multiple Home Assistant actions.",
+});
+let ActionTile = class ActionTile extends h {
+    constructor() {
+        super(...arguments);
+        this._running = false;
+    }
+    getCardSize() {
+        return 1;
+    }
+    static { this.styles = r$3(css_248z$1); }
+    setConfig(config) {
+        this._config = { ...config };
+    }
+    shouldUpdate(changedProps) {
+        if (!this._config)
+            return false;
+        return !!(changedProps.has("_running") || changedProps.has("hass") || changedProps.has("_config"));
+    }
+    render() {
+        const { icon, iconAnimation, iconColor, name } = this.updateState();
+        const iconStyles = {
+            color: `rgb(${iconColor})`,
+            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
+            animation: iconAnimation,
+        };
+        return ke `
+            <div class="container" @click=${this._runActions}>
+                <div class="icon" style="${se(iconStyles)}">
+                    <ha-icon .icon=${icon}></ha-icon>
+                </div>
+                <div class="name">${name}</div>
+            </div>
+        `;
+    }
+    updateState() {
+        let icon, iconAnimation, iconColor, name;
+        if (this._config) {
+            if (this._running) {
+                icon = "hass:rotate-right";
+                iconAnimation = "spin 1.0s linear infinite";
+                iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
+            }
+            else {
+                icon = this._config.icon || "hass:help-rhombus";
+                iconAnimation = "none";
+                iconColor = "var(--sq-inactive-rgb)";
+            }
+            name = this._config.name || "Action Tile";
+        }
+        else {
+            icon = "hass:alert-rhombus";
+            iconAnimation = "none";
+            iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+            name = "Unknown";
+        }
+        return { icon, iconAnimation, iconColor, name };
+    }
+    async _runActions(e) {
+        e.stopPropagation();
+        if (!this.hass || !this._config?.actions)
+            return;
+        this._running = true;
+        for (const action of this._config.actions) {
+            const [domain, service] = action.action.split(".");
+            await callService(this.hass, domain, service, action.data || {});
+        }
+        setTimeout(() => {
+            this._running = false;
+        }, 1000);
+    }
+};
+__decorate([
+    n({ attribute: false })
+], ActionTile.prototype, "hass", void 0);
+__decorate([
+    r()
+], ActionTile.prototype, "_config", void 0);
+__decorate([
+    r()
+], ActionTile.prototype, "_running", void 0);
+ActionTile = __decorate([
+    t$1("smartqasa-action-tile")
+], ActionTile);
+
+window.customCards.push({
     type: "smartqasa-all-off-tile",
     name: "SmartQasa All Off Tile",
     preview: true,
