@@ -89,6 +89,7 @@ export class PanelCard extends LitElement {
         this._syncTime();
 
         this._startSsIdleTimer();
+        console.log("Screen saver idle timer started...");
 
         SS_HIDE_EVENTS.forEach((event) => window.addEventListener(event, () => this._resetSsIdleTimer()));
 

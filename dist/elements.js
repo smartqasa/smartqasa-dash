@@ -9058,6 +9058,7 @@ let PanelCard = class PanelCard extends h {
         ["orientationchange", "resize"].forEach((event) => window.addEventListener(event, this._boundHandleDeviceChanges));
         this._syncTime();
         this._startSsIdleTimer();
+        console.log("Screen saver idle timer started...");
         SS_HIDE_EVENTS.forEach((event) => window.addEventListener(event, () => this._resetSsIdleTimer()));
         this._loading = false;
     }
