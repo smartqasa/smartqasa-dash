@@ -11853,7 +11853,7 @@ const tileBaseStyle = i$3 `
         padding: var(--sq-tile-padding, 1rem);
         background-color: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
         overflow: hidden;
-        -webkit-tap-highlight-color: transparent;
+        -webkit-tap-highlight-color: red;
         cursor: pointer;
     }
 
