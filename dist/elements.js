@@ -9058,7 +9058,6 @@ let PanelCard = class PanelCard extends h {
         ["orientationchange", "resize"].forEach((event) => window.addEventListener(event, this._boundHandleDeviceChanges));
         this._syncTime();
         this._startSsIdleTimer();
-        console.log("Screen saver idle timer started...");
         SS_HIDE_EVENTS.forEach((event) => window.addEventListener(event, () => this._resetSsIdleTimer()));
         this._loading = false;
     }
@@ -9417,7 +9416,6 @@ let PanelCard = class PanelCard extends h {
         }
     }
     _startSsIdleTimer() {
-        console.log("Starting screen saver idle timer...");
         this._sSidleTimer = window.setTimeout(() => {
             this._screenSaverActive = true;
             this.requestUpdate();
@@ -9425,7 +9423,6 @@ let PanelCard = class PanelCard extends h {
         }, SS_IDLE_TIMER);
     }
     _runSsCycle() {
-        console.log("Running screen saver cycle...");
         this._moveSsElement();
         const container = this.shadowRoot?.querySelector(".ss-element");
         if (container) {
@@ -9459,9 +9456,11 @@ let PanelCard = class PanelCard extends h {
     }
     _resetSsIdleTimer() {
         if (this._screenSaverActive) {
-            this._screenSaverActive = false;
-            this.requestUpdate();
-            clearTimeout(this._sSanimationTimer);
+            setTimeout(() => {
+                this._screenSaverActive = false;
+                this.requestUpdate();
+                clearTimeout(this._sSanimationTimer);
+            }, 100);
         }
         clearTimeout(this._sSidleTimer);
         this._startSsIdleTimer();
