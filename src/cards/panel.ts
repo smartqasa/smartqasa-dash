@@ -531,16 +531,20 @@ export class PanelCard extends LitElement {
     }
 
     private _moveSsElement(): void {
-        const container = this.shadowRoot?.querySelector(".ss-element") as HTMLElement;
-        if (container) {
-            const maxWidth = Math.max(0, window.innerWidth - container.clientWidth);
-            const maxHeight = Math.max(0, window.innerHeight - container.clientHeight);
-            const randomX = Math.floor(Math.random() * maxWidth);
-            const randomY = Math.floor(Math.random() * maxHeight);
-            container.style.left = `${randomX}px`;
-            container.style.top = `${randomY}px`;
+        const container = this.shadowRoot?.querySelector(".screen-saver") as HTMLElement;
+        const element = this.shadowRoot?.querySelector(".ss-element") as HTMLElement;
 
-            console.log("Container position:", randomX, randomY);
+        if (container && element) {
+            const maxWidth = container.clientWidth - element.clientWidth;
+            const maxHeight = container.clientHeight - element.clientHeight;
+
+            const randomX = Math.max(0, Math.floor(Math.random() * maxWidth));
+            const randomY = Math.max(0, Math.floor(Math.random() * maxHeight));
+
+            element.style.left = `${randomX}px`;
+            element.style.top = `${randomY}px`;
+
+            console.log("Element position:", randomX, randomY);
         }
     }
 
