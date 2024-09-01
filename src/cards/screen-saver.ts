@@ -4,7 +4,7 @@ import { LovelaceCardConfig } from "../types";
 import { formattedDate, formattedTime } from "../utils/format-date-time";
 
 interface Config extends LovelaceCardConfig {
-    move_timer?: number;
+    move_timer?: number; // move_timer in seconds
 }
 
 window.customCards.push({
@@ -20,8 +20,8 @@ export class ScreenSaver extends LitElement {
     @state() private _time: string = "Loading...";
     @state() private _date: string = "Loading...";
 
+    private _moveTimerId: number | undefined;
     private _timeIntervalId: number | undefined;
-    private _moveIntervalId: number | undefined;
 
     static get styles(): CSSResultGroup {
         return css`
@@ -41,6 +41,7 @@ export class ScreenSaver extends LitElement {
                 position: absolute;
                 padding: 2rem;
                 background-color: transparent;
+                opacity: 0; /* Start as invisible */
                 animation: fade-in 1.5s forwards;
             }
             .time,
@@ -85,7 +86,7 @@ export class ScreenSaver extends LitElement {
     protected firstUpdated(): void {
         this._updateElement();
         this._startClock();
-        this._startMoveElement();
+        this._cycleElement();
     }
 
     protected render(): TemplateResult {
@@ -102,17 +103,28 @@ export class ScreenSaver extends LitElement {
     private _startClock(): void {
         this._timeIntervalId = window.setInterval(() => {
             this._updateElement();
-        }, 1000);
+        }, 1000); // Update time every second
     }
 
-    private _startMoveElement(): void {
-        this._moveElement();
-
+    private _cycleElement(): void {
+        const element = this.shadowRoot?.querySelector(".element") as HTMLElement;
         const moveTimer = (this._config?.move_timer ?? 30) * 1000;
 
-        this._moveIntervalId = window.setInterval(() => {
-            this._moveElement();
-        }, moveTimer);
+        if (element) {
+            element.style.animation = "fade-in 1.5s forwards";
+
+            setTimeout(() => {
+                element.style.animation = ""; // Clear fade-in animation
+                setTimeout(() => {
+                    element.style.animation = "fade-out 1.5s forwards";
+                    setTimeout(() => {
+                        this._moveElement();
+                        element.style.animation = "fade-in 1.5s forwards";
+                        this._cycleElement(); // Repeat the cycle
+                    }, 1500); // Wait for fade-out to complete
+                }, moveTimer); // Wait for move_timer duration
+            }, 1500); // Wait for initial fade-in to complete
+        }
     }
 
     private _updateElement(): void {
@@ -141,8 +153,8 @@ export class ScreenSaver extends LitElement {
         if (this._timeIntervalId !== undefined) {
             window.clearInterval(this._timeIntervalId);
         }
-        if (this._moveIntervalId !== undefined) {
-            window.clearInterval(this._moveIntervalId);
+        if (this._moveTimerId !== undefined) {
+            window.clearTimeout(this._moveTimerId);
         }
         super.disconnectedCallback();
     }

@@ -9416,6 +9416,7 @@ let ScreenSaver = class ScreenSaver extends h {
                 position: absolute;
                 padding: 2rem;
                 background-color: transparent;
+                opacity: 0; /* Start as invisible */
                 animation: fade-in 1.5s forwards;
             }
             .time,
@@ -9458,7 +9459,7 @@ let ScreenSaver = class ScreenSaver extends h {
     firstUpdated() {
         this._updateElement();
         this._startClock();
-        this._startMoveElement();
+        this._cycleElement();
     }
     render() {
         return ke `
@@ -9473,14 +9474,25 @@ let ScreenSaver = class ScreenSaver extends h {
     _startClock() {
         this._timeIntervalId = window.setInterval(() => {
             this._updateElement();
-        }, 1000);
+        }, 1000); // Update time every second
     }
-    _startMoveElement() {
-        this._moveElement();
+    _cycleElement() {
+        const element = this.shadowRoot?.querySelector(".element");
         const moveTimer = (this._config?.move_timer ?? 30) * 1000;
-        this._moveIntervalId = window.setInterval(() => {
-            this._moveElement();
-        }, moveTimer);
+        if (element) {
+            element.style.animation = "fade-in 1.5s forwards";
+            setTimeout(() => {
+                element.style.animation = ""; // Clear fade-in animation
+                setTimeout(() => {
+                    element.style.animation = "fade-out 1.5s forwards";
+                    setTimeout(() => {
+                        this._moveElement();
+                        element.style.animation = "fade-in 1.5s forwards";
+                        this._cycleElement(); // Repeat the cycle
+                    }, 1500); // Wait for fade-out to complete
+                }, moveTimer); // Wait for move_timer duration
+            }, 1500); // Wait for initial fade-in to complete
+        }
     }
     _updateElement() {
         const now = new Date();
@@ -9503,8 +9515,8 @@ let ScreenSaver = class ScreenSaver extends h {
         if (this._timeIntervalId !== undefined) {
             window.clearInterval(this._timeIntervalId);
         }
-        if (this._moveIntervalId !== undefined) {
-            window.clearInterval(this._moveIntervalId);
+        if (this._moveTimerId !== undefined) {
+            window.clearTimeout(this._moveTimerId);
         }
         super.disconnectedCallback();
     }
