@@ -152,12 +152,6 @@ export class PanelCard extends LitElement {
         const isPhoneLandscape = this._deviceType === "phone" && this._deviceOrientation === "landscape";
 
         return html`
-            <div class="screen-saver" style="display: ${this._screenSaverActive ? "block" : "none"};">
-                <div class="ss-element">
-                    <div class="ss-time">${this._formattedTime()}</div>
-                    <div class="ss-date">${this._formattedDate()}</div>
-                </div>
-            </div>
             <div
                 class="container"
                 style="display: ${!this._screenSaverActive ? "grid" : "none"}; height: ${this._isAdmin
@@ -166,6 +160,12 @@ export class PanelCard extends LitElement {
             >
                 ${this._deviceType === "tablet" ? this._renderHeader() : nothing} ${this._renderArea()}
                 ${this._renderBody()} ${isPhoneLandscape ? nothing : this._renderFooter()}
+            </div>
+            <div class="screen-saver" style="display: ${this._screenSaverActive ? "block" : "none"};">
+                <div class="ss-element">
+                    <div class="ss-time">${this._formattedTime()}</div>
+                    <div class="ss-date">${this._formattedDate()}</div>
+                </div>
             </div>
         `;
     }

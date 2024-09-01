@@ -9108,12 +9108,6 @@ let PanelCard = class PanelCard extends h {
             return ke `<div>Loading...</div>`;
         const isPhoneLandscape = this._deviceType === "phone" && this._deviceOrientation === "landscape";
         return ke `
-            <div class="screen-saver" style="display: ${this._screenSaverActive ? "block" : "none"};">
-                <div class="ss-element">
-                    <div class="ss-time">${this._formattedTime()}</div>
-                    <div class="ss-date">${this._formattedDate()}</div>
-                </div>
-            </div>
             <div
                 class="container"
                 style="display: ${!this._screenSaverActive ? "grid" : "none"}; height: ${this._isAdmin
@@ -9122,6 +9116,12 @@ let PanelCard = class PanelCard extends h {
             >
                 ${this._deviceType === "tablet" ? this._renderHeader() : D} ${this._renderArea()}
                 ${this._renderBody()} ${isPhoneLandscape ? D : this._renderFooter()}
+            </div>
+            <div class="screen-saver" style="display: ${this._screenSaverActive ? "block" : "none"};">
+                <div class="ss-element">
+                    <div class="ss-time">${this._formattedTime()}</div>
+                    <div class="ss-date">${this._formattedDate()}</div>
+                </div>
             </div>
         `;
     }
