@@ -8812,8 +8812,18 @@ async function menuConfig(menu_tab) {
             entity: "script.system_tablet_reload",
         },
         {
-            type: "custom:button-card",
-            template: "clear-cache-tile",
+            type: "custom:smartqasa-action-tile",
+            actions: [
+                {
+                    action: "browser_mod.javascript",
+                    data: {
+                        code: "fully.clearCache()",
+                    },
+                },
+                {
+                    action: "browser_mod.refresh",
+                },
+            ],
         },
         {
             type: "custom:smartqasa-dialog-tile",
@@ -8835,8 +8845,13 @@ async function menuConfig(menu_tab) {
                 },
             },
             card: {
-                type: "custom:button-card",
-                template: "system-reboot-tile",
+                type: "custom:smartqasa-action-tile",
+                actions: [
+                    {
+                        action: "call-service",
+                        service: "hassio.host_reboot",
+                    },
+                ],
             },
         },
         {

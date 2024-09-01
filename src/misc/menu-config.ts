@@ -37,8 +37,18 @@ export async function menuConfig(menu_tab?: number): Promise<any> {
             entity: "script.system_tablet_reload",
         },
         {
-            type: "custom:button-card",
-            template: "clear-cache-tile",
+            type: "custom:smartqasa-action-tile",
+            actions: [
+                {
+                    action: "browser_mod.javascript",
+                    data: {
+                        code: "fully.clearCache()",
+                    },
+                },
+                {
+                    action: "browser_mod.refresh",
+                },
+            ],
         },
         {
             type: "custom:smartqasa-dialog-tile",
@@ -60,8 +70,13 @@ export async function menuConfig(menu_tab?: number): Promise<any> {
                 },
             },
             card: {
-                type: "custom:button-card",
-                template: "system-reboot-tile",
+                type: "custom:smartqasa-action-tile",
+                actions: [
+                    {
+                        action: "call-service",
+                        service: "hassio.host_reboot",
+                    },
+                ],
             },
         },
         {
