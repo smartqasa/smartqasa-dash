@@ -260,7 +260,7 @@
     display: block;
     height: 100%;
     width: 100%;
-    background-color: transparent;
+    background-color: black;
 }
 .ss-element {
     position: absolute;
@@ -277,12 +277,12 @@
 .ss-time {
     font-size: 6rem;
     font-weight: 300;
-    color: rgb(180, 180, 180);
+    color: rgb(140, 140, 140);
 }
 .ss-date {
     font-size: 2rem;
     font-weight: 200;
-    color: rgb(180, 180, 180);
+    color: rgb(140, 140, 140);
 }
 @keyframes fade-in {
     0% {

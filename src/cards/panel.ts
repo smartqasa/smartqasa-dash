@@ -90,7 +90,7 @@ export class PanelCard extends LitElement {
 
         this._startSsIdleTimer();
 
-        SS_HIDE_EVENTS.forEach((event) => window.addEventListener(event, () => this._resetSsIdleTimer()));
+        SS_HIDE_EVENTS.forEach((event) => window.addEventListener(event, () => this._resetScreenSaver()));
 
         this._loading = false;
     }
@@ -539,23 +539,16 @@ export class PanelCard extends LitElement {
 
             element.style.left = `${randomX}px`;
             element.style.top = `${randomY}px`;
-
-            console.log("Element position:", randomX, randomY);
         }
     }
 
-    private _hideSsPanel(e: Event): void {
-        e.stopPropagation();
-        this._resetSsIdleTimer();
-    }
-
-    private _resetSsIdleTimer(): void {
+    private _resetScreenSaver(): void {
         if (this._screenSaverActive) {
             setTimeout(() => {
                 this._screenSaverActive = false;
                 this.requestUpdate();
                 clearTimeout(this._sSanimationTimer);
-            }, 100);
+            }, 150);
         }
         clearTimeout(this._sSidleTimer);
         this._startSsIdleTimer();
