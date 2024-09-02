@@ -9438,6 +9438,8 @@ let ScreenSaver = class ScreenSaver extends h {
                 background-color: transparent;
                 opacity: 0;
                 animation: fade-in 1.5s forwards;
+                align-items: center;
+                justify-content: center;
             }
             .time,
             .date {
@@ -9458,7 +9460,7 @@ let ScreenSaver = class ScreenSaver extends h {
             }
             .logo {
                 display: flex;
-                justify-content: center;
+                flex-direction: column;
                 align-items: center;
                 background-color: transparent;
             }
@@ -9468,11 +9470,12 @@ let ScreenSaver = class ScreenSaver extends h {
                 opacity: 0.5;
             }
             .name {
-                margin-top: 0.5rem;
+                margin-top: 10px; /* 10px gap between logo and name */
                 padding: 0.5rem 1rem;
                 background-color: rgba(200, 200, 200, 0.5);
                 color: rgba(0, 0, 0, 1);
                 font-size: 1.5rem;
+                font-weight: 200;
                 text-align: center;
                 border-radius: 0.25rem;
                 word-wrap: break-word;
