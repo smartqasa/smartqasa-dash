@@ -71,6 +71,7 @@ export class ScreenSaver extends LitElement {
                 width: auto;
                 justify-content: center;
                 align-items: center;
+            }
             .logo img {
                 object-fit: contain;
             }

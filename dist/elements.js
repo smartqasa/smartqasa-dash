@@ -9462,6 +9462,7 @@ let ScreenSaver = class ScreenSaver extends h {
                 width: auto;
                 justify-content: center;
                 align-items: center;
+            }
             .logo img {
                 object-fit: contain;
             }
@@ -9495,15 +9496,15 @@ let ScreenSaver = class ScreenSaver extends h {
         return ke `
             <div class="container">
                 <div class="element">
-                    ${this._config?.display === "time"
+                    ${this._config?.display === "logo"
             ? ke `
-                              <div class="time">${this._time}</div>
-                              <div class="date">${this._date}</div>
-                          `
-            : ke `
                               <div class="logo">
                                   <img src=${img$24} alt="Logo" />
                               </div>
+                          `
+            : ke `
+                              <div class="time">${this._time}</div>
+                              <div class="date">${this._date}</div>
                           `}
                 </div>
             </div>
