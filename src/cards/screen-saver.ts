@@ -41,6 +41,8 @@ export class ScreenSaver extends LitElement {
                 position: relative;
             }
             .element {
+                display: flex;
+                flex-direction: column;
                 position: absolute;
                 padding: 2rem;
                 background-color: transparent;
