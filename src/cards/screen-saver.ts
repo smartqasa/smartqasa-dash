@@ -5,8 +5,7 @@ import { formattedDate, formattedTime } from "../utils/format-date-time";
 import logoImage from "../assets/images/logo.png";
 
 interface Config extends LovelaceCardConfig {
-    display: "time" | "logo";
-    move_timer?: number;
+    move_timer?: number; // move_timer in seconds
 }
 
 window.customCards.push({
@@ -40,7 +39,6 @@ export class ScreenSaver extends LitElement {
                 position: relative;
             }
             .element {
-                display: flex;
                 position: absolute;
                 padding: 2rem;
                 background-color: transparent;
@@ -66,10 +64,14 @@ export class ScreenSaver extends LitElement {
             }
             .logo {
                 display: flex;
-                max-width: 15%;
                 max-height: 15%;
+                max-width: 15%;
+                height: auto;
+                width: auto;
                 justify-content: center;
                 align-items: center;
+            .logo img {
+                object-fit: contain;
             }
             @keyframes fade-in {
                 0% {
@@ -120,11 +122,9 @@ export class ScreenSaver extends LitElement {
     }
 
     private _startClock(): void {
-        if (this._config?.display === "time") {
-            this._timeIntervalId = window.setInterval(() => {
-                this._updateElement();
-            }, 1000);
-        }
+        this._timeIntervalId = window.setInterval(() => {
+            this._updateElement();
+        }, 1000);
     }
 
     private _cycleElement(): void {
@@ -150,10 +150,8 @@ export class ScreenSaver extends LitElement {
 
     private _updateElement(): void {
         const now = new Date();
-        if (this._config?.display === "time") {
-            this._time = formattedTime(now);
-            this._date = formattedDate(now);
-        }
+        this._time = formattedTime(now);
+        this._date = formattedDate(now);
     }
 
     private _moveElement(): void {

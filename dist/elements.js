@@ -9431,7 +9431,6 @@ let ScreenSaver = class ScreenSaver extends h {
                 position: relative;
             }
             .element {
-                display: flex;
                 position: absolute;
                 padding: 2rem;
                 background-color: transparent;
@@ -9457,10 +9456,14 @@ let ScreenSaver = class ScreenSaver extends h {
             }
             .logo {
                 display: flex;
-                max-width: 15%;
                 max-height: 15%;
+                max-width: 15%;
+                height: auto;
+                width: auto;
                 justify-content: center;
                 align-items: center;
+            .logo img {
+                object-fit: contain;
             }
             @keyframes fade-in {
                 0% {
@@ -9507,11 +9510,9 @@ let ScreenSaver = class ScreenSaver extends h {
         `;
     }
     _startClock() {
-        if (this._config?.display === "time") {
-            this._timeIntervalId = window.setInterval(() => {
-                this._updateElement();
-            }, 1000);
-        }
+        this._timeIntervalId = window.setInterval(() => {
+            this._updateElement();
+        }, 1000);
     }
     _cycleElement() {
         const element = this.shadowRoot?.querySelector(".element");
@@ -9533,10 +9534,8 @@ let ScreenSaver = class ScreenSaver extends h {
     }
     _updateElement() {
         const now = new Date();
-        if (this._config?.display === "time") {
-            this._time = formattedTime(now);
-            this._date = formattedDate(now);
-        }
+        this._time = formattedTime(now);
+        this._date = formattedDate(now);
     }
     _moveElement() {
         const container = this.shadowRoot?.querySelector(".container");
