@@ -5,8 +5,9 @@ import { formattedDate, formattedTime } from "../utils/format-date-time";
 import logoImage from "../assets/images/logo.png";
 
 interface Config extends LovelaceCardConfig {
-    display: "time" | "logo";
     move_timer?: number;
+    display: "time" | "logo";
+    name?: string;
 }
 
 window.customCards.push({
@@ -74,6 +75,17 @@ export class ScreenSaver extends LitElement {
                 width: 150px;
                 opacity: 0.5;
             }
+            .name {
+                margin-top: 0.5rem;
+                padding: 0.5rem 1rem;
+                background-color: rgba(200, 200, 200, 0.5);
+                color: rgba(0, 0, 0, 1);
+                font-size: 1.5rem;
+                text-align: center;
+                border-radius: 0.25rem;
+                word-wrap: break-word;
+                max-width: 100%;
+            }
             @keyframes fade-in {
                 0% {
                     opacity: 0;
@@ -111,6 +123,7 @@ export class ScreenSaver extends LitElement {
                         ? html`
                               <div class="logo">
                                   <img src=${logoImage} alt="Logo" />
+                                  ${this._config.name ? html` <div class="name">${this._config.name}</div> ` : ""}
                               </div>
                           `
                         : html`

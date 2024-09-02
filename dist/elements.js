@@ -9465,6 +9465,17 @@ let ScreenSaver = class ScreenSaver extends h {
                 width: 150px;
                 opacity: 0.5;
             }
+            .name {
+                margin-top: 0.5rem;
+                padding: 0.5rem 1rem;
+                background-color: rgba(200, 200, 200, 0.5);
+                color: rgba(0, 0, 0, 1);
+                font-size: 1.5rem;
+                text-align: center;
+                border-radius: 0.25rem;
+                word-wrap: break-word;
+                max-width: 100%;
+            }
             @keyframes fade-in {
                 0% {
                     opacity: 0;
@@ -9499,6 +9510,7 @@ let ScreenSaver = class ScreenSaver extends h {
             ? ke `
                               <div class="logo">
                                   <img src=${img$24} alt="Logo" />
+                                  ${this._config.name ? ke ` <div class="name">${this._config.name}</div> ` : ""}
                               </div>
                           `
             : ke `
