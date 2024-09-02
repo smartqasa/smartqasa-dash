@@ -2,9 +2,11 @@ import { css, CSSResultGroup, html, LitElement, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { LovelaceCardConfig } from "../types";
 import { formattedDate, formattedTime } from "../utils/format-date-time";
+import logoImage from "../assets/images/logo.png";
 
 interface Config extends LovelaceCardConfig {
-    move_timer?: number; // move_timer in seconds
+    display: "time" | "logo";
+    move_timer?: number;
 }
 
 window.customCards.push({
@@ -38,6 +40,7 @@ export class ScreenSaver extends LitElement {
                 position: relative;
             }
             .element {
+                display: flex;
                 position: absolute;
                 padding: 2rem;
                 background-color: transparent;
@@ -94,17 +97,23 @@ export class ScreenSaver extends LitElement {
         return html`
             <div class="container">
                 <div class="element">
-                    <div class="time">${this._time}</div>
-                    <div class="date">${this._date}</div>
+                    ${this._config?.display === "time"
+                        ? html`
+                              <div class="time">${this._time}</div>
+                              <div class="date">${this._date}</div>
+                          `
+                        : html` <img src=${logoImage} alt="Logo" /> `}
                 </div>
             </div>
         `;
     }
 
     private _startClock(): void {
-        this._timeIntervalId = window.setInterval(() => {
-            this._updateElement();
-        }, 1000);
+        if (this._config?.display === "time") {
+            this._timeIntervalId = window.setInterval(() => {
+                this._updateElement();
+            }, 1000);
+        }
     }
 
     private _cycleElement(): void {
@@ -130,8 +139,10 @@ export class ScreenSaver extends LitElement {
 
     private _updateElement(): void {
         const now = new Date();
-        this._time = formattedTime(now);
-        this._date = formattedDate(now);
+        if (this._config?.display === "time") {
+            this._time = formattedTime(now);
+            this._date = formattedDate(now);
+        }
     }
 
     private _moveElement(): void {

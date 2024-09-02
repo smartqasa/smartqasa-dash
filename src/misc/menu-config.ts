@@ -40,6 +40,7 @@ export async function menuConfig(menu_tab?: number): Promise<any> {
             type: "custom:smartqasa-action-tile",
             icon: "mdi:wiper",
             name: "Clear Cache",
+            menu_tab: 3,
             actions: [
                 {
                     action: "browser_mod.javascript",
@@ -72,6 +73,7 @@ export async function menuConfig(menu_tab?: number): Promise<any> {
                 type: "custom:smartqasa-action-tile",
                 icon: "mdi:restart",
                 name: "Reboot System",
+                menu_tab: 3,
                 action: "hassio.host_reboot",
             },
         },
@@ -93,6 +95,7 @@ export async function menuConfig(menu_tab?: number): Promise<any> {
                 type: "custom:smartqasa-action-tile",
                 icon: "mdi:power",
                 name: "Shutdown System",
+                menu_tab: 3,
                 action: "hassio.host_shutdown",
             },
         },

@@ -16,10 +16,6 @@ window.customCards.push({
 
 @customElement("smartqasa-more-info-dialog")
 export class MoreInfoDialog extends LitElement {
-    getCardSize(): number {
-        return 6;
-    }
-
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() private _config?: Config;
     private _entity?: string;
