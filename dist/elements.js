@@ -9455,12 +9455,15 @@ let ScreenSaver = class ScreenSaver extends h {
                 font-weight: 200;
                 color: rgb(140, 140, 140);
             }
-
-            img {
-                max-width: 15%;
-                max-height: 15%;
+            .logo {
+                display: flex;
+                justify-content: center;
+                align-items: center;
             }
-
+            .logo img {
+                max-width: 10%;
+                max-height: 10%;
+            }
             @keyframes fade-in {
                 0% {
                     opacity: 0;
@@ -9496,7 +9499,11 @@ let ScreenSaver = class ScreenSaver extends h {
                               <div class="time">${this._time}</div>
                               <div class="date">${this._date}</div>
                           `
-            : ke ` <img src=${img$24} alt="Logo" /> `}
+            : ke `
+                              <div class="logo">
+                                  <img src=${img$24} alt="Logo" />
+                              </div>
+                          `}
                 </div>
             </div>
         `;

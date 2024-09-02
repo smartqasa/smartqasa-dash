@@ -64,12 +64,15 @@ export class ScreenSaver extends LitElement {
                 font-weight: 200;
                 color: rgb(140, 140, 140);
             }
-
-            img {
-                max-width: 15%;
-                max-height: 15%;
+            .logo {
+                display: flex;
+                justify-content: center;
+                align-items: center;
             }
-
+            .logo img {
+                max-width: 10%;
+                max-height: 10%;
+            }
             @keyframes fade-in {
                 0% {
                     opacity: 0;
@@ -108,7 +111,11 @@ export class ScreenSaver extends LitElement {
                               <div class="time">${this._time}</div>
                               <div class="date">${this._date}</div>
                           `
-                        : html` <img src=${logoImage} alt="Logo" /> `}
+                        : html`
+                              <div class="logo">
+                                  <img src=${logoImage} alt="Logo" />
+                              </div>
+                          `}
                 </div>
             </div>
         `;
