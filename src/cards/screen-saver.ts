@@ -85,11 +85,11 @@ export class ScreenSaver extends LitElement {
                 background-color: rgba(200, 200, 200, 0.5);
                 color: rgba(0, 0, 0, 1);
                 font-size: 1.5rem;
-                font-weight: 200;
+                font-weight: 300;
                 text-align: center;
                 border-radius: 0.25rem;
                 word-wrap: break-word;
-                max-width: 100%;
+                width: 100%;
             }
             @keyframes fade-in {
                 0% {
