@@ -5,7 +5,8 @@ import { formattedDate, formattedTime } from "../utils/format-date-time";
 import logoImage from "../assets/images/logo.png";
 
 interface Config extends LovelaceCardConfig {
-    move_timer?: number; // move_timer in seconds
+    display: "time" | "logo";
+    move_timer?: number;
 }
 
 window.customCards.push({
@@ -106,15 +107,15 @@ export class ScreenSaver extends LitElement {
         return html`
             <div class="container">
                 <div class="element">
-                    ${this._config?.display === "time"
+                    ${this._config?.display === "logo"
                         ? html`
-                              <div class="time">${this._time}</div>
-                              <div class="date">${this._date}</div>
-                          `
-                        : html`
                               <div class="logo">
                                   <img src=${logoImage} alt="Logo" />
                               </div>
+                          `
+                        : html`
+                              <div class="time">${this._time}</div>
+                              <div class="date">${this._date}</div>
                           `}
                 </div>
             </div>
