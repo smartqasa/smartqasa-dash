@@ -9457,12 +9457,10 @@ let ScreenSaver = class ScreenSaver extends h {
             }
             .logo {
                 display: flex;
+                max-width: 15%;
+                max-height: 15%;
                 justify-content: center;
                 align-items: center;
-            }
-            .logo img {
-                max-width: 50%;
-                max-height: 50%;
             }
             @keyframes fade-in {
                 0% {
