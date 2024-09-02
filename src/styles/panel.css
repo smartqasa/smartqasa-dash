@@ -122,6 +122,10 @@
     justify-content: center;
     align-items: center;
 }
+.footer-icon {
+    height: var(--sq-icon-size, 1.8rem);
+    width: var(--sq-icon-size, 1.8rem);
+}
 .footer-button {
     display: flex;
     gap: 0.5rem;
@@ -133,10 +137,7 @@
     color: rgb(var(--sq-secondary-font-rgb));
     cursor: pointer;
 }
-.footer-icon {
-    height: var(--sq-icon-size, 1.8rem);
-    width: var(--sq-icon-size, 1.8rem);
-}
+
 /* Tablet Portrait */
 @media (orientation: portrait) and (min-width: 601px), (orientation: portrait) and (width: 534px) {
     .area-image {

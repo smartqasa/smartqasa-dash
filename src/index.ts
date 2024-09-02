@@ -30,6 +30,7 @@ window.customCards = window.customCards ?? [];
 
 // Cards
 import "./cards/horizontal-stack";
+import "./cards/menu";
 import "./cards/panel";
 import "./cards/screen-saver";
 import "./cards/vertical-stack";
