@@ -64,6 +64,12 @@ export class ScreenSaver extends LitElement {
                 font-weight: 200;
                 color: rgb(140, 140, 140);
             }
+
+            img {
+                max-width: 15%;
+                max-height: 15%;
+            }
+
             @keyframes fade-in {
                 0% {
                     opacity: 0;
