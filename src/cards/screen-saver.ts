@@ -65,15 +65,14 @@ export class ScreenSaver extends LitElement {
             }
             .logo {
                 display: flex;
-                max-height: 15%;
-                max-width: 15%;
-                height: auto;
-                width: auto;
                 justify-content: center;
                 align-items: center;
+                background-color: transparent;
             }
             .logo img {
                 object-fit: contain;
+                width: 150px;
+                opacity: 0.5;
             }
             @keyframes fade-in {
                 0% {
