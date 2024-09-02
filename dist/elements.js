@@ -9461,8 +9461,8 @@ let ScreenSaver = class ScreenSaver extends h {
                 align-items: center;
             }
             .logo img {
-                max-width: 10%;
-                max-height: 10%;
+                max-width: 50%;
+                max-height: 50%;
             }
             @keyframes fade-in {
                 0% {
