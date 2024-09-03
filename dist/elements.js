@@ -1,3 +1,5 @@
+import ',/misc/progress';
+
 /******************************************************************************
 Copyright (c) Microsoft Corporation.
 
