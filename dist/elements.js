@@ -9091,7 +9091,7 @@ let PanelCard = class PanelCard extends h {
     }
     render() {
         if (this._loading)
-            return ke `<div>Loading...</div>`;
+            return ke `<progress-indicator></progress-indicator>`;
         const isPhoneLandscape = this._deviceType === "phone" && this._deviceOrientation === "landscape";
         return ke `
             <div class="container" style="display: height: ${this._isAdmin ? "calc(100vh - 56px)" : "100vh"};">
@@ -11920,7 +11920,7 @@ let ProgressIndicator = class ProgressIndicator extends h {
             justify-content: center;
             padding: 1.5rem;
             border-radius: 2rem;
-            background-color: rgba(128, 128, 128, 0.3);
+            background-color: rgba(128, 128, 128, 0.2);
         }
         .dot {
             width: 1rem;

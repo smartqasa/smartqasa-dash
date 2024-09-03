@@ -148,7 +148,7 @@ export class PanelCard extends LitElement {
     }
 
     protected render(): TemplateResult {
-        if (this._loading) return html`<div>Loading...</div>`;
+        if (this._loading) return html`<progress-indicator></progress-indicator>`;
 
         const isPhoneLandscape = this._deviceType === "phone" && this._deviceOrientation === "landscape";
 
