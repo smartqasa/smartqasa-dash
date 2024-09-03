@@ -180,7 +180,7 @@ export class PanelCard extends LitElement {
     private _renderArea() {
         const name = this._config?.name ?? this._areaObj?.name ?? "Area";
         const picture = this._config?.picture
-            ? `/local/smartqasa/images/${this._config.picture}`
+            ? `/config/smartqasa/area_images/${this._config.picture}`
             : this._areaObj?.picture ?? defaultImage;
 
         const isPhoneLandscape = this._deviceType === "phone" && this._deviceOrientation === "landscape";
