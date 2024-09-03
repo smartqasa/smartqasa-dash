@@ -2,8 +2,9 @@ import { css, LitElement, html, nothing } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 
-import { getDeviceType } from "../utils/device-info";
 import { HomeAssistant, LovelaceCardConfig } from "../types";
+import { loadYamlAsJson } from "../utils/load-yaml-as-json";
+import { getDeviceType } from "../utils/device-info";
 import { createElement } from "../utils/create-element";
 
 interface Tab {
@@ -35,7 +36,7 @@ export class MenuCard extends LitElement {
     public async setConfig(config: Config) {
         this._config = { ...config };
         this._menuTab = config.menu_tab || 0;
-        this._tabs = config.tabs || [];
+        this._tabs = await loadYamlAsJson("/local/smartqasa/dialogs/menu.yaml");
     }
 
     static get styles() {
