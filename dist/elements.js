@@ -4088,7 +4088,7 @@ let MenuCard = class MenuCard extends h {
                 padding: 1rem;
                 border: var(--sq-card-border, none);
                 border-radius: var(--sq-card-border-radius, 1.5rem);
-                background-color: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
+                background-color: transparent;
                 box-sizing: border-box;
             }
             .tab-bar {
@@ -8930,182 +8930,12 @@ async function entertainDialog(config, hass) {
     window.browser_mod?.service("popup", dialogConfig);
 }
 
-async function menuConfig(menu_tab) {
-    function createAttributes(icon, label) {
-        return {
-            icon: deviceType === "phone" ? icon : null,
-            label: deviceType === "tablet" ? label : null,
-        };
-    }
-    const layout = {
-        margin: 0,
-        card_margin: 0,
-        padding: "1rem 0 0 0",
-        "grid-template-columns": deviceType === "phone" ? "repeat(2, 1fr)" : "repeat(3, var(--sq-tile-width-tablet, 20rem))",
-        "grid-gap": "var(--sq-dialog-grid-gap)",
-    };
-    const favoMenuTiles = await loadYamlAsJson("/local/smartqasa/menus/favorites.yaml");
-    const funcMenuTiles = await loadYamlAsJson("/local/smartqasa/menus/functions.yaml");
-    const applMenuTiles = await loadYamlAsJson("/local/smartqasa/menus/applications.yaml");
-    const utilMenuTiles = [
-        {
-            type: "custom:smartqasa-dialog-tile",
-            dialog: "clean_screen",
-            menu_tab: 3,
-        },
-        {
-            type: "custom:smartqasa-dialog-tile",
-            dialog: "display_themes",
-            menu_tab: 3,
-        },
-        {
-            type: "custom:smartqasa-routine-tile",
-            entity: "script.system_tablet_reload",
-        },
-        {
-            type: "custom:smartqasa-action-tile",
-            icon: "mdi:wiper",
-            name: "Clear Cache",
-            menu_tab: 3,
-            actions: [
-                {
-                    action: "browser_mod.javascript",
-                    data: {
-                        code: "fully.clearCache()",
-                    },
-                },
-            ],
-        },
-        {
-            type: "custom:smartqasa-dialog-tile",
-            dialog: "speed_test",
-            menu_tab: 3,
-        },
-        {
-            type: "custom:restriction-card",
-            condition: {
-                entity: "input_boolean.admin_mode",
-                value: "off",
-            },
-            restrictions: {
-                block: {
-                    condition: {
-                        entity: "input_boolean.admin_mode",
-                        value: "off",
-                    },
-                },
-            },
-            card: {
-                type: "custom:smartqasa-action-tile",
-                icon: "mdi:restart",
-                name: "Reboot System",
-                menu_tab: 3,
-                action: "hassio.host_reboot",
-            },
-        },
-        {
-            type: "custom:restriction-card",
-            condition: {
-                entity: "input_boolean.admin_mode",
-                value: "off",
-            },
-            restrictions: {
-                block: {
-                    condition: {
-                        entity: "input_boolean.admin_mode",
-                        value: "off",
-                    },
-                },
-            },
-            card: {
-                type: "custom:smartqasa-action-tile",
-                icon: "mdi:power",
-                name: "Shutdown System",
-                menu_tab: 3,
-                action: "hassio.host_shutdown",
-            },
-        },
-        {
-            type: "custom:restriction-card",
-            condition: {
-                entity: "input_boolean.admin_mode",
-                value: "off",
-            },
-            restrictions: {
-                block: {
-                    condition: {
-                        entity: "input_boolean.admin_mode",
-                        value: "off",
-                    },
-                },
-            },
-            card: {
-                type: "custom:smartqasa-app-tile",
-                app: "play_store",
-                icon: "mdi:store",
-            },
-        },
-        {
-            type: "custom:smartqasa-dialog-tile",
-            dialog: "admin_mode",
-            menu_tab: 3,
-        },
-    ];
+async function menuConfig() {
     const menuConfig = {
         title: "Menu",
         timeout: 120000,
         content: {
-            type: "custom:tabbed-card",
-            options: {
-                defaultTabIndex: menu_tab || 0,
-            },
-            styles: {
-                "--mdc-tab-height": "45px",
-                "--mdc-typography-button-font-size": "var(--sq-primary-font-size)",
-                "--mdc-typography-button-font-weight": "var(--sq-primary-font-weight)",
-                "--mdc-typography-button-text-transform": "none",
-                "--mdc-theme-primary": "rgb(var(--sq-primary-font-rgb))",
-                "--mdc-tab-color-default": "rgb(var(--sq-inactive-rgb))",
-                "--mdc-tab-text-label-color-default": "rgb(var(--sq-inactive-rgb))",
-            },
-            tabs: [
-                {
-                    attributes: createAttributes("hass:star", "Favorites"),
-                    card: {
-                        type: "custom:layout-card",
-                        layout_type: "custom:grid-layout",
-                        layout: layout,
-                        cards: favoMenuTiles,
-                    },
-                },
-                {
-                    attributes: createAttributes("hass:function", "Functions"),
-                    card: {
-                        type: "custom:layout-card",
-                        layout_type: "custom:grid-layout",
-                        layout: layout,
-                        cards: funcMenuTiles,
-                    },
-                },
-                {
-                    attributes: createAttributes("hass:exit-to-app", "Applications"),
-                    card: {
-                        type: "custom:layout-card",
-                        layout_type: "custom:grid-layout",
-                        layout: layout,
-                        cards: applMenuTiles,
-                    },
-                },
-                {
-                    attributes: createAttributes("hass:cog-outline", "Utilities"),
-                    card: {
-                        type: "custom:layout-card",
-                        layout_type: "custom:grid-layout",
-                        layout: layout,
-                        cards: utilMenuTiles,
-                    },
-                },
-            ],
+            type: "custom:smartqasa-menu-card",
         },
     };
     window.smartqasa.menuConfig = menuConfig;
@@ -9554,7 +9384,7 @@ let PanelCard = class PanelCard extends h {
     async _handleMenu() {
         window.smartqasa.menuTab = 0;
         try {
-            const dialogConfig = await menuConfig(0);
+            const dialogConfig = await menuConfig();
             window.browser_mod?.service("popup", dialogConfig);
         }
         catch (error) {
@@ -12026,8 +11856,9 @@ let PanelFooter = class PanelFooter extends h {
         entertainDialog(this._config, this.hass);
     }
     async handleMenu() {
+        window.smartqasa.menuTab = 0;
         try {
-            const dialogConfig = await menuConfig(0);
+            const dialogConfig = await menuConfig();
             window.browser_mod?.service("popup", dialogConfig);
         }
         catch (error) {
@@ -13697,16 +13528,16 @@ let OptionTile = class OptionTile extends h {
             this._running = false;
             const menuTab = this._config?.menu_tab;
             if (menuTab !== undefined && menuTab >= 0 && menuTab <= 3) {
-                this.showMenu(menuTab);
+                this._showMenu();
             }
             else {
                 window.browser_mod?.service("close_popup", {});
             }
         }, 1000);
     }
-    async showMenu(menuTab) {
+    async _showMenu() {
         try {
-            const dialogConfig = await menuConfig(menuTab);
+            const dialogConfig = await menuConfig();
             window.browser_mod?.service("popup", dialogConfig);
         }
         catch (e) {

@@ -117,8 +117,9 @@ class PanelFooter extends LitElement implements ActionHandlers {
     }
 
     async handleMenu(): Promise<void> {
+        window.smartqasa.menuTab = 0;
         try {
-            const dialogConfig = await menuConfig(0);
+            const dialogConfig = await menuConfig();
             window.browser_mod?.service("popup", dialogConfig);
         } catch (error) {
             console.error("Error loading menu configuration", error);

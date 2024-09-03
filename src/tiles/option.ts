@@ -13,7 +13,6 @@ interface Config extends LovelaceCardConfig {
     entity: string;
     option: string;
     trigger?: string;
-    menu_tab?: number;
 }
 
 window.customCards.push({
@@ -119,16 +118,16 @@ export class OptionTile extends LitElement {
             this._running = false;
             const menuTab = this._config?.menu_tab;
             if (menuTab !== undefined && menuTab >= 0 && menuTab <= 3) {
-                this.showMenu(menuTab);
+                this._showMenu();
             } else {
                 window.browser_mod?.service("close_popup", {});
             }
         }, 1000);
     }
 
-    private async showMenu(menuTab: number): Promise<void> {
+    private async _showMenu(): Promise<void> {
         try {
-            const dialogConfig = await menuConfig(menuTab);
+            const dialogConfig = await menuConfig();
             window.browser_mod?.service("popup", dialogConfig);
         } catch (e) {
             window.browser_mod?.service("close_popup", {});

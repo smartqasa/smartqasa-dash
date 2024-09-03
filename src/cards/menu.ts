@@ -38,7 +38,7 @@ export class MenuCard extends LitElement {
                 padding: 1rem;
                 border: var(--sq-card-border, none);
                 border-radius: var(--sq-card-border-radius, 1.5rem);
-                background-color: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
+                background-color: transparent;
                 box-sizing: border-box;
             }
             .tab-bar {
