@@ -51,6 +51,7 @@ export class PanelCard extends LitElement {
     @state() private _isAdmin = false;
     @state() private _deviceOrientation: string = getDeviceOrientation();
     @state() private _deviceType: string = getDeviceType();
+    @state() private _areaPicture: string = defaultImage;
     private _timeIntervalId: number | undefined;
     private _boundHandleDeviceChanges = this._handleDeviceChanges.bind(this);
     private _swiper?: Swiper;
@@ -67,6 +68,7 @@ export class PanelCard extends LitElement {
     public async setConfig(config: Config) {
         this._config = { ...config };
         this._area = this._config.area;
+        this._areaPicture = await this._getAreaPicture();
         this._loading = true;
     }
 
@@ -177,17 +179,15 @@ export class PanelCard extends LitElement {
         `;
     }
 
-    private async _renderArea() {
+    private _renderArea() {
         const name = this._config?.name ?? this._areaObj?.name ?? "Area";
 
         const isPhoneLandscape = this._deviceType === "phone" && this._deviceOrientation === "landscape";
 
-        const picture = await this._getAreaPicture();
-
         return html`
             <div class="area-container">
                 <div class="area-name ${this._deviceType === "phone" ? "overlay" : ""}">${name}</div>
-                <img class="area-picture" alt="Area picture..." src=${picture} />
+                <img class="area-picture" alt="Area picture..." src=${this._areaPicture} />
                 ${this._areaChips.length > 0
                     ? html`
                           <div class="area-chips">

@@ -9116,6 +9116,7 @@ let PanelCard = class PanelCard extends h {
         this._isAdmin = false;
         this._deviceOrientation = getDeviceOrientation();
         this._deviceType = getDeviceType();
+        this._areaPicture = img$25;
         this._boundHandleDeviceChanges = this._handleDeviceChanges.bind(this);
         this._headerChips = [];
         this._areaChips = [];
@@ -9126,6 +9127,7 @@ let PanelCard = class PanelCard extends h {
     async setConfig(config) {
         this._config = { ...config };
         this._area = this._config.area;
+        this._areaPicture = await this._getAreaPicture();
         this._loading = true;
     }
     async firstUpdated(changedProps) {
@@ -9212,14 +9214,13 @@ let PanelCard = class PanelCard extends h {
             </div>
         `;
     }
-    async _renderArea() {
+    _renderArea() {
         const name = this._config?.name ?? this._areaObj?.name ?? "Area";
         const isPhoneLandscape = this._deviceType === "phone" && this._deviceOrientation === "landscape";
-        const picture = await this._getAreaPicture();
         return ke `
             <div class="area-container">
                 <div class="area-name ${this._deviceType === "phone" ? "overlay" : ""}">${name}</div>
-                <img class="area-picture" alt="Area picture..." src=${picture} />
+                <img class="area-picture" alt="Area picture..." src=${this._areaPicture} />
                 ${this._areaChips.length > 0
             ? ke `
                           <div class="area-chips">
@@ -9520,6 +9521,9 @@ __decorate([
 __decorate([
     r()
 ], PanelCard.prototype, "_deviceType", void 0);
+__decorate([
+    r()
+], PanelCard.prototype, "_areaPicture", void 0);
 PanelCard = __decorate([
     t$1("smartqasa-panel-card")
 ], PanelCard);
