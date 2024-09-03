@@ -4075,12 +4075,15 @@ window.customCards.push({
 let MenuCard = class MenuCard extends h {
     constructor() {
         super(...arguments);
+        this._tabs = [];
         this._menuTab = 0;
     }
     async setConfig(config) {
         this._config = { ...config };
         this._menuTab = config.menu_tab || 0;
-        this._tabs = await loadYamlAsJson("/local/smartqasa/dialogs/menu.yaml");
+        if (this._tabs.length === 0) {
+            this._tabs = (await loadYamlAsJson("/local/smartqasa/dialogs/menu.yaml"));
+        }
     }
     static get styles() {
         return i$3 `
@@ -4141,7 +4144,7 @@ let MenuCard = class MenuCard extends h {
         `;
     }
     render() {
-        if (!this._config || !this._tabs || this._tabs.length === 0 || !this.hass) {
+        if (!this._config || !this._tabs.length || !this.hass) {
             return D;
         }
         const currentTab = this._tabs[this._menuTab];
@@ -4163,7 +4166,7 @@ let MenuCard = class MenuCard extends h {
                                 ?icon-only=${deviceType === "phone"}
                             >
                                 <ha-icon .icon="${tab.icon}"></ha-icon>
-                                <span>${tab.name}</span>
+                                <span>${tab.tab}</span>
                             </div>
                         `)}
                 </div>
@@ -4189,6 +4192,9 @@ __decorate([
 __decorate([
     r()
 ], MenuCard.prototype, "_config", void 0);
+__decorate([
+    r()
+], MenuCard.prototype, "_tabs", void 0);
 MenuCard = __decorate([
     t$1("smartqasa-menu-card")
 ], MenuCard);

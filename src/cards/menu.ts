@@ -7,15 +7,12 @@ import { loadYamlAsJson } from "../utils/load-yaml-as-json";
 import { getDeviceType } from "../utils/device-info";
 import { createElement } from "../utils/create-element";
 
-interface Tab {
-    icon: string;
-    name: string;
-    tiles: LovelaceCardConfig[];
-}
+interface Config extends LovelaceCardConfig {}
 
-interface Config extends LovelaceCardConfig {
-    menu_tab?: number;
-    tabs: Tab[];
+interface Tab {
+    tab: string;
+    icon: string;
+    tiles: LovelaceCardConfig[];
 }
 
 window.customCards.push({
@@ -29,14 +26,16 @@ window.customCards.push({
 export class MenuCard extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() private _config?: Config;
+    @state() private _tabs: Tab[] = [];
 
     private _menuTab = 0;
-    private _tabs?: Tab[];
 
     public async setConfig(config: Config) {
         this._config = { ...config };
         this._menuTab = config.menu_tab || 0;
-        this._tabs = await loadYamlAsJson("/local/smartqasa/dialogs/menu.yaml");
+        if (this._tabs.length === 0) {
+            this._tabs = (await loadYamlAsJson("/local/smartqasa/dialogs/menu.yaml")) as Tab[];
+        }
     }
 
     static get styles() {
@@ -99,7 +98,7 @@ export class MenuCard extends LitElement {
     }
 
     protected render() {
-        if (!this._config || !this._tabs || this._tabs.length === 0 || !this.hass) {
+        if (!this._config || !this._tabs.length || !this.hass) {
             return nothing;
         }
 
@@ -126,7 +125,7 @@ export class MenuCard extends LitElement {
                                 ?icon-only=${deviceType === "phone"}
                             >
                                 <ha-icon .icon="${tab.icon}"></ha-icon>
-                                <span>${tab.name}</span>
+                                <span>${tab.tab}</span>
                             </div>
                         `
                     )}
