@@ -9212,27 +9212,10 @@ let PanelCard = class PanelCard extends h {
             </div>
         `;
     }
-    _renderArea() {
+    async _renderArea() {
         const name = this._config?.name ?? this._areaObj?.name ?? "Area";
-        let picture = img$25;
-        if (this._areaObj?.picture) {
-            picture = this._areaObj.picture;
-        }
-        else {
-            const areaFileName = `/local/smartqasa/pictures/${this._area}.png`;
-            fetch(areaFileName, { method: "HEAD" })
-                .then((response) => {
-                if (response.ok) {
-                    picture = areaFileName;
-                    console.log("Pre-Picture", picture);
-                }
-            })
-                .catch(() => {
-                console.error(`Failed to load picture for area: ${this._area}`);
-            });
-        }
-        console.log("Post-Picture", picture);
         const isPhoneLandscape = this._deviceType === "phone" && this._deviceOrientation === "landscape";
+        const picture = await this._getAreaPicture();
         return ke `
             <div class="area-container">
                 <div class="area-name ${this._deviceType === "phone" ? "overlay" : ""}">${name}</div>
@@ -9247,6 +9230,37 @@ let PanelCard = class PanelCard extends h {
                 ${isPhoneLandscape ? ke `<div class="footer-container">${this._renderFooter()}</div>` : D}
             </div>
         `;
+    }
+    async _getAreaPicture() {
+        if (this._config?.picture) {
+            const configPictureFile = `/local/smartqasa/pictures/${this._config.picture}`;
+            try {
+                const response = await fetch(configPictureFile, { method: "HEAD" });
+                if (response.ok) {
+                    return configPictureFile;
+                }
+                else {
+                    console.error("Picture from config not found, using defaultImage");
+                    return img$25;
+                }
+            }
+            catch (error) {
+                console.error(`Failed to check picture from config: ${this._config.picture}`, error);
+                return img$25;
+            }
+        }
+        const areaFileName = `/local/smartqasa/pictures/${this._area}.png`;
+        try {
+            const response = await fetch(areaFileName, { method: "HEAD" });
+            if (response.ok) {
+                return areaFileName;
+            }
+        }
+        catch (error) { }
+        if (this._areaObj?.picture) {
+            return this._areaObj.picture;
+        }
+        return img$25;
     }
     _renderBody() {
         if (!this._config || !this._bodyTiles.length)

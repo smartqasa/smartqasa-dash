@@ -177,28 +177,12 @@ export class PanelCard extends LitElement {
         `;
     }
 
-    private _renderArea() {
+    private async _renderArea() {
         const name = this._config?.name ?? this._areaObj?.name ?? "Area";
-        let picture = defaultImage;
 
-        if (this._areaObj?.picture) {
-            picture = this._areaObj.picture;
-        } else {
-            const areaFileName = `/local/smartqasa/pictures/${this._area}.png`;
-
-            fetch(areaFileName, { method: "HEAD" })
-                .then((response) => {
-                    if (response.ok) {
-                        picture = areaFileName;
-                        console.log("Pre-Picture", picture);
-                    }
-                })
-                .catch(() => {
-                    console.error(`Failed to load picture for area: ${this._area}`);
-                });
-        }
-        console.log("Post-Picture", picture);
         const isPhoneLandscape = this._deviceType === "phone" && this._deviceOrientation === "landscape";
+
+        const picture = await this._getAreaPicture();
 
         return html`
             <div class="area-container">
@@ -214,6 +198,38 @@ export class PanelCard extends LitElement {
                 ${isPhoneLandscape ? html`<div class="footer-container">${this._renderFooter()}</div>` : nothing}
             </div>
         `;
+    }
+
+    private async _getAreaPicture(): Promise<string> {
+        if (this._config?.picture) {
+            const configPictureFile = `/local/smartqasa/pictures/${this._config.picture}`;
+            try {
+                const response = await fetch(configPictureFile, { method: "HEAD" });
+                if (response.ok) {
+                    return configPictureFile;
+                } else {
+                    console.error("Picture from config not found, using defaultImage");
+                    return defaultImage;
+                }
+            } catch (error) {
+                console.error(`Failed to check picture from config: ${this._config.picture}`, error);
+                return defaultImage;
+            }
+        }
+
+        const areaFileName = `/local/smartqasa/pictures/${this._area}.png`;
+        try {
+            const response = await fetch(areaFileName, { method: "HEAD" });
+            if (response.ok) {
+                return areaFileName;
+            }
+        } catch (error) {}
+
+        if (this._areaObj?.picture) {
+            return this._areaObj.picture;
+        }
+
+        return defaultImage;
     }
 
     private _renderBody() {
