@@ -13,14 +13,22 @@ class ProgressIndicator extends LitElement {
     @property({ type: Number }) activeIndex = 0;
 
     static styles = css`
+        .container {
+            width: 100%;
+            height: 100%;
+            background-color: transparent;
+        }
+
         .dots {
             display: flex;
-            gap: 0.5rem;
+            gap: 1rem;
             justify-content: center;
+            padding: 2rem;
+            background-color: rgba(0, 0, 0, 0.2);
         }
         .dot {
-            width: 0.5rem;
-            height: 0.5rem;
+            width: 1rem;
+            height: 1rem;
             background-color: var(--dot-color, #ccc);
             border-radius: 50%;
             opacity: 0.5;
@@ -52,10 +60,12 @@ class ProgressIndicator extends LitElement {
 
     render() {
         return html`
-            <div class="dots">
-                ${[0, 1, 2].map(
-                    (index) => html` <div class="dot ${index === this.activeIndex ? "active" : ""}"></div> `
-                )}
+            <div class="container">
+                <div class="dots">
+                    ${[0, 1, 2].map(
+                        (index) => html` <div class="dot ${index === this.activeIndex ? "active" : ""}"></div> `
+                    )}
+                </div>
             </div>
         `;
     }

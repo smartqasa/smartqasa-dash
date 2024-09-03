@@ -11903,14 +11903,22 @@ let ProgressIndicator = class ProgressIndicator extends h {
         this.activeIndex = 0;
     }
     static { this.styles = i$3 `
+        .container {
+            width: 100%;
+            height: 100%;
+            background-color: transparent;
+        }
+
         .dots {
             display: flex;
-            gap: 0.5rem;
+            gap: 1rem;
             justify-content: center;
+            padding: 2rem;
+            background-color: rgba(0, 0, 0, 0.2);
         }
         .dot {
-            width: 0.5rem;
-            height: 0.5rem;
+            width: 1rem;
+            height: 1rem;
             background-color: var(--dot-color, #ccc);
             border-radius: 50%;
             opacity: 0.5;
@@ -11937,8 +11945,10 @@ let ProgressIndicator = class ProgressIndicator extends h {
     }
     render() {
         return ke `
-            <div class="dots">
-                ${[0, 1, 2].map((index) => ke ` <div class="dot ${index === this.activeIndex ? "active" : ""}"></div> `)}
+            <div class="container">
+                <div class="dots">
+                    ${[0, 1, 2].map((index) => ke ` <div class="dot ${index === this.activeIndex ? "active" : ""}"></div> `)}
+                </div>
             </div>
         `;
     }
@@ -14805,7 +14815,7 @@ PopupConfirmation = __decorate([
     t$1("popup-confirmation")
 ], PopupConfirmation);
 
-var version = "2024.9.1b-1";
+var version = "2024.9.3b-1";
 
 window.smartqasa = window.smartqasa || {};
 window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();
