@@ -25,9 +25,9 @@ export class MenuCard extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() private _tabs: Tab[] = [];
     @state() private _bodyTiles: LovelaceCard[][] = [];
+    @state() private _menuTab = window.smartqasa.menuTab || 0;
 
     private _deviceType = getDeviceType();
-    private _menuTab = window.smartqasa.menuTab || 0;
 
     public async setConfig() {}
 
@@ -36,8 +36,7 @@ export class MenuCard extends LitElement {
             .container {
                 display: block;
                 padding: 1rem;
-                border: var(--sq-card-border, none);
-                border-radius: var(--sq-card-border-radius, 1.5rem);
+                border: none;
                 background-color: transparent;
                 box-sizing: border-box;
             }

@@ -4077,8 +4077,8 @@ let MenuCard = class MenuCard extends h {
         super(...arguments);
         this._tabs = [];
         this._bodyTiles = [];
-        this._deviceType = getDeviceType();
         this._menuTab = window.smartqasa.menuTab || 0;
+        this._deviceType = getDeviceType();
     }
     async setConfig() { }
     static get styles() {
@@ -4086,8 +4086,7 @@ let MenuCard = class MenuCard extends h {
             .container {
                 display: block;
                 padding: 1rem;
-                border: var(--sq-card-border, none);
-                border-radius: var(--sq-card-border-radius, 1.5rem);
+                border: none;
                 background-color: transparent;
                 box-sizing: border-box;
             }
@@ -4213,6 +4212,9 @@ __decorate([
 __decorate([
     r()
 ], MenuCard.prototype, "_bodyTiles", void 0);
+__decorate([
+    r()
+], MenuCard.prototype, "_menuTab", void 0);
 MenuCard = __decorate([
     t$1("smartqasa-menu-card")
 ], MenuCard);
