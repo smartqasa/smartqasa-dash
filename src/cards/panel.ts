@@ -188,13 +188,15 @@ export class PanelCard extends LitElement {
 
             fetch(areaFileName, { method: "HEAD" })
                 .then((response) => {
-                    if (response.ok) picture = areaFileName;
+                    if (response.ok) {
+                        picture = areaFileName;
+                        console.log("Picture", picture);
+                    }
                 })
                 .catch(() => {
                     console.error(`Failed to load picture for area: ${this._area}`);
                 });
         }
-        console.log("Picture", picture);
 
         const isPhoneLandscape = this._deviceType === "phone" && this._deviceOrientation === "landscape";
 
