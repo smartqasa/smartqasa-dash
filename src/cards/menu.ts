@@ -99,6 +99,18 @@ export class MenuCard extends LitElement {
         }
     }
 
+    protected updated(changedProps: PropertyValues) {
+        super.updated(changedProps);
+
+        // Only update tiles on the current tab when hass changes
+        if (changedProps.has("hass") && this.hass) {
+            const currentTiles = this._bodyTiles[this._menuTab] || [];
+            currentTiles.forEach((tile) => {
+                tile.hass = this.hass;
+            });
+        }
+    }
+
     protected render() {
         const gridStyle = {
             gridTemplateColumns: this._deviceType === "phone" ? "1fr 1fr" : "repeat(3, 1fr)",
@@ -134,11 +146,7 @@ export class MenuCard extends LitElement {
         console.log("Loading menu tabs and tiles...");
         try {
             this._tabs = (await loadYamlAsJson("/local/smartqasa/dialogs/menu.yaml")) as Tab[];
-            this._bodyTiles = await Promise.all(
-                this._tabs.map(async (tab) => {
-                    return this._loadMenuTiles(tab.tiles);
-                })
-            );
+            this._bodyTiles = await Promise.all(this._tabs.map(async (tab) => this._loadMenuTiles(tab.tiles)));
         } catch (error) {
             console.error("Error loading tabs and tiles:", error);
         }
@@ -161,5 +169,11 @@ export class MenuCard extends LitElement {
     private _setMenuTab(index: number) {
         this._menuTab = index;
         window.smartqasa.menuTab = index;
+
+        // Ensure the tiles for the new tab have `hass` set when switching
+        const currentTiles = this._bodyTiles[this._menuTab] || [];
+        currentTiles.forEach((tile) => {
+            tile.hass = this.hass;
+        });
     }
 }
