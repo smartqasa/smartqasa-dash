@@ -35,7 +35,7 @@ export class MenuCard extends LitElement {
     public async setConfig(config: Config) {
         this._config = { ...config };
         this._menuTab = config.menu_tab || 0;
-        this._tabs = config.tabs;
+        this._tabs = config.tabs || [];
     }
 
     static get styles() {
@@ -80,7 +80,7 @@ export class MenuCard extends LitElement {
             .tab[icon-only] span {
                 display: none;
             }
-            .tiles-container {
+            .tiles {
                 display: grid;
                 gap: var(--sq-tile-spacing, 0.8rem);
                 width: 100%;
@@ -97,14 +97,18 @@ export class MenuCard extends LitElement {
         `;
     }
 
-    render() {
-        if (!this._config || !this._tabs || !this.hass) {
+    protected render() {
+        if (!this._config || !this._tabs || this._tabs.length === 0 || !this.hass) {
             return nothing;
         }
 
         const currentTab = this._tabs[this._menuTab];
-        const deviceType = getDeviceType();
 
+        if (!currentTab) {
+            return nothing;
+        }
+
+        const deviceType = getDeviceType();
         const gridStyle = {
             gridTemplateColumns: deviceType === "phone" ? "1fr 1fr" : "repeat(3, 1fr)",
         };
@@ -126,7 +130,7 @@ export class MenuCard extends LitElement {
                         `
                     )}
                 </div>
-                <div class="tiles-container" style=${styleMap(gridStyle)}>
+                <div class="tiles" style=${styleMap(gridStyle)}>
                     ${currentTab.tiles.map((tile) => html` <div class="tile">${this._renderTile(tile)}</div> `)}
                 </div>
             </div>
@@ -134,7 +138,7 @@ export class MenuCard extends LitElement {
     }
 
     private _renderTile(tile: LovelaceCardConfig) {
-        const element = createElement(tile); // Use the createElement utility
+        const element = createElement(tile);
         if (!element) {
             console.warn(`Failed to create element for tile: ${tile.type}`);
             return nothing;

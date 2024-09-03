@@ -214,7 +214,7 @@ let MenuCard = class MenuCard extends h {
     async setConfig(config) {
         this._config = { ...config };
         this._menuTab = config.menu_tab || 0;
-        this._tabs = config.tabs;
+        this._tabs = config.tabs || [];
     }
     static get styles() {
         return i$3 `
@@ -258,7 +258,7 @@ let MenuCard = class MenuCard extends h {
             .tab[icon-only] span {
                 display: none;
             }
-            .tiles-container {
+            .tiles {
                 display: grid;
                 gap: var(--sq-tile-spacing, 0.8rem);
                 width: 100%;
@@ -275,10 +275,13 @@ let MenuCard = class MenuCard extends h {
         `;
     }
     render() {
-        if (!this._config || !this._tabs || !this.hass) {
+        if (!this._config || !this._tabs || this._tabs.length === 0 || !this.hass) {
             return D;
         }
         const currentTab = this._tabs[this._menuTab];
+        if (!currentTab) {
+            return D;
+        }
         const deviceType = getDeviceType();
         const gridStyle = {
             gridTemplateColumns: deviceType === "phone" ? "1fr 1fr" : "repeat(3, 1fr)",
@@ -298,14 +301,14 @@ let MenuCard = class MenuCard extends h {
                             </div>
                         `)}
                 </div>
-                <div class="tiles-container" style=${se(gridStyle)}>
+                <div class="tiles" style=${se(gridStyle)}>
                     ${currentTab.tiles.map((tile) => ke ` <div class="tile">${this._renderTile(tile)}</div> `)}
                 </div>
             </div>
         `;
     }
     _renderTile(tile) {
-        const element = createElement$1(tile); // Use the createElement utility
+        const element = createElement$1(tile);
         if (!element) {
             console.warn(`Failed to create element for tile: ${tile.type}`);
             return D;
