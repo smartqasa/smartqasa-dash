@@ -2,7 +2,7 @@ import { css, LitElement, html, nothing } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 
-import { HomeAssistant, LovelaceCardConfig } from "../types";
+import { HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 import { loadYamlAsJson } from "../utils/load-yaml-as-json";
 import { getDeviceType } from "../utils/device-info";
 import { createElement } from "../utils/create-element";
@@ -26,16 +26,18 @@ window.customCards.push({
 export class MenuCard extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() private _config?: Config;
+    @state() private _loading = true;
     @state() private _tabs: Tab[] = [];
+    @state() private _bodyTiles: LovelaceCard[][] = [];
 
     private _menuTab = 0;
 
     public async setConfig(config: Config) {
         this._config = { ...config };
         this._menuTab = config.menu_tab || 0;
-        if (this._tabs.length === 0) {
-            this._tabs = (await loadYamlAsJson("/local/smartqasa/dialogs/menu.yaml")) as Tab[];
-        }
+        this._loading = true;
+        await this._loadTabsAndTiles();
+        this._loading = false;
     }
 
     static get styles() {
@@ -98,14 +100,8 @@ export class MenuCard extends LitElement {
     }
 
     protected render() {
-        if (!this._config || !this._tabs.length || !this.hass) {
-            return nothing;
-        }
-
-        const currentTab = this._tabs[this._menuTab];
-
-        if (!currentTab) {
-            return nothing;
+        if (this._loading || !this._config || !this._tabs.length || !this.hass) {
+            return html`<div>Loading...</div>`;
         }
 
         const deviceType = getDeviceType();
@@ -131,20 +127,36 @@ export class MenuCard extends LitElement {
                     )}
                 </div>
                 <div class="tiles" style=${styleMap(gridStyle)}>
-                    ${currentTab.tiles.map((tile) => html` <div class="tile">${this._renderTile(tile)}</div> `)}
+                    ${this._bodyTiles[this._menuTab].map((tile) => html`<div class="tile">${tile}</div>`)}
                 </div>
             </div>
         `;
     }
 
-    private _renderTile(tile: LovelaceCardConfig) {
-        const element = createElement(tile);
-        if (!element) {
-            console.warn(`Failed to create element for tile: ${tile.type}`);
-            return nothing;
+    private async _loadTabsAndTiles() {
+        try {
+            this._tabs = (await loadYamlAsJson("/local/smartqasa/dialogs/menu.yaml")) as Tab[];
+            this._bodyTiles = await Promise.all(
+                this._tabs.map(async (tab) => {
+                    return this._loadTilesForTab(tab.tiles);
+                })
+            );
+        } catch (error) {
+            console.error("Error loading tabs and tiles:", error);
         }
+    }
 
-        element.hass = this.hass;
-        return element;
+    private async _loadTilesForTab(tilesConfig: LovelaceCardConfig[]): Promise<LovelaceCard[]> {
+        const tiles: LovelaceCard[] = [];
+        for (const config of tilesConfig) {
+            const tile = createElement(config) as LovelaceCard;
+            if (tile) {
+                tile.hass = this.hass;
+                tiles.push(tile);
+            } else {
+                console.error("Failed to create tile for config:", config);
+            }
+        }
+        return tiles;
     }
 }

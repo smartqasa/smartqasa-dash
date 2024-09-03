@@ -4075,15 +4075,17 @@ window.customCards.push({
 let MenuCard = class MenuCard extends h {
     constructor() {
         super(...arguments);
+        this._loading = true;
         this._tabs = [];
+        this._bodyTiles = [];
         this._menuTab = 0;
     }
     async setConfig(config) {
         this._config = { ...config };
         this._menuTab = config.menu_tab || 0;
-        if (this._tabs.length === 0) {
-            this._tabs = (await loadYamlAsJson("/local/smartqasa/dialogs/menu.yaml"));
-        }
+        this._loading = true;
+        await this._loadTabsAndTiles();
+        this._loading = false;
     }
     static get styles() {
         return i$3 `
@@ -4144,12 +4146,8 @@ let MenuCard = class MenuCard extends h {
         `;
     }
     render() {
-        if (!this._config || !this._tabs.length || !this.hass) {
-            return D;
-        }
-        const currentTab = this._tabs[this._menuTab];
-        if (!currentTab) {
-            return D;
+        if (this._loading || !this._config || !this._tabs.length || !this.hass) {
+            return ke `<div>Loading...</div>`;
         }
         const deviceType = getDeviceType();
         const gridStyle = {
@@ -4171,19 +4169,35 @@ let MenuCard = class MenuCard extends h {
                         `)}
                 </div>
                 <div class="tiles" style=${se(gridStyle)}>
-                    ${currentTab.tiles.map((tile) => ke ` <div class="tile">${this._renderTile(tile)}</div> `)}
+                    ${this._bodyTiles[this._menuTab].map((tile) => ke `<div class="tile">${tile}</div>`)}
                 </div>
             </div>
         `;
     }
-    _renderTile(tile) {
-        const element = createElement$1(tile);
-        if (!element) {
-            console.warn(`Failed to create element for tile: ${tile.type}`);
-            return D;
+    async _loadTabsAndTiles() {
+        try {
+            this._tabs = (await loadYamlAsJson("/local/smartqasa/dialogs/menu.yaml"));
+            this._bodyTiles = await Promise.all(this._tabs.map(async (tab) => {
+                return this._loadTilesForTab(tab.tiles);
+            }));
         }
-        element.hass = this.hass;
-        return element;
+        catch (error) {
+            console.error("Error loading tabs and tiles:", error);
+        }
+    }
+    async _loadTilesForTab(tilesConfig) {
+        const tiles = [];
+        for (const config of tilesConfig) {
+            const tile = createElement$1(config);
+            if (tile) {
+                tile.hass = this.hass;
+                tiles.push(tile);
+            }
+            else {
+                console.error("Failed to create tile for config:", config);
+            }
+        }
+        return tiles;
     }
 };
 __decorate([
@@ -4194,7 +4208,13 @@ __decorate([
 ], MenuCard.prototype, "_config", void 0);
 __decorate([
     r()
+], MenuCard.prototype, "_loading", void 0);
+__decorate([
+    r()
 ], MenuCard.prototype, "_tabs", void 0);
+__decorate([
+    r()
+], MenuCard.prototype, "_bodyTiles", void 0);
 MenuCard = __decorate([
     t$1("smartqasa-menu-card")
 ], MenuCard);
