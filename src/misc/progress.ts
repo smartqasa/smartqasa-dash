@@ -1,5 +1,5 @@
 import { css, LitElement, html } from "lit";
-import { customElement, property, state } from "lit/decorators.js";
+import { customElement, property } from "lit/decorators.js";
 
 window.customCards.push({
     type: "smartqasa-progress-indicator",

@@ -54,7 +54,7 @@ import "./dialogs/more-info";
 // Misc
 import "./misc/area-picture";
 import "./misc/panel-footer";
-import ",/misc/progress";
+import "./misc/progress";
 import "./misc/time-date";
 import "./misc/title";
 
