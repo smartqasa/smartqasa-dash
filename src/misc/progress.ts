@@ -8,7 +8,7 @@ window.customCards.push({
     description: "A SmartQasa card for rendering a Progress Indicator.",
 });
 
-@customElement("progress-indicator")
+@customElement("smartqasa-progress-indicator")
 class ProgressIndicator extends LitElement {
     @property({ type: Number }) activeIndex = 0;
 

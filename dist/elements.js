@@ -11946,7 +11946,7 @@ __decorate([
     n({ type: Number })
 ], ProgressIndicator.prototype, "activeIndex", void 0);
 ProgressIndicator = __decorate([
-    t$1("progress-indicator")
+    t$1("smartqasa-progress-indicator")
 ], ProgressIndicator);
 
 let TimeDate = class TimeDate extends h {
