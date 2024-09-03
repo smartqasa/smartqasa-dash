@@ -3,6 +3,8 @@ import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 
 import { HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
+import { loadYamlAsJson } from "../utils/load-yaml-as-json";
+import { createElement } from "../utils/create-element";
 import { deviceType } from "../utils/device-info"; // Assuming deviceType utility is available
 
 interface Tab {
@@ -61,15 +63,14 @@ export class MenuCard extends LitElement {
                 align-items: center;
                 padding: 0.5rem 1rem;
                 border-radius: 5px;
+                background-color: rgba(var(--sq-secondard-font-color), 0.2);
+                color: rgb(var(--sq-secondary-font-rgb));
                 transition: background-color 0.3s;
                 cursor: pointer;
             }
             .tab[selected] {
-                background-color: var(--primary-color);
-                color: white;
-            }
-            .tab:hover {
-                background-color: var(--primary-color-light);
+                background-color: rgba(var(--sq-primary-font-color), 0.2);
+                color: rgb(var(--sq-primary-font-rgb));
             }
             .tab ha-icon {
                 margin-right: 0.5rem;
@@ -88,6 +89,13 @@ export class MenuCard extends LitElement {
             return nothing;
         }
 
+        this._loadMenuTiles();
+
+        const currentTab = this._tabs[this._menuTab];
+        const gridStyle = {
+            gridTemplateColumns: `repeat(${currentTab.columns}, minmax(0, 1fr))`,
+        };
+
         return html`
             <div class="container">
                 <div class="tab-bar">
@@ -105,7 +113,28 @@ export class MenuCard extends LitElement {
                         `
                     )}
                 </div>
+                <div class="tiles-container" style=${styleMap(gridStyle)}>
+                    ${currentTab.tiles.map(
+                        (tileConfig) => html` <div class="tile">${this._renderTile(tileConfig)}</div> `
+                    )}
+                </div>
             </div>
         `;
+    }
+
+    private _loadMenuTiles = async () => {
+        const favoMenuTiles = await loadYamlAsJson("/local/smartqasa/menus/favorites.yaml");
+        const funcMenuTiles = await loadYamlAsJson("/local/smartqasa/menus/functions.yaml");
+        const applMenuTiles = await loadYamlAsJson("/local/smartqasa/menus/applications.yaml");
+    };
+
+    private _renderTile(config: LovelaceCardConfig) {
+        const tile = createElement(config) as LovelaceCard;
+        if (tile) {
+            tile.hass = this.hass;
+        } else {
+            console.error("Failed to create tile for config:", config);
+        }
+        return html`<div>${tile}</div>`;
     }
 }
