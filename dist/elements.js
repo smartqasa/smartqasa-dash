@@ -9224,13 +9224,14 @@ let PanelCard = class PanelCard extends h {
                 .then((response) => {
                 if (response.ok) {
                     picture = areaFileName;
-                    console.log("Picture", picture);
+                    console.log("Pre-Picture", picture);
                 }
             })
                 .catch(() => {
                 console.error(`Failed to load picture for area: ${this._area}`);
             });
         }
+        console.log("Post-Picture", picture);
         const isPhoneLandscape = this._deviceType === "phone" && this._deviceOrientation === "landscape";
         return ke `
             <div class="area-container">
