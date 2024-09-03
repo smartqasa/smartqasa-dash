@@ -43,11 +43,14 @@ export class MenuCard extends LitElement {
             .container {
                 display: block;
                 padding: 1rem;
+                border: var(--sq-card-border, none);
+                border-radius: var(--sq-card-border-radius, 1.5rem);
+                background-color: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
                 box-sizing: border-box;
             }
             .tab-bar {
                 display: flex;
-                justify-content: space-evenly;
+                justify-content: space-between;
                 align-items: center;
                 gap: 1rem;
                 padding: 0.5rem 0;
@@ -77,25 +80,6 @@ export class MenuCard extends LitElement {
             .tab[icon-only] span {
                 display: none;
             }
-            .tiles-container {
-                display: grid;
-                gap: var(--sq-tile-spacing, 0.8rem);
-                width: 100%;
-                margin: auto;
-                grid-template-rows: var(--sq-tile-height, 7rem);
-                overflow-y: auto;
-                padding: 1rem 0;
-            }
-            .tile {
-                width: 100%;
-                height: 100%;
-                box-sizing: border-box;
-            }
-            .blank-tile {
-                visibility: hidden;
-                width: 100%;
-                height: 100%;
-            }
         `;
     }
 
@@ -103,11 +87,6 @@ export class MenuCard extends LitElement {
         if (!this._config || !this._tabs || !this.hass) {
             return nothing;
         }
-
-        const currentTab = this._tabs[this._menuTab];
-        const gridStyle = {
-            gridTemplateColumns: `repeat(${currentTab.columns}, minmax(0, 1fr))`,
-        };
 
         return html`
             <div class="container">
@@ -126,16 +105,7 @@ export class MenuCard extends LitElement {
                         `
                     )}
                 </div>
-                <div class="tiles-container" style=${styleMap(gridStyle)}>
-                    ${currentTab.tiles.map((tile) => html` <div class="tile">${this._renderTile(tile)}</div> `)}
-                </div>
             </div>
         `;
-    }
-
-    private _renderTile(tile: LovelaceCardConfig) {
-        // Implement your logic to render different types of tiles based on the configuration
-        // This is a placeholder implementation and should be replaced with actual rendering logic
-        return html`<div>${tile.type}</div>`;
     }
 }
