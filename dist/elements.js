@@ -4158,7 +4158,7 @@ let MenuCard = class MenuCard extends h {
     }
     render() {
         const gridStyle = {
-            gridTemplateColumns: this._deviceType === "phone" ? "1fr 1fr" : "repeat(3, 1fr)",
+            gridTemplateColumns: this._deviceType === "phone" ? "1fr 1fr" : "repeat(3, var(--sq-tile-width, 19.5rem))",
         };
         const currentTiles = this._bodyTiles[this._menuTab] || [];
         return ke `
