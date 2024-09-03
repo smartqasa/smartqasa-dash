@@ -11904,6 +11904,9 @@ let ProgressIndicator = class ProgressIndicator extends h {
     }
     static { this.styles = i$3 `
         .container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
             width: 100%;
             height: 100%;
             background-color: transparent;
@@ -11911,10 +11914,13 @@ let ProgressIndicator = class ProgressIndicator extends h {
 
         .dots {
             display: flex;
+            width: min-content;
+            height: min-content;
             gap: 1rem;
             justify-content: center;
-            padding: 2rem;
-            background-color: rgba(0, 0, 0, 0.2);
+            padding: 1.5rem;
+            border-radius: 2rem;
+            background-color: rgba(0, 0, 0, 0.5);
         }
         .dot {
             width: 1rem;

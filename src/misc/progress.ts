@@ -14,6 +14,9 @@ class ProgressIndicator extends LitElement {
 
     static styles = css`
         .container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
             width: 100%;
             height: 100%;
             background-color: transparent;
@@ -21,10 +24,13 @@ class ProgressIndicator extends LitElement {
 
         .dots {
             display: flex;
+            width: min-content;
+            height: min-content;
             gap: 1rem;
             justify-content: center;
-            padding: 2rem;
-            background-color: rgba(0, 0, 0, 0.2);
+            padding: 1.5rem;
+            border-radius: 2rem;
+            background-color: rgba(0, 0, 0, 0.5);
         }
         .dot {
             width: 1rem;
@@ -39,7 +45,9 @@ class ProgressIndicator extends LitElement {
             background-color: var(--dot-active-color, #000);
         }
     `;
+
     public async setConfig() {}
+
     connectedCallback() {
         super.connectedCallback();
         this._startAnimation();
