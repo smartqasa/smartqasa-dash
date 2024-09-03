@@ -9215,7 +9215,7 @@ let PanelCard = class PanelCard extends h {
     _renderArea() {
         const name = this._config?.name ?? this._areaObj?.name ?? "Area";
         const picture = this._config?.picture
-            ? `/config/smartqasa/area_images/${this._config.picture}`
+            ? `/config/smartqasa/area_pictures/${this._config.picture}`
             : this._areaObj?.picture ?? img$25;
         const isPhoneLandscape = this._deviceType === "phone" && this._deviceOrientation === "landscape";
         return ke `
