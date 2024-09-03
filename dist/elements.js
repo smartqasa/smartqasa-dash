@@ -9222,14 +9222,15 @@ let PanelCard = class PanelCard extends h {
             const areaFileName = `/local/smartqasa/pictures/${this._area}.png`;
             fetch(areaFileName, { method: "HEAD" })
                 .then((response) => {
-                if (response.ok)
+                if (response.ok) {
                     picture = areaFileName;
+                    console.log("Picture", picture);
+                }
             })
                 .catch(() => {
                 console.error(`Failed to load picture for area: ${this._area}`);
             });
         }
-        console.log("Picture", picture);
         const isPhoneLandscape = this._deviceType === "phone" && this._deviceOrientation === "landscape";
         return ke `
             <div class="area-container">
