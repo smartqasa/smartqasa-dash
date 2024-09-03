@@ -4174,6 +4174,7 @@ let MenuCard = class MenuCard extends h {
         `;
     }
     async _loadMenuTabs() {
+        console.log("Loading menu tabs and tiles...");
         try {
             this._tabs = (await loadYamlAsJson("/local/smartqasa/dialogs/menu.yaml"));
             this._bodyTiles = await Promise.all(this._tabs.map(async (tab) => {
