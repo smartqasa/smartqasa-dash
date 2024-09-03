@@ -11920,7 +11920,7 @@ let ProgressIndicator = class ProgressIndicator extends h {
             justify-content: center;
             padding: 1.5rem;
             border-radius: 2rem;
-            background-color: rgba(128, 128, 128, 0.2);
+            background-color: rgba(128, 128, 128, 0.1);
         }
         .dot {
             width: 1rem;
