@@ -11,6 +11,7 @@ declare global {
             homePath?: string;
             startArea?: string;
             menuConfig?: any;
+            menuTab: number;
             viewMode: "area" | "entertain";
         };
     }

@@ -495,6 +495,7 @@ export class PanelCard extends LitElement {
     }
 
     private async _handleMenu(): Promise<void> {
+        window.smartqasa.menuTab = 0;
         try {
             const dialogConfig = await menuConfig(0);
             window.browser_mod?.service("popup", dialogConfig);

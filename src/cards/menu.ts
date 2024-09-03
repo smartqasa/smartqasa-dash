@@ -1,4 +1,4 @@
-import { css, LitElement, html, nothing } from "lit";
+import { css, html, LitElement, nothing, PropertyValues } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 
@@ -6,8 +6,6 @@ import { HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 import { loadYamlAsJson } from "../utils/load-yaml-as-json";
 import { getDeviceType } from "../utils/device-info";
 import { createElement } from "../utils/create-element";
-
-interface Config extends LovelaceCardConfig {}
 
 interface Tab {
     tab: string;
@@ -25,20 +23,13 @@ window.customCards.push({
 @customElement("smartqasa-menu-card")
 export class MenuCard extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
-    @state() private _config?: Config;
     @state() private _loading = true;
     @state() private _tabs: Tab[] = [];
     @state() private _bodyTiles: LovelaceCard[][] = [];
 
-    private _menuTab = 0;
+    private _menuTab = window.smartqasa.menuTab || 0;
 
-    public async setConfig(config: Config) {
-        this._config = { ...config };
-        this._menuTab = config.menu_tab || 0;
-        this._loading = true;
-        await this._loadTabsAndTiles();
-        this._loading = false;
-    }
+    public async setConfig() {}
 
     static get styles() {
         return css`
@@ -99,8 +90,18 @@ export class MenuCard extends LitElement {
         `;
     }
 
+    protected async firstUpdated(changedProps: PropertyValues) {
+        super.firstUpdated(changedProps);
+        await this._loadMenuTabs();
+
+        if (this._menuTab < 0 || this._menuTab >= this._tabs.length) {
+            this._menuTab = 0;
+            window.smartqasa.menuTab = 0;
+        }
+    }
+
     protected render() {
-        if (this._loading || !this._config || !this._tabs.length || !this.hass) {
+        if (this._loading || !this._tabs.length || !this.hass) {
             return html`<div>Loading...</div>`;
         }
 
@@ -117,7 +118,7 @@ export class MenuCard extends LitElement {
                             <div
                                 class="tab"
                                 ?selected=${this._menuTab === index}
-                                @click="${() => (this._menuTab = index)}"
+                                @click="${() => this._setMenuTab(index)}"
                                 ?icon-only=${deviceType === "phone"}
                             >
                                 <ha-icon .icon="${tab.icon}"></ha-icon>
@@ -133,12 +134,12 @@ export class MenuCard extends LitElement {
         `;
     }
 
-    private async _loadTabsAndTiles() {
+    private async _loadMenuTabs() {
         try {
             this._tabs = (await loadYamlAsJson("/local/smartqasa/dialogs/menu.yaml")) as Tab[];
             this._bodyTiles = await Promise.all(
                 this._tabs.map(async (tab) => {
-                    return this._loadTilesForTab(tab.tiles);
+                    return this._loadMenuTiles(tab.tiles);
                 })
             );
         } catch (error) {
@@ -146,7 +147,7 @@ export class MenuCard extends LitElement {
         }
     }
 
-    private async _loadTilesForTab(tilesConfig: LovelaceCardConfig[]): Promise<LovelaceCard[]> {
+    private async _loadMenuTiles(tilesConfig: LovelaceCardConfig[]): Promise<LovelaceCard[]> {
         const tiles: LovelaceCard[] = [];
         for (const config of tilesConfig) {
             const tile = createElement(config) as LovelaceCard;
@@ -158,5 +159,10 @@ export class MenuCard extends LitElement {
             }
         }
         return tiles;
+    }
+
+    private _setMenuTab(index: number) {
+        this._menuTab = index;
+        window.smartqasa.menuTab = index;
     }
 }

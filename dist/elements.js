@@ -4078,15 +4078,9 @@ let MenuCard = class MenuCard extends h {
         this._loading = true;
         this._tabs = [];
         this._bodyTiles = [];
-        this._menuTab = 0;
+        this._menuTab = window.smartqasa.menuTab || 0;
     }
-    async setConfig(config) {
-        this._config = { ...config };
-        this._menuTab = config.menu_tab || 0;
-        this._loading = true;
-        await this._loadTabsAndTiles();
-        this._loading = false;
-    }
+    async setConfig() { }
     static get styles() {
         return i$3 `
             .container {
@@ -4145,8 +4139,16 @@ let MenuCard = class MenuCard extends h {
             }
         `;
     }
+    async firstUpdated(changedProps) {
+        super.firstUpdated(changedProps);
+        await this._loadMenuTabs();
+        if (this._menuTab < 0 || this._menuTab >= this._tabs.length) {
+            this._menuTab = 0;
+            window.smartqasa.menuTab = 0;
+        }
+    }
     render() {
-        if (this._loading || !this._config || !this._tabs.length || !this.hass) {
+        if (this._loading || !this._tabs.length || !this.hass) {
             return ke `<div>Loading...</div>`;
         }
         const deviceType = getDeviceType();
@@ -4160,7 +4162,7 @@ let MenuCard = class MenuCard extends h {
                             <div
                                 class="tab"
                                 ?selected=${this._menuTab === index}
-                                @click="${() => (this._menuTab = index)}"
+                                @click="${() => this._setMenuTab(index)}"
                                 ?icon-only=${deviceType === "phone"}
                             >
                                 <ha-icon .icon="${tab.icon}"></ha-icon>
@@ -4174,18 +4176,18 @@ let MenuCard = class MenuCard extends h {
             </div>
         `;
     }
-    async _loadTabsAndTiles() {
+    async _loadMenuTabs() {
         try {
             this._tabs = (await loadYamlAsJson("/local/smartqasa/dialogs/menu.yaml"));
             this._bodyTiles = await Promise.all(this._tabs.map(async (tab) => {
-                return this._loadTilesForTab(tab.tiles);
+                return this._loadMenuTiles(tab.tiles);
             }));
         }
         catch (error) {
             console.error("Error loading tabs and tiles:", error);
         }
     }
-    async _loadTilesForTab(tilesConfig) {
+    async _loadMenuTiles(tilesConfig) {
         const tiles = [];
         for (const config of tilesConfig) {
             const tile = createElement$1(config);
@@ -4199,13 +4201,14 @@ let MenuCard = class MenuCard extends h {
         }
         return tiles;
     }
+    _setMenuTab(index) {
+        this._menuTab = index;
+        window.smartqasa.menuTab = index;
+    }
 };
 __decorate([
     n({ attribute: false })
 ], MenuCard.prototype, "hass", void 0);
-__decorate([
-    r()
-], MenuCard.prototype, "_config", void 0);
 __decorate([
     r()
 ], MenuCard.prototype, "_loading", void 0);
@@ -9554,6 +9557,7 @@ let PanelCard = class PanelCard extends h {
         entertainDialog(this._config, this.hass);
     }
     async _handleMenu() {
+        window.smartqasa.menuTab = 0;
         try {
             const dialogConfig = await menuConfig(0);
             window.browser_mod?.service("popup", dialogConfig);
