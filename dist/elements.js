@@ -9214,9 +9214,22 @@ let PanelCard = class PanelCard extends h {
     }
     _renderArea() {
         const name = this._config?.name ?? this._areaObj?.name ?? "Area";
-        const picture = this._config?.picture
-            ? `/config/smartqasa/area_pictures/${this._config.picture}`
-            : this._areaObj?.picture ?? img$25;
+        let picture = img$25;
+        // Check if the areaObj has a picture
+        if (this._areaObj?.picture) {
+            picture = this._areaObj.picture;
+        }
+        else {
+            // Construct the filename from the area name
+            const areaFileName = `/local/smartqasa/pictures/${this._area}.png`;
+            // Check if the constructed filename exists
+            const xhr = new XMLHttpRequest();
+            xhr.open("HEAD", areaFileName, false);
+            xhr.send();
+            if (xhr.status !== 404) {
+                picture = areaFileName;
+            }
+        }
         const isPhoneLandscape = this._deviceType === "phone" && this._deviceOrientation === "landscape";
         return ke `
             <div class="area-container">
