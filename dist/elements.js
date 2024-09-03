@@ -4102,17 +4102,17 @@ let MenuCard = class MenuCard extends h {
             .tab {
                 display: flex;
                 align-items: center;
-                cursor: pointer;
                 padding: 0.5rem 1rem;
                 border-radius: 5px;
+                font-size: var(--sq-primary-font-size, 1.5rem);
+                font-weight: var(--sq-primary-font-weight, 300);
+                color: rgb(var(--sq-secondary-font-rgb, 128, 128, 128));
                 transition: background-color 0.3s;
+                cursor: pointer;
             }
             .tab[selected] {
-                background-color: var(--primary-color);
-                color: white;
-            }
-            .tab:hover {
-                background-color: var(--primary-color-light);
+                font-weight: var(--sq-primary-font-weight, 400);
+                color: rgb(var(--sq-primary-font-rgb, 128, 128, 128));
             }
             .tab ha-icon {
                 margin-right: 0.5rem;
