@@ -191,6 +191,7 @@ export class PanelCard extends LitElement {
                     if (response.ok) {
                         picture = areaFileName;
                     }
+                    console.log("Response", response);
                 })
                 .catch(() => {
                     console.error(`Failed to load picture for area: ${this._area}`);

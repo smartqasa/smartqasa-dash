@@ -9225,6 +9225,7 @@ let PanelCard = class PanelCard extends h {
                 if (response.ok) {
                     picture = areaFileName;
                 }
+                console.log("Response", response);
             })
                 .catch(() => {
                 console.error(`Failed to load picture for area: ${this._area}`);
