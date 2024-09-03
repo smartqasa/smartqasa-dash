@@ -31,7 +31,7 @@ class ProgressIndicator extends LitElement {
             background-color: var(--dot-active-color, #000);
         }
     `;
-
+    public async setConfig() {}
     connectedCallback() {
         super.connectedCallback();
         this._startAnimation();

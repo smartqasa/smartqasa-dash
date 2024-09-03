@@ -11921,6 +11921,7 @@ let ProgressIndicator = class ProgressIndicator extends h {
             background-color: var(--dot-active-color, #000);
         }
     `; }
+    async setConfig() { }
     connectedCallback() {
         super.connectedCallback();
         this._startAnimation();
