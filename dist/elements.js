@@ -171,19 +171,6 @@ HorizontalStack = __decorate([
     t$1("smartqasa-horizontal-stack")
 ], HorizontalStack);
 
-/**
- * @license
- * Copyright 2017 Google LLC
- * SPDX-License-Identifier: BSD-3-Clause
- */
-const t={ATTRIBUTE:1,CHILD:2,PROPERTY:3,BOOLEAN_ATTRIBUTE:4,EVENT:5,ELEMENT:6},e=t=>(...e)=>({_$litDirective$:t,values:e});let i$1 = class i{constructor(t){}get _$AU(){return this._$AM._$AU}_$AT(t,e,i){this.t=t,this._$AM=e,this.i=i;}_$AS(t,e){return this.update(t,e)}update(t,e){return this.render(...e)}};
-
-/**
- * @license
- * Copyright 2018 Google LLC
- * SPDX-License-Identifier: BSD-3-Clause
- */const ee="important",ie=" !"+ee,se=e(class extends i$1{constructor(e){if(super(e),e.type!==t.ATTRIBUTE||"style"!==e.name||e.strings?.length>2)throw Error("The `styleMap` directive must be used in the `style` attribute and must be the only part in the attribute.")}render(t){return Object.keys(t).reduce(((e,r)=>{const s=t[r];return null==s?e:e+`${r=r.includes("-")?r:r.replace(/(?:^(webkit|moz|ms|o)|)(?=[A-Z])/g,"-$&").toLowerCase()}:${s};`}),"")}update(t,[e]){const{style:r}=t.element;if(void 0===this.ft)return this.ft=new Set(Object.keys(e)),this.render(e);for(const t of this.ft)null==e[t]&&(this.ft.delete(t),t.includes("-")?r.removeProperty(t):r[t]=null);for(const t in e){const s=e[t];if(null!=s){this.ft.add(t);const e="string"==typeof s&&s.endsWith(ie);t.includes("-")||e?r.setProperty(t,e?s.slice(0,-11):s,e?ee:""):r[t]=s;}}return R}});
-
 function getDeviceOrientation() {
     return window.screen.orientation.type.startsWith("portrait") ? "portrait" : "landscape";
 }
@@ -221,11 +208,14 @@ let MenuCard = class MenuCard extends h {
             .container {
                 display: block;
                 padding: 1rem;
+                border: var(--sq-card-border, none);
+                border-radius: var(--sq-card-border-radius, 1.5rem);
+                background-color: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
                 box-sizing: border-box;
             }
             .tab-bar {
                 display: flex;
-                justify-content: space-evenly;
+                justify-content: space-between;
                 align-items: center;
                 gap: 1rem;
                 padding: 0.5rem 0;
@@ -255,35 +245,12 @@ let MenuCard = class MenuCard extends h {
             .tab[icon-only] span {
                 display: none;
             }
-            .tiles-container {
-                display: grid;
-                gap: var(--sq-tile-spacing, 0.8rem);
-                width: 100%;
-                margin: auto;
-                grid-template-rows: var(--sq-tile-height, 7rem);
-                overflow-y: auto;
-                padding: 1rem 0;
-            }
-            .tile {
-                width: 100%;
-                height: 100%;
-                box-sizing: border-box;
-            }
-            .blank-tile {
-                visibility: hidden;
-                width: 100%;
-                height: 100%;
-            }
         `;
     }
     render() {
         if (!this._config || !this._tabs || !this.hass) {
             return D;
         }
-        const currentTab = this._tabs[this._menuTab];
-        const gridStyle = {
-            gridTemplateColumns: `repeat(${currentTab.columns}, minmax(0, 1fr))`,
-        };
         return ke `
             <div class="container">
                 <div class="tab-bar">
@@ -299,16 +266,8 @@ let MenuCard = class MenuCard extends h {
                             </div>
                         `)}
                 </div>
-                <div class="tiles-container" style=${se(gridStyle)}>
-                    ${currentTab.tiles.map((tile) => ke ` <div class="tile">${this._renderTile(tile)}</div> `)}
-                </div>
             </div>
         `;
-    }
-    _renderTile(tile) {
-        // Implement your logic to render different types of tiles based on the configuration
-        // This is a placeholder implementation and should be replaced with actual rendering logic
-        return ke `<div>${tile.type}</div>`;
     }
 };
 __decorate([
@@ -320,6 +279,19 @@ __decorate([
 MenuCard = __decorate([
     t$1("smartqasa-menu-card")
 ], MenuCard);
+
+/**
+ * @license
+ * Copyright 2017 Google LLC
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+const t={ATTRIBUTE:1,CHILD:2,PROPERTY:3,BOOLEAN_ATTRIBUTE:4,EVENT:5,ELEMENT:6},e=t=>(...e)=>({_$litDirective$:t,values:e});let i$1 = class i{constructor(t){}get _$AU(){return this._$AM._$AU}_$AT(t,e,i){this.t=t,this._$AM=e,this.i=i;}_$AS(t,e){return this.update(t,e)}update(t,e){return this.render(...e)}};
+
+/**
+ * @license
+ * Copyright 2018 Google LLC
+ * SPDX-License-Identifier: BSD-3-Clause
+ */const ee="important",ie=" !"+ee,se=e(class extends i$1{constructor(e){if(super(e),e.type!==t.ATTRIBUTE||"style"!==e.name||e.strings?.length>2)throw Error("The `styleMap` directive must be used in the `style` attribute and must be the only part in the attribute.")}render(t){return Object.keys(t).reduce(((e,r)=>{const s=t[r];return null==s?e:e+`${r=r.includes("-")?r:r.replace(/(?:^(webkit|moz|ms|o)|)(?=[A-Z])/g,"-$&").toLowerCase()}:${s};`}),"")}update(t,[e]){const{style:r}=t.element;if(void 0===this.ft)return this.ft=new Set(Object.keys(e)),this.render(e);for(const t of this.ft)null==e[t]&&(this.ft.delete(t),t.includes("-")?r.removeProperty(t):r[t]=null);for(const t in e){const s=e[t];if(null!=s){this.ft.add(t);const e="string"==typeof s&&s.endsWith(ie);t.includes("-")||e?r.setProperty(t,e?s.slice(0,-11):s,e?ee:""):r[t]=s;}}return R}});
 
 function navigateToArea(area) {
     if (!area)
