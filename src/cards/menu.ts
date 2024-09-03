@@ -23,10 +23,10 @@ window.customCards.push({
 @customElement("smartqasa-menu-card")
 export class MenuCard extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
-    @state() private _loading = true;
     @state() private _tabs: Tab[] = [];
     @state() private _bodyTiles: LovelaceCard[][] = [];
 
+    private _deviceType = getDeviceType();
     private _menuTab = window.smartqasa.menuTab || 0;
 
     public async setConfig() {}
@@ -101,13 +101,8 @@ export class MenuCard extends LitElement {
     }
 
     protected render() {
-        if (this._loading || !this._tabs.length || !this.hass) {
-            return html`<div>Loading...</div>`;
-        }
-
-        const deviceType = getDeviceType();
         const gridStyle = {
-            gridTemplateColumns: deviceType === "phone" ? "1fr 1fr" : "repeat(3, 1fr)",
+            gridTemplateColumns: this._deviceType === "phone" ? "1fr 1fr" : "repeat(3, 1fr)",
         };
 
         return html`
@@ -119,7 +114,7 @@ export class MenuCard extends LitElement {
                                 class="tab"
                                 ?selected=${this._menuTab === index}
                                 @click="${() => this._setMenuTab(index)}"
-                                ?icon-only=${deviceType === "phone"}
+                                ?icon-only=${this._deviceType === "phone"}
                             >
                                 <ha-icon .icon="${tab.icon}"></ha-icon>
                                 <span>${tab.tab}</span>

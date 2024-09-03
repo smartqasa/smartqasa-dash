@@ -4075,9 +4075,9 @@ window.customCards.push({
 let MenuCard = class MenuCard extends h {
     constructor() {
         super(...arguments);
-        this._loading = true;
         this._tabs = [];
         this._bodyTiles = [];
+        this._deviceType = getDeviceType();
         this._menuTab = window.smartqasa.menuTab || 0;
     }
     async setConfig() { }
@@ -4148,12 +4148,8 @@ let MenuCard = class MenuCard extends h {
         }
     }
     render() {
-        if (this._loading || !this._tabs.length || !this.hass) {
-            return ke `<div>Loading...</div>`;
-        }
-        const deviceType = getDeviceType();
         const gridStyle = {
-            gridTemplateColumns: deviceType === "phone" ? "1fr 1fr" : "repeat(3, 1fr)",
+            gridTemplateColumns: this._deviceType === "phone" ? "1fr 1fr" : "repeat(3, 1fr)",
         };
         return ke `
             <div class="container">
@@ -4163,7 +4159,7 @@ let MenuCard = class MenuCard extends h {
                                 class="tab"
                                 ?selected=${this._menuTab === index}
                                 @click="${() => this._setMenuTab(index)}"
-                                ?icon-only=${deviceType === "phone"}
+                                ?icon-only=${this._deviceType === "phone"}
                             >
                                 <ha-icon .icon="${tab.icon}"></ha-icon>
                                 <span>${tab.tab}</span>
@@ -4209,9 +4205,6 @@ let MenuCard = class MenuCard extends h {
 __decorate([
     n({ attribute: false })
 ], MenuCard.prototype, "hass", void 0);
-__decorate([
-    r()
-], MenuCard.prototype, "_loading", void 0);
 __decorate([
     r()
 ], MenuCard.prototype, "_tabs", void 0);
