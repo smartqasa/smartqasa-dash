@@ -4151,6 +4151,7 @@ let MenuCard = class MenuCard extends h {
         const gridStyle = {
             gridTemplateColumns: this._deviceType === "phone" ? "1fr 1fr" : "repeat(3, 1fr)",
         };
+        const currentTiles = this._bodyTiles[this._menuTab] || [];
         return ke `
             <div class="container">
                 <div class="tab-bar">
@@ -4167,7 +4168,7 @@ let MenuCard = class MenuCard extends h {
                         `)}
                 </div>
                 <div class="tiles" style=${se(gridStyle)}>
-                    ${this._bodyTiles[this._menuTab].map((tile) => ke `<div class="tile">${tile}</div>`)}
+                    ${currentTiles.map((tile) => ke `<div class="tile">${tile}</div>`)}
                 </div>
             </div>
         `;

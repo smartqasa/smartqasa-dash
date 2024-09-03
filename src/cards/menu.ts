@@ -105,6 +105,8 @@ export class MenuCard extends LitElement {
             gridTemplateColumns: this._deviceType === "phone" ? "1fr 1fr" : "repeat(3, 1fr)",
         };
 
+        const currentTiles = this._bodyTiles[this._menuTab] || [];
+
         return html`
             <div class="container">
                 <div class="tab-bar">
@@ -123,7 +125,7 @@ export class MenuCard extends LitElement {
                     )}
                 </div>
                 <div class="tiles" style=${styleMap(gridStyle)}>
-                    ${this._bodyTiles[this._menuTab].map((tile) => html`<div class="tile">${tile}</div>`)}
+                    ${currentTiles.map((tile) => html`<div class="tile">${tile}</div>`)}
                 </div>
             </div>
         `;
