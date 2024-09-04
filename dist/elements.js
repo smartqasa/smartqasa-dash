@@ -9090,8 +9090,7 @@ let PanelCard = class PanelCard extends h {
         ["orientationchange", "resize"].forEach((event) => window.removeEventListener(event, this._boundHandleDeviceChanges));
     }
     render() {
-        if (this._loading)
-            return ke `<progress-indicator></progress-indicator>`;
+        //if (this._loading) return html`<progress-indicator></progress-indicator>`;
         const isPhoneLandscape = this._deviceType === "phone" && this._deviceOrientation === "landscape";
         return ke `
             <div class="container" style="display: height: ${this._isAdmin ? "calc(100vh - 56px)" : "100vh"};">
