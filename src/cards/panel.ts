@@ -148,12 +148,12 @@ export class PanelCard extends LitElement {
     }
 
     protected render(): TemplateResult {
-        //if (this._loading) return html`<progress-indicator></progress-indicator>`;
+        if (this._loading) return html`<progress-indicator></progress-indicator>`;
 
         const isPhoneLandscape = this._deviceType === "phone" && this._deviceOrientation === "landscape";
 
         return html`
-            <div class="container" style="display: height: ${this._isAdmin ? "calc(100vh - 56px)" : "100vh"};">
+            <div class="container" style="height: ${this._isAdmin ? "calc(100vh - 56px)" : "100vh"};">
                 ${this._deviceType === "tablet" ? this._renderHeader() : nothing} ${this._renderArea()}
                 ${this._renderBody()} ${isPhoneLandscape ? nothing : this._renderFooter()}
             </div>
