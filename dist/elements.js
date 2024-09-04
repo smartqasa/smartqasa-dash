@@ -9891,10 +9891,12 @@ let VerticalStack = class VerticalStack extends h {
         `;
     }
     setConfig(config) {
-        if (!config.cards || config.cards.length === 0) {
-            throw new Error("You need to define 'cards'");
+        if (!config.cards) {
+            this._config = { ...config, cards: [] };
         }
-        this._config = { ...config };
+        else {
+            this._config = { ...config };
+        }
     }
     firstUpdated(changedProps) {
         super.firstUpdated(changedProps);

@@ -34,10 +34,11 @@ class VerticalStack extends LitElement {
     }
 
     public setConfig(config: Config): void {
-        if (!config.cards || config.cards.length === 0) {
-            throw new Error("You need to define 'cards'");
+        if (!config.cards) {
+            this._config = { ...config, cards: [] };
+        } else {
+            this._config = { ...config };
         }
-        this._config = { ...config };
     }
 
     protected firstUpdated(changedProps: PropertyValues) {
