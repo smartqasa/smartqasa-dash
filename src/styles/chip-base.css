@@ -31,6 +31,12 @@
     justify-content: center;
 }
 
+@keyframes blink {
+    50% {
+        opacity: 0.25;
+    }
+}
+
 @keyframes spin {
     from {
         transform: rotate(0deg);
