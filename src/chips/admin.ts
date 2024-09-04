@@ -37,7 +37,7 @@ export class AdminChip extends LitElement {
         const icon = "hass:tools";
         const iconStyles = {
             color: "rgb(var(--sq-rgb-orange, 255, 120, 0))",
-            animation: "blink 2s ease infinite",
+            animation: "blink 2.0s linear infinite",
         };
 
         return html`
