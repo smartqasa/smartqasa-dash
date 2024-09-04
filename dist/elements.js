@@ -72,6 +72,22 @@ const t$1=t=>(e,o)=>{void 0!==o?o.addInitializer((()=>{customElements.define(t,e
  * SPDX-License-Identifier: BSD-3-Clause
  */function r(r){return n({...r,state:!0,attribute:!1})}
 
+function getDeviceOrientation() {
+    return window.screen.orientation.type.startsWith("portrait") ? "portrait" : "landscape";
+}
+function getDeviceType() {
+    const { width, height } = window.screen;
+    const orientation = window.screen.orientation.type.startsWith("portrait") ? "portrait" : "landscape";
+    if ((orientation === "portrait" && width < 600 && width != 534) ||
+        (orientation === "landscape" && height < 600 && height != 534)) {
+        return "phone";
+    }
+    else {
+        return "tablet";
+    }
+}
+let deviceType = getDeviceType();
+
 const createElement$1 = (config) => {
     if (!config.type) {
         console.error("Error: No type configured for element:", config);
@@ -92,6 +108,75 @@ const createElement$1 = (config) => {
         return undefined;
     }
 };
+
+window.customCards.push({
+    type: "smartqasa-grid-card",
+    name: "SmartQasa Grid Card",
+    preview: false,
+    description: "A SmartQasa element that displays other tiles in a grid.",
+});
+let GridCard = class GridCard extends h {
+    constructor() {
+        super(...arguments);
+        this._tiles = [];
+    }
+    static get styles() {
+        return i$3 `
+            .container {
+                display: grid;
+                grid-template-rows: var(--sq-tile-height, 7rem);
+                gap: var(--sq-tile-spacing, 0.8rem);
+            }
+        `;
+    }
+    setConfig(config) {
+        if (!config.tiles || !config.tiles.length) {
+            throw new Error("You need to define 'tiles'");
+        }
+        this._config = { ...config };
+        this._createTiles();
+    }
+    update(changedProps) {
+        super.update(changedProps);
+        if (changedProps.has("_config") && this._config) {
+            this._createTiles();
+        }
+        if (changedProps.has("hass") && this.hass) {
+            this._tiles.forEach((tile) => {
+                tile.hass = this.hass;
+            });
+        }
+    }
+    render() {
+        if (!this._config || !this.hass || this._tiles.length)
+            return D;
+        this._config.columns || 3;
+        return ke `
+            <div class="container">${this._tiles.map((tile) => ke `<div class="element">${tile}</div>`)}</div>
+        `;
+    }
+    _createTiles() {
+        if (!this._config || !this.hass)
+            return;
+        this._tiles = this._config.tiles.map((tileConfig) => {
+            const tile = createElement$1(tileConfig);
+            tile.hass = this.hass;
+            return tile;
+        });
+    }
+};
+__decorate([
+    n({ attribute: false })
+], GridCard.prototype, "hass", void 0);
+__decorate([
+    r()
+], GridCard.prototype, "_config", void 0);
+__decorate([
+    r()
+], GridCard.prototype, "_tiles", void 0);
+GridCard = __decorate([
+    t$1("smartqasa-grid-card")
+], GridCard);
 
 window.customCards.push({
     type: "smartqasa-horizontal-stack",
@@ -4049,22 +4134,6 @@ const loadYamlAsJson = async (yamlFilePath) => {
         };
     }
 };
-
-function getDeviceOrientation() {
-    return window.screen.orientation.type.startsWith("portrait") ? "portrait" : "landscape";
-}
-function getDeviceType() {
-    const { width, height } = window.screen;
-    const orientation = window.screen.orientation.type.startsWith("portrait") ? "portrait" : "landscape";
-    if ((orientation === "portrait" && width < 600 && width != 534) ||
-        (orientation === "landscape" && height < 600 && height != 534)) {
-        return "phone";
-    }
-    else {
-        return "tablet";
-    }
-}
-let deviceType = getDeviceType();
 
 window.customCards.push({
     type: "smartqasa-menu-card",

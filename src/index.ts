@@ -30,6 +30,7 @@ window.smartqasa.startArea = window.smartqasa.startArea || location.pathname.spl
 window.customCards = window.customCards ?? [];
 
 // Cards
+import "./cards/grid";
 import "./cards/horizontal-stack";
 import "./cards/menu";
 import "./cards/panel";
