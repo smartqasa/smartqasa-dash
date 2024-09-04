@@ -9245,7 +9245,6 @@ let PanelCard = class PanelCard extends h {
             return;
         const swiperParams = {
             initialSlide: 0,
-            autoHeight: true,
             loop: true,
             modules: [Navigation],
             navigation: {
