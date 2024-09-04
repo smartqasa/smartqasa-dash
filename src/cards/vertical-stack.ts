@@ -56,8 +56,6 @@ class VerticalStack extends LitElement {
                 card.hass = this.hass;
             });
         }
-
-        super.update(changedProps);
     }
 
     protected render() {

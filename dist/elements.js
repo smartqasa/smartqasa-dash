@@ -9736,7 +9736,6 @@ let VerticalStack = class VerticalStack extends h {
                 card.hass = this.hass;
             });
         }
-        super.update(changedProps);
     }
     render() {
         if (!this._config || !this.hass || !Array.isArray(this._cards))
