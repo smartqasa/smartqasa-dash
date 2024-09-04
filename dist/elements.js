@@ -4274,7 +4274,7 @@ let MenuCard = class MenuCard extends h {
                 border-radius: 5px;
                 font-size: var(--sq-primary-font-size, 1.5rem);
                 font-weight: var(--sq-primary-font-weight, 300);
-                color: rgb(var(--sq-secondary-font-rgb, 128, 128, 128));
+                color: rgb(var(--sq-inactive-rgb, 128, 128, 128));
                 transition: background-color 0.3s;
                 cursor: pointer;
             }
@@ -11519,7 +11519,6 @@ function selectOptionDialog(config, stateObj) {
         entity: stateObj.entity_id,
         option: option,
         trigger: config?.trigger,
-        menu_tab: config.menu_tab,
     }));
     const dialogConfig = {
         title: stateObj.attributes.friendly_name || stateObj.entity_id,

@@ -54,7 +54,7 @@ export class MenuCard extends LitElement {
                 border-radius: 5px;
                 font-size: var(--sq-primary-font-size, 1.5rem);
                 font-weight: var(--sq-primary-font-weight, 300);
-                color: rgb(var(--sq-secondary-font-rgb, 128, 128, 128));
+                color: rgb(var(--sq-inactive-rgb, 128, 128, 128));
                 transition: background-color 0.3s;
                 cursor: pointer;
             }
