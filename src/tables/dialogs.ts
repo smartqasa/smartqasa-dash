@@ -370,7 +370,7 @@ export const dialogTable: DialogTable = {
                 },
                 cards: [
                     {
-                        type: "vertical-stack",
+                        type: "custom:smartqasa-vertical-stack",
                         cards: [
                             {
                                 type: "custom:gap-card",

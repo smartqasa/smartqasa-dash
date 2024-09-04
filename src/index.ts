@@ -39,6 +39,7 @@ import "./cards/vertical-stack";
 import "./cards/tv-remote";
 
 // Chips
+import "./chips/admin";
 import "./chips/custom";
 import "./chips/dialog";
 import "./chips/motion";

@@ -10348,6 +10348,56 @@ TVRemoteCard = __decorate([
 var css_248z$4 = ".container {\n    display: flex;\n    margin: 0 var(--sq-chip-spacing, 0.4rem);\n    align-items: center;\n    justify-content: center;\n    width: fit-content;\n    border: var(--sq-card-border);\n    border-radius: var(--sq-chip-border-radius);\n    background-color: var(--sq-card-background-color);\n    transition: var(--sq-icon-transition, none);\n    overflow: hidden;\n    -webkit-tap-highlight-color: transparent;\n    cursor: pointer;\n}\n\n.container:focus,\n.container:active {\n    background-color: var(--sq-ripple-color);\n    border-radius: var(--sq-chip-border-radius);\n    outline: none;\n}\n\n.icon {\n    display: flex;\n    height: var(--sq-icon-size, 1.8rem);\n    width: var(--sq-icon-size, 1.8rem);\n    padding: var(--sq-chip-padding, 1rem);\n    color: rgb(var(--sq-primary-text-rgb));\n    transition: var(--sq-icon-transition, none);\n    align-items: center;\n    justify-content: center;\n}\n\n@keyframes spin {\n    from {\n        transform: rotate(0deg);\n    }\n    to {\n        transform: rotate(360deg);\n    }\n}\n";
 styleInject(css_248z$4);
 
+window.customCards.push({
+    type: "smartqasa-admin-chip",
+    name: "SmartQasa Admin Chip",
+    preview: true,
+    description: "A SmartQasa chip for toggling off admin mode.",
+});
+let AdminChip = class AdminChip extends h {
+    constructor() {
+        super(...arguments);
+        this._entity = "input_boolean.admin_mode";
+    }
+    static { this.styles = r$3(css_248z$4); }
+    setConfig() { }
+    updated(changedProps) {
+        super.updated(changedProps);
+        if (this.hass && changedProps.has("hass")) {
+            this._stateObj = this.hass.states[this._entity];
+        }
+    }
+    render() {
+        if (!this._entity || this._stateObj?.state !== "on")
+            return D;
+        const icon = "hass:tools";
+        const iconStyles = {
+            color: "var(--sq-rgb-orange, 255, 120, 0)",
+            animation: "blink 2s ease infinite",
+        };
+        return ke `
+            <div class="container" @click=${this._toggleEntity}>
+                <div class="icon" style="${se(iconStyles)}">
+                    <ha-icon .icon=${icon}></ha-icon>
+                </div>
+            </div>
+        `;
+    }
+    _toggleEntity(e) {
+        e.stopPropagation();
+        callService(this.hass, "input_boolean", "turn_off", { entity_id: this._entity });
+    }
+};
+__decorate([
+    n({ attribute: false })
+], AdminChip.prototype, "hass", void 0);
+__decorate([
+    r()
+], AdminChip.prototype, "_stateObj", void 0);
+AdminChip = __decorate([
+    t$1("smartqasa-admin-chip")
+], AdminChip);
+
 var css_248z$3 = ".container {\n    justify-content: flex-start;\n}\n\n.icon {\n    padding-right: calc(var(--sq-chip-padding, 1rem) / 2);\n    align-items: center;\n    justify-content: center;\n}\n\n.text {\n    display: flex;\n    padding: var(--sq-chip-padding, 1rem);\n    padding-left: 0;\n    line-height: var(--sq-icon-size, 1.8rem);\n    font-weight: var(--sq-primary-font-weight, 400);\n    font-size: var(--sq-primary-font-size, 1.5rem);\n    color: rgb(var(--sq-primary-font-rgb, 128, 128, 128));\n    text-align: left;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: nowrap;\n    align-items: center;\n}\n";
 styleInject(css_248z$3);
 
@@ -10823,7 +10873,7 @@ const dialogTable = {
                 },
                 cards: [
                     {
-                        type: "vertical-stack",
+                        type: "custom:smartqasa-vertical-stack",
                         cards: [
                             {
                                 type: "custom:gap-card",
