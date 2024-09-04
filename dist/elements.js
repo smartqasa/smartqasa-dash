@@ -9722,12 +9722,14 @@ let VerticalStack = class VerticalStack extends h {
             throw new Error("You need to define 'cards'");
         }
         this._config = { ...config };
+        console.log("Config", this._config);
     }
     firstUpdated(changedProps) {
         super.firstUpdated(changedProps);
         if (changedProps.has("_config") && this._config && this.hass) {
             this._cards = createCards(this._config.cards, this.hass);
         }
+        console.log("Cards", this._cards);
     }
     updated(changedProps) {
         super.updated(changedProps);
@@ -9738,8 +9740,9 @@ let VerticalStack = class VerticalStack extends h {
         }
     }
     render() {
-        if (!this._config || !this.hass || !Array.isArray(this._cards))
+        if (!this._config || !this.hass || this._cards.length === 0)
             return D;
+        console.log("Render", this._cards);
         return ke `
             <div class="container">${this._cards.map((card) => ke `<div class="element">${card}</div>`)}</div>
         `;
