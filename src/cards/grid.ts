@@ -8,7 +8,7 @@ import { createCards } from "../utils/create-cards";
 
 interface Config extends LovelaceCardConfig {
     columns?: number;
-    tiles: LovelaceCardConfig[];
+    cards: LovelaceCardConfig[];
 }
 
 window.customCards.push({
@@ -22,7 +22,7 @@ window.customCards.push({
 class GridCard extends LitElement {
     @property({ attribute: false }) private hass?: HomeAssistant;
     @state() private _config?: Config;
-    @state() private _tiles: LovelaceCard[] = [];
+    @state() private _cards: LovelaceCard[] = [];
 
     static get styles() {
         return css`
@@ -35,7 +35,7 @@ class GridCard extends LitElement {
     }
 
     public setConfig(config: Config): void {
-        if (!config.tiles || !config.tiles.length) {
+        if (!config.cards || !config.cards.length) {
             throw new Error("You need to define 'tiles'");
         }
 
@@ -45,22 +45,22 @@ class GridCard extends LitElement {
     protected firstUpdated(changedProps: PropertyValues) {
         super.firstUpdated(changedProps);
         if (changedProps.has("_config") && this._config && this.hass) {
-            this._tiles = createCards(this._config.tiles, this.hass) as LovelaceCard[];
+            this._cards = createCards(this._config.cards, this.hass) as LovelaceCard[];
         }
     }
 
     protected updated(changedProps: PropertyValues) {
         super.updated(changedProps);
 
-        if (changedProps.has("hass") && this.hass && this._tiles.length) {
-            this._tiles.forEach((tile) => {
-                tile.hass = this.hass;
+        if (changedProps.has("hass") && this.hass && this._cards.length) {
+            this._cards.forEach((card) => {
+                card.hass = this.hass;
             });
         }
     }
 
     protected render() {
-        if (!this._config || !this.hass || !this._tiles.length) return nothing;
+        if (!this._config || !this.hass || !this._cards.length) return nothing;
 
         const columns = this._config.columns || 3;
         const gridStyle = {
@@ -70,7 +70,7 @@ class GridCard extends LitElement {
 
         return html`
             <div class="container" style=${styleMap(gridStyle)}>
-                ${this._tiles.map((tile) => html`<div class="element">${tile}</div>`)}
+                ${this._cards.map((card) => html`<div class="element">${card}</div>`)}
             </div>
         `;
     }

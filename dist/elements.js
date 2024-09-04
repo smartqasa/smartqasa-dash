@@ -141,7 +141,7 @@ window.customCards.push({
 let GridCard = class GridCard extends h {
     constructor() {
         super(...arguments);
-        this._tiles = [];
+        this._cards = [];
     }
     static get styles() {
         return i$3 `
@@ -153,7 +153,7 @@ let GridCard = class GridCard extends h {
         `;
     }
     setConfig(config) {
-        if (!config.tiles || !config.tiles.length) {
+        if (!config.cards || !config.cards.length) {
             throw new Error("You need to define 'tiles'");
         }
         this._config = { ...config };
@@ -161,19 +161,19 @@ let GridCard = class GridCard extends h {
     firstUpdated(changedProps) {
         super.firstUpdated(changedProps);
         if (changedProps.has("_config") && this._config && this.hass) {
-            this._tiles = createCards(this._config.tiles, this.hass);
+            this._cards = createCards(this._config.cards, this.hass);
         }
     }
     updated(changedProps) {
         super.updated(changedProps);
-        if (changedProps.has("hass") && this.hass && this._tiles.length) {
-            this._tiles.forEach((tile) => {
-                tile.hass = this.hass;
+        if (changedProps.has("hass") && this.hass && this._cards.length) {
+            this._cards.forEach((card) => {
+                card.hass = this.hass;
             });
         }
     }
     render() {
-        if (!this._config || !this.hass || !this._tiles.length)
+        if (!this._config || !this.hass || !this._cards.length)
             return D;
         const columns = this._config.columns || 3;
         const gridStyle = {
@@ -181,7 +181,7 @@ let GridCard = class GridCard extends h {
         };
         return ke `
             <div class="container" style=${se(gridStyle)}>
-                ${this._tiles.map((tile) => ke `<div class="element">${tile}</div>`)}
+                ${this._cards.map((card) => ke `<div class="element">${card}</div>`)}
             </div>
         `;
     }
@@ -194,7 +194,7 @@ __decorate([
 ], GridCard.prototype, "_config", void 0);
 __decorate([
     r()
-], GridCard.prototype, "_tiles", void 0);
+], GridCard.prototype, "_cards", void 0);
 GridCard = __decorate([
     t$1("smartqasa-grid-card")
 ], GridCard);
@@ -9726,7 +9726,7 @@ let VerticalStack = class VerticalStack extends h {
     firstUpdated(changedProps) {
         super.firstUpdated(changedProps);
         if (changedProps.has("_config") && this._config && this.hass) {
-            this._cards = createCards(this._config.tiles, this.hass);
+            this._cards = createCards(this._config.cards, this.hass);
         }
     }
     updated(changedProps) {
