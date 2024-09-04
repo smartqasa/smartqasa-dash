@@ -4264,7 +4264,7 @@ let MenuCard = class MenuCard extends h {
     async _loadMenuTabs() {
         console.log("Loading menu tabs and tiles...");
         try {
-            this._tabs = (await loadYamlAsJson("/local/smartqasa/dialogs/menu.yaml"));
+            this._tabs = (await loadYamlAsJson("/local/smartqasa/config/menu.yaml"));
             this._bodyTiles = await Promise.all(this._tabs.map(async (tab) => this._loadMenuTiles(tab.tiles)));
         }
         catch (error) {
@@ -9348,7 +9348,7 @@ let PanelCard = class PanelCard extends h {
     async _loadHeaderChips() {
         let chipsConfig = [];
         try {
-            const yamlFilePath = "/local/smartqasa/lists/chips.yaml";
+            const yamlFilePath = "/local/smartqasa/config/chips.yaml";
             chipsConfig = (await loadYamlAsJson(yamlFilePath));
         }
         catch (error) {

@@ -370,7 +370,7 @@ export class PanelCard extends LitElement {
     private async _loadHeaderChips(): Promise<LovelaceCard[]> {
         let chipsConfig: LovelaceCardConfig[] = [];
         try {
-            const yamlFilePath = "/local/smartqasa/lists/chips.yaml";
+            const yamlFilePath = "/local/smartqasa/config/chips.yaml";
             chipsConfig = (await loadYamlAsJson(yamlFilePath)) as LovelaceCardConfig[];
         } catch (error) {
             console.error("Error loading header chips:", error);

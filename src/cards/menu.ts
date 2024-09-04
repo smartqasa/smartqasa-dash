@@ -144,7 +144,7 @@ export class MenuCard extends LitElement {
     private async _loadMenuTabs() {
         console.log("Loading menu tabs and tiles...");
         try {
-            this._tabs = (await loadYamlAsJson("/local/smartqasa/dialogs/menu.yaml")) as Tab[];
+            this._tabs = (await loadYamlAsJson("/local/smartqasa/config/menu.yaml")) as Tab[];
             this._bodyTiles = await Promise.all(this._tabs.map(async (tab) => this._loadMenuTiles(tab.tiles)));
         } catch (error) {
             console.error("Error loading tabs and tiles:", error);
