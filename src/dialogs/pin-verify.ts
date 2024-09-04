@@ -72,7 +72,14 @@ export class PinVerifyDialog extends LitElement {
             border: var(--sq-card-border, none);
             border-radius: 1.5rem;
             background-color: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
+            -webkit-tap-highlight-color: transparent;
             cursor: pointer;
+        }
+        .button:focus,
+        .button:active {
+            background-color: var(--sq-ripple-color);
+            border-radius: var(--sq-card-border-radius, 1.5rem);
+            outline: none;
         }
     `;
 
