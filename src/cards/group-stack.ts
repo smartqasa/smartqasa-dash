@@ -4,10 +4,9 @@ import { HomeAssistant, LovelaceCardConfig, LovelaceCard } from "../types";
 import { createElement } from "../utils/create-element";
 
 interface Config extends LovelaceCardConfig {
-    filter: "group" | "domain"; // Filter by group or domain
-    group?: string; // Group entity for 'group' filter
-    domain?: string; // Domain for 'domain' filter (e.g., 'climate', 'vacuum')
-    card_type: string; // The type of card to create for each entity
+    filter_type: "group" | "domain";
+    filter_value: string;
+    card_type: string;
 }
 
 window.customCards.push({
@@ -36,13 +35,8 @@ class GroupStack extends LitElement {
     }
 
     public setConfig(config: Config): void {
-        if (
-            !config.filter ||
-            !config.card_type ||
-            (config.filter === "group" && !config.group) ||
-            (config.filter === "domain" && !config.domain)
-        ) {
-            throw new Error("Filter type, card_type, and either group or domain must be provided in the config.");
+        if (!config.filter_type || !config.filter_value || !config.card_type) {
+            throw new Error("filter_type, filter_value, and card_type must be provided in the config.");
         }
         this._config = { ...config };
     }
@@ -53,21 +47,19 @@ class GroupStack extends LitElement {
         if (changedProps.has("_config") && this._config && this.hass) {
             let entityIds: string[] = [];
 
-            if (this._config.filter === "group") {
-                const groupEntity = this.hass!.states[this._config.group!];
+            if (this._config.filter_type === "group") {
+                const groupEntity = this.hass!.states[this._config.filter_value];
                 if (groupEntity && groupEntity.attributes.entity_id) {
                     entityIds = groupEntity.attributes.entity_id as string[];
                 }
-            } else if (this._config.filter === "domain") {
-                const domain = this._config.domain!;
-                // Filter all entities in Home Assistant by the specified domain
+            } else if (this._config.filter_type === "domain") {
+                const domain = this._config.filter_value;
                 entityIds = Object.keys(this.hass!.states).filter((entityId) => {
                     return entityId.startsWith(`${domain}.`);
                 });
             }
 
             if (entityIds.length > 0) {
-                // Sort the entities by friendly_name
                 const entityNameMap = entityIds.map((entityId) => {
                     const entity = this.hass!.states[entityId];
                     const friendlyName = entity?.attributes.friendly_name?.toLowerCase() || "";
@@ -75,11 +67,8 @@ class GroupStack extends LitElement {
                 });
 
                 entityNameMap.sort((a, b) => a.friendlyName.localeCompare(b.friendlyName));
-
-                // Update entityIds with the sorted order
                 entityIds = entityNameMap.map((item) => item.entityId);
 
-                // Create a card for each entity
                 this._cards = entityIds.map((entityId) => {
                     const cardConfig: LovelaceCardConfig = {
                         type: this._config!.card_type,
