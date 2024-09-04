@@ -95,7 +95,6 @@
 }
 .swiper {
     grid-area: body;
-    height: minmax(0, 1fr);
     width: 100%;
 }
 .swiper-slide {
