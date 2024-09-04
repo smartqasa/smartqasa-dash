@@ -11,10 +11,10 @@ interface Config extends LovelaceCardConfig {
 }
 
 window.customCards.push({
-    type: "smartqasa-pin-verify-dialog",
-    name: "SmartQasa PIN Verify Dialog",
+    type: "smartqasa-pin-verify-card",
+    name: "SmartQasa PIN Verify card",
     preview: true,
-    description: "A SmartQasa dialog for accepting and verifying a PIN.",
+    description: "A SmartQasa card for accepting and verifying a PIN.",
 });
 
 @customElement("smartqasa-pin-verify-dialog")
@@ -78,7 +78,7 @@ export class PinVerifyDialog extends LitElement {
         .button:focus,
         .button:active {
             background-color: var(--sq-ripple-color);
-            border-radius: var(--sq-card-border-radius, 1.5rem);
+            border-radius: 1.5rem;
             outline: none;
         }
     `;

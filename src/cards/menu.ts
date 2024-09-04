@@ -102,7 +102,6 @@ export class MenuCard extends LitElement {
     protected updated(changedProps: PropertyValues) {
         super.updated(changedProps);
 
-        // Only update tiles on the current tab when hass changes
         if (changedProps.has("hass") && this.hass) {
             const currentTiles = this._bodyTiles[this._menuTab] || [];
             currentTiles.forEach((tile) => {

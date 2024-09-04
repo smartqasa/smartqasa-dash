@@ -34,6 +34,7 @@ import "./cards/grid-stack";
 import "./cards/horizontal-stack";
 import "./cards/menu";
 import "./cards/panel";
+import "./cards/pin-verify";
 import "./cards/screen-saver";
 import "./cards/vertical-stack";
 import "./cards/tv-remote";
@@ -50,7 +51,7 @@ import "./chips/thermostat";
 import "./chips/weather";
 
 // Dialogs
-import "./dialogs/pin-verify";
+
 import "./dialogs/more-info";
 
 // Misc
