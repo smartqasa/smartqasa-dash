@@ -24,10 +24,6 @@ export class AdminChip extends LitElement {
 
     public setConfig(): void {}
 
-    protected shouldUpdate(changedProps: PropertyValues): boolean {
-        return !!(changedProps.has("hass") && this.hass?.states[this._entity] !== this._stateObj);
-    }
-
     protected updated(changedProps: PropertyValues): void {
         super.updated(changedProps);
         if (this.hass && changedProps.has("hass")) {
