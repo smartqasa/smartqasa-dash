@@ -9718,16 +9718,19 @@ let VerticalStack = class VerticalStack extends h {
         `;
     }
     setConfig(config) {
-        if (!config.cards || !Array.isArray(config.cards)) {
+        if (!config.cards || !config.cards.length) {
             throw new Error("You need to define 'cards'");
         }
         this._config = { ...config };
-        this._createCards();
     }
-    update(changedProps) {
-        if (changedProps.has("_config") && this._config) {
-            this._createCards();
+    firstUpdated(changedProps) {
+        super.firstUpdated(changedProps);
+        if (changedProps.has("_config") && this._config && this.hass) {
+            this._cards = createCards(this._config.tiles, this.hass);
         }
+    }
+    updated(changedProps) {
+        super.updated(changedProps);
         if (changedProps.has("hass") && this.hass) {
             this._cards.forEach((card) => {
                 card.hass = this.hass;
@@ -9741,15 +9744,6 @@ let VerticalStack = class VerticalStack extends h {
         return ke `
             <div class="container">${this._cards.map((card) => ke `<div class="element">${card}</div>`)}</div>
         `;
-    }
-    _createCards() {
-        if (!this._config || !this.hass)
-            return;
-        this._cards = this._config.cards.map((cardConfig) => {
-            const card = createElement$1(cardConfig);
-            card.hass = this.hass;
-            return card;
-        });
     }
 };
 __decorate([
