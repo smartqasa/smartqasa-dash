@@ -200,6 +200,84 @@ GridStack = __decorate([
 ], GridStack);
 
 window.customCards.push({
+    type: "smartqasa-group-stack",
+    name: "SmartQasa Group Stack",
+    preview: false,
+    description: "A SmartQasa element that dynamically creates cards for entities in a group.",
+});
+let GroupStack = class GroupStack extends h {
+    constructor() {
+        super(...arguments);
+        this._cards = [];
+    }
+    static get styles() {
+        return i$3 `
+            .container {
+                display: flex;
+                flex-direction: column;
+            }
+            .element:not(:last-child) {
+                padding-bottom: 0.8rem;
+            }
+        `;
+    }
+    setConfig(config) {
+        if (!config.entity || !config.card) {
+            throw new Error("Entity and card must be provided in the config.");
+        }
+        this._config = { ...config };
+    }
+    firstUpdated(changedProps) {
+        super.firstUpdated(changedProps);
+        if (changedProps.has("_config") && this._config && this.hass) {
+            const entity = this.hass.states[this._config.entity];
+            if (entity && entity.attributes.entity_id) {
+                const entityIds = entity.attributes.entity_id;
+                // Generate a card for each entity ID, using the card template from the config
+                this._cards = entityIds.map((entityId) => {
+                    // Clone the card config and assign the current entity ID
+                    const cardConfig = {
+                        ...this._config.card,
+                        entity: entityId, // Pass the entity ID to the card config
+                    };
+                    // Create the Lovelace card element using the config
+                    const card = createElement$1(cardConfig);
+                    card.hass = this.hass;
+                    return card;
+                });
+            }
+        }
+    }
+    updated(changedProps) {
+        super.updated(changedProps);
+        if (changedProps.has("hass") && this.hass) {
+            this._cards.forEach((card) => {
+                card.hass = this.hass;
+            });
+        }
+    }
+    render() {
+        if (!this._config || !this.hass || this._cards.length === 0)
+            return D;
+        return ke `
+            <div class="container">${this._cards.map((card) => ke `<div class="element">${card}</div>`)}</div>
+        `;
+    }
+};
+__decorate([
+    n({ attribute: false })
+], GroupStack.prototype, "hass", void 0);
+__decorate([
+    r()
+], GroupStack.prototype, "_config", void 0);
+__decorate([
+    r()
+], GroupStack.prototype, "_cards", void 0);
+GroupStack = __decorate([
+    t$1("smartqasa-group-stack")
+], GroupStack);
+
+window.customCards.push({
     type: "smartqasa-horizontal-stack",
     name: "SmartQasa Horizontal Stack",
     preview: false,

@@ -31,6 +31,7 @@ window.customCards = window.customCards ?? [];
 
 // Cards
 import "./cards/grid-stack";
+import "./cards/group-stack";
 import "./cards/horizontal-stack";
 import "./cards/menu";
 import "./cards/panel";
