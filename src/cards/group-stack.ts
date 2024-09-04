@@ -46,13 +46,22 @@ class GroupStack extends LitElement {
             const entity = this.hass!.states[this._config.entity];
 
             if (entity && entity.attributes.entity_id) {
-                const entityIds = entity.attributes.entity_id as string[];
+                let entityIds = entity.attributes.entity_id as string[];
 
-                // Create a card for each entity ID, using the provided card_type
+                const entityNameMap = entityIds.map((entityId) => {
+                    const entity = this.hass!.states[entityId];
+                    const friendlyName = entity?.attributes.friendly_name?.toLowerCase() || "";
+                    return { entityId, friendlyName };
+                });
+
+                entityNameMap.sort((a, b) => a.friendlyName.localeCompare(b.friendlyName));
+
+                entityIds = entityNameMap.map((item) => item.entityId);
+
                 this._cards = entityIds.map((entityId) => {
                     const cardConfig: LovelaceCardConfig = {
-                        type: this._config!.card_type, // The card type like 'custom:smartqasa-lock-tile'
-                        entity: entityId, // The entity ID for each individual entity
+                        type: this._config!.card_type,
+                        entity: entityId,
                     };
                     const card = createElement(cardConfig) as LovelaceCard;
                     card.hass = this.hass!;
