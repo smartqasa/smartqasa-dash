@@ -1,51 +1,44 @@
 import { css, html, LitElement, nothing, PropertyValues } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
-import { HomeAssistant, LovelaceCardConfig, LovelaceCard } from "../types";
-import { createElement } from "../utils/create-element";
+
+import { HomeAssistant, LovelaceCardConfig, LovelaceCard } from "../src/types";
+import { createElement } from "../src/utils/create-element";
 
 interface Config extends LovelaceCardConfig {
+    columns?: number;
     cards: LovelaceCardConfig[];
-    justify_right?: boolean;
 }
 
 window.customCards.push({
-    type: "smartqasa-horizontal-stack",
-    name: "SmartQasa Horizontal Stack",
+    type: "smartqasa-grid-stack",
+    name: "SmartQasa Grid Stack",
     preview: false,
-    description: "A SmartQasa element that displays other cards in a horizontal stack.",
+    description: "A SmartQasa element that displays other cards in a grid layout.",
 });
 
-@customElement("smartqasa-horizontal-stack")
-class HorizontalStack extends LitElement {
+@customElement("smartqasa-grid-stack")
+class VerticalStack extends LitElement {
     @property({ attribute: false }) private hass?: HomeAssistant;
     @state() private _config?: Config;
+    @state() private _columns: number = 3;
     @state() private _cards: LovelaceCard[] = [];
 
     static get styles() {
         return css`
             .container {
-                display: flex;
-                flex-direction: row;
-                align-items: start;
-                justify-content: flex-start;
-                margin-left: calc(var(--sq-chip-margin, 0.4rem) * -1);
-            }
-            .container.justify-right {
-                justify-content: flex-end;
-                margin-right: calc(var(--sq-chip-margin, 0.4rem) * -1);
-            }
-            .element {
-                display: flex;
+                display: grid;
+                gap: 1rem;
             }
         `;
     }
 
     public setConfig(config: Config): void {
         if (!config.cards || !Array.isArray(config.cards)) {
-            return;
+            throw new Error("You need to define 'cards'");
         }
 
         this._config = { ...config };
+        this._columns = config.columns || 3;
         this._createCards();
     }
 
@@ -64,17 +57,16 @@ class HorizontalStack extends LitElement {
     }
 
     protected render() {
-        if (!this._config || !this.hass || this._cards.length === 0) return nothing;
-
-        const containerClass = this._config.justify_right ? "container justify-right" : "container";
+        if (!this._config || !this.hass || !Array.isArray(this._cards)) return nothing;
 
         return html`
-            <div class="${containerClass}">${this._cards.map((card) => html`<div class="element">${card}</div>`)}</div>
+            <div class="container">${this._cards.map((card) => html`<div class="element">${card}</div>`)}</div>
         `;
     }
 
     private _createCards() {
         if (!this._config || !this.hass) return;
+
         this._cards = this._config.cards.map((cardConfig) => {
             const card = createElement(cardConfig) as LovelaceCard;
             card.hass = this.hass;

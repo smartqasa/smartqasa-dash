@@ -3,8 +3,6 @@ import { customElement, property, state } from "lit/decorators.js";
 
 import { HomeAssistant, LovelaceCardConfig, LovelaceCard } from "../types";
 import { createCards } from "../utils/create-cards";
-import { Console } from "console";
-import { computeStateDisplay } from "custom-card-helpers";
 
 interface Config extends LovelaceCardConfig {
     cards: LovelaceCardConfig[];
@@ -36,11 +34,10 @@ class VerticalStack extends LitElement {
     }
 
     public setConfig(config: Config): void {
-        if (!config.cards || !config.cards.length) {
+        if (!config.cards || config.cards.length === 0) {
             throw new Error("You need to define 'cards'");
         }
         this._config = { ...config };
-        console.log("Config", this._config);
     }
 
     protected firstUpdated(changedProps: PropertyValues) {
@@ -48,7 +45,6 @@ class VerticalStack extends LitElement {
         if (changedProps.has("_config") && this._config && this.hass) {
             this._cards = createCards(this._config.cards, this.hass) as LovelaceCard[];
         }
-        console.log("Cards", this._cards);
     }
 
     protected updated(changedProps: PropertyValues) {
@@ -62,7 +58,6 @@ class VerticalStack extends LitElement {
 
     protected render() {
         if (!this._config || !this.hass || this._cards.length === 0) return nothing;
-        console.log("Render", this._cards);
         return html`
             <div class="container">${this._cards.map((card) => html`<div class="element">${card}</div>`)}</div>
         `;

@@ -133,12 +133,12 @@ const createCards = (config, hass) => {
 };
 
 window.customCards.push({
-    type: "smartqasa-grid-card",
-    name: "SmartQasa Grid Card",
+    type: "smartqasa-grid-stack",
+    name: "SmartQasa Grid Stack",
     preview: false,
-    description: "A SmartQasa element that displays other tiles in a grid.",
+    description: "A SmartQasa element that displays other cards in a grid layout.",
 });
-let GridCard = class GridCard extends h {
+let GridStack = class GridStack extends h {
     constructor() {
         super(...arguments);
         this._cards = [];
@@ -153,16 +153,18 @@ let GridCard = class GridCard extends h {
         `;
     }
     setConfig(config) {
-        if (!config.cards || !config.cards.length) {
+        if (!config.cards || config.cards.length === 0) {
             throw new Error("You need to define 'tiles'");
         }
         this._config = { ...config };
+        console.log("Config", this._config);
     }
     firstUpdated(changedProps) {
         super.firstUpdated(changedProps);
         if (changedProps.has("_config") && this._config && this.hass) {
             this._cards = createCards(this._config.cards, this.hass);
         }
+        console.log("Cards", this._cards);
     }
     updated(changedProps) {
         super.updated(changedProps);
@@ -173,8 +175,9 @@ let GridCard = class GridCard extends h {
         }
     }
     render() {
-        if (!this._config || !this.hass || !this._cards.length)
+        if (!this._config || !this.hass || this._cards.length === 0)
             return D;
+        console.log("Render", this._cards);
         const columns = this._config.columns || 3;
         const gridStyle = {
             gridTemplateColumns: deviceType === "phone" ? `1fr 1fr` : `repeat(${columns}, var(--sq-tile-width, 19.5rem))`,
@@ -188,16 +191,16 @@ let GridCard = class GridCard extends h {
 };
 __decorate([
     n({ attribute: false })
-], GridCard.prototype, "hass", void 0);
+], GridStack.prototype, "hass", void 0);
 __decorate([
     r()
-], GridCard.prototype, "_config", void 0);
+], GridStack.prototype, "_config", void 0);
 __decorate([
     r()
-], GridCard.prototype, "_cards", void 0);
-GridCard = __decorate([
-    t$1("smartqasa-grid-card")
-], GridCard);
+], GridStack.prototype, "_cards", void 0);
+GridStack = __decorate([
+    t$1("smartqasa-grid-stack")
+], GridStack);
 
 window.customCards.push({
     type: "smartqasa-horizontal-stack",
@@ -247,7 +250,7 @@ let HorizontalStack = class HorizontalStack extends h {
         super.update(changedProps);
     }
     render() {
-        if (!this._config || !this.hass || !Array.isArray(this._cards))
+        if (!this._config || !this.hass || this._cards.length === 0)
             return D;
         const containerClass = this._config.justify_right ? "container justify-right" : "container";
         return ke `
@@ -9718,18 +9721,16 @@ let VerticalStack = class VerticalStack extends h {
         `;
     }
     setConfig(config) {
-        if (!config.cards || !config.cards.length) {
+        if (!config.cards || config.cards.length === 0) {
             throw new Error("You need to define 'cards'");
         }
         this._config = { ...config };
-        console.log("Config", this._config);
     }
     firstUpdated(changedProps) {
         super.firstUpdated(changedProps);
         if (changedProps.has("_config") && this._config && this.hass) {
             this._cards = createCards(this._config.cards, this.hass);
         }
-        console.log("Cards", this._cards);
     }
     updated(changedProps) {
         super.updated(changedProps);
@@ -9742,7 +9743,6 @@ let VerticalStack = class VerticalStack extends h {
     render() {
         if (!this._config || !this.hass || this._cards.length === 0)
             return D;
-        console.log("Render", this._cards);
         return ke `
             <div class="container">${this._cards.map((card) => ke `<div class="element">${card}</div>`)}</div>
         `;
