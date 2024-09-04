@@ -1,9 +1,10 @@
 import { css, html, LitElement, nothing, PropertyValues } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
+import { styleMap } from "lit/directives/style-map.js";
 
 import { HomeAssistant, LovelaceCardConfig, LovelaceCard } from "../types";
 import { deviceType } from "../utils/device-info";
-import { createElement } from "../utils/create-element";
+import { createCards } from "../utils/create-cards";
 
 interface Config extends LovelaceCardConfig {
     columns?: number;
@@ -39,16 +40,19 @@ class GridCard extends LitElement {
         }
 
         this._config = { ...config };
-        this._createTiles();
     }
 
-    protected update(changedProps: PropertyValues) {
-        super.update(changedProps);
-        if (changedProps.has("_config") && this._config) {
-            this._createTiles();
+    protected firstUpdated(changedProps: PropertyValues) {
+        super.firstUpdated(changedProps);
+        if (changedProps.has("_config") && this._config && this.hass) {
+            this._tiles = createCards(this._config.tiles, this.hass) as LovelaceCard[];
         }
+    }
 
-        if (changedProps.has("hass") && this.hass) {
+    protected updated(changedProps: PropertyValues) {
+        super.updated(changedProps);
+
+        if (changedProps.has("hass") && this.hass && this._tiles.length) {
             this._tiles.forEach((tile) => {
                 tile.hass = this.hass;
             });
@@ -56,24 +60,18 @@ class GridCard extends LitElement {
     }
 
     protected render() {
-        if (!this._config || !this.hass || this._tiles.length) return nothing;
+        if (!this._config || !this.hass || !this._tiles.length) return nothing;
+
         const columns = this._config.columns || 3;
         const gridStyle = {
             gridTemplateColumns:
                 deviceType === "phone" ? `1fr 1fr` : `repeat(${columns}, var(--sq-tile-width, 19.5rem))`,
         };
+
         return html`
-            <div class="container">${this._tiles.map((tile) => html`<div class="element">${tile}</div>`)}</div>
+            <div class="container" style=${styleMap(gridStyle)}>
+                ${this._tiles.map((tile) => html`<div class="element">${tile}</div>`)}
+            </div>
         `;
-    }
-
-    private _createTiles() {
-        if (!this._config || !this.hass) return;
-
-        this._tiles = this._config.tiles.map((tileConfig) => {
-            const tile = createElement(tileConfig) as LovelaceCard;
-            tile.hass = this.hass;
-            return tile;
-        });
     }
 }

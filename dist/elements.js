@@ -72,6 +72,19 @@ const t$1=t=>(e,o)=>{void 0!==o?o.addInitializer((()=>{customElements.define(t,e
  * SPDX-License-Identifier: BSD-3-Clause
  */function r(r){return n({...r,state:!0,attribute:!1})}
 
+/**
+ * @license
+ * Copyright 2017 Google LLC
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+const t={ATTRIBUTE:1,CHILD:2,PROPERTY:3,BOOLEAN_ATTRIBUTE:4,EVENT:5,ELEMENT:6},e=t=>(...e)=>({_$litDirective$:t,values:e});let i$1 = class i{constructor(t){}get _$AU(){return this._$AM._$AU}_$AT(t,e,i){this.t=t,this._$AM=e,this.i=i;}_$AS(t,e){return this.update(t,e)}update(t,e){return this.render(...e)}};
+
+/**
+ * @license
+ * Copyright 2018 Google LLC
+ * SPDX-License-Identifier: BSD-3-Clause
+ */const ee="important",ie=" !"+ee,se=e(class extends i$1{constructor(e){if(super(e),e.type!==t.ATTRIBUTE||"style"!==e.name||e.strings?.length>2)throw Error("The `styleMap` directive must be used in the `style` attribute and must be the only part in the attribute.")}render(t){return Object.keys(t).reduce(((e,r)=>{const s=t[r];return null==s?e:e+`${r=r.includes("-")?r:r.replace(/(?:^(webkit|moz|ms|o)|)(?=[A-Z])/g,"-$&").toLowerCase()}:${s};`}),"")}update(t,[e]){const{style:r}=t.element;if(void 0===this.ft)return this.ft=new Set(Object.keys(e)),this.render(e);for(const t of this.ft)null==e[t]&&(this.ft.delete(t),t.includes("-")?r.removeProperty(t):r[t]=null);for(const t in e){const s=e[t];if(null!=s){this.ft.add(t);const e="string"==typeof s&&s.endsWith(ie);t.includes("-")||e?r.setProperty(t,e?s.slice(0,-11):s,e?ee:""):r[t]=s;}}return R}});
+
 function getDeviceOrientation() {
     return window.screen.orientation.type.startsWith("portrait") ? "portrait" : "landscape";
 }
@@ -109,6 +122,16 @@ const createElement$1 = (config) => {
     }
 };
 
+const createCards = (config, hass) => {
+    if (!config || !config.length || !hass)
+        return D;
+    return config.map((cardConfig) => {
+        const card = createElement$1(cardConfig);
+        card.hass = hass;
+        return card;
+    });
+};
+
 window.customCards.push({
     type: "smartqasa-grid-card",
     name: "SmartQasa Grid Card",
@@ -134,35 +157,33 @@ let GridCard = class GridCard extends h {
             throw new Error("You need to define 'tiles'");
         }
         this._config = { ...config };
-        this._createTiles();
     }
-    update(changedProps) {
-        super.update(changedProps);
-        if (changedProps.has("_config") && this._config) {
-            this._createTiles();
+    firstUpdated(changedProps) {
+        super.firstUpdated(changedProps);
+        if (changedProps.has("_config") && this._config && this.hass) {
+            this._tiles = createCards(this._config.tiles, this.hass);
         }
-        if (changedProps.has("hass") && this.hass) {
+    }
+    updated(changedProps) {
+        super.updated(changedProps);
+        if (changedProps.has("hass") && this.hass && this._tiles.length) {
             this._tiles.forEach((tile) => {
                 tile.hass = this.hass;
             });
         }
     }
     render() {
-        if (!this._config || !this.hass || this._tiles.length)
+        if (!this._config || !this.hass || !this._tiles.length)
             return D;
-        this._config.columns || 3;
+        const columns = this._config.columns || 3;
+        const gridStyle = {
+            gridTemplateColumns: deviceType === "phone" ? `1fr 1fr` : `repeat(${columns}, var(--sq-tile-width, 19.5rem))`,
+        };
         return ke `
-            <div class="container">${this._tiles.map((tile) => ke `<div class="element">${tile}</div>`)}</div>
+            <div class="container" style=${se(gridStyle)}>
+                ${this._tiles.map((tile) => ke `<div class="element">${tile}</div>`)}
+            </div>
         `;
-    }
-    _createTiles() {
-        if (!this._config || !this.hass)
-            return;
-        this._tiles = this._config.tiles.map((tileConfig) => {
-            const tile = createElement$1(tileConfig);
-            tile.hass = this.hass;
-            return tile;
-        });
     }
 };
 __decorate([
@@ -255,19 +276,6 @@ __decorate([
 HorizontalStack = __decorate([
     t$1("smartqasa-horizontal-stack")
 ], HorizontalStack);
-
-/**
- * @license
- * Copyright 2017 Google LLC
- * SPDX-License-Identifier: BSD-3-Clause
- */
-const t={ATTRIBUTE:1,CHILD:2,PROPERTY:3,BOOLEAN_ATTRIBUTE:4,EVENT:5,ELEMENT:6},e=t=>(...e)=>({_$litDirective$:t,values:e});let i$1 = class i{constructor(t){}get _$AU(){return this._$AM._$AU}_$AT(t,e,i){this.t=t,this._$AM=e,this.i=i;}_$AS(t,e){return this.update(t,e)}update(t,e){return this.render(...e)}};
-
-/**
- * @license
- * Copyright 2018 Google LLC
- * SPDX-License-Identifier: BSD-3-Clause
- */const ee="important",ie=" !"+ee,se=e(class extends i$1{constructor(e){if(super(e),e.type!==t.ATTRIBUTE||"style"!==e.name||e.strings?.length>2)throw Error("The `styleMap` directive must be used in the `style` attribute and must be the only part in the attribute.")}render(t){return Object.keys(t).reduce(((e,r)=>{const s=t[r];return null==s?e:e+`${r=r.includes("-")?r:r.replace(/(?:^(webkit|moz|ms|o)|)(?=[A-Z])/g,"-$&").toLowerCase()}:${s};`}),"")}update(t,[e]){const{style:r}=t.element;if(void 0===this.ft)return this.ft=new Set(Object.keys(e)),this.render(e);for(const t of this.ft)null==e[t]&&(this.ft.delete(t),t.includes("-")?r.removeProperty(t):r[t]=null);for(const t in e){const s=e[t];if(null!=s){this.ft.add(t);const e="string"==typeof s&&s.endsWith(ie);t.includes("-")||e?r.setProperty(t,e?s.slice(0,-11):s,e?ee:""):r[t]=s;}}return R}});
 
 /*! js-yaml 4.1.0 https://github.com/nodeca/js-yaml @license MIT */
 function isNothing(subject) {
