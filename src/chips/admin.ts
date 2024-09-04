@@ -24,6 +24,10 @@ export class AdminChip extends LitElement {
 
     public setConfig(): void {}
 
+    protected shouldUpdate(changedProps: PropertyValues): boolean {
+        return !!(changedProps.has("hass") && this.hass?.states[this._entity] !== this._stateObj);
+    }
+
     protected updated(changedProps: PropertyValues): void {
         super.updated(changedProps);
         if (this.hass && changedProps.has("hass")) {
@@ -36,7 +40,7 @@ export class AdminChip extends LitElement {
 
         const icon = "hass:tools";
         const iconStyles = {
-            color: "var(--sq-rgb-orange, 255, 120, 0)",
+            color: "rgb(var(--sq-rgb-orange, 255, 120, 0))",
             animation: "blink 2s ease infinite",
         };
 

@@ -10361,6 +10361,9 @@ let AdminChip = class AdminChip extends h {
     }
     static { this.styles = r$3(css_248z$4); }
     setConfig() { }
+    shouldUpdate(changedProps) {
+        return !!(changedProps.has("hass") && this.hass?.states[this._entity] !== this._stateObj);
+    }
     updated(changedProps) {
         super.updated(changedProps);
         if (this.hass && changedProps.has("hass")) {
@@ -10372,7 +10375,7 @@ let AdminChip = class AdminChip extends h {
             return D;
         const icon = "hass:tools";
         const iconStyles = {
-            color: "var(--sq-rgb-orange, 255, 120, 0)",
+            color: "rgb(var(--sq-rgb-orange, 255, 120, 0))",
             animation: "blink 2s ease infinite",
         };
         return ke `
