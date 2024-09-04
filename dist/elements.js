@@ -222,8 +222,8 @@ let GroupStack = class GroupStack extends h {
         `;
     }
     setConfig(config) {
-        if (!config.entity || !config.card) {
-            throw new Error("Entity and card must be provided in the config.");
+        if (!config.entity || !config.card_type) {
+            throw new Error("Entity and card_type must be provided in the config.");
         }
         this._config = { ...config };
     }
@@ -233,14 +233,12 @@ let GroupStack = class GroupStack extends h {
             const entity = this.hass.states[this._config.entity];
             if (entity && entity.attributes.entity_id) {
                 const entityIds = entity.attributes.entity_id;
-                // Generate a card for each entity ID, using the card template from the config
+                // Create a card for each entity ID, using the provided card_type
                 this._cards = entityIds.map((entityId) => {
-                    // Clone the card config and assign the current entity ID
                     const cardConfig = {
-                        ...this._config.card,
-                        entity: entityId, // Pass the entity ID to the card config
+                        type: this._config.card_type, // The card type like 'custom:smartqasa-lock-tile'
+                        entity: entityId, // The entity ID for each individual entity
                     };
-                    // Create the Lovelace card element using the config
                     const card = createElement$1(cardConfig);
                     card.hass = this.hass;
                     return card;

@@ -4,8 +4,8 @@ import { HomeAssistant, LovelaceCardConfig, LovelaceCard } from "../types";
 import { createElement } from "../utils/create-element";
 
 interface Config extends LovelaceCardConfig {
-    entity: string; // Entity containing the 'entity_id' array
-    card: LovelaceCardConfig; // Card configuration template
+    entity: string; // The entity containing an 'entity_id' array
+    card_type: string; // The type of card to create for each entity, e.g., 'custom:smartqasa-lock-tile'
 }
 
 window.customCards.push({
@@ -34,8 +34,8 @@ class GroupStack extends LitElement {
     }
 
     public setConfig(config: Config): void {
-        if (!config.entity || !config.card) {
-            throw new Error("Entity and card must be provided in the config.");
+        if (!config.entity || !config.card_type) {
+            throw new Error("Entity and card_type must be provided in the config.");
         }
         this._config = { ...config };
     }
@@ -48,14 +48,12 @@ class GroupStack extends LitElement {
             if (entity && entity.attributes.entity_id) {
                 const entityIds = entity.attributes.entity_id as string[];
 
-                // Generate a card for each entity ID, using the card template from the config
+                // Create a card for each entity ID, using the provided card_type
                 this._cards = entityIds.map((entityId) => {
-                    // Clone the card config and assign the current entity ID
-                    const cardConfig = {
-                        ...this._config!.card,
-                        entity: entityId, // Pass the entity ID to the card config
+                    const cardConfig: LovelaceCardConfig = {
+                        type: this._config!.card_type, // The card type like 'custom:smartqasa-lock-tile'
+                        entity: entityId, // The entity ID for each individual entity
                     };
-                    // Create the Lovelace card element using the config
                     const card = createElement(cardConfig) as LovelaceCard;
                     card.hass = this.hass!;
                     return card;
