@@ -24,7 +24,6 @@ window.customCards.push({
 export class AreaTile extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() private _config?: Config;
-    @state() private _running: boolean = false;
     private _area?: string;
     private _areaObj?: HassArea;
 
@@ -37,7 +36,6 @@ export class AreaTile extends LitElement {
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
         return !!(
-            changedProps.has("running") ||
             (changedProps.has("hass") && this._area && this.hass?.areas[this._area] !== this._areaObj) ||
             (changedProps.has("_config") && this._config)
         );
@@ -66,15 +64,10 @@ export class AreaTile extends LitElement {
         this._areaObj = this._area ? this.hass?.areas[this._area] : undefined;
 
         if (this._config && this._areaObj) {
-            if (this._running) {
-                icon = "hass:rotate-right";
-                iconAnimation = "spin 1.0s linear infinite";
-                iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
-            } else {
-                icon = this._config.icon || this._areaObj.icon || "hass:help-rhombus";
-                iconAnimation = "none";
-                iconColor = "var(--sq-inactive-rgb)";
-            }
+            icon = this._config.icon || this._areaObj.icon || "hass:help-rhombus";
+            iconAnimation = "none";
+            iconColor = "var(--sq-inactive-rgb)";
+
             name = this._config.name || this._areaObj.name || this._area;
         } else {
             icon = "hass:alert-rhombus";
@@ -89,14 +82,7 @@ export class AreaTile extends LitElement {
     private _navigateToArea(e: Event): void {
         e.stopPropagation();
         if (!this._area) return;
-
-        this._running = true;
-
         navigateToArea(this._area);
-
-        setTimeout(() => {
-            this._running = false;
-            window.browser_mod?.service("close_popup", {});
-        }, 500);
+        window.browser_mod?.service("close_popup", {});
     }
 }
