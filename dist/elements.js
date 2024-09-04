@@ -8860,19 +8860,6 @@ function Navigation(_ref) {
   });
 }
 
-const listDialogStyle = {
-    margin: 0,
-    card_margin: 0,
-    "grid-template-columns": "1fr",
-    "grid-gap": "var(--sq-dialog-grid-gap)",
-};
-const gridDialogStyle = {
-    margin: 0,
-    card_margin: 0,
-    "grid-template-columns": deviceType === "phone" ? "repeat(2, 1fr)" : "repeat(3, var(--sq-tile-width-tablet, 20rem))",
-    "grid-gap": "var(--sq-dialog-grid-gap)",
-};
-
 function areasDialog(hass) {
     if (!hass)
         return;
@@ -8885,9 +8872,8 @@ function areasDialog(hass) {
         title: "Areas",
         timeout: 60000,
         content: {
-            type: "custom:layout-card",
-            layout_type: "custom:grid-layout",
-            layout: gridDialogStyle,
+            type: "custom:smartqasa-grid-stack",
+            columns: 3,
             cards: cards,
         },
     };
@@ -10512,12 +10498,8 @@ const dialogTable = {
             size: "fullscreen",
             timeout: 120000,
             content: {
-                type: "custom:layout-card",
-                layout_type: "custom:horizontal-layout",
-                layout: {
-                    max_cols: 3,
-                    card_margin: "4px 4px 8px",
-                },
+                type: "custom:smartqasa-grid-stack",
+                columns: 3,
                 cards: [
                     {
                         type: "custom:mini-graph-card",
@@ -10710,9 +10692,7 @@ const dialogTable = {
             title: "Display Themes",
             timeout: 60000,
             content: {
-                type: "custom:layout-card",
-                layout_type: "custom:grid-layout",
-                layout: listDialogStyle,
+                type: "custom:smartqasa-vertical-stack",
                 cards: [
                     {
                         type: "custom:smartqasa-theme-tile",
@@ -14343,9 +14323,8 @@ let PoolLightTile = class PoolLightTile extends h {
             title: this._stateObj.attributes.friendly_name || this._stateObj.entity_id,
             timeout: 60000,
             content: {
-                type: "custom:layout-card",
-                layout_type: "custom:grid-layout",
-                layout: gridDialogStyle,
+                type: "custom:smartqasa-grid-stack",
+                columns: 3,
                 cards: cards,
             },
         };

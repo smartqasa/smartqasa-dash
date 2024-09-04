@@ -5,7 +5,6 @@ import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
 import { callService } from "../utils/call-service";
 import { sequenceTable } from "../tables/pool-light-sequences";
-import { gridDialogStyle } from "../styles/dialog";
 
 import tileBaseStyle from "../styles/tile-base.css";
 import tileStateStyle from "../styles/tile-state.css";
@@ -108,9 +107,8 @@ export class PoolLightTile extends LitElement {
             title: this._stateObj.attributes.friendly_name || this._stateObj.entity_id,
             timeout: 60000,
             content: {
-                type: "custom:layout-card",
-                layout_type: "custom:grid-layout",
-                layout: gridDialogStyle,
+                type: "custom:smartqasa-grid-stack",
+                columns: 3,
                 cards: cards,
             },
         };

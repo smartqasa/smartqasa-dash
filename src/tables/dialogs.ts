@@ -1,5 +1,4 @@
 import { listDialogConfig } from "../utils/list-dialog-config";
-import { listDialogStyle } from "../styles/dialog";
 
 interface DialogTable {
     [key: string]: {
@@ -34,12 +33,8 @@ export const dialogTable: DialogTable = {
             size: "fullscreen",
             timeout: 120000,
             content: {
-                type: "custom:layout-card",
-                layout_type: "custom:horizontal-layout",
-                layout: {
-                    max_cols: 3,
-                    card_margin: "4px 4px 8px",
-                },
+                type: "custom:smartqasa-grid-stack",
+                columns: 3,
                 cards: [
                     {
                         type: "custom:mini-graph-card",
@@ -233,9 +228,7 @@ export const dialogTable: DialogTable = {
             title: "Display Themes",
             timeout: 60000,
             content: {
-                type: "custom:layout-card",
-                layout_type: "custom:grid-layout",
-                layout: listDialogStyle,
+                type: "custom:smartqasa-vertical-stack",
                 cards: [
                     {
                         type: "custom:smartqasa-theme-tile",

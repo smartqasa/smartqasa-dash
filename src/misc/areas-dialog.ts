@@ -1,5 +1,4 @@
 import { HassArea } from "../types";
-import { gridDialogStyle } from "../styles/dialog";
 
 export function areasDialog(hass: any): void {
     if (!hass) return;
@@ -15,9 +14,8 @@ export function areasDialog(hass: any): void {
         title: "Areas",
         timeout: 60000,
         content: {
-            type: "custom:layout-card",
-            layout_type: "custom:grid-layout",
-            layout: gridDialogStyle,
+            type: "custom:smartqasa-grid-stack",
+            columns: 3,
             cards: cards,
         },
     };
