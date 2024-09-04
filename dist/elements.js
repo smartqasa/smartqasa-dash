@@ -203,7 +203,7 @@ window.customCards.push({
     type: "smartqasa-group-stack",
     name: "SmartQasa Group Stack",
     preview: false,
-    description: "A SmartQasa element that dynamically creates cards for entities in a group.",
+    description: "A SmartQasa element that dynamically creates cards for entities based on group or domain filtering.",
 });
 let GroupStack = class GroupStack extends h {
     constructor() {
@@ -222,24 +222,42 @@ let GroupStack = class GroupStack extends h {
         `;
     }
     setConfig(config) {
-        if (!config.entity || !config.card_type) {
-            throw new Error("Entity and card_type must be provided in the config.");
+        if (!config.filter ||
+            !config.card_type ||
+            (config.filter === "group" && !config.group) ||
+            (config.filter === "domain" && !config.domain)) {
+            throw new Error("Filter type, card_type, and either group or domain must be provided in the config.");
         }
         this._config = { ...config };
     }
     firstUpdated(changedProps) {
         super.firstUpdated(changedProps);
         if (changedProps.has("_config") && this._config && this.hass) {
-            const entity = this.hass.states[this._config.entity];
-            if (entity && entity.attributes.entity_id) {
-                let entityIds = entity.attributes.entity_id;
+            let entityIds = [];
+            if (this._config.filter === "group") {
+                const groupEntity = this.hass.states[this._config.group];
+                if (groupEntity && groupEntity.attributes.entity_id) {
+                    entityIds = groupEntity.attributes.entity_id;
+                }
+            }
+            else if (this._config.filter === "domain") {
+                const domain = this._config.domain;
+                // Filter all entities in Home Assistant by the specified domain
+                entityIds = Object.keys(this.hass.states).filter((entityId) => {
+                    return entityId.startsWith(`${domain}.`);
+                });
+            }
+            if (entityIds.length > 0) {
+                // Sort the entities by friendly_name
                 const entityNameMap = entityIds.map((entityId) => {
                     const entity = this.hass.states[entityId];
                     const friendlyName = entity?.attributes.friendly_name?.toLowerCase() || "";
                     return { entityId, friendlyName };
                 });
                 entityNameMap.sort((a, b) => a.friendlyName.localeCompare(b.friendlyName));
+                // Update entityIds with the sorted order
                 entityIds = entityNameMap.map((item) => item.entityId);
+                // Create a card for each entity
                 this._cards = entityIds.map((entityId) => {
                     const cardConfig = {
                         type: this._config.card_type,
@@ -10761,34 +10779,14 @@ CustomChip = __decorate([
     t$1("smartqasa-custom-chip")
 ], CustomChip);
 
-const listDialogConfig = (dialogTitle, filterType, filterValue, tileType) => {
+const listDialogConfig = (dialogTitle, filterType, filterValue, cardType) => {
     return {
         title: dialogTitle,
         timeout: 60000,
         content: {
-            type: "custom:auto-entities",
-            card: {
-                type: "custom:smartqasa-vertical-stack",
-            },
-            card_param: "cards",
-            filter: {
-                include: [
-                    {
-                        [filterType]: filterValue,
-                        sort: {
-                            method: "friendly_name",
-                            ignore_case: true,
-                        },
-                        options: {
-                            type: `custom:smartqasa-${tileType}-tile`,
-                            dialog_title: dialogTitle,
-                            filter_type: filterType,
-                            filter_value: filterValue,
-                            tile_type: tileType,
-                        },
-                    },
-                ],
-            },
+            type: "custom:smartqasa-group-stack",
+            group: filterValue,
+            card_type: `custom:smartqasa-${cardType}-tile`,
         },
     };
 };
