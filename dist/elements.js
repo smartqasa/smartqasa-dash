@@ -157,14 +157,12 @@ let GridStack = class GridStack extends h {
             throw new Error("You need to define 'tiles'");
         }
         this._config = { ...config };
-        console.log("Config", this._config);
     }
     firstUpdated(changedProps) {
         super.firstUpdated(changedProps);
         if (changedProps.has("_config") && this._config && this.hass) {
             this._cards = createCards(this._config.cards, this.hass);
         }
-        console.log("Cards", this._cards);
     }
     updated(changedProps) {
         super.updated(changedProps);
@@ -177,7 +175,6 @@ let GridStack = class GridStack extends h {
     render() {
         if (!this._config || !this.hass || this._cards.length === 0)
             return D;
-        console.log("Render", this._cards);
         const columns = this._config.columns || 3;
         const gridStyle = {
             gridTemplateColumns: deviceType === "phone" ? `1fr 1fr` : `repeat(${columns}, var(--sq-tile-width, 19.5rem))`,
@@ -4165,7 +4162,6 @@ let MenuCard = class MenuCard extends h {
         return i$3 `
             .container {
                 display: block;
-                padding: 1rem;
                 border: none;
                 background-color: transparent;
                 box-sizing: border-box;
@@ -4262,7 +4258,6 @@ let MenuCard = class MenuCard extends h {
         `;
     }
     async _loadMenuTabs() {
-        console.log("Loading menu tabs and tiles...");
         try {
             this._tabs = (await loadYamlAsJson("/local/smartqasa/config/menu.yaml"));
             this._bodyTiles = await Promise.all(this._tabs.map(async (tab) => this._loadMenuTiles(tab.tiles)));

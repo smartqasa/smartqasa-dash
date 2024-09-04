@@ -39,7 +39,6 @@ class GridStack extends LitElement {
             throw new Error("You need to define 'tiles'");
         }
         this._config = { ...config };
-        console.log("Config", this._config);
     }
 
     protected firstUpdated(changedProps: PropertyValues) {
@@ -47,7 +46,6 @@ class GridStack extends LitElement {
         if (changedProps.has("_config") && this._config && this.hass) {
             this._cards = createCards(this._config.cards, this.hass) as LovelaceCard[];
         }
-        console.log("Cards", this._cards);
     }
 
     protected updated(changedProps: PropertyValues) {
@@ -61,7 +59,6 @@ class GridStack extends LitElement {
 
     protected render() {
         if (!this._config || !this.hass || this._cards.length === 0) return nothing;
-        console.log("Render", this._cards);
         const columns = this._config.columns || 3;
         const gridStyle = {
             gridTemplateColumns:
