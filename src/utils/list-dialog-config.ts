@@ -9,7 +9,8 @@ export const listDialogConfig: any = (
         timeout: 60000,
         content: {
             type: "custom:smartqasa-group-stack",
-            group: filterValue,
+            filter_type: filterType,
+            filter_value: filterValue,
             card_type: `custom:smartqasa-${cardType}-tile`,
         },
     };
