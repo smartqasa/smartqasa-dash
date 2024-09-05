@@ -1,5 +1,5 @@
 import { PropertyValues } from "lit";
-import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
+import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../src/types";
 
 /**
  * Utility function to determine if a component should update.

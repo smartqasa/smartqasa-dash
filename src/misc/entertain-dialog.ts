@@ -6,7 +6,7 @@ export async function entertainDialog(config: any, hass: any): Promise<void> {
     const videoPlayerObj = config.video_player ? hass.states[config.video_player] : undefined;
     const videoSoundObj = config.video_sound ? hass.states[config.video_sound] : undefined;
     const audioPlayerObj = config.audio_player ? hass.states[config.audio_player] : undefined;
-    const appListCards = await loadYamlAsJson("/local/smartqasa/lists/entertain.yaml");
+    const appListCards = await loadYamlAsJson("/local/smartqasa/config/entertain.yaml");
 
     const videoPlayerTitle = videoPlayerObj
         ? {
