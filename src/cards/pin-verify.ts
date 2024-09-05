@@ -17,8 +17,8 @@ window.customCards.push({
     description: "A SmartQasa card for accepting and verifying a PIN.",
 });
 
-@customElement("smartqasa-pin-verify-dialog")
-export class PinVerifyDialog extends LitElement {
+@customElement("smartqasa-pin-verify-card")
+export class PinVerifyCard extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() private _config?: Config;
     @state() private _inputPin: string = "";
