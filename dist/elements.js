@@ -14905,6 +14905,7 @@ let CustomPopup = class CustomPopup extends h {
         this.size = "normal"; // 'normal' or 'fullscreen'
         this.timeout = 0; // timeout in seconds
         this.card = {};
+        this.popupVisible = false; // Controls the visibility of the popup
     }
     async setConfig() { }
     connectedCallback() {
@@ -14920,11 +14921,10 @@ let CustomPopup = class CustomPopup extends h {
         }
     }
     closePopup() {
+        this.popupVisible = false; // Hide the popup
         this.dispatchEvent(new CustomEvent("close-popup", { bubbles: true, composed: true }));
     }
-    // Method to handle clicks outside the popup container
     _onOverlayClick(e) {
-        // Ensure the click is not on the popup container itself
         if (e.target.classList.contains("overlay")) {
             this.closePopup();
         }
@@ -14996,6 +14996,8 @@ let CustomPopup = class CustomPopup extends h {
         }
     `; }
     render() {
+        if (!this.popupVisible)
+            return ke ``; // Do not render anything if the popup is not visible
         const progressStyle = this.timeout > 0 ? `animation: progress ${this.timeout}s linear forwards;` : "";
         return ke `
             <div class="overlay" @click="${this._onOverlayClick}"></div>
@@ -15021,6 +15023,9 @@ __decorate([
 __decorate([
     n({ type: Object })
 ], CustomPopup.prototype, "card", void 0);
+__decorate([
+    n({ type: Boolean })
+], CustomPopup.prototype, "popupVisible", void 0);
 CustomPopup = __decorate([
     t$1("smartqasa-popup-dialog")
 ], CustomPopup);

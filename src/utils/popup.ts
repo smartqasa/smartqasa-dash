@@ -14,6 +14,7 @@ class CustomPopup extends LitElement {
     @property({ type: String }) size = "normal"; // 'normal' or 'fullscreen'
     @property({ type: Number }) timeout = 0; // timeout in seconds
     @property({ type: Object }) card = {};
+    @property({ type: Boolean }) popupVisible = false; // Controls the visibility of the popup
 
     private timeoutId: number | undefined;
 
@@ -34,12 +35,11 @@ class CustomPopup extends LitElement {
     }
 
     closePopup() {
+        this.popupVisible = false; // Hide the popup
         this.dispatchEvent(new CustomEvent("close-popup", { bubbles: true, composed: true }));
     }
 
-    // Method to handle clicks outside the popup container
     _onOverlayClick(e: Event) {
-        // Ensure the click is not on the popup container itself
         if ((e.target as HTMLElement).classList.contains("overlay")) {
             this.closePopup();
         }
@@ -113,6 +113,8 @@ class CustomPopup extends LitElement {
     `;
 
     render() {
+        if (!this.popupVisible) return html``; // Do not render anything if the popup is not visible
+
         const progressStyle = this.timeout > 0 ? `animation: progress ${this.timeout}s linear forwards;` : "";
 
         return html`
