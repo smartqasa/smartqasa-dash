@@ -11,8 +11,8 @@ window.customCards.push({
 @customElement("smartqasa-popup-dialog")
 class CustomPopup extends LitElement {
     @property({ type: String }) title = "";
-    @property({ type: String }) size = "normal";
-    @property({ type: Number }) timeout = 0;
+    @property({ type: String }) size = "normal"; // 'normal' or 'fullscreen'
+    @property({ type: Number }) timeout = 0; // timeout in seconds
     @property({ type: Object }) card = {};
 
     private timeoutId: number | undefined;
@@ -37,6 +37,14 @@ class CustomPopup extends LitElement {
         this.dispatchEvent(new CustomEvent("close-popup", { bubbles: true, composed: true }));
     }
 
+    // Method to handle clicks outside the popup container
+    _onOverlayClick(e: Event) {
+        // Ensure the click is not on the popup container itself
+        if ((e.target as HTMLElement).classList.contains("overlay")) {
+            this.closePopup();
+        }
+    }
+
     static styles = css`
         :host {
             position: fixed;
@@ -44,11 +52,21 @@ class CustomPopup extends LitElement {
             left: 0;
             width: 100vw;
             height: 100vh;
-            backdrop-filter: blur(5px);
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 1000;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            backdrop-filter: blur(5px);
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
         }
 
         .popup-container {
@@ -60,6 +78,7 @@ class CustomPopup extends LitElement {
             padding: 20px;
             position: relative;
             transition: all 0.3s ease;
+            z-index: 1000;
         }
 
         .popup-container.fullscreen {
@@ -97,6 +116,8 @@ class CustomPopup extends LitElement {
         const progressStyle = this.timeout > 0 ? `animation: progress ${this.timeout}s linear forwards;` : "";
 
         return html`
+            <div class="overlay" @click="${this._onOverlayClick}"></div>
+            <!-- Clicking outside the container triggers close -->
             <div class="popup-container ${this.size}">
                 <div class="progress-bar"><div style="${progressStyle}"></div></div>
                 <button class="close-btn" @click=${this.closePopup}>X</button>
