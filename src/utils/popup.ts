@@ -9,39 +9,39 @@ window.customCards.push({
 });
 
 @customElement("smartqasa-popup-dialog")
-class CustomPopup extends LitElement {
+class SmartQasaPopupDialog extends LitElement {
     @property({ type: String }) title = "";
     @property({ type: String }) size = "normal"; // 'normal' or 'fullscreen'
     @property({ type: Number }) timeout = 0; // timeout in seconds
     @property({ type: Object }) card = {};
-    @property({ type: Boolean }) popupVisible = false; // Controls the visibility of the popup
+    @property({ type: Boolean }) smartqasa_popupVisible = false; // Controls the visibility of the popup
 
-    private timeoutId: number | undefined;
+    private smartqasa_timeoutId: number | undefined;
 
     public async setConfig() {}
 
     connectedCallback() {
         super.connectedCallback();
         if (this.timeout > 0) {
-            this.timeoutId = window.setTimeout(() => this.closePopup(), this.timeout * 1000);
+            this.smartqasa_timeoutId = window.setTimeout(() => this.smartqasa_closePopup(), this.timeout * 1000);
         }
     }
 
     disconnectedCallback() {
         super.disconnectedCallback();
-        if (this.timeoutId) {
-            clearTimeout(this.timeoutId);
+        if (this.smartqasa_timeoutId) {
+            clearTimeout(this.smartqasa_timeoutId);
         }
     }
 
-    closePopup() {
-        this.popupVisible = false; // Hide the popup
-        this.dispatchEvent(new CustomEvent("close-popup", { bubbles: true, composed: true }));
+    smartqasa_closePopup() {
+        this.smartqasa_popupVisible = false; // Hide the popup
+        this.dispatchEvent(new CustomEvent("smartqasa-close-popup", { bubbles: true, composed: true }));
     }
 
-    _onOverlayClick(e: Event) {
+    smartqasa_onOverlayClick(e: Event) {
         if ((e.target as HTMLElement).classList.contains("overlay")) {
-            this.closePopup();
+            this.smartqasa_closePopup();
         }
     }
 
@@ -113,16 +113,16 @@ class CustomPopup extends LitElement {
     `;
 
     render() {
-        if (!this.popupVisible) return html``; // Do not render anything if the popup is not visible
+        if (!this.smartqasa_popupVisible) return html``; // Do not render anything if the popup is not visible
 
         const progressStyle = this.timeout > 0 ? `animation: progress ${this.timeout}s linear forwards;` : "";
 
         return html`
-            <div class="overlay" @click="${this._onOverlayClick}"></div>
+            <div class="overlay" @click="${this.smartqasa_onOverlayClick}"></div>
             <!-- Clicking outside the container triggers close -->
             <div class="popup-container ${this.size}">
                 <div class="progress-bar"><div style="${progressStyle}"></div></div>
-                <button class="close-btn" @click=${this.closePopup}>X</button>
+                <button class="close-btn" @click=${this.smartqasa_closePopup}>X</button>
                 <div class="title">${this.title}</div>
                 <div class="content">${this.card ? this.card : html`<slot></slot>`}</div>
             </div>

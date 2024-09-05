@@ -14898,35 +14898,35 @@ window.customCards.push({
     preview: true,
     description: "A SmartQasa tile for executing multiple Home Assistant actions.",
 });
-let CustomPopup = class CustomPopup extends h {
+let SmartQasaPopupDialog = class SmartQasaPopupDialog extends h {
     constructor() {
         super(...arguments);
         this.title = "";
         this.size = "normal"; // 'normal' or 'fullscreen'
         this.timeout = 0; // timeout in seconds
         this.card = {};
-        this.popupVisible = false; // Controls the visibility of the popup
+        this.smartqasa_popupVisible = false; // Controls the visibility of the popup
     }
     async setConfig() { }
     connectedCallback() {
         super.connectedCallback();
         if (this.timeout > 0) {
-            this.timeoutId = window.setTimeout(() => this.closePopup(), this.timeout * 1000);
+            this.smartqasa_timeoutId = window.setTimeout(() => this.smartqasa_closePopup(), this.timeout * 1000);
         }
     }
     disconnectedCallback() {
         super.disconnectedCallback();
-        if (this.timeoutId) {
-            clearTimeout(this.timeoutId);
+        if (this.smartqasa_timeoutId) {
+            clearTimeout(this.smartqasa_timeoutId);
         }
     }
-    closePopup() {
-        this.popupVisible = false; // Hide the popup
-        this.dispatchEvent(new CustomEvent("close-popup", { bubbles: true, composed: true }));
+    smartqasa_closePopup() {
+        this.smartqasa_popupVisible = false; // Hide the popup
+        this.dispatchEvent(new CustomEvent("smartqasa-close-popup", { bubbles: true, composed: true }));
     }
-    _onOverlayClick(e) {
+    smartqasa_onOverlayClick(e) {
         if (e.target.classList.contains("overlay")) {
-            this.closePopup();
+            this.smartqasa_closePopup();
         }
     }
     static { this.styles = i$3 `
@@ -14996,15 +14996,15 @@ let CustomPopup = class CustomPopup extends h {
         }
     `; }
     render() {
-        if (!this.popupVisible)
+        if (!this.smartqasa_popupVisible)
             return ke ``; // Do not render anything if the popup is not visible
         const progressStyle = this.timeout > 0 ? `animation: progress ${this.timeout}s linear forwards;` : "";
         return ke `
-            <div class="overlay" @click="${this._onOverlayClick}"></div>
+            <div class="overlay" @click="${this.smartqasa_onOverlayClick}"></div>
             <!-- Clicking outside the container triggers close -->
             <div class="popup-container ${this.size}">
                 <div class="progress-bar"><div style="${progressStyle}"></div></div>
-                <button class="close-btn" @click=${this.closePopup}>X</button>
+                <button class="close-btn" @click=${this.smartqasa_closePopup}>X</button>
                 <div class="title">${this.title}</div>
                 <div class="content">${this.card ? this.card : ke `<slot></slot>`}</div>
             </div>
@@ -15013,22 +15013,22 @@ let CustomPopup = class CustomPopup extends h {
 };
 __decorate([
     n({ type: String })
-], CustomPopup.prototype, "title", void 0);
+], SmartQasaPopupDialog.prototype, "title", void 0);
 __decorate([
     n({ type: String })
-], CustomPopup.prototype, "size", void 0);
+], SmartQasaPopupDialog.prototype, "size", void 0);
 __decorate([
     n({ type: Number })
-], CustomPopup.prototype, "timeout", void 0);
+], SmartQasaPopupDialog.prototype, "timeout", void 0);
 __decorate([
     n({ type: Object })
-], CustomPopup.prototype, "card", void 0);
+], SmartQasaPopupDialog.prototype, "card", void 0);
 __decorate([
     n({ type: Boolean })
-], CustomPopup.prototype, "popupVisible", void 0);
-CustomPopup = __decorate([
+], SmartQasaPopupDialog.prototype, "smartqasa_popupVisible", void 0);
+SmartQasaPopupDialog = __decorate([
     t$1("smartqasa-popup-dialog")
-], CustomPopup);
+], SmartQasaPopupDialog);
 
 var version = "2024.9.5b-1";
 
