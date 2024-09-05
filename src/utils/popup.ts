@@ -104,5 +104,3 @@ class CustomPopup extends LitElement {
         `;
     }
 }
-
-customElements.define("custom-popup", CustomPopup);
