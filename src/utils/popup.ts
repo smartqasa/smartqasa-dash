@@ -17,6 +17,8 @@ class CustomPopup extends LitElement {
 
     private timeoutId: number | undefined;
 
+    public async setConfig() {}
+
     connectedCallback() {
         super.connectedCallback();
         if (this.timeout > 0) {

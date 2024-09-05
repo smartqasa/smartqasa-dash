@@ -14892,92 +14892,118 @@ ThermostatTile = __decorate([
     t$1("smartqasa-thermostat-tile")
 ], ThermostatTile);
 
-let PopupConfirmation = class PopupConfirmation extends h {
+window.customCards.push({
+    type: "smartqasa-popup-dialog",
+    name: "SmartQasa Popup Dialog",
+    preview: true,
+    description: "A SmartQasa tile for executing multiple Home Assistant actions.",
+});
+let CustomPopup = class CustomPopup extends h {
     constructor() {
         super(...arguments);
-        this.isOpen = false;
-        this.message = "Proceed?";
-        this.handleOpen = (event) => {
-            console.log("Received open-confirmation-popup", event.detail.message);
-            this.open(event.detail.message);
-        };
+        this.title = "";
+        this.size = "normal";
+        this.timeout = 0;
+        this.card = {};
+    }
+    async setConfig() { }
+    connectedCallback() {
+        super.connectedCallback();
+        if (this.timeout > 0) {
+            this.timeoutId = window.setTimeout(() => this.closePopup(), this.timeout * 1000);
+        }
+    }
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        if (this.timeoutId) {
+            clearTimeout(this.timeoutId);
+        }
+    }
+    closePopup() {
+        this.dispatchEvent(new CustomEvent("close-popup", { bubbles: true, composed: true }));
     }
     static { this.styles = i$3 `
         :host {
-            display: block;
-        }
-        :host([is-open]) .overlay {
-            display: flex;
-        }
-        .overlay {
-            display: none;
             position: fixed;
-            inset: 0;
-            background-color: rgba(0, 0, 0, 0.5);
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            backdrop-filter: blur(5px);
+            display: flex;
             justify-content: center;
             align-items: center;
             z-index: 1000;
         }
-        .popup {
+
+        .popup-container {
             background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            width: var(--popup-width, 300px);
+            max-width: 90vw;
             padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+            transition: all 0.3s ease;
         }
-        button {
-            margin-top: 10px;
-            margin-right: 10px;
+
+        .popup-container.fullscreen {
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 5px;
+            background-color: lightgray;
+            position: absolute;
+            top: 0;
+            left: 0;
+            overflow: hidden;
+        }
+
+        .title {
+            text-align: left;
+            font-size: 1.5em;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 1.2em;
             cursor: pointer;
-        }
-        button:hover {
-            background-color: #e0e0e0;
         }
     `; }
     render() {
+        const progressStyle = this.timeout > 0 ? `animation: progress ${this.timeout}s linear forwards;` : "";
         return ke `
-            <div class="overlay" @click="${this.close}">
-                <div class="popup" @click="${this.stopPropagation}">
-                    <p>${this.message}</p>
-                    <button @click="${this.confirm}">Confirm</button>
-                    <button @click="${this.close}">Cancel</button>
-                </div>
+            <div class="popup-container ${this.size}">
+                <div class="progress-bar"><div style="${progressStyle}"></div></div>
+                <button class="close-btn" @click=${this.closePopup}>X</button>
+                <div class="title">${this.title}</div>
+                <div class="content">${this.card ? this.card : ke `<slot></slot>`}</div>
             </div>
         `;
     }
-    confirm() {
-        this.dispatchEvent(new CustomEvent("confirm"));
-        this.close();
-    }
-    close(e) {
-        if (e)
-            e.stopPropagation();
-        this.isOpen = false;
-    }
-    open(message = "Are you sure?") {
-        this.message = message;
-        this.isOpen = true;
-    }
-    stopPropagation(e) {
-        e.stopPropagation();
-    }
-    connectedCallback() {
-        super.connectedCallback();
-        window.addEventListener("open-confirmation-popup", this.handleOpen);
-    }
-    disconnectedCallback() {
-        super.disconnectedCallback();
-        window.removeEventListener("open-confirmation-popup", this.handleOpen);
-    }
 };
 __decorate([
-    n({ type: Boolean, reflect: true })
-], PopupConfirmation.prototype, "isOpen", void 0);
+    n({ type: String })
+], CustomPopup.prototype, "title", void 0);
 __decorate([
     n({ type: String })
-], PopupConfirmation.prototype, "message", void 0);
-PopupConfirmation = __decorate([
-    t$1("popup-confirmation")
-], PopupConfirmation);
+], CustomPopup.prototype, "size", void 0);
+__decorate([
+    n({ type: Number })
+], CustomPopup.prototype, "timeout", void 0);
+__decorate([
+    n({ type: Object })
+], CustomPopup.prototype, "card", void 0);
+CustomPopup = __decorate([
+    t$1("smartqasa-popup-dialog")
+], CustomPopup);
 
 var version = "2024.9.4b-3";
 
