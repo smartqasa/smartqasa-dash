@@ -36,7 +36,7 @@ import "./cards/horizontal-stack";
 import "./cards/menu";
 import "./cards/panel";
 import "./cards/pin-verify";
-import "./cards/screen-saver";
+import "./cards/screensaver";
 import "./cards/vertical-stack";
 import "./cards/tv-remote";
 

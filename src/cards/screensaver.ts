@@ -11,13 +11,13 @@ interface Config extends LovelaceCardConfig {
 }
 
 window.customCards.push({
-    type: "smartqasa-screen-saver",
+    type: "smartqasa-screensaver-card",
     name: "SmartQasa Screen Saver Card",
     preview: true,
     description: "A SmartQasa card for displaying a screen saver.",
 });
 
-@customElement("smartqasa-screen-saver")
+@customElement("smartqasa-screensaver-card")
 export class ScreenSaver extends LitElement {
     @state() private _config?: Config;
     @state() private _time: string = "Loading...";
