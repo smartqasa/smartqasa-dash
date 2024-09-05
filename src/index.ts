@@ -88,7 +88,7 @@ import "./tiles/theme";
 import "./tiles/thermostat";
 
 // Utils
-//import "./utils/popup";
+import "./utils/popup";
 
 import { version } from "../package.json";
 console.info(`%c SmartQasa ⏏ ${version} `, "background-color: #0000ff; color: #ffffff; font-weight: 700;");
