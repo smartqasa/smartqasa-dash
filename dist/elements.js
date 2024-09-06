@@ -9204,7 +9204,6 @@ let PanelCard = class PanelCard extends h {
         this._loading = true;
     }
     async firstUpdated(changedProps) {
-        super.firstUpdated(changedProps);
         await this._loadContent();
         if (this._deviceType === "tablet") {
             this._initializeSwiper();
@@ -9215,7 +9214,6 @@ let PanelCard = class PanelCard extends h {
         this._loading = false;
     }
     updated(changedProps) {
-        super.updated(changedProps);
         this._isAdmin = this.hass?.user?.is_admin ?? false;
         if (this._deviceType === "tablet") {
             if (this._swiper) {
@@ -14929,53 +14927,7 @@ let PopupDialog = class PopupDialog extends h {
         this.title = "";
         this.size = "normal";
         this.timeout = 0;
-        this.progressBarAnimation = ""; // Track progress bar animation
-    }
-    updated(changedProperties) {
-        // Handle changes to the timeout property
-        if (changedProperties.has("timeout")) {
-            this.handleTimeout();
-        }
-        // Handle changes to the hass property and bind it to the card
-        if (changedProperties.has("hass") && this.cardElement) {
-            this.cardElement.hass = this.hass;
-        }
-        // Recreate the card if 'card' config changes
-        if (changedProperties.has("card")) {
-            this.cardElement = this.renderCard();
-        }
-    }
-    handleTimeout() {
-        if (this.timeoutId) {
-            clearTimeout(this.timeoutId);
-        }
-        if (this.timeout > 0) {
-            // Start the timeout and update progress bar animation
-            this.timeoutId = window.setTimeout(() => this.closePopup(), this.timeout * 1000);
-            this.progressBarAnimation = `progress ${this.timeout}s linear forwards`;
-        }
-    }
-    disconnectedCallback() {
-        super.disconnectedCallback();
-        if (this.timeoutId) {
-            clearTimeout(this.timeoutId);
-        }
-    }
-    closePopup() {
-        this.dispatchEvent(new CustomEvent("smartqasa-popup-close", { bubbles: true, composed: true }));
-    }
-    renderCard() {
-        if (this.card) {
-            const cardElement = createElement$1(this.card);
-            if (cardElement) {
-                cardElement.hass = this.hass;
-                return cardElement;
-            }
-            else {
-                console.error("Failed to create card element from config:", this.card);
-            }
-        }
-        return undefined;
+        this._progressBarAnimation = "";
     }
     static { this.styles = i$3 `
         :host {
@@ -15038,21 +14990,55 @@ let PopupDialog = class PopupDialog extends h {
             cursor: pointer;
         }
     `; }
+    firstUpdated(changedProps) {
+        this._cardElement = this.card ? createElement$1(this.card) : undefined;
+        if (this._cardElement)
+            this._cardElement.hass = this.hass;
+    }
+    updated(changedProps) {
+        if (changedProps.has("timeout")) {
+            this._handleTimeout();
+        }
+        if (changedProps.has("hass") && this._cardElement) {
+            this._cardElement.hass = this.hass;
+        }
+    }
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        if (this._timeoutId) {
+            clearTimeout(this._timeoutId);
+        }
+    }
     render() {
         return ke `
             <div class="popup-container ${this.size}">
                 ${this.timeout > 0
             ? ke `<div class="progress-bar">
-                          <div style="--progress-animation: ${this.progressBarAnimation}"></div>
+                          <div style="--progress-animation: ${this._progressBarAnimation}"></div>
                       </div>`
             : ""}
                 <button class="close-btn" @click=${this.closePopup}>X</button>
                 <div class="title">${this.title}</div>
-                <div class="content">${this.cardElement ? ke `${this.cardElement}` : ke `<slot></slot>`}</div>
+                <div class="content">${this._cardElement ? ke `${this._cardElement}` : ke `<slot></slot>`}</div>
             </div>
         `;
     }
+    _handleTimeout() {
+        if (this._timeoutId) {
+            clearTimeout(this._timeoutId);
+        }
+        if (this.timeout > 0) {
+            this._timeoutId = window.setTimeout(() => this.closePopup(), this.timeout * 1000);
+            this._progressBarAnimation = `progress ${this.timeout}s linear forwards`;
+        }
+    }
+    closePopup() {
+        this.dispatchEvent(new CustomEvent("smartqasa-popup-close", { bubbles: true, composed: true }));
+    }
 };
+__decorate([
+    n({ attribute: false })
+], PopupDialog.prototype, "hass", void 0);
 __decorate([
     n({ type: String })
 ], PopupDialog.prototype, "title", void 0);
@@ -15066,14 +15052,14 @@ __decorate([
     n({ type: Object })
 ], PopupDialog.prototype, "card", void 0);
 __decorate([
-    n({ type: Object })
-], PopupDialog.prototype, "hass", void 0);
+    r()
+], PopupDialog.prototype, "_cardElement", void 0);
 __decorate([
     r()
-], PopupDialog.prototype, "progressBarAnimation", void 0);
+], PopupDialog.prototype, "_progressBarAnimation", void 0);
 __decorate([
     e$1(".progress-bar > div")
-], PopupDialog.prototype, "progressBar", void 0);
+], PopupDialog.prototype, "_progressBar", void 0);
 PopupDialog = __decorate([
     t$1("smartqasa-popup-dialog")
 ], PopupDialog);
@@ -15094,10 +15080,8 @@ window.smartqasa.service = function (service, data) {
             popup.timeout = data.timeout;
         if (data?.card)
             popup.card = data.card;
-        console.log("Popup created with data:", popup);
         document.body.appendChild(popup);
         popup.addEventListener("smartqasa-popup-close", () => {
-            console.log("Popup close event triggered");
             document.body.removeChild(popup);
         });
     }

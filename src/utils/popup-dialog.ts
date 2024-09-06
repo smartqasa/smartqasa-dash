@@ -1,83 +1,30 @@
 import { css, html, LitElement, PropertyValues } from "lit";
 import { customElement, property, state, query } from "lit/decorators.js";
 import { createElement } from "../utils/create-element";
-import { LovelaceCard, LovelaceCardConfig, HomeAssistant } from "../types"; // Correct import for LovelaceCard
+import { HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
+import { thermostatIcons } from "../const";
 
 export interface PopupData {
     title?: string;
-    size?: "normal" | "fullscreen"; // Using specific types for better validation
+    size?: "normal" | "fullscreen";
     timeout?: number;
     card?: LovelaceCardConfig;
 }
 
 @customElement("smartqasa-popup-dialog")
 export class PopupDialog extends LitElement {
-    @property({ type: String }) title = "";
-    @property({ type: String }) size: "normal" | "fullscreen" = "normal";
-    @property({ type: Number }) timeout = 0;
-    @property({ type: Object }) card?: LovelaceCardConfig;
-    @property({ type: Object }) hass!: HomeAssistant;
+    @property({ attribute: false }) public hass?: HomeAssistant;
+    @property({ type: String }) public title = "";
+    @property({ type: String }) public size: "normal" | "fullscreen" = "normal";
+    @property({ type: Number }) public timeout = 0;
+    @property({ type: Object }) public card?: LovelaceCardConfig;
 
-    @state() private progressBarAnimation: string = ""; // Track progress bar animation
+    @state() private _cardElement: LovelaceCard | undefined;
+    @state() private _progressBarAnimation: string = "";
 
-    @query(".progress-bar > div") private progressBar!: HTMLElement; // Query the progress bar for direct access
+    @query(".progress-bar > div") private _progressBar!: HTMLElement;
 
-    private cardElement?: LovelaceCard; // Correct usage of LovelaceCard
-    private timeoutId: number | undefined;
-
-    updated(changedProperties: PropertyValues) {
-        // Handle changes to the timeout property
-        if (changedProperties.has("timeout")) {
-            this.handleTimeout();
-        }
-
-        // Handle changes to the hass property and bind it to the card
-        if (changedProperties.has("hass") && this.cardElement) {
-            this.cardElement.hass = this.hass;
-        }
-
-        // Recreate the card if 'card' config changes
-        if (changedProperties.has("card")) {
-            this.cardElement = this.renderCard();
-        }
-    }
-
-    private handleTimeout() {
-        if (this.timeoutId) {
-            clearTimeout(this.timeoutId);
-        }
-
-        if (this.timeout > 0) {
-            // Start the timeout and update progress bar animation
-            this.timeoutId = window.setTimeout(() => this.closePopup(), this.timeout * 1000);
-
-            this.progressBarAnimation = `progress ${this.timeout}s linear forwards`;
-        }
-    }
-
-    disconnectedCallback() {
-        super.disconnectedCallback();
-        if (this.timeoutId) {
-            clearTimeout(this.timeoutId);
-        }
-    }
-
-    closePopup() {
-        this.dispatchEvent(new CustomEvent("smartqasa-popup-close", { bubbles: true, composed: true }));
-    }
-
-    private renderCard() {
-        if (this.card) {
-            const cardElement = createElement(this.card);
-            if (cardElement) {
-                cardElement.hass = this.hass;
-                return cardElement;
-            } else {
-                console.error("Failed to create card element from config:", this.card);
-            }
-        }
-        return undefined;
-    }
+    private _timeoutId: number | undefined;
 
     static styles = css`
         :host {
@@ -141,18 +88,55 @@ export class PopupDialog extends LitElement {
         }
     `;
 
-    render() {
+    protected firstUpdated(changedProps: PropertyValues) {
+        this._cardElement = this.card ? createElement(this.card) : undefined;
+        if (this._cardElement) this._cardElement.hass = this.hass;
+    }
+
+    protected updated(changedProps: PropertyValues) {
+        if (changedProps.has("timeout")) {
+            this._handleTimeout();
+        }
+
+        if (changedProps.has("hass") && this._cardElement) {
+            this._cardElement.hass = this.hass;
+        }
+    }
+
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        if (this._timeoutId) {
+            clearTimeout(this._timeoutId);
+        }
+    }
+
+    protected render() {
         return html`
             <div class="popup-container ${this.size}">
                 ${this.timeout > 0
                     ? html`<div class="progress-bar">
-                          <div style="--progress-animation: ${this.progressBarAnimation}"></div>
+                          <div style="--progress-animation: ${this._progressBarAnimation}"></div>
                       </div>`
                     : ""}
                 <button class="close-btn" @click=${this.closePopup}>X</button>
                 <div class="title">${this.title}</div>
-                <div class="content">${this.cardElement ? html`${this.cardElement}` : html`<slot></slot>`}</div>
+                <div class="content">${this._cardElement ? html`${this._cardElement}` : html`<slot></slot>`}</div>
             </div>
         `;
+    }
+
+    private _handleTimeout() {
+        if (this._timeoutId) {
+            clearTimeout(this._timeoutId);
+        }
+
+        if (this.timeout > 0) {
+            this._timeoutId = window.setTimeout(() => this.closePopup(), this.timeout * 1000);
+            this._progressBarAnimation = `progress ${this.timeout}s linear forwards`;
+        }
+    }
+
+    public closePopup() {
+        this.dispatchEvent(new CustomEvent("smartqasa-popup-close", { bubbles: true, composed: true }));
     }
 }

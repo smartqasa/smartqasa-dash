@@ -32,12 +32,10 @@ window.smartqasa.service = function (service: string, data?: PopupData) {
         if (data?.size) popup.size = data.size;
         if (data?.timeout) popup.timeout = data.timeout;
         if (data?.card) popup.card = data.card;
-        console.log("Popup created with data:", popup);
 
         document.body.appendChild(popup);
 
         popup.addEventListener("smartqasa-popup-close", () => {
-            console.log("Popup close event triggered");
             document.body.removeChild(popup);
         });
     } else if (service === "popup_close") {

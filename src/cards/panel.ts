@@ -73,8 +73,6 @@ export class PanelCard extends LitElement {
     }
 
     protected async firstUpdated(changedProps: PropertyValues) {
-        super.firstUpdated(changedProps);
-
         await this._loadContent();
 
         if (this._deviceType === "tablet") {
@@ -92,8 +90,6 @@ export class PanelCard extends LitElement {
     }
 
     protected updated(changedProps: PropertyValues) {
-        super.updated(changedProps);
-
         this._isAdmin = this.hass?.user?.is_admin ?? false;
 
         if (this._deviceType === "tablet") {
