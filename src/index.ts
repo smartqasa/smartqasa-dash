@@ -24,24 +24,38 @@ window.smartqasa.startArea = window.smartqasa.startArea || location.pathname.spl
 
 import { PopupDialog, PopupData } from "./utils/popup-dialog";
 
+// Define the smartqasa service function
 window.smartqasa.service = function (service: string, data?: PopupData) {
     if (service === "popup") {
+        console.log("Creating popup with data:", data);
+
         const popup = document.createElement("smartqasa-popup-dialog") as PopupDialog;
 
+        // Set properties from data object
         if (data?.title) popup.title = data.title;
         if (data?.size) popup.size = data.size;
         if (data?.timeout) popup.timeout = data.timeout;
         if (data?.card) popup.card = data.card;
 
+        // Append the popup to the DOM
         document.body.appendChild(popup);
 
+        // Log that popup was appended
+        console.log("Popup appended to DOM");
+
+        // Listen for the close event and remove the popup
         popup.addEventListener("smartqasa-popup-close", () => {
+            console.log("Popup close event triggered");
             document.body.removeChild(popup);
         });
     } else if (service === "popup_close") {
+        console.log("Closing popup via service");
         const popup = document.querySelector("smartqasa-popup-dialog");
         if (popup) {
+            console.log("Popup found, dispatching close event");
             popup.dispatchEvent(new CustomEvent("smartqasa-popup-close"));
+        } else {
+            console.warn("No popup found to close");
         }
     } else {
         console.warn(`Service ${service} is not implemented in smartqasa.`);
@@ -108,5 +122,6 @@ import "./tiles/switch";
 import "./tiles/theme";
 import "./tiles/thermostat";
 
+// Log version info
 import { version } from "../package.json";
 console.info(`%c SmartQasa ⏏ ${version} `, "background-color: #0000ff; color: #ffffff; font-weight: 700;");

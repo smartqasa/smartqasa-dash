@@ -14893,9 +14893,12 @@ var version = "2024.9.5b-1";
 window.smartqasa = window.smartqasa || {};
 window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();
 window.smartqasa.startArea = window.smartqasa.startArea || location.pathname.split("/").pop();
+// Define the smartqasa service function
 window.smartqasa.service = function (service, data) {
     if (service === "popup") {
+        console.log("Creating popup with data:", data);
         const popup = document.createElement("smartqasa-popup-dialog");
+        // Set properties from data object
         if (data?.title)
             popup.title = data.title;
         if (data?.size)
@@ -14904,15 +14907,25 @@ window.smartqasa.service = function (service, data) {
             popup.timeout = data.timeout;
         if (data?.card)
             popup.card = data.card;
+        // Append the popup to the DOM
         document.body.appendChild(popup);
+        // Log that popup was appended
+        console.log("Popup appended to DOM");
+        // Listen for the close event and remove the popup
         popup.addEventListener("smartqasa-popup-close", () => {
+            console.log("Popup close event triggered");
             document.body.removeChild(popup);
         });
     }
     else if (service === "popup_close") {
+        console.log("Closing popup via service");
         const popup = document.querySelector("smartqasa-popup-dialog");
         if (popup) {
+            console.log("Popup found, dispatching close event");
             popup.dispatchEvent(new CustomEvent("smartqasa-popup-close"));
+        }
+        else {
+            console.warn("No popup found to close");
         }
     }
     else {

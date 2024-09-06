@@ -11,16 +11,19 @@ export interface PopupData {
 @customElement("smartqasa-popup-dialog")
 export class PopupDialog extends LitElement {
     @property({ type: String }) title = "";
-    @property({ type: String }) size = "normal";
-    @property({ type: Number }) timeout = 0;
+    @property({ type: String }) size = "normal"; // 'normal' or 'fullscreen'
+    @property({ type: Number }) timeout = 0; // timeout in seconds
     @property({ type: Object }) card = {};
 
     private timeoutId: number | undefined;
 
+    // Timeout management
     connectedCallback() {
         super.connectedCallback();
+        console.log("Popup connected to DOM with title:", this.title);
         if (this.timeout > 0) {
             this.timeoutId = window.setTimeout(() => this.closePopup(), this.timeout * 1000);
+            console.log(`Popup will close after ${this.timeout} seconds`);
         }
     }
 
@@ -28,10 +31,12 @@ export class PopupDialog extends LitElement {
         super.disconnectedCallback();
         if (this.timeoutId) {
             clearTimeout(this.timeoutId);
+            console.log("Popup disconnected and timeout cleared");
         }
     }
 
     closePopup() {
+        console.log("Closing popup");
         this.dispatchEvent(new CustomEvent("smartqasa-popup-close", { bubbles: true, composed: true }));
     }
 
@@ -93,7 +98,7 @@ export class PopupDialog extends LitElement {
 
     render() {
         const progressStyle = this.timeout > 0 ? `animation: progress ${this.timeout}s linear forwards;` : "";
-        console.log("PopupDialog render");
+        console.log("Rendering popup with title:", this.title);
         return html`
             <div class="popup-container ${this.size}">
                 ${this.timeout > 0 ? html`<div class="progress-bar"><div style="${progressStyle}"></div></div>` : ""}
