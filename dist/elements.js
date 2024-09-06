@@ -14990,13 +14990,9 @@ let PopupDialog = class PopupDialog extends h {
             cursor: pointer;
         }
     `; }
-    connectedCallback() {
-        super.connectedCallback();
-        console.log("Element connected to the DOM");
-    }
     firstUpdated() {
         this._cardElement = this.card ? createElement$1(this.card) : undefined;
-        console.log("First", this._cardElement);
+        console.log("First", this.card, this._cardElement);
         if (this._cardElement)
             this._cardElement.hass = this.hass;
     }
