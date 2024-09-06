@@ -87,6 +87,11 @@ export class PopupDialog extends LitElement {
         }
     `;
 
+    connectedCallback() {
+        super.connectedCallback();
+        console.log("Element connected to the DOM");
+    }
+
     protected firstUpdated() {
         this._cardElement = this.card ? createElement(this.card) : undefined;
         console.log("First", this._cardElement);
