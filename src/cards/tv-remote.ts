@@ -44,9 +44,8 @@ export class TVRemoteCard extends LitElement {
                 width: fit-content;
                 margin: 1.2rem;
                 padding: 1.2rem;
-                border: var(--sq-card-border, none);
-                border-radius: var(--sq-card-border-radius, 1.5rem);
-                background-color: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
+                border: none;
+                background-color: transparent;
             }
             .name {
                 padding: 0.5rem;
@@ -62,8 +61,6 @@ export class TVRemoteCard extends LitElement {
                 display: grid;
                 grid-template-columns: auto auto;
                 gap: 4rem;
-            }
-            .remote-section {
             }
             .row {
                 display: flex;
