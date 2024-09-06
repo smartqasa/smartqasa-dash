@@ -7,6 +7,5 @@ export function entityListDialog(
     tileType: string
 ) {
     const dialogConfig = listDialogConfig(dialogTitle, filterType, filterValue, tileType);
-    console.log("Entity List Dialog", dialogConfig);
     window.smartqasa.service("popup", dialogConfig);
 }

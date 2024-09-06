@@ -4,8 +4,8 @@ import { styleMap } from "lit/directives/style-map.js";
 
 import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
 import { callService } from "../utils/call-service";
-import { moreInfoDialog } from "../utils/more-info-dialog";
-import { entityListDialog } from "../utils/entity-list-dialog-test";
+import { moreInfoDialog } from "../utils/more-info-dialog-test";
+import { entityListDialog } from "../utils/entity-list-dialog";
 
 import tileBaseStyle from "../styles/tile-base.css";
 import tileStateStyle from "../styles/tile-state.css";
