@@ -2,7 +2,6 @@ import { css, html, LitElement, PropertyValues } from "lit";
 import { customElement, property, state, query } from "lit/decorators.js";
 import { createElement } from "../utils/create-element";
 import { HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
-import { thermostatIcons } from "../const";
 
 export interface PopupData {
     title?: string;
@@ -88,8 +87,9 @@ export class PopupDialog extends LitElement {
         }
     `;
 
-    protected firstUpdated(changedProps: PropertyValues) {
+    protected firstUpdated() {
         this._cardElement = this.card ? createElement(this.card) : undefined;
+        console.log("First", this._cardElement);
         if (this._cardElement) this._cardElement.hass = this.hass;
     }
 

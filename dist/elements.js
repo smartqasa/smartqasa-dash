@@ -9203,7 +9203,7 @@ let PanelCard = class PanelCard extends h {
         this._areaPicture = await this._getAreaPicture();
         this._loading = true;
     }
-    async firstUpdated(changedProps) {
+    async firstUpdated() {
         await this._loadContent();
         if (this._deviceType === "tablet") {
             this._initializeSwiper();
@@ -14990,8 +14990,9 @@ let PopupDialog = class PopupDialog extends h {
             cursor: pointer;
         }
     `; }
-    firstUpdated(changedProps) {
+    firstUpdated() {
         this._cardElement = this.card ? createElement$1(this.card) : undefined;
+        console.log("First", this._cardElement);
         if (this._cardElement)
             this._cardElement.hass = this.hass;
     }

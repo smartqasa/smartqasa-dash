@@ -72,7 +72,7 @@ export class PanelCard extends LitElement {
         this._loading = true;
     }
 
-    protected async firstUpdated(changedProps: PropertyValues) {
+    protected async firstUpdated() {
         await this._loadContent();
 
         if (this._deviceType === "tablet") {
