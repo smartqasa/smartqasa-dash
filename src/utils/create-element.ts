@@ -1,22 +1,31 @@
 import { LovelaceCard, LovelaceCardConfig } from "../types";
 
 export const createElement = (config: LovelaceCardConfig): LovelaceCard | undefined => {
-    if (!config.type) {
-        console.error("Error: No type configured for element:", config);
+    if (!config || typeof config !== "object" || !config.type) {
+        console.error("Error: Invalid or missing 'type' in config:", config);
         return undefined;
     }
 
     const tag = config.type.startsWith("custom:") ? config.type.replace("custom:", "") : config.type;
+
     if (!customElements.get(tag)) {
-        console.error("Error: Custom element doesn't exist:", tag);
+        console.error(`Error: Custom element '${tag}' is not registered.`);
         return undefined;
     }
-    const element = window.document.createElement(tag) as LovelaceCard;
+
+    const element = document.createElement(tag) as LovelaceCard;
+
+    if (typeof element.setConfig !== "function") {
+        console.error(`Error: The element '${tag}' does not implement 'setConfig'.`, element);
+        return undefined;
+    }
+
     try {
         element.setConfig(config);
-        return element;
     } catch (err) {
-        console.error("Error setting config for element:", err);
+        console.error(`Error: Failed to set config for element '${tag}'.`, err);
         return undefined;
     }
+
+    return element;
 };

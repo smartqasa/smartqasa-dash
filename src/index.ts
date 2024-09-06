@@ -24,26 +24,18 @@ window.smartqasa.startArea = window.smartqasa.startArea || location.pathname.spl
 
 import { PopupDialog, PopupData } from "./utils/popup-dialog";
 
-// Define the smartqasa service function
 window.smartqasa.service = function (service: string, data?: PopupData) {
     if (service === "popup") {
-        console.log("Creating popup with data:", data);
-
         const popup = document.createElement("smartqasa-popup-dialog") as PopupDialog;
 
-        // Set properties from data object
         if (data?.title) popup.title = data.title;
         if (data?.size) popup.size = data.size;
         if (data?.timeout) popup.timeout = data.timeout;
         if (data?.card) popup.card = data.card;
+        console.log("Popup created with data:", popup);
 
-        // Append the popup to the DOM
         document.body.appendChild(popup);
 
-        // Log that popup was appended
-        console.log("Popup appended to DOM");
-
-        // Listen for the close event and remove the popup
         popup.addEventListener("smartqasa-popup-close", () => {
             console.log("Popup close event triggered");
             document.body.removeChild(popup);
