@@ -11747,7 +11747,7 @@ SelectChip = __decorate([
     t$1("smartqasa-select-chip")
 ], SelectChip);
 
-function moreInfoDialog$1(config, stateObj) {
+function moreInfoDialog(config, stateObj) {
     if (!config || !stateObj)
         return;
     const title = stateObj.attributes.friendly_name || stateObj.entity_id;
@@ -11818,7 +11818,7 @@ let ThermostatChip$1 = class ThermostatChip extends h {
     }
     _showMoreInfo(e) {
         e.stopPropagation();
-        moreInfoDialog$1(this._config, this._stateObj);
+        moreInfoDialog(this._config, this._stateObj);
     }
 };
 __decorate([
@@ -13210,7 +13210,7 @@ let FanTile = class FanTile extends h {
     }
     _showMoreInfo(e) {
         e.stopPropagation();
-        moreInfoDialog$1(this._config, this._stateObj);
+        moreInfoDialog(this._config, this._stateObj);
     }
     _showEntityList(e) {
         e.stopPropagation();
@@ -13326,7 +13326,7 @@ let GarageTile = class GarageTile extends h {
     }
     _showMoreInfo(e) {
         e.stopPropagation();
-        moreInfoDialog$1(this._config, this._stateObj);
+        moreInfoDialog(this._config, this._stateObj);
     }
 };
 __decorate([
@@ -13406,7 +13406,7 @@ let HeaterTile = class HeaterTile extends h {
     }
     _showMoreInfo(e) {
         e.stopPropagation();
-        moreInfoDialog$1(this._config, this._stateObj);
+        moreInfoDialog(this._config, this._stateObj);
     }
 };
 __decorate([
@@ -13421,24 +13421,6 @@ __decorate([
 HeaterTile = __decorate([
     t$1("smartqasa-heater-tile")
 ], HeaterTile);
-
-function moreInfoDialog(config, stateObj) {
-    if (!config || !stateObj)
-        return;
-    const title = stateObj.attributes.friendly_name || stateObj.entity_id;
-    let dialogConfig = {
-        title: title,
-        timeout: 60000,
-        card: {
-            type: "custom:smartqasa-more-info-dialog",
-            entity: stateObj.entity_id,
-        },
-    };
-    if (!window.browser_mod) {
-        console.error("browser_mod is not available");
-    }
-    window.smartqasa.service("popup", dialogConfig);
-}
 
 window.customCards.push({
     type: "smartqasa-light-tile",
@@ -13697,7 +13679,7 @@ let LockTile = class LockTile extends h {
     }
     _showMoreInfo(e) {
         e.stopPropagation();
-        moreInfoDialog$1(this._config, this._stateObj);
+        moreInfoDialog(this._config, this._stateObj);
     }
 };
 __decorate([
@@ -13939,7 +13921,7 @@ let RobotTile = class RobotTile extends h {
     }
     _showMoreInfo(e) {
         e.stopPropagation();
-        moreInfoDialog$1(this._config, this._stateObj);
+        moreInfoDialog(this._config, this._stateObj);
     }
 };
 __decorate([
@@ -14298,7 +14280,7 @@ let SensorTile = class SensorTile extends h {
     }
     _showMoreInfo(e) {
         e.stopPropagation();
-        moreInfoDialog$1(this._config, this._stateObj);
+        moreInfoDialog(this._config, this._stateObj);
     }
 };
 __decorate([
@@ -14684,7 +14666,7 @@ let ShadeTile = class ShadeTile extends h {
     }
     _showMoreInfo(e) {
         e.stopPropagation();
-        moreInfoDialog$1(this._config, this._stateObj);
+        moreInfoDialog(this._config, this._stateObj);
     }
     _showEntityList(e) {
         e.stopPropagation();
@@ -14777,7 +14759,7 @@ let SwitchTile = class SwitchTile extends h {
     }
     _showMoreInfo(e) {
         e.stopPropagation();
-        moreInfoDialog$1(this._config, this._stateObj);
+        moreInfoDialog(this._config, this._stateObj);
     }
 };
 __decorate([
@@ -14908,7 +14890,7 @@ let ThermostatTile = class ThermostatTile extends h {
     }
     _showMoreInfo(e) {
         e.stopPropagation();
-        moreInfoDialog$1(this._config, this._stateObj);
+        moreInfoDialog(this._config, this._stateObj);
     }
 };
 __decorate([
