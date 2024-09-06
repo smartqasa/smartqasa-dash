@@ -119,9 +119,8 @@ export class RokuTile extends LitElement {
             title: this._stateObj.attributes?.friendly_name || this._entity || "Unknown",
             timeout: 60000,
             content: {
-                type: "custom:roku-card",
+                type: "custom:smartqasa-tv-remote-card",
                 entity: this._entity,
-                tv: true,
             },
             ...(this._config.dialog_title && {
                 dismiss_action: {

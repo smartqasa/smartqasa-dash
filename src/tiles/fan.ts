@@ -119,7 +119,7 @@ export class FanTile extends LitElement {
         if (!groupObj) return;
 
         const entityIds = groupObj.attributes?.entity_id;
-        if (entityIds.length) return;
+        if (entityIds.length === 0) return;
 
         const friendlyName = this._stateObj.attributes?.friendly_name || "Unknown";
         entityListDialog(friendlyName, "group", group, "fan");
