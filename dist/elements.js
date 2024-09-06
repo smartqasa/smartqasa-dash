@@ -13422,6 +13422,7 @@ const listDialogConfig = (dialogTitle, filterType, filterValue, cardType) => {
 
 function entityListDialog(dialogTitle, filterType, filterValue, tileType) {
     const dialogConfig = listDialogConfig(dialogTitle, filterType, filterValue, tileType);
+    console.log("Entity List Dialog", dialogConfig);
     window.smartqasa.service("popup", dialogConfig);
 }
 

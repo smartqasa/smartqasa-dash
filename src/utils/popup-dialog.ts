@@ -93,7 +93,7 @@ export class PopupDialog extends LitElement {
 
     render() {
         const progressStyle = this.timeout > 0 ? `animation: progress ${this.timeout}s linear forwards;` : "";
-
+        console.log("PopupDialog render");
         return html`
             <div class="popup-container ${this.size}">
                 ${this.timeout > 0 ? html`<div class="progress-bar"><div style="${progressStyle}"></div></div>` : ""}
