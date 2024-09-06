@@ -14907,6 +14907,122 @@ ThermostatTile = __decorate([
     t$1("smartqasa-thermostat-tile")
 ], ThermostatTile);
 
+let PopupDialog = class PopupDialog extends h {
+    constructor() {
+        super(...arguments);
+        this.title = "";
+        this.size = "normal"; // 'normal' or 'fullscreen'
+        this.timeout = 0; // timeout in seconds
+        this.card = {};
+    }
+    // Timeout management
+    connectedCallback() {
+        super.connectedCallback();
+        console.log("Popup connected to DOM with title:", this.title);
+        if (this.timeout > 0) {
+            this.timeoutId = window.setTimeout(() => this.closePopup(), this.timeout * 1000);
+            console.log(`Popup will close after ${this.timeout} seconds`);
+        }
+    }
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        if (this.timeoutId) {
+            clearTimeout(this.timeoutId);
+            console.log("Popup disconnected and timeout cleared");
+        }
+    }
+    closePopup() {
+        console.log("Closing popup");
+        this.dispatchEvent(new CustomEvent("smartqasa-popup-close", { bubbles: true, composed: true }));
+    }
+    static { this.styles = i$3 `
+        :host {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            min-width: 300px; /* Debugging */
+            min-height: 300px; /* Debugging */
+        }
+
+        .popup-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            width: var(--popup-width, 300px);
+            max-width: 90vw;
+            padding: 20px;
+            position: relative;
+            transition: all 0.3s ease;
+            min-width: 200px; /* Debugging */
+            min-height: 200px; /* Debugging */
+        }
+
+        .popup-container.fullscreen {
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 5px;
+            background-color: lightgray;
+            position: absolute;
+            top: 0;
+            left: 0;
+            overflow: hidden;
+        }
+
+        .title {
+            text-align: left;
+            font-size: 1.5em;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 1.2em;
+            cursor: pointer;
+        }
+    `; }
+    render() {
+        const progressStyle = this.timeout > 0 ? `animation: progress ${this.timeout}s linear forwards;` : "";
+        console.log("Rendering popup with title:", this.title);
+        return ke `
+            <div class="popup-container ${this.size}">
+                ${this.timeout > 0 ? ke `<div class="progress-bar"><div style="${progressStyle}"></div></div>` : ""}
+                <button class="close-btn" @click=${this.closePopup}>X</button>
+                <div class="title">${this.title}</div>
+                <div class="content">${this.card ? this.card : ke `<slot></slot>`}</div>
+            </div>
+        `;
+    }
+};
+__decorate([
+    n({ type: String })
+], PopupDialog.prototype, "title", void 0);
+__decorate([
+    n({ type: String })
+], PopupDialog.prototype, "size", void 0);
+__decorate([
+    n({ type: Number })
+], PopupDialog.prototype, "timeout", void 0);
+__decorate([
+    n({ type: Object })
+], PopupDialog.prototype, "card", void 0);
+PopupDialog = __decorate([
+    t$1("smartqasa-popup-dialog")
+], PopupDialog);
+
 var version = "2024.9.6b-1";
 
 window.smartqasa = window.smartqasa || {};
