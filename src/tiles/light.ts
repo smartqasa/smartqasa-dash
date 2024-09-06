@@ -5,7 +5,7 @@ import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
 import { callService } from "../utils/call-service";
 import { moreInfoDialog } from "../utils/more-info-dialog";
-import { entityListDialog } from "../utils/entity-list-dialog";
+import { entityListDialog } from "../utils/entity-list-dialog-test";
 
 import tileBaseStyle from "../styles/tile-base.css";
 import tileStateStyle from "../styles/tile-state.css";
@@ -111,8 +111,6 @@ export class LightTile extends LitElement {
 
         const entityIds = groupObj.attributes?.entity_id;
         if (entityIds.length === 0) return;
-
-        console.log("showEntityList");
 
         const friendlyName = this._stateObj.attributes?.friendly_name || "Unknown";
         entityListDialog(friendlyName, "group", group, "light");

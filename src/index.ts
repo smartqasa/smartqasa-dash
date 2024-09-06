@@ -24,10 +24,9 @@ window.smartqasa.startArea = window.smartqasa.startArea || location.pathname.spl
 
 import { PopupDialog, PopupData } from "./utils/popup-dialog";
 
-// Define the smartqasa service function
 window.smartqasa.service = function (service: string, data?: PopupData) {
     if (service === "popup") {
-        const popup = document.createElement("popup-dialog") as PopupDialog;
+        const popup = document.createElement("smartqasa-popup-dialog") as PopupDialog;
 
         // Set properties from data object
         if (data?.title) popup.title = data.title;
@@ -39,14 +38,14 @@ window.smartqasa.service = function (service: string, data?: PopupData) {
         document.body.appendChild(popup);
 
         // Listen for the close event and remove the popup
-        popup.addEventListener("sq-close-popup", () => {
+        popup.addEventListener("smartqasa-close-popup", () => {
             document.body.removeChild(popup);
         });
     } else if (service === "popup-close") {
         // Handle closing the popup
-        const popup = document.querySelector("popup-dialog");
+        const popup = document.querySelector("smartqasa-popup-dialog");
         if (popup) {
-            popup.dispatchEvent(new CustomEvent("sq-close-popup"));
+            popup.dispatchEvent(new CustomEvent("smartqasa-popup-close"));
         }
     } else {
         console.warn(`Service ${service} is not implemented in smartqasa.`);

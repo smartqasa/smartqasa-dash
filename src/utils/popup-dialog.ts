@@ -8,11 +8,11 @@ export interface PopupData {
     card?: object;
 }
 
-@customElement("popup-dialog")
+@customElement("smartqasa-popup-dialog")
 export class PopupDialog extends LitElement {
     @property({ type: String }) title = "";
-    @property({ type: String }) size = "normal"; // 'normal' or 'fullscreen'
-    @property({ type: Number }) timeout = 0; // timeout in seconds
+    @property({ type: String }) size = "normal";
+    @property({ type: Number }) timeout = 0;
     @property({ type: Object }) card = {};
 
     private timeoutId: number | undefined;
@@ -32,7 +32,7 @@ export class PopupDialog extends LitElement {
     }
 
     closePopup() {
-        this.dispatchEvent(new CustomEvent("sq-close-popup", { bubbles: true, composed: true }));
+        this.dispatchEvent(new CustomEvent("smartqasa-popup-close", { bubbles: true, composed: true }));
     }
 
     static styles = css`
