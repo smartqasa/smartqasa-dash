@@ -52,6 +52,8 @@ export class PopupDialog extends LitElement {
             justify-content: center;
             align-items: center;
             z-index: 1000;
+            min-width: 300px; /* Debugging */
+            min-height: 300px; /* Debugging */
         }
 
         .popup-container {
@@ -63,6 +65,8 @@ export class PopupDialog extends LitElement {
             padding: 20px;
             position: relative;
             transition: all 0.3s ease;
+            min-width: 200px; /* Debugging */
+            min-height: 200px; /* Debugging */
         }
 
         .popup-container.fullscreen {
