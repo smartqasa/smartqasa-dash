@@ -10772,7 +10772,7 @@ CustomChip = __decorate([
     t$1("smartqasa-custom-chip")
 ], CustomChip);
 
-const listDialogConfig = (dialogTitle, filterType, filterValue, cardType) => {
+const listDialogConfig$1 = (dialogTitle, filterType, filterValue, cardType) => {
     return {
         title: dialogTitle,
         timeout: 60000,
@@ -11057,35 +11057,35 @@ const dialogTable = {
         icon: "hass:garage-open-variant",
         name: "Garage Doors",
         entity: "cover.all_garage_doors",
-        data: listDialogConfig("Garage Doors", "group", "cover.all_garage_doors", "garage"),
+        data: listDialogConfig$1("Garage Doors", "group", "cover.all_garage_doors", "garage"),
     },
     locks: {
         icon: "hass:lock-open",
         name: "Door Locks",
         entity: "lock.all_door_locks",
-        data: listDialogConfig("Door Locks", "group", "lock.all_door_locks", "lock"),
+        data: listDialogConfig$1("Door Locks", "group", "lock.all_door_locks", "lock"),
     },
     robots: {
         icon: "hass:robot-vacuum-variant",
         name: "Robots",
-        data: listDialogConfig("Robots", "domain", "vacuum", "robot"),
+        data: listDialogConfig$1("Robots", "domain", "vacuum", "robot"),
     },
     roku_players: {
         icon: "hass:audio-video",
         name: "Roku Players",
-        data: listDialogConfig("Roku Players", "group", "media_player.all_roku_players", "roku"),
+        data: listDialogConfig$1("Roku Players", "group", "media_player.all_roku_players", "roku"),
     },
     sensors_doors: {
         icon: "hass:door-open",
         name: "Door Sensors",
         entity: "binary_sensor.all_door_sensors",
-        data: listDialogConfig("Door Sensors", "group", "binary_sensor.all_door_sensors", "sensor"),
+        data: listDialogConfig$1("Door Sensors", "group", "binary_sensor.all_door_sensors", "sensor"),
     },
     sensors_windows: {
         icon: "hass:window-open",
         name: "Window Sensors",
         entity: "binary_sensor.all_window_sensors",
-        data: listDialogConfig("Window Sensors", "group", "binary_sensor.all_window_sensors", "sensor"),
+        data: listDialogConfig$1("Window Sensors", "group", "binary_sensor.all_window_sensors", "sensor"),
     },
     speed_test: {
         icon: "hass:gauge",
@@ -11108,12 +11108,12 @@ const dialogTable = {
     sonos_players: {
         icon: "hass:speaker-multiple",
         name: "Sonos Players",
-        data: listDialogConfig("Sonos Players", "group", "media_player.all_sonos_players", "sonos"),
+        data: listDialogConfig$1("Sonos Players", "group", "media_player.all_sonos_players", "sonos"),
     },
     thermostats: {
         icon: "hass:thermostat",
         name: "Thermostats",
-        data: listDialogConfig("Thermostats", "domain", "climate", "thermostat"),
+        data: listDialogConfig$1("Thermostats", "domain", "climate", "thermostat"),
     },
     weather: {
         icon: "hass:sun-wireless",
@@ -11751,7 +11751,7 @@ function moreInfoDialog(config, stateObj) {
             dismiss_action: {
                 service: "browser_mod.popup",
                 data: {
-                    ...listDialogConfig(config.dialog_title, config.filter_type, config.filter_value, config.tile_type),
+                    ...listDialogConfig$1(config.dialog_title, config.filter_type, config.filter_value, config.tile_type),
                 },
             },
         }),
@@ -13115,8 +13115,8 @@ DialogTile = __decorate([
     t$1("smartqasa-dialog-tile")
 ], DialogTile);
 
-function entityListDialog(dialogTitle, filterType, filterValue, tileType) {
-    const dialogConfig = listDialogConfig(dialogTitle, filterType, filterValue, tileType);
+function entityListDialog$1(dialogTitle, filterType, filterValue, tileType) {
+    const dialogConfig = listDialogConfig$1(dialogTitle, filterType, filterValue, tileType);
     window.browser_mod?.service("popup", dialogConfig);
 }
 
@@ -13212,7 +13212,7 @@ let FanTile = class FanTile extends h {
         if (entityIds.length)
             return;
         const friendlyName = this._stateObj.attributes?.friendly_name || "Unknown";
-        entityListDialog(friendlyName, "group", group, "fan");
+        entityListDialog$1(friendlyName, "group", group, "fan");
     }
 };
 __decorate([
@@ -13409,6 +13409,24 @@ __decorate([
 HeaterTile = __decorate([
     t$1("smartqasa-heater-tile")
 ], HeaterTile);
+
+const listDialogConfig = (dialogTitle, filterType, filterValue, cardType) => {
+    return {
+        title: dialogTitle,
+        timeout: 60000,
+        card: {
+            type: "custom:smartqasa-group-stack",
+            filter_type: filterType,
+            filter_value: filterValue,
+            card_type: `custom:smartqasa-${cardType}-tile`,
+        },
+    };
+};
+
+function entityListDialog(dialogTitle, filterType, filterValue, tileType) {
+    const dialogConfig = listDialogConfig(dialogTitle, filterType, filterValue, tileType);
+    window.smartqasa.service("popup", dialogConfig);
+}
 
 window.customCards.push({
     type: "smartqasa-light-tile",
@@ -14019,7 +14037,7 @@ let RokuTile = class RokuTile extends h {
                 dismiss_action: {
                     service: "browser_mod.popup",
                     data: {
-                        ...listDialogConfig(this._config.dialog_title, this._config.filter_type, this._config.filter_value, this._config.tile_type),
+                        ...listDialogConfig$1(this._config.dialog_title, this._config.filter_type, this._config.filter_value, this._config.tile_type),
                     },
                 },
             }),
@@ -14669,7 +14687,7 @@ let ShadeTile = class ShadeTile extends h {
         if (entityIds.length)
             return;
         const friendlyName = this._stateObj.attributes?.friendly_name || "Unknown";
-        entityListDialog(friendlyName, "group", group, "shade");
+        entityListDialog$1(friendlyName, "group", group, "shade");
     }
 };
 __decorate([
@@ -14892,148 +14910,41 @@ ThermostatTile = __decorate([
     t$1("smartqasa-thermostat-tile")
 ], ThermostatTile);
 
-window.customCards.push({
-    type: "smartqasa-popup-dialog",
-    name: "SmartQasa Popup Dialog",
-    preview: true,
-    description: "A SmartQasa tile for executing multiple Home Assistant actions.",
-});
-let SmartQasaPopupDialog = class SmartQasaPopupDialog extends h {
-    constructor() {
-        super(...arguments);
-        this.title = "";
-        this.size = "normal"; // 'normal' or 'fullscreen'
-        this.timeout = 0; // timeout in seconds
-        this.card = {};
-        this.smartqasa_popupVisible = false; // Controls the visibility of the popup
-    }
-    async setConfig() { }
-    connectedCallback() {
-        super.connectedCallback();
-        if (this.timeout > 0) {
-            this.smartqasa_timeoutId = window.setTimeout(() => this.smartqasa_closePopup(), this.timeout * 1000);
-        }
-    }
-    disconnectedCallback() {
-        super.disconnectedCallback();
-        if (this.smartqasa_timeoutId) {
-            clearTimeout(this.smartqasa_timeoutId);
-        }
-    }
-    smartqasa_closePopup() {
-        this.smartqasa_popupVisible = false; // Hide the popup
-        this.dispatchEvent(new CustomEvent("smartqasa-close-popup", { bubbles: true, composed: true }));
-    }
-    smartqasa_onOverlayClick(e) {
-        if (e.target.classList.contains("overlay")) {
-            this.smartqasa_closePopup();
-        }
-    }
-    static { this.styles = i$3 `
-        :host {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            backdrop-filter: blur(5px);
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 999;
-        }
-
-        .popup-container {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-            width: var(--popup-width, 300px);
-            max-width: 90vw;
-            padding: 20px;
-            position: relative;
-            transition: all 0.3s ease;
-            z-index: 1000;
-        }
-
-        .popup-container.fullscreen {
-            width: 100vw;
-            height: 100vh;
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 5px;
-            background-color: lightgray;
-            position: absolute;
-            top: 0;
-            left: 0;
-            overflow: hidden;
-        }
-
-        .title {
-            text-align: left;
-            font-size: 1.5em;
-        }
-
-        .close-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: none;
-            border: none;
-            font-size: 1.2em;
-            cursor: pointer;
-        }
-    `; }
-    render() {
-        if (!this.smartqasa_popupVisible)
-            return ke ``; // Do not render anything if the popup is not visible
-        const progressStyle = this.timeout > 0 ? `animation: progress ${this.timeout}s linear forwards;` : "";
-        return ke `
-            <div class="overlay" @click="${this.smartqasa_onOverlayClick}"></div>
-            <!-- Clicking outside the container triggers close -->
-            <div class="popup-container ${this.size}">
-                <div class="progress-bar"><div style="${progressStyle}"></div></div>
-                <button class="close-btn" @click=${this.smartqasa_closePopup}>X</button>
-                <div class="title">${this.title}</div>
-                <div class="content">${this.card ? this.card : ke `<slot></slot>`}</div>
-            </div>
-        `;
-    }
-};
-__decorate([
-    n({ type: String })
-], SmartQasaPopupDialog.prototype, "title", void 0);
-__decorate([
-    n({ type: String })
-], SmartQasaPopupDialog.prototype, "size", void 0);
-__decorate([
-    n({ type: Number })
-], SmartQasaPopupDialog.prototype, "timeout", void 0);
-__decorate([
-    n({ type: Object })
-], SmartQasaPopupDialog.prototype, "card", void 0);
-__decorate([
-    n({ type: Boolean })
-], SmartQasaPopupDialog.prototype, "smartqasa_popupVisible", void 0);
-SmartQasaPopupDialog = __decorate([
-    t$1("smartqasa-popup-dialog")
-], SmartQasaPopupDialog);
-
 var version = "2024.9.5b-1";
 
 window.smartqasa = window.smartqasa || {};
 window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();
 window.smartqasa.startArea = window.smartqasa.startArea || location.pathname.split("/").pop();
+// Define the smartqasa service function
+window.smartqasa.service = function (service, data) {
+    if (service === "popup") {
+        const popup = document.createElement("popup-dialog");
+        // Set properties from data object
+        if (data?.title)
+            popup.title = data.title;
+        if (data?.size)
+            popup.size = data.size;
+        if (data?.timeout)
+            popup.timeout = data.timeout;
+        if (data?.card)
+            popup.card = data.card;
+        // Append the popup to the DOM
+        document.body.appendChild(popup);
+        // Listen for the close event and remove the popup
+        popup.addEventListener("sq-close-popup", () => {
+            document.body.removeChild(popup);
+        });
+    }
+    else if (service === "popup-close") {
+        // Handle closing the popup
+        const popup = document.querySelector("popup-dialog");
+        if (popup) {
+            popup.dispatchEvent(new CustomEvent("sq-close-popup"));
+        }
+    }
+    else {
+        console.warn(`Service ${service} is not implemented in smartqasa.`);
+    }
+};
 window.customCards = window.customCards ?? [];
 console.info(`%c SmartQasa ⏏ ${version} `, "background-color: #0000ff; color: #ffffff; font-weight: 700;");

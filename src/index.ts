@@ -13,19 +13,45 @@ declare global {
             menuConfig?: any;
             menuTab: number;
             viewMode: "area" | "entertain";
+            service: (service: string, data?: object) => void;
         };
-    }
-}
-
-declare global {
-    interface WindowEventMap {
-        "open-confirmation-popup": CustomEvent;
     }
 }
 
 window.smartqasa = window.smartqasa || {};
 window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();
 window.smartqasa.startArea = window.smartqasa.startArea || location.pathname.split("/").pop();
+
+import { PopupDialog, PopupData } from "./utils/popup-dialog";
+
+// Define the smartqasa service function
+window.smartqasa.service = function (service: string, data?: PopupData) {
+    if (service === "popup") {
+        const popup = document.createElement("popup-dialog") as PopupDialog;
+
+        // Set properties from data object
+        if (data?.title) popup.title = data.title;
+        if (data?.size) popup.size = data.size;
+        if (data?.timeout) popup.timeout = data.timeout;
+        if (data?.card) popup.card = data.card;
+
+        // Append the popup to the DOM
+        document.body.appendChild(popup);
+
+        // Listen for the close event and remove the popup
+        popup.addEventListener("sq-close-popup", () => {
+            document.body.removeChild(popup);
+        });
+    } else if (service === "popup-close") {
+        // Handle closing the popup
+        const popup = document.querySelector("popup-dialog");
+        if (popup) {
+            popup.dispatchEvent(new CustomEvent("sq-close-popup"));
+        }
+    } else {
+        console.warn(`Service ${service} is not implemented in smartqasa.`);
+    }
+};
 
 window.customCards = window.customCards ?? [];
 
@@ -86,9 +112,6 @@ import "./tiles/shade";
 import "./tiles/switch";
 import "./tiles/theme";
 import "./tiles/thermostat";
-
-// Utils
-import "./utils/popup";
 
 import { version } from "../package.json";
 console.info(`%c SmartQasa ⏏ ${version} `, "background-color: #0000ff; color: #ffffff; font-weight: 700;");
