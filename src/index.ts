@@ -28,21 +28,17 @@ window.smartqasa.service = function (service: string, data?: PopupData) {
     if (service === "popup") {
         const popup = document.createElement("smartqasa-popup-dialog") as PopupDialog;
 
-        // Set properties from data object
         if (data?.title) popup.title = data.title;
         if (data?.size) popup.size = data.size;
         if (data?.timeout) popup.timeout = data.timeout;
         if (data?.card) popup.card = data.card;
 
-        // Append the popup to the DOM
         document.body.appendChild(popup);
 
-        // Listen for the close event and remove the popup
-        popup.addEventListener("smartqasa-close-popup", () => {
+        popup.addEventListener("smartqasa-popup-close", () => {
             document.body.removeChild(popup);
         });
-    } else if (service === "popup-close") {
-        // Handle closing the popup
+    } else if (service === "popup_close") {
         const popup = document.querySelector("smartqasa-popup-dialog");
         if (popup) {
             popup.dispatchEvent(new CustomEvent("smartqasa-popup-close"));
