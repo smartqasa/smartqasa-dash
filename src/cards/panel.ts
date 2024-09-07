@@ -15,7 +15,7 @@ import { entertainDialog } from "../misc/entertain-dialog";
 import { menuConfig } from "../misc/menu-config";
 import { formattedTime, formattedDate } from "../utils/format-date-time";
 
-import panelStyles from "../styles/panel.css";
+import panelStyles from "../css/panel.css";
 import swiperStyles from "swiper/swiper-bundle.css";
 import defaultImage from "../assets/images/default.png";
 

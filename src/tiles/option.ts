@@ -7,7 +7,7 @@ import { callService } from "../utils/call-service";
 import { menuConfig } from "../misc/menu-config";
 import { phaseIcons, modeIcons } from "../const";
 
-import tileBaseStyle from "../styles/tile-base.css";
+import tileBaseStyle from "../css/tile-base.css";
 
 interface Config extends LovelaceCardConfig {
     entity: string;

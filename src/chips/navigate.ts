@@ -5,7 +5,7 @@ import { styleMap } from "lit/directives/style-map.js";
 import { navigateToArea } from "../utils/navigate-to-area";
 import { HassArea, HomeAssistant, LovelaceCardConfig } from "../types";
 
-import chipDoubleStyle from "../styles/chip-double.css";
+import chipDoubleStyle from "../css/chip-double.css";
 
 interface Config extends LovelaceCardConfig {
     area_prev?: string;

@@ -16,7 +16,7 @@ import { menuConfig } from "../misc/menu-config";
 import { formattedTime, formattedDate } from "../utils/format-date-time";
 import { SS_CYCLE_TIMER, SS_HIDE_EVENTS, SS_IDLE_TIMER } from "../const";
 
-import panelStyles from "../styles/panel.css";
+import panelStyles from "../css/panel.css";
 import swiperStyles from "swiper/swiper-bundle.css";
 import defaultImage from "../assets/images/default.png";
 

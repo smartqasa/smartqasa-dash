@@ -5,7 +5,7 @@ import { styleMap } from "lit/directives/style-map.js";
 import { HomeAssistant, LovelaceCardConfig } from "../types";
 import { callService } from "../utils/call-service";
 
-import tileBaseStyle from "../styles/tile-base.css";
+import tileBaseStyle from "../css/tile-base.css";
 
 interface ActionConfig {
     action: string;

@@ -4,7 +4,7 @@ import { styleMap } from "lit/directives/style-map.js";
 
 import { LovelaceCardConfig } from "../types";
 
-import tileBaseStyle from "../styles/tile-base.css";
+import tileBaseStyle from "../css/tile-base.css";
 
 interface Config extends LovelaceCardConfig {
     icon: string;

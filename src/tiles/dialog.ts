@@ -6,7 +6,7 @@ import { LovelaceCardConfig } from "../types";
 import { dialogTable } from "../tables/dialogs";
 import { menuConfig } from "../misc/menu-config";
 
-import tileBaseStyle from "../styles/tile-base.css";
+import tileBaseStyle from "../css/tile-base.css";
 
 interface Config extends LovelaceCardConfig {
     dialog: string;

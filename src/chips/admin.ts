@@ -5,7 +5,7 @@ import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity, HomeAssistant } from "../types";
 import { callService } from "../utils/call-service";
 
-import chipBaseStyle from "../styles/chip-base.css";
+import chipBaseStyle from "../css/chip-base.css";
 
 window.customCards.push({
     type: "smartqasa-admin-chip",

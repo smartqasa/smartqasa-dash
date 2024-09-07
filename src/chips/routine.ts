@@ -5,8 +5,8 @@ import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
 import { callService } from "../utils/call-service";
 
-import chipBaseStyle from "../styles/chip-base.css";
-import chipTextStyle from "../styles/chip-text.css";
+import chipBaseStyle from "../css/chip-base.css";
+import chipTextStyle from "../css/chip-text.css";
 
 interface Config extends LovelaceCardConfig {
     entity: string;

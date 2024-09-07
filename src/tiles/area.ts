@@ -5,7 +5,7 @@ import { styleMap } from "lit/directives/style-map.js";
 import { HassArea, HomeAssistant, LovelaceCardConfig } from "../types";
 import { navigateToArea } from "../utils/navigate-to-area";
 
-import tileBaseStyle from "../styles/tile-base.css";
+import tileBaseStyle from "../css/tile-base.css";
 
 interface Config extends LovelaceCardConfig {
     area: string;

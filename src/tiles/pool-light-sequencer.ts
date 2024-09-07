@@ -6,7 +6,7 @@ import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
 import { callService } from "../utils/call-service";
 import { sequenceTable } from "../tables/pool-light-sequences";
 
-import tileBaseStyle from "../styles/tile-base.css";
+import tileBaseStyle from "../css/tile-base.css";
 
 interface Config extends LovelaceCardConfig {
     sequence: string;

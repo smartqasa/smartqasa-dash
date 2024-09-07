@@ -4,7 +4,7 @@ import { customElement, state } from "lit/decorators.js";
 import { LovelaceCardConfig } from "../types";
 import appTable from "../tables/apps";
 
-import tileBaseStyle from "../styles/tile-base.css";
+import tileBaseStyle from "../css/tile-base.css";
 interface Config extends LovelaceCardConfig {
     app: string;
     icon?: string;

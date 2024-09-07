@@ -7,8 +7,8 @@ import { callService } from "../utils/call-service";
 import { moreInfoDialog } from "../utils/more-info-dialog";
 import { entityListDialog } from "../utils/entity-list-dialog";
 
-import tileBaseStyle from "../styles/tile-base.css";
-import tileStateStyle from "../styles/tile-state.css";
+import tileBaseStyle from "../css/tile-base.css";
+import tileStateStyle from "../css/tile-state.css";
 
 interface Config extends LovelaceCardConfig {
     entity: string;
