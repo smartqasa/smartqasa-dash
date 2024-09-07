@@ -11301,15 +11301,11 @@ const dialogTable = {
             size: "fullscreen",
             timeout: 60000,
             content: {
-                type: "custom:smartqasa-horizontal-stack",
+                type: "horizontal-stack",
                 cards: [
                     {
-                        type: "custom:smartqasa-vertical-stack",
+                        type: "vertical-stack",
                         cards: [
-                            {
-                                type: "custom:gap-card",
-                                height: 15,
-                            },
                             {
                                 type: "weather-forecast",
                                 entity: "weather.forecast_home",
@@ -11331,10 +11327,6 @@ const dialogTable = {
                     {
                         type: "vertical-stack",
                         cards: [
-                            {
-                                type: "custom:gap-card",
-                                height: 15,
-                            },
                             {
                                 type: "custom:weather-radar-card",
                                 frame_count: 10,
