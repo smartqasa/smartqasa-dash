@@ -4438,11 +4438,11 @@ let MoreInfoCard = class MoreInfoCard extends h {
         }
 
         .title {
-            margin: 0.5rem 1rem;
+            padding: 0.5rem 0.5rem 1rem 0.5rem;
             text-align: left;
             text-overflow: ellipsis;
             white-space: normal;
-            font-weight: var(--sq-primary-font-weight, 400);
+            font-weight: 400;
             font-size: var(--sq-primary-font-size, 1.5rem);
             color: rgb(var(--sq-primary-font-rgb, 128, 128, 128));
         }
