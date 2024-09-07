@@ -37,7 +37,7 @@ export class MoreInfoCard extends LitElement {
         }
 
         .title {
-            margin-bottom: 1rem;
+            margin: 0.5rem 1rem;
             text-align: left;
             text-overflow: ellipsis;
             white-space: normal;
