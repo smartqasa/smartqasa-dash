@@ -4423,26 +4423,40 @@ window.customCards.push({
     description: "A SmartQasa card for displaying More Info for an entity.",
 });
 let MoreInfoCard = class MoreInfoCard extends h {
+    static { this.styles = i$3 `
+        .container {
+            border: var(--sq-card-border, none);
+            border-radius: var(--sq-card-border-radius, 1.5rem);
+            padding: var(--sq-card-padding, 1rem);
+            background-color: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
+        }
+
+        .container-transparent {
+            border-radius: var(--sq-card-border-radius, 1.5rem);
+            background-color: transparent;
+            padding: var(--sq-card-padding, 1rem);
+        }
+    `; }
     setConfig(config) {
         this._config = { ...config };
         this._entity = this._config?.entity;
-        console.log("MoreInfoCard setConfig", this._config, this._entity);
     }
-    updated(changedProps) {
-        if (changedProps.has("hass") && this._entity) {
-            this._stateObj = this.hass?.states[this._entity];
+    shouldUpdate(changedProps) {
+        return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
+            changedProps.has("_config"));
+    }
+    willUpdate(changedProps) {
+        if (changedProps.has("hass") && this.hass && this._entity) {
+            this._stateObj = this.hass.states[this._entity];
         }
     }
     render() {
         if (!this._config || !this.hass || !this._stateObj)
             return D;
-        console.log("MoreInfoCard render", this._config, this._stateObj);
-        const styles = {
-            backgroundColor: this._config?.background ? "var(--sq-card-background-color)" : "transparent",
-        };
+        const containerClass = this._config.background ? "container" : "container-transparent";
         return ke `
             <div>
-                <div class="container" style=${se(styles)}>
+                <div class="${containerClass}">
                     <more-info-content .hass=${this.hass} .stateObj=${this._stateObj}> </more-info-content>
                 </div>
             </div>
@@ -4455,9 +4469,6 @@ __decorate([
 __decorate([
     r()
 ], MoreInfoCard.prototype, "_config", void 0);
-__decorate([
-    r()
-], MoreInfoCard.prototype, "_stateObj", void 0);
 MoreInfoCard = __decorate([
     t$1("smartqasa-more-info-card")
 ], MoreInfoCard);
@@ -13152,12 +13163,17 @@ let FanTile = class FanTile extends h {
         this._entity = this._config.entity.startsWith("fan.") ? this._config.entity : undefined;
     }
     shouldUpdate(changedProps) {
-        if (!this._config)
-            return false;
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
             changedProps.has("_config"));
     }
+    updated(changedProps) {
+        if (changedProps.has("hass") && this.hass && this._entity) {
+            this._stateObj = this.hass.states[this._entity];
+        }
+    }
     render() {
+        if (!this._config || !this._entity)
+            return D;
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this._updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
@@ -13176,7 +13192,6 @@ let FanTile = class FanTile extends h {
     }
     _updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
-        this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
         if (this._stateObj) {
             const state = this._stateObj.state || "unknown";
             icon = this._config.icon || "hass:fan";
@@ -13439,12 +13454,17 @@ let LightTile = class LightTile extends h {
         this._entity = this._config.entity.startsWith("light.") ? this._config.entity : undefined;
     }
     shouldUpdate(changedProps) {
-        if (!this._config)
-            return false;
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
             changedProps.has("_config"));
     }
+    updated(changedProps) {
+        if (changedProps.has("hass") && this.hass && this._entity) {
+            this._stateObj = this.hass.states[this._entity];
+        }
+    }
     render() {
+        if (!this._config || !this._entity)
+            return D;
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this._updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
@@ -13463,7 +13483,6 @@ let LightTile = class LightTile extends h {
     }
     _updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
-        this._stateObj = this._entity ? this.hass.states[this._entity] : undefined;
         if (this._stateObj) {
             const state = this._stateObj.state || "unknown";
             icon = this._config.icon || this._stateObj.attributes.icon || "hass:lightbulb";

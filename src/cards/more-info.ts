@@ -1,7 +1,5 @@
-import { html, LitElement, nothing, PropertyValues, TemplateResult } from "lit";
+import { css, html, LitElement, nothing, PropertyValues, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
-import { styleMap } from "lit/directives/style-map.js";
-
 import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
 
 interface Config extends LovelaceCardConfig {
@@ -20,32 +18,50 @@ window.customCards.push({
 export class MoreInfoCard extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() private _config?: Config;
-    @state() private _stateObj?: HassEntity;
     private _entity?: string;
+    private _stateObj?: HassEntity;
 
-    public setConfig(config: Config) {
+    static styles = css`
+        .container {
+            border: var(--sq-card-border, none);
+            border-radius: var(--sq-card-border-radius, 1.5rem);
+            padding: var(--sq-card-padding, 1rem);
+            background-color: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
+        }
+
+        .container-transparent {
+            border-radius: var(--sq-card-border-radius, 1.5rem);
+            background-color: transparent;
+            padding: var(--sq-card-padding, 1rem);
+        }
+    `;
+
+    public setConfig(config: Config): void {
         this._config = { ...config };
         this._entity = this._config?.entity;
     }
 
-    protected updated(changedProps: PropertyValues) {
-        if (changedProps.has("hass") && this._entity) {
-            this._stateObj = this.hass?.states[this._entity];
+    protected shouldUpdate(changedProps: PropertyValues): boolean {
+        return !!(
+            (changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
+            changedProps.has("_config")
+        );
+    }
+
+    protected willUpdate(changedProps: PropertyValues): void {
+        if (changedProps.has("hass") && this.hass && this._entity) {
+            this._stateObj = this.hass.states[this._entity];
         }
     }
 
     protected render(): TemplateResult | typeof nothing {
         if (!this._config || !this.hass || !this._stateObj) return nothing;
 
-        console.log("MoreInfoCard", this._config, this._stateObj);
-
-        const styles = {
-            backgroundColor: this._config?.background ? "var(--sq-card-background-color)" : "transparent",
-        };
+        const containerClass = this._config.background ? "container" : "container-transparent";
 
         return html`
             <div>
-                <div class="container" style=${styleMap(styles)}>
+                <div class="${containerClass}">
                     <more-info-content .hass=${this.hass} .stateObj=${this._stateObj}> </more-info-content>
                 </div>
             </div>

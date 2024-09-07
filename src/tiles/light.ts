@@ -39,14 +39,21 @@ export class LightTile extends LitElement {
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
-        if (!this._config) return false;
         return !!(
             (changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
             changedProps.has("_config")
         );
     }
 
+    protected updated(changedProps: PropertyValues): void {
+        if (changedProps.has("hass") && this.hass && this._entity) {
+            this._stateObj = this.hass.states[this._entity];
+        }
+    }
+
     protected render(): TemplateResult | typeof nothing {
+        if (!this._config || !this._entity) return nothing;
+
         const { icon, iconAnimation, iconColor, name, stateFmtd } = this._updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
@@ -66,8 +73,6 @@ export class LightTile extends LitElement {
 
     private _updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
-
-        this._stateObj = this._entity ? this.hass!.states[this._entity] : undefined;
 
         if (this._stateObj) {
             const state = this._stateObj.state || "unknown";
