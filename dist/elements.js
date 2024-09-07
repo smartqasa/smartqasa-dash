@@ -4426,6 +4426,7 @@ let MoreInfoCard = class MoreInfoCard extends h {
     setConfig(config) {
         this._config = { ...config };
         this._entity = this._config?.entity;
+        console.log("MoreInfoCard setConfig", this._config, this._entity);
     }
     updated(changedProps) {
         if (changedProps.has("hass") && this._entity) {

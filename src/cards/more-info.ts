@@ -23,12 +23,14 @@ export class MoreInfoCard extends LitElement {
     @state() private _stateObj?: HassEntity;
     private _entity?: string;
 
-    public setConfig(config: Config): void {
+    public setConfig(config: Config) {
         this._config = { ...config };
         this._entity = this._config?.entity;
+
+        console.log("MoreInfoCard setConfig", this._config, this._entity);
     }
 
-    protected updated(changedProps: PropertyValues): void {
+    protected updated(changedProps: PropertyValues) {
         if (changedProps.has("hass") && this._entity) {
             this._stateObj = this.hass?.states[this._entity];
         }
