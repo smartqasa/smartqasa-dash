@@ -4427,10 +4427,6 @@ let MoreInfoCard = class MoreInfoCard extends h {
         this._config = { ...config };
         this._entity = this._config?.entity;
     }
-    shouldUpdate(changedProps) {
-        return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
-            (changedProps.has("config") && this._config));
-    }
     updated(changedProps) {
         if (changedProps.has("hass") && this._entity) {
             this._stateObj = this.hass?.states[this._entity];
