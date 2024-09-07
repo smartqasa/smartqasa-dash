@@ -54,6 +54,9 @@ window.smartqasa.service = function (service: string, data?: PopupData) {
 
 window.customCards = window.customCards ?? [];
 
+// Test
+import "./tiles/light-test";
+
 // Cards
 import "./cards/grid-stack";
 import "./cards/group-stack";
