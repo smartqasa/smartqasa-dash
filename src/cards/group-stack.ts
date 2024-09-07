@@ -1,4 +1,4 @@
-import { css, html, LitElement, nothing, PropertyValues } from "lit";
+import { css, html, LitElement, PropertyValues } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { HomeAssistant, LovelaceCardConfig, LovelaceCard } from "../types";
 import { createElement } from "../utils/create-element";
@@ -39,20 +39,21 @@ class GroupStack extends LitElement {
             throw new Error("filter_type, filter_value, and card_type must be provided in the config.");
         }
         this._config = { ...config };
+        this._cards = [];
     }
 
-    protected firstUpdated(changedProps: PropertyValues) {
-        if (changedProps.has("_config") && this._config && this.hass) {
+    protected willUpdate(changedProps: PropertyValues) {
+        if ((changedProps.has("_config") || changedProps.has("hass")) && this._config && this.hass) {
             let entityIds: string[] = [];
 
             if (this._config.filter_type === "group") {
-                const groupEntity = this.hass!.states[this._config.filter_value];
+                const groupEntity = this.hass.states[this._config.filter_value];
                 if (groupEntity && groupEntity.attributes.entity_id) {
                     entityIds = groupEntity.attributes.entity_id as string[];
                 }
             } else if (this._config.filter_type === "domain") {
                 const domain = this._config.filter_value;
-                entityIds = Object.keys(this.hass!.states).filter((entityId) => {
+                entityIds = Object.keys(this.hass.states).filter((entityId) => {
                     return entityId.startsWith(`${domain}.`);
                 });
             }
@@ -76,6 +77,8 @@ class GroupStack extends LitElement {
                     card.hass = this.hass!;
                     return card;
                 });
+            } else {
+                this._cards = [];
             }
         }
     }
@@ -89,7 +92,7 @@ class GroupStack extends LitElement {
     }
 
     protected render() {
-        if (!this._config || !this.hass || this._cards.length === 0) return nothing;
+        if (!this._config || !this.hass || this._cards.length === 0) return html``;
         return html`
             <div class="container">${this._cards.map((card) => html`<div class="element">${card}</div>`)}</div>
         `;

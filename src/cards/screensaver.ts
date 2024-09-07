@@ -114,7 +114,7 @@ export class ScreenSaver extends LitElement {
         this._config = { ...config };
     }
 
-    protected firstUpdated(): void {
+    protected firstUpdated() {
         this._updateElement();
         this._startClock();
         this._cycleElement();
@@ -140,13 +140,13 @@ export class ScreenSaver extends LitElement {
         `;
     }
 
-    private _startClock(): void {
+    private _startClock() {
         this._timeIntervalId = window.setInterval(() => {
             this._updateElement();
         }, 1000);
     }
 
-    private _cycleElement(): void {
+    private _cycleElement() {
         const element = this.shadowRoot?.querySelector(".element") as HTMLElement;
         const moveTimer = (this._config?.move_timer ?? 30) * 1000;
 
@@ -167,13 +167,13 @@ export class ScreenSaver extends LitElement {
         }
     }
 
-    private _updateElement(): void {
+    private _updateElement() {
         const now = new Date();
         this._time = formattedTime(now);
         this._date = formattedDate(now);
     }
 
-    private _moveElement(): void {
+    private _moveElement() {
         const container = this.shadowRoot?.querySelector(".container") as HTMLElement;
         const element = this.shadowRoot?.querySelector(".element") as HTMLElement;
 
@@ -189,7 +189,7 @@ export class ScreenSaver extends LitElement {
         }
     }
 
-    disconnectedCallback(): void {
+    disconnectedCallback() {
         if (this._timeIntervalId !== undefined) {
             window.clearInterval(this._timeIntervalId);
         }

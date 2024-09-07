@@ -1,4 +1,4 @@
-import { css, html, LitElement, nothing, PropertyValues } from "lit";
+import { css, html, LitElement, PropertyValues, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 
@@ -29,7 +29,7 @@ export class MenuCard extends LitElement {
 
     private _deviceType = getDeviceType();
 
-    public async setConfig() {}
+    public setConfig(): void {}
 
     static get styles() {
         return css`
@@ -88,7 +88,7 @@ export class MenuCard extends LitElement {
         `;
     }
 
-    protected async firstUpdated(changedProps: PropertyValues) {
+    protected async firstUpdated(changedProps: PropertyValues): Promise<void> {
         await this._loadMenuTabs();
 
         if (this._menuTab < 0 || this._menuTab >= this._tabs.length) {
@@ -97,16 +97,16 @@ export class MenuCard extends LitElement {
         }
     }
 
-    protected updated(changedProps: PropertyValues) {
+    protected willUpdate(changedProps: PropertyValues): void {
         if (changedProps.has("hass") && this.hass) {
             const currentTiles = this._bodyTiles[this._menuTab] || [];
             currentTiles.forEach((tile) => {
-                tile.hass = this.hass;
+                tile.hass = this.hass!;
             });
         }
     }
 
-    protected render() {
+    protected render(): TemplateResult {
         const gridStyle = {
             gridTemplateColumns: this._deviceType === "phone" ? "1fr 1fr" : "repeat(3, var(--sq-tile-width, 19.5rem))",
         };
@@ -137,7 +137,7 @@ export class MenuCard extends LitElement {
         `;
     }
 
-    private async _loadMenuTabs() {
+    private async _loadMenuTabs(): Promise<void> {
         try {
             this._tabs = (await loadYamlAsJson("/local/smartqasa/config/menu.yaml")) as Tab[];
             this._bodyTiles = await Promise.all(this._tabs.map(async (tab) => this._loadMenuTiles(tab.tiles)));
@@ -160,7 +160,7 @@ export class MenuCard extends LitElement {
         return tiles;
     }
 
-    private _setMenuTab(index: number) {
+    private _setMenuTab(index: number): void {
         this._menuTab = index;
         window.smartqasa.menuTab = index;
 

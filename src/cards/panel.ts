@@ -458,7 +458,7 @@ export class PanelCard extends LitElement {
         }
     }
 
-    private _handleFooterAction(e: Event, methodName: keyof ActionHandlers): void {
+    private _handleFooterAction(e: Event, methodName: keyof ActionHandlers) {
         e.stopPropagation();
         if (typeof this[methodName] === "function") {
             this[methodName]();
@@ -467,7 +467,7 @@ export class PanelCard extends LitElement {
         }
     }
 
-    private _handleHome(): void {
+    private _handleHome() {
         const startArea = window.smartqasa.startArea;
         if (!startArea) return;
 
@@ -482,11 +482,11 @@ export class PanelCard extends LitElement {
         }
     }
 
-    private _handleAreas(): void {
+    private _handleAreas() {
         areasDialog(this.hass);
     }
 
-    private _handleEntertain(): void {
+    private _handleEntertain() {
         entertainDialog(this._config, this.hass);
     }
 

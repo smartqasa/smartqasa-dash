@@ -2,7 +2,7 @@ import { CSSResult, html, LitElement, nothing, PropertyValues, TemplateResult, u
 import { customElement, property, state } from "lit/decorators.js";
 
 import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
-import { selectOptionDialog } from "../dialogs/select-option-dialog";
+import { selectOptionDialog } from "../utils/select-option-dialog";
 import { phaseIcons, modeIcons } from "../const";
 
 import { chipBaseStyle } from "../../archive/chip";

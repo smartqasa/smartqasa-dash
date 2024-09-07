@@ -1,4 +1,4 @@
-import { listDialogConfig } from "../dialogs/list-dialog-config";
+import { listDialogConfig } from "../utils/list-dialog-config";
 
 interface DialogTable {
     [key: string]: {

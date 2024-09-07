@@ -1,4 +1,4 @@
-import { css, html, LitElement, nothing, PropertyValues } from "lit";
+import { css, html, LitElement, nothing, PropertyValues, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 
@@ -34,14 +34,14 @@ class GridStack extends LitElement {
         `;
     }
 
-    public setConfig(config: Config) {
+    public setConfig(config: Config): void {
         if (!config.cards || config.cards.length === 0) {
             throw new Error("You need to define 'tiles'");
         }
         this._config = { ...config };
     }
 
-    protected willUpdate(changedProps: PropertyValues) {
+    protected willUpdate(changedProps: PropertyValues): void {
         const hassChanged = changedProps.has("hass");
         const configChanged = changedProps.has("_config");
 
@@ -58,7 +58,7 @@ class GridStack extends LitElement {
         }
     }
 
-    protected render() {
+    protected render(): TemplateResult | typeof nothing {
         if (!this._config || !this.hass || this._cards.length === 0) return nothing;
         const columns = this._config.columns || 3;
         const gridStyle = {

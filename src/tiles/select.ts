@@ -3,7 +3,7 @@ import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 
 import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
-import { selectOptionDialog } from "../dialogs/select-option-dialog";
+import { selectOptionDialog } from "../utils/select-option-dialog";
 
 import tileBaseStyle from "../css/tile-base.css";
 import tileStateStyle from "../css/tile-state.css";

@@ -1,4 +1,4 @@
-import { css, html, LitElement, nothing, PropertyValues } from "lit";
+import { css, html, LitElement, nothing, PropertyValues, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { HomeAssistant, LovelaceCardConfig, LovelaceCard } from "../types";
 import { createCards } from "../utils/create-cards";
@@ -40,13 +40,13 @@ class HorizontalStack extends LitElement {
         `;
     }
 
-    public setConfig(config: Config) {
+    public setConfig(config: Config): void {
         if (!config.cards || config.cards.length === 0) return;
 
         this._config = { ...config };
     }
 
-    protected willUpdate(changedProps: PropertyValues) {
+    protected willUpdate(changedProps: PropertyValues): void {
         const hassChanged = changedProps.has("hass");
         const configChanged = changedProps.has("_config");
 
@@ -63,7 +63,7 @@ class HorizontalStack extends LitElement {
         }
     }
 
-    protected render() {
+    protected render(): TemplateResult | typeof nothing {
         if (!this._config || !this.hass || this._cards.length === 0) return nothing;
 
         const containerClass = this._config.justify_right ? "container justify-right" : "container";

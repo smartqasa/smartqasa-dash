@@ -83,7 +83,7 @@ export class PinVerifyCard extends LitElement {
         }
     `;
 
-    public setConfig(config: Config): void {
+    public setConfig(config: Config) {
         this._config = { ...config };
         this.validateEntities();
     }

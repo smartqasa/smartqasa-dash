@@ -416,9 +416,10 @@ let GroupStack = class GroupStack extends h {
             throw new Error("filter_type, filter_value, and card_type must be provided in the config.");
         }
         this._config = { ...config };
+        this._cards = [];
     }
-    firstUpdated(changedProps) {
-        if (changedProps.has("_config") && this._config && this.hass) {
+    willUpdate(changedProps) {
+        if ((changedProps.has("_config") || changedProps.has("hass")) && this._config && this.hass) {
             let entityIds = [];
             if (this._config.filter_type === "group") {
                 const groupEntity = this.hass.states[this._config.filter_value];
@@ -450,6 +451,9 @@ let GroupStack = class GroupStack extends h {
                     return card;
                 });
             }
+            else {
+                this._cards = [];
+            }
         }
     }
     updated(changedProps) {
@@ -461,7 +465,7 @@ let GroupStack = class GroupStack extends h {
     }
     render() {
         if (!this._config || !this.hass || this._cards.length === 0)
-            return D;
+            return ke ``;
         return ke `
             <div class="container">${this._cards.map((card) => ke `<div class="element">${card}</div>`)}</div>
         `;
@@ -4430,7 +4434,7 @@ let MenuCard = class MenuCard extends h {
         this._menuTab = window.smartqasa.menuTab || 0;
         this._deviceType = getDeviceType();
     }
-    async setConfig() { }
+    setConfig() { }
     static get styles() {
         return i$3 `
             .container {
@@ -4494,7 +4498,7 @@ let MenuCard = class MenuCard extends h {
             window.smartqasa.menuTab = 0;
         }
     }
-    updated(changedProps) {
+    willUpdate(changedProps) {
         if (changedProps.has("hass") && this.hass) {
             const currentTiles = this._bodyTiles[this._menuTab] || [];
             currentTiles.forEach((tile) => {

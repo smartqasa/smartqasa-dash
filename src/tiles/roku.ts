@@ -4,7 +4,7 @@ import { styleMap } from "lit/directives/style-map.js";
 
 import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
 import { callService } from "../utils/call-service";
-import { listDialogConfig } from "../dialogs/list-dialog-config";
+import { listDialogConfig } from "../utils/list-dialog-config";
 
 import tileBaseStyle from "../css/tile-base.css";
 import tileStateStyle from "../css/tile-state.css";
