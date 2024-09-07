@@ -11298,14 +11298,7 @@ const dialogTable = {
             size: "fullscreen",
             timeout: 60000,
             content: {
-                type: "custom:layout-card",
-                layout_type: "custom:grid-layout",
-                layout: {
-                    "place-content": "center",
-                    "place-self": "center",
-                    "grid-template-columns": "446px 454px",
-                    "grid-gap": "var(--sq-dialog-grid-gap)",
-                },
+                type: "custom:smartqasa-horizontal-stack",
                 cards: [
                     {
                         type: "custom:smartqasa-vertical-stack",
