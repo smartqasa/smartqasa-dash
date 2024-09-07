@@ -32,8 +32,8 @@ export class MoreInfoCard extends LitElement {
 
         .container-transparent {
             border-radius: var(--sq-card-border-radius, 1.5rem);
+            padding: 0;
             background-color: transparent;
-            padding: var(--sq-card-padding, 1rem);
         }
 
         .title {
