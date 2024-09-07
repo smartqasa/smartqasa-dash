@@ -10836,6 +10836,11 @@ let WeatherCard = class WeatherCard extends h {
                 grid-template-columns: 1fr 1fr;
                 gap: 16px;
             }
+            .left-column {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
         `;
     }
     setConfig(config) {
@@ -10847,16 +10852,8 @@ let WeatherCard = class WeatherCard extends h {
             this._entity = "weather.forecast_home";
         }
     }
-    willUpdate(changedProps) {
-        if (!this.hass || !this._entity) {
-            return;
-        }
-        if (changedProps.has("hass")) {
-            this._stateObj = this.hass.states[this._entity];
-        }
-    }
-    render() {
-        const hourlyForecast = createElement$1({
+    firstUpdated() {
+        this._hourlyForecastCard = createElement$1({
             type: "weather-forecast",
             entity: this._entity,
             forecast_type: "hourly",
@@ -10865,18 +10862,14 @@ let WeatherCard = class WeatherCard extends h {
             show_forecast: true,
             secondary_info_attribute: "wind_speed",
         });
-        if (hourlyForecast)
-            hourlyForecast.hass = this.hass;
-        const dailyForecast = createElement$1({
+        this._dailyForecastCard = createElement$1({
             type: "weather-forecast",
             entity: "weather.forecast_home",
             forecast_type: "daily",
             show_current: false,
             show_forecast: true,
         });
-        if (dailyForecast)
-            dailyForecast.hass = this.hass;
-        const radarMap = createElement$1({
+        this._radarMapCard = createElement$1({
             type: "custom:weather-radar-card",
             frame_count: 10,
             show_marker: true,
@@ -10890,9 +10883,28 @@ let WeatherCard = class WeatherCard extends h {
             extra_labels: true,
             map_style: "Voyager",
         });
-        if (radarMap)
-            radarMap.hass = this.hass;
-        return ke ` <div class="grid">${hourlyForecast} ${dailyForecast} ${radarMap}</div> `;
+    }
+    willUpdate(changedProps) {
+        if (!this.hass || !this._entity) {
+            return;
+        }
+        if (changedProps.has("hass")) {
+            if (this._hourlyForecastCard)
+                this._hourlyForecastCard.hass = this.hass;
+            if (this._dailyForecastCard)
+                this._dailyForecastCard.hass = this.hass;
+        }
+    }
+    render() {
+        return ke `
+            <div class="grid">
+                <div class="left-column">
+                    ${this._hourlyForecastCard || D} ${this._dailyForecastCard || D}
+                </div>
+
+                ${this._radarMapCard || D}
+            </div>
+        `;
     }
 };
 __decorate([

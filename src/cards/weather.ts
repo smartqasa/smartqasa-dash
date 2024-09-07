@@ -1,9 +1,7 @@
-import { css, html, LitElement, nothing, PropertyValues, TemplateResult } from "lit";
+import { css, html, LitElement, PropertyValues, TemplateResult, nothing } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
-import { styleMap } from "lit/directives/style-map.js";
 
 import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
-import { deviceType } from "../utils/device-info";
 import { createElement } from "../utils/create-element";
 
 interface Config extends LovelaceCardConfig {
@@ -22,7 +20,10 @@ export class WeatherCard extends LitElement {
     @property({ attribute: false }) private hass?: HomeAssistant;
     @state() private _config?: Config;
     private _entity?: string;
-    private _stateObj?: HassEntity;
+
+    private _hourlyForecastCard?: any;
+    private _dailyForecastCard?: any;
+    private _radarMapCard?: any;
 
     static get styles() {
         return css`
@@ -30,6 +31,11 @@ export class WeatherCard extends LitElement {
                 display: grid;
                 grid-template-columns: 1fr 1fr;
                 gap: 16px;
+            }
+            .left-column {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
             }
         `;
     }
@@ -44,18 +50,8 @@ export class WeatherCard extends LitElement {
         }
     }
 
-    protected willUpdate(changedProps: PropertyValues): void {
-        if (!this.hass || !this._entity) {
-            return;
-        }
-
-        if (changedProps.has("hass")) {
-            this._stateObj = this.hass.states[this._entity];
-        }
-    }
-
-    protected render(): TemplateResult {
-        const hourlyForecast = createElement({
+    protected firstUpdated(): void {
+        this._hourlyForecastCard = createElement({
             type: "weather-forecast",
             entity: this._entity,
             forecast_type: "hourly",
@@ -65,9 +61,7 @@ export class WeatherCard extends LitElement {
             secondary_info_attribute: "wind_speed",
         });
 
-        if (hourlyForecast) hourlyForecast.hass = this.hass;
-
-        const dailyForecast = createElement({
+        this._dailyForecastCard = createElement({
             type: "weather-forecast",
             entity: "weather.forecast_home",
             forecast_type: "daily",
@@ -75,9 +69,7 @@ export class WeatherCard extends LitElement {
             show_forecast: true,
         });
 
-        if (dailyForecast) dailyForecast.hass = this.hass;
-
-        const radarMap = createElement({
+        this._radarMapCard = createElement({
             type: "custom:weather-radar-card",
             frame_count: 10,
             show_marker: true,
@@ -91,9 +83,28 @@ export class WeatherCard extends LitElement {
             extra_labels: true,
             map_style: "Voyager",
         });
+    }
 
-        if (radarMap) radarMap.hass = this.hass;
+    protected willUpdate(changedProps: PropertyValues): void {
+        if (!this.hass || !this._entity) {
+            return;
+        }
 
-        return html` <div class="grid">${hourlyForecast} ${dailyForecast} ${radarMap}</div> `;
+        if (changedProps.has("hass")) {
+            if (this._hourlyForecastCard) this._hourlyForecastCard.hass = this.hass;
+            if (this._dailyForecastCard) this._dailyForecastCard.hass = this.hass;
+        }
+    }
+
+    protected render(): TemplateResult {
+        return html`
+            <div class="grid">
+                <div class="left-column">
+                    ${this._hourlyForecastCard || nothing} ${this._dailyForecastCard || nothing}
+                </div>
+
+                ${this._radarMapCard || nothing}
+            </div>
+        `;
     }
 }
