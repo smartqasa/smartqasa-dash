@@ -308,7 +308,7 @@ const appTable: AppTable = {
     ring: {
         name: "Ring",
         app_icon: ringIcon,
-        launcher: "uri_scheme",
+        launcher: "package",
         package: "com.ringapp",
         uri_scheme: "ring:",
     },

@@ -12560,7 +12560,7 @@ const appTable = {
     ring: {
         name: "Ring",
         app_icon: img$e,
-        launcher: "uri_scheme",
+        launcher: "package",
         package: "com.ringapp",
         uri_scheme: "ring:",
     },
