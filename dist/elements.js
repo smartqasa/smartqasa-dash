@@ -465,7 +465,7 @@ let GroupStack = class GroupStack extends h {
     }
     render() {
         if (!this._config || !this.hass || this._cards.length === 0)
-            return ke ``;
+            return D;
         return ke `
             <div class="container">${this._cards.map((card) => ke `<div class="element">${card}</div>`)}</div>
         `;
@@ -10821,6 +10821,89 @@ __decorate([
 TVRemoteCard = __decorate([
     t$1("smartqasa-tv-remote-card")
 ], TVRemoteCard);
+
+window.customCards.push({
+    type: "smartqasa-weather-card",
+    name: "SmartQasa Weather Card",
+    preview: false,
+    description: "A SmartQasa element that displays a grid of weather info.",
+});
+let WeatherCard = class WeatherCard extends h {
+    static get styles() {
+        return i$3 `
+            .grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 16px;
+            }
+        `;
+    }
+    setConfig(config) {
+        this._config = { ...config };
+        if (this._config.entity) {
+            this._entity = this._config.entity.startsWith("weather.") ? this._config.entity : "undefined";
+        }
+        else {
+            this._entity = "weather.forecast_home";
+        }
+    }
+    willUpdate(changedProps) {
+        if (!this.hass || !this._entity) {
+            return;
+        }
+        if (changedProps.has("hass")) {
+            this._stateObj = this.hass.states[this._entity];
+        }
+    }
+    render() {
+        const hourlyForecast = createElement$1({
+            type: "weather-forecast",
+            entity: this._entity,
+            forecast_type: "hourly",
+            name: "Forecast",
+            show_current: true,
+            show_forecast: true,
+            secondary_info_attribute: "wind_speed",
+        });
+        if (hourlyForecast)
+            hourlyForecast.hass = this.hass;
+        const dailyForecast = createElement$1({
+            type: "weather-forecast",
+            entity: "weather.forecast_home",
+            forecast_type: "daily",
+            show_current: false,
+            show_forecast: true,
+        });
+        if (dailyForecast)
+            dailyForecast.hass = this.hass;
+        const radarMap = createElement$1({
+            type: "custom:weather-radar-card",
+            frame_count: 10,
+            show_marker: true,
+            show_range: true,
+            show_zoom: true,
+            show_recenter: true,
+            show_playback: true,
+            zoom_level: 20,
+            square_map: true,
+            show_scale: true,
+            extra_labels: true,
+            map_style: "Voyager",
+        });
+        if (radarMap)
+            radarMap.hass = this.hass;
+        return ke ` <div class="grid">${hourlyForecast} ${dailyForecast} ${radarMap}</div> `;
+    }
+};
+__decorate([
+    n({ attribute: false })
+], WeatherCard.prototype, "hass", void 0);
+__decorate([
+    r()
+], WeatherCard.prototype, "_config", void 0);
+WeatherCard = __decorate([
+    t$1("smartqasa-weather-card")
+], WeatherCard);
 
 var css_248z$2 = ".container {\n    display: flex;\n    margin: 0 var(--sq-chip-spacing, 0.4rem);\n    align-items: center;\n    justify-content: center;\n    width: fit-content;\n    border: var(--sq-card-border);\n    border-radius: var(--sq-chip-border-radius);\n    background-color: var(--sq-card-background-color);\n    transition: var(--sq-icon-transition, none);\n    overflow: hidden;\n    -webkit-tap-highlight-color: transparent;\n    cursor: pointer;\n}\n\n.container:focus,\n.container:active {\n    background-color: var(--sq-ripple-color);\n    border-radius: var(--sq-chip-border-radius);\n    outline: none;\n}\n\n.icon {\n    display: flex;\n    height: var(--sq-icon-size, 1.8rem);\n    width: var(--sq-icon-size, 1.8rem);\n    padding: var(--sq-chip-padding, 1rem);\n    color: rgb(var(--sq-primary-text-rgb));\n    transition: var(--sq-icon-transition, none);\n    align-items: center;\n    justify-content: center;\n}\n\n@keyframes blink {\n    50% {\n        opacity: 0.25;\n    }\n}\n\n@keyframes spin {\n    from {\n        transform: rotate(0deg);\n    }\n    to {\n        transform: rotate(360deg);\n    }\n}\n";
 styleInject(css_248z$2);

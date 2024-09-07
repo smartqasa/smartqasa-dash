@@ -68,6 +68,7 @@ import "./cards/pin-verify";
 import "./cards/screensaver";
 import "./cards/vertical-stack";
 import "./cards/tv-remote";
+import "./cards/weather";
 
 // Chips
 import "./chips/admin";

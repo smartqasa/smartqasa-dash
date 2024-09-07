@@ -1,4 +1,4 @@
-import { css, html, LitElement, PropertyValues } from "lit";
+import { css, html, LitElement, nothing, PropertyValues, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { HomeAssistant, LovelaceCardConfig, LovelaceCard } from "../types";
 import { createElement } from "../utils/create-element";
@@ -91,8 +91,8 @@ class GroupStack extends LitElement {
         }
     }
 
-    protected render() {
-        if (!this._config || !this.hass || this._cards.length === 0) return html``;
+    protected render(): TemplateResult | typeof nothing {
+        if (!this._config || !this.hass || this._cards.length === 0) return nothing;
         return html`
             <div class="container">${this._cards.map((card) => html`<div class="element">${card}</div>`)}</div>
         `;
