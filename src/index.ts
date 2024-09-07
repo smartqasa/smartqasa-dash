@@ -77,10 +77,6 @@ import "./chips/select";
 import "./chips/thermostat";
 import "./chips/weather";
 
-// Dialogs
-
-import "./cards/more-info";
-
 // Misc
 import "./misc/area-picture";
 import "./misc/panel-footer";
