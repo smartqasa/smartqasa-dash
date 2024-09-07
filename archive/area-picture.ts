@@ -1,8 +1,8 @@
 import { css, CSSResultGroup, html, LitElement, PropertyValues, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 
-import { HassArea, HomeAssistant, LovelaceCardConfig } from "../types";
-import { deviceType } from "../utils/device-info";
+import { HassArea, HomeAssistant, LovelaceCardConfig } from "../src/types";
+import { deviceType } from "../src/utils/device-info";
 
 import defaultImage from "../assets/images/default.png";
 

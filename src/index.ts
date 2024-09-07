@@ -80,13 +80,6 @@ import "./chips/select";
 import "./chips/thermostat";
 import "./chips/weather";
 
-// Misc
-import "./misc/area-picture";
-import "./misc/panel-footer";
-import "./misc/progress";
-import "./misc/time-date";
-import "./misc/title";
-
 // Tiles
 import "./tiles/action";
 import "./tiles/all-off";

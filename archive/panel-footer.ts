@@ -1,11 +1,11 @@
 import { LitElement, html, css, CSSResultGroup, PropertyValues, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 
-import { HomeAssistant, LovelaceCardConfig } from "../types";
-import { areasDialog } from "./areas-dialog";
-import { entertainDialog } from "./entertain-dialog";
-import { menuConfig } from "./menu-config";
-import { deviceType } from "../utils/device-info";
+import { HomeAssistant, LovelaceCardConfig } from "../src/types";
+import { areasDialog } from "../src/misc/areas-dialog";
+import { entertainDialog } from "../src/misc/entertain-dialog";
+import { menuConfig } from "../src/misc/menu-config";
+import { deviceType } from "../src/utils/device-info";
 
 interface Config extends LovelaceCardConfig {
     audio_player: string;

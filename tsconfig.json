@@ -13,12 +13,6 @@
         "types": ["node"],
         "useDefineForClassFields": false
     },
-    "include": [
-        "src/**/*.ts",
-        "global.d.ts",
-        "archive/has-changed.ts",
-        "archive/popup-confirmation.ts",
-        "archive/popup-dialog.ts"
-    ],
+    "include": ["src/**/*.ts", "global.d.ts"],
     "exclude": ["node_modules", "archive"]
 }
