@@ -5,6 +5,7 @@ import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
 
 interface Config extends LovelaceCardConfig {
     entity: string;
+    background: boolean;
 }
 
 window.customCards.push({
@@ -42,9 +43,12 @@ export class MoreInfoCard extends LitElement {
     protected render(): TemplateResult {
         if (!this.hass || !this._entity) return html``;
 
+        // Dynamically set the background style
+        const backgroundStyle = this._config?.background ? "var(--sq-card-background-color)" : "transparent";
+
         return html`
             <div>
-                <div class="container">
+                <div class="container" style="background-color: ${backgroundStyle};">
                     <more-info-content .hass=${this.hass} .stateObj=${this._stateObj}> </more-info-content>
                 </div>
             </div>

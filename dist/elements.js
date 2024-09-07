@@ -4439,9 +4439,11 @@ let MoreInfoCard = class MoreInfoCard extends h {
     render() {
         if (!this.hass || !this._entity)
             return ke ``;
+        // Dynamically set the background style
+        const backgroundStyle = this._config?.background ? "var(--sq-card-background-color)" : "transparent";
         return ke `
             <div>
-                <div class="container">
+                <div class="container" style="background-color: ${backgroundStyle};">
                     <more-info-content .hass=${this.hass} .stateObj=${this._stateObj}> </more-info-content>
                 </div>
             </div>
@@ -11044,11 +11046,6 @@ const dialogTable = {
             content: {
                 type: "picture",
                 image: "/local/sq-storage/images/clean_screen.png",
-                card_mod: {
-                    style: {
-                        radius: "0px",
-                    },
-                },
             },
         },
     },

@@ -212,11 +212,6 @@ export const dialogTable: DialogTable = {
             content: {
                 type: "picture",
                 image: "/local/sq-storage/images/clean_screen.png",
-                card_mod: {
-                    style: {
-                        radius: "0px",
-                    },
-                },
             },
         },
     },
