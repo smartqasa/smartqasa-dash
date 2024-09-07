@@ -4558,7 +4558,6 @@ let MenuCard = class MenuCard extends h {
     _setMenuTab(index) {
         this._menuTab = index;
         window.smartqasa.menuTab = index;
-        // Ensure the tiles for the new tab have `hass` set when switching
         const currentTiles = this._bodyTiles[this._menuTab] || [];
         currentTiles.forEach((tile) => {
             tile.hass = this.hass;
