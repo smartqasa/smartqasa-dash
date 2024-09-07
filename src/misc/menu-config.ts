@@ -1,5 +1,5 @@
-export async function menuConfig(): Promise<any> {
-    const menuConfig = {
+export const menuConfig = async (): Promise<any> => {
+    const config = {
         title: "Menu",
         timeout: 120000,
         content: {
@@ -7,7 +7,7 @@ export async function menuConfig(): Promise<any> {
         },
     };
 
-    window.smartqasa.menuConfig = menuConfig;
+    window.smartqasa.menuConfig = config;
 
-    return menuConfig;
-}
+    return config;
+};

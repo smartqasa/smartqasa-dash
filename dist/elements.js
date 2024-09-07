@@ -9347,17 +9347,17 @@ async function entertainDialog(config, hass) {
     window.browser_mod?.service("popup", dialogConfig);
 }
 
-async function menuConfig() {
-    const menuConfig = {
+const menuConfig = async () => {
+    const config = {
         title: "Menu",
         timeout: 120000,
         content: {
             type: "custom:smartqasa-menu-card",
         },
     };
-    window.smartqasa.menuConfig = menuConfig;
-    return menuConfig;
-}
+    window.smartqasa.menuConfig = config;
+    return config;
+};
 
 const formattedDate = (date = new Date()) => {
     const options = {

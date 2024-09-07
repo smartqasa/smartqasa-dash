@@ -3,7 +3,7 @@ import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 
 import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
-import { moreInfoDialog } from "../utils/more-info-dialog";
+import { moreInfoDialog } from "../dialogs/more-info-dialog";
 import { thermostatIcons, thermostatColors } from "../const";
 
 import chipBaseStyle from "../css/chip-base.css";
