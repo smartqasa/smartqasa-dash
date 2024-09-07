@@ -89,7 +89,6 @@ export class MenuCard extends LitElement {
     }
 
     protected async firstUpdated(changedProps: PropertyValues) {
-        super.firstUpdated(changedProps);
         await this._loadMenuTabs();
 
         if (this._menuTab < 0 || this._menuTab >= this._tabs.length) {
@@ -99,8 +98,6 @@ export class MenuCard extends LitElement {
     }
 
     protected updated(changedProps: PropertyValues) {
-        super.updated(changedProps);
-
         if (changedProps.has("hass") && this.hass) {
             const currentTiles = this._bodyTiles[this._menuTab] || [];
             currentTiles.forEach((tile) => {

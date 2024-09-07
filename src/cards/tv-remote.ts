@@ -23,7 +23,6 @@ window.customCards.push({
 export class TVRemoteCard extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() private _config?: Config;
-    @state() private _mode: string = "remote";
     private _entity?: string;
     private _stateObj?: HassEntity;
     private _entities: { [key: string]: string | undefined } = {};
@@ -133,11 +132,10 @@ export class TVRemoteCard extends LitElement {
         if (!this._config.entity.startsWith("media_player.")) return;
 
         this._entity = this._config.entity;
-        this.initializeEntities();
+        this._initializeEntities();
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
-        if (!this._config) return false;
         return !!(
             (changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
             changedProps.has("_config")
@@ -146,11 +144,36 @@ export class TVRemoteCard extends LitElement {
 
     protected updated(changedProps: PropertyValues): void {
         if (changedProps.has("hass") || changedProps.has("_config")) {
-            this.initializeEntities();
+            this._initializeEntities();
         }
     }
 
-    private initializeEntities(): void {
+    protected render(): TemplateResult | void {
+        if (!this.hass || !this._config || !this._entity || !this._entities.remote) {
+            return html``;
+        }
+
+        this._stateObj = this.hass.states[this._entity];
+        if (!this._stateObj || !this.hass.states[this._entities.remote]) {
+            return html`
+                <ha-card>
+                    <div class="warning">Entity Unavailable</div>
+                </ha-card>
+            `;
+        }
+
+        return html`
+            <div class="container">
+                <div class="name">${this._config!.name || this._stateObj!.attributes.friendly_name || "TV Remote"}</div>
+                <div class="sections">
+                    <div class="remote-section">${this._renderRemoteSection()}</div>
+                    <div class="app-section">${this._renderAppSection()}</div>
+                </div>
+            </div>
+        `;
+    }
+
+    private _initializeEntities(): void {
         if (!this.hass || !this._config || !this._entity) return;
 
         this._entities.remote = this._config.remote_entity
@@ -186,31 +209,6 @@ export class TVRemoteCard extends LitElement {
 
         this._entities.audio = findAudioEntity();
         this._entities.video = findVideoEntity();
-    }
-
-    protected render(): TemplateResult | void {
-        if (!this.hass || !this._config || !this._entity || !this._entities.remote) {
-            return html``;
-        }
-
-        this._stateObj = this.hass.states[this._entity];
-        if (!this._stateObj || !this.hass.states[this._entities.remote]) {
-            return html`
-                <ha-card>
-                    <div class="warning">Entity Unavailable</div>
-                </ha-card>
-            `;
-        }
-
-        return html`
-            <div class="container">
-                <div class="name">${this._config!.name || this._stateObj!.attributes.friendly_name || "TV Remote"}</div>
-                <div class="sections">
-                    <div class="remote-section">${this._renderRemoteSection()}</div>
-                    <div class="app-section">${this._renderAppSection()}</div>
-                </div>
-            </div>
-        `;
     }
 
     private _renderRemoteSection(): TemplateResult {
@@ -267,7 +265,7 @@ export class TVRemoteCard extends LitElement {
                         return html`
                             <div
                                 class="app-item"
-                                @click=${() => this.selectApp(app)}
+                                @click=${() => this._selectApp(app)}
                                 style="${this._getAppItemStyle(icon)}"
                             >
                                 ${icon ? html`<img src="${icon}" alt="${app}" />` : html`${app}`}
@@ -301,19 +299,19 @@ export class TVRemoteCard extends LitElement {
         const button = target.dataset.button!;
 
         if (category === "power") {
-            this.handlePower();
+            this._handlePower();
         } else if (category === "volume") {
-            this.handleVolume(button);
+            this._handleVolume(button);
         } else if (category === "command") {
-            this.handleCommand(button);
+            this._handleCommand(button);
         }
     }
 
-    private handlePower(): void {
+    private _handlePower(): void {
         callService(this.hass, "remote", "send_command", { entity_id: this._entities.remote, command: "power" });
     }
 
-    private handleVolume(button: string): void {
+    private _handleVolume(button: string): void {
         const entity = this._entities.audio || undefined;
         if (entity) {
             const isMuted = this.hass!.states[entity].attributes.is_volume_muted;
@@ -340,11 +338,11 @@ export class TVRemoteCard extends LitElement {
         }
     }
 
-    private handleCommand(button: string): void {
+    private _handleCommand(button: string): void {
         callService(this.hass, "remote", "send_command", { entity_id: this._entities.remote, command: button });
     }
 
-    private selectApp(app: string): void {
+    private _selectApp(app: string): void {
         if (!this.hass || !this._entity) return;
         callService(this.hass, "media_player", "select_source", {
             entity_id: this._entity,

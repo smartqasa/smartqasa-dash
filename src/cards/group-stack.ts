@@ -42,8 +42,6 @@ class GroupStack extends LitElement {
     }
 
     protected firstUpdated(changedProps: PropertyValues) {
-        super.firstUpdated(changedProps);
-
         if (changedProps.has("_config") && this._config && this.hass) {
             let entityIds: string[] = [];
 
@@ -83,7 +81,6 @@ class GroupStack extends LitElement {
     }
 
     protected updated(changedProps: PropertyValues) {
-        super.updated(changedProps);
         if (changedProps.has("hass") && this.hass) {
             this._cards.forEach((card) => {
                 card.hass = this.hass!;

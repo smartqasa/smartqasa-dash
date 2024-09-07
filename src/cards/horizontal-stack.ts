@@ -41,9 +41,7 @@ class HorizontalStack extends LitElement {
     }
 
     public setConfig(config: Config): void {
-        if (!config.cards || !Array.isArray(config.cards)) {
-            return;
-        }
+        if (!config.cards || config.cards.length === 0) return;
 
         this._config = { ...config };
         this._createCards();
@@ -59,8 +57,6 @@ class HorizontalStack extends LitElement {
                 card.hass = this.hass;
             });
         }
-
-        super.update(changedProps);
     }
 
     protected render() {

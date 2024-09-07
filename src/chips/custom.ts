@@ -1,4 +1,4 @@
-import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult, unsafeCSS } from "lit";
+import { CSSResultGroup, html, LitElement, nothing, PropertyValues, TemplateResult, unsafeCSS } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 
@@ -55,15 +55,14 @@ export class CustomChip extends LitElement {
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
-        if (!this._config) return false;
         return !!(
             (changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
             changedProps.has("_config")
         );
     }
 
-    protected render(): TemplateResult {
-        if (!this._dialogObj) return html``;
+    protected render(): TemplateResult | typeof nothing {
+        if (!this._dialogObj) return nothing;
 
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
 

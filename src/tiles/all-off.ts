@@ -36,7 +36,6 @@ export class AllOffTile extends LitElement {
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
-        if (!this._config) return false;
         return !!(
             changedProps.has("running") ||
             (changedProps.has("hass") && this._area && this.hass?.areas[this._area] !== this._areaObj) ||

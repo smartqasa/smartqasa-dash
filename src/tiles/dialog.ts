@@ -39,7 +39,7 @@ export class DialogTile extends LitElement {
     }
 
     protected render(): TemplateResult {
-        const { icon, iconAnimation, iconColor, name } = this.updateState();
+        const { icon, iconAnimation, iconColor, name } = this._updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
             backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
@@ -55,7 +55,7 @@ export class DialogTile extends LitElement {
         `;
     }
 
-    private updateState() {
+    private _updateState() {
         let icon, iconAnimation, iconColor, name;
 
         if (this.config && this.dialogObj) {

@@ -176,13 +176,11 @@ let GridStack = class GridStack extends h {
         this._config = { ...config };
     }
     firstUpdated(changedProps) {
-        super.firstUpdated(changedProps);
         if (changedProps.has("_config") && this._config && this.hass) {
             this._cards = createCards(this._config.cards, this.hass);
         }
     }
     updated(changedProps) {
-        super.updated(changedProps);
         if (changedProps.has("hass") && this.hass && this._cards.length) {
             this._cards.forEach((card) => {
                 card.hass = this.hass;
@@ -245,7 +243,6 @@ let GroupStack = class GroupStack extends h {
         this._config = { ...config };
     }
     firstUpdated(changedProps) {
-        super.firstUpdated(changedProps);
         if (changedProps.has("_config") && this._config && this.hass) {
             let entityIds = [];
             if (this._config.filter_type === "group") {
@@ -281,7 +278,6 @@ let GroupStack = class GroupStack extends h {
         }
     }
     updated(changedProps) {
-        super.updated(changedProps);
         if (changedProps.has("hass") && this.hass) {
             this._cards.forEach((card) => {
                 card.hass = this.hass;
@@ -339,9 +335,8 @@ let HorizontalStack = class HorizontalStack extends h {
         `;
     }
     setConfig(config) {
-        if (!config.cards || !Array.isArray(config.cards)) {
+        if (!config.cards || config.cards.length === 0)
             return;
-        }
         this._config = { ...config };
         this._createCards();
     }
@@ -354,7 +349,6 @@ let HorizontalStack = class HorizontalStack extends h {
                 card.hass = this.hass;
             });
         }
-        super.update(changedProps);
     }
     render() {
         if (!this._config || !this.hass || this._cards.length === 0)
@@ -4325,7 +4319,6 @@ let MenuCard = class MenuCard extends h {
         `;
     }
     async firstUpdated(changedProps) {
-        super.firstUpdated(changedProps);
         await this._loadMenuTabs();
         if (this._menuTab < 0 || this._menuTab >= this._tabs.length) {
             this._menuTab = 0;
@@ -4333,7 +4326,6 @@ let MenuCard = class MenuCard extends h {
         }
     }
     updated(changedProps) {
-        super.updated(changedProps);
         if (changedProps.has("hass") && this.hass) {
             const currentTiles = this._bodyTiles[this._menuTab] || [];
             currentTiles.forEach((tile) => {
@@ -10075,13 +10067,11 @@ let VerticalStack = class VerticalStack extends h {
         }
     }
     firstUpdated(changedProps) {
-        super.firstUpdated(changedProps);
         if (changedProps.has("_config") && this._config && this.hass) {
             this._cards = createCards(this._config.cards, this.hass);
         }
     }
     updated(changedProps) {
-        super.updated(changedProps);
         if (changedProps.has("hass") && this.hass) {
             this._cards.forEach((card) => {
                 card.hass = this.hass;
@@ -10380,7 +10370,6 @@ window.customCards.push({
 let TVRemoteCard = class TVRemoteCard extends h {
     constructor() {
         super(...arguments);
-        this._mode = "remote";
         this._entities = {};
     }
     static get styles() {
@@ -10487,20 +10476,40 @@ let TVRemoteCard = class TVRemoteCard extends h {
         if (!this._config.entity.startsWith("media_player."))
             return;
         this._entity = this._config.entity;
-        this.initializeEntities();
+        this._initializeEntities();
     }
     shouldUpdate(changedProps) {
-        if (!this._config)
-            return false;
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
             changedProps.has("_config"));
     }
     updated(changedProps) {
         if (changedProps.has("hass") || changedProps.has("_config")) {
-            this.initializeEntities();
+            this._initializeEntities();
         }
     }
-    initializeEntities() {
+    render() {
+        if (!this.hass || !this._config || !this._entity || !this._entities.remote) {
+            return ke ``;
+        }
+        this._stateObj = this.hass.states[this._entity];
+        if (!this._stateObj || !this.hass.states[this._entities.remote]) {
+            return ke `
+                <ha-card>
+                    <div class="warning">Entity Unavailable</div>
+                </ha-card>
+            `;
+        }
+        return ke `
+            <div class="container">
+                <div class="name">${this._config.name || this._stateObj.attributes.friendly_name || "TV Remote"}</div>
+                <div class="sections">
+                    <div class="remote-section">${this._renderRemoteSection()}</div>
+                    <div class="app-section">${this._renderAppSection()}</div>
+                </div>
+            </div>
+        `;
+    }
+    _initializeEntities() {
         if (!this.hass || !this._config || !this._entity)
             return;
         this._entities.remote = this._config.remote_entity
@@ -10534,28 +10543,6 @@ let TVRemoteCard = class TVRemoteCard extends h {
         };
         this._entities.audio = findAudioEntity();
         this._entities.video = findVideoEntity();
-    }
-    render() {
-        if (!this.hass || !this._config || !this._entity || !this._entities.remote) {
-            return ke ``;
-        }
-        this._stateObj = this.hass.states[this._entity];
-        if (!this._stateObj || !this.hass.states[this._entities.remote]) {
-            return ke `
-                <ha-card>
-                    <div class="warning">Entity Unavailable</div>
-                </ha-card>
-            `;
-        }
-        return ke `
-            <div class="container">
-                <div class="name">${this._config.name || this._stateObj.attributes.friendly_name || "TV Remote"}</div>
-                <div class="sections">
-                    <div class="remote-section">${this._renderRemoteSection()}</div>
-                    <div class="app-section">${this._renderAppSection()}</div>
-                </div>
-            </div>
-        `;
     }
     _renderRemoteSection() {
         return ke `
@@ -10607,7 +10594,7 @@ let TVRemoteCard = class TVRemoteCard extends h {
             return ke `
                             <div
                                 class="app-item"
-                                @click=${() => this.selectApp(app)}
+                                @click=${() => this._selectApp(app)}
                                 style="${this._getAppItemStyle(icon)}"
                             >
                                 ${icon ? ke `<img src="${icon}" alt="${app}" />` : ke `${app}`}
@@ -10638,19 +10625,19 @@ let TVRemoteCard = class TVRemoteCard extends h {
         const category = target.dataset.category;
         const button = target.dataset.button;
         if (category === "power") {
-            this.handlePower();
+            this._handlePower();
         }
         else if (category === "volume") {
-            this.handleVolume(button);
+            this._handleVolume(button);
         }
         else if (category === "command") {
-            this.handleCommand(button);
+            this._handleCommand(button);
         }
     }
-    handlePower() {
+    _handlePower() {
         callService(this.hass, "remote", "send_command", { entity_id: this._entities.remote, command: "power" });
     }
-    handleVolume(button) {
+    _handleVolume(button) {
         const entity = this._entities.audio || undefined;
         if (entity) {
             const isMuted = this.hass.states[entity].attributes.is_volume_muted;
@@ -10679,10 +10666,10 @@ let TVRemoteCard = class TVRemoteCard extends h {
             });
         }
     }
-    handleCommand(button) {
+    _handleCommand(button) {
         callService(this.hass, "remote", "send_command", { entity_id: this._entities.remote, command: button });
     }
-    selectApp(app) {
+    _selectApp(app) {
         if (!this.hass || !this._entity)
             return;
         callService(this.hass, "media_player", "select_source", {
@@ -10697,9 +10684,6 @@ __decorate([
 __decorate([
     r()
 ], TVRemoteCard.prototype, "_config", void 0);
-__decorate([
-    r()
-], TVRemoteCard.prototype, "_mode", void 0);
 TVRemoteCard = __decorate([
     t$1("smartqasa-tv-remote-card")
 ], TVRemoteCard);
@@ -10785,14 +10769,12 @@ let CustomChip = class CustomChip extends h {
         }
     }
     shouldUpdate(changedProps) {
-        if (!this._config)
-            return false;
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
             changedProps.has("_config"));
     }
     render() {
         if (!this._dialogObj)
-            return ke ``;
+            return D;
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
         const icon = this._dialogObj.icon || "mdi:help-circle";
         let iconColor = "var(--sq-inactive-rgb)";
@@ -11278,8 +11260,6 @@ let DialogChip = class DialogChip extends h {
         this._label = this._config.label || "";
     }
     shouldUpdate(changedProps) {
-        if (!this._config)
-            return false;
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
             changedProps.has("_config"));
     }
@@ -12315,20 +12295,15 @@ let ActionTile = class ActionTile extends h {
         super(...arguments);
         this._running = false;
     }
-    getCardSize() {
-        return 1;
-    }
     static { this.styles = r$3(css_248z$1); }
     setConfig(config) {
         this._config = { ...config };
     }
     shouldUpdate(changedProps) {
-        if (!this._config)
-            return false;
         return !!(changedProps.has("_running") || changedProps.has("hass") || changedProps.has("_config"));
     }
     render() {
-        const { icon, iconAnimation, iconColor, name } = this.updateState();
+        const { icon, iconAnimation, iconColor, name } = this._updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
             backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
@@ -12343,7 +12318,7 @@ let ActionTile = class ActionTile extends h {
             </div>
         `;
     }
-    updateState() {
+    _updateState() {
         let icon, iconAnimation, iconColor, name;
         if (this._config) {
             if (this._running) {
@@ -12410,8 +12385,6 @@ let AllOffTile = class AllOffTile extends h {
         this._area = this._config?.area;
     }
     shouldUpdate(changedProps) {
-        if (!this._config)
-            return false;
         return !!(changedProps.has("running") ||
             (changedProps.has("hass") && this._area && this.hass?.areas[this._area] !== this._areaObj) ||
             changedProps.has("_config"));
@@ -13092,7 +13065,7 @@ let DialogTile = class DialogTile extends h {
         this.dialogObj = dialogTable[config.dialog];
     }
     render() {
-        const { icon, iconAnimation, iconColor, name } = this.updateState();
+        const { icon, iconAnimation, iconColor, name } = this._updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
             backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
@@ -13107,7 +13080,7 @@ let DialogTile = class DialogTile extends h {
             </div>
         `;
     }
-    updateState() {
+    _updateState() {
         let icon, iconAnimation, iconColor, name;
         if (this.config && this.dialogObj) {
             icon = this.config.icon || this.dialogObj.icon;
@@ -13276,13 +13249,11 @@ let GarageTile = class GarageTile extends h {
         this._entity = this._config.entity?.startsWith("cover.") ? this._config.entity : undefined;
     }
     shouldUpdate(changedProps) {
-        if (!this.hass || !this._config)
-            return false;
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
             (changedProps.has("_config") && this._config));
     }
     render() {
-        const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
+        const { icon, iconAnimation, iconColor, name, stateFmtd } = this._updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
             backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
@@ -13298,7 +13269,7 @@ let GarageTile = class GarageTile extends h {
             </div>
         `;
     }
-    updateState() {
+    _updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
         if (this._config && this.hass && this._stateObj) {
@@ -13381,13 +13352,11 @@ let HeaterTile = class HeaterTile extends h {
         this._entity = this._config.entity?.startsWith("water_heater.") ? this._config.entity : undefined;
     }
     shouldUpdate(changedProps) {
-        if (!this._config)
-            return false;
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
             (changedProps.has("_config") && this._config));
     }
     render() {
-        const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
+        const { icon, iconAnimation, iconColor, name, stateFmtd } = this._updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
             backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
@@ -13403,7 +13372,7 @@ let HeaterTile = class HeaterTile extends h {
             </div>
         `;
     }
-    updateState() {
+    _updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
         if (this._stateObj) {
@@ -13617,14 +13586,12 @@ let LockTile = class LockTile extends h {
         this._entity = this._config.entity?.startsWith("lock.") ? this._config.entity : undefined;
     }
     shouldUpdate(changedProps) {
-        if (!this._config)
-            return false;
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
             changedProps.has("_config") ||
             changedProps.has("_running"));
     }
     render() {
-        const { icon, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
+        const { icon, iconAnimation, iconColor, name, stateFmtd } = this._updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
             backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
@@ -13640,7 +13607,7 @@ let LockTile = class LockTile extends h {
             </div>
         `;
     }
-    updateState() {
+    _updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
         if (this._stateObj) {
@@ -13862,8 +13829,6 @@ let RobotTile = class RobotTile extends h {
         this._entity = this._config.entity?.startsWith("vacuum.") ? this._config.entity : undefined;
     }
     shouldUpdate(changedProps) {
-        if (!this._config)
-            return false;
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
             changedProps.has("_config"));
     }
@@ -13976,8 +13941,6 @@ let RokuTile = class RokuTile extends h {
         this._entity = this._config.entity.startsWith("media_player.") ? this._config.entity : undefined;
     }
     shouldUpdate(changedProps) {
-        if (!this._config)
-            return false;
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
             changedProps.has("_config"));
     }
@@ -14085,9 +14048,6 @@ let RoutineTile = class RoutineTile extends h {
         super(...arguments);
         this._running = false;
     }
-    getCardSize() {
-        return 1;
-    }
     static { this.styles = r$3(css_248z$1); }
     setConfig(config) {
         this._config = { ...config };
@@ -14096,14 +14056,12 @@ let RoutineTile = class RoutineTile extends h {
             : undefined;
     }
     shouldUpdate(changedProps) {
-        if (!this._config)
-            return false;
         return !!(changedProps.has("_running") ||
             (changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
             changedProps.has("_config"));
     }
     render() {
-        const { icon, iconAnimation, iconColor, name } = this.updateState();
+        const { icon, iconAnimation, iconColor, name } = this._updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
             backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
@@ -14118,7 +14076,7 @@ let RoutineTile = class RoutineTile extends h {
             </div>
         `;
     }
-    updateState() {
+    _updateState() {
         let icon, iconAnimation, iconColor, name;
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
         if (this._config && this._stateObj) {
@@ -14261,13 +14219,11 @@ let SensorTile = class SensorTile extends h {
         this._entity = this._config.entity?.startsWith("binary_sensor.") ? this._config.entity : undefined;
     }
     shouldUpdate(changedProps) {
-        if (!this._config)
-            return false;
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
             changedProps.has("_config"));
     }
     render() {
-        const { iconTemplate, iconAnimation, iconColor, name, stateFmtd } = this.updateState();
+        const { iconTemplate, iconAnimation, iconColor, name, stateFmtd } = this._updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
             backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
@@ -14281,7 +14237,7 @@ let SensorTile = class SensorTile extends h {
             </div>
         `;
     }
-    updateState() {
+    _updateState() {
         let iconTemplate, iconAnimation, iconColor, name, stateFmtd;
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
         if (this._stateObj) {
@@ -14508,14 +14464,14 @@ let PoolLightSequencerTile = class PoolLightSequencerTile extends h {
             changedProps.has("_config"));
     }
     render() {
-        const { icon, iconAnimation, iconColor, name } = this.updateState();
+        const { icon, iconAnimation, iconColor, name } = this._updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
             backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
             animation: iconAnimation,
         };
         return ke `
-            <div class="container" @click=${this.runRoutine}>
+            <div class="container" @click=${this._runRoutine}>
                 <div class="icon" style="${se(iconStyles)}">
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
@@ -14523,7 +14479,7 @@ let PoolLightSequencerTile = class PoolLightSequencerTile extends h {
             </div>
         `;
     }
-    updateState() {
+    _updateState() {
         let icon, iconAnimation, iconColor, name;
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
         if (this._config && this._sequenceObj && this._stateObj) {
@@ -14547,7 +14503,7 @@ let PoolLightSequencerTile = class PoolLightSequencerTile extends h {
         }
         return { icon, iconAnimation, iconColor, name };
     }
-    async runRoutine(e) {
+    async _runRoutine(e) {
         e.stopPropagation();
         if (!this.hass || !this._stateObj)
             return;
@@ -14587,8 +14543,6 @@ let ShadeTile = class ShadeTile extends h {
         this._entity = this._config.entity?.startsWith("cover.") ? this._config.entity : undefined;
     }
     shouldUpdate(changedProps) {
-        if (!this._config)
-            return false;
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
             changedProps.has("_config"));
     }
@@ -14734,8 +14688,6 @@ let SwitchTile = class SwitchTile extends h {
             : undefined;
     }
     shouldUpdate(changedProps) {
-        if (!this._config)
-            return false;
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
             changedProps.has("_config"));
     }
@@ -14854,8 +14806,6 @@ let ThermostatTile = class ThermostatTile extends h {
         this._entity = this._config.entity?.startsWith("climate.") ? this._config.entity : undefined;
     }
     shouldUpdate(changedProps) {
-        if (!this._config)
-            return false;
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
             changedProps.has("_config"));
     }

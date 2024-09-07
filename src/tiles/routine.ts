@@ -22,10 +22,6 @@ window.customCards.push({
 
 @customElement("smartqasa-routine-tile")
 export class RoutineTile extends LitElement {
-    getCardSize(): number {
-        return 1;
-    }
-
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() private _config?: Config;
     @state() private _running: boolean = false;
@@ -42,7 +38,6 @@ export class RoutineTile extends LitElement {
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
-        if (!this._config) return false;
         return !!(
             changedProps.has("_running") ||
             (changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
@@ -51,7 +46,7 @@ export class RoutineTile extends LitElement {
     }
 
     protected render(): TemplateResult {
-        const { icon, iconAnimation, iconColor, name } = this.updateState();
+        const { icon, iconAnimation, iconColor, name } = this._updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
             backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
@@ -67,7 +62,7 @@ export class RoutineTile extends LitElement {
         `;
     }
 
-    private updateState() {
+    private _updateState() {
         let icon, iconAnimation, iconColor, name;
 
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;

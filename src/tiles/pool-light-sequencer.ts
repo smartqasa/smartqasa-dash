@@ -41,14 +41,14 @@ export class PoolLightSequencerTile extends LitElement {
     }
 
     protected render(): TemplateResult {
-        const { icon, iconAnimation, iconColor, name } = this.updateState();
+        const { icon, iconAnimation, iconColor, name } = this._updateState();
         const iconStyles = {
             color: `rgb(${iconColor})`,
             backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
             animation: iconAnimation,
         };
         return html`
-            <div class="container" @click=${this.runRoutine}>
+            <div class="container" @click=${this._runRoutine}>
                 <div class="icon" style="${styleMap(iconStyles)}">
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
@@ -57,7 +57,7 @@ export class PoolLightSequencerTile extends LitElement {
         `;
     }
 
-    private updateState() {
+    private _updateState() {
         let icon, iconAnimation, iconColor, name;
 
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
@@ -83,7 +83,7 @@ export class PoolLightSequencerTile extends LitElement {
         return { icon, iconAnimation, iconColor, name };
     }
 
-    private async runRoutine(e: Event): Promise<void> {
+    private async _runRoutine(e: Event): Promise<void> {
         e.stopPropagation();
         if (!this.hass || !this._stateObj) return;
 

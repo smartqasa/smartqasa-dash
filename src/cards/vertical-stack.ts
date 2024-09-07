@@ -42,14 +42,12 @@ class VerticalStack extends LitElement {
     }
 
     protected firstUpdated(changedProps: PropertyValues) {
-        super.firstUpdated(changedProps);
         if (changedProps.has("_config") && this._config && this.hass) {
             this._cards = createCards(this._config.cards, this.hass) as LovelaceCard[];
         }
     }
 
     protected updated(changedProps: PropertyValues) {
-        super.updated(changedProps);
         if (changedProps.has("hass") && this.hass) {
             this._cards.forEach((card) => {
                 card.hass = this.hass;
