@@ -13177,11 +13177,6 @@ let FanTile = class FanTile extends h {
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
             changedProps.has("_config"));
     }
-    updated(changedProps) {
-        if (changedProps.has("hass") && this.hass && this._entity) {
-            this._stateObj = this.hass.states[this._entity];
-        }
-    }
     render() {
         if (!this._config || !this._entity)
             return D;
@@ -13203,6 +13198,7 @@ let FanTile = class FanTile extends h {
     }
     _updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
+        this._stateObj = this.hass && this._entity ? this.hass.states[this._entity] : undefined;
         if (this._stateObj) {
             const state = this._stateObj.state || "unknown";
             icon = this._config.icon || "hass:fan";
@@ -13468,11 +13464,6 @@ let LightTile = class LightTile extends h {
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
             changedProps.has("_config"));
     }
-    updated(changedProps) {
-        if (changedProps.has("hass") && this.hass && this._entity) {
-            this._stateObj = this.hass.states[this._entity];
-        }
-    }
     render() {
         if (!this._config || !this._entity)
             return D;
@@ -13494,6 +13485,7 @@ let LightTile = class LightTile extends h {
     }
     _updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
+        this._stateObj = this.hass && this._entity ? this.hass.states[this._entity] : undefined;
         if (this._stateObj) {
             const state = this._stateObj.state || "unknown";
             icon = this._config.icon || this._stateObj.attributes.icon || "hass:lightbulb";

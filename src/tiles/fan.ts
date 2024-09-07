@@ -44,12 +44,6 @@ export class FanTile extends LitElement {
         );
     }
 
-    protected updated(changedProps: PropertyValues): void {
-        if (changedProps.has("hass") && this.hass && this._entity) {
-            this._stateObj = this.hass.states[this._entity];
-        }
-    }
-
     protected render(): TemplateResult | typeof nothing {
         if (!this._config || !this._entity) return nothing;
 
@@ -72,6 +66,8 @@ export class FanTile extends LitElement {
 
     private _updateState() {
         let icon, iconAnimation, iconColor, name, stateFmtd;
+
+        this._stateObj = this.hass && this._entity ? this.hass.states[this._entity] : undefined;
 
         if (this._stateObj) {
             const state = this._stateObj.state || "unknown";
