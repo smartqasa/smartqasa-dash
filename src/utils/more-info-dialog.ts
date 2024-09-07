@@ -12,6 +12,7 @@ export function moreInfoDialog(config: any, stateObj: any) {
         content: {
             type: "custom:smartqasa-more-info-card",
             entity: stateObj.entity_id,
+            background: false,
         },
         ...(config.dialog_title && {
             dismiss_action: {

@@ -4439,11 +4439,12 @@ let MoreInfoCard = class MoreInfoCard extends h {
     render() {
         if (!this.hass || !this._entity)
             return ke ``;
-        // Dynamically set the background style
-        const backgroundStyle = this._config?.background ? "var(--sq-card-background-color)" : "transparent";
+        const styles = {
+            backgroundColor: this._config?.background ? "var(--sq-card-background-color)" : "transparent",
+        };
         return ke `
             <div>
-                <div class="container" style="background-color: ${backgroundStyle};">
+                <div class="container" style=${se(styles)}>
                     <more-info-content .hass=${this.hass} .stateObj=${this._stateObj}> </more-info-content>
                 </div>
             </div>
@@ -11800,6 +11801,7 @@ function moreInfoDialog(config, stateObj) {
         content: {
             type: "custom:smartqasa-more-info-card",
             entity: stateObj.entity_id,
+            background: false,
         },
         ...(config.dialog_title && {
             dismiss_action: {

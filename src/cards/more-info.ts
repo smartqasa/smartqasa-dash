@@ -1,11 +1,12 @@
 import { html, LitElement, PropertyValues, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
+import { styleMap } from "lit/directives/style-map.js";
 
 import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
 
 interface Config extends LovelaceCardConfig {
     entity: string;
-    background: boolean;
+    background?: boolean;
 }
 
 window.customCards.push({
@@ -43,12 +44,13 @@ export class MoreInfoCard extends LitElement {
     protected render(): TemplateResult {
         if (!this.hass || !this._entity) return html``;
 
-        // Dynamically set the background style
-        const backgroundStyle = this._config?.background ? "var(--sq-card-background-color)" : "transparent";
+        const styles = {
+            backgroundColor: this._config?.background ? "var(--sq-card-background-color)" : "transparent",
+        };
 
         return html`
             <div>
-                <div class="container" style="background-color: ${backgroundStyle};">
+                <div class="container" style=${styleMap(styles)}>
                     <more-info-content .hass=${this.hass} .stateObj=${this._stateObj}> </more-info-content>
                 </div>
             </div>
