@@ -28,13 +28,6 @@ export class MoreInfoCard extends LitElement {
         this._entity = this._config?.entity;
     }
 
-    protected shouldUpdate(changedProps: PropertyValues): boolean {
-        return !!(
-            (changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
-            (changedProps.has("config") && this._config)
-        );
-    }
-
     protected updated(changedProps: PropertyValues): void {
         if (changedProps.has("hass") && this._entity) {
             this._stateObj = this.hass?.states[this._entity];
@@ -42,7 +35,7 @@ export class MoreInfoCard extends LitElement {
     }
 
     protected render(): TemplateResult | typeof nothing {
-        if (!this._config || !this._stateObj) return nothing;
+        if (!this._config || this.hass || !this._stateObj) return nothing;
 
         console.log("MoreInfoCard render", this._config, this._stateObj);
 
