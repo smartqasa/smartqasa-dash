@@ -8,18 +8,18 @@ interface Config extends LovelaceCardConfig {
 }
 
 window.customCards.push({
-    type: "smartqasa-more-info-dialog",
-    name: "SmartQasa More Info Dialog",
+    type: "smartqasa-more-info-card",
+    name: "SmartQasa More Info Card",
     preview: true,
-    description: "A SmartQasa dialog for showing More Info for an entity.",
+    description: "A SmartQasa card for displaying More Info for an entity.",
 });
 
-@customElement("smartqasa-more-info-dialog")
-export class MoreInfoDialog extends LitElement {
+@customElement("smartqasa-more-info-card")
+export class MoreInfoCard extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() private _config?: Config;
+    @state() private _stateObj?: HassEntity;
     private _entity?: string;
-    private _stateObj?: HassEntity;
 
     public setConfig(config: Config): void {
         this._config = { ...config };
@@ -33,9 +33,15 @@ export class MoreInfoDialog extends LitElement {
         );
     }
 
+    protected updated(changedProps: PropertyValues): void {
+        if (changedProps.has("hass") && this._entity) {
+            this._stateObj = this.hass?.states[this._entity];
+        }
+    }
+
     protected render(): TemplateResult {
         if (!this.hass || !this._entity) return html``;
-        this._stateObj = this.hass.states[this._entity];
+
         return html`
             <div>
                 <div class="container">

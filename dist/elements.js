@@ -4416,6 +4416,51 @@ MenuCard = __decorate([
     t$1("smartqasa-menu-card")
 ], MenuCard);
 
+window.customCards.push({
+    type: "smartqasa-more-info-card",
+    name: "SmartQasa More Info Card",
+    preview: true,
+    description: "A SmartQasa card for displaying More Info for an entity.",
+});
+let MoreInfoCard = class MoreInfoCard extends h {
+    setConfig(config) {
+        this._config = { ...config };
+        this._entity = this._config?.entity;
+    }
+    shouldUpdate(changedProps) {
+        return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
+            (changedProps.has("config") && this._config));
+    }
+    updated(changedProps) {
+        if (changedProps.has("hass") && this._entity) {
+            this._stateObj = this.hass?.states[this._entity];
+        }
+    }
+    render() {
+        if (!this.hass || !this._entity)
+            return ke ``;
+        return ke `
+            <div>
+                <div class="container">
+                    <more-info-content .hass=${this.hass} .stateObj=${this._stateObj}> </more-info-content>
+                </div>
+            </div>
+        `;
+    }
+};
+__decorate([
+    n({ attribute: false })
+], MoreInfoCard.prototype, "hass", void 0);
+__decorate([
+    r()
+], MoreInfoCard.prototype, "_config", void 0);
+__decorate([
+    r()
+], MoreInfoCard.prototype, "_stateObj", void 0);
+MoreInfoCard = __decorate([
+    t$1("smartqasa-more-info-card")
+], MoreInfoCard);
+
 function navigateToArea(area) {
     if (!area)
         return;
@@ -11756,7 +11801,7 @@ function moreInfoDialog(config, stateObj) {
         dismissable: true,
         timeout: 60000,
         content: {
-            type: "custom:smartqasa-more-info-dialog",
+            type: "custom:smartqasa-more-info-card",
             entity: stateObj.entity_id,
         },
         ...(config.dialog_title && {
@@ -11885,44 +11930,6 @@ __decorate([
 ThermostatChip = __decorate([
     t$1("smartqasa-weather-chip")
 ], ThermostatChip);
-
-window.customCards.push({
-    type: "smartqasa-more-info-dialog",
-    name: "SmartQasa More Info Dialog",
-    preview: true,
-    description: "A SmartQasa dialog for showing More Info for an entity.",
-});
-let MoreInfoDialog = class MoreInfoDialog extends h {
-    setConfig(config) {
-        this._config = { ...config };
-        this._entity = this._config?.entity;
-    }
-    shouldUpdate(changedProps) {
-        return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
-            (changedProps.has("config") && this._config));
-    }
-    render() {
-        if (!this.hass || !this._entity)
-            return ke ``;
-        this._stateObj = this.hass.states[this._entity];
-        return ke `
-            <div>
-                <div class="container">
-                    <more-info-content .hass=${this.hass} .stateObj=${this._stateObj}> </more-info-content>
-                </div>
-            </div>
-        `;
-    }
-};
-__decorate([
-    n({ attribute: false })
-], MoreInfoDialog.prototype, "hass", void 0);
-__decorate([
-    r()
-], MoreInfoDialog.prototype, "_config", void 0);
-MoreInfoDialog = __decorate([
-    t$1("smartqasa-more-info-dialog")
-], MoreInfoDialog);
 
 window.customCards.push({
     type: "smartqasa-area-picture",

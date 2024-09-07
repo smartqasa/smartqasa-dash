@@ -7,7 +7,7 @@ export function moreInfoDialog(config: any, stateObj: any) {
         title: title,
         timeout: 60000,
         card: {
-            type: "custom:smartqasa-more-info-dialog",
+            type: "custom:smartqasa-more-info-card",
             entity: stateObj.entity_id,
         },
     };

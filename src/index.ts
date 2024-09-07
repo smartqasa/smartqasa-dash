@@ -59,6 +59,7 @@ import "./cards/grid-stack";
 import "./cards/group-stack";
 import "./cards/horizontal-stack";
 import "./cards/menu";
+import "./cards/more-info";
 import "./cards/panel";
 import "./cards/pin-verify";
 import "./cards/screensaver";
@@ -78,7 +79,7 @@ import "./chips/weather";
 
 // Dialogs
 
-import "./dialogs/more-info";
+import "./cards/more-info";
 
 // Misc
 import "./misc/area-picture";
