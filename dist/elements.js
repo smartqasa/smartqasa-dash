@@ -119,7 +119,7 @@ const createElement$1 = (config) => {
         console.error("Error: Invalid or missing 'type' in config:", config);
         return undefined;
     }
-    const tag = config.type.startsWith("custom:") ? config.type.replace("custom:", "") : `hui-${config.type}`;
+    const tag = config.type.startsWith("custom:") ? config.type.replace("custom:", "") : `hui-${config.type}-card`;
     if (!customElements.get(tag)) {
         console.error(`Error: Custom element '${tag}' is not registered.`);
         return undefined;

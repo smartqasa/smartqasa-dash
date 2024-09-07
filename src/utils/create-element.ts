@@ -6,7 +6,7 @@ export const createElement = (config: LovelaceCardConfig): LovelaceCard | undefi
         return undefined;
     }
 
-    const tag = config.type.startsWith("custom:") ? config.type.replace("custom:", "") : `hui-${config.type}`;
+    const tag = config.type.startsWith("custom:") ? config.type.replace("custom:", "") : `hui-${config.type}-card`;
 
     if (!customElements.get(tag)) {
         console.error(`Error: Custom element '${tag}' is not registered.`);
