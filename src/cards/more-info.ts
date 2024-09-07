@@ -72,8 +72,8 @@ export class MoreInfoCard extends LitElement {
 
         return html`
             <div>
-                ${this._config.title ? html`<div class="title">${this._config.title}</div>` : nothing}
                 <div class="${containerClass}">
+                    ${this._config.title ? html`<div class="title">${this._config.title}</div>` : nothing}
                     <more-info-content .hass=${this.hass} .stateObj=${this._stateObj}> </more-info-content>
                 </div>
             </div>

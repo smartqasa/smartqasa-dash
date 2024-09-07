@@ -4466,8 +4466,8 @@ let MoreInfoCard = class MoreInfoCard extends h {
         const containerClass = this._config.background ? "container" : "container-transparent";
         return ke `
             <div>
-                ${this._config.title ? ke `<div class="title">${this._config.title}</div>` : D}
                 <div class="${containerClass}">
+                    ${this._config.title ? ke `<div class="title">${this._config.title}</div>` : D}
                     <more-info-content .hass=${this.hass} .stateObj=${this._stateObj}> </more-info-content>
                 </div>
             </div>
