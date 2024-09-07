@@ -4436,6 +4436,16 @@ let MoreInfoCard = class MoreInfoCard extends h {
             background-color: transparent;
             padding: var(--sq-card-padding, 1rem);
         }
+
+        .title {
+            margin-bottom: 0.5rem;
+            text-align: left;
+            text-overflow: ellipsis;
+            white-space: normal;
+            font-weight: var(--sq-primary-font-weight, 400);
+            font-size: var(--sq-primary-font-size, 1.5rem);
+            color: rgb(var(--sq-primary-font-rgb, 128, 128, 128));
+        }
     `; }
     setConfig(config) {
         this._config = { ...config };
@@ -4456,6 +4466,7 @@ let MoreInfoCard = class MoreInfoCard extends h {
         const containerClass = this._config.background ? "container" : "container-transparent";
         return ke `
             <div>
+                ${this._config.title ? ke `<div class="title">${this._config.title}</div>` : D}
                 <div class="${containerClass}">
                     <more-info-content .hass=${this.hass} .stateObj=${this._stateObj}> </more-info-content>
                 </div>

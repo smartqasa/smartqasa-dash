@@ -4,6 +4,7 @@ import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
 
 interface Config extends LovelaceCardConfig {
     entity: string;
+    title?: string;
     background?: boolean;
 }
 
@@ -34,6 +35,16 @@ export class MoreInfoCard extends LitElement {
             background-color: transparent;
             padding: var(--sq-card-padding, 1rem);
         }
+
+        .title {
+            margin-bottom: 0.5rem;
+            text-align: left;
+            text-overflow: ellipsis;
+            white-space: normal;
+            font-weight: var(--sq-primary-font-weight, 400);
+            font-size: var(--sq-primary-font-size, 1.5rem);
+            color: rgb(var(--sq-primary-font-rgb, 128, 128, 128));
+        }
     `;
 
     public setConfig(config: Config): void {
@@ -61,6 +72,7 @@ export class MoreInfoCard extends LitElement {
 
         return html`
             <div>
+                ${this._config.title ? html`<div class="title">${this._config.title}</div>` : nothing}
                 <div class="${containerClass}">
                     <more-info-content .hass=${this.hass} .stateObj=${this._stateObj}> </more-info-content>
                 </div>
