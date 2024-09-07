@@ -311,12 +311,13 @@ const createElement$1 = (config) => {
     return element;
 };
 
-const createCards = (config, hass) => {
-    if (!config || !config.length || !hass)
+const createCards = (cardsConfig, hass) => {
+    if (!cardsConfig || cardsConfig.length > 0)
         return D;
-    return config.map((cardConfig) => {
+    return cardsConfig.map((cardConfig) => {
         const card = createElement$1(cardConfig);
-        card.hass = hass;
+        if (hass)
+            card.hass = hass;
         return card;
     });
 };
@@ -347,13 +348,15 @@ let GridStack = class GridStack extends h {
         }
         this._config = { ...config };
     }
-    firstUpdated(changedProps) {
-        if (changedProps.has("_config") && this._config && this.hass) {
-            this._cards = createCards(this._config.cards, this.hass);
+    willUpdate(changedProps) {
+        const hassChanged = changedProps.has("hass");
+        const configChanged = changedProps.has("_config");
+        if ((hassChanged || configChanged) && this._config) {
+            if (this.hass && this._config.cards.length > 0) {
+                this._cards = createCards(this._config.cards, this.hass);
+            }
         }
-    }
-    updated(changedProps) {
-        if (changedProps.has("hass") && this.hass && this._cards.length) {
+        if (hassChanged && this._cards.length > 0) {
             this._cards.forEach((card) => {
                 card.hass = this.hass;
             });
@@ -510,13 +513,16 @@ let HorizontalStack = class HorizontalStack extends h {
         if (!config.cards || config.cards.length === 0)
             return;
         this._config = { ...config };
-        this._createCards();
     }
-    update(changedProps) {
-        if (changedProps.has("_config") && this._config) {
-            this._createCards();
+    willUpdate(changedProps) {
+        const hassChanged = changedProps.has("hass");
+        const configChanged = changedProps.has("_config");
+        if ((hassChanged || configChanged) && this._config) {
+            if (this.hass && this._config.cards.length > 0) {
+                this._cards = createCards(this._config.cards, this.hass);
+            }
         }
-        if (changedProps.has("hass") && this.hass) {
+        if (hassChanged && this._cards.length > 0) {
             this._cards.forEach((card) => {
                 card.hass = this.hass;
             });
@@ -529,15 +535,6 @@ let HorizontalStack = class HorizontalStack extends h {
         return ke `
             <div class="${containerClass}">${this._cards.map((card) => ke `<div class="element">${card}</div>`)}</div>
         `;
-    }
-    _createCards() {
-        if (!this._config || !this.hass)
-            return;
-        this._cards = this._config.cards.map((cardConfig) => {
-            const card = createElement$1(cardConfig);
-            card.hass = this.hass;
-            return card;
-        });
     }
 };
 __decorate([
@@ -10211,13 +10208,15 @@ let VerticalStack = class VerticalStack extends h {
             this._config = { ...config };
         }
     }
-    firstUpdated(changedProps) {
-        if (changedProps.has("_config") && this._config && this.hass) {
-            this._cards = createCards(this._config.cards, this.hass);
+    willUpdate(changedProps) {
+        const hassChanged = changedProps.has("hass");
+        const configChanged = changedProps.has("_config");
+        if ((hassChanged || configChanged) && this._config) {
+            if (this.hass && this._config.cards.length > 0) {
+                this._cards = createCards(this._config.cards, this.hass);
+            }
         }
-    }
-    updated(changedProps) {
-        if (changedProps.has("hass") && this.hass) {
+        if (hassChanged && this._cards.length > 0) {
             this._cards.forEach((card) => {
                 card.hass = this.hass;
             });

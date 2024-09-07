@@ -41,14 +41,17 @@ class VerticalStack extends LitElement {
         }
     }
 
-    protected firstUpdated(changedProps: PropertyValues) {
-        if (changedProps.has("_config") && this._config && this.hass) {
-            this._cards = createCards(this._config.cards, this.hass) as LovelaceCard[];
-        }
-    }
+    protected willUpdate(changedProps: PropertyValues): void {
+        const hassChanged = changedProps.has("hass");
+        const configChanged = changedProps.has("_config");
 
-    protected updated(changedProps: PropertyValues) {
-        if (changedProps.has("hass") && this.hass) {
+        if ((hassChanged || configChanged) && this._config) {
+            if (this.hass && this._config.cards.length > 0) {
+                this._cards = createCards(this._config.cards, this.hass) as LovelaceCard[];
+            }
+        }
+
+        if (hassChanged && this._cards.length > 0) {
             this._cards.forEach((card) => {
                 card.hass = this.hass;
             });

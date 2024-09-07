@@ -1,7 +1,7 @@
 import { css, html, LitElement, nothing, PropertyValues } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { HomeAssistant, LovelaceCardConfig, LovelaceCard } from "../types";
-import { createElement } from "../utils/create-element";
+import { createCards } from "../utils/create-cards";
 
 interface Config extends LovelaceCardConfig {
     cards: LovelaceCardConfig[];
@@ -44,15 +44,19 @@ class HorizontalStack extends LitElement {
         if (!config.cards || config.cards.length === 0) return;
 
         this._config = { ...config };
-        this._createCards();
     }
 
-    protected update(changedProps: PropertyValues) {
-        if (changedProps.has("_config") && this._config) {
-            this._createCards();
+    protected willUpdate(changedProps: PropertyValues): void {
+        const hassChanged = changedProps.has("hass");
+        const configChanged = changedProps.has("_config");
+
+        if ((hassChanged || configChanged) && this._config) {
+            if (this.hass && this._config.cards.length > 0) {
+                this._cards = createCards(this._config.cards, this.hass) as LovelaceCard[];
+            }
         }
 
-        if (changedProps.has("hass") && this.hass) {
+        if (hassChanged && this._cards.length > 0) {
             this._cards.forEach((card) => {
                 card.hass = this.hass;
             });
@@ -67,14 +71,5 @@ class HorizontalStack extends LitElement {
         return html`
             <div class="${containerClass}">${this._cards.map((card) => html`<div class="element">${card}</div>`)}</div>
         `;
-    }
-
-    private _createCards() {
-        if (!this._config || !this.hass) return;
-        this._cards = this._config.cards.map((cardConfig) => {
-            const card = createElement(cardConfig) as LovelaceCard;
-            card.hass = this.hass;
-            return card;
-        });
     }
 }
