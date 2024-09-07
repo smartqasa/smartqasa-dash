@@ -1,4 +1,4 @@
-import { html, LitElement, PropertyValues, TemplateResult } from "lit";
+import { html, LitElement, nothing, PropertyValues, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 
@@ -41,8 +41,10 @@ export class MoreInfoCard extends LitElement {
         }
     }
 
-    protected render(): TemplateResult {
-        if (!this.hass || !this._entity) return html``;
+    protected render(): TemplateResult | typeof nothing {
+        if (!this._config || !this._stateObj) return nothing;
+
+        console.log("MoreInfoCard render", this._config, this._stateObj);
 
         const styles = {
             backgroundColor: this._config?.background ? "var(--sq-card-background-color)" : "transparent",

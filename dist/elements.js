@@ -4437,8 +4437,9 @@ let MoreInfoCard = class MoreInfoCard extends h {
         }
     }
     render() {
-        if (!this.hass || !this._entity)
-            return ke ``;
+        if (!this._config || !this._stateObj)
+            return D;
+        console.log("MoreInfoCard render", this._config, this._stateObj);
         const styles = {
             backgroundColor: this._config?.background ? "var(--sq-card-background-color)" : "transparent",
         };
