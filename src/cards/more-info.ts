@@ -26,8 +26,6 @@ export class MoreInfoCard extends LitElement {
     public setConfig(config: Config) {
         this._config = { ...config };
         this._entity = this._config?.entity;
-
-        console.log("MoreInfoCard setConfig", this._config, this._entity);
     }
 
     protected updated(changedProps: PropertyValues) {
@@ -37,9 +35,9 @@ export class MoreInfoCard extends LitElement {
     }
 
     protected render(): TemplateResult | typeof nothing {
-        if (!this._config || this.hass || !this._stateObj) return nothing;
+        if (!this._config || !this.hass || !this._stateObj) return nothing;
 
-        console.log("MoreInfoCard render", this._config, this._stateObj);
+        console.log("MoreInfoCard", this._config, this._stateObj);
 
         const styles = {
             backgroundColor: this._config?.background ? "var(--sq-card-background-color)" : "transparent",

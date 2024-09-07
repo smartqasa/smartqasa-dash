@@ -4434,7 +4434,7 @@ let MoreInfoCard = class MoreInfoCard extends h {
         }
     }
     render() {
-        if (!this._config || this.hass || !this._stateObj)
+        if (!this._config || !this.hass || !this._stateObj)
             return D;
         console.log("MoreInfoCard render", this._config, this._stateObj);
         const styles = {
