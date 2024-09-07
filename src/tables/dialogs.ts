@@ -352,52 +352,10 @@ export const dialogTable: DialogTable = {
         name: "Weather",
         data: {
             title: "Weather",
-            size: "fullscreen",
+            size: "wide",
             timeout: 60000,
             content: {
-                type: "horizontal-stack",
-                cards: [
-                    {
-                        type: "vertical-stack",
-                        cards: [
-                            {
-                                type: "weather-forecast",
-                                entity: "weather.forecast_home",
-                                forecast_type: "hourly",
-                                name: "Forecast",
-                                show_current: true,
-                                show_forecast: true,
-                                secondary_info_attribute: "wind_speed",
-                            },
-                            {
-                                type: "weather-forecast",
-                                entity: "weather.forecast_home",
-                                forecast_type: "daily",
-                                show_current: false,
-                                show_forecast: true,
-                            },
-                        ],
-                    },
-                    {
-                        type: "vertical-stack",
-                        cards: [
-                            {
-                                type: "custom:weather-radar-card",
-                                frame_count: 10,
-                                show_marker: true,
-                                show_range: true,
-                                show_zoom: true,
-                                show_recenter: true,
-                                show_playback: true,
-                                zoom_level: 20,
-                                square_map: true,
-                                show_scale: true,
-                                extra_labels: true,
-                                map_style: "Voyager",
-                            },
-                        ],
-                    },
-                ],
+                type: "custom:smartqasa-weather-card",
             },
         },
     },

@@ -93,6 +93,7 @@ export class WeatherCard extends LitElement {
         if (changedProps.has("hass")) {
             if (this._hourlyForecastCard) this._hourlyForecastCard.hass = this.hass;
             if (this._dailyForecastCard) this._dailyForecastCard.hass = this.hass;
+            if (this._radarMapCard) this._radarMapCard.hass = this.hass;
         }
     }
 
