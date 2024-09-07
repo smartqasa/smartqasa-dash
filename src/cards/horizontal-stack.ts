@@ -40,19 +40,19 @@ class HorizontalStack extends LitElement {
         `;
     }
 
-    public setConfig(config: Config): void {
+    public setConfig(config: Config) {
         if (!config.cards || config.cards.length === 0) return;
 
         this._config = { ...config };
     }
 
-    protected willUpdate(changedProps: PropertyValues): void {
+    protected willUpdate(changedProps: PropertyValues) {
         const hassChanged = changedProps.has("hass");
         const configChanged = changedProps.has("_config");
 
         if ((hassChanged || configChanged) && this._config) {
             if (this.hass && this._config.cards.length > 0) {
-                this._cards = createCards(this._config.cards, this.hass) as LovelaceCard[];
+                this._cards = createCards(this._config.cards, this.hass);
             }
         }
 

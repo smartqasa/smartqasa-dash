@@ -312,8 +312,8 @@ const createElement$1 = (config) => {
 };
 
 const createCards = (cardsConfig, hass) => {
-    if (!cardsConfig || cardsConfig.length > 0)
-        return D;
+    if (!cardsConfig || cardsConfig.length === 0)
+        return [];
     return cardsConfig.map((cardConfig) => {
         const card = createElement$1(cardConfig);
         if (hass)
