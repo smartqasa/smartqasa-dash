@@ -11,7 +11,6 @@ import { Navigation } from "swiper/modules";
 import { createElement } from "../utils/create-element";
 import { loadYamlAsJson } from "../utils/load-yaml-as-json";
 import { areasDialog } from "../misc/areas-dialog";
-import { entertainDialog } from "../misc/entertain-dialog";
 import { menuConfig } from "../misc/menu-config";
 import { formattedTime, formattedDate } from "../utils/format-date-time";
 
@@ -47,8 +46,8 @@ window.customCards.push({
 export class PanelCard extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() private _config?: Config;
-    @state() private _loading = true;
     @state() private _isAdmin = false;
+    @state() private _entertainMode = false;
     @state() private _deviceOrientation: string = getDeviceOrientation();
     @state() private _deviceType: string = getDeviceType();
     @state() private _areaPicture: string = defaultImage;
@@ -69,7 +68,6 @@ export class PanelCard extends LitElement {
         this._config = { ...config };
         this._area = this._config.area;
         this._areaPicture = await this._getAreaPicture();
-        this._loading = true;
     }
 
     protected async firstUpdated() {
@@ -85,8 +83,6 @@ export class PanelCard extends LitElement {
         );
 
         this._syncTime();
-
-        this._loading = false;
     }
 
     protected updated(changedProps: PropertyValues) {
@@ -144,8 +140,6 @@ export class PanelCard extends LitElement {
     }
 
     protected render(): TemplateResult {
-        //if (this._loading) return html`<progress-indicator></progress-indicator>`;
-
         const isPhoneLandscape = this._deviceType === "phone" && this._deviceOrientation === "landscape";
 
         return html`
@@ -468,6 +462,7 @@ export class PanelCard extends LitElement {
     }
 
     private _handleHome() {
+        this._entertainMode = false;
         const startArea = window.smartqasa.startArea;
         if (!startArea) return;
 
@@ -487,7 +482,7 @@ export class PanelCard extends LitElement {
     }
 
     private _handleEntertain() {
-        entertainDialog(this._config, this.hass);
+        this._entertainMode = true;
     }
 
     private async _handleMenu(): Promise<void> {
