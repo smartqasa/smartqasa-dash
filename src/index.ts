@@ -57,13 +57,15 @@ window.customCards = window.customCards ?? [];
 // Test
 import "./tiles/light-test";
 
+// Panel
+import "./panel/panel";
+
 // Cards
 import "./cards/grid-stack";
 import "./cards/group-stack";
 import "./cards/horizontal-stack";
 import "./cards/menu";
 import "./cards/more-info";
-import "./cards/panel";
 import "./cards/pin-verify";
 import "./cards/screensaver";
 import "./cards/vertical-stack";
