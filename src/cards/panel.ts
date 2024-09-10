@@ -11,6 +11,7 @@ import { Navigation } from "swiper/modules";
 import { createElement } from "../utils/create-element";
 import { loadYamlAsJson } from "../utils/load-yaml-as-json";
 import { areasDialog } from "../misc/areas-dialog";
+import { entertainDialog } from "../misc/entertain-dialog";
 import { menuConfig } from "../misc/menu-config";
 import { formattedTime, formattedDate } from "../utils/format-date-time";
 
@@ -47,7 +48,7 @@ export class PanelCard extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() private _config?: Config;
     @state() private _isAdmin = false;
-    @state() private _entertainMode = false;
+    @state() private _displayMode: "control" | "entertain" = "control";
     @state() private _deviceOrientation: string = getDeviceOrientation();
     @state() private _deviceType: string = getDeviceType();
     @state() private _areaPicture: string = defaultImage;
@@ -142,10 +143,31 @@ export class PanelCard extends LitElement {
     protected render(): TemplateResult {
         const isPhoneLandscape = this._deviceType === "phone" && this._deviceOrientation === "landscape";
 
+        if (this._displayMode === "entertain") {
+            let containerStyle = {
+                height: `${this._isAdmin ? "calc(100vh - 56px)" : "100vh"}`,
+                gridAreaRows: "auto 1fr auto",
+                gridAreaNames: "'header' 'entertain' 'footer'",
+            };
+
+            return html`
+                <div class="container" style="${styleMap(containerStyle)}">
+                    ${this._deviceType === "tablet" ? this._renderHeader() : nothing}
+                    ${isPhoneLandscape ? nothing : this._renderFooter()}
+                </div>
+            `;
+        }
+
+        let containerStyle = {
+            height: `${this._isAdmin ? "calc(100vh - 56px)" : "100vh"}`,
+        };
+        // prettier-ignore
         return html`
-            <div class="container" style="height: ${this._isAdmin ? "calc(100vh - 56px)" : "100vh"};">
-                ${this._deviceType === "tablet" ? this._renderHeader() : nothing} ${this._renderArea()}
-                ${this._renderBody()} ${isPhoneLandscape ? nothing : this._renderFooter()}
+            <div class="container" style="${styleMap(containerStyle)}">
+                ${this._deviceType === "tablet" ? this._renderHeader() : nothing}
+                ${this._renderArea()}
+                ${this._renderBody()}
+                ${isPhoneLandscape ? nothing : this._renderFooter()}
             </div>
         `;
     }
@@ -462,7 +484,8 @@ export class PanelCard extends LitElement {
     }
 
     private _handleHome() {
-        this._entertainMode = false;
+        this._displayMode = "entertain";
+
         const startArea = window.smartqasa.startArea;
         if (!startArea) return;
 
@@ -482,7 +505,7 @@ export class PanelCard extends LitElement {
     }
 
     private _handleEntertain() {
-        this._entertainMode = true;
+        this._displayMode = "entertain";
     }
 
     private async _handleMenu(): Promise<void> {

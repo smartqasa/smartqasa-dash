@@ -9260,7 +9260,7 @@ let PanelCard = class PanelCard extends h {
     constructor() {
         super(...arguments);
         this._isAdmin = false;
-        this._entertainMode = false;
+        this._displayMode = "control";
         this._deviceOrientation = getDeviceOrientation();
         this._deviceType = getDeviceType();
         this._areaPicture = img$25;
@@ -9330,12 +9330,30 @@ let PanelCard = class PanelCard extends h {
         ["orientationchange", "resize"].forEach((event) => window.removeEventListener(event, this._boundHandleDeviceChanges));
     }
     render() {
-        //if (this._loading) return html`<progress-indicator></progress-indicator>`;
         const isPhoneLandscape = this._deviceType === "phone" && this._deviceOrientation === "landscape";
+        if (this._displayMode === "entertain") {
+            let containerStyle = {
+                height: `${this._isAdmin ? "calc(100vh - 56px)" : "100vh"}`,
+                gridAreaRows: "auto 1fr auto",
+                gridAreaNames: "'header' 'entertain' 'footer'",
+            };
+            return ke `
+                <div class="container" style="${se(containerStyle)}">
+                    ${this._deviceType === "tablet" ? this._renderHeader() : D}
+                    ${isPhoneLandscape ? D : this._renderFooter()}
+                </div>
+            `;
+        }
+        let containerStyle = {
+            height: `${this._isAdmin ? "calc(100vh - 56px)" : "100vh"}`,
+        };
+        // prettier-ignore
         return ke `
-            <div class="container" style="height: ${this._isAdmin ? "calc(100vh - 56px)" : "100vh"};">
-                ${this._deviceType === "tablet" ? this._renderHeader() : D} ${this._renderArea()}
-                ${this._renderBody()} ${isPhoneLandscape ? D : this._renderFooter()}
+            <div class="container" style="${se(containerStyle)}">
+                ${this._deviceType === "tablet" ? this._renderHeader() : D}
+                ${this._renderArea()}
+                ${this._renderBody()}
+                ${isPhoneLandscape ? D : this._renderFooter()}
             </div>
         `;
     }
@@ -9616,7 +9634,7 @@ let PanelCard = class PanelCard extends h {
         }
     }
     _handleHome() {
-        this._entertainMode = false;
+        this._displayMode = "entertain";
         const startArea = window.smartqasa.startArea;
         if (!startArea)
             return;
@@ -9634,7 +9652,7 @@ let PanelCard = class PanelCard extends h {
         areasDialog(this.hass);
     }
     _handleEntertain() {
-        this._entertainMode = true;
+        this._displayMode = "entertain";
     }
     async _handleMenu() {
         window.smartqasa.menuTab = 0;
@@ -9658,7 +9676,7 @@ __decorate([
 ], PanelCard.prototype, "_isAdmin", void 0);
 __decorate([
     r()
-], PanelCard.prototype, "_entertainMode", void 0);
+], PanelCard.prototype, "_displayMode", void 0);
 __decorate([
     r()
 ], PanelCard.prototype, "_deviceOrientation", void 0);
