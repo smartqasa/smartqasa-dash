@@ -78,7 +78,7 @@ export class MenuCard extends LitElement {
                 margin: auto;
                 grid-template-rows: var(--sq-tile-height, 7rem);
                 overflow-y: auto;
-                padding: 1rem 0;
+                padding: 1rem 0 0 0;
             }
             .tile {
                 width: 100%;
