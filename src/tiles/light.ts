@@ -94,6 +94,7 @@ export class LightTile extends LitElement {
 
     private _toggleEntity(e: Event): void {
         e.stopPropagation();
+
         if (this._stateObj?.state === "on") {
             callService(this.hass, "light", "turn_off", { entity_id: this._entity, transition: 2 });
         } else {
