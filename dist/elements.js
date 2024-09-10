@@ -13275,7 +13275,12 @@ let LightTile = class LightTile extends h {
     }
     _toggleEntity(e) {
         e.stopPropagation();
-        callService(this.hass, "light", "toggle", { entity_id: this._entity });
+        if (this._stateObj?.state === "on") {
+            callService(this.hass, "light", "turn_off", { entity_id: this._entity, transition: 2 });
+        }
+        else {
+            callService(this.hass, "light", "turn_on", { entity_id: this._entity });
+        }
     }
     _showMoreInfo(e) {
         e.stopPropagation();
