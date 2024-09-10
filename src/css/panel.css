@@ -21,7 +21,7 @@
     padding: 1rem 1rem 0.5rem 1rem;
     box-sizing: border-box;
 }
-.container.entertain {
+.container[entertain] {
     grid-template-rows: auto 1fr auto;
     grid-template-areas:
         "header"

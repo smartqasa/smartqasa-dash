@@ -102,8 +102,8 @@ export class PinVerifyCard extends LitElement {
                 `Invalid entity domain: Outcome entity should be of domain "input_boolean", got "${outcomeDomain}" instead.`
             );
         }
-        this._pinEntity = this._config.pin_entity;
-        this._outcomeEntity = this._config.outcome_entity;
+        this._pinEntity = this._config.pin_entity || "input_text.admin_pin_code";
+        this._outcomeEntity = this._config.outcome_entity || "input_boolean.admin_mode";
     }
 
     protected render() {
