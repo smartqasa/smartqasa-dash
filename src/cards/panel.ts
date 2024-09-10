@@ -142,25 +142,19 @@ export class PanelCard extends LitElement {
 
     protected render(): TemplateResult {
         const isPhoneLandscape = this._deviceType === "phone" && this._deviceOrientation === "landscape";
+        const containerStyle = {
+            height: `${this._isAdmin ? "calc(100vh - 56px)" : "100vh"}`,
+        };
 
         if (this._displayMode === "entertain") {
-            let containerStyle = {
-                height: `${this._isAdmin ? "calc(100vh - 56px)" : "100vh"}`,
-                gridAreaRows: "auto 1fr auto",
-                gridAreaNames: "'header' 'entertain' 'footer'",
-            };
-
             return html`
-                <div class="container" style="${styleMap(containerStyle)}">
+                <div class="container.entertain" style="${styleMap(containerStyle)}">
                     ${this._deviceType === "tablet" ? this._renderHeader() : nothing}
                     ${isPhoneLandscape ? nothing : this._renderFooter()}
                 </div>
             `;
         }
 
-        let containerStyle = {
-            height: `${this._isAdmin ? "calc(100vh - 56px)" : "100vh"}`,
-        };
         // prettier-ignore
         return html`
             <div class="container" style="${styleMap(containerStyle)}">
@@ -484,7 +478,7 @@ export class PanelCard extends LitElement {
     }
 
     private _handleHome() {
-        this._displayMode = "entertain";
+        this._displayMode = "control";
 
         const startArea = window.smartqasa.startArea;
         if (!startArea) return;
