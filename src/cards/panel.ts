@@ -150,9 +150,9 @@ export class PanelCard extends LitElement {
 
         const classes = {
             container: true,
-            "container.admin": this._adminMode,
-            "container.control": displayMode === "control",
-            "container.entertain": displayMode === "entertain",
+            "container admin": this._adminMode,
+            "container control": displayMode === "control",
+            "container entertain": displayMode === "entertain",
         };
 
         let content;

@@ -9343,9 +9343,9 @@ let PanelCard = class PanelCard extends h {
         const displayMode = this._displayMode;
         const classes = {
             container: true,
-            "container.admin": this._adminMode,
-            "container.control": displayMode === "control",
-            "container.entertain": displayMode === "entertain",
+            "container admin": this._adminMode,
+            "container control": displayMode === "control",
+            "container entertain": displayMode === "entertain",
         };
         let content;
         // prettier-ignore
