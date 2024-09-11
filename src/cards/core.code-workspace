@@ -1,0 +1,15 @@
+{
+    "folders": [
+		{
+			"path": "../../../core"
+		},
+		{
+			"name": "smartqasa-dash",
+			"path": "../.."
+		},
+		{
+			"path": "../../../smartqasa-theme"
+		}
+	],
+    "settings": {}
+}
