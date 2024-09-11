@@ -9392,7 +9392,7 @@ let PanelCard = class PanelCard extends h {
         return ke `
             <div class="area-container">
                 <div class="area-name ${this._isPhone ? "overlay" : ""}">${name}</div>
-                <img class="area-picture" src=${this._areaPicture} alt="Area picture..." />
+                <img class="area-picture" src=${this._areaPicture} alt="Area picture..." loading="lazy" />
                 ${this._areaChips.length > 0
             ? ke `
                           <div class="area-chips">
@@ -9405,35 +9405,27 @@ let PanelCard = class PanelCard extends h {
         `;
     }
     async _getAreaPicture() {
+        if (this._areaPicture !== img$25)
+            return this._areaPicture;
         if (this._config?.picture) {
             const configPictureFile = `/local/smartqasa/pictures/${this._config.picture}`;
             try {
                 const response = await fetch(configPictureFile, { method: "HEAD" });
-                if (response.ok) {
-                    return configPictureFile;
-                }
-                else {
-                    console.error("Picture from config not found, using defaultImage");
-                    return img$25;
-                }
+                if (response.ok)
+                    return (this._areaPicture = configPictureFile);
             }
             catch (error) {
-                console.error(`Failed to check picture from config: ${this._config.picture}`, error);
-                return img$25;
+                console.error("Picture from config not found, using defaultImage", error);
             }
         }
         const areaFileName = `/local/smartqasa/pictures/${this._area}.png`;
         try {
             const response = await fetch(areaFileName, { method: "HEAD" });
-            if (response.ok) {
-                return areaFileName;
-            }
+            if (response.ok)
+                return (this._areaPicture = areaFileName);
         }
         catch (error) { }
-        if (this._areaObj?.picture) {
-            return this._areaObj.picture;
-        }
-        return img$25;
+        return (this._areaPicture = img$25);
     }
     _renderBody() {
         if (!this._config || !this._bodyTiles.length)
@@ -9542,13 +9534,14 @@ let PanelCard = class PanelCard extends h {
     }
     async _loadContent() {
         this._areaObj = this._area ? this.hass?.areas[this._area] : undefined;
-        this._headerChips = await this._loadHeaderChips();
-        if (this._config?.chips) {
-            this._areaChips = await this._loadAreaChips(this._config.chips);
-        }
-        if (this._config?.tiles) {
-            this._bodyTiles = await this._loadBodyTiles(this._config.tiles);
-        }
+        const [headerChips, areaChips, bodyTiles] = await Promise.all([
+            this._loadHeaderChips(),
+            this._loadAreaChips(this._config?.chips || []),
+            this._loadBodyTiles(this._config?.tiles || []),
+        ]);
+        this._headerChips = headerChips;
+        this._areaChips = areaChips;
+        this._bodyTiles = bodyTiles;
     }
     async _loadHeaderChips() {
         let chipsConfig = [];

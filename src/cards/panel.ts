@@ -210,7 +210,7 @@ export class PanelCard extends LitElement {
         return html`
             <div class="area-container">
                 <div class="area-name ${this._isPhone ? "overlay" : ""}">${name}</div>
-                <img class="area-picture" src=${this._areaPicture} alt="Area picture..." />
+                <img class="area-picture" src=${this._areaPicture} alt="Area picture..." loading="lazy" />
                 ${this._areaChips.length > 0
                     ? html`
                           <div class="area-chips">
@@ -224,35 +224,25 @@ export class PanelCard extends LitElement {
     }
 
     private async _getAreaPicture(): Promise<string> {
+        if (this._areaPicture !== defaultImage) return this._areaPicture;
+
         if (this._config?.picture) {
             const configPictureFile = `/local/smartqasa/pictures/${this._config.picture}`;
             try {
                 const response = await fetch(configPictureFile, { method: "HEAD" });
-                if (response.ok) {
-                    return configPictureFile;
-                } else {
-                    console.error("Picture from config not found, using defaultImage");
-                    return defaultImage;
-                }
+                if (response.ok) return (this._areaPicture = configPictureFile);
             } catch (error) {
-                console.error(`Failed to check picture from config: ${this._config.picture}`, error);
-                return defaultImage;
+                console.error("Picture from config not found, using defaultImage", error);
             }
         }
 
         const areaFileName = `/local/smartqasa/pictures/${this._area}.png`;
         try {
             const response = await fetch(areaFileName, { method: "HEAD" });
-            if (response.ok) {
-                return areaFileName;
-            }
+            if (response.ok) return (this._areaPicture = areaFileName);
         } catch (error) {}
 
-        if (this._areaObj?.picture) {
-            return this._areaObj.picture;
-        }
-
-        return defaultImage;
+        return (this._areaPicture = defaultImage);
     }
 
     private _renderBody() {
@@ -379,15 +369,15 @@ export class PanelCard extends LitElement {
     private async _loadContent() {
         this._areaObj = this._area ? this.hass?.areas[this._area] : undefined;
 
-        this._headerChips = await this._loadHeaderChips();
+        const [headerChips, areaChips, bodyTiles] = await Promise.all([
+            this._loadHeaderChips(),
+            this._loadAreaChips(this._config?.chips || []),
+            this._loadBodyTiles(this._config?.tiles || []),
+        ]);
 
-        if (this._config?.chips) {
-            this._areaChips = await this._loadAreaChips(this._config.chips);
-        }
-
-        if (this._config?.tiles) {
-            this._bodyTiles = await this._loadBodyTiles(this._config.tiles);
-        }
+        this._headerChips = headerChips;
+        this._areaChips = areaChips;
+        this._bodyTiles = bodyTiles;
     }
 
     private async _loadHeaderChips(): Promise<LovelaceCard[]> {
