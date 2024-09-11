@@ -9364,7 +9364,7 @@ let PanelCard = class PanelCard extends h {
         }
         // prettier-ignore
         return ke `
-            <div class="container ${Rt(classes)}">
+            <div class="container" ${Rt(classes)}>
                 ${this._deviceType === "tablet" ? this._renderHeader() : D}
                 ${content}
                 ${isPhoneLandscape ? D : this._renderFooter()}
