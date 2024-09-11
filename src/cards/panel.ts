@@ -1,6 +1,5 @@
 import { CSSResultGroup, html, LitElement, nothing, PropertyValues, TemplateResult, unsafeCSS } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
-import { classMap } from "lit/directives/class-map.js";
 import { styleMap } from "lit/directives/style-map.js";
 
 import { HassArea, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
@@ -50,10 +49,12 @@ export class PanelCard extends LitElement {
     @state() private _adminMode = false;
     @state() private _displayMode: "control" | "entertain" = "control";
     @state() private _deviceOrientation: string = getDeviceOrientation();
-    @state() private _deviceType: string = getDeviceType();
+    @state() private _isPhone: boolean = getDeviceType() === "phone";
+    @state() private _isTablet: boolean = getDeviceType() === "tablet";
+    @state() private _isPortrait: boolean = this._deviceOrientation === "portrait";
+    @state() private _isLandscape: boolean = this._deviceOrientation === "landscape";
     @state() private _areaPicture: string = defaultImage;
     private _timeIntervalId: number | undefined;
-    private _boundHandleDeviceChanges = this._handleDeviceChanges.bind(this);
     private _swiper?: Swiper;
     private _resetTimer?: ReturnType<typeof setTimeout>;
     private _area?: string;
@@ -74,13 +75,13 @@ export class PanelCard extends LitElement {
     protected async firstUpdated() {
         await this._loadContent();
 
-        if (this._deviceType === "tablet") {
+        if (this._isTablet) {
             this._initializeSwiper();
             this._startResetTimer();
         }
 
         ["orientationchange", "resize"].forEach((event) =>
-            window.addEventListener(event, this._boundHandleDeviceChanges)
+            window.addEventListener(event, this._handleDeviceChanges.bind(this))
         );
 
         this._syncTime();
@@ -92,7 +93,7 @@ export class PanelCard extends LitElement {
             this._adminMode = (this.hass.user?.is_admin ?? false) || adminMode;
         }
 
-        if (this._deviceType === "tablet") {
+        if (this._isTablet) {
             if (this._swiper) {
                 this._swiper.update();
             } else {
@@ -105,7 +106,7 @@ export class PanelCard extends LitElement {
         } else if (changedProps.has("hass") && this.hass) {
             this._areaObj = this._area ? this.hass.areas[this._area] : undefined;
 
-            if (this._deviceType === "tablet" && this._headerChips.length) {
+            if (this._isTablet && this._headerChips.length) {
                 this._headerChips.forEach((chip) => {
                     chip.hass = this.hass;
                 });
@@ -139,13 +140,11 @@ export class PanelCard extends LitElement {
         }
 
         ["orientationchange", "resize"].forEach((event) =>
-            window.removeEventListener(event, this._boundHandleDeviceChanges)
+            window.removeEventListener(event, this._handleDeviceChanges.bind(this))
         );
     }
 
     protected render(): TemplateResult {
-        const isPhoneLandscape = this._deviceType === "phone" && this._deviceOrientation === "landscape";
-
         const displayMode = this._displayMode;
 
         let content;
@@ -173,16 +172,21 @@ export class PanelCard extends LitElement {
                 ?control=${displayMode === "control"}
                 ?entertain=${displayMode === "entertain"}
             >
-                ${this._deviceType === "tablet" ? this._renderHeader() : nothing}
+                ${this._isTablet ? this._renderHeader() : nothing}
                 ${content}
-                ${isPhoneLandscape ? nothing : this._renderFooter()}
+                ${this._isPhone && this._isLandscape ? nothing : this._renderFooter()}
             </div>
         `;
     }
 
     private _handleDeviceChanges() {
-        this._deviceOrientation = getDeviceOrientation();
-        this._deviceType = getDeviceType();
+        const type = getDeviceType();
+        this._isPhone = type === "phone";
+        this._isTablet = type === "tablet";
+
+        const orientation = getDeviceOrientation();
+        this._isPortrait = orientation === "portrait";
+        this._isLandscape = orientation === "landscape";
     }
 
     private _renderHeader() {
@@ -202,16 +206,13 @@ export class PanelCard extends LitElement {
     private _renderArea() {
         const name = this._config?.name ?? this._areaObj?.name ?? "Area";
 
-        const isPhoneLandscape = this._deviceType === "phone" && this._deviceOrientation === "landscape";
-
-        const tabletPortrait = this._deviceType === "tablet" && this._deviceOrientation === "portrait";
-
         return html`
             <div class="area-container">
-                <div class="area-name ${this._deviceType === "phone" ? "overlay" : ""}">${name}</div>
+                <div class="area-name ${this._isPhone ? "overlay" : ""}">${name}</div>
                 <img
                     class="area-picture"
-                    ?tablet-portrait=${tabletPortrait}
+                    ?tablet-portrait=${this._isTablet && this._isPortrait}
+                    ?phone-portrait=${this._isPhone && this._isPortrait}
                     src="${this._areaPicture}"
                     alt="Area picture..."
                 />
@@ -222,7 +223,9 @@ export class PanelCard extends LitElement {
                           </div>
                       `
                     : nothing}
-                ${isPhoneLandscape ? html`<div class="footer-container">${this._renderFooter()}</div>` : nothing}
+                ${this._isPhone && this._isLandscape
+                    ? html`<div class="footer-container">${this._renderFooter()}</div>`
+                    : nothing}
             </div>
         `;
     }
@@ -262,7 +265,7 @@ export class PanelCard extends LitElement {
     private _renderBody() {
         if (!this._config || !this._bodyTiles.length) return nothing;
 
-        if (this._deviceType === "phone") {
+        if (this._isPhone) {
             const gridStyle = { gridTemplateColumns: "1fr 1fr" };
             return html`
                 <div class="body-tiles" style=${styleMap(gridStyle)}>
@@ -272,34 +275,36 @@ export class PanelCard extends LitElement {
         }
 
         return html`
-            <div class="swiper">
-                <div class="swiper-wrapper">
-                    ${this._bodyTiles.map((page, index) => {
-                        const gridStyle = {
-                            gridTemplateColumns: `repeat(${this._bodyColumns[index]}, var(--sq-tile-width, 19.5rem))`,
-                        };
+            <div class="body-container">
+                <div class="swiper">
+                    <div class="swiper-wrapper">
+                        ${this._bodyTiles.map((page, index) => {
+                            const gridStyle = {
+                                gridTemplateColumns: `repeat(${this._bodyColumns[index]}, var(--sq-tile-width, 19.5rem))`,
+                            };
 
-                        return html`
-                            <div class="swiper-slide">
-                                <div class="body-tiles" style=${styleMap(gridStyle)}>
-                                    ${page.map((tile) => html`<div class="tile">${tile}</div>`)}
+                            return html`
+                                <div class="swiper-slide">
+                                    <div class="body-tiles" style=${styleMap(gridStyle)}>
+                                        ${page.map((tile) => html`<div class="tile">${tile}</div>`)}
+                                    </div>
                                 </div>
-                            </div>
-                        `;
-                    })}
+                            `;
+                        })}
+                    </div>
+                    ${this._bodyTiles.length > 1
+                        ? html`
+                              <div
+                                  class="swiper-button-prev"
+                                  @click=${(e: Event) => this._handleSwiperNavigation(e, "prev")}
+                              ></div>
+                              <div
+                                  class="swiper-button-next"
+                                  @click=${(e: Event) => this._handleSwiperNavigation(e, "next")}
+                              ></div>
+                          `
+                        : nothing}
                 </div>
-                ${this._bodyTiles.length > 1
-                    ? html`
-                          <div
-                              class="swiper-button-prev"
-                              @click=${(e: Event) => this._handleSwiperNavigation(e, "prev")}
-                          ></div>
-                          <div
-                              class="swiper-button-next"
-                              @click=${(e: Event) => this._handleSwiperNavigation(e, "next")}
-                          ></div>
-                      `
-                    : nothing}
             </div>
         `;
     }
@@ -442,7 +447,7 @@ export class PanelCard extends LitElement {
                     this._bodyColumns.push(columns);
                 }
             } else if (config.type === "blank") {
-                if (this._deviceType === "tablet") {
+                if (this._isTablet) {
                     const blankTile = document.createElement("div");
                     blankTile.classList.add("blank-tile");
                     currentPage.push(blankTile as unknown as LovelaceCard);

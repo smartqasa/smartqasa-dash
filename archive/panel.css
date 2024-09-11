@@ -171,11 +171,6 @@
     gap: var(--sq-tile-spacing, 0.8rem);
     overflow-y: auto;
 }
-.body-tiles[phone-portrait] {
-    width: 100%;
-    margin: 0;
-}
-
 .blank-tile {
     visibility: hidden;
     width: 100%;
@@ -203,10 +198,59 @@
     color: rgb(var(--sq-secondary-font-rgb));
     cursor: pointer;
 }
-.footer-button span[phone-portrait] {
-    display: none;
-}
 
+/* Phone Portrait */
+@media (orientation: portrait) and (max-width: 534px),
+    (orientation: portrait) and (min-width: 535px) and (max-width: 600px) {
+    .container {
+        grid-template-columns: 100%;
+        grid-template-rows: auto minmax(0, 1fr) auto;
+        grid-template-areas:
+            "area"
+            "body"
+            "footer";
+        gap: 1rem;
+        padding: 0.6rem 0.6rem 0.3rem 0.6rem;
+    }
+    .area-container {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
+        grid-template-areas:
+            "image"
+            "chips";
+        gap: 1rem;
+        position: relative;
+    }
+    .area-picture {
+        height: 15vh;
+    }
+    .area-name.overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        padding: 0.5rem;
+        font-size: 2.5rem;
+        font-weight: var(--sq-title-font-weight, 400);
+        border-radius: 0.2rem 0 0 0;
+    }
+    .body-container {
+        grid-area: body;
+        display: flex;
+        width: 100%;
+        overflow-y: auto;
+    }
+    .body-tiles {
+        width: 100%;
+        margin: 0;
+        grid-template-rows: var(--sq-tile-height, 7rem);
+        gap: var(--sq-tile-spacing, 0.8rem);
+    }
+    .footer-button span {
+        display: none;
+    }
+}
 /* Phone Landscape */
 @media (orientation: landscape) and (max-height: 534px),
     (orientation: landscape) and (min-height: 535px) and (max-height: 600px) {
