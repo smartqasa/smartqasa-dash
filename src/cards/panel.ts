@@ -169,10 +169,9 @@ export class PanelCard extends LitElement {
                 break;
         }
 
-        console.log("Container Classes:", containerClasses);
         // prettier-ignore
         return html`
-            <div class="container ${classMap(containerClasses)}">
+            <div class="container" control>
                 ${this._deviceType === "tablet" ? this._renderHeader() : nothing}
                 ${content}
                 ${isPhoneLandscape ? nothing : this._renderFooter()}
