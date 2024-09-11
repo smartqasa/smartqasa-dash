@@ -340,6 +340,8 @@ let GridStack = class GridStack extends h {
                 grid-template-rows: var(--sq-tile-height, 7rem);
                 gap: var(--sq-tile-spacing, 0.8rem);
             }
+            .element {
+                width: 100%;
         `;
     }
     setConfig(config) {
@@ -14734,7 +14736,7 @@ PopupDialog = __decorate([
     t$1("smartqasa-popup-dialog")
 ], PopupDialog);
 
-var version = "2024.9.11b-9";
+var version = "2024.9.11b-10";
 
 window.smartqasa = window.smartqasa || {};
 window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();

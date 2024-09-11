@@ -31,6 +31,8 @@ class GridStack extends LitElement {
                 grid-template-rows: var(--sq-tile-height, 7rem);
                 gap: var(--sq-tile-spacing, 0.8rem);
             }
+            .element {
+                width: 100%;
         `;
     }
 
