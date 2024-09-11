@@ -4648,6 +4648,12 @@ MoreInfoCard = __decorate([
     t$1("smartqasa-more-info-card")
 ], MoreInfoCard);
 
+/**
+ * @license
+ * Copyright 2018 Google LLC
+ * SPDX-License-Identifier: BSD-3-Clause
+ */const Rt=e(class extends i$1{constructor(s){if(super(s),s.type!==t.ATTRIBUTE||"class"!==s.name||s.strings?.length>2)throw Error("`classMap()` can only be used in the `class` attribute and must be the only part in the attribute.")}render(t){return " "+Object.keys(t).filter((s=>t[s])).join(" ")+" "}update(t,[s]){if(void 0===this.st){this.st=new Set,void 0!==t.strings&&(this.nt=new Set(t.strings.join(" ").split(/\s/).filter((t=>""!==t))));for(const t in s)s[t]&&!this.nt?.has(t)&&this.st.add(t);return this.render(s)}const i=t.element.classList;for(const t of this.st)t in s||(i.remove(t),this.st.delete(t));for(const t in s){const r=!!s[t];r===this.st.has(t)||this.nt?.has(t)||(r?(i.add(t),this.st.add(t)):(i.remove(t),this.st.delete(t)));}return R}});
+
 function navigateToArea(area) {
     if (!area)
         return;
@@ -9335,11 +9341,12 @@ let PanelCard = class PanelCard extends h {
     render() {
         const isPhoneLandscape = this._deviceType === "phone" && this._deviceOrientation === "landscape";
         const displayMode = this._displayMode;
-        ({
+        const classes = {
             admin: this._adminMode,
             control: displayMode === "control",
             entertain: displayMode === "entertain",
-        });
+        };
+        console.log("classes", Rt(classes));
         let content;
         // prettier-ignore
         switch (displayMode) {
@@ -9358,7 +9365,7 @@ let PanelCard = class PanelCard extends h {
         }
         // prettier-ignore
         return ke `
-        <div class="container" admin control>
+        <div class="container" ${Rt(classes)} >
             ${this._deviceType === "tablet" ? this._renderHeader() : D}
             ${content}
             ${isPhoneLandscape ? D : this._renderFooter()}
