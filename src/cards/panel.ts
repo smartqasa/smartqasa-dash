@@ -149,12 +149,10 @@ export class PanelCard extends LitElement {
         const displayMode = this._displayMode;
 
         const containerClasses = {
-            admin: this._adminMode,
+            admin: false,
             control: displayMode === "control",
             entertain: displayMode === "entertain",
         };
-
-        console.log("Container Classes", containerClasses);
 
         let content;
         // prettier-ignore

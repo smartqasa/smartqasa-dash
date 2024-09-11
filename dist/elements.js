@@ -9342,11 +9342,10 @@ let PanelCard = class PanelCard extends h {
         const isPhoneLandscape = this._deviceType === "phone" && this._deviceOrientation === "landscape";
         const displayMode = this._displayMode;
         const containerClasses = {
-            admin: this._adminMode,
+            admin: false,
             control: displayMode === "control",
             entertain: displayMode === "entertain",
         };
-        console.log("Container Classes", containerClasses);
         let content;
         // prettier-ignore
         switch (displayMode) {
