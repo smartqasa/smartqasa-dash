@@ -15,10 +15,10 @@
     padding: 1rem 1rem 0.5rem 1rem;
     box-sizing: border-box;
 }
-.container[admin] {
+.container.admin {
     height: calc(100vh - 56px);
 }
-.container[control] {
+.container.control {
     grid-template-rows: auto auto 1fr auto;
     grid-template-areas:
         "header"
@@ -26,14 +26,13 @@
         "body"
         "footer";
 }
-.container[entertain] {
+.container.entertain {
     grid-template-rows: auto 1fr auto;
     grid-template-areas:
         "header"
         "entertain"
         "footer";
 }
-
 .header-container {
     grid-area: header;
     display: flex;
