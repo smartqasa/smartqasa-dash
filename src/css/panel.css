@@ -33,6 +33,7 @@
         "entertain"
         "footer";
 }
+
 .header-container {
     grid-area: header;
     display: flex;
@@ -104,6 +105,9 @@
     box-shadow: none;
     background-color: transparent;
 }
+.area-picture[tablet-portait] {
+    height: 10vh;
+}
 .swiper {
     grid-area: body;
     width: 100%;
@@ -149,12 +153,6 @@
     cursor: pointer;
 }
 
-/* Tablet Portrait */
-@media (orientation: portrait) and (min-width: 601px), (orientation: portrait) and (width: 534px) {
-    .area-picture {
-        height: 10vh;
-    }
-}
 /* Phone Portrait */
 @media (orientation: portrait) and (max-width: 534px),
     (orientation: portrait) and (min-width: 535px) and (max-width: 600px) {

@@ -148,7 +148,7 @@ export class PanelCard extends LitElement {
 
         const displayMode = this._displayMode;
 
-        const containerClasses = {
+        const classes = {
             admin: this._adminMode,
             control: displayMode === "control",
             entertain: displayMode === "entertain",
@@ -173,7 +173,7 @@ export class PanelCard extends LitElement {
 
         // prettier-ignore
         return html`
-            <div class="container" ${classMap(containerClasses)}>
+            <div class="container" ${classMap(classes)}>
                 ${this._deviceType === "tablet" ? this._renderHeader() : nothing}
                 ${content}
                 ${isPhoneLandscape ? nothing : this._renderFooter()}
@@ -205,10 +205,16 @@ export class PanelCard extends LitElement {
 
         const isPhoneLandscape = this._deviceType === "phone" && this._deviceOrientation === "landscape";
 
+        const classes = {
+            "tablet-portrait": this._deviceType === "tablet" && this._deviceOrientation === "portrait",
+            "phone-portrait": this._deviceType === "phone" && this._deviceOrientation === "portrait",
+            "phone-landscape": this._deviceType === "phone" && this._deviceOrientation === "landscape",
+        };
+
         return html`
             <div class="area-container">
                 <div class="area-name ${this._deviceType === "phone" ? "overlay" : ""}">${name}</div>
-                <img class="area-picture" alt="Area picture..." src=${this._areaPicture} />
+                <img class="area-picture" ${classMap(classes)} alt="Area picture..." src=${this._areaPicture} />
                 ${this._areaChips.length > 0
                     ? html`
                           <div class="area-chips">
@@ -493,7 +499,10 @@ export class PanelCard extends LitElement {
     }
 
     private _handleHome() {
-        this._displayMode = "control";
+        if (this._displayMode !== "control") {
+            this._displayMode = "control";
+            return;
+        }
 
         const startArea = window.smartqasa.startArea;
         if (!startArea) return;
@@ -510,6 +519,7 @@ export class PanelCard extends LitElement {
     }
 
     private _handleAreas() {
+        this._displayMode = "control";
         areasDialog(this.hass);
     }
 
