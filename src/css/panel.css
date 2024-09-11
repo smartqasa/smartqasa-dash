@@ -158,7 +158,7 @@
 /* Phone Portrait */
 @media (orientation: portrait) and (max-width: 534px),
     (orientation: portrait) and (min-width: 535px) and (max-width: 600px) {
-    .container {
+    .container[control] {
         grid-template-rows: auto minmax(0, 1fr) auto;
         grid-template-areas:
             "area"
