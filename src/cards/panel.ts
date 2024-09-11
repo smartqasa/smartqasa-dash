@@ -149,7 +149,7 @@ export class PanelCard extends LitElement {
         const displayMode = this._displayMode;
 
         const containerClasses = {
-            admin: false,
+            admin: this._adminMode,
             control: displayMode === "control",
             entertain: displayMode === "entertain",
         };
@@ -173,7 +173,7 @@ export class PanelCard extends LitElement {
 
         // prettier-ignore
         return html`
-            <div class="container" admin control>
+            <div class="container" ${classMap(containerClasses)}>
                 ${this._deviceType === "tablet" ? this._renderHeader() : nothing}
                 ${content}
                 ${isPhoneLandscape ? nothing : this._renderFooter()}
