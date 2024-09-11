@@ -27,6 +27,13 @@
     gap: 1rem;
     padding: 0.6rem 0.6rem 0.3rem 0.6rem;
 }
+.container[phone-landscape] {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 100%;
+    grid-template-areas: "area body";
+    gap: 1rem;
+    padding: 0.6rem 0.6rem 0.3rem 0.6rem;
+}
 .container[control] {
     grid-template-rows: auto auto 1fr auto;
     grid-template-areas:
@@ -96,6 +103,17 @@
     gap: 1rem;
     position: relative;
 }
+.area-container[phone-landscape] {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr auto;
+    grid-template-areas:
+        "image"
+        "chips"
+        "footer";
+    gap: 1rem;
+    position: relative;
+}
+
 .area-name {
     grid-area: name;
     line-height: normal;
@@ -123,6 +141,10 @@
     align-items: center;
     justify-content: flex-start;
     margin-left: calc(var(--sq-chip-spacing, 0.4rem) * -1);
+}
+.area-chips[phone] {
+    grid-area: chips;
+    align-items: flex-start;
 }
 
 .area-picture {
@@ -171,6 +193,10 @@
     gap: var(--sq-tile-spacing, 0.8rem);
     overflow-y: auto;
 }
+.body-tiles[phone] {
+    grid-template-columns: 1fr 1fr;
+}
+
 .body-tiles[phone-portrait] {
     width: 100%;
     margin: 0;
@@ -205,66 +231,4 @@
 }
 .footer-button span[phone-portrait] {
     display: none;
-}
-
-/* Phone Landscape */
-@media (orientation: landscape) and (max-height: 534px),
-    (orientation: landscape) and (min-height: 535px) and (max-height: 600px) {
-    .container {
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: 100%;
-        grid-template-areas: "area body";
-        gap: 1rem;
-        padding: 0.6rem 0.6rem 0.3rem 0.6rem;
-    }
-    .area-container {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto 1fr auto;
-        grid-template-areas:
-            "image"
-            "chips"
-            "footer-p-l";
-        gap: 1rem;
-        position: relative;
-    }
-    .area-picture {
-        height: 35vh;
-    }
-    .area-name.overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        background-color: rgba(0, 0, 0, 0.5);
-        color: white;
-        padding: 0.5rem;
-        font-size: 2.5rem;
-        font-weight: var(--sq-title-font-weight, 400);
-        border-radius: 0.2rem 0 0 0;
-    }
-    .area-chips {
-        grid-area: chips;
-        align-items: flex-start;
-    }
-    .footer-container {
-        grid-area: footer-p-l;
-        display: flex;
-        gap: 3rem;
-        justify-content: center;
-        align-items: center;
-    }
-    .footer-button span {
-        display: none;
-    }
-    .body-container {
-        grid-area: body;
-        display: flex;
-        width: 100%;
-        overflow-y: auto;
-    }
-    .body-tiles {
-        width: 100%;
-        margin: 0;
-        grid-template-rows: var(--sq-tile-height, 7rem);
-        gap: var(--sq-tile-spacing, 0.8rem);
-    }
 }

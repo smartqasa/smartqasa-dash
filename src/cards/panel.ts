@@ -266,9 +266,8 @@ export class PanelCard extends LitElement {
         if (!this._config || !this._bodyTiles.length) return nothing;
 
         if (this._isPhone) {
-            const gridStyle = { gridTemplateColumns: "1fr 1fr" };
             return html`
-                <div class="body-tiles" style=${styleMap(gridStyle)}>
+                <div class="body-tiles" phone>
                     ${this._bodyTiles.flat().map((tile) => html`<div class="tile">${tile}</div>`)}
                 </div>
             `;
