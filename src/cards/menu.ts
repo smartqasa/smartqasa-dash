@@ -36,6 +36,7 @@ export class MenuCard extends LitElement {
         return css`
             .container {
                 display: block;
+                height: 100%;
                 border: none;
                 background-color: transparent;
                 box-sizing: border-box;
@@ -75,6 +76,7 @@ export class MenuCard extends LitElement {
             .tiles {
                 display: grid;
                 gap: var(--sq-tile-spacing, 0.8rem);
+                height: 100%;
                 width: 100%;
                 margin: auto;
                 grid-template-rows: var(--sq-tile-height, 7rem);

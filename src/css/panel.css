@@ -202,7 +202,6 @@
     .body-tiles {
         width: 100%;
         margin: 0;
-        grid-template-rows: var(--sq-tile-height, 7rem);
         gap: var(--sq-tile-spacing, 0.8rem);
     }
     .footer-button span {
@@ -268,7 +267,6 @@
     .body-tiles {
         width: 100%;
         margin: 0;
-        grid-template-rows: var(--sq-tile-height, 7rem);
         gap: var(--sq-tile-spacing, 0.8rem);
     }
 }
