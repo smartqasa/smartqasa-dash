@@ -9342,7 +9342,7 @@ let PanelCard = class PanelCard extends h {
         const isPhoneLandscape = this._deviceType === "phone" && this._deviceOrientation === "landscape";
         const displayMode = this._displayMode;
         const containerClasses = {
-            admin: false,
+            admin: this._adminMode,
             control: displayMode === "control",
             entertain: displayMode === "entertain",
         };
