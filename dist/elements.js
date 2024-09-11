@@ -342,6 +342,7 @@ let GridStack = class GridStack extends h {
             }
             .element {
                 width: 100%;
+            }
         `;
     }
     setConfig(config) {
@@ -4434,6 +4435,7 @@ let MenuCard = class MenuCard extends h {
         this._tabs = [];
         this._bodyTiles = [];
         this._menuTab = window.smartqasa.menuTab || 0;
+        this._gridStyle = {};
         this._deviceType = getDeviceType();
     }
     setConfig() { }
@@ -4493,6 +4495,11 @@ let MenuCard = class MenuCard extends h {
             }
         `;
     }
+    connectedCallback() {
+        super.connectedCallback();
+        ["orientationchange", "resize"].forEach((event) => window.addEventListener(event, this._handleDeviceChanges.bind(this)));
+        this._handleDeviceChanges();
+    }
     async firstUpdated(changedProps) {
         await this._loadMenuTabs();
         if (this._menuTab < 0 || this._menuTab >= this._tabs.length) {
@@ -4508,10 +4515,11 @@ let MenuCard = class MenuCard extends h {
             });
         }
     }
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        ["orientationchange", "resize"].forEach((event) => window.removeEventListener(event, this._handleDeviceChanges.bind(this)));
+    }
     render() {
-        const gridStyle = {
-            gridTemplateColumns: this._deviceType === "phone" ? "1fr" : "repeat(3, var(--sq-tile-width, 19.5rem))",
-        };
         const currentTiles = this._bodyTiles[this._menuTab] || [];
         return ke `
             <div class="container">
@@ -4528,11 +4536,32 @@ let MenuCard = class MenuCard extends h {
                             </div>
                         `)}
                 </div>
-                <div class="tiles" style=${se(gridStyle)}>
+                <div class="tiles" style=${se(this._gridStyle)}>
                     ${currentTiles.map((tile) => ke `<div class="tile">${tile}</div>`)}
                 </div>
             </div>
         `;
+    }
+    _handleDeviceChanges() {
+        const type = getDeviceType();
+        const orientation = getDeviceOrientation();
+        if (type === "phone") {
+            if (orientation === "landscape") {
+                this._gridStyle = {
+                    gridTemplateColumns: "1fr 1fr",
+                };
+            }
+            else {
+                this._gridStyle = {
+                    gridTemplateColumns: "1fr",
+                };
+            }
+        }
+        else {
+            this._gridStyle = {
+                gridTemplateColumns: "repeat(3, var(--sq-tile-width, 19.5rem))",
+            };
+        }
     }
     async _loadMenuTabs() {
         try {
@@ -4578,6 +4607,9 @@ __decorate([
 __decorate([
     r()
 ], MenuCard.prototype, "_menuTab", void 0);
+__decorate([
+    r()
+], MenuCard.prototype, "_gridStyle", void 0);
 MenuCard = __decorate([
     t$1("smartqasa-menu-card")
 ], MenuCard);
@@ -9280,14 +9312,17 @@ let PanelCard = class PanelCard extends h {
         this._area = this._config.area;
         this._areaPicture = await this._getAreaPicture();
     }
-    async firstUpdated() {
-        await this._loadContent();
+    connectedCallback() {
+        super.connectedCallback();
         if (this._isTablet) {
             this._initializeSwiper();
             this._startResetTimer();
         }
-        ["orientationchange", "resize"].forEach((event) => window.addEventListener(event, this._handleDeviceChanges.bind(this)));
         this._syncTime();
+        ["orientationchange", "resize"].forEach((event) => window.addEventListener(event, this._handleDeviceChanges.bind(this)));
+    }
+    async firstUpdated() {
+        await this._loadContent();
     }
     updated(changedProps) {
         if (this.hass) {

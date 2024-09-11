@@ -33,6 +33,7 @@ class GridStack extends LitElement {
             }
             .element {
                 width: 100%;
+            }
         `;
     }
 

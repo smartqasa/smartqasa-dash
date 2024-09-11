@@ -71,19 +71,23 @@ export class PanelCard extends LitElement {
         this._areaPicture = await this._getAreaPicture();
     }
 
-    protected async firstUpdated() {
-        await this._loadContent();
+    connectedCallback() {
+        super.connectedCallback();
 
         if (this._isTablet) {
             this._initializeSwiper();
             this._startResetTimer();
         }
 
+        this._syncTime();
+
         ["orientationchange", "resize"].forEach((event) =>
             window.addEventListener(event, this._handleDeviceChanges.bind(this))
         );
+    }
 
-        this._syncTime();
+    protected async firstUpdated() {
+        await this._loadContent();
     }
 
     protected updated(changedProps: PropertyValues) {

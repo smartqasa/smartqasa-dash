@@ -2,7 +2,7 @@ import { css, html, LitElement, PropertyValues, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 
-import { HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
+import { HassArea, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 import { loadYamlAsJson } from "../utils/load-yaml-as-json";
 import { getDeviceType, getDeviceOrientation } from "../utils/device-info";
 import { createElement } from "../utils/create-element";
@@ -14,19 +14,18 @@ interface Tab {
 }
 
 window.customCards.push({
-    type: "smartqasa-menu-card",
-    name: "SmartQasa Menu Card",
+    type: "smartqasa-areas-card",
+    name: "SmartQasa Areas Card",
     preview: true,
-    description: "A SmartQasa card for rendering a menu.",
+    description: "A SmartQasa card for rendering a list of areas.",
 });
 
 @customElement("smartqasa-menu-card")
-export class MenuCard extends LitElement {
+export class AreaCard extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() private _tabs: Tab[] = [];
     @state() private _bodyTiles: LovelaceCard[][] = [];
     @state() private _menuTab = window.smartqasa.menuTab || 0;
-    @state() private _gridStyle = {};
 
     private _deviceType = getDeviceType();
 
@@ -89,16 +88,6 @@ export class MenuCard extends LitElement {
         `;
     }
 
-    public connectedCallback() {
-        super.connectedCallback();
-
-        ["orientationchange", "resize"].forEach((event) =>
-            window.addEventListener(event, this._handleDeviceChanges.bind(this))
-        );
-
-        this._handleDeviceChanges();
-    }
-
     protected async firstUpdated(changedProps: PropertyValues): Promise<void> {
         await this._loadMenuTabs();
 
@@ -117,15 +106,11 @@ export class MenuCard extends LitElement {
         }
     }
 
-    public disconnectedCallback() {
-        super.disconnectedCallback();
-
-        ["orientationchange", "resize"].forEach((event) =>
-            window.removeEventListener(event, this._handleDeviceChanges.bind(this))
-        );
-    }
-
     protected render(): TemplateResult {
+        const gridStyle = {
+            gridTemplateColumns: this._deviceType === "phone" ? "1fr" : "repeat(3, var(--sq-tile-width, 19.5rem))",
+        };
+
         const currentTiles = this._bodyTiles[this._menuTab] || [];
 
         return html`
@@ -145,32 +130,11 @@ export class MenuCard extends LitElement {
                         `
                     )}
                 </div>
-                <div class="tiles" style=${styleMap(this._gridStyle)}>
+                <div class="tiles" style=${styleMap(gridStyle)}>
                     ${currentTiles.map((tile) => html`<div class="tile">${tile}</div>`)}
                 </div>
             </div>
         `;
-    }
-
-    private _handleDeviceChanges() {
-        const type = getDeviceType();
-        const orientation = getDeviceOrientation();
-
-        if (type === "phone") {
-            if (orientation === "landscape") {
-                this._gridStyle = {
-                    gridTemplateColumns: "1fr 1fr",
-                };
-            } else {
-                this._gridStyle = {
-                    gridTemplateColumns: "1fr",
-                };
-            }
-        } else {
-            this._gridStyle = {
-                gridTemplateColumns: "repeat(3, var(--sq-tile-width, 19.5rem))",
-            };
-        }
     }
 
     private async _loadMenuTabs(): Promise<void> {
