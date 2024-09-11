@@ -9341,11 +9341,11 @@ let PanelCard = class PanelCard extends h {
     render() {
         const isPhoneLandscape = this._deviceType === "phone" && this._deviceOrientation === "landscape";
         const displayMode = this._displayMode;
-        const classes = Rt({
+        const classes = {
             admin: this._adminMode,
             control: displayMode === "control",
             entertain: displayMode === "entertain",
-        });
+        };
         let content;
         // prettier-ignore
         switch (displayMode) {
@@ -9364,7 +9364,7 @@ let PanelCard = class PanelCard extends h {
         }
         // prettier-ignore
         return ke `
-            <div class="container ${classes}">
+            <div class="container" ${Rt(classes)}>
                 ${this._deviceType === "tablet" ? this._renderHeader() : D}
                 ${content}
                 ${isPhoneLandscape ? D : this._renderFooter()}
