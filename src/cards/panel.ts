@@ -207,12 +207,17 @@ export class PanelCard extends LitElement {
         const name = this._config?.name ?? this._areaObj?.name ?? "Area";
 
         return html`
-            <div class="area-container">
+            <div
+                class="area-container"
+                ?phone-portrait=${this._isPhone && this._isPortrait}
+                ?phone-landscape=${this._isPhone && this._isLandscape}
+            >
                 <div class="area-name ${this._isPhone ? "overlay" : ""}">${name}</div>
                 <img
                     class="area-picture"
                     ?tablet-portrait=${this._isTablet && this._isPortrait}
                     ?phone-portrait=${this._isPhone && this._isPortrait}
+                    ?phone-landscape=${this._isPhone && this._isLandscape}
                     src="${this._areaPicture}"
                     alt="Area picture..."
                 />
@@ -274,36 +279,34 @@ export class PanelCard extends LitElement {
         }
 
         return html`
-            <div class="body-container">
-                <div class="swiper">
-                    <div class="swiper-wrapper">
-                        ${this._bodyTiles.map((page, index) => {
-                            const gridStyle = {
-                                gridTemplateColumns: `repeat(${this._bodyColumns[index]}, var(--sq-tile-width, 19.5rem))`,
-                            };
+            <div class="swiper">
+                <div class="swiper-wrapper">
+                    ${this._bodyTiles.map((page, index) => {
+                        const gridStyle = {
+                            gridTemplateColumns: `repeat(${this._bodyColumns[index]}, var(--sq-tile-width, 19.5rem))`,
+                        };
 
-                            return html`
-                                <div class="swiper-slide">
-                                    <div class="body-tiles" style=${styleMap(gridStyle)}>
-                                        ${page.map((tile) => html`<div class="tile">${tile}</div>`)}
-                                    </div>
+                        return html`
+                            <div class="swiper-slide">
+                                <div class="body-tiles" style=${styleMap(gridStyle)}>
+                                    ${page.map((tile) => html`<div class="tile">${tile}</div>`)}
                                 </div>
-                            `;
-                        })}
-                    </div>
-                    ${this._bodyTiles.length > 1
-                        ? html`
-                              <div
-                                  class="swiper-button-prev"
-                                  @click=${(e: Event) => this._handleSwiperNavigation(e, "prev")}
-                              ></div>
-                              <div
-                                  class="swiper-button-next"
-                                  @click=${(e: Event) => this._handleSwiperNavigation(e, "next")}
-                              ></div>
-                          `
-                        : nothing}
+                            </div>
+                        `;
+                    })}
                 </div>
+                ${this._bodyTiles.length > 1
+                    ? html`
+                          <div
+                              class="swiper-button-prev"
+                              @click=${(e: Event) => this._handleSwiperNavigation(e, "prev")}
+                          ></div>
+                          <div
+                              class="swiper-button-next"
+                              @click=${(e: Event) => this._handleSwiperNavigation(e, "next")}
+                          ></div>
+                      `
+                    : nothing}
             </div>
         `;
     }

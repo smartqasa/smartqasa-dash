@@ -142,10 +142,6 @@
     justify-content: flex-start;
     margin-left: calc(var(--sq-chip-spacing, 0.4rem) * -1);
 }
-.area-chips[phone] {
-    grid-area: chips;
-    align-items: flex-start;
-}
 
 .area-picture {
     grid-area: image;
@@ -167,16 +163,8 @@
     height: 35vh;
 }
 
-.body-container {
-    grid-area: body;
-}
-.body-container[phone-portrait] {
-    display: flex;
-    width: 100%;
-    overflow-y: auto;
-}
-
 .swiper {
+    grid-area: body;
     width: 100%;
 }
 .swiper-slide {
