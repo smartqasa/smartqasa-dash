@@ -4508,7 +4508,7 @@ let MenuCard = class MenuCard extends h {
     }
     render() {
         const gridStyle = {
-            gridTemplateColumns: this._deviceType === "phone" ? "1fr 1fr" : "repeat(3, var(--sq-tile-width, 19.5rem))",
+            gridTemplateColumns: this._deviceType === "phone" ? "1fr" : "repeat(3, var(--sq-tile-width, 19.5rem))",
         };
         const currentTiles = this._bodyTiles[this._menuTab] || [];
         return ke `
@@ -9199,6 +9199,7 @@ function Navigation(_ref) {
 function areasDialog(hass) {
     if (!hass)
         return;
+    const columns = getDeviceType() === "tablet" ? 3 : 1;
     const areas = Object.values(hass.areas).filter((area) => area?.labels.includes("visible"));
     const cards = areas?.map((area) => ({
         type: "custom:smartqasa-area-tile",
@@ -9209,7 +9210,7 @@ function areasDialog(hass) {
         timeout: 60000,
         content: {
             type: "custom:smartqasa-grid-stack",
-            columns: 3,
+            columns: columns,
             cards: cards,
         },
     };

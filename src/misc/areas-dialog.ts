@@ -1,8 +1,10 @@
 import { HassArea } from "../types";
+import { getDeviceType } from "../utils/device-info";
 
 export function areasDialog(hass: any): void {
     if (!hass) return;
 
+    const columns = getDeviceType() === "tablet" ? 3 : 1;
     const areas = Object.values<HassArea>(hass.areas).filter((area) => area?.labels.includes("visible"));
 
     const cards = areas?.map((area) => ({
@@ -15,7 +17,7 @@ export function areasDialog(hass: any): void {
         timeout: 60000,
         content: {
             type: "custom:smartqasa-grid-stack",
-            columns: 3,
+            columns: columns,
             cards: cards,
         },
     };
