@@ -46,12 +46,13 @@ window.customCards.push({
 export class PanelCard extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() private _config?: Config;
-    @state() private _isAdminMode = false;
+    @state() private _adminMode = false;
     @state() private _displayMode: "control" | "entertain" = "control";
+    @state() private _deviceOrientation: string = getDeviceOrientation();
     @state() private _isPhone: boolean = getDeviceType() === "phone";
     @state() private _isTablet: boolean = getDeviceType() === "tablet";
-    @state() private _isPortrait: boolean = getDeviceOrientation() === "portrait";
-    @state() private _isLandscape: boolean = getDeviceOrientation() === "landscape";
+    @state() private _isPortrait: boolean = this._deviceOrientation === "portrait";
+    @state() private _isLandscape: boolean = this._deviceOrientation === "landscape";
     @state() private _areaPicture: string = defaultImage;
     private _timeIntervalId: number | undefined;
     private _swiper?: Swiper;
@@ -88,8 +89,8 @@ export class PanelCard extends LitElement {
 
     protected updated(changedProps: PropertyValues) {
         if (this.hass) {
-            const isAdminMode = this.hass.states["input_boolean.admin_mode"]?.state === "on";
-            this._isAdminMode = (this.hass.user?.is_admin ?? false) || isAdminMode;
+            const adminMode = this.hass.states["input_boolean.admin_mode"]?.state === "on";
+            this._adminMode = (this.hass.user?.is_admin ?? false) || adminMode;
         }
 
         if (this._isTablet) {
@@ -167,7 +168,7 @@ export class PanelCard extends LitElement {
         return html`
             <div
                 class="container"
-                ?admin=${this._isAdminMode}
+                ?admin=${this._adminMode}
                 ?control=${displayMode === "control"}
                 ?entertain=${displayMode === "entertain"}
             >
@@ -205,12 +206,21 @@ export class PanelCard extends LitElement {
     private _renderArea() {
         const name = this._config?.name ?? this._areaObj?.name ?? "Area";
 
-        const isPhoneLandscape = this._isPhone && this._isLandscape;
-
         return html`
-            <div class="area-container">
+            <div
+                class="area-container"
+                ?phone-portrait=${this._isPhone && this._isPortrait}
+                ?phone-landscape=${this._isPhone && this._isLandscape}
+            >
                 <div class="area-name ${this._isPhone ? "overlay" : ""}">${name}</div>
-                <img class="area-picture" src=${this._areaPicture} alt="Area picture..." />
+                <img
+                    class="area-picture"
+                    ?tablet-portrait=${this._isTablet && this._isPortrait}
+                    ?phone-portrait=${this._isPhone && this._isPortrait}
+                    ?phone-landscape=${this._isPhone && this._isLandscape}
+                    src="${this._areaPicture}"
+                    alt="Area picture..."
+                />
                 ${this._areaChips.length > 0
                     ? html`
                           <div class="area-chips">
@@ -218,7 +228,9 @@ export class PanelCard extends LitElement {
                           </div>
                       `
                     : nothing}
-                ${isPhoneLandscape ? html`<div class="footer-container">${this._renderFooter()}</div>` : nothing}
+                ${this._isPhone && this._isLandscape
+                    ? html`<div class="footer-container">${this._renderFooter()}</div>`
+                    : nothing}
             </div>
         `;
     }
@@ -259,9 +271,8 @@ export class PanelCard extends LitElement {
         if (!this._config || !this._bodyTiles.length) return nothing;
 
         if (this._isPhone) {
-            const gridStyle = { gridTemplateColumns: "1fr 1fr" };
             return html`
-                <div class="body-tiles" style=${styleMap(gridStyle)}>
+                <div class="body-tiles" phone>
                     ${this._bodyTiles.flat().map((tile) => html`<div class="tile">${tile}</div>`)}
                 </div>
             `;
