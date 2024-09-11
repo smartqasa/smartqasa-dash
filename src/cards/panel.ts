@@ -145,7 +145,7 @@ export class PanelCard extends LitElement {
         const isPhoneLandscape = this._deviceType === "phone" && this._deviceOrientation === "landscape";
 
         const displayMode = this._displayMode;
-        console.log("Display mode:", displayMode);
+
         const containerClasses = {
             container: true,
             admin: this._adminMode,
@@ -170,6 +170,7 @@ export class PanelCard extends LitElement {
                 break;
         }
 
+        console.log("Container Classes:", containerClasses);
         // prettier-ignore
         return html`
             <div class=${classMap(containerClasses)}>

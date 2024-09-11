@@ -9339,7 +9339,6 @@ let PanelCard = class PanelCard extends h {
     render() {
         const isPhoneLandscape = this._deviceType === "phone" && this._deviceOrientation === "landscape";
         const displayMode = this._displayMode;
-        console.log("Display mode:", displayMode);
         const containerClasses = {
             container: true,
             admin: this._adminMode,
@@ -9362,6 +9361,7 @@ let PanelCard = class PanelCard extends h {
                 content = D;
                 break;
         }
+        console.log("Container Classes:", containerClasses);
         // prettier-ignore
         return ke `
             <div class=${Rt(containerClasses)}>
