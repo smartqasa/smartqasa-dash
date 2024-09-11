@@ -170,8 +170,7 @@ export class PanelCard extends LitElement {
             <div
                 class="container"
                 ?admin=${this._adminMode}
-                ?control=${displayMode === "control"}
-                ?entertain=${displayMode === "entertain"}
+                ?${displayMode}
             >
                 ${this._deviceType === "tablet" ? this._renderHeader() : nothing}
                 ${content}

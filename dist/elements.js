@@ -9356,8 +9356,7 @@ let PanelCard = class PanelCard extends h {
             <div
                 class="container"
                 ?admin=${this._adminMode}
-                ?control=${displayMode === "control"}
-                ?entertain=${displayMode === "entertain"}
+                ?${displayMode}
             >
                 ${this._deviceType === "tablet" ? this._renderHeader() : D}
                 ${content}
