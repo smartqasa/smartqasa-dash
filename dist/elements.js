@@ -9342,6 +9342,7 @@ let PanelCard = class PanelCard extends h {
         const isPhoneLandscape = this._deviceType === "phone" && this._deviceOrientation === "landscape";
         const displayMode = this._displayMode;
         const classes = {
+            container: true,
             admin: this._adminMode,
             control: displayMode === "control",
             entertain: displayMode === "entertain",
@@ -9364,7 +9365,7 @@ let PanelCard = class PanelCard extends h {
         }
         // prettier-ignore
         return ke `
-            <div class="container" ${Rt(classes)}>
+            <div class=${Rt(classes)}>
                 ${this._deviceType === "tablet" ? this._renderHeader() : D}
                 ${content}
                 ${isPhoneLandscape ? D : this._renderFooter()}
@@ -9391,17 +9392,16 @@ let PanelCard = class PanelCard extends h {
     _renderArea() {
         const name = this._config?.name ?? this._areaObj?.name ?? "Area";
         const isPhoneLandscape = this._deviceType === "phone" && this._deviceOrientation === "landscape";
-        const classes = {
+        ({
+            "area-picture": true,
             "tablet-portrait": this._deviceType === "tablet" && this._deviceOrientation === "portrait",
             "phone-portrait": this._deviceType === "phone" && this._deviceOrientation === "portrait",
             "phone-landscape": this._deviceType === "phone" && this._deviceOrientation === "landscape",
-        };
+        });
         return ke `
             <div class="area-container">
                 <div class="area-name ${this._deviceType === "phone" ? "overlay" : ""}">${name}</div>
-                <div class="area-picture">
-                    ${Rt(classes)} <img src=${this._areaPicture} alt="Area picture..." />
-                </div>
+                <img class="area-picture" alt="Area picture..." src=${this._areaPicture} />
                 ${this._areaChips.length > 0
             ? ke `
                           <div class="area-chips">
