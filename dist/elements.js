@@ -9292,8 +9292,10 @@ let PanelCard = class PanelCard extends h {
         this._syncTime();
     }
     updated(changedProps) {
-        const adminMode = this.hass?.states["input_boolean.admin_mode"]?.state === "on";
-        this._adminMode = (this.hass?.user?.is_admin ?? false) || adminMode;
+        if (this.hass) {
+            const adminMode = this.hass.states["input_boolean.admin_mode"]?.state === "on";
+            this._adminMode = (this.hass.user?.is_admin ?? false) || adminMode;
+        }
         if (this._deviceType === "tablet") {
             if (this._swiper) {
                 this._swiper.update();
@@ -9344,6 +9346,7 @@ let PanelCard = class PanelCard extends h {
             control: displayMode === "control",
             entertain: displayMode === "entertain",
         };
+        console.log("Container Classes", containerClasses);
         let content;
         // prettier-ignore
         switch (displayMode) {

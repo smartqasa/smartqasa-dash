@@ -87,8 +87,10 @@ export class PanelCard extends LitElement {
     }
 
     protected updated(changedProps: PropertyValues) {
-        const adminMode = this.hass?.states["input_boolean.admin_mode"]?.state === "on";
-        this._adminMode = (this.hass?.user?.is_admin ?? false) || adminMode;
+        if (this.hass) {
+            const adminMode = this.hass.states["input_boolean.admin_mode"]?.state === "on";
+            this._adminMode = (this.hass.user?.is_admin ?? false) || adminMode;
+        }
 
         if (this._deviceType === "tablet") {
             if (this._swiper) {
@@ -151,6 +153,8 @@ export class PanelCard extends LitElement {
             control: displayMode === "control",
             entertain: displayMode === "entertain",
         };
+
+        console.log("Container Classes", containerClasses);
 
         let content;
         // prettier-ignore
