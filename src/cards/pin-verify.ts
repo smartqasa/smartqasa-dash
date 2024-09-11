@@ -1,4 +1,4 @@
-import { css, html, LitElement } from "lit";
+import { css, html, LitElement, nothing, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 
@@ -85,11 +85,15 @@ export class PinVerifyCard extends LitElement {
 
     public setConfig(config: Config) {
         this._config = { ...config };
-        this.validateEntities();
+        this._validateEntities();
     }
 
-    private validateEntities() {
+    private _validateEntities() {
         if (!this._config) return;
+
+        this._pinEntity = this._config.pin_entity || "input_text.admin_pin_code";
+        this._outcomeEntity = this._config.outcome_entity || "input_boolean.admin_mode";
+
         const pinDomain = this._config.pin_entity.split(".")[0];
         const outcomeDomain = this._config.outcome_entity.split(".")[0];
         if (pinDomain !== "input_text") {
@@ -102,12 +106,10 @@ export class PinVerifyCard extends LitElement {
                 `Invalid entity domain: Outcome entity should be of domain "input_boolean", got "${outcomeDomain}" instead.`
             );
         }
-        this._pinEntity = this._config.pin_entity || "input_text.admin_pin_code";
-        this._outcomeEntity = this._config.outcome_entity || "input_boolean.admin_mode";
     }
 
-    protected render() {
-        if (!this._config) return html``;
+    protected render(): TemplateResult | typeof nothing {
+        if (!this._config) return nothing;
 
         const title = this._config.title || "Enter PIN";
 
@@ -136,21 +138,21 @@ export class PinVerifyCard extends LitElement {
                 </div>
                 <div class="masked-pin" style="${styleMap(pinStyles)}">${maskedPin}</div>
                 <div class="grid">
-                    ${[1, 2, 3, 4, 5, 6, 7, 8, 9, "☓", 0, "✓"].map((digit) => this.renderButton(digit))}
+                    ${[1, 2, 3, 4, 5, 6, 7, 8, 9, "☓", 0, "✓"].map((digit) => this._renderButton(digit))}
                 </div>
             </div>
         `;
     }
 
-    private renderButton(digit: number | string) {
-        return html`<div class="button" @click=${() => this.handleInput(digit)}>${digit}</div>`;
+    private _renderButton(digit: number | string) {
+        return html`<div class="button" @click=${() => this._handleInput(digit)}>${digit}</div>`;
     }
 
-    private handleInput(digit: number | string) {
+    private _handleInput(digit: number | string) {
         if (this._pinState) return;
 
         if (digit === "✓") {
-            this.verifyPin();
+            this._verifyPin();
         } else if (digit === "☓") {
             this._inputPin = "";
             this._maskedPin = "";
@@ -160,7 +162,7 @@ export class PinVerifyCard extends LitElement {
         }
     }
 
-    private verifyPin() {
+    private _verifyPin() {
         if (!this.hass || !this._pinEntity || !this._outcomeEntity) return;
 
         const adminPin = this.hass.states[this._pinEntity].state;

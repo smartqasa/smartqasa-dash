@@ -9755,11 +9755,13 @@ let PinVerifyCard = class PinVerifyCard extends h {
     `; }
     setConfig(config) {
         this._config = { ...config };
-        this.validateEntities();
+        this._validateEntities();
     }
-    validateEntities() {
+    _validateEntities() {
         if (!this._config)
             return;
+        this._pinEntity = this._config.pin_entity || "input_text.admin_pin_code";
+        this._outcomeEntity = this._config.outcome_entity || "input_boolean.admin_mode";
         const pinDomain = this._config.pin_entity.split(".")[0];
         const outcomeDomain = this._config.outcome_entity.split(".")[0];
         if (pinDomain !== "input_text") {
@@ -9768,12 +9770,10 @@ let PinVerifyCard = class PinVerifyCard extends h {
         if (outcomeDomain !== "input_boolean") {
             throw new Error(`Invalid entity domain: Outcome entity should be of domain "input_boolean", got "${outcomeDomain}" instead.`);
         }
-        this._pinEntity = this._config.pin_entity || "input_text.admin_pin_code";
-        this._outcomeEntity = this._config.outcome_entity || "input_boolean.admin_mode";
     }
     render() {
         if (!this._config)
-            return ke ``;
+            return D;
         const title = this._config.title || "Enter PIN";
         let maskedPin, pinStyles;
         if (!this._pinState) {
@@ -9802,19 +9802,19 @@ let PinVerifyCard = class PinVerifyCard extends h {
                 </div>
                 <div class="masked-pin" style="${se(pinStyles)}">${maskedPin}</div>
                 <div class="grid">
-                    ${[1, 2, 3, 4, 5, 6, 7, 8, 9, "☓", 0, "✓"].map((digit) => this.renderButton(digit))}
+                    ${[1, 2, 3, 4, 5, 6, 7, 8, 9, "☓", 0, "✓"].map((digit) => this._renderButton(digit))}
                 </div>
             </div>
         `;
     }
-    renderButton(digit) {
-        return ke `<div class="button" @click=${() => this.handleInput(digit)}>${digit}</div>`;
+    _renderButton(digit) {
+        return ke `<div class="button" @click=${() => this._handleInput(digit)}>${digit}</div>`;
     }
-    handleInput(digit) {
+    _handleInput(digit) {
         if (this._pinState)
             return;
         if (digit === "✓") {
-            this.verifyPin();
+            this._verifyPin();
         }
         else if (digit === "☓") {
             this._inputPin = "";
@@ -9825,7 +9825,7 @@ let PinVerifyCard = class PinVerifyCard extends h {
             this._maskedPin += "*";
         }
     }
-    verifyPin() {
+    _verifyPin() {
         if (!this.hass || !this._pinEntity || !this._outcomeEntity)
             return;
         const adminPin = this.hass.states[this._pinEntity].state;
