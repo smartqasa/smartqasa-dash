@@ -148,7 +148,7 @@ export class PanelCard extends LitElement {
 
         const displayMode = this._displayMode;
 
-        const containerClasses = {
+        const classes = {
             admin: this._adminMode,
             control: displayMode === "control",
             entertain: displayMode === "entertain",
@@ -173,12 +173,12 @@ export class PanelCard extends LitElement {
 
         // prettier-ignore
         return html`
-            <div class="container" ${classMap(containerClasses)}>
-                ${this._deviceType === "tablet" ? this._renderHeader() : nothing}
-                ${content}
-                ${isPhoneLandscape ? nothing : this._renderFooter()}
-            </div>
-        `;
+        <div class="container" ${classMap(classes)}>
+            ${this._deviceType === "tablet" ? this._renderHeader() : nothing}
+            ${content}
+            ${isPhoneLandscape ? nothing : this._renderFooter()}
+        </div>
+    `;
     }
 
     private _handleDeviceChanges() {
@@ -212,7 +212,7 @@ export class PanelCard extends LitElement {
         return html`
             <div class="area-container">
                 <div class="area-name ${this._deviceType === "phone" ? "overlay" : ""}">${name}</div>
-                <img class="area-picture" ${classMap(classes)} alt="Area picture..." src=${this._areaPicture} />
+                <img class="area-picture" src="${this._areaPicture}" alt="Area picture..." />
                 ${this._areaChips.length > 0
                     ? html`
                           <div class="area-chips">

@@ -9341,7 +9341,7 @@ let PanelCard = class PanelCard extends h {
     render() {
         const isPhoneLandscape = this._deviceType === "phone" && this._deviceOrientation === "landscape";
         const displayMode = this._displayMode;
-        const containerClasses = {
+        const classes = {
             admin: this._adminMode,
             control: displayMode === "control",
             entertain: displayMode === "entertain",
@@ -9364,12 +9364,12 @@ let PanelCard = class PanelCard extends h {
         }
         // prettier-ignore
         return ke `
-            <div class="container" ${Rt(containerClasses)}>
-                ${this._deviceType === "tablet" ? this._renderHeader() : D}
-                ${content}
-                ${isPhoneLandscape ? D : this._renderFooter()}
-            </div>
-        `;
+        <div class="container" ${Rt(classes)}>
+            ${this._deviceType === "tablet" ? this._renderHeader() : D}
+            ${content}
+            ${isPhoneLandscape ? D : this._renderFooter()}
+        </div>
+    `;
     }
     _handleDeviceChanges() {
         this._deviceOrientation = getDeviceOrientation();
@@ -9391,13 +9391,13 @@ let PanelCard = class PanelCard extends h {
     _renderArea() {
         const name = this._config?.name ?? this._areaObj?.name ?? "Area";
         const isPhoneLandscape = this._deviceType === "phone" && this._deviceOrientation === "landscape";
-        const classes = {
+        ({
             "tablet-portrait": this._deviceType === "tablet" && this._deviceOrientation === "portrait",
-        };
+        });
         return ke `
             <div class="area-container">
                 <div class="area-name ${this._deviceType === "phone" ? "overlay" : ""}">${name}</div>
-                <img class="area-picture" ${Rt(classes)} alt="Area picture..." src=${this._areaPicture} />
+                <img class="area-picture" src="${this._areaPicture}" alt="Area picture..." />
                 ${this._areaChips.length > 0
             ? ke `
                           <div class="area-chips">
