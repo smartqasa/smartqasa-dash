@@ -170,7 +170,8 @@ export class PanelCard extends LitElement {
             <div
                 class="container"
                 ?admin=${this._adminMode}
-                ?${displayMode}
+                ?control=${displayMode === "control"}
+                ?entertain=${displayMode === "entertain"}
             >
                 ${this._deviceType === "tablet" ? this._renderHeader() : nothing}
                 ${content}
@@ -203,14 +204,17 @@ export class PanelCard extends LitElement {
 
         const isPhoneLandscape = this._deviceType === "phone" && this._deviceOrientation === "landscape";
 
-        const classes = {
-            "tablet-portrait": this._deviceType === "tablet" && this._deviceOrientation === "portrait",
-        };
+        const tabletPortrait = this._deviceType === "tablet" && this._deviceOrientation === "portrait";
 
         return html`
             <div class="area-container">
                 <div class="area-name ${this._deviceType === "phone" ? "overlay" : ""}">${name}</div>
-                <img class="area-picture" src="${this._areaPicture}" alt="Area picture..." />
+                <img
+                    class="area-picture"
+                    ?tablet-portrait=${tabletPortrait}
+                    src="${this._areaPicture}"
+                    alt="Area picture..."
+                />
                 ${this._areaChips.length > 0
                     ? html`
                           <div class="area-chips">
