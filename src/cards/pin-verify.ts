@@ -106,7 +106,6 @@ export class PinVerifyCard extends LitElement {
                 `Invalid entity domain: Outcome entity should be of domain "input_boolean", got "${outcomeDomain}" instead.`
             );
         }
-        console.log(this._pinEntity, this._outcomeEntity);
     }
 
     protected render(): TemplateResult | typeof nothing {
@@ -171,8 +170,6 @@ export class PinVerifyCard extends LitElement {
             console.error(`Entity ${this._pinEntity} not found.`);
             return;
         }
-
-        console.log("Verifying PIN", pinStateObj.state, this._inputPin);
 
         const adminPin = pinStateObj.state;
         if (this._inputPin === adminPin) {

@@ -1,5 +1,6 @@
 import { CSSResultGroup, html, LitElement, nothing, PropertyValues, TemplateResult, unsafeCSS } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
+import { classMap } from "lit/directives/class-map.js";
 import { styleMap } from "lit/directives/style-map.js";
 
 import { HassArea, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
@@ -11,7 +12,6 @@ import { Navigation } from "swiper/modules";
 import { createElement } from "../utils/create-element";
 import { loadYamlAsJson } from "../utils/load-yaml-as-json";
 import { areasDialog } from "../misc/areas-dialog";
-import { entertainDialog } from "../misc/entertain-dialog";
 import { menuConfig } from "../misc/menu-config";
 import { formattedTime, formattedDate } from "../utils/format-date-time";
 
@@ -47,7 +47,7 @@ window.customCards.push({
 export class PanelCard extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() private _config?: Config;
-    @state() private _isAdmin = false;
+    @state() private _adminMode = false;
     @state() private _displayMode: "control" | "entertain" = "control";
     @state() private _deviceOrientation: string = getDeviceOrientation();
     @state() private _deviceType: string = getDeviceType();
@@ -87,7 +87,8 @@ export class PanelCard extends LitElement {
     }
 
     protected updated(changedProps: PropertyValues) {
-        this._isAdmin = this.hass?.user?.is_admin ?? false;
+        const adminMode = this.hass?.states["input_boolean.admin_mode"]?.state === "on";
+        this._adminMode = (this.hass?.user?.is_admin ?? false) || adminMode;
 
         if (this._deviceType === "tablet") {
             if (this._swiper) {
@@ -142,25 +143,38 @@ export class PanelCard extends LitElement {
 
     protected render(): TemplateResult {
         const isPhoneLandscape = this._deviceType === "phone" && this._deviceOrientation === "landscape";
-        const containerStyle = {
-            height: `${this._isAdmin ? "calc(100vh - 56px)" : "100vh"}`,
+
+        const displayMode = this._displayMode;
+
+        const containerClasses = {
+            container: true,
+            admin: this._adminMode,
+            control: displayMode === "control",
+            entertain: displayMode === "entertain",
         };
 
-        if (this._displayMode === "entertain") {
-            return html`
-                <div class="container.entertain" style="${styleMap(containerStyle)}">
-                    ${this._deviceType === "tablet" ? this._renderHeader() : nothing}
-                    ${isPhoneLandscape ? nothing : this._renderFooter()}
-                </div>
-            `;
+        let content;
+        // prettier-ignore
+        switch (displayMode) {
+            case "control":
+                content = html`
+                    ${this._renderArea()}
+                    ${this._renderBody()}
+                `;
+                break;
+            case "entertain":
+                content = html`<!-- Entertain mode: Area and Body are hidden -->`;
+                break;
+            default:
+                content = nothing;
+                break;
         }
 
         // prettier-ignore
         return html`
-            <div class="container" style="${styleMap(containerStyle)}">
+            <div class="container" class=${classMap(containerClasses)}>
                 ${this._deviceType === "tablet" ? this._renderHeader() : nothing}
-                ${this._renderArea()}
-                ${this._renderBody()}
+                ${content}
                 ${isPhoneLandscape ? nothing : this._renderFooter()}
             </div>
         `;
