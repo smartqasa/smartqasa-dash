@@ -6,8 +6,8 @@ import { HomeAssistant, LovelaceCardConfig } from "../types";
 
 interface Config extends LovelaceCardConfig {
     title?: string;
-    pin_entity: string;
-    outcome_entity: string;
+    pin_entity?: string;
+    outcome_entity?: string;
 }
 
 window.customCards.push({
@@ -94,8 +94,8 @@ export class PinVerifyCard extends LitElement {
         this._pinEntity = this._config.pin_entity || "input_text.admin_pin_code";
         this._outcomeEntity = this._config.outcome_entity || "input_boolean.admin_mode";
 
-        const pinDomain = this._config.pin_entity.split(".")[0];
-        const outcomeDomain = this._config.outcome_entity.split(".")[0];
+        const pinDomain = this._pinEntity.split(".")[0];
+        const outcomeDomain = this._outcomeEntity.split(".")[0];
         if (pinDomain !== "input_text") {
             throw new Error(
                 `Invalid entity domain: PIN entity should be of domain "input_text", got "${pinDomain}" instead.`
