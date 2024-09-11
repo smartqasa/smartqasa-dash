@@ -117,7 +117,7 @@ export class PinVerifyCard extends LitElement {
         if (!this._pinState) {
             maskedPin = this._maskedPin;
             pinStyles = {
-                color: "rgb(var(--sq-primary-font-rgb))",
+                color: "var(--sq-primary-font-rgb)",
             };
         } else if (this._pinState === "valid") {
             maskedPin = "PIN Accepted";
@@ -165,7 +165,13 @@ export class PinVerifyCard extends LitElement {
     private _verifyPin() {
         if (!this.hass || !this._pinEntity || !this._outcomeEntity) return;
 
-        const adminPin = this.hass.states[this._pinEntity].state;
+        const pinStateObj = this.hass.states[this._pinEntity];
+        if (!pinStateObj) {
+            console.error(`Entity ${this._pinEntity} not found.`);
+            return;
+        }
+
+        const adminPin = pinStateObj.state;
         if (this._inputPin === adminPin) {
             this._pinState = "valid";
             try {
@@ -173,7 +179,7 @@ export class PinVerifyCard extends LitElement {
                     entity_id: this._outcomeEntity,
                 });
             } catch (error) {
-                console.error("Failed to turn_on the admin mode entity:", error);
+                console.error("Failed to turn on the admin mode entity:", error);
             }
             setTimeout(() => {
                 this._inputPin = "";
