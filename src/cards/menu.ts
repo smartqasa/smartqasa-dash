@@ -13,13 +13,6 @@ interface Tab {
     tiles: LovelaceCardConfig[];
 }
 
-window.customCards.push({
-    type: "smartqasa-menu-card",
-    name: "SmartQasa Menu Card",
-    preview: true,
-    description: "A SmartQasa card for rendering a menu.",
-});
-
 @customElement("smartqasa-menu-card")
 export class MenuCard extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;

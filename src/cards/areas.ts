@@ -12,6 +12,8 @@ export class AreasCard extends LitElement {
     @state() private _areaTiles: LovelaceCard[] = [];
     @state() private _gridStyle = {};
 
+    public setConfig(): void {}
+
     static get styles() {
         return css`
             :host {
