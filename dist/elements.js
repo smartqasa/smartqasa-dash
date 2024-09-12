@@ -9584,7 +9584,6 @@ let PanelCard = class PanelCard extends h {
     connectedCallback() {
         super.connectedCallback();
         this._syncTime();
-        this._loadContent();
         ["orientationchange", "resize"].forEach((event) => window.addEventListener(event, this._handleDeviceChanges.bind(this)));
     }
     willUpdate(changedProps) {
@@ -9611,7 +9610,8 @@ let PanelCard = class PanelCard extends h {
                 });
         }
     }
-    firstUpdated() {
+    async firstUpdated() {
+        this._loadContent();
         console.log("First updated", this._isTablet, this._bodyTiles.length);
         if (this._isTablet && this._bodyTiles.length > 1) {
             this._initializeSwiper();
