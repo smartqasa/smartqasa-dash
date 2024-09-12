@@ -127,10 +127,9 @@ export class PanelCard extends LitElement {
         }
     }
 
-    protected updated(): void {
-        if (this._isTablet && this._bodyTiles.length > 1 && !this._swiper) {
+    protected firstUpdated(): void {
+        if (this._isTablet && this._bodyTiles.length > 1) {
             this._initializeSwiper();
-            console.log("Swiper initialized during willUpdate");
         }
     }
 
@@ -315,12 +314,6 @@ export class PanelCard extends LitElement {
     }
 
     private _initializeSwiper() {
-        const swiperContainer = this.shadowRoot?.querySelector(".swiper");
-        if (!swiperContainer) {
-            console.error("Swiper container not found");
-            return;
-        }
-
         const swiperParams: SwiperOptions = {
             initialSlide: 0,
             loop: true,
@@ -331,8 +324,7 @@ export class PanelCard extends LitElement {
             },
         };
 
-        this._swiper = new Swiper(swiperContainer as HTMLElement, swiperParams);
-        //Swiper.use([Navigation]);
+        this._swiper = new Swiper(".swiper", swiperParams);
 
         this._startResetTimer();
     }

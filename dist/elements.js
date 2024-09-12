@@ -9621,10 +9621,9 @@ let PanelCard = class PanelCard extends h {
                 });
         }
     }
-    updated() {
-        if (this._isTablet && this._bodyTiles.length > 1 && !this._swiper) {
+    firstUpdated() {
+        if (this._isTablet && this._bodyTiles.length > 1) {
             this._initializeSwiper();
-            console.log("Swiper initialized during willUpdate");
         }
     }
     render() {
@@ -9792,11 +9791,6 @@ let PanelCard = class PanelCard extends h {
         syncTime();
     }
     _initializeSwiper() {
-        const swiperContainer = this.shadowRoot?.querySelector(".swiper");
-        if (!swiperContainer) {
-            console.error("Swiper container not found");
-            return;
-        }
         const swiperParams = {
             initialSlide: 0,
             loop: true,
@@ -9806,8 +9800,7 @@ let PanelCard = class PanelCard extends h {
                 prevEl: ".swiper-button-prev",
             },
         };
-        this._swiper = new Swiper(swiperContainer, swiperParams);
-        //Swiper.use([Navigation]);
+        this._swiper = new Swiper(".swiper", swiperParams);
         this._startResetTimer();
     }
     _startResetTimer() {
