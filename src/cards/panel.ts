@@ -285,9 +285,7 @@ export class PanelCard extends LitElement {
 
     private _renderEntertain(): TemplateResult {
         return html`
-            <div class="entertain-container">
-                <div class="entertain-card">${this._audioCard}</div>
-            </div>
+            <div class="entertain-container">${this._audioCard}</div>
             ;
         `;
     }

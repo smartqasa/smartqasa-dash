@@ -162,15 +162,6 @@
     gap: 1rem;
 }
 
-.entertain-card {
-    width: 100%;
-    height: 100%;
-    box-sizing: border-box;
-    border: var(--sq-card-border, none);
-    border-radius: var(--sq-card-border-radius, 1.5rem);
-    background-color: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
-}
-
 /* Tablet Portrait */
 @media (orientation: portrait) and (min-width: 601px), (orientation: portrait) and (width: 534px) {
     .area-picture {
