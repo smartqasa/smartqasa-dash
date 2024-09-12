@@ -11,7 +11,6 @@ import { Navigation } from "swiper/modules";
 import { createElement } from "../utils/create-element";
 import { loadYamlAsJson } from "../utils/load-yaml-as-json";
 import { dialogTable } from "../tables/dialogs";
-import { menuConfig } from "../../archive/menu-config";
 import { formattedTime, formattedDate } from "../utils/format-date-time";
 
 import panelStyles from "../css/panel.css";
@@ -76,8 +75,6 @@ export class PanelCard extends LitElement {
 
         this._syncTime();
 
-        this._loadContent();
-
         ["orientationchange", "resize"].forEach((event) =>
             window.addEventListener(event, this._handleDeviceChanges.bind(this))
         );
@@ -111,7 +108,9 @@ export class PanelCard extends LitElement {
         }
     }
 
-    protected firstUpdated(): void {
+    protected async firstUpdated(): Promise<void> {
+        this._loadContent();
+
         console.log("First updated", this._isTablet, this._bodyTiles.length);
         if (this._isTablet && this._bodyTiles.length > 1) {
             this._initializeSwiper();
