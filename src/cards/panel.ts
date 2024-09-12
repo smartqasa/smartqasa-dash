@@ -110,7 +110,7 @@ export class PanelCard extends LitElement {
             this._isAdminMode = (this.hass.user?.is_admin ?? false) || isAdminMode;
         }
 
-        if (this._isTablet && this._swiper) this._swiper.update();
+        //if (this._isTablet && this._swiper) this._swiper.update();
 
         if (changedProps.has("_config") && this._config) this._loadContent();
 
@@ -131,6 +131,13 @@ export class PanelCard extends LitElement {
                 this._bodyTiles.forEach((page) => {
                     updateHassForCards(page);
                 });
+        }
+    }
+
+    protected firstUpdated(): void {
+        if (this._isTablet && this._bodyTiles.length > 1) {
+            this._initializeSwiper();
+            this._startResetTimer();
         }
     }
 
@@ -317,6 +324,12 @@ export class PanelCard extends LitElement {
     private _initializeSwiper() {
         if (this._bodyTiles.length <= 1) return;
 
+        const swiperContainer = this.shadowRoot?.querySelector(".swiper");
+        if (!swiperContainer) {
+            console.error("Swiper container not found");
+            return;
+        }
+
         const swiperParams: SwiperOptions = {
             initialSlide: 0,
             loop: true,
@@ -327,9 +340,7 @@ export class PanelCard extends LitElement {
             },
         };
 
-        this._swiper = new Swiper(".swiper", swiperParams);
-
-        //if (this._swiper) Swiper.use([Navigation]);
+        this._swiper = new Swiper(swiperContainer as HTMLElement, swiperParams);
     }
 
     private _startResetTimer(): void {

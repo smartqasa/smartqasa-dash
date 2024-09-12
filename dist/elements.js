@@ -9606,8 +9606,7 @@ let PanelCard = class PanelCard extends h {
             const isAdminMode = this.hass.states["input_boolean.admin_mode"]?.state === "on";
             this._isAdminMode = (this.hass.user?.is_admin ?? false) || isAdminMode;
         }
-        if (this._isTablet && this._swiper)
-            this._swiper.update();
+        //if (this._isTablet && this._swiper) this._swiper.update();
         if (changedProps.has("_config") && this._config)
             this._loadContent();
         if (changedProps.has("hass") && this.hass) {
@@ -9625,6 +9624,12 @@ let PanelCard = class PanelCard extends h {
                 this._bodyTiles.forEach((page) => {
                     updateHassForCards(page);
                 });
+        }
+    }
+    firstUpdated() {
+        if (this._isTablet && this._bodyTiles.length > 1) {
+            this._initializeSwiper();
+            this._startResetTimer();
         }
     }
     render() {
@@ -9794,6 +9799,11 @@ let PanelCard = class PanelCard extends h {
     _initializeSwiper() {
         if (this._bodyTiles.length <= 1)
             return;
+        const swiperContainer = this.shadowRoot?.querySelector(".swiper");
+        if (!swiperContainer) {
+            console.error("Swiper container not found");
+            return;
+        }
         const swiperParams = {
             initialSlide: 0,
             loop: true,
@@ -9803,8 +9813,7 @@ let PanelCard = class PanelCard extends h {
                 prevEl: ".swiper-button-prev",
             },
         };
-        this._swiper = new Swiper(".swiper", swiperParams);
-        //if (this._swiper) Swiper.use([Navigation]);
+        this._swiper = new Swiper(swiperContainer, swiperParams);
     }
     _startResetTimer() {
         if (this._resetTimer) {
