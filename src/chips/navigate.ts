@@ -1,6 +1,5 @@
-import { CSSResult, html, LitElement, PropertyValues, TemplateResult, unsafeCSS } from "lit";
+import { CSSResult, html, LitElement, nothing, PropertyValues, TemplateResult, unsafeCSS } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
-import { styleMap } from "lit/directives/style-map.js";
 
 import { navigateToArea } from "../utils/navigate-to-area";
 import { HassArea, HomeAssistant, LovelaceCardConfig } from "../types";
@@ -43,8 +42,8 @@ export class NavigateChip extends LitElement {
         );
     }
 
-    protected render(): TemplateResult {
-        if (!this._areaPrev || !this._areaNext) return html``;
+    protected render(): TemplateResult | typeof nothing {
+        if (!this._areaPrev || !this._areaNext) return nothing;
 
         this._areaObjPrev = this._areaPrev ? this.hass?.areas[this._areaPrev] : undefined;
         this._areaObjNext = this._areaNext ? this.hass?.areas[this._areaNext] : undefined;

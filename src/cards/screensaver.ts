@@ -110,14 +110,25 @@ export class ScreenSaver extends LitElement {
         `;
     }
 
-    public setConfig(config: Config) {
+    public setConfig(config: Config): void {
         this._config = { ...config };
     }
 
-    protected firstUpdated() {
+    public connectedCallBack(): void {
+        super.connectedCallback();
         this._updateElement();
         this._startClock();
         this._cycleElement();
+    }
+
+    public disconnectedCallback(): void {
+        super.disconnectedCallback();
+        if (this._timeIntervalId !== undefined) {
+            window.clearInterval(this._timeIntervalId);
+        }
+        if (this._moveTimerId !== undefined) {
+            window.clearTimeout(this._moveTimerId);
+        }
     }
 
     protected render(): TemplateResult {
@@ -140,13 +151,13 @@ export class ScreenSaver extends LitElement {
         `;
     }
 
-    private _startClock() {
+    private _startClock(): void {
         this._timeIntervalId = window.setInterval(() => {
             this._updateElement();
         }, 1000);
     }
 
-    private _cycleElement() {
+    private _cycleElement(): void {
         const element = this.shadowRoot?.querySelector(".element") as HTMLElement;
         const moveTimer = (this._config?.move_timer ?? 30) * 1000;
 
@@ -167,13 +178,13 @@ export class ScreenSaver extends LitElement {
         }
     }
 
-    private _updateElement() {
+    private _updateElement(): void {
         const now = new Date();
         this._time = formattedTime(now);
         this._date = formattedDate(now);
     }
 
-    private _moveElement() {
+    private _moveElement(): void {
         const container = this.shadowRoot?.querySelector(".container") as HTMLElement;
         const element = this.shadowRoot?.querySelector(".element") as HTMLElement;
 
@@ -187,15 +198,5 @@ export class ScreenSaver extends LitElement {
             element.style.left = `${randomX}px`;
             element.style.top = `${randomY}px`;
         }
-    }
-
-    disconnectedCallback() {
-        if (this._timeIntervalId !== undefined) {
-            window.clearInterval(this._timeIntervalId);
-        }
-        if (this._moveTimerId !== undefined) {
-            window.clearTimeout(this._moveTimerId);
-        }
-        super.disconnectedCallback();
     }
 }

@@ -86,9 +86,7 @@ export class WeatherCard extends LitElement {
     }
 
     protected willUpdate(changedProps: PropertyValues): void {
-        if (!this.hass || !this._entity) {
-            return;
-        }
+        if (!this.hass || !this._entity) return;
 
         if (changedProps.has("hass")) {
             if (this._hourlyForecastCard) this._hourlyForecastCard.hass = this.hass;

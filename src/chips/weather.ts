@@ -15,7 +15,7 @@ window.customCards.push({
     type: "smartqasa-weather-chip",
     name: "SmartQasa Weather Chip",
     preview: true,
-    description: "A SmartQasa chip for displaying the weather.",
+    description: "A SmartQasa chip for displaying the weather card.",
 });
 
 @customElement("smartqasa-weather-chip")

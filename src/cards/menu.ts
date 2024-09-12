@@ -84,7 +84,7 @@ export class MenuCard extends LitElement {
         `;
     }
 
-    public async connectedCallback() {
+    public async connectedCallback(): Promise<void> {
         super.connectedCallback();
 
         ["orientationchange", "resize"].forEach((event) =>
@@ -96,7 +96,7 @@ export class MenuCard extends LitElement {
         await this._loadMenuTabs();
     }
 
-    public disconnectedCallback() {
+    public disconnectedCallback(): void {
         super.disconnectedCallback();
 
         ["orientationchange", "resize"].forEach((event) =>
@@ -140,7 +140,7 @@ export class MenuCard extends LitElement {
         `;
     }
 
-    private _handleDeviceChanges() {
+    private _handleDeviceChanges(): void {
         const type = getDeviceType();
         const orientation = getDeviceOrientation();
 

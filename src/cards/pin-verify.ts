@@ -83,12 +83,12 @@ export class PinVerifyCard extends LitElement {
         }
     `;
 
-    public setConfig(config: Config) {
+    public setConfig(config: Config): void {
         this._config = { ...config };
         this._validateEntities();
     }
 
-    private _validateEntities() {
+    private _validateEntities(): void {
         if (!this._config) return;
 
         this._pinEntity = this._config.pin_entity || "input_text.admin_pin_code";
@@ -144,11 +144,11 @@ export class PinVerifyCard extends LitElement {
         `;
     }
 
-    private _renderButton(digit: number | string) {
+    private _renderButton(digit: number | string): TemplateResult {
         return html`<div class="button" @click=${() => this._handleInput(digit)}>${digit}</div>`;
     }
 
-    private _handleInput(digit: number | string) {
+    private _handleInput(digit: number | string): void {
         if (this._pinState) return;
 
         if (digit === "✓") {
@@ -162,7 +162,7 @@ export class PinVerifyCard extends LitElement {
         }
     }
 
-    private _verifyPin() {
+    private _verifyPin(): void {
         if (!this.hass || !this._pinEntity || !this._outcomeEntity) return;
 
         const pinStateObj = this.hass.states[this._pinEntity];

@@ -11,7 +11,7 @@ import { Navigation } from "swiper/modules";
 import { createElement } from "../utils/create-element";
 import { loadYamlAsJson } from "../utils/load-yaml-as-json";
 import { dialogTable } from "../tables/dialogs";
-import { menuConfig } from "../misc/menu-config";
+import { menuConfig } from "../../archive/menu-config";
 import { formattedTime, formattedDate } from "../utils/format-date-time";
 
 import panelStyles from "../css/panel.css";
@@ -71,7 +71,7 @@ export class PanelCard extends LitElement {
         this._areaPicture = await this._getAreaPicture();
     }
 
-    public async connectedCallback() {
+    public async connectedCallback(): Promise<void> {
         super.connectedCallback();
 
         if (this._isTablet) {
@@ -88,7 +88,7 @@ export class PanelCard extends LitElement {
         await this._loadContent();
     }
 
-    disconnectedCallback() {
+    disconnectedCallback(): void {
         super.disconnectedCallback();
 
         if (this._timeIntervalId !== undefined) {
@@ -104,7 +104,7 @@ export class PanelCard extends LitElement {
         );
     }
 
-    protected willUpdate(changedProps: PropertyValues) {
+    protected willUpdate(changedProps: PropertyValues): void {
         if (this.hass) {
             const isAdminMode = this.hass.states["input_boolean.admin_mode"]?.state === "on";
             this._isAdminMode = (this.hass.user?.is_admin ?? false) || isAdminMode;
@@ -169,7 +169,7 @@ export class PanelCard extends LitElement {
         `;
     }
 
-    private _handleDeviceChanges() {
+    private _handleDeviceChanges(): void {
         const type = getDeviceType();
         this._isPhone = type === "phone";
         this._isTablet = type === "tablet";
@@ -179,7 +179,7 @@ export class PanelCard extends LitElement {
         this._isLandscape = orientation === "landscape";
     }
 
-    private _renderHeader() {
+    private _renderHeader(): TemplateResult {
         return html`
             <div class="header-container">
                 <div class="header-time-date" @click="${this._launchClock}">
@@ -193,7 +193,7 @@ export class PanelCard extends LitElement {
         `;
     }
 
-    private _renderArea() {
+    private _renderArea(): TemplateResult {
         const name = this._config?.name ?? this._areaObj?.name ?? "Area";
 
         const isPhoneLandscape = this._isPhone && this._isLandscape;
@@ -236,7 +236,7 @@ export class PanelCard extends LitElement {
         return (this._areaPicture = defaultImage);
     }
 
-    private _renderBody() {
+    private _renderBody(): TemplateResult | typeof nothing {
         if (!this._config || !this._bodyTiles.length) return nothing;
 
         if (this._isPhone) {
@@ -281,7 +281,7 @@ export class PanelCard extends LitElement {
         `;
     }
 
-    private _renderFooter() {
+    private _renderFooter(): TemplateResult {
         return html`
             <div class="footer-container">
                 ${this._renderFooterButton("hass:home", "Home", "_handleHome")}
@@ -301,7 +301,7 @@ export class PanelCard extends LitElement {
         `;
     }
 
-    private _syncTime() {
+    private _syncTime(): void {
         const syncTime = () => {
             const now = new Date();
             const millisecondsUntilNextSecond = 1000 - now.getMilliseconds();
@@ -314,7 +314,7 @@ export class PanelCard extends LitElement {
         syncTime();
     }
 
-    private _initializeSwiper() {
+    private _initializeSwiper(): void {
         if (this._bodyTiles.length <= 1) return;
 
         const swiperParams: SwiperOptions = {
@@ -330,7 +330,7 @@ export class PanelCard extends LitElement {
         this._swiper = new Swiper(".swiper", swiperParams);
     }
 
-    private _startResetTimer() {
+    private _startResetTimer(): void {
         if (this._resetTimer) {
             clearTimeout(this._resetTimer);
         }
@@ -340,7 +340,7 @@ export class PanelCard extends LitElement {
         }, 5 * 60 * 1000); // 5 minutes
     }
 
-    private _resetToFirstPage() {
+    private _resetToFirstPage(): void {
         if (this._swiper && this._swiper.activeIndex !== 0) {
             this._swiper.slideTo(0);
         }
@@ -348,7 +348,7 @@ export class PanelCard extends LitElement {
         this._startResetTimer();
     }
 
-    private async _loadContent() {
+    private async _loadContent(): Promise<void> {
         this._areaObj = this._area ? this.hass?.areas[this._area] : undefined;
 
         const [headerChips, areaChips, bodyTiles] = await Promise.all([
@@ -435,7 +435,7 @@ export class PanelCard extends LitElement {
         return pages;
     }
 
-    private _launchClock(e: Event) {
+    private _launchClock(e: Event): void {
         e.stopPropagation();
         if (typeof window.fully !== "undefined" && window.fully.startApplication) {
             window.fully.startApplication("com.google.android.deskclock");
@@ -444,7 +444,7 @@ export class PanelCard extends LitElement {
         }
     }
 
-    private _handleSwiperNavigation(e: Event, direction: "prev" | "next") {
+    private _handleSwiperNavigation(e: Event, direction: "prev" | "next"): void {
         e.stopPropagation();
         if (this._swiper) {
             if (direction === "prev") {
@@ -457,7 +457,7 @@ export class PanelCard extends LitElement {
         }
     }
 
-    private _handleFooterAction(e: Event, methodName: keyof ActionHandlers) {
+    private _handleFooterAction(e: Event, methodName: keyof ActionHandlers): void {
         e.stopPropagation();
         if (typeof this[methodName] === "function") {
             this[methodName]();
@@ -466,7 +466,7 @@ export class PanelCard extends LitElement {
         }
     }
 
-    private _handleHome() {
+    private _handleHome(): void {
         if (this._displayMode !== "control") {
             this._displayMode = "control";
             return;
@@ -486,23 +486,20 @@ export class PanelCard extends LitElement {
         }
     }
 
-    private _handleAreas() {
+    private _handleAreas(): void {
         this._displayMode = "control";
         const dialogObj = dialogTable["areas"];
         window.browser_mod?.service("popup", { ...dialogObj.data });
     }
 
-    private _handleEntertain() {
+    private _handleEntertain(): void {
         this._displayMode = "entertain";
     }
 
-    private async _handleMenu(): Promise<void> {
+    private _handleMenu(): void {
         window.smartqasa.menuTab = 0;
-        try {
-            const dialogConfig = await menuConfig();
-            window.browser_mod?.service("popup", dialogConfig);
-        } catch (error) {
-            console.error("Error loading menu configuration", error);
-        }
+
+        const dialogObj = dialogTable["menu"];
+        window.browser_mod?.service("popup", { ...dialogObj.data });
     }
 }

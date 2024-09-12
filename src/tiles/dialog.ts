@@ -4,7 +4,7 @@ import { styleMap } from "lit/directives/style-map.js";
 
 import { LovelaceCardConfig } from "../types";
 import { dialogTable } from "../tables/dialogs";
-import { menuConfig } from "../misc/menu-config";
+import { menuConfig } from "../../archive/menu-config";
 
 import tileBaseStyle from "../css/tile-base.css";
 

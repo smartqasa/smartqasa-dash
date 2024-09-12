@@ -33,7 +33,7 @@ export class AreasCard extends LitElement {
         `;
     }
 
-    public async connectedCallback() {
+    public connectedCallback(): void {
         super.connectedCallback();
 
         this._handleDeviceChanges();
@@ -45,7 +45,7 @@ export class AreasCard extends LitElement {
         this._loadAreaTiles();
     }
 
-    public disconnectedCallback() {
+    public disconnectedCallback(): void {
         super.disconnectedCallback();
 
         ["orientationchange", "resize"].forEach((event) =>
@@ -69,7 +69,7 @@ export class AreasCard extends LitElement {
         `;
     }
 
-    private _handleDeviceChanges() {
+    private _handleDeviceChanges(): void {
         const type = getDeviceType();
         const orientation = getDeviceOrientation();
 

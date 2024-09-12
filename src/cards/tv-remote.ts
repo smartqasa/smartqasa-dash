@@ -1,4 +1,4 @@
-import { css, CSSResult, html, LitElement, PropertyValues, TemplateResult } from "lit";
+import { css, CSSResult, html, LitElement, nothing, PropertyValues, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
 import { callService } from "../utils/call-service";
@@ -148,10 +148,8 @@ export class TVRemoteCard extends LitElement {
         }
     }
 
-    protected render(): TemplateResult | void {
-        if (!this.hass || !this._config || !this._entity || !this._entities.remote) {
-            return html``;
-        }
+    protected render(): TemplateResult | typeof nothing {
+        if (!this.hass || !this._config || !this._entity || !this._entities.remote) return nothing;
 
         this._stateObj = this.hass.states[this._entity];
         if (!this._stateObj || !this.hass.states[this._entities.remote]) {

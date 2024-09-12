@@ -15,6 +15,13 @@ interface Config extends LovelaceCardConfig {
     name?: string;
 }
 
+window.customCards.push({
+    type: "smartqasa-routine-chip",
+    name: "SmartQasa Routine Chip",
+    preview: true,
+    description: "A SmartQasa chip for triggering an automation, scene, or script entity.",
+});
+
 @customElement("smartqasa-routine-chip")
 export class RoutineChip extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
@@ -60,7 +67,7 @@ export class RoutineChip extends LitElement {
         `;
     }
 
-    private _updateState() {
+    private _updateState(): { icon: string; iconAnimation: string; iconColor: string; name: string } {
         let icon, iconAnimation, iconColor, name;
 
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
@@ -112,10 +119,3 @@ export class RoutineChip extends LitElement {
         }, 2000);
     }
 }
-
-window.customCards.push({
-    type: "smartqasa-routine-chip",
-    name: "SmartQasa Routine Chip",
-    preview: true,
-    description: "A SmartQasa chip for triggering an automation, scene, or script entity.",
-});

@@ -13,6 +13,13 @@ interface Config extends LovelaceCardConfig {
     entity?: string;
 }
 
+window.customCards.push({
+    type: "smartqasa-theromstat-chip",
+    name: "SmartQasa Thermostat Chip",
+    preview: true,
+    description: "A SmartQasa chip that displays a thermostat.",
+});
+
 @customElement("smartqasa-thermostat-chip")
 export class ThermostatChip extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;

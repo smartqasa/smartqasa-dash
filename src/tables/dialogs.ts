@@ -303,6 +303,18 @@ export const dialogTable: DialogTable = {
         data: listDialogConfig("Door Locks", "group", "lock.all_door_locks", "lock"),
     },
 
+    menu: {
+        icon: "hass:menu",
+        name: "Menu",
+        data: {
+            title: "Menu",
+            timeout: 120000,
+            content: {
+                type: "custom:smartqasa-menu-card",
+            },
+        },
+    },
+
     robots: {
         icon: "hass:robot-vacuum-variant",
         name: "Robots",
