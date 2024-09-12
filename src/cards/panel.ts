@@ -451,7 +451,7 @@ export class PanelCard extends LitElement {
                 console.log("Swiping to previous page");
                 this._swiper.slidePrev();
             } else {
-                console.log("Swiping to previous page");
+                console.log("Swiping to next page");
                 this._swiper.slideNext();
             }
 

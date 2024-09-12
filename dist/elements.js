@@ -9912,7 +9912,7 @@ let PanelCard = class PanelCard extends h {
                 this._swiper.slidePrev();
             }
             else {
-                console.log("Swiping to previous page");
+                console.log("Swiping to next page");
                 this._swiper.slideNext();
             }
             this._startResetTimer();
