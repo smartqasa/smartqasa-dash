@@ -9583,13 +9583,13 @@ let PanelCard = class PanelCard extends h {
     }
     async connectedCallback() {
         super.connectedCallback();
+        this._syncTime();
+        await this._loadContent();
         if (this._isTablet) {
             this._initializeSwiper();
             this._startResetTimer();
         }
-        this._syncTime();
         ["orientationchange", "resize"].forEach((event) => window.addEventListener(event, this._handleDeviceChanges.bind(this)));
-        await this._loadContent();
     }
     disconnectedCallback() {
         super.disconnectedCallback();
@@ -9794,17 +9794,14 @@ let PanelCard = class PanelCard extends h {
     _initializeSwiper() {
         if (this._bodyTiles.length <= 1)
             return;
-        const swiperContainer = this.shadowRoot?.querySelector(".swiper");
-        if (!swiperContainer)
-            return;
         const swiperParams = {
             initialSlide: 0,
             loop: true,
             modules: [Navigation],
             navigation: true,
         };
-        this._swiper = new Swiper(swiperContainer, swiperParams);
-        Swiper.use([Navigation]);
+        this._swiper = new Swiper(".swiper", swiperParams);
+        //if (this._swiper) Swiper.use([Navigation]);
     }
     _startResetTimer() {
         if (this._resetTimer) {

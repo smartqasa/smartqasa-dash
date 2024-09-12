@@ -74,18 +74,18 @@ export class PanelCard extends LitElement {
     public async connectedCallback(): Promise<void> {
         super.connectedCallback();
 
+        this._syncTime();
+
+        await this._loadContent();
+
         if (this._isTablet) {
             this._initializeSwiper();
             this._startResetTimer();
         }
 
-        this._syncTime();
-
         ["orientationchange", "resize"].forEach((event) =>
             window.addEventListener(event, this._handleDeviceChanges.bind(this))
         );
-
-        await this._loadContent();
     }
 
     disconnectedCallback(): void {
@@ -314,11 +314,8 @@ export class PanelCard extends LitElement {
         syncTime();
     }
 
-    private _initializeSwiper(): void {
+    private _initializeSwiper() {
         if (this._bodyTiles.length <= 1) return;
-
-        const swiperContainer = this.shadowRoot?.querySelector(".swiper");
-        if (!swiperContainer) return;
 
         const swiperParams: SwiperOptions = {
             initialSlide: 0,
@@ -327,8 +324,9 @@ export class PanelCard extends LitElement {
             navigation: true,
         };
 
-        this._swiper = new Swiper(swiperContainer as HTMLElement, swiperParams);
-        Swiper.use([Navigation]);
+        this._swiper = new Swiper(".swiper", swiperParams);
+
+        //if (this._swiper) Swiper.use([Navigation]);
     }
 
     private _startResetTimer(): void {
