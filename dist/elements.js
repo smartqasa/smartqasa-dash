@@ -4450,7 +4450,7 @@ let MenuCard = class MenuCard extends h {
             }
             .tab-bar {
                 display: flex;
-                justify-content: space-between;
+                justify-content: space-around;
                 align-items: center;
                 gap: 1rem;
                 padding: 0.5rem 0;
@@ -4483,10 +4483,10 @@ let MenuCard = class MenuCard extends h {
             .tiles {
                 display: grid;
                 gap: var(--sq-tile-spacing, 0.8rem);
-                height: 100%;
                 width: 100%;
+                height: minmax(0, 1fr);
                 margin: auto;
-                grid-template-rows: var(--sq-tile-height, 7rem);
+                grid-auto-rows: var(--sq-tile-height, 7rem);
                 overflow-y: auto;
                 padding: 1rem 0 0 0;
             }
