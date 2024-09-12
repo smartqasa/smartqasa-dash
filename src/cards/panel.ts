@@ -97,18 +97,24 @@ export class PanelCard extends LitElement {
         );
     }
 
-    protected willUpdate(changedProps: PropertyValues): void {
+    protected updated(changedProps: PropertyValues): void {
         if (this.hass) {
             const isAdminMode = this.hass.states["input_boolean.admin_mode"]?.state === "on";
             this._isAdminMode = (this.hass.user?.is_admin ?? false) || isAdminMode;
         }
 
-        //if (this._isTablet && this._swiper) this._swiper.update();
-
         if (changedProps.has("_config") && this._config) this._loadContent();
 
         if (changedProps.has("hass") && this.hass) {
             this._areaObj = this._area ? this.hass.areas[this._area] : undefined;
+
+            if (this._isTablet) {
+                if (this._swiper) {
+                    this._swiper.update();
+                } else {
+                    this._initializeSwiper();
+                }
+            }
 
             const updateHassForCards = (cards: LovelaceCard[]) => {
                 cards.forEach((card) => {
@@ -130,9 +136,8 @@ export class PanelCard extends LitElement {
     protected async firstUpdated(): Promise<void> {
         await this._loadContent();
 
-        if (this._isTablet && this._bodyTiles.length > 1) {
+        if (this._isTablet) {
             this._initializeSwiper();
-            this._startResetTimer();
         }
     }
 
@@ -335,6 +340,8 @@ export class PanelCard extends LitElement {
 
         this._swiper = new Swiper(swiperContainer as HTMLElement, swiperParams);
         Swiper.use([Navigation]);
+
+        this._startResetTimer();
     }
 
     private _startResetTimer(): void {

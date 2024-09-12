@@ -9596,16 +9596,23 @@ let PanelCard = class PanelCard extends h {
         }
         ["orientationchange", "resize"].forEach((event) => window.removeEventListener(event, this._handleDeviceChanges.bind(this)));
     }
-    willUpdate(changedProps) {
+    updated(changedProps) {
         if (this.hass) {
             const isAdminMode = this.hass.states["input_boolean.admin_mode"]?.state === "on";
             this._isAdminMode = (this.hass.user?.is_admin ?? false) || isAdminMode;
         }
-        //if (this._isTablet && this._swiper) this._swiper.update();
         if (changedProps.has("_config") && this._config)
             this._loadContent();
         if (changedProps.has("hass") && this.hass) {
             this._areaObj = this._area ? this.hass.areas[this._area] : undefined;
+            if (this._isTablet) {
+                if (this._swiper) {
+                    this._swiper.update();
+                }
+                else {
+                    this._initializeSwiper();
+                }
+            }
             const updateHassForCards = (cards) => {
                 cards.forEach((card) => {
                     card.hass = this.hass;
@@ -9623,9 +9630,8 @@ let PanelCard = class PanelCard extends h {
     }
     async firstUpdated() {
         await this._loadContent();
-        if (this._isTablet && this._bodyTiles.length > 1) {
+        if (this._isTablet) {
             this._initializeSwiper();
-            this._startResetTimer();
         }
     }
     render() {
@@ -9809,6 +9815,7 @@ let PanelCard = class PanelCard extends h {
         };
         this._swiper = new Swiper(swiperContainer, swiperParams);
         Swiper.use([Navigation]);
+        this._startResetTimer();
     }
     _startResetTimer() {
         if (this._resetTimer) {
