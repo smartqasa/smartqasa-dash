@@ -147,7 +147,7 @@ export class PanelCard extends LitElement {
                 `;
                 break;
             case "entertain":
-                content = html`<!-- Entertain mode: Area and control are hidden -->`;
+                content = html`${this._renderEntertain()}`;
                 break;
             default:
                 content = nothing;
@@ -279,6 +279,21 @@ export class PanelCard extends LitElement {
                     : nothing}
             </div>
         `;
+    }
+
+    private _renderEntertain(): TemplateResult {
+        const config: LovelaceCardConfig = {
+            type: "custom:sonos-card",
+            entityId: this._config?.audio_player,
+            heightPercentage: 86,
+            mediaBrowserItemsPerRow: 3,
+            mediaBrowserShowTitleForThumbnailIcons: true,
+            showVolumeUpAndDownButtons: true,
+            sections: ["player", "volumes", "groups", "grouping", "media browser"],
+        };
+        const card = createElement(config) as LovelaceCard;
+        card.hass = this.hass;
+        return html` <div class="entertain-container">${card}</div> `;
     }
 
     private _renderFooter(): TemplateResult {
