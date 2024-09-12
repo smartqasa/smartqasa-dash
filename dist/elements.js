@@ -311,6 +311,112 @@ const createElement$1 = (config) => {
     return element;
 };
 
+window.customCards.push({
+    type: "smartqasa-areas-card",
+    name: "SmartQasa Areas Card",
+    preview: true,
+    description: "A SmartQasa card for rendering a list of areas.",
+});
+let AreasCard = class AreasCard extends h {
+    constructor() {
+        super(...arguments);
+        this._areaTiles = [];
+        this._gridStyle = {};
+    }
+    setConfig() { }
+    static get styles() {
+        return i$3 `
+            :host {
+                border: none;
+                background-color: transparent;
+                box-sizing: border-box;
+            }
+            .container {
+                display: grid;
+                width: 100%;
+                margin: auto;
+                grid-auto-rows: var(--sq-tile-height, 7rem);
+                gap: var(--sq-tile-spacing, 0.8rem);
+                overflow-y: auto;
+            }
+            .tile {
+                display: block;
+            }
+        `;
+    }
+    async connectedCallback() {
+        super.connectedCallback();
+        this._handleDeviceChanges();
+        ["orientationchange", "resize"].forEach((event) => window.addEventListener(event, this._handleDeviceChanges.bind(this)));
+        this._loadAreaTiles();
+    }
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        ["orientationchange", "resize"].forEach((event) => window.removeEventListener(event, this._handleDeviceChanges.bind(this)));
+    }
+    willUpdate(changedProps) {
+        if (changedProps.has("hass") && this.hass) {
+            this._areaTiles.forEach((tile) => {
+                tile.hass = this.hass;
+            });
+        }
+    }
+    render() {
+        return ke `
+            <div class="container">
+                <div class="tiles" style=${se(this._gridStyle)}>
+                    ${this._areaTiles.map((tile) => ke `<div class="tile">${tile}</div>`)}
+                </div>
+            </div>
+        `;
+    }
+    _handleDeviceChanges() {
+        const type = getDeviceType();
+        const orientation = getDeviceOrientation();
+        if (type === "phone") {
+            this._gridStyle = {
+                gridTemplateColumns: orientation === "landscape" ? "1fr 1fr" : "1fr",
+            };
+        }
+        else {
+            this._gridStyle = {
+                gridTemplateColumns: "repeat(3, var(--sq-tile-width, 19.5rem))",
+            };
+        }
+    }
+    _loadAreaTiles() {
+        if (!this.hass || !this.hass.areas) {
+            this._areaTiles = [];
+            return;
+        }
+        const visibleAreas = Object.values(this.hass.areas).filter((area) => area?.labels?.includes("visible"));
+        if (visibleAreas.length === 0) {
+            this._areaTiles = [];
+            return;
+        }
+        this._areaTiles = visibleAreas.map((area) => {
+            const tile = createElement$1({
+                type: "custom:smartqasa-area-tile",
+                area: area.area_id,
+            });
+            tile.hass = this.hass;
+            return tile;
+        });
+    }
+};
+__decorate([
+    n({ attribute: false })
+], AreasCard.prototype, "hass", void 0);
+__decorate([
+    r()
+], AreasCard.prototype, "_areaTiles", void 0);
+__decorate([
+    r()
+], AreasCard.prototype, "_gridStyle", void 0);
+AreasCard = __decorate([
+    t$1("smartqasa-areas-card")
+], AreasCard);
+
 const createCards = (cardsConfig, hass) => {
     if (!cardsConfig || cardsConfig.length === 0)
         return [];

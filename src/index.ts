@@ -58,6 +58,7 @@ window.customCards = window.customCards ?? [];
 import "./tiles/light-test";
 
 // Cards
+import "./cards/areas";
 import "./cards/grid-stack";
 import "./cards/group-stack";
 import "./cards/horizontal-stack";

@@ -14,7 +14,7 @@ window.customCards.push({
 });
 
 @customElement("smartqasa-areas-card")
-export class AreaCard extends LitElement {
+export class AreasCard extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() private _areaTiles: LovelaceCard[] = [];
     @state() private _gridStyle = {};
