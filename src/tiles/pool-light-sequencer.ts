@@ -57,7 +57,7 @@ export class PoolLightSequencerTile extends LitElement {
         `;
     }
 
-    private _updateState() {
+    private _updateState(): { icon: string; iconAnimation: string; iconColor: string; name: string } {
         let icon, iconAnimation, iconColor, name;
 
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
@@ -72,7 +72,7 @@ export class PoolLightSequencerTile extends LitElement {
                 iconAnimation = "none";
                 iconColor = this._sequenceObj.iconRGB || "var(--sq-inactive-rgb)";
             }
-            name = this._sequenceObj.name || "Unknown";
+            name = this._sequenceObj.name || "Light";
         } else {
             icon = "hass:alert-rhombus";
             iconAnimation = "none";

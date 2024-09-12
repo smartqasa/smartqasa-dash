@@ -63,7 +63,13 @@ export class PoolLightTile extends LitElement {
         `;
     }
 
-    private _updateState() {
+    private _updateState(): {
+        icon: string;
+        iconAnimation?: string;
+        iconColor: string;
+        name: string;
+        stateFmtd: string;
+    } {
         let icon, iconAnimation, iconColor, name, stateFmtd;
 
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
@@ -72,7 +78,7 @@ export class PoolLightTile extends LitElement {
             const state = this._stateObj.state || "unknown";
             icon = this._config!.icon || this._stateObj.attributes.icon || "hass:lightbulb";
             iconColor = state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
-            name = this._config!.name || this._stateObj.attributes.friendly_name || this._entity;
+            name = this._config!.name || this._stateObj.attributes.friendly_name || "Light";
             stateFmtd =
                 this.hass!.formatEntityState(this._stateObj) +
                 (state === "on" && this._stateObj.attributes.brightness

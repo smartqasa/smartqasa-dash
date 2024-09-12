@@ -62,7 +62,7 @@ export class OptionTile extends LitElement {
         `;
     }
 
-    private _updateState() {
+    private _updateState(): { icon: string; iconAnimation: string; iconColor: string; name: string } {
         let icon, iconAnimation, iconColor, name;
 
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;

@@ -61,7 +61,13 @@ export class RokuTile extends LitElement {
         `;
     }
 
-    private _updateState() {
+    private _updateState(): {
+        icon: string;
+        iconAnimation?: string;
+        iconColor: string;
+        name: string;
+        stateFmtd: string;
+    } {
         let icon, iconAnimation, iconColor, name, stateFmtd;
 
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
@@ -90,7 +96,7 @@ export class RokuTile extends LitElement {
                     iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
                     break;
             }
-            name = this._config!.name || this._stateObj.attributes.friendly_name || this._entity;
+            name = this._config!.name || this._stateObj.attributes.friendly_name || "Roku";
             stateFmtd = `${this.hass!.formatEntityState(this._stateObj)}${
                 this._stateObj.attributes?.source ? ` - ${this._stateObj.attributes.source}` : ""
             }`;

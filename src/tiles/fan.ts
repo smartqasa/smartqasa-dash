@@ -64,7 +64,13 @@ export class FanTile extends LitElement {
         `;
     }
 
-    private _updateState() {
+    private _updateState(): {
+        icon: string;
+        iconAnimation: string;
+        iconColor: string;
+        name: string;
+        stateFmtd: string;
+    } {
         let icon, iconAnimation, iconColor, name, stateFmtd;
 
         this._stateObj = this.hass && this._entity ? this.hass.states[this._entity] : undefined;
@@ -83,7 +89,7 @@ export class FanTile extends LitElement {
                 }
             }
             iconColor = state === "on" ? "var(--sq-fan-on-rgb)" : "var(--sq-inactive-rgb)";
-            name = this._config!.name || this._stateObj.attributes.friendly_name || this._entity;
+            name = this._config!.name || this._stateObj.attributes.friendly_name || "Fan";
             stateFmtd = `${this.hass!.formatEntityState(this._stateObj)}${
                 state === "on" && this._stateObj.attributes.percentage
                     ? " - " + this.hass!.formatEntityAttributeValue(this._stateObj, "percentage")

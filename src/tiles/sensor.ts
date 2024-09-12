@@ -61,7 +61,13 @@ export class SensorTile extends LitElement {
         `;
     }
 
-    private _updateState() {
+    private _updateState(): {
+        iconTemplate: TemplateResult;
+        iconAnimation?: string;
+        iconColor: string;
+        name: string;
+        stateFmtd: string;
+    } {
         let iconTemplate, iconAnimation, iconColor, name, stateFmtd;
 
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
@@ -73,7 +79,7 @@ export class SensorTile extends LitElement {
                 iconTemplate = html`<ha-icon .icon=${this._config!.icon}></ha-icon>`;
             }
             iconColor = this._stateObj.state === "on" ? "var(--sq-binary_sensor-on-rgb)" : "var(--sq-inactive-rgb)";
-            name = this._config!.name || this._stateObj.attributes.friendly_name || this._entity;
+            name = this._config!.name || this._stateObj.attributes.friendly_name || "Sensor";
             stateFmtd = this.hass!.formatEntityState(this._stateObj);
         } else {
             iconTemplate = html`<ha-icon icon="hass:leak"></ha-icon>`;

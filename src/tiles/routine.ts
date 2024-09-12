@@ -62,7 +62,7 @@ export class RoutineTile extends LitElement {
         `;
     }
 
-    private _updateState() {
+    private _updateState(): { icon: string; iconAnimation: string; iconColor: string; name: string } {
         let icon, iconAnimation, iconColor, name;
 
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
@@ -77,7 +77,7 @@ export class RoutineTile extends LitElement {
                 iconAnimation = "none";
                 iconColor = "var(--sq-inactive-rgb)";
             }
-            name = this._config.name || this._stateObj.attributes.friendly_name || this._entity;
+            name = this._config.name || this._stateObj.attributes.friendly_name || "Roku";
         } else {
             icon = "hass:alert-rhombus";
             iconAnimation = "none";

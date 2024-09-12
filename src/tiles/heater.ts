@@ -61,7 +61,13 @@ export class HeaterTile extends LitElement {
         `;
     }
 
-    private _updateState() {
+    private _updateState(): {
+        icon: string;
+        iconAnimation?: string;
+        iconColor: string;
+        name: string;
+        stateFmtd: string;
+    } {
         let icon, iconAnimation, iconColor, name, stateFmtd;
 
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
@@ -71,7 +77,7 @@ export class HeaterTile extends LitElement {
             icon = this._config!.icon || "hass:water-thermometer";
             iconAnimation = "none";
             iconColor = heaterColors[state] || heaterColors.idle;
-            name = this._config!.name || this._stateObj.attributes.friendly_name || this._entity;
+            name = this._config!.name || this._stateObj.attributes.friendly_name || "Heater";
             stateFmtd = this.hass!.formatEntityState(this._stateObj);
             if (state !== "off" && this._stateObj.attributes.temperature) {
                 stateFmtd += ` - ${this._stateObj.attributes.temperature}°`;

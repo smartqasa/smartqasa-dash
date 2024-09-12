@@ -58,7 +58,7 @@ export class ActionTile extends LitElement {
         `;
     }
 
-    private _updateState() {
+    private _updateState(): { icon: string; iconAnimation: string; iconColor: string; name: string } {
         let icon, iconAnimation, iconColor, name;
 
         if (this._config) {

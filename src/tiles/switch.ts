@@ -64,7 +64,13 @@ export class SwitchTile extends LitElement {
         `;
     }
 
-    private _updateState() {
+    private _updateState(): {
+        icon: string;
+        iconAnimation?: string;
+        iconColor: string;
+        name: string;
+        stateFmtd: string;
+    } {
         let icon, iconAnimation, iconColor, name, stateFmtd;
 
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
@@ -77,7 +83,7 @@ export class SwitchTile extends LitElement {
                 state === "on"
                     ? `var(--sq-switch${this._config!.category ? `-${this._config!.category}` : ""}-on-rgb)`
                     : "var(--sq-inactive-rgb)";
-            name = this._config!.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
+            name = this._config!.name || this._stateObj.attributes.friendly_name || "Switch";
             stateFmtd = this.hass!.formatEntityState(this._stateObj);
         } else {
             icon = this._config!.icon || "hass:toggle-switch-variant";

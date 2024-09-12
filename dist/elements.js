@@ -12213,7 +12213,7 @@ let AllOffTile = class AllOffTile extends h {
                 iconAnimation = "none";
                 iconColor = "var(--sq-inactive-rgb)";
             }
-            name = this._config.name || this._areaObj.name || this._area;
+            name = this._config.name || this._areaObj.name || "All Off";
         }
         else {
             icon = "hass:alert-rhombus";
@@ -12815,7 +12815,7 @@ let AreaTile = class AreaTile extends h {
             icon = this._config.icon || this._areaObj.icon || "hass:help-rhombus";
             iconAnimation = "none";
             iconColor = "var(--sq-inactive-rgb)";
-            name = this._config.name || this._areaObj.name || this._area;
+            name = this._config.name || this._areaObj.name || "Area";
         }
         else {
             icon = "hass:alert-rhombus";
@@ -12973,7 +12973,7 @@ let FanTile = class FanTile extends h {
                 }
             }
             iconColor = state === "on" ? "var(--sq-fan-on-rgb)" : "var(--sq-inactive-rgb)";
-            name = this._config.name || this._stateObj.attributes.friendly_name || this._entity;
+            name = this._config.name || this._stateObj.attributes.friendly_name || "Fan";
             stateFmtd = `${this.hass.formatEntityState(this._stateObj)}${state === "on" && this._stateObj.attributes.percentage
                 ? " - " + this.hass.formatEntityAttributeValue(this._stateObj, "percentage")
                 : ""}`;
@@ -13087,7 +13087,7 @@ let GarageTile = class GarageTile extends h {
                     iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
                     break;
             }
-            name = this._config.name || this._stateObj.attributes.friendly_name || this._entity;
+            name = this._config.name || this._stateObj.attributes.friendly_name || "Garage";
             stateFmtd =
                 this.hass.formatEntityState(this._stateObj) +
                     (state === "open" && this._stateObj.attributes.current_position
@@ -13166,7 +13166,7 @@ let HeaterTile = class HeaterTile extends h {
             icon = this._config.icon || "hass:water-thermometer";
             iconAnimation = "none";
             iconColor = heaterColors[state] || heaterColors.idle;
-            name = this._config.name || this._stateObj.attributes.friendly_name || this._entity;
+            name = this._config.name || this._stateObj.attributes.friendly_name || "Heater";
             stateFmtd = this.hass.formatEntityState(this._stateObj);
             if (state !== "off" && this._stateObj.attributes.temperature) {
                 stateFmtd += ` - ${this._stateObj.attributes.temperature}°`;
@@ -13246,7 +13246,7 @@ let LightTile = class LightTile extends h {
             icon = this._config.icon || this._stateObj.attributes.icon || "hass:lightbulb";
             iconAnimation = "none";
             iconColor = state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
-            name = this._config.name || this._stateObj.attributes.friendly_name || this._entity;
+            name = this._config.name || this._stateObj.attributes.friendly_name || "Light";
             stateFmtd = `${this.hass.formatEntityState(this._stateObj)}${state === "on" && this._stateObj.attributes.brightness
                 ? " - " + this.hass.formatEntityAttributeValue(this._stateObj, "brightness")
                 : ""}`;
@@ -13435,7 +13435,7 @@ let LockTile = class LockTile extends h {
                     iconColor = "var(--sq-unavailable-rgb)";
                     break;
             }
-            name = this._config.name || this._stateObj.attributes.friendly_name || this._entity;
+            name = this._config.name || this._stateObj.attributes.friendly_name || "Lock";
             stateFmtd = this.hass.formatEntityState(this._stateObj);
         }
         else {
@@ -13689,7 +13689,7 @@ let RobotTile = class RobotTile extends h {
                     iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
                     break;
             }
-            name = this._config.name || this._stateObj.attributes.friendly_name || this._entity;
+            name = this._config.name || this._stateObj.attributes.friendly_name || "Robot";
             stateFmtd =
                 this.hass?.formatEntityState(this._stateObj) +
                     (this._stateObj.attributes.battery_level
@@ -13791,7 +13791,7 @@ let RokuTile = class RokuTile extends h {
                     iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
                     break;
             }
-            name = this._config.name || this._stateObj.attributes.friendly_name || this._entity;
+            name = this._config.name || this._stateObj.attributes.friendly_name || "Roku";
             stateFmtd = `${this.hass.formatEntityState(this._stateObj)}${this._stateObj.attributes?.source ? ` - ${this._stateObj.attributes.source}` : ""}`;
         }
         else {
@@ -13893,7 +13893,7 @@ let RoutineTile = class RoutineTile extends h {
                 iconAnimation = "none";
                 iconColor = "var(--sq-inactive-rgb)";
             }
-            name = this._config.name || this._stateObj.attributes.friendly_name || this._entity;
+            name = this._config.name || this._stateObj.attributes.friendly_name || "Roku";
         }
         else {
             icon = "hass:alert-rhombus";
@@ -13982,7 +13982,7 @@ let SelectTile = class SelectTile extends h {
             icon = this._config.icon || this._stateObj.attributes?.icon || "hass:form-dropdown";
             iconAnimation = "none";
             iconColor = "var(--sq-inactive-rgb)";
-            name = this._config.name || this._stateObj.attributes?.friendly_name || this._entity;
+            name = this._config.name || this._stateObj.attributes?.friendly_name || "Select List";
             stateFmtd = this.hass.formatEntityState(this._stateObj) || "Unknown";
         }
         else {
@@ -14051,7 +14051,7 @@ let SensorTile = class SensorTile extends h {
                 iconTemplate = ke `<ha-icon .icon=${this._config.icon}></ha-icon>`;
             }
             iconColor = this._stateObj.state === "on" ? "var(--sq-binary_sensor-on-rgb)" : "var(--sq-inactive-rgb)";
-            name = this._config.name || this._stateObj.attributes.friendly_name || this._entity;
+            name = this._config.name || this._stateObj.attributes.friendly_name || "Sensor";
             stateFmtd = this.hass.formatEntityState(this._stateObj);
         }
         else {
@@ -14193,7 +14193,7 @@ let PoolLightTile = class PoolLightTile extends h {
             const state = this._stateObj.state || "unknown";
             icon = this._config.icon || this._stateObj.attributes.icon || "hass:lightbulb";
             iconColor = state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
-            name = this._config.name || this._stateObj.attributes.friendly_name || this._entity;
+            name = this._config.name || this._stateObj.attributes.friendly_name || "Light";
             stateFmtd =
                 this.hass.formatEntityState(this._stateObj) +
                     (state === "on" && this._stateObj.attributes.brightness
@@ -14296,7 +14296,7 @@ let PoolLightSequencerTile = class PoolLightSequencerTile extends h {
                 iconAnimation = "none";
                 iconColor = this._sequenceObj.iconRGB || "var(--sq-inactive-rgb)";
             }
-            name = this._sequenceObj.name || "Unknown";
+            name = this._sequenceObj.name || "Light";
         }
         else {
             icon = "hass:alert-rhombus";
@@ -14398,7 +14398,7 @@ let ShadeTile = class ShadeTile extends h {
                     iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
                     break;
             }
-            name = this._config.name || this._stateObj.attributes.friendly_name || this._entity;
+            name = this._config.name || this._stateObj.attributes.friendly_name || "Shade";
             stateFmtd =
                 this.hass.formatEntityState(this._stateObj) +
                     (state === "open" && this._stateObj.attributes.current_position
@@ -14522,7 +14522,7 @@ let SwitchTile = class SwitchTile extends h {
                 state === "on"
                     ? `var(--sq-switch${this._config.category ? `-${this._config.category}` : ""}-on-rgb)`
                     : "var(--sq-inactive-rgb)";
-            name = this._config.name || this._stateObj.attributes.friendly_name || this._stateObj.entity_id;
+            name = this._config.name || this._stateObj.attributes.friendly_name || "Switch";
             stateFmtd = this.hass.formatEntityState(this._stateObj);
         }
         else {
@@ -14643,7 +14643,7 @@ let ThermostatTile = class ThermostatTile extends h {
             else {
                 iconColor = thermostatColors[hvacAction] || thermostatColors.idle;
             }
-            name = this._config.name || this._stateObj.attributes.friendly_name || this._entity;
+            name = this._config.name || this._stateObj.attributes.friendly_name || "Thermostat";
             stateFmtd = this.hass.formatEntityState(this._stateObj);
             if (state !== "off") {
                 if (this._stateObj.attributes.current_temperature) {

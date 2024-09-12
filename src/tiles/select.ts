@@ -61,7 +61,13 @@ export class SelectTile extends LitElement {
         `;
     }
 
-    private _updateState() {
+    private _updateState(): {
+        icon: string;
+        iconAnimation: string;
+        iconColor: string;
+        name: string;
+        stateFmtd: string;
+    } {
         let icon, iconAnimation, iconColor, name, stateFmtd;
 
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
@@ -71,7 +77,7 @@ export class SelectTile extends LitElement {
             icon = this._config.icon || this._stateObj.attributes?.icon || "hass:form-dropdown";
             iconAnimation = "none";
             iconColor = "var(--sq-inactive-rgb)";
-            name = this._config.name || this._stateObj.attributes?.friendly_name || this._entity;
+            name = this._config.name || this._stateObj.attributes?.friendly_name || "Select List";
             stateFmtd = this.hass.formatEntityState(this._stateObj) || "Unknown";
         } else {
             icon = this._config?.icon || "hass:form-dropdown";

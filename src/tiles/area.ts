@@ -58,7 +58,7 @@ export class AreaTile extends LitElement {
         `;
     }
 
-    private updateState() {
+    private updateState(): { icon: string; iconAnimation: string; iconColor: string; name: string } {
         let icon, iconAnimation, iconColor, name;
 
         this._areaObj = this._area ? this.hass?.areas[this._area] : undefined;
@@ -68,7 +68,7 @@ export class AreaTile extends LitElement {
             iconAnimation = "none";
             iconColor = "var(--sq-inactive-rgb)";
 
-            name = this._config.name || this._areaObj.name || this._area;
+            name = this._config.name || this._areaObj.name || "Area";
         } else {
             icon = "hass:alert-rhombus";
             iconAnimation = "none";

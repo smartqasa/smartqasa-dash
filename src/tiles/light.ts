@@ -65,7 +65,13 @@ export class LightTile extends LitElement {
         `;
     }
 
-    private _updateState() {
+    private _updateState(): {
+        icon: string;
+        iconAnimation?: string;
+        iconColor: string;
+        name: string;
+        stateFmtd: string;
+    } {
         let icon, iconAnimation, iconColor, name, stateFmtd;
 
         this._stateObj = this.hass && this._entity ? this.hass.states[this._entity] : undefined;
@@ -75,7 +81,7 @@ export class LightTile extends LitElement {
             icon = this._config!.icon || this._stateObj.attributes.icon || "hass:lightbulb";
             iconAnimation = "none";
             iconColor = state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
-            name = this._config!.name || this._stateObj.attributes.friendly_name || this._entity;
+            name = this._config!.name || this._stateObj.attributes.friendly_name || "Light";
             stateFmtd = `${this.hass!.formatEntityState(this._stateObj)}${
                 state === "on" && this._stateObj.attributes.brightness
                     ? " - " + this.hass!.formatEntityAttributeValue(this._stateObj, "brightness")
