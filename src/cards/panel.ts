@@ -267,14 +267,8 @@ export class PanelCard extends LitElement {
                 </div>
                 ${this._bodyTiles.length > 1
                     ? html`
-                          <div
-                              class="swiper-button-prev"
-                              @click=${(e: Event) => this._handleSwiperNavigation(e, "prev")}
-                          ></div>
-                          <div
-                              class="swiper-button-next"
-                              @click=${(e: Event) => this._handleSwiperNavigation(e, "next")}
-                          ></div>
+                          <div class="swiper-button-prev"></div>
+                          <div class="swiper-button-next"></div>
                       `
                     : nothing}
             </div>
@@ -315,12 +309,7 @@ export class PanelCard extends LitElement {
     }
 
     private _initializeSwiper() {
-        if (this._bodyTiles.length <= 1) {
-            return;
-        }
-
-        const swiperContainer = this.shadowRoot?.querySelector(".swiper");
-        if (!swiperContainer) return;
+        if (this._bodyTiles.length <= 1) return;
 
         const swiperParams: SwiperOptions = {
             initialSlide: 0,
@@ -332,11 +321,7 @@ export class PanelCard extends LitElement {
             },
         };
 
-        this._swiper = new Swiper(swiperContainer as HTMLElement, swiperParams);
-
-        if (this._swiper) {
-            Swiper.use([Navigation]);
-        }
+        this._swiper = new Swiper(".swiper", swiperParams);
     }
 
     private _startResetTimer() {
