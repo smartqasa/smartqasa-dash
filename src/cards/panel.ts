@@ -51,7 +51,8 @@ export class PanelCard extends LitElement {
     @state() private _isTablet: boolean = getDeviceType() === "tablet";
     @state() private _isPortrait: boolean = getDeviceOrientation() === "portrait";
     @state() private _isLandscape: boolean = getDeviceOrientation() === "landscape";
-    @state() private _areaPicture: string = defaultImage;
+
+    private _areaPicture: string = defaultImage;
     private _timeIntervalId: number | undefined;
     private _swiper?: Swiper;
     private _resetTimer?: ReturnType<typeof setTimeout>;
@@ -61,6 +62,7 @@ export class PanelCard extends LitElement {
     private _areaChips: LovelaceCard[] = [];
     private _controlTiles: LovelaceCard[][] = [];
     private _controlColumns: number[] = [];
+    private _audioCard?: LovelaceCard;
 
     static styles: CSSResultGroup = [unsafeCSS(swiperStyles), unsafeCSS(panelStyles)];
 
@@ -282,18 +284,12 @@ export class PanelCard extends LitElement {
     }
 
     private _renderEntertain(): TemplateResult {
-        const config: LovelaceCardConfig = {
-            type: "custom:sonos-card",
-            entityId: this._config?.audio_player,
-            heightPercentage: 86,
-            mediaBrowserItemsPerRow: 3,
-            mediaBrowserShowTitleForThumbnailIcons: true,
-            showVolumeUpAndDownButtons: true,
-            sections: ["player", "volumes", "groups", "grouping", "media browser"],
-        };
-        const card = createElement(config) as LovelaceCard;
-        card.hass = this.hass;
-        return html` <div class="entertain-container">${card}</div> `;
+        return html`
+            <div class="entertain-container">
+                <div class="entertain-card">${this._audioCard}</div>
+            </div>
+            ;
+        `;
     }
 
     private _renderFooter(): TemplateResult {
@@ -387,6 +383,8 @@ export class PanelCard extends LitElement {
             });
 
         this._controlTiles = this._loadControlTiles(this._config?.tiles || []);
+
+        this._loadEntertainCards();
     }
 
     private async _loadHeaderChips(): Promise<LovelaceCard[]> {
@@ -460,6 +458,21 @@ export class PanelCard extends LitElement {
         }
 
         return pages;
+    }
+
+    private _loadEntertainCards(): void {
+        const config: LovelaceCardConfig = {
+            type: "custom:sonos-card",
+            entityId: this._config?.audio_player,
+            mediaBrowserItemsPerRow: 3,
+            mediaBrowserShowTitleForThumbnailIcons: true,
+            showVolumeUpAndDownButtons: true,
+            sections: ["player", "volumes", "groups", "grouping", "media browser"],
+        };
+        const card = createElement(config) as LovelaceCard;
+        card.hass = this.hass;
+
+        this._audioCard = card;
     }
 
     private _launchClock(e: Event): void {
