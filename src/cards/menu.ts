@@ -35,7 +35,8 @@ export class MenuCard extends LitElement {
     static get styles() {
         return css`
             .container {
-                display: block;
+                display: flex;
+                flex-direction: column;
                 height: 100%;
                 border: none;
                 background-color: transparent;
@@ -76,12 +77,10 @@ export class MenuCard extends LitElement {
             .tiles {
                 display: grid;
                 gap: var(--sq-tile-spacing, 0.8rem);
-                width: 100%;
-                height: minmax(0, 1fr);
-                margin: auto;
                 grid-auto-rows: var(--sq-tile-height, 7rem);
                 overflow-y: auto;
                 padding: 1rem 0 0 0;
+                flex-grow: 1;
             }
             .tile {
                 width: 100%;

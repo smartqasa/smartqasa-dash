@@ -4442,7 +4442,8 @@ let MenuCard = class MenuCard extends h {
     static get styles() {
         return i$3 `
             .container {
-                display: block;
+                display: flex;
+                flex-direction: column;
                 height: 100%;
                 border: none;
                 background-color: transparent;
@@ -4483,12 +4484,10 @@ let MenuCard = class MenuCard extends h {
             .tiles {
                 display: grid;
                 gap: var(--sq-tile-spacing, 0.8rem);
-                width: 100%;
-                height: minmax(0, 1fr);
-                margin: auto;
                 grid-auto-rows: var(--sq-tile-height, 7rem);
                 overflow-y: auto;
                 padding: 1rem 0 0 0;
+                flex-grow: 1;
             }
             .tile {
                 width: 100%;
