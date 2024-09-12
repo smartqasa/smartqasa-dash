@@ -9587,16 +9587,6 @@ let PanelCard = class PanelCard extends h {
         await this._loadContent();
         ["orientationchange", "resize"].forEach((event) => window.addEventListener(event, this._handleDeviceChanges.bind(this)));
     }
-    disconnectedCallback() {
-        super.disconnectedCallback();
-        if (this._timeIntervalId !== undefined) {
-            clearInterval(this._timeIntervalId);
-        }
-        if (this._resetTimer) {
-            clearTimeout(this._resetTimer);
-        }
-        ["orientationchange", "resize"].forEach((event) => window.removeEventListener(event, this._handleDeviceChanges.bind(this)));
-    }
     willUpdate(changedProps) {
         if (this.hass) {
             const isAdminMode = this.hass.states["input_boolean.admin_mode"]?.state === "on";
@@ -9622,9 +9612,18 @@ let PanelCard = class PanelCard extends h {
         }
     }
     firstUpdated() {
-        if (this._isTablet && this._bodyTiles.length > 1) {
+        if (this._isTablet && this._bodyTiles.length > 1)
             this._initializeSwiper();
+    }
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        if (this._timeIntervalId !== undefined) {
+            clearInterval(this._timeIntervalId);
         }
+        if (this._resetTimer) {
+            clearTimeout(this._resetTimer);
+        }
+        ["orientationchange", "resize"].forEach((event) => window.removeEventListener(event, this._handleDeviceChanges.bind(this)));
     }
     render() {
         const displayMode = this._displayMode;
@@ -9791,6 +9790,11 @@ let PanelCard = class PanelCard extends h {
         syncTime();
     }
     _initializeSwiper() {
+        const swiperContainer = this.shadowRoot?.querySelector(".swiper");
+        if (!swiperContainer) {
+            console.error("Swiper container not found");
+            return;
+        }
         const swiperParams = {
             initialSlide: 0,
             loop: true,
@@ -9800,7 +9804,7 @@ let PanelCard = class PanelCard extends h {
                 prevEl: ".swiper-button-prev",
             },
         };
-        this._swiper = new Swiper(".swiper", swiperParams);
+        this._swiper = new Swiper(swiperContainer, swiperParams);
         this._startResetTimer();
     }
     _startResetTimer() {

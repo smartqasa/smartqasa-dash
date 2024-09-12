@@ -83,22 +83,6 @@ export class PanelCard extends LitElement {
         );
     }
 
-    disconnectedCallback(): void {
-        super.disconnectedCallback();
-
-        if (this._timeIntervalId !== undefined) {
-            clearInterval(this._timeIntervalId);
-        }
-
-        if (this._resetTimer) {
-            clearTimeout(this._resetTimer);
-        }
-
-        ["orientationchange", "resize"].forEach((event) =>
-            window.removeEventListener(event, this._handleDeviceChanges.bind(this))
-        );
-    }
-
     protected willUpdate(changedProps: PropertyValues): void {
         if (this.hass) {
             const isAdminMode = this.hass.states["input_boolean.admin_mode"]?.state === "on";
@@ -128,9 +112,23 @@ export class PanelCard extends LitElement {
     }
 
     protected firstUpdated(): void {
-        if (this._isTablet && this._bodyTiles.length > 1) {
-            this._initializeSwiper();
+        if (this._isTablet && this._bodyTiles.length > 1) this._initializeSwiper();
+    }
+
+    public disconnectedCallback(): void {
+        super.disconnectedCallback();
+
+        if (this._timeIntervalId !== undefined) {
+            clearInterval(this._timeIntervalId);
         }
+
+        if (this._resetTimer) {
+            clearTimeout(this._resetTimer);
+        }
+
+        ["orientationchange", "resize"].forEach((event) =>
+            window.removeEventListener(event, this._handleDeviceChanges.bind(this))
+        );
     }
 
     protected render(): TemplateResult {
@@ -314,6 +312,12 @@ export class PanelCard extends LitElement {
     }
 
     private _initializeSwiper() {
+        const swiperContainer = this.shadowRoot?.querySelector(".swiper");
+        if (!swiperContainer) {
+            console.error("Swiper container not found");
+            return;
+        }
+
         const swiperParams: SwiperOptions = {
             initialSlide: 0,
             loop: true,
@@ -324,7 +328,7 @@ export class PanelCard extends LitElement {
             },
         };
 
-        this._swiper = new Swiper(".swiper", swiperParams);
+        this._swiper = new Swiper(swiperContainer as HTMLElement, swiperParams);
 
         this._startResetTimer();
     }
