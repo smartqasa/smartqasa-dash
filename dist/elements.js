@@ -333,8 +333,6 @@ let AreasCard = class AreasCard extends h {
             }
             .container {
                 display: grid;
-                width: 100%;
-                margin: auto;
                 grid-auto-rows: var(--sq-tile-height, 7rem);
                 gap: var(--sq-tile-spacing, 0.8rem);
                 overflow-y: auto;
@@ -363,10 +361,8 @@ let AreasCard = class AreasCard extends h {
     }
     render() {
         return ke `
-            <div class="container">
-                <div class="tiles" style=${se(this._gridStyle)}>
-                    ${this._areaTiles.map((tile) => ke `<div class="tile">${tile}</div>`)}
-                </div>
+            <div class="container" style=${se(this._gridStyle)}>
+                ${this._areaTiles.map((tile) => ke `<div class="tile">${tile}</div>`)}
             </div>
         `;
     }
@@ -4547,13 +4543,14 @@ let MenuCard = class MenuCard extends h {
     setConfig() { }
     static get styles() {
         return i$3 `
-            .container {
-                display: flex;
-                flex-direction: column;
-                height: 100%;
+            :host {
                 border: none;
                 background-color: transparent;
                 box-sizing: border-box;
+            }
+            .container {
+                display: flex;
+                flex-direction: column;
             }
             .tab-bar {
                 display: flex;
@@ -4589,11 +4586,11 @@ let MenuCard = class MenuCard extends h {
             }
             .tiles {
                 display: grid;
+                padding: 1rem 0 0 0;
                 gap: var(--sq-tile-spacing, 0.8rem);
                 grid-auto-rows: var(--sq-tile-height, 7rem);
-                overflow-y: auto;
-                padding: 1rem 0 0 0;
                 flex-grow: 1;
+                overflow-y: auto;
             }
             .tile {
                 width: 100%;
@@ -4647,16 +4644,9 @@ let MenuCard = class MenuCard extends h {
         const type = getDeviceType();
         const orientation = getDeviceOrientation();
         if (type === "phone") {
-            if (orientation === "landscape") {
-                this._gridStyle = {
-                    gridTemplateColumns: "1fr 1fr",
-                };
-            }
-            else {
-                this._gridStyle = {
-                    gridTemplateColumns: "1fr",
-                };
-            }
+            this._gridStyle = {
+                gridTemplateColumns: orientation === "landscape" ? "1fr 1fr" : "1fr",
+            };
         }
         else {
             this._gridStyle = {

@@ -30,8 +30,6 @@ export class AreasCard extends LitElement {
             }
             .container {
                 display: grid;
-                width: 100%;
-                margin: auto;
                 grid-auto-rows: var(--sq-tile-height, 7rem);
                 gap: var(--sq-tile-spacing, 0.8rem);
                 overflow-y: auto;
@@ -72,10 +70,8 @@ export class AreasCard extends LitElement {
 
     protected render(): TemplateResult {
         return html`
-            <div class="container">
-                <div class="tiles" style=${styleMap(this._gridStyle)}>
-                    ${this._areaTiles.map((tile) => html`<div class="tile">${tile}</div>`)}
-                </div>
+            <div class="container" style=${styleMap(this._gridStyle)}>
+                ${this._areaTiles.map((tile) => html`<div class="tile">${tile}</div>`)}
             </div>
         `;
     }

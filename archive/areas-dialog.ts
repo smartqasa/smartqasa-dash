@@ -1,5 +1,5 @@
-import { HassArea } from "../types";
-import { getDeviceType } from "../utils/device-info";
+import { HassArea } from "../src/types";
+import { getDeviceType } from "../src/utils/device-info";
 
 export function areasDialog(hass: any): void {
     if (!hass) return;

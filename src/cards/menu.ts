@@ -34,13 +34,14 @@ export class MenuCard extends LitElement {
 
     static get styles() {
         return css`
-            .container {
-                display: flex;
-                flex-direction: column;
-                height: 100%;
+            :host {
                 border: none;
                 background-color: transparent;
                 box-sizing: border-box;
+            }
+            .container {
+                display: flex;
+                flex-direction: column;
             }
             .tab-bar {
                 display: flex;
@@ -76,11 +77,11 @@ export class MenuCard extends LitElement {
             }
             .tiles {
                 display: grid;
+                padding: 1rem 0 0 0;
                 gap: var(--sq-tile-spacing, 0.8rem);
                 grid-auto-rows: var(--sq-tile-height, 7rem);
-                overflow-y: auto;
-                padding: 1rem 0 0 0;
                 flex-grow: 1;
+                overflow-y: auto;
             }
             .tile {
                 width: 100%;
@@ -114,7 +115,7 @@ export class MenuCard extends LitElement {
         if (changedProps.has("hass") && this.hass) {
             const currentTiles = this._bodyTiles[this._menuTab] || [];
             currentTiles.forEach((tile) => {
-                tile.hass = this.hass!;
+                tile.hass = this.hass;
             });
         }
     }
@@ -151,15 +152,9 @@ export class MenuCard extends LitElement {
         const orientation = getDeviceOrientation();
 
         if (type === "phone") {
-            if (orientation === "landscape") {
-                this._gridStyle = {
-                    gridTemplateColumns: "1fr 1fr",
-                };
-            } else {
-                this._gridStyle = {
-                    gridTemplateColumns: "1fr",
-                };
-            }
+            this._gridStyle = {
+                gridTemplateColumns: orientation === "landscape" ? "1fr 1fr" : "1fr",
+            };
         } else {
             this._gridStyle = {
                 gridTemplateColumns: "repeat(3, var(--sq-tile-width, 19.5rem))",
