@@ -110,11 +110,11 @@ export class PanelCard extends LitElement {
 
     protected async firstUpdated(): Promise<void> {
         await this._loadContent();
+    }
 
-        console.log("First updated", this._isTablet, this._bodyTiles.length);
-        if (this._isTablet && this._bodyTiles.length > 1) {
+    protected updated(): void {
+        if (this._isTablet && this._bodyTiles.length > 1 && !this._swiper) {
             this._initializeSwiper();
-            console.log("Swiper initialized during firstUpdated");
         }
     }
 
