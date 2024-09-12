@@ -71,10 +71,12 @@ export class PanelCard extends LitElement {
         this._areaPicture = await this._getAreaPicture();
     }
 
-    public connectedCallback(): void {
+    public async connectedCallback(): Promise<void> {
         super.connectedCallback();
 
         this._syncTime();
+
+        await this._loadContent();
 
         ["orientationchange", "resize"].forEach((event) =>
             window.addEventListener(event, this._handleDeviceChanges.bind(this))
@@ -97,15 +99,7 @@ export class PanelCard extends LitElement {
         );
     }
 
-    protected async firstUpdated(): Promise<void> {
-        await this._loadContent();
-
-        if (this._isTablet) {
-            this._initializeSwiper();
-        }
-    }
-
-    protected updated(changedProps: PropertyValues): void {
+    protected willUpdate(changedProps: PropertyValues): void {
         if (this.hass) {
             const isAdminMode = this.hass.states["input_boolean.admin_mode"]?.state === "on";
             this._isAdminMode = (this.hass.user?.is_admin ?? false) || isAdminMode;
@@ -121,6 +115,7 @@ export class PanelCard extends LitElement {
                     this._swiper.update();
                 } else {
                     this._initializeSwiper();
+                    console.log("Swiper initialized during willUpdate");
                 }
             }
 

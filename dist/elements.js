@@ -9581,9 +9581,10 @@ let PanelCard = class PanelCard extends h {
         this._area = this._config.area;
         this._areaPicture = await this._getAreaPicture();
     }
-    connectedCallback() {
+    async connectedCallback() {
         super.connectedCallback();
         this._syncTime();
+        await this._loadContent();
         ["orientationchange", "resize"].forEach((event) => window.addEventListener(event, this._handleDeviceChanges.bind(this)));
     }
     disconnectedCallback() {
@@ -9596,13 +9597,7 @@ let PanelCard = class PanelCard extends h {
         }
         ["orientationchange", "resize"].forEach((event) => window.removeEventListener(event, this._handleDeviceChanges.bind(this)));
     }
-    async firstUpdated() {
-        await this._loadContent();
-        if (this._isTablet) {
-            this._initializeSwiper();
-        }
-    }
-    updated(changedProps) {
+    willUpdate(changedProps) {
         if (this.hass) {
             const isAdminMode = this.hass.states["input_boolean.admin_mode"]?.state === "on";
             this._isAdminMode = (this.hass.user?.is_admin ?? false) || isAdminMode;
@@ -9617,6 +9612,7 @@ let PanelCard = class PanelCard extends h {
                 }
                 else {
                     this._initializeSwiper();
+                    console.log("Swiper initialized during willUpdate");
                 }
             }
             const updateHassForCards = (cards) => {
