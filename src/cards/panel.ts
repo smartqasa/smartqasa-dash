@@ -110,15 +110,6 @@ export class PanelCard extends LitElement {
         if (changedProps.has("hass") && this.hass) {
             this._areaObj = this._area ? this.hass.areas[this._area] : undefined;
 
-            if (this._isTablet) {
-                if (this._swiper) {
-                    this._swiper.update();
-                } else {
-                    this._initializeSwiper();
-                    console.log("Swiper initialized during willUpdate");
-                }
-            }
-
             const updateHassForCards = (cards: LovelaceCard[]) => {
                 cards.forEach((card) => {
                     card.hass = this.hass;
@@ -133,6 +124,13 @@ export class PanelCard extends LitElement {
                 this._bodyTiles.forEach((page) => {
                     updateHassForCards(page);
                 });
+        }
+    }
+
+    protected updated(): void {
+        if (this._isTablet && this._bodyTiles.length > 1 && !this._swiper) {
+            this._initializeSwiper();
+            console.log("Swiper initialized during willUpdate");
         }
     }
 
@@ -334,7 +332,7 @@ export class PanelCard extends LitElement {
         };
 
         this._swiper = new Swiper(swiperContainer as HTMLElement, swiperParams);
-        Swiper.use([Navigation]);
+        //Swiper.use([Navigation]);
 
         this._startResetTimer();
     }

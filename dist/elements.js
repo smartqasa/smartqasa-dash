@@ -9606,15 +9606,6 @@ let PanelCard = class PanelCard extends h {
             this._loadContent();
         if (changedProps.has("hass") && this.hass) {
             this._areaObj = this._area ? this.hass.areas[this._area] : undefined;
-            if (this._isTablet) {
-                if (this._swiper) {
-                    this._swiper.update();
-                }
-                else {
-                    this._initializeSwiper();
-                    console.log("Swiper initialized during willUpdate");
-                }
-            }
             const updateHassForCards = (cards) => {
                 cards.forEach((card) => {
                     card.hass = this.hass;
@@ -9628,6 +9619,12 @@ let PanelCard = class PanelCard extends h {
                 this._bodyTiles.forEach((page) => {
                     updateHassForCards(page);
                 });
+        }
+    }
+    updated() {
+        if (this._isTablet && this._bodyTiles.length > 1 && !this._swiper) {
+            this._initializeSwiper();
+            console.log("Swiper initialized during willUpdate");
         }
     }
     render() {
@@ -9810,7 +9807,7 @@ let PanelCard = class PanelCard extends h {
             },
         };
         this._swiper = new Swiper(swiperContainer, swiperParams);
-        Swiper.use([Navigation]);
+        //Swiper.use([Navigation]);
         this._startResetTimer();
     }
     _startResetTimer() {
