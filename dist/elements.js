@@ -317,6 +317,7 @@ let AreasCard = class AreasCard extends h {
         this._areaTiles = [];
         this._gridStyle = {};
     }
+    setConfig() { }
     static get styles() {
         return i$3 `
             :host {
@@ -4518,12 +4519,6 @@ const loadYamlAsJson = async (yamlFilePath) => {
     }
 };
 
-window.customCards.push({
-    type: "smartqasa-menu-card",
-    name: "SmartQasa Menu Card",
-    preview: true,
-    description: "A SmartQasa card for rendering a menu.",
-});
 let MenuCard = class MenuCard extends h {
     constructor() {
         super(...arguments);
@@ -9930,11 +9925,7 @@ let PanelCard = class PanelCard extends h {
         syncTime();
     }
     _initializeSwiper() {
-        if (this._bodyTiles.length <= 1) {
-            return;
-        }
-        const swiperContainer = this.shadowRoot?.querySelector(".swiper");
-        if (!swiperContainer)
+        if (this._bodyTiles.length <= 1)
             return;
         const swiperParams = {
             initialSlide: 0,
@@ -9945,10 +9936,7 @@ let PanelCard = class PanelCard extends h {
                 prevEl: ".swiper-button-prev",
             },
         };
-        this._swiper = new Swiper(swiperContainer, swiperParams);
-        if (this._swiper) {
-            Swiper.use([Navigation]);
-        }
+        this._swiper = new Swiper(".swiper", swiperParams);
     }
     _startResetTimer() {
         if (this._resetTimer) {
