@@ -10297,8 +10297,7 @@ let ScreenSaver = class ScreenSaver extends h {
     setConfig(config) {
         this._config = { ...config };
     }
-    connectedCallBack() {
-        super.connectedCallback();
+    firstUpdated() {
         this._updateElement();
         this._startClock();
         this._cycleElement();

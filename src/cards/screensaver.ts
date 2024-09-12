@@ -114,8 +114,7 @@ export class ScreenSaver extends LitElement {
         this._config = { ...config };
     }
 
-    public connectedCallBack(): void {
-        super.connectedCallback();
+    protected firstUpdated(): void {
         this._updateElement();
         this._startClock();
         this._cycleElement();
