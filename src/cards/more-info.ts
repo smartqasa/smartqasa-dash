@@ -8,13 +8,6 @@ interface Config extends LovelaceCardConfig {
     background?: boolean;
 }
 
-window.customCards.push({
-    type: "smartqasa-more-info-card",
-    name: "SmartQasa More Info Card",
-    preview: true,
-    description: "A SmartQasa card for displaying More Info for an entity.",
-});
-
 @customElement("smartqasa-more-info-card")
 export class MoreInfoCard extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
@@ -24,15 +17,15 @@ export class MoreInfoCard extends LitElement {
 
     static styles = css`
         .container {
+            padding: var(--sq-card-padding, 1rem);
             border: var(--sq-card-border, none);
             border-radius: var(--sq-card-border-radius, 1.5rem);
-            padding: var(--sq-card-padding, 1rem);
             background-color: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
         }
 
         .container-transparent {
-            border-radius: var(--sq-card-border-radius, 1.5rem);
             padding: 0;
+            border-radius: var(--sq-card-border-radius, 1.5rem);
             background-color: transparent;
         }
 

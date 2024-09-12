@@ -6,20 +6,11 @@ import { HassArea, HomeAssistant, LovelaceCard } from "../types";
 import { getDeviceType, getDeviceOrientation } from "../utils/device-info";
 import { createElement } from "../utils/create-element";
 
-window.customCards.push({
-    type: "smartqasa-areas-card",
-    name: "SmartQasa Areas Card",
-    preview: true,
-    description: "A SmartQasa card for rendering a list of areas.",
-});
-
 @customElement("smartqasa-areas-card")
 export class AreasCard extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() private _areaTiles: LovelaceCard[] = [];
     @state() private _gridStyle = {};
-
-    public setConfig(): void {}
 
     static get styles() {
         return css`

@@ -311,19 +311,12 @@ const createElement$1 = (config) => {
     return element;
 };
 
-window.customCards.push({
-    type: "smartqasa-areas-card",
-    name: "SmartQasa Areas Card",
-    preview: true,
-    description: "A SmartQasa card for rendering a list of areas.",
-});
 let AreasCard = class AreasCard extends h {
     constructor() {
         super(...arguments);
         this._areaTiles = [];
         this._gridStyle = {};
     }
-    setConfig() { }
     static get styles() {
         return i$3 `
             :host {
@@ -4705,24 +4698,18 @@ MenuCard = __decorate([
     t$1("smartqasa-menu-card")
 ], MenuCard);
 
-window.customCards.push({
-    type: "smartqasa-more-info-card",
-    name: "SmartQasa More Info Card",
-    preview: true,
-    description: "A SmartQasa card for displaying More Info for an entity.",
-});
 let MoreInfoCard = class MoreInfoCard extends h {
     static { this.styles = i$3 `
         .container {
+            padding: var(--sq-card-padding, 1rem);
             border: var(--sq-card-border, none);
             border-radius: var(--sq-card-border-radius, 1.5rem);
-            padding: var(--sq-card-padding, 1rem);
             background-color: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
         }
 
         .container-transparent {
-            border-radius: var(--sq-card-border-radius, 1.5rem);
             padding: 0;
+            border-radius: var(--sq-card-border-radius, 1.5rem);
             background-color: transparent;
         }
 
