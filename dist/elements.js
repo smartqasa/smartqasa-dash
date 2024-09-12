@@ -9581,7 +9581,7 @@ let PanelCard = class PanelCard extends h {
         this._area = this._config.area;
         this._areaPicture = await this._getAreaPicture();
     }
-    async connectedCallback() {
+    connectedCallback() {
         super.connectedCallback();
         this._syncTime();
         ["orientationchange", "resize"].forEach((event) => window.addEventListener(event, this._handleDeviceChanges.bind(this)));
@@ -9793,8 +9793,6 @@ let PanelCard = class PanelCard extends h {
         syncTime();
     }
     _initializeSwiper() {
-        if (this._bodyTiles.length <= 1)
-            return;
         const swiperContainer = this.shadowRoot?.querySelector(".swiper");
         if (!swiperContainer) {
             console.error("Swiper container not found");

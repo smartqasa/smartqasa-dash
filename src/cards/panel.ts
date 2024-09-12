@@ -71,7 +71,7 @@ export class PanelCard extends LitElement {
         this._areaPicture = await this._getAreaPicture();
     }
 
-    public async connectedCallback(): Promise<void> {
+    public connectedCallback(): void {
         super.connectedCallback();
 
         this._syncTime();
@@ -317,8 +317,6 @@ export class PanelCard extends LitElement {
     }
 
     private _initializeSwiper() {
-        if (this._bodyTiles.length <= 1) return;
-
         const swiperContainer = this.shadowRoot?.querySelector(".swiper");
         if (!swiperContainer) {
             console.error("Swiper container not found");
