@@ -9581,10 +9581,10 @@ let PanelCard = class PanelCard extends h {
         this._area = this._config.area;
         this._areaPicture = await this._getAreaPicture();
     }
-    async connectedCallback() {
+    connectedCallback() {
         super.connectedCallback();
         this._syncTime();
-        await this._loadContent();
+        this._loadContent();
         ["orientationchange", "resize"].forEach((event) => window.addEventListener(event, this._handleDeviceChanges.bind(this)));
     }
     willUpdate(changedProps) {

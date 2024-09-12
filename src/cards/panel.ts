@@ -71,12 +71,12 @@ export class PanelCard extends LitElement {
         this._areaPicture = await this._getAreaPicture();
     }
 
-    public async connectedCallback(): Promise<void> {
+    public connectedCallback(): void {
         super.connectedCallback();
 
         this._syncTime();
 
-        await this._loadContent();
+        this._loadContent();
 
         ["orientationchange", "resize"].forEach((event) =>
             window.addEventListener(event, this._handleDeviceChanges.bind(this))
