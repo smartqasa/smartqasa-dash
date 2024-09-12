@@ -336,7 +336,7 @@ let AreasCard = class AreasCard extends h {
             }
         `;
     }
-    async connectedCallback() {
+    connectedCallback() {
         super.connectedCallback();
         this._handleDeviceChanges();
         ["orientationchange", "resize"].forEach((event) => window.addEventListener(event, this._handleDeviceChanges.bind(this)));
@@ -9589,6 +9589,17 @@ const dialogTable = {
         entity: "lock.all_door_locks",
         data: listDialogConfig("Door Locks", "group", "lock.all_door_locks", "lock"),
     },
+    menu: {
+        icon: "hass:menu",
+        name: "Menu",
+        data: {
+            title: "Menu",
+            timeout: 120000,
+            content: {
+                type: "custom:smartqasa-menu-card",
+            },
+        },
+    },
     robots: {
         icon: "hass:robot-vacuum-variant",
         name: "Robots",
@@ -9651,18 +9662,6 @@ const dialogTable = {
             },
         },
     },
-};
-
-const menuConfig = async () => {
-    const config = {
-        title: "Menu",
-        timeout: 120000,
-        content: {
-            type: "custom:smartqasa-menu-card",
-        },
-    };
-    window.smartqasa.menuConfig = config;
-    return config;
 };
 
 const formattedDate = (date = new Date()) => {
@@ -10084,15 +10083,10 @@ let PanelCard = class PanelCard extends h {
     _handleEntertain() {
         this._displayMode = "entertain";
     }
-    async _handleMenu() {
+    _handleMenu() {
         window.smartqasa.menuTab = 0;
-        try {
-            const dialogConfig = await menuConfig();
-            window.browser_mod?.service("popup", dialogConfig);
-        }
-        catch (error) {
-            console.error("Error loading menu configuration", error);
-        }
+        const dialogObj = dialogTable["menu"];
+        window.browser_mod?.service("popup", { ...dialogObj.data });
     }
 };
 __decorate([
@@ -10421,10 +10415,20 @@ let ScreenSaver = class ScreenSaver extends h {
     setConfig(config) {
         this._config = { ...config };
     }
-    firstUpdated() {
+    connectedCallBack() {
+        super.connectedCallback();
         this._updateElement();
         this._startClock();
         this._cycleElement();
+    }
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        if (this._timeIntervalId !== undefined) {
+            window.clearInterval(this._timeIntervalId);
+        }
+        if (this._moveTimerId !== undefined) {
+            window.clearTimeout(this._moveTimerId);
+        }
     }
     render() {
         return ke `
@@ -10484,15 +10488,6 @@ let ScreenSaver = class ScreenSaver extends h {
             element.style.left = `${randomX}px`;
             element.style.top = `${randomY}px`;
         }
-    }
-    disconnectedCallback() {
-        if (this._timeIntervalId !== undefined) {
-            window.clearInterval(this._timeIntervalId);
-        }
-        if (this._moveTimerId !== undefined) {
-            window.clearTimeout(this._moveTimerId);
-        }
-        super.disconnectedCallback();
     }
 };
 __decorate([
@@ -10949,9 +10944,8 @@ let TVRemoteCard = class TVRemoteCard extends h {
         }
     }
     render() {
-        if (!this.hass || !this._config || !this._entity || !this._entities.remote) {
-            return ke ``;
-        }
+        if (!this.hass || !this._config || !this._entity || !this._entities.remote)
+            return D;
         this._stateObj = this.hass.states[this._entity];
         if (!this._stateObj || !this.hass.states[this._entities.remote]) {
             return ke `
@@ -11212,9 +11206,8 @@ let WeatherCard = class WeatherCard extends h {
         });
     }
     willUpdate(changedProps) {
-        if (!this.hass || !this._entity) {
+        if (!this.hass || !this._entity)
             return;
-        }
         if (changedProps.has("hass")) {
             if (this._hourlyForecastCard)
                 this._hourlyForecastCard.hass = this.hass;
@@ -11560,7 +11553,7 @@ let NavigateChip = class NavigateChip extends h {
     }
     render() {
         if (!this._areaPrev || !this._areaNext)
-            return ke ``;
+            return D;
         this._areaObjPrev = this._areaPrev ? this.hass?.areas[this._areaPrev] : undefined;
         this._areaObjNext = this._areaNext ? this.hass?.areas[this._areaNext] : undefined;
         const iconPrev = "hass:menu-left";
@@ -11614,6 +11607,12 @@ NavigateChip = __decorate([
     t$1("smartqasa-navigate-chip")
 ], NavigateChip);
 
+window.customCards.push({
+    type: "smartqasa-routine-chip",
+    name: "SmartQasa Routine Chip",
+    preview: true,
+    description: "A SmartQasa chip for triggering an automation, scene, or script entity.",
+});
 let RoutineChip = class RoutineChip extends h {
     constructor() {
         super(...arguments);
@@ -11708,12 +11707,6 @@ __decorate([
 RoutineChip = __decorate([
     t$1("smartqasa-routine-chip")
 ], RoutineChip);
-window.customCards.push({
-    type: "smartqasa-routine-chip",
-    name: "SmartQasa Routine Chip",
-    preview: true,
-    description: "A SmartQasa chip for triggering an automation, scene, or script entity.",
-});
 
 function selectOptionDialog(config, stateObj) {
     if (!stateObj)
@@ -11967,6 +11960,12 @@ function moreInfoDialog(config, stateObj) {
     window.browser_mod?.service("popup", dialogConfig);
 }
 
+window.customCards.push({
+    type: "smartqasa-theromstat-chip",
+    name: "SmartQasa Thermostat Chip",
+    preview: true,
+    description: "A SmartQasa chip that displays a thermostat.",
+});
 let ThermostatChip$1 = class ThermostatChip extends h {
     static { this.styles = [r$3(css_248z$2), r$3(css_248z$1)]; }
     setConfig(config) {
@@ -12028,7 +12027,7 @@ window.customCards.push({
     type: "smartqasa-weather-chip",
     name: "SmartQasa Weather Chip",
     preview: true,
-    description: "A SmartQasa chip for displaying the weather.",
+    description: "A SmartQasa chip for displaying the weather card.",
 });
 let ThermostatChip = class ThermostatChip extends h {
     static { this.styles = [r$3(css_248z$2), r$3(css_248z$1)]; }
@@ -13482,6 +13481,18 @@ __decorate([
 LockTile = __decorate([
     t$1("smartqasa-lock-tile")
 ], LockTile);
+
+const menuConfig = async () => {
+    const config = {
+        title: "Menu",
+        timeout: 120000,
+        content: {
+            type: "custom:smartqasa-menu-card",
+        },
+    };
+    window.smartqasa.menuConfig = config;
+    return config;
+};
 
 window.customCards.push({
     type: "smartqasa-option-tile",
