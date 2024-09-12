@@ -109,7 +109,7 @@ export class PanelCard extends LitElement {
     }
 
     protected async firstUpdated(): Promise<void> {
-        this._loadContent();
+        await this._loadContent();
 
         console.log("First updated", this._isTablet, this._bodyTiles.length);
         if (this._isTablet && this._bodyTiles.length > 1) {
