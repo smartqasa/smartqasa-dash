@@ -78,6 +78,10 @@ export class PanelCard extends LitElement {
         ["orientationchange", "resize"].forEach((event) =>
             window.addEventListener(event, this._handleDeviceChanges.bind(this))
         );
+
+        window.addEventListener("touchstart", this._startResetTimer.bind(this), { passive: true });
+
+        this._startResetTimer();
     }
 
     protected willUpdate(changedProps: PropertyValues): void {
@@ -132,6 +136,8 @@ export class PanelCard extends LitElement {
         ["orientationchange", "resize"].forEach((event) =>
             window.removeEventListener(event, this._handleDeviceChanges.bind(this))
         );
+
+        window.removeEventListener("touchstart", this._startResetTimer.bind(this));
     }
 
     protected render(): TemplateResult {
@@ -332,8 +338,6 @@ export class PanelCard extends LitElement {
         };
 
         this._swiper = new Swiper(swiperContainer as HTMLElement, swiperParams);
-
-        this._startResetTimer();
     }
 
     private _startResetTimer(): void {
@@ -456,14 +460,12 @@ export class PanelCard extends LitElement {
 
         if (this._swiper) {
             if (direction === "prev") {
-                console.log("Swiping to previous page");
                 this._swiper.slidePrev();
             } else {
-                console.log("Swiping to next page");
                 this._swiper.slideNext();
             }
 
-            this._startResetTimer();
+            //this._startResetTimer();
         }
     }
 

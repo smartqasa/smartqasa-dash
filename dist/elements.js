@@ -9585,6 +9585,8 @@ let PanelCard = class PanelCard extends h {
         super.connectedCallback();
         this._syncTime();
         ["orientationchange", "resize"].forEach((event) => window.addEventListener(event, this._handleDeviceChanges.bind(this)));
+        window.addEventListener("touchstart", this._startResetTimer.bind(this), { passive: true });
+        this._startResetTimer();
     }
     willUpdate(changedProps) {
         if (this.hass) {
@@ -9627,6 +9629,7 @@ let PanelCard = class PanelCard extends h {
             clearTimeout(this._resetTimer);
         }
         ["orientationchange", "resize"].forEach((event) => window.removeEventListener(event, this._handleDeviceChanges.bind(this)));
+        window.removeEventListener("touchstart", this._startResetTimer.bind(this));
     }
     render() {
         const displayMode = this._displayMode;
@@ -9808,7 +9811,6 @@ let PanelCard = class PanelCard extends h {
             },
         };
         this._swiper = new Swiper(swiperContainer, swiperParams);
-        this._startResetTimer();
     }
     _startResetTimer() {
         if (this._resetTimer) {
@@ -9913,14 +9915,12 @@ let PanelCard = class PanelCard extends h {
         e.stopPropagation();
         if (this._swiper) {
             if (direction === "prev") {
-                console.log("Swiping to previous page");
                 this._swiper.slidePrev();
             }
             else {
-                console.log("Swiping to next page");
                 this._swiper.slideNext();
             }
-            this._startResetTimer();
+            //this._startResetTimer();
         }
     }
     _handleFooterAction(e, methodName) {
