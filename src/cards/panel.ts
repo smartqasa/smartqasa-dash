@@ -75,11 +75,11 @@ export class PanelCard extends LitElement {
 
         this._syncTime();
 
-        ["orientationchange", "resize"].forEach((event) =>
-            window.addEventListener(event, this._handleDeviceChanges.bind(this))
-        );
-
+        window.addEventListener("resize", this._handleDeviceChanges.bind(this));
+        window.addEventListener("orientationchange", this._handleDeviceChanges.bind(this));
         window.addEventListener("touchstart", this._startResetTimer.bind(this), { passive: true });
+
+        this._loadContent();
 
         this._startResetTimer();
     }
@@ -112,10 +112,6 @@ export class PanelCard extends LitElement {
         }
     }
 
-    protected async firstUpdated(): Promise<void> {
-        await this._loadContent();
-    }
-
     protected updated(): void {
         if (this._isTablet && this._bodyTiles.length > 1 && !this._swiper) {
             this._initializeSwiper();
@@ -125,6 +121,10 @@ export class PanelCard extends LitElement {
     public disconnectedCallback(): void {
         super.disconnectedCallback();
 
+        window.removeEventListener("resize", this._handleDeviceChanges.bind(this));
+        window.removeEventListener("orientationchange", this._handleDeviceChanges.bind(this));
+        window.removeEventListener("touchstart", this._startResetTimer.bind(this));
+
         if (this._timeIntervalId !== undefined) {
             clearInterval(this._timeIntervalId);
         }
@@ -132,12 +132,6 @@ export class PanelCard extends LitElement {
         if (this._resetTimer) {
             clearTimeout(this._resetTimer);
         }
-
-        ["orientationchange", "resize"].forEach((event) =>
-            window.removeEventListener(event, this._handleDeviceChanges.bind(this))
-        );
-
-        window.removeEventListener("touchstart", this._startResetTimer.bind(this));
     }
 
     protected render(): TemplateResult {
@@ -341,7 +335,6 @@ export class PanelCard extends LitElement {
     }
 
     private _startResetTimer(): void {
-        console.log("Starting reset timer");
         if (this._resetTimer) {
             clearTimeout(this._resetTimer);
         }
@@ -359,18 +352,26 @@ export class PanelCard extends LitElement {
         this._startResetTimer();
     }
 
-    private async _loadContent(): Promise<void> {
+    private _loadContent(): void {
         this._areaObj = this._area ? this.hass?.areas[this._area] : undefined;
 
-        const [headerChips, areaChips, bodyTiles] = await Promise.all([
-            this._loadHeaderChips(),
-            this._loadAreaChips(this._config?.chips || []),
-            this._loadBodyTiles(this._config?.tiles || []),
-        ]);
+        this._loadHeaderChips()
+            .then((headerChips) => {
+                this._headerChips = headerChips;
+            })
+            .catch((error) => {
+                console.error("Error loading header chips:", error);
+            });
 
-        this._headerChips = headerChips;
-        this._areaChips = areaChips;
-        this._bodyTiles = bodyTiles;
+        this._loadAreaChips(this._config?.chips || [])
+            .then((areaChips) => {
+                this._areaChips = areaChips;
+            })
+            .catch((error) => {
+                console.error("Error loading area chips:", error);
+            });
+
+        this._bodyTiles = this._loadBodyTiles(this._config?.tiles || []);
     }
 
     private async _loadHeaderChips(): Promise<LovelaceCard[]> {
@@ -398,7 +399,7 @@ export class PanelCard extends LitElement {
         });
     }
 
-    private async _loadBodyTiles(tilesConfig: LovelaceCardConfig[]): Promise<LovelaceCard[][]> {
+    private _loadBodyTiles(tilesConfig: LovelaceCardConfig[]): LovelaceCard[][] {
         const pages: LovelaceCard[][] = [];
         this._bodyColumns = [];
         let currentPage: LovelaceCard[] = [];

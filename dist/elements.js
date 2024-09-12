@@ -9584,8 +9584,10 @@ let PanelCard = class PanelCard extends h {
     connectedCallback() {
         super.connectedCallback();
         this._syncTime();
-        ["orientationchange", "resize"].forEach((event) => window.addEventListener(event, this._handleDeviceChanges.bind(this)));
+        window.addEventListener("resize", this._handleDeviceChanges.bind(this));
+        window.addEventListener("orientationchange", this._handleDeviceChanges.bind(this));
         window.addEventListener("touchstart", this._startResetTimer.bind(this), { passive: true });
+        this._loadContent();
         this._startResetTimer();
     }
     willUpdate(changedProps) {
@@ -9612,9 +9614,6 @@ let PanelCard = class PanelCard extends h {
                 });
         }
     }
-    async firstUpdated() {
-        await this._loadContent();
-    }
     updated() {
         if (this._isTablet && this._bodyTiles.length > 1 && !this._swiper) {
             this._initializeSwiper();
@@ -9622,14 +9621,15 @@ let PanelCard = class PanelCard extends h {
     }
     disconnectedCallback() {
         super.disconnectedCallback();
+        window.removeEventListener("resize", this._handleDeviceChanges.bind(this));
+        window.removeEventListener("orientationchange", this._handleDeviceChanges.bind(this));
+        window.removeEventListener("touchstart", this._startResetTimer.bind(this));
         if (this._timeIntervalId !== undefined) {
             clearInterval(this._timeIntervalId);
         }
         if (this._resetTimer) {
             clearTimeout(this._resetTimer);
         }
-        ["orientationchange", "resize"].forEach((event) => window.removeEventListener(event, this._handleDeviceChanges.bind(this)));
-        window.removeEventListener("touchstart", this._startResetTimer.bind(this));
     }
     render() {
         const displayMode = this._displayMode;
@@ -9813,7 +9813,6 @@ let PanelCard = class PanelCard extends h {
         this._swiper = new Swiper(swiperContainer, swiperParams);
     }
     _startResetTimer() {
-        console.log("Starting reset timer");
         if (this._resetTimer) {
             clearTimeout(this._resetTimer);
         }
@@ -9827,16 +9826,23 @@ let PanelCard = class PanelCard extends h {
         }
         this._startResetTimer();
     }
-    async _loadContent() {
+    _loadContent() {
         this._areaObj = this._area ? this.hass?.areas[this._area] : undefined;
-        const [headerChips, areaChips, bodyTiles] = await Promise.all([
-            this._loadHeaderChips(),
-            this._loadAreaChips(this._config?.chips || []),
-            this._loadBodyTiles(this._config?.tiles || []),
-        ]);
-        this._headerChips = headerChips;
-        this._areaChips = areaChips;
-        this._bodyTiles = bodyTiles;
+        this._loadHeaderChips()
+            .then((headerChips) => {
+            this._headerChips = headerChips;
+        })
+            .catch((error) => {
+            console.error("Error loading header chips:", error);
+        });
+        this._loadAreaChips(this._config?.chips || [])
+            .then((areaChips) => {
+            this._areaChips = areaChips;
+        })
+            .catch((error) => {
+            console.error("Error loading area chips:", error);
+        });
+        this._bodyTiles = this._loadBodyTiles(this._config?.tiles || []);
     }
     async _loadHeaderChips() {
         let chipsConfig = [];
@@ -9861,7 +9867,7 @@ let PanelCard = class PanelCard extends h {
             return chip;
         });
     }
-    async _loadBodyTiles(tilesConfig) {
+    _loadBodyTiles(tilesConfig) {
         const pages = [];
         this._bodyColumns = [];
         let currentPage = [];
