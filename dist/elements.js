@@ -14721,7 +14721,7 @@ PopupDialog = __decorate([
     t$1("smartqasa-popup-dialog")
 ], PopupDialog);
 
-var version = "2024.9.11b-11";
+var version = "2024.9.12b-1";
 
 window.smartqasa = window.smartqasa || {};
 window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();
