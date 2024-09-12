@@ -59,8 +59,8 @@ export class PanelCard extends LitElement {
     private _areaObj?: HassArea;
     private _headerChips: LovelaceCard[] = [];
     private _areaChips: LovelaceCard[] = [];
-    private _bodyTiles: LovelaceCard[][] = [];
-    private _bodyColumns: number[] = [];
+    private _controlTiles: LovelaceCard[][] = [];
+    private _controlColumns: number[] = [];
 
     static styles: CSSResultGroup = [unsafeCSS(swiperStyles), unsafeCSS(panelStyles)];
 
@@ -105,15 +105,15 @@ export class PanelCard extends LitElement {
 
             if (this._areaChips.length) updateHassForCards(this._areaChips);
 
-            if (this._bodyTiles.length)
-                this._bodyTiles.forEach((page) => {
+            if (this._controlTiles.length)
+                this._controlTiles.forEach((page) => {
                     updateHassForCards(page);
                 });
         }
     }
 
     protected updated(): void {
-        if (this._isTablet && this._bodyTiles.length > 1 && !this._swiper) {
+        if (this._isTablet && this._controlTiles.length > 1 && !this._swiper) {
             this._initializeSwiper();
         }
     }
@@ -143,11 +143,11 @@ export class PanelCard extends LitElement {
             case "control":
                 content = html`
                     ${this._renderArea()}
-                    ${this._renderBody()}
+                    ${this._renderControl()}
                 `;
                 break;
             case "entertain":
-                content = html`<!-- Entertain mode: Area and Body are hidden -->`;
+                content = html`<!-- Entertain mode: Area and control are hidden -->`;
                 break;
             default:
                 content = nothing;
@@ -236,14 +236,14 @@ export class PanelCard extends LitElement {
         return (this._areaPicture = defaultImage);
     }
 
-    private _renderBody(): TemplateResult | typeof nothing {
-        if (!this._config || !this._bodyTiles.length) return nothing;
+    private _renderControl(): TemplateResult | typeof nothing {
+        if (!this._config || !this._controlTiles.length) return nothing;
 
         if (this._isPhone) {
             const gridStyle = { gridTemplateColumns: "1fr 1fr" };
             return html`
-                <div class="body-tiles" style=${styleMap(gridStyle)}>
-                    ${this._bodyTiles.flat().map((tile) => html`<div class="tile">${tile}</div>`)}
+                <div class="control-tiles" style=${styleMap(gridStyle)}>
+                    ${this._controlTiles.flat().map((tile) => html`<div class="tile">${tile}</div>`)}
                 </div>
             `;
         }
@@ -251,21 +251,21 @@ export class PanelCard extends LitElement {
         return html`
             <div class="swiper">
                 <div class="swiper-wrapper">
-                    ${this._bodyTiles.map((page, index) => {
+                    ${this._controlTiles.map((page, index) => {
                         const gridStyle = {
-                            gridTemplateColumns: `repeat(${this._bodyColumns[index]}, var(--sq-tile-width, 19.5rem))`,
+                            gridTemplateColumns: `repeat(${this._controlColumns[index]}, var(--sq-tile-width, 19.5rem))`,
                         };
 
                         return html`
                             <div class="swiper-slide">
-                                <div class="body-tiles" style=${styleMap(gridStyle)}>
+                                <div class="control-tiles" style=${styleMap(gridStyle)}>
                                     ${page.map((tile) => html`<div class="tile">${tile}</div>`)}
                                 </div>
                             </div>
                         `;
                     })}
                 </div>
-                ${this._bodyTiles.length > 1
+                ${this._controlTiles.length > 1
                     ? html`
                           <div
                               class="swiper-button-prev"
@@ -371,7 +371,7 @@ export class PanelCard extends LitElement {
                 console.error("Error loading area chips:", error);
             });
 
-        this._bodyTiles = this._loadBodyTiles(this._config?.tiles || []);
+        this._controlTiles = this._loadControlTiles(this._config?.tiles || []);
     }
 
     private async _loadHeaderChips(): Promise<LovelaceCard[]> {
@@ -399,9 +399,9 @@ export class PanelCard extends LitElement {
         });
     }
 
-    private _loadBodyTiles(tilesConfig: LovelaceCardConfig[]): LovelaceCard[][] {
+    private _loadControlTiles(tilesConfig: LovelaceCardConfig[]): LovelaceCard[][] {
         const pages: LovelaceCard[][] = [];
-        this._bodyColumns = [];
+        this._controlColumns = [];
         let currentPage: LovelaceCard[] = [];
         let firstTile = true;
 
@@ -409,7 +409,7 @@ export class PanelCard extends LitElement {
             if (firstTile) {
                 const columns =
                     config.type === "page" && config.columns >= 2 && config.columns <= 4 ? config.columns : 3;
-                this._bodyColumns.push(columns);
+                this._controlColumns.push(columns);
             }
 
             if (config.type === "page") {
@@ -419,7 +419,7 @@ export class PanelCard extends LitElement {
 
                     const columns =
                         config.type === "page" && config.columns >= 2 && config.columns <= 4 ? config.columns : 3;
-                    this._bodyColumns.push(columns);
+                    this._controlColumns.push(columns);
                 }
             } else if (config.type === "blank") {
                 if (this._isTablet) {

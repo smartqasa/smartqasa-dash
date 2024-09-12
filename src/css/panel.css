@@ -23,7 +23,7 @@
     grid-template-areas:
         "header"
         "area"
-        "body"
+        "control"
         "footer";
 }
 .container[entertain] {
@@ -107,7 +107,7 @@
     background-color: transparent;
 }
 .swiper {
-    grid-area: body;
+    grid-area: control;
     width: 100%;
 }
 .swiper-slide {
@@ -115,7 +115,7 @@
     height: 100%;
     overflow-y: auto;
 }
-.body-tiles {
+.control-tiles {
     display: grid;
     width: min-content;
     margin: auto;
@@ -172,7 +172,7 @@
             auto;
         grid-template-areas:
             "area"
-            "body"
+            "control"
             "footer";
     }
     .area-container {
@@ -200,13 +200,13 @@
         font-weight: var(--sq-title-font-weight, 400);
         border-radius: 0.2rem 0 0 0;
     }
-    .body-container {
-        grid-area: body;
+    .control-container {
+        grid-area: control;
         display: flex;
         width: 100%;
         overflow-y: auto;
     }
-    .body-tiles {
+    .control-tiles {
         width: 100%;
         margin: 0;
         gap: var(--sq-tile-spacing, 0.8rem);
@@ -225,7 +225,7 @@
     .container[control] {
         grid-template-columns: 1fr 1fr;
         grid-template-rows: 100%;
-        grid-template-areas: "area body";
+        grid-template-areas: "area control";
     }
     .area-container {
         grid-template-columns: 1fr;
@@ -265,13 +265,13 @@
     .footer-button span {
         display: none;
     }
-    .body-container {
-        grid-area: body;
+    .control-container {
+        grid-area: control;
         display: flex;
         width: 100%;
         overflow-y: auto;
     }
-    .body-tiles {
+    .control-tiles {
         width: 100%;
         margin: 0;
         gap: var(--sq-tile-spacing, 0.8rem);
