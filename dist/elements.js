@@ -9612,8 +9612,10 @@ let PanelCard = class PanelCard extends h {
         }
     }
     firstUpdated() {
-        if (this._isTablet && this._bodyTiles.length > 1)
+        if (this._isTablet && this._bodyTiles.length > 1) {
             this._initializeSwiper();
+            console.log("Swiper initialized during firstUpdated");
+        }
     }
     disconnectedCallback() {
         super.disconnectedCallback();
