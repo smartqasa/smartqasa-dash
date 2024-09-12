@@ -9596,6 +9596,12 @@ let PanelCard = class PanelCard extends h {
         }
         ["orientationchange", "resize"].forEach((event) => window.removeEventListener(event, this._handleDeviceChanges.bind(this)));
     }
+    async firstUpdated() {
+        await this._loadContent();
+        if (this._isTablet) {
+            this._initializeSwiper();
+        }
+    }
     updated(changedProps) {
         if (this.hass) {
             const isAdminMode = this.hass.states["input_boolean.admin_mode"]?.state === "on";
@@ -9626,12 +9632,6 @@ let PanelCard = class PanelCard extends h {
                 this._bodyTiles.forEach((page) => {
                     updateHassForCards(page);
                 });
-        }
-    }
-    async firstUpdated() {
-        await this._loadContent();
-        if (this._isTablet) {
-            this._initializeSwiper();
         }
     }
     render() {

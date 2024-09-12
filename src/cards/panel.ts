@@ -97,6 +97,14 @@ export class PanelCard extends LitElement {
         );
     }
 
+    protected async firstUpdated(): Promise<void> {
+        await this._loadContent();
+
+        if (this._isTablet) {
+            this._initializeSwiper();
+        }
+    }
+
     protected updated(changedProps: PropertyValues): void {
         if (this.hass) {
             const isAdminMode = this.hass.states["input_boolean.admin_mode"]?.state === "on";
@@ -130,14 +138,6 @@ export class PanelCard extends LitElement {
                 this._bodyTiles.forEach((page) => {
                     updateHassForCards(page);
                 });
-        }
-    }
-
-    protected async firstUpdated(): Promise<void> {
-        await this._loadContent();
-
-        if (this._isTablet) {
-            this._initializeSwiper();
         }
     }
 
