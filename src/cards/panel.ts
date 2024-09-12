@@ -341,6 +341,7 @@ export class PanelCard extends LitElement {
     }
 
     private _startResetTimer(): void {
+        console.log("Starting reset timer");
         if (this._resetTimer) {
             clearTimeout(this._resetTimer);
         }

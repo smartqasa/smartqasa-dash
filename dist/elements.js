@@ -9813,6 +9813,7 @@ let PanelCard = class PanelCard extends h {
         this._swiper = new Swiper(swiperContainer, swiperParams);
     }
     _startResetTimer() {
+        console.log("Starting reset timer");
         if (this._resetTimer) {
             clearTimeout(this._resetTimer);
         }
