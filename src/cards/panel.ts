@@ -10,7 +10,7 @@ import { SwiperOptions } from "swiper/types";
 import { Navigation } from "swiper/modules";
 import { createElement } from "../utils/create-element";
 import { loadYamlAsJson } from "../utils/load-yaml-as-json";
-import { areasDialog } from "../misc/areas-dialog";
+import { dialogTable } from "../tables/dialogs";
 import { menuConfig } from "../misc/menu-config";
 import { formattedTime, formattedDate } from "../utils/format-date-time";
 
@@ -497,7 +497,8 @@ export class PanelCard extends LitElement {
 
     private _handleAreas() {
         this._displayMode = "control";
-        areasDialog(this.hass);
+        const dialogObj = dialogTable["areas"];
+        window.browser_mod?.service("popup", { ...dialogObj.data });
     }
 
     private _handleEntertain() {

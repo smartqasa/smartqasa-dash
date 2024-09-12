@@ -201,6 +201,19 @@ export const dialogTable: DialogTable = {
             },
         },
     },
+
+    areas: {
+        icon: "hass:view-dashboard",
+        name: "Areas",
+        data: {
+            title: "Areas",
+            timeout: 60000,
+            content: {
+                type: "custom:smartqasa-areas-card",
+            },
+        },
+    },
+
     clean_screen: {
         icon: "hass:spray-bottle",
         name: "Clean Screen",

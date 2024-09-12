@@ -46,7 +46,7 @@ export class DialogTile extends LitElement {
             animation: iconAnimation,
         };
         return html`
-            <div class="container" @click=${this.showDialog}>
+            <div class="container" @click=${this._showDialog}>
                 <div class="icon" style="${styleMap(iconStyles)}">
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
@@ -72,7 +72,7 @@ export class DialogTile extends LitElement {
         return { icon, iconAnimation, iconColor, name };
     }
 
-    private async showDialog(e: Event): Promise<void> {
+    private _showDialog(e: Event) {
         e.stopPropagation();
         if (!this.dialogObj || !this.config) return;
 
