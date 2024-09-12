@@ -9798,7 +9798,10 @@ let PanelCard = class PanelCard extends h {
             initialSlide: 0,
             loop: true,
             modules: [Navigation],
-            navigation: true,
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+            },
         };
         this._swiper = new Swiper(".swiper", swiperParams);
         //if (this._swiper) Swiper.use([Navigation]);
