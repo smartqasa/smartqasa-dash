@@ -76,13 +76,6 @@ export class PanelCard extends LitElement {
 
         this._syncTime();
 
-        await this._loadContent();
-
-        if (this._isTablet) {
-            this._initializeSwiper();
-            this._startResetTimer();
-        }
-
         ["orientationchange", "resize"].forEach((event) =>
             window.addEventListener(event, this._handleDeviceChanges.bind(this))
         );
@@ -134,7 +127,9 @@ export class PanelCard extends LitElement {
         }
     }
 
-    protected firstUpdated(): void {
+    protected async firstUpdated(): Promise<void> {
+        await this._loadContent();
+
         if (this._isTablet && this._bodyTiles.length > 1) {
             this._initializeSwiper();
             this._startResetTimer();
@@ -341,6 +336,7 @@ export class PanelCard extends LitElement {
         };
 
         this._swiper = new Swiper(swiperContainer as HTMLElement, swiperParams);
+        Swiper.use([Navigation]);
     }
 
     private _startResetTimer(): void {
