@@ -71,7 +71,7 @@ export class PanelCard extends LitElement {
         this._areaPicture = await this._getAreaPicture();
     }
 
-    connectedCallback() {
+    public async connectedCallback() {
         super.connectedCallback();
 
         if (this._isTablet) {
@@ -84,13 +84,11 @@ export class PanelCard extends LitElement {
         ["orientationchange", "resize"].forEach((event) =>
             window.addEventListener(event, this._handleDeviceChanges.bind(this))
         );
-    }
 
-    protected async firstUpdated() {
         await this._loadContent();
     }
 
-    protected updated(changedProps: PropertyValues) {
+    protected willUpdate(changedProps: PropertyValues) {
         if (this.hass) {
             const isAdminMode = this.hass.states["input_boolean.admin_mode"]?.state === "on";
             this._isAdminMode = (this.hass.user?.is_admin ?? false) || isAdminMode;
@@ -106,26 +104,28 @@ export class PanelCard extends LitElement {
 
         if (changedProps.has("_config") && this._config) {
             this._loadContent();
-        } else if (changedProps.has("hass") && this.hass) {
+        }
+
+        if (changedProps.has("hass") && this.hass) {
             this._areaObj = this._area ? this.hass.areas[this._area] : undefined;
 
-            if (this._isTablet && this._headerChips.length) {
-                this._headerChips.forEach((chip) => {
-                    chip.hass = this.hass;
+            const updateHassForCards = (cards: LovelaceCard[]) => {
+                cards.forEach((card) => {
+                    card.hass = this.hass;
                 });
+            };
+
+            if (this._isTablet && this._headerChips.length) {
+                updateHassForCards(this._headerChips);
             }
 
             if (this._areaChips.length) {
-                this._areaChips.forEach((chip) => {
-                    chip.hass = this.hass;
-                });
+                updateHassForCards(this._areaChips);
             }
 
             if (this._bodyTiles.length) {
                 this._bodyTiles.forEach((page) => {
-                    page.forEach((tile) => {
-                        tile.hass = this.hass;
-                    });
+                    updateHassForCards(page);
                 });
             }
         }

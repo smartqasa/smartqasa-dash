@@ -90,7 +90,7 @@ export class MenuCard extends LitElement {
         `;
     }
 
-    public connectedCallback() {
+    public async connectedCallback() {
         super.connectedCallback();
 
         ["orientationchange", "resize"].forEach((event) =>
@@ -98,15 +98,8 @@ export class MenuCard extends LitElement {
         );
 
         this._handleDeviceChanges();
-    }
 
-    protected async firstUpdated(changedProps: PropertyValues): Promise<void> {
         await this._loadMenuTabs();
-
-        if (this._menuTab < 0 || this._menuTab >= this._tabs.length) {
-            this._menuTab = 0;
-            window.smartqasa.menuTab = 0;
-        }
     }
 
     protected willUpdate(changedProps: PropertyValues): void {
