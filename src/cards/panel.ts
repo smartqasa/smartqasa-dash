@@ -112,6 +112,7 @@ export class PanelCard extends LitElement {
     }
 
     protected firstUpdated(): void {
+        console.log("First updated", this._isTablet, this._bodyTiles.length);
         if (this._isTablet && this._bodyTiles.length > 1) {
             this._initializeSwiper();
             console.log("Swiper initialized during firstUpdated");
