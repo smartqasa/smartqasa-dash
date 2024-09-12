@@ -88,49 +88,6 @@ export class PanelCard extends LitElement {
         await this._loadContent();
     }
 
-    protected willUpdate(changedProps: PropertyValues) {
-        if (this.hass) {
-            const isAdminMode = this.hass.states["input_boolean.admin_mode"]?.state === "on";
-            this._isAdminMode = (this.hass.user?.is_admin ?? false) || isAdminMode;
-        }
-
-        if (this._isTablet) {
-            if (this._swiper) {
-                this._swiper.update();
-            } else {
-                this._initializeSwiper();
-            }
-        }
-
-        if (changedProps.has("_config") && this._config) {
-            this._loadContent();
-        }
-
-        if (changedProps.has("hass") && this.hass) {
-            this._areaObj = this._area ? this.hass.areas[this._area] : undefined;
-
-            const updateHassForCards = (cards: LovelaceCard[]) => {
-                cards.forEach((card) => {
-                    card.hass = this.hass;
-                });
-            };
-
-            if (this._isTablet && this._headerChips.length) {
-                updateHassForCards(this._headerChips);
-            }
-
-            if (this._areaChips.length) {
-                updateHassForCards(this._areaChips);
-            }
-
-            if (this._bodyTiles.length) {
-                this._bodyTiles.forEach((page) => {
-                    updateHassForCards(page);
-                });
-            }
-        }
-    }
-
     disconnectedCallback() {
         super.disconnectedCallback();
 
@@ -145,6 +102,36 @@ export class PanelCard extends LitElement {
         ["orientationchange", "resize"].forEach((event) =>
             window.removeEventListener(event, this._handleDeviceChanges.bind(this))
         );
+    }
+
+    protected willUpdate(changedProps: PropertyValues) {
+        if (this.hass) {
+            const isAdminMode = this.hass.states["input_boolean.admin_mode"]?.state === "on";
+            this._isAdminMode = (this.hass.user?.is_admin ?? false) || isAdminMode;
+        }
+
+        if (this._isTablet && this._swiper) this._swiper.update();
+
+        if (changedProps.has("_config") && this._config) this._loadContent();
+
+        if (changedProps.has("hass") && this.hass) {
+            this._areaObj = this._area ? this.hass.areas[this._area] : undefined;
+
+            const updateHassForCards = (cards: LovelaceCard[]) => {
+                cards.forEach((card) => {
+                    card.hass = this.hass;
+                });
+            };
+
+            if (this._isTablet && this._headerChips.length) updateHassForCards(this._headerChips);
+
+            if (this._areaChips.length) updateHassForCards(this._areaChips);
+
+            if (this._bodyTiles.length)
+                this._bodyTiles.forEach((page) => {
+                    updateHassForCards(page);
+                });
+        }
     }
 
     protected render(): TemplateResult {

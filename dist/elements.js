@@ -4502,6 +4502,10 @@ let MenuCard = class MenuCard extends h {
         this._handleDeviceChanges();
         await this._loadMenuTabs();
     }
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        ["orientationchange", "resize"].forEach((event) => window.removeEventListener(event, this._handleDeviceChanges.bind(this)));
+    }
     willUpdate(changedProps) {
         if (changedProps.has("hass") && this.hass) {
             const currentTiles = this._bodyTiles[this._menuTab] || [];
@@ -4509,10 +4513,6 @@ let MenuCard = class MenuCard extends h {
                 tile.hass = this.hass;
             });
         }
-    }
-    disconnectedCallback() {
-        super.disconnectedCallback();
-        ["orientationchange", "resize"].forEach((event) => window.removeEventListener(event, this._handleDeviceChanges.bind(this)));
     }
     render() {
         const currentTiles = this._bodyTiles[this._menuTab] || [];
@@ -9317,42 +9317,6 @@ let PanelCard = class PanelCard extends h {
         ["orientationchange", "resize"].forEach((event) => window.addEventListener(event, this._handleDeviceChanges.bind(this)));
         await this._loadContent();
     }
-    willUpdate(changedProps) {
-        if (this.hass) {
-            const isAdminMode = this.hass.states["input_boolean.admin_mode"]?.state === "on";
-            this._isAdminMode = (this.hass.user?.is_admin ?? false) || isAdminMode;
-        }
-        if (this._isTablet) {
-            if (this._swiper) {
-                this._swiper.update();
-            }
-            else {
-                this._initializeSwiper();
-            }
-        }
-        if (changedProps.has("_config") && this._config) {
-            this._loadContent();
-        }
-        if (changedProps.has("hass") && this.hass) {
-            this._areaObj = this._area ? this.hass.areas[this._area] : undefined;
-            const updateHassForCards = (cards) => {
-                cards.forEach((card) => {
-                    card.hass = this.hass;
-                });
-            };
-            if (this._isTablet && this._headerChips.length) {
-                updateHassForCards(this._headerChips);
-            }
-            if (this._areaChips.length) {
-                updateHassForCards(this._areaChips);
-            }
-            if (this._bodyTiles.length) {
-                this._bodyTiles.forEach((page) => {
-                    updateHassForCards(page);
-                });
-            }
-        }
-    }
     disconnectedCallback() {
         super.disconnectedCallback();
         if (this._timeIntervalId !== undefined) {
@@ -9362,6 +9326,32 @@ let PanelCard = class PanelCard extends h {
             clearTimeout(this._resetTimer);
         }
         ["orientationchange", "resize"].forEach((event) => window.removeEventListener(event, this._handleDeviceChanges.bind(this)));
+    }
+    willUpdate(changedProps) {
+        if (this.hass) {
+            const isAdminMode = this.hass.states["input_boolean.admin_mode"]?.state === "on";
+            this._isAdminMode = (this.hass.user?.is_admin ?? false) || isAdminMode;
+        }
+        if (this._isTablet && this._swiper)
+            this._swiper.update();
+        if (changedProps.has("_config") && this._config)
+            this._loadContent();
+        if (changedProps.has("hass") && this.hass) {
+            this._areaObj = this._area ? this.hass.areas[this._area] : undefined;
+            const updateHassForCards = (cards) => {
+                cards.forEach((card) => {
+                    card.hass = this.hass;
+                });
+            };
+            if (this._isTablet && this._headerChips.length)
+                updateHassForCards(this._headerChips);
+            if (this._areaChips.length)
+                updateHassForCards(this._areaChips);
+            if (this._bodyTiles.length)
+                this._bodyTiles.forEach((page) => {
+                    updateHassForCards(page);
+                });
+        }
     }
     render() {
         const displayMode = this._displayMode;

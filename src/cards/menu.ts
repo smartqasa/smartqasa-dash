@@ -102,6 +102,14 @@ export class MenuCard extends LitElement {
         await this._loadMenuTabs();
     }
 
+    public disconnectedCallback() {
+        super.disconnectedCallback();
+
+        ["orientationchange", "resize"].forEach((event) =>
+            window.removeEventListener(event, this._handleDeviceChanges.bind(this))
+        );
+    }
+
     protected willUpdate(changedProps: PropertyValues): void {
         if (changedProps.has("hass") && this.hass) {
             const currentTiles = this._bodyTiles[this._menuTab] || [];
@@ -109,14 +117,6 @@ export class MenuCard extends LitElement {
                 tile.hass = this.hass!;
             });
         }
-    }
-
-    public disconnectedCallback() {
-        super.disconnectedCallback();
-
-        ["orientationchange", "resize"].forEach((event) =>
-            window.removeEventListener(event, this._handleDeviceChanges.bind(this))
-        );
     }
 
     protected render(): TemplateResult {
