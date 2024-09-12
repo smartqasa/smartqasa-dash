@@ -317,17 +317,17 @@ export class PanelCard extends LitElement {
     private _initializeSwiper(): void {
         if (this._bodyTiles.length <= 1) return;
 
+        const swiperContainer = this.shadowRoot?.querySelector(".swiper");
+        if (!swiperContainer) return;
+
         const swiperParams: SwiperOptions = {
             initialSlide: 0,
             loop: true,
             modules: [Navigation],
-            navigation: {
-                nextEl: ".swiper-button-next",
-                prevEl: ".swiper-button-prev",
-            },
+            navigation: true,
         };
 
-        this._swiper = new Swiper(".swiper", swiperParams);
+        this._swiper = new Swiper(swiperContainer as HTMLElement, swiperParams);
         Swiper.use([Navigation]);
     }
 

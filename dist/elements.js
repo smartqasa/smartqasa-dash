@@ -9794,16 +9794,16 @@ let PanelCard = class PanelCard extends h {
     _initializeSwiper() {
         if (this._bodyTiles.length <= 1)
             return;
+        const swiperContainer = this.shadowRoot?.querySelector(".swiper");
+        if (!swiperContainer)
+            return;
         const swiperParams = {
             initialSlide: 0,
             loop: true,
             modules: [Navigation],
-            navigation: {
-                nextEl: ".swiper-button-next",
-                prevEl: ".swiper-button-prev",
-            },
+            navigation: true,
         };
-        this._swiper = new Swiper(".swiper", swiperParams);
+        this._swiper = new Swiper(swiperContainer, swiperParams);
         Swiper.use([Navigation]);
     }
     _startResetTimer() {
