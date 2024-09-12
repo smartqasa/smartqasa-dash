@@ -328,6 +328,7 @@ export class PanelCard extends LitElement {
         };
 
         this._swiper = new Swiper(".swiper", swiperParams);
+        Swiper.use([Navigation]);
     }
 
     private _startResetTimer(): void {
@@ -437,6 +438,7 @@ export class PanelCard extends LitElement {
 
     private _launchClock(e: Event): void {
         e.stopPropagation();
+
         if (typeof window.fully !== "undefined" && window.fully.startApplication) {
             window.fully.startApplication("com.google.android.deskclock");
         } else {
@@ -446,6 +448,7 @@ export class PanelCard extends LitElement {
 
     private _handleSwiperNavigation(e: Event, direction: "prev" | "next"): void {
         e.stopPropagation();
+
         if (this._swiper) {
             if (direction === "prev") {
                 console.log("Swiping to previous page");
@@ -461,6 +464,7 @@ export class PanelCard extends LitElement {
 
     private _handleFooterAction(e: Event, methodName: keyof ActionHandlers): void {
         e.stopPropagation();
+
         if (typeof this[methodName] === "function") {
             this[methodName]();
         } else {

@@ -9804,6 +9804,7 @@ let PanelCard = class PanelCard extends h {
             },
         };
         this._swiper = new Swiper(".swiper", swiperParams);
+        Swiper.use([Navigation]);
     }
     _startResetTimer() {
         if (this._resetTimer) {
