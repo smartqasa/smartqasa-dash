@@ -4360,16 +4360,15 @@ let MenuCard = class MenuCard extends h {
     static get styles() {
         return i$3 `
             :host {
-                height: 100%;
                 border: none;
                 background-color: transparent;
-                box-sizing: border-box;
             }
             .container {
-                height: 100%;
                 display: grid;
                 grid-templace-columns: 100%;
-                grid-template-rows: auto minmax(0, 1fr);
+                grid-template-rows:
+                    auto
+                    1fr;
                 overflow: hidden;
             }
             .tab-bar {
@@ -4414,7 +4413,6 @@ let MenuCard = class MenuCard extends h {
             .tile {
                 width: 100%;
                 height: 100%;
-                box-sizing: border-box;
             }
         `;
     }

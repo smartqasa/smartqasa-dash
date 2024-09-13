@@ -28,16 +28,15 @@ export class MenuCard extends LitElement {
     static get styles() {
         return css`
             :host {
-                height: 100%;
                 border: none;
                 background-color: transparent;
-                box-sizing: border-box;
             }
             .container {
-                height: 100%;
                 display: grid;
                 grid-templace-columns: 100%;
-                grid-template-rows: auto minmax(0, 1fr);
+                grid-template-rows:
+                    auto
+                    1fr;
                 overflow: hidden;
             }
             .tab-bar {
@@ -82,7 +81,6 @@ export class MenuCard extends LitElement {
             .tile {
                 width: 100%;
                 height: 100%;
-                box-sizing: border-box;
             }
         `;
     }
