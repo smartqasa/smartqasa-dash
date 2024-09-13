@@ -58,7 +58,7 @@ export class PanelCard extends LitElement {
     private _boundStartResetTimer: () => void;
     private _areaPicture: string = defaultImage;
     private _timeIntervalId: number | undefined;
-    private _swiper?: Swiper;
+    private _swiper: Swiper | undefined;
     private _resetTimer?: ReturnType<typeof setTimeout>;
     private _area?: string;
     private _areaObj?: HassArea;
@@ -155,7 +155,7 @@ export class PanelCard extends LitElement {
             case "control":
                 content = html`
                     ${this._renderArea()}
-                    ${renderControls(this._controlTiles, this._controlColumns, this._isPhone)}
+                    ${renderControls(this._controlTiles, this._controlColumns, this._isPhone, this._swiper)}
                 `;
                 break;
             case "entertain":

@@ -8970,7 +8970,7 @@ function loadControlTiles(tilesConfig, hass, isTablet) {
     }
     return { controlTiles, controlColumns };
 }
-function renderControls(controlTiles, controlColumns, isPhone) {
+function renderControls(controlTiles, controlColumns, isPhone, swiper) {
     if (controlTiles.length === 0)
         return D;
     if (isPhone) {
@@ -8997,10 +8997,10 @@ function renderControls(controlTiles, controlColumns, isPhone) {
                     `;
     })}
             </div>
-            ${controlTiles.length > 1
+            ${controlTiles.length > 1 && swiper
         ? ke `
-                      <div class="swiper-button-prev"></div>
-                      <div class="swiper-button-next"></div>
+                      <div class="swiper-button-prev" @click=${(e) => swiper.slidePrev()}></div>
+                      <div class="swiper-button-next" @click=${(e) => swiper.slideNext()}></div>
                   `
         : D}
         </div>
@@ -9162,7 +9162,7 @@ let PanelCard = class PanelCard extends h {
             case "control":
                 content = ke `
                     ${this._renderArea()}
-                    ${renderControls(this._controlTiles, this._controlColumns, this._isPhone)}
+                    ${renderControls(this._controlTiles, this._controlColumns, this._isPhone, this._swiper)}
                 `;
                 break;
             case "entertain":

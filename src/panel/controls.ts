@@ -1,7 +1,8 @@
 import { HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 import { createElement } from "../utils/create-element";
-import { CSSResultGroup, html, LitElement, nothing, PropertyValues, TemplateResult, unsafeCSS } from "lit";
+import { html, nothing, TemplateResult } from "lit";
 import { styleMap } from "lit/directives/style-map.js";
+import Swiper from "swiper/types/swiper-class";
 
 export function loadControlTiles(
     tilesConfig: LovelaceCardConfig[],
@@ -56,7 +57,8 @@ export function loadControlTiles(
 export function renderControls(
     controlTiles: LovelaceCard[][],
     controlColumns: number[],
-    isPhone: boolean
+    isPhone: boolean,
+    swiper: Swiper | undefined
 ): TemplateResult | typeof nothing {
     if (controlTiles.length === 0) return nothing;
 
@@ -86,10 +88,10 @@ export function renderControls(
                     `;
                 })}
             </div>
-            ${controlTiles.length > 1
+            ${controlTiles.length > 1 && swiper
                 ? html`
-                      <div class="swiper-button-prev"></div>
-                      <div class="swiper-button-next"></div>
+                      <div class="swiper-button-prev" @click=${(e: Event) => swiper.slidePrev()}></div>
+                      <div class="swiper-button-next" @click=${(e: Event) => swiper.slideNext()}></div>
                   `
                 : nothing}
         </div>
