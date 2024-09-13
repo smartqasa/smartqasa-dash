@@ -4360,6 +4360,7 @@ let MenuCard = class MenuCard extends h {
     static get styles() {
         return i$3 `
             :host {
+                height: 100%;
                 border: none;
                 background-color: transparent;
                 box-sizing: border-box;

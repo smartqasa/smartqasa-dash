@@ -28,6 +28,7 @@ export class MenuCard extends LitElement {
     static get styles() {
         return css`
             :host {
+                height: 100%;
                 border: none;
                 background-color: transparent;
                 box-sizing: border-box;
