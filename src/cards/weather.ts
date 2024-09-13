@@ -27,15 +27,14 @@ export class WeatherCard extends LitElement {
 
     static get styles() {
         return css`
-            .grid {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 16px;
+            .container {
+                display: flex;
+                gap: var(--sq-tile-spacing, 0.8rem);
             }
             .left-column {
                 display: flex;
                 flex-direction: column;
-                gap: 8px;
+                gap: var(--sq-tile-spacing, 0.8rem);
             }
         `;
     }
@@ -97,7 +96,7 @@ export class WeatherCard extends LitElement {
 
     protected render(): TemplateResult {
         return html`
-            <div class="grid">
+            <div class="container">
                 <div class="left-column">
                     ${this._hourlyForecastCard || nothing} ${this._dailyForecastCard || nothing}
                 </div>

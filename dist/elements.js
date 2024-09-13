@@ -9790,7 +9790,6 @@ let PanelCard = class PanelCard extends h {
                 <div class="entertain-card">${this._audioCards[1]}</div>
                 <div class="entertain-card">${this._audioCards[2]}</div>
             </div>
-            ;
         `;
     }
     _renderFooter() {
@@ -11098,15 +11097,14 @@ window.customCards.push({
 let WeatherCard = class WeatherCard extends h {
     static get styles() {
         return i$3 `
-            .grid {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 16px;
+            .container {
+                display: flex;
+                gap: var(--sq-tile-spacing, 0.8rem);
             }
             .left-column {
                 display: flex;
                 flex-direction: column;
-                gap: 8px;
+                gap: var(--sq-tile-spacing, 0.8rem);
             }
         `;
     }
@@ -11165,7 +11163,7 @@ let WeatherCard = class WeatherCard extends h {
     }
     render() {
         return ke `
-            <div class="grid">
+            <div class="container">
                 <div class="left-column">
                     ${this._hourlyForecastCard || D} ${this._dailyForecastCard || D}
                 </div>

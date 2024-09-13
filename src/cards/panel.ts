@@ -298,7 +298,6 @@ export class PanelCard extends LitElement {
                 <div class="entertain-card">${this._audioCards[1]}</div>
                 <div class="entertain-card">${this._audioCards[2]}</div>
             </div>
-            ;
         `;
     }
 
