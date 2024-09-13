@@ -1,10 +1,8 @@
 import { CSSResultGroup, html, LitElement, nothing, PropertyValues, TemplateResult, unsafeCSS } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
-import { styleMap } from "lit/directives/style-map.js";
 
 import { HassArea, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 import { getDeviceOrientation, getDeviceType } from "../utils/device-info";
-import { formattedTime, formattedDate } from "../utils/format-date-time";
 import { navigateToArea } from "../utils/navigate-to-area";
 import Swiper from "swiper";
 import { SwiperOptions } from "swiper/types";
@@ -12,6 +10,8 @@ import { Navigation } from "swiper/modules";
 import { createElement } from "../utils/create-element";
 import { loadYamlAsJson } from "../utils/load-yaml-as-json";
 import { dialogTable } from "../tables/dialogs";
+import { loadHeaderChips, renderHeader } from "./header";
+import { loadAreaPicture, renderArea } from "./area";
 import { loadControlTiles, renderControls } from "./controls";
 import { loadAudioCards } from "./audio";
 
@@ -56,6 +56,7 @@ export class PanelCard extends LitElement {
 
     private _boundHandleDeviceChanges: () => void;
     private _boundStartResetTimer: () => void;
+    private _areaName: string = "Area";
     private _areaPicture: string = defaultImage;
     private _timeIntervalId: number | undefined;
     private _swiper: Swiper | undefined;
@@ -73,7 +74,7 @@ export class PanelCard extends LitElement {
     public async setConfig(config: Config) {
         this._config = { ...config };
         this._area = this._config.area;
-        this._areaPicture = await this._getAreaPicture();
+        this._areaPicture = await loadAreaPicture(this._config.picture || "", this._area);
     }
 
     constructor() {
@@ -105,7 +106,8 @@ export class PanelCard extends LitElement {
         if (changedProps.has("_config") && this._config) this._loadContent();
 
         if (changedProps.has("hass") && this.hass) {
-            this._areaObj = this._area ? this.hass.areas[this._area] : undefined;
+            this._areaObj = this._area ? this.hass?.areas[this._area] : undefined;
+            this._areaName = this._config?.name ?? this._areaObj?.name ?? "Area";
 
             const updateHassForCards = (cards: LovelaceCard[]) => {
                 cards.forEach((card) => {
@@ -153,8 +155,9 @@ export class PanelCard extends LitElement {
         // prettier-ignore
         switch (displayMode) {
             case "control":
+                const name = this._config?.name ?? this._areaObj?.name ?? "Area";
                 content = html`
-                    ${this._renderArea()}
+                    ${renderArea(this._areaName, this._areaPicture, this._areaChips, this._isPhone, this._isLandscape)}
                     ${renderControls(this._controlTiles, this._controlColumns, this._isPhone, this._swiper)}
                 `;
                 break;
@@ -174,7 +177,7 @@ export class PanelCard extends LitElement {
                 ?control=${displayMode === "control"}
                 ?entertain=${displayMode === "entertain"}
             >
-                ${this._isTablet ? this._renderHeader() : nothing}
+                ${this._isTablet ? renderHeader(this._headerChips) : nothing}
                 ${content}
                 ${this._isPhone && this._isLandscape ? nothing : this._renderFooter()}
             </div>
@@ -189,20 +192,6 @@ export class PanelCard extends LitElement {
         const orientation = getDeviceOrientation();
         this._isPortrait = orientation === "portrait";
         this._isLandscape = orientation === "landscape";
-    }
-
-    private _renderHeader(): TemplateResult {
-        return html`
-            <div class="header-container">
-                <div class="header-time-date" @click="${this._launchClock}">
-                    <div class="time">${formattedTime()}</div>
-                    <div class="date">${formattedDate()}</div>
-                </div>
-                <div class="header-chips">
-                    ${this._headerChips.map((chip) => html`<div class="chip">${chip}</div>`)}
-                </div>
-            </div>
-        `;
     }
 
     private _renderArea(): TemplateResult {
@@ -246,51 +235,6 @@ export class PanelCard extends LitElement {
         } catch (error) {}
 
         return (this._areaPicture = defaultImage);
-    }
-
-    private _renderControl(): TemplateResult | typeof nothing {
-        if (!this._config || !this._controlTiles.length) return nothing;
-
-        if (this._isPhone) {
-            const gridStyle = { gridTemplateColumns: "1fr 1fr" };
-            return html`
-                <div class="control-tiles" style=${styleMap(gridStyle)}>
-                    ${this._controlTiles.flat().map((tile) => html`<div class="tile">${tile}</div>`)}
-                </div>
-            `;
-        }
-
-        return html`
-            <div class="swiper">
-                <div class="swiper-wrapper">
-                    ${this._controlTiles.map((page, index) => {
-                        const gridStyle = {
-                            gridTemplateColumns: `repeat(${this._controlColumns[index]}, var(--sq-tile-width, 19.5rem))`,
-                        };
-
-                        return html`
-                            <div class="swiper-slide">
-                                <div class="control-tiles" style=${styleMap(gridStyle)}>
-                                    ${page.map((tile) => html`<div class="tile">${tile}</div>`)}
-                                </div>
-                            </div>
-                        `;
-                    })}
-                </div>
-                ${this._controlTiles.length > 1
-                    ? html`
-                          <div
-                              class="swiper-button-prev"
-                              @click=${(e: Event) => this._handleSwiperNavigation(e, "prev")}
-                          ></div>
-                          <div
-                              class="swiper-button-next"
-                              @click=${(e: Event) => this._handleSwiperNavigation(e, "next")}
-                          ></div>
-                      `
-                    : nothing}
-            </div>
-        `;
     }
 
     private _renderEntertain(): TemplateResult {
@@ -376,8 +320,9 @@ export class PanelCard extends LitElement {
 
     private _loadContent(): void {
         this._areaObj = this._area ? this.hass?.areas[this._area] : undefined;
+        this._areaName = this._config?.name ?? this._areaObj?.name ?? "Area";
 
-        this._loadHeaderChips()
+        loadHeaderChips(this.hass!)
             .then((headerChips) => {
                 this._headerChips = headerChips;
             })
