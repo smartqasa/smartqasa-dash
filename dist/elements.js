@@ -4366,22 +4366,19 @@ let MenuCard = class MenuCard extends h {
                 box-sizing: border-box;
             }
             .container {
-                display: flex;
-                flex-direction: column;
                 height: 100%;
+                display: grid;
+                grid-templace-columns: 100%;
+                grid-template-rows: auto minmax(0, 1fr);
+                overflow: hidden;
             }
             .tab-bar {
-                flex: 0 0 auto;
                 display: flex;
                 justify-content: space-around;
                 align-items: center;
                 gap: 1rem;
                 padding: 0.5rem 0;
                 border-bottom: 1px solid var(--divider-color);
-                position: sticky; /* Make the tab bar sticky */
-                top: 0; /* Stick to the top */
-                background-color: var(--card-background-color); /* Background for tab bar */
-                z-index: 1; /* Ensure it stays above the scrollable content */
             }
             .tab {
                 display: flex;
@@ -4408,13 +4405,11 @@ let MenuCard = class MenuCard extends h {
                 display: none;
             }
             .tiles {
-                flex: 1 1 auto;
                 display: grid;
                 padding: 1rem 0 0 0;
                 gap: var(--sq-tile-spacing, 0.8rem);
                 grid-auto-rows: var(--sq-tile-height, 7rem);
-                overflow-y: auto; /* Allow vertical scrolling */
-                padding-bottom: 1rem; /* Add bottom padding to avoid cutting off last tile */
+                overflow-y: auto;
             }
             .tile {
                 width: 100%;
