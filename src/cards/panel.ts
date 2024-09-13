@@ -64,7 +64,7 @@ export class PanelCard extends LitElement {
     private _areaChips: LovelaceCard[] = [];
     private _controlTiles: LovelaceCard[][] = [];
     private _controlColumns: number[] = [];
-    private _audioCard?: LovelaceCard;
+    private _audioCards: LovelaceCard[] = [];
 
     static styles: CSSResultGroup = [unsafeCSS(swiperStyles), unsafeCSS(panelStyles)];
 
@@ -293,7 +293,11 @@ export class PanelCard extends LitElement {
 
     private _renderEntertain(): TemplateResult {
         return html`
-            <div class="entertain-container">${this._audioCard}</div>
+            <div class="entertain-container">
+                <div class="entertain-card">${this._audioCards[0]}</div>
+                <div class="entertain-card">${this._audioCards[1]}</div>
+                <div class="entertain-card">${this._audioCards[2]}</div>
+            </div>
             ;
         `;
     }
@@ -467,18 +471,35 @@ export class PanelCard extends LitElement {
     }
 
     private _loadEntertainCards(): void {
-        const config: LovelaceCardConfig = {
+        const createCard = (index: number, config: LovelaceCardConfig) => {
+            const card = createElement(config) as LovelaceCard;
+            card.hass = this.hass;
+            this._audioCards[index] = card;
+            this._audioCards[index].hass = this.hass;
+        };
+
+        createCard(0, {
+            type: "custom:sonos-card",
+            entityId: this._config?.audio_player,
+            showVolumeUpAndDownButtons: true,
+            sections: ["volumes", "groups", "grouping"],
+        });
+
+        createCard(1, {
+            type: "custom:sonos-card",
+            entityId: this._config?.audio_player,
+            showVolumeUpAndDownButtons: true,
+            sections: ["player"],
+        });
+
+        createCard(2, {
             type: "custom:sonos-card",
             entityId: this._config?.audio_player,
             mediaBrowserItemsPerRow: 3,
             mediaBrowserShowTitleForThumbnailIcons: true,
             showVolumeUpAndDownButtons: true,
-            sections: ["player", "volumes", "groups", "grouping", "media browser"],
-        };
-        const card = createElement(config) as LovelaceCard;
-        card.hass = this.hass;
-
-        this._audioCard = card;
+            sections: ["media browser"],
+        });
     }
 
     private _launchClock(e: Event): void {
