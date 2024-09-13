@@ -35,8 +35,9 @@ export class MenuCard extends LitElement {
             }
             .container {
                 display: flex;
-                height: 100%;
                 flex-direction: column;
+                height: 100%;
+                overflow: hidden;
             }
             .tab-bar {
                 flex: 0 0 auto;
