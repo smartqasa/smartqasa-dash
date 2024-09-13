@@ -4,6 +4,7 @@ import { styleMap } from "lit/directives/style-map.js";
 
 import { HassArea, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 import { getDeviceOrientation, getDeviceType } from "../utils/device-info";
+import { formattedTime, formattedDate } from "../utils/format-date-time";
 import { navigateToArea } from "../utils/navigate-to-area";
 import Swiper from "swiper";
 import { SwiperOptions } from "swiper/types";
@@ -11,7 +12,7 @@ import { Navigation } from "swiper/modules";
 import { createElement } from "../utils/create-element";
 import { loadYamlAsJson } from "../utils/load-yaml-as-json";
 import { dialogTable } from "../tables/dialogs";
-import { formattedTime, formattedDate } from "../utils/format-date-time";
+import { loadAudioCards } from "./audio";
 
 import panelStyles from "../css/panel.css";
 import swiperStyles from "swiper/swiper-bundle.css";
@@ -393,7 +394,7 @@ export class PanelCard extends LitElement {
 
         this._controlTiles = this._loadControlTiles(this._config?.tiles || []);
 
-        this._loadEntertainCards();
+        this._audioCards = loadAudioCards(this.hass!, this._config?.audio_player || "");
     }
 
     private async _loadHeaderChips(): Promise<LovelaceCard[]> {
@@ -480,6 +481,7 @@ export class PanelCard extends LitElement {
         createCard(0, {
             type: "custom:sonos-card",
             entityId: this._config?.audio_player,
+            heightPercentage: "auto",
             showVolumeUpAndDownButtons: true,
             sections: ["volumes", "groups", "grouping"],
         });
@@ -487,13 +489,14 @@ export class PanelCard extends LitElement {
         createCard(1, {
             type: "custom:sonos-card",
             entityId: this._config?.audio_player,
+            heightPercentage: "auto",
             showVolumeUpAndDownButtons: true,
             sections: ["player"],
         });
 
         createCard(2, {
             type: "custom:sonos-card",
-            entityId: this._config?.audio_player,
+            heightPercentage: "auto",
             mediaBrowserItemsPerRow: 3,
             mediaBrowserShowTitleForThumbnailIcons: true,
             showVolumeUpAndDownButtons: true,

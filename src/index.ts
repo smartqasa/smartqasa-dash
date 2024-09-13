@@ -54,6 +54,9 @@ window.smartqasa.service = function (service: string, data?: PopupData) {
 
 window.customCards = window.customCards ?? [];
 
+// Panel
+import "./panel/panel";
+
 // Cards
 import "./cards/areas";
 import "./cards/grid-stack";
@@ -61,7 +64,6 @@ import "./cards/group-stack";
 import "./cards/horizontal-stack";
 import "./cards/menu";
 import "./cards/more-info";
-import "./cards/panel";
 import "./cards/pin-verify";
 import "./cards/screensaver";
 import "./cards/vertical-stack";
@@ -104,7 +106,7 @@ import "./tiles/switch";
 import "./tiles/theme";
 import "./tiles/thermostat";
 
-import "./utils/popup-dialog";
+//import "./utils/popup-dialog";
 
 // Log version info
 import { version } from "../package.json";
