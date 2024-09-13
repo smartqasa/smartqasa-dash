@@ -34,6 +34,7 @@ export class MenuCard extends LitElement {
             }
             .container {
                 display: flex;
+                height: 100%;
                 flex-direction: column;
             }
             .tab-bar {
@@ -70,7 +71,8 @@ export class MenuCard extends LitElement {
                 display: none;
             }
             .tiles {
-                flex: 0 1 auto;
+                flex: 1 1 auto;
+                position: relative;
                 display: grid;
                 padding: 1rem 0 0 0;
                 gap: var(--sq-tile-spacing, 0.8rem);
