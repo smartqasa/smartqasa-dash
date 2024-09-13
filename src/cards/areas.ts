@@ -12,6 +12,8 @@ export class AreasCard extends LitElement {
     @state() private _areaTiles: LovelaceCard[] = [];
     @state() private _gridStyle = {};
 
+    private _boundHandleDeviceChanges: () => void;
+
     public setConfig(): void {}
 
     static get styles() {
@@ -33,14 +35,18 @@ export class AreasCard extends LitElement {
         `;
     }
 
+    constructor() {
+        super();
+        this._boundHandleDeviceChanges = this._handleDeviceChanges.bind(this);
+    }
+
     public connectedCallback(): void {
         super.connectedCallback();
 
         this._handleDeviceChanges();
 
-        ["orientationchange", "resize"].forEach((event) =>
-            window.addEventListener(event, this._handleDeviceChanges.bind(this))
-        );
+        window.addEventListener("resize", this._boundHandleDeviceChanges);
+        window.addEventListener("orientationchange", this._boundHandleDeviceChanges);
 
         this._loadAreaTiles();
     }
@@ -48,9 +54,8 @@ export class AreasCard extends LitElement {
     public disconnectedCallback(): void {
         super.disconnectedCallback();
 
-        ["orientationchange", "resize"].forEach((event) =>
-            window.removeEventListener(event, this._handleDeviceChanges.bind(this))
-        );
+        window.removeEventListener("resize", this._boundHandleDeviceChanges);
+        window.removeEventListener("orientationchange", this._boundHandleDeviceChanges);
     }
 
     protected willUpdate(changedProps: PropertyValues): void {

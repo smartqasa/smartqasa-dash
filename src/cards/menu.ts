@@ -21,6 +21,7 @@ export class MenuCard extends LitElement {
     @state() private _menuTab = window.smartqasa.menuTab || 0;
     @state() private _gridStyle = {};
 
+    private _boundHandleDeviceChanges: () => void;
     private _deviceType = getDeviceType();
 
     public setConfig(): void {}
@@ -85,24 +86,22 @@ export class MenuCard extends LitElement {
         `;
     }
 
-    public async connectedCallback(): Promise<void> {
+    constructor() {
+        super();
+        this._boundHandleDeviceChanges = this._handleDeviceChanges.bind(this);
+    }
+
+    public connectedCallback(): void {
         super.connectedCallback();
 
-        ["orientationchange", "resize"].forEach((event) =>
-            window.addEventListener(event, this._handleDeviceChanges.bind(this))
-        );
+        this._loadMenuTabs().catch((error) => {
+            console.error("Error loading menu tabs and tiles:", error);
+        });
 
         this._handleDeviceChanges();
 
-        await this._loadMenuTabs();
-    }
-
-    public disconnectedCallback(): void {
-        super.disconnectedCallback();
-
-        ["orientationchange", "resize"].forEach((event) =>
-            window.removeEventListener(event, this._handleDeviceChanges.bind(this))
-        );
+        window.addEventListener("resize", this._boundHandleDeviceChanges);
+        window.addEventListener("orientationchange", this._boundHandleDeviceChanges);
     }
 
     protected willUpdate(changedProps: PropertyValues): void {
@@ -112,6 +111,13 @@ export class MenuCard extends LitElement {
                 tile.hass = this.hass;
             });
         }
+    }
+
+    public disconnectedCallback(): void {
+        super.disconnectedCallback();
+
+        window.removeEventListener("resize", this._boundHandleDeviceChanges);
+        window.removeEventListener("orientationchange", this._boundHandleDeviceChanges);
     }
 
     protected render(): TemplateResult {
@@ -158,10 +164,15 @@ export class MenuCard extends LitElement {
 
     private async _loadMenuTabs(): Promise<void> {
         try {
-            this._tabs = (await loadYamlAsJson("/local/smartqasa/config/menu.yaml")) as Tab[];
-            this._bodyTiles = await Promise.all(this._tabs.map(async (tab) => this._loadMenuTiles(tab.tiles)));
+            const tabsData = (await loadYamlAsJson("/local/smartqasa/config/menu.yaml")) as Tab[];
+            if (!Array.isArray(tabsData)) {
+                throw new Error("Invalid tabs configuration");
+            }
+            this._tabs = tabsData;
+
+            this._bodyTiles = await Promise.all(this._tabs.map((tab) => this._loadMenuTiles(tab.tiles)));
         } catch (error) {
-            console.error("Error loading tabs and tiles:", error);
+            console.error("Error loading menu tabs and tiles:", error);
         }
     }
 

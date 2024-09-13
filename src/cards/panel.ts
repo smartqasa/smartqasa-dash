@@ -52,6 +52,8 @@ export class PanelCard extends LitElement {
     @state() private _isPortrait: boolean = getDeviceOrientation() === "portrait";
     @state() private _isLandscape: boolean = getDeviceOrientation() === "landscape";
 
+    private _boundHandleDeviceChanges: () => void;
+    private _boundStartResetTimer: () => void;
     private _areaPicture: string = defaultImage;
     private _timeIntervalId: number | undefined;
     private _swiper?: Swiper;
@@ -72,14 +74,20 @@ export class PanelCard extends LitElement {
         this._areaPicture = await this._getAreaPicture();
     }
 
+    constructor() {
+        super();
+        this._boundHandleDeviceChanges = this._handleDeviceChanges.bind(this);
+        this._boundStartResetTimer = this._startResetTimer.bind(this);
+    }
+
     public connectedCallback(): void {
         super.connectedCallback();
 
         this._syncTime();
 
-        window.addEventListener("resize", this._handleDeviceChanges.bind(this));
-        window.addEventListener("orientationchange", this._handleDeviceChanges.bind(this));
-        window.addEventListener("touchstart", this._startResetTimer.bind(this), { passive: true });
+        window.addEventListener("resize", this._boundHandleDeviceChanges);
+        window.addEventListener("orientationchange", this._boundHandleDeviceChanges);
+        window.addEventListener("touchstart", this._boundStartResetTimer, { passive: true });
 
         this._loadContent();
 
@@ -123,9 +131,9 @@ export class PanelCard extends LitElement {
     public disconnectedCallback(): void {
         super.disconnectedCallback();
 
-        window.removeEventListener("resize", this._handleDeviceChanges.bind(this));
-        window.removeEventListener("orientationchange", this._handleDeviceChanges.bind(this));
-        window.removeEventListener("touchstart", this._startResetTimer.bind(this));
+        window.removeEventListener("resize", this._boundHandleDeviceChanges);
+        window.removeEventListener("orientationchange", this._boundHandleDeviceChanges);
+        window.removeEventListener("touchstart", this._boundStartResetTimer);
 
         if (this._timeIntervalId !== undefined) {
             clearInterval(this._timeIntervalId);

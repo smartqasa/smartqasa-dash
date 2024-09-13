@@ -140,11 +140,6 @@ const createElement$1 = (config) => {
 };
 
 let AreasCard = class AreasCard extends h {
-    constructor() {
-        super(...arguments);
-        this._areaTiles = [];
-        this._gridStyle = {};
-    }
     setConfig() { }
     static get styles() {
         return i$3 `
@@ -164,15 +159,23 @@ let AreasCard = class AreasCard extends h {
             }
         `;
     }
+    constructor() {
+        super();
+        this._areaTiles = [];
+        this._gridStyle = {};
+        this._boundHandleDeviceChanges = this._handleDeviceChanges.bind(this);
+    }
     connectedCallback() {
         super.connectedCallback();
         this._handleDeviceChanges();
-        ["orientationchange", "resize"].forEach((event) => window.addEventListener(event, this._handleDeviceChanges.bind(this)));
+        window.addEventListener("resize", this._boundHandleDeviceChanges);
+        window.addEventListener("orientationchange", this._boundHandleDeviceChanges);
         this._loadAreaTiles();
     }
     disconnectedCallback() {
         super.disconnectedCallback();
-        ["orientationchange", "resize"].forEach((event) => window.removeEventListener(event, this._handleDeviceChanges.bind(this)));
+        window.removeEventListener("resize", this._boundHandleDeviceChanges);
+        window.removeEventListener("orientationchange", this._boundHandleDeviceChanges);
     }
     willUpdate(changedProps) {
         if (changedProps.has("hass") && this.hass) {
@@ -4348,14 +4351,6 @@ const loadYamlAsJson = async (yamlFilePath) => {
 };
 
 let MenuCard = class MenuCard extends h {
-    constructor() {
-        super(...arguments);
-        this._tabs = [];
-        this._bodyTiles = [];
-        this._menuTab = window.smartqasa.menuTab || 0;
-        this._gridStyle = {};
-        this._deviceType = getDeviceType();
-    }
     setConfig() { }
     static get styles() {
         return i$3 `
@@ -4416,15 +4411,23 @@ let MenuCard = class MenuCard extends h {
             }
         `;
     }
-    async connectedCallback() {
-        super.connectedCallback();
-        ["orientationchange", "resize"].forEach((event) => window.addEventListener(event, this._handleDeviceChanges.bind(this)));
-        this._handleDeviceChanges();
-        await this._loadMenuTabs();
+    constructor() {
+        super();
+        this._tabs = [];
+        this._bodyTiles = [];
+        this._menuTab = window.smartqasa.menuTab || 0;
+        this._gridStyle = {};
+        this._deviceType = getDeviceType();
+        this._boundHandleDeviceChanges = this._handleDeviceChanges.bind(this);
     }
-    disconnectedCallback() {
-        super.disconnectedCallback();
-        ["orientationchange", "resize"].forEach((event) => window.removeEventListener(event, this._handleDeviceChanges.bind(this)));
+    connectedCallback() {
+        super.connectedCallback();
+        this._loadMenuTabs().catch((error) => {
+            console.error("Error loading menu tabs and tiles:", error);
+        });
+        this._handleDeviceChanges();
+        window.addEventListener("resize", this._boundHandleDeviceChanges);
+        window.addEventListener("orientationchange", this._boundHandleDeviceChanges);
     }
     willUpdate(changedProps) {
         if (changedProps.has("hass") && this.hass) {
@@ -4433,6 +4436,11 @@ let MenuCard = class MenuCard extends h {
                 tile.hass = this.hass;
             });
         }
+    }
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        window.removeEventListener("resize", this._boundHandleDeviceChanges);
+        window.removeEventListener("orientationchange", this._boundHandleDeviceChanges);
     }
     render() {
         const currentTiles = this._bodyTiles[this._menuTab] || [];
@@ -4473,11 +4481,15 @@ let MenuCard = class MenuCard extends h {
     }
     async _loadMenuTabs() {
         try {
-            this._tabs = (await loadYamlAsJson("/local/smartqasa/config/menu.yaml"));
-            this._bodyTiles = await Promise.all(this._tabs.map(async (tab) => this._loadMenuTiles(tab.tiles)));
+            const tabsData = (await loadYamlAsJson("/local/smartqasa/config/menu.yaml"));
+            if (!Array.isArray(tabsData)) {
+                throw new Error("Invalid tabs configuration");
+            }
+            this._tabs = tabsData;
+            this._bodyTiles = await Promise.all(this._tabs.map((tab) => this._loadMenuTiles(tab.tiles)));
         }
         catch (error) {
-            console.error("Error loading tabs and tiles:", error);
+            console.error("Error loading menu tabs and tiles:", error);
         }
     }
     async _loadMenuTiles(tilesConfig) {
@@ -9562,8 +9574,14 @@ window.customCards.push({
     description: "A SmartQasa card for rendering an panel.",
 });
 let PanelCard = class PanelCard extends h {
+    static { this.styles = [r$3(css_248z$5), r$3(css_248z$6)]; }
+    async setConfig(config) {
+        this._config = { ...config };
+        this._area = this._config.area;
+        this._areaPicture = await this._getAreaPicture();
+    }
     constructor() {
-        super(...arguments);
+        super();
         this._isAdminMode = false;
         this._displayMode = "control";
         this._isPhone = getDeviceType() === "phone";
@@ -9575,19 +9593,15 @@ let PanelCard = class PanelCard extends h {
         this._areaChips = [];
         this._controlTiles = [];
         this._controlColumns = [];
-    }
-    static { this.styles = [r$3(css_248z$5), r$3(css_248z$6)]; }
-    async setConfig(config) {
-        this._config = { ...config };
-        this._area = this._config.area;
-        this._areaPicture = await this._getAreaPicture();
+        this._boundHandleDeviceChanges = this._handleDeviceChanges.bind(this);
+        this._boundStartResetTimer = this._startResetTimer.bind(this);
     }
     connectedCallback() {
         super.connectedCallback();
         this._syncTime();
-        window.addEventListener("resize", this._handleDeviceChanges.bind(this));
-        window.addEventListener("orientationchange", this._handleDeviceChanges.bind(this));
-        window.addEventListener("touchstart", this._startResetTimer.bind(this), { passive: true });
+        window.addEventListener("resize", this._boundHandleDeviceChanges);
+        window.addEventListener("orientationchange", this._boundHandleDeviceChanges);
+        window.addEventListener("touchstart", this._boundStartResetTimer, { passive: true });
         this._loadContent();
         this._startResetTimer();
     }
@@ -9622,9 +9636,9 @@ let PanelCard = class PanelCard extends h {
     }
     disconnectedCallback() {
         super.disconnectedCallback();
-        window.removeEventListener("resize", this._handleDeviceChanges.bind(this));
-        window.removeEventListener("orientationchange", this._handleDeviceChanges.bind(this));
-        window.removeEventListener("touchstart", this._startResetTimer.bind(this));
+        window.removeEventListener("resize", this._boundHandleDeviceChanges);
+        window.removeEventListener("orientationchange", this._boundHandleDeviceChanges);
+        window.removeEventListener("touchstart", this._boundStartResetTimer);
         if (this._timeIntervalId !== undefined) {
             clearInterval(this._timeIntervalId);
         }
