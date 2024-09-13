@@ -8928,6 +8928,49 @@ const dialogTable = {
     },
 };
 
+function loadControls(tilesConfig, hass, isTablet) {
+    const controlTiles = [];
+    const controlColumns = [];
+    let currentPage = [];
+    let firstTile = true;
+    for (const config of tilesConfig) {
+        if (firstTile) {
+            const columns = config.type === "page" && config.columns >= 2 && config.columns <= 4 ? config.columns : 3;
+            controlColumns.push(columns);
+        }
+        if (config.type === "page") {
+            if (!firstTile && currentPage.length) {
+                controlTiles.push(currentPage);
+                currentPage = [];
+                const columns = config.type === "page" && config.columns >= 2 && config.columns <= 4 ? config.columns : 3;
+                controlColumns.push(columns);
+            }
+        }
+        else if (config.type === "blank") {
+            if (isTablet) {
+                const blankTile = document.createElement("div");
+                blankTile.classList.add("blank-tile");
+                currentPage.push(blankTile);
+            }
+        }
+        else {
+            const tile = createElement(config);
+            if (tile) {
+                tile.hass = hass;
+                currentPage.push(tile);
+            }
+            else {
+                console.error("Failed to create tile for config:", config);
+            }
+        }
+        firstTile = false;
+    }
+    if (currentPage.length > 0) {
+        controlTiles.push(currentPage);
+    }
+    return { controlTiles, controlColumns };
+}
+
 function loadAudioCards(hass, player) {
     const cards = [];
     const createCards = (index, config) => {
@@ -9295,7 +9338,10 @@ let PanelCard = class PanelCard extends h {
             .catch((error) => {
             console.error("Error loading area chips:", error);
         });
-        this._controlTiles = this._loadControlTiles(this._config?.tiles || []);
+        const { controlTiles, controlColumns } = loadControls(this._config?.tiles || [], this.hass, this._isTablet);
+        this._controlTiles = controlTiles;
+        this._controlColumns = controlColumns;
+        //this._controlTiles = this._loadControlTiles(this._config?.tiles || []);
         this._audioCards = loadAudioCards(this.hass, this._config?.audio_player || "");
     }
     async _loadHeaderChips() {
@@ -9362,36 +9408,6 @@ let PanelCard = class PanelCard extends h {
             pages.push(currentPage);
         }
         return pages;
-    }
-    _loadEntertainCards() {
-        const createCard = (index, config) => {
-            const card = createElement(config);
-            card.hass = this.hass;
-            this._audioCards[index] = card;
-            this._audioCards[index].hass = this.hass;
-        };
-        createCard(0, {
-            type: "custom:sonos-card",
-            entityId: this._config?.audio_player,
-            heightPercentage: "auto",
-            showVolumeUpAndDownButtons: true,
-            sections: ["volumes", "groups", "grouping"],
-        });
-        createCard(1, {
-            type: "custom:sonos-card",
-            entityId: this._config?.audio_player,
-            heightPercentage: "auto",
-            showVolumeUpAndDownButtons: true,
-            sections: ["player"],
-        });
-        createCard(2, {
-            type: "custom:sonos-card",
-            heightPercentage: "auto",
-            mediaBrowserItemsPerRow: 3,
-            mediaBrowserShowTitleForThumbnailIcons: true,
-            showVolumeUpAndDownButtons: true,
-            sections: ["media browser"],
-        });
     }
     _launchClock(e) {
         e.stopPropagation();
