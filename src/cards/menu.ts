@@ -37,6 +37,7 @@ export class MenuCard extends LitElement {
                 flex-direction: column;
             }
             .tab-bar {
+                flex: 0 0 auto;
                 display: flex;
                 justify-content: space-around;
                 align-items: center;
@@ -69,11 +70,11 @@ export class MenuCard extends LitElement {
                 display: none;
             }
             .tiles {
+                flex: 0 1 auto;
                 display: grid;
                 padding: 1rem 0 0 0;
                 gap: var(--sq-tile-spacing, 0.8rem);
                 grid-auto-rows: var(--sq-tile-height, 7rem);
-                flex-grow: 1;
                 overflow-y: auto;
             }
             .tile {
