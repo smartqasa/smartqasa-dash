@@ -8928,7 +8928,7 @@ const dialogTable = {
     },
 };
 
-function loadControls(tilesConfig, hass, isTablet) {
+function loadControlTiles(tilesConfig, hass, isTablet) {
     const controlTiles = [];
     const controlColumns = [];
     let currentPage = [];
@@ -8969,6 +8969,42 @@ function loadControls(tilesConfig, hass, isTablet) {
         controlTiles.push(currentPage);
     }
     return { controlTiles, controlColumns };
+}
+function renderControls(controlTiles, controlColumns, isPhone) {
+    if (controlTiles.length === 0)
+        return D;
+    if (isPhone) {
+        const gridStyle = { gridTemplateColumns: "1fr 1fr" };
+        return ke `
+            <div class="control-tiles" style=${se(gridStyle)}>
+                ${controlTiles.flat().map((tile) => ke `<div class="tile">${tile}</div>`)}
+            </div>
+        `;
+    }
+    return ke `
+        <div class="swiper">
+            <div class="swiper-wrapper">
+                ${controlTiles.map((page, index) => {
+        const gridStyle = {
+            gridTemplateColumns: `repeat(${controlColumns[index]}, var(--sq-tile-width, 19.5rem))`,
+        };
+        return ke `
+                        <div class="swiper-slide">
+                            <div class="control-tiles" style=${se(gridStyle)}>
+                                ${page.map((tile) => ke `<div class="tile">${tile}</div>`)}
+                            </div>
+                        </div>
+                    `;
+    })}
+            </div>
+            ${controlTiles.length > 1
+        ? ke `
+                      <div class="swiper-button-prev"></div>
+                      <div class="swiper-button-next"></div>
+                  `
+        : D}
+        </div>
+    `;
 }
 
 function loadAudioCards(hass, player) {
@@ -9126,7 +9162,7 @@ let PanelCard = class PanelCard extends h {
             case "control":
                 content = ke `
                     ${this._renderArea()}
-                    ${this._renderControl()}
+                    ${renderControls(this._controlTiles, this._controlColumns, this._isPhone)}
                 `;
                 break;
             case "entertain":
@@ -9338,10 +9374,9 @@ let PanelCard = class PanelCard extends h {
             .catch((error) => {
             console.error("Error loading area chips:", error);
         });
-        const { controlTiles, controlColumns } = loadControls(this._config?.tiles || [], this.hass, this._isTablet);
+        const { controlTiles, controlColumns } = loadControlTiles(this._config?.tiles || [], this.hass, this._isTablet);
         this._controlTiles = controlTiles;
         this._controlColumns = controlColumns;
-        //this._controlTiles = this._loadControlTiles(this._config?.tiles || []);
         this._audioCards = loadAudioCards(this.hass, this._config?.audio_player || "");
     }
     async _loadHeaderChips() {
@@ -9366,48 +9401,6 @@ let PanelCard = class PanelCard extends h {
             chip.hass = this.hass;
             return chip;
         });
-    }
-    _loadControlTiles(tilesConfig) {
-        const pages = [];
-        this._controlColumns = [];
-        let currentPage = [];
-        let firstTile = true;
-        for (const config of tilesConfig) {
-            if (firstTile) {
-                const columns = config.type === "page" && config.columns >= 2 && config.columns <= 4 ? config.columns : 3;
-                this._controlColumns.push(columns);
-            }
-            if (config.type === "page") {
-                if (!firstTile && currentPage.length) {
-                    pages.push(currentPage);
-                    currentPage = [];
-                    const columns = config.type === "page" && config.columns >= 2 && config.columns <= 4 ? config.columns : 3;
-                    this._controlColumns.push(columns);
-                }
-            }
-            else if (config.type === "blank") {
-                if (this._isTablet) {
-                    const blankTile = document.createElement("div");
-                    blankTile.classList.add("blank-tile");
-                    currentPage.push(blankTile);
-                }
-            }
-            else {
-                const tile = createElement(config);
-                if (tile) {
-                    tile.hass = this.hass;
-                    currentPage.push(tile);
-                }
-                else {
-                    console.error("Failed to create tile for config:", config);
-                }
-            }
-            firstTile = false;
-        }
-        if (currentPage.length) {
-            pages.push(currentPage);
-        }
-        return pages;
     }
     _launchClock(e) {
         e.stopPropagation();

@@ -12,7 +12,7 @@ import { Navigation } from "swiper/modules";
 import { createElement } from "../utils/create-element";
 import { loadYamlAsJson } from "../utils/load-yaml-as-json";
 import { dialogTable } from "../tables/dialogs";
-import { loadControls } from "./controls";
+import { loadControlTiles, renderControls } from "./controls";
 import { loadAudioCards } from "./audio";
 
 import panelStyles from "../css/panel.css";
@@ -155,7 +155,7 @@ export class PanelCard extends LitElement {
             case "control":
                 content = html`
                     ${this._renderArea()}
-                    ${this._renderControl()}
+                    ${renderControls(this._controlTiles, this._controlColumns, this._isPhone)}
                 `;
                 break;
             case "entertain":
@@ -393,12 +393,14 @@ export class PanelCard extends LitElement {
                 console.error("Error loading area chips:", error);
             });
 
-        const { controlTiles, controlColumns } = loadControls(this._config?.tiles || [], this.hass!, this._isTablet);
+        const { controlTiles, controlColumns } = loadControlTiles(
+            this._config?.tiles || [],
+            this.hass!,
+            this._isTablet
+        );
 
         this._controlTiles = controlTiles;
         this._controlColumns = controlColumns;
-
-        //this._controlTiles = this._loadControlTiles(this._config?.tiles || []);
 
         this._audioCards = loadAudioCards(this.hass!, this._config?.audio_player || "");
     }
@@ -426,54 +428,6 @@ export class PanelCard extends LitElement {
             chip.hass = this.hass;
             return chip;
         });
-    }
-
-    private _loadControlTiles(tilesConfig: LovelaceCardConfig[]): LovelaceCard[][] {
-        const pages: LovelaceCard[][] = [];
-        this._controlColumns = [];
-        let currentPage: LovelaceCard[] = [];
-        let firstTile = true;
-
-        for (const config of tilesConfig) {
-            if (firstTile) {
-                const columns =
-                    config.type === "page" && config.columns >= 2 && config.columns <= 4 ? config.columns : 3;
-                this._controlColumns.push(columns);
-            }
-
-            if (config.type === "page") {
-                if (!firstTile && currentPage.length) {
-                    pages.push(currentPage);
-                    currentPage = [];
-
-                    const columns =
-                        config.type === "page" && config.columns >= 2 && config.columns <= 4 ? config.columns : 3;
-                    this._controlColumns.push(columns);
-                }
-            } else if (config.type === "blank") {
-                if (this._isTablet) {
-                    const blankTile = document.createElement("div");
-                    blankTile.classList.add("blank-tile");
-                    currentPage.push(blankTile as unknown as LovelaceCard);
-                }
-            } else {
-                const tile = createElement(config) as LovelaceCard;
-                if (tile) {
-                    tile.hass = this.hass;
-                    currentPage.push(tile);
-                } else {
-                    console.error("Failed to create tile for config:", config);
-                }
-            }
-
-            firstTile = false;
-        }
-
-        if (currentPage.length) {
-            pages.push(currentPage);
-        }
-
-        return pages;
     }
 
     private _launchClock(e: Event): void {

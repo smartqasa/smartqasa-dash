@@ -1,13 +1,15 @@
 import { HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 import { createElement } from "../utils/create-element";
+import { CSSResultGroup, html, LitElement, nothing, PropertyValues, TemplateResult, unsafeCSS } from "lit";
+import { styleMap } from "lit/directives/style-map.js";
 
-export function loadControls(
+export function loadControlTiles(
     tilesConfig: LovelaceCardConfig[],
     hass: HomeAssistant,
     isTablet: boolean
 ): { controlTiles: LovelaceCard[][]; controlColumns: number[] } {
     const controlTiles: LovelaceCard[][] = [];
-    const controlColumns = [];
+    const controlColumns: number[] = [];
     let currentPage: LovelaceCard[] = [];
     let firstTile = true;
 
@@ -50,4 +52,46 @@ export function loadControls(
     }
 
     return { controlTiles, controlColumns };
+}
+export function renderControls(
+    controlTiles: LovelaceCard[][],
+    controlColumns: number[],
+    isPhone: boolean
+): TemplateResult | typeof nothing {
+    if (controlTiles.length === 0) return nothing;
+
+    if (isPhone) {
+        const gridStyle = { gridTemplateColumns: "1fr 1fr" };
+        return html`
+            <div class="control-tiles" style=${styleMap(gridStyle)}>
+                ${controlTiles.flat().map((tile) => html`<div class="tile">${tile}</div>`)}
+            </div>
+        `;
+    }
+
+    return html`
+        <div class="swiper">
+            <div class="swiper-wrapper">
+                ${controlTiles.map((page, index) => {
+                    const gridStyle = {
+                        gridTemplateColumns: `repeat(${controlColumns[index]}, var(--sq-tile-width, 19.5rem))`,
+                    };
+
+                    return html`
+                        <div class="swiper-slide">
+                            <div class="control-tiles" style=${styleMap(gridStyle)}>
+                                ${page.map((tile) => html`<div class="tile">${tile}</div>`)}
+                            </div>
+                        </div>
+                    `;
+                })}
+            </div>
+            ${controlTiles.length > 1
+                ? html`
+                      <div class="swiper-button-prev"></div>
+                      <div class="swiper-button-next"></div>
+                  `
+                : nothing}
+        </div>
+    `;
 }
