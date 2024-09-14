@@ -8545,7 +8545,6 @@ async function loadHeaderChips(hass) {
     });
 }
 function renderHeader(headerChips) {
-    console.log("Header", window.smartqasa);
     function launchClock(e) {
         e.stopPropagation();
         if (typeof window.fully !== "undefined" && window.fully.startApplication) {
@@ -8953,7 +8952,6 @@ const dialogTable = {
 };
 
 function renderFooter() {
-    console.log("Footer viewMode", window.smartqasa.viewMode);
     function renderFooterButton(icon, name, action) {
         return ke `
             <div
@@ -9045,7 +9043,7 @@ function renderArea(name, picture, chips, isPhone, isLandscape) {
     return ke `
         <div class="area-container">
             <div class="area-name ${isPhone ? "overlay" : ""}">${name}</div>
-            <img class="area-picture" src=${picture} alt="Area picture..." loading="lazy" />
+            <img class="area-picture" src=${picture} alt="Area picture..." />
             ${chips.length > 0
         ? ke ` <div class="area-chips">${chips.map((chip) => ke `<div class="chip">${chip}</div>`)}</div> `
         : D}
@@ -9255,7 +9253,6 @@ let PanelCard = class PanelCard extends h {
         super.connectedCallback();
         this._syncTime();
         window.smartqasa.viewMode = "control";
-        this._loadContent();
         window.addEventListener("resize", this._boundHandleDeviceChanges);
         window.addEventListener("orientationchange", this._boundHandleDeviceChanges);
         window.addEventListener("touchstart", this._boundStartResetTimer, { passive: true });
@@ -9286,6 +9283,9 @@ let PanelCard = class PanelCard extends h {
                     updateHassForCards(page);
                 });
         }
+    }
+    firstUpdated() {
+        this._loadContent();
     }
     updated() {
         if (this._isTablet && this._controlTiles.length > 1 && !this._swiper) {

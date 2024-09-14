@@ -45,7 +45,7 @@ export function renderArea(
     return html`
         <div class="area-container">
             <div class="area-name ${isPhone ? "overlay" : ""}">${name}</div>
-            <img class="area-picture" src=${picture} alt="Area picture..." loading="lazy" />
+            <img class="area-picture" src=${picture} alt="Area picture..." />
             ${chips.length > 0
                 ? html` <div class="area-chips">${chips.map((chip) => html`<div class="chip">${chip}</div>`)}</div> `
                 : nothing}

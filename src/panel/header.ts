@@ -22,7 +22,6 @@ export async function loadHeaderChips(hass: HomeAssistant): Promise<LovelaceCard
 }
 
 export function renderHeader(headerChips: LovelaceCard[]): TemplateResult {
-    console.log("Header", window.smartqasa);
     function launchClock(e: Event): void {
         e.stopPropagation();
 

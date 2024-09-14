@@ -74,8 +74,6 @@ export class PanelCard extends LitElement {
 
         window.smartqasa.viewMode = "control";
 
-        this._loadContent();
-
         window.addEventListener("resize", this._boundHandleDeviceChanges);
         window.addEventListener("orientationchange", this._boundHandleDeviceChanges);
         window.addEventListener("touchstart", this._boundStartResetTimer, { passive: true });
@@ -111,6 +109,10 @@ export class PanelCard extends LitElement {
                     updateHassForCards(page);
                 });
         }
+    }
+
+    protected firstUpdated(): void {
+        this._loadContent();
     }
 
     protected updated(): void {

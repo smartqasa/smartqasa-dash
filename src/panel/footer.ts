@@ -3,7 +3,6 @@ import { navigateToArea } from "../utils/navigate-to-area";
 import { dialogTable } from "../tables/dialogs";
 
 export function renderFooter(): TemplateResult {
-    console.log("Footer viewMode", window.smartqasa.viewMode);
     function renderFooterButton(icon: string, name: string, action: () => void): TemplateResult {
         return html`
             <div
