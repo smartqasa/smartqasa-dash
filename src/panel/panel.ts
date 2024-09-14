@@ -182,6 +182,8 @@ export class PanelCard extends LitElement {
         const orientation = getDeviceOrientation();
         this._isPortrait = orientation === "portrait";
         this._isLandscape = orientation === "landscape";
+
+        this.requestUpdate();
     }
 
     private _syncTime(): void {

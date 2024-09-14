@@ -9345,6 +9345,7 @@ let PanelCard = class PanelCard extends h {
         const orientation = getDeviceOrientation();
         this._isPortrait = orientation === "portrait";
         this._isLandscape = orientation === "landscape";
+        this.requestUpdate();
     }
     _syncTime() {
         const syncTime = () => {
