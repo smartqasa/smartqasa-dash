@@ -8951,55 +8951,55 @@ const dialogTable = {
     },
 };
 
-function handleHome() {
-    window.smartqasa.viewMode = window.smartqasa.viewMode || "control";
-    console.log("View mode:", window.smartqasa.viewMode);
-    if (window.smartqasa.viewMode !== "control") {
-        window.smartqasa.viewMode = "control";
-        return;
-    }
-    const startArea = window.smartqasa.startArea;
-    if (!startArea)
-        return;
-    const url = new URL(location.href);
-    const pathSegments = url.pathname.split("/");
-    const currentArea = pathSegments.pop();
-    console.log("Current area:", currentArea);
-    console.log("Start area:", startArea);
-    if (currentArea !== startArea) {
-        navigateToArea(startArea);
-    }
-    else {
-        navigateToArea("home");
-    }
-}
-function handleAreas() {
-    const dialogObj = dialogTable["areas"];
-    window.browser_mod?.service("popup", { ...dialogObj.data });
-}
-function handleEntertain() {
-    window.smartqasa.viewMode = "entertain";
-}
-function handleMenu() {
-    window.smartqasa.menuTab = 0;
-    const dialogObj = dialogTable["menu"];
-    window.browser_mod?.service("popup", { ...dialogObj.data });
-}
-function renderFooterButton(icon, name, action) {
-    return ke `
-        <div
-            class="footer-button"
-            @click=${(e) => {
-        e.stopPropagation();
-        action();
-    }}
-        >
-            <ha-icon .icon=${icon}></ha-icon>
-            <span>${name}</span>
-        </div>
-    `;
-}
 function renderFooter() {
+    function renderFooterButton(icon, name, action) {
+        return ke `
+            <div
+                class="footer-button"
+                @click=${(e) => {
+            e.stopPropagation();
+            action();
+        }}
+            >
+                <ha-icon .icon=${icon}></ha-icon>
+                <span>${name}</span>
+            </div>
+        `;
+    }
+    function handleHome() {
+        window.smartqasa.viewMode = window.smartqasa.viewMode || "control";
+        console.log("View mode:", window.smartqasa.viewMode);
+        if (window.smartqasa.viewMode !== "control") {
+            window.smartqasa.viewMode = "control";
+            return;
+        }
+        const startArea = window.smartqasa.startArea;
+        if (!startArea)
+            return;
+        const url = new URL(location.href);
+        const pathSegments = url.pathname.split("/");
+        const currentArea = pathSegments.pop();
+        console.log("Current area:", currentArea);
+        console.log("Start area:", startArea);
+        if (currentArea !== startArea) {
+            navigateToArea(startArea);
+        }
+        else {
+            navigateToArea("home");
+        }
+    }
+    function handleAreas() {
+        const dialogObj = dialogTable["areas"];
+        window.browser_mod?.service("popup", { ...dialogObj.data });
+    }
+    function handleEntertain() {
+        window.smartqasa.viewMode = "entertain";
+    }
+    function handleMenu() {
+        window.smartqasa.menuTab = 0;
+        const dialogObj = dialogTable["menu"];
+        window.browser_mod?.service("popup", { ...dialogObj.data });
+    }
     return ke `
         <div class="footer-container">
             ${renderFooterButton("hass:home", "Home", handleHome)}
@@ -14624,7 +14624,6 @@ var version = "2024.9.14b-1";
 
 window.smartqasa = window.smartqasa || {};
 window.smartqasa.viewMode = "control";
-console.log("Index View mode:", window.smartqasa.viewMode);
 window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();
 window.smartqasa.startArea = window.smartqasa.startArea || location.pathname.split("/").pop();
 window.customCards = window.customCards ?? [];
