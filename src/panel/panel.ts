@@ -3,11 +3,9 @@ import { customElement, property, state } from "lit/decorators.js";
 
 import { HassArea, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 import { getDeviceOrientation, getDeviceType } from "../utils/device-info";
-import { navigateToArea } from "../utils/navigate-to-area";
 import Swiper from "swiper";
 import { SwiperOptions } from "swiper/types";
 import { Navigation } from "swiper/modules";
-import { dialogTable } from "../tables/dialogs";
 import { loadHeaderChips, renderHeader } from "./header";
 import { loadAreaPicture, loadAreaChips, renderArea } from "./area";
 import { loadControlTiles, renderControls } from "./controls";
@@ -27,13 +25,6 @@ interface Config extends LovelaceCardConfig {
     video_sound: string;
     chips?: LovelaceCardConfig[];
     tiles?: LovelaceCardConfig[];
-}
-
-interface ActionHandlers {
-    _handleHome: () => void;
-    _handleAreas: () => void;
-    _handleEntertain: () => void;
-    _handleMenu: () => void;
 }
 
 window.customCards.push({
@@ -208,26 +199,6 @@ export class PanelCard extends LitElement {
         `;
     }
 
-    private _renderFooter(): TemplateResult {
-        return html`
-            <div class="footer-container">
-                ${this._renderFooterButton("hass:home", "Home", "_handleHome")}
-                ${this._renderFooterButton("hass:view-dashboard", "Areas", "_handleAreas")}
-                ${this._renderFooterButton("hass:music", "Entertainment", "_handleEntertain")}
-                ${this._renderFooterButton("hass:menu", "Menu", "_handleMenu")}
-            </div>
-        `;
-    }
-
-    private _renderFooterButton(icon: string, name: string, methodName: keyof ActionHandlers): TemplateResult {
-        return html`
-            <div class="footer-button" @click="${(e: Event) => this._handleFooterAction(e, methodName)}">
-                <ha-icon .icon=${icon}></ha-icon>
-                <span>${name}</span>
-            </div>
-        `;
-    }
-
     private _syncTime(): void {
         const syncTime = () => {
             const now = new Date();
@@ -308,52 +279,5 @@ export class PanelCard extends LitElement {
         this._controlColumns = controlColumns;
 
         this._audioCards = loadAudioCards(this.hass!, this._config?.audio_player || "");
-    }
-
-    private _handleFooterAction(e: Event, methodName: keyof ActionHandlers): void {
-        e.stopPropagation();
-
-        if (typeof this[methodName] === "function") {
-            this[methodName]();
-        } else {
-            console.error(`Method not found: ${methodName}`);
-        }
-    }
-
-    private _handleHome(): void {
-        if (this._viewMode !== "control") {
-            this._viewMode = "control";
-            return;
-        }
-
-        const startArea = window.smartqasa.startArea;
-        if (!startArea) return;
-
-        const url = new URL(location.href);
-        const pathSegments = url.pathname.split("/");
-        const currentArea = pathSegments.pop();
-
-        if (currentArea !== startArea) {
-            navigateToArea(startArea);
-        } else {
-            navigateToArea("home");
-        }
-    }
-
-    private _handleAreas(): void {
-        this._viewMode = "control";
-        const dialogObj = dialogTable["areas"];
-        window.browser_mod?.service("popup", { ...dialogObj.data });
-    }
-
-    private _handleEntertain(): void {
-        this._viewMode = "entertain";
-    }
-
-    private _handleMenu(): void {
-        window.smartqasa.menuTab = 0;
-
-        const dialogObj = dialogTable["menu"];
-        window.browser_mod?.service("popup", { ...dialogObj.data });
     }
 }
