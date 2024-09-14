@@ -164,7 +164,6 @@
 }
 .entertain-card {
     display: block;
-    --ha-card-border-radius: var(--sq-card-border-radius, 0.5rem);
 }
 
 /* Tablet Portrait */
