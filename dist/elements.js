@@ -9017,7 +9017,7 @@ function loadAreaChips(chipsConfig, hass) {
     });
 }
 function renderArea(name, picture, chips, isPhone, isLandscape) {
-    const picturePath = `/local/smartqasa/pictures/${picture}.png`;
+    const picturePath = `/local/smartqasa/pictures/${picture}`;
     return ke `
         <div class="area-container">
             <div class="area-name ${isPhone ? "overlay" : ""}">${name}</div>

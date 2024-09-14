@@ -19,7 +19,7 @@ export function renderArea(
     isPhone: boolean,
     isLandscape: boolean
 ): TemplateResult {
-    const picturePath = `/local/smartqasa/pictures/${picture}.png`;
+    const picturePath = `/local/smartqasa/pictures/${picture}`;
 
     return html`
         <div class="area-container">
