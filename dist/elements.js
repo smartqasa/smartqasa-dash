@@ -9233,18 +9233,18 @@ window.customCards.push({
     description: "A SmartQasa card for rendering an panel.",
 });
 let PanelCard = class PanelCard extends h {
-    static { this.styles = [r$3(css_248z$5), r$3(css_248z$6)]; }
-    setConfig(config) {
-        this._config = { ...config };
-        this._area = this._config.area;
-    }
     constructor() {
-        super();
+        super(...arguments);
         this._isAdminMode = false;
         this._isPhone = getDeviceType() === "phone";
         this._isTablet = getDeviceType() === "tablet";
         this._isPortrait = getDeviceOrientation() === "portrait";
         this._isLandscape = getDeviceOrientation() === "landscape";
+        /*
+        private _boundRequestUpdate: () => void;
+        private _boundHandleDeviceChanges: () => void;
+        private _boundStartResetTimer: () => void;
+        */
         this._areaName = "Area";
         this._areaPicture = img$25;
         this._headerChips = [];
@@ -9252,19 +9252,30 @@ let PanelCard = class PanelCard extends h {
         this._controlTiles = [];
         this._controlColumns = [];
         this._audioCards = [];
+    }
+    static { this.styles = [r$3(css_248z$5), r$3(css_248z$6)]; }
+    setConfig(config) {
+        this._config = { ...config };
+        this._area = this._config.area;
+    }
+    /*
+    constructor() {
+        super();
+
         this._boundRequestUpdate = this.requestUpdate.bind(this);
         this._boundHandleDeviceChanges = this._handleDeviceChanges.bind(this);
         this._boundStartResetTimer = this._startResetTimer.bind(this);
     }
+    */
     connectedCallback() {
         super.connectedCallback();
         this._syncTime();
         window.smartqasa.viewMode = "control";
         this._loadContent();
-        window.addEventListener("viewModeChanged", this._boundRequestUpdate);
-        window.addEventListener("resize", this._boundHandleDeviceChanges);
-        window.addEventListener("orientationchange", this._boundHandleDeviceChanges);
-        window.addEventListener("touchstart", this._boundStartResetTimer, { passive: true });
+        window.addEventListener("viewModeChanged", () => this.requestUpdate());
+        window.addEventListener("resize", this._handleDeviceChanges);
+        window.addEventListener("orientationchange", this._handleDeviceChanges);
+        window.addEventListener("touchstart", this._startResetTimer, { passive: true });
         this._startResetTimer();
     }
     willUpdate(changedProps) {
@@ -9299,10 +9310,10 @@ let PanelCard = class PanelCard extends h {
     }
     disconnectedCallback() {
         super.disconnectedCallback();
-        window.removeEventListener("viewModeChanged", this._boundRequestUpdate);
-        window.removeEventListener("resize", this._boundHandleDeviceChanges);
-        window.removeEventListener("orientationchange", this._boundHandleDeviceChanges);
-        window.removeEventListener("touchstart", this._boundStartResetTimer);
+        window.removeEventListener("viewModeChanged", () => this.requestUpdate());
+        window.removeEventListener("resize", this._handleDeviceChanges);
+        window.removeEventListener("orientationchange", this._handleDeviceChanges);
+        window.removeEventListener("touchstart", this._startResetTimer);
         if (this._timeIntervalId !== undefined) {
             clearInterval(this._timeIntervalId);
         }
