@@ -15,7 +15,7 @@ window.customCards.push({
     description: "A SmartQasa element that display a set of Sonos card.",
 });
 
-@customElement("smartqasa-grid-stack")
+@customElement("smartqasa-sonos-card")
 class SonosCard extends LitElement {
     @property({ attribute: false }) private hass?: HomeAssistant;
     @state() private _config?: Config;
