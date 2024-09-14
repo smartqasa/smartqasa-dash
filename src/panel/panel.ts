@@ -244,7 +244,8 @@ export class PanelCard extends LitElement {
     private _loadContent(): void {
         if (!this.hass || !this._config) return;
 
-        this._headerChips = createElements(this._config.header_chips || [], this.hass);
+        const headerChipsConfig = (window.smartqasa.chipsConfig as LovelaceCardConfig[]) ?? [];
+        this._headerChips = createElements(headerChipsConfig, this.hass);
 
         this._areaObj = this._area ? this.hass.areas[this._area] : undefined;
         this._areaChips = createElements(this._config.chips || [], this.hass);

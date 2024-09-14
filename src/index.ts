@@ -4,6 +4,23 @@ window.smartqasa.startArea = window.smartqasa.startArea || location.pathname.spl
 
 window.customCards = window.customCards ?? [];
 
+import { loadYamlAsJson } from "./utils/load-yaml-as-json";
+import { LovelaceCardConfig } from "./types";
+
+async function preloadChipsConfig() {
+    try {
+        const yamlFilePath = "/local/smartqasa/config/chips.yaml";
+        const chipsConfig = await loadYamlAsJson<LovelaceCardConfig[]>(yamlFilePath);
+        window.smartqasa.chipsConfig = chipsConfig;
+        console.info("Preloaded chipsConfig:", window.smartqasa.chipsConfig);
+    } catch (error) {
+        console.error("Error preloading chipsConfig:", error);
+        window.smartqasa.chipsConfig = [];
+    }
+}
+
+preloadChipsConfig();
+
 // Panel
 import "./panel/panel";
 

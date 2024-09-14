@@ -1,16 +1,7 @@
-import { HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
-import { createElement } from "../utils/create-element";
+import { LovelaceCard } from "../types";
 import { html, nothing, TemplateResult } from "lit";
 import { renderFooter } from "./footer";
 import defaultImage from "../assets/images/default.png";
-
-export function loadAreaChips(chipsConfig: LovelaceCardConfig[], hass: HomeAssistant): LovelaceCard[] {
-    return chipsConfig.map((config) => {
-        const chip = createElement(config) as LovelaceCard;
-        if (hass) chip.hass = hass;
-        return chip;
-    });
-}
 
 export function renderArea(
     name: string,
