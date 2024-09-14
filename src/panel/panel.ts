@@ -241,19 +241,17 @@ export class PanelCard extends LitElement {
     }
 
     private async _loadContent(): Promise<void> {
-        await loadHeaderChips(this.hass!);
+        if (!this.hass || !this._config) return;
 
-        this._areaObj = this._area ? this.hass?.areas[this._area] : undefined;
-        this._areaChips = loadAreaChips(this._config?.chips || [], this.hass!);
+        this._headerChips = await loadHeaderChips(this.hass);
 
-        const { controlTiles, controlColumns } = loadControlTiles(
-            this._config?.tiles || [],
-            this.hass!,
-            this._isTablet
-        );
+        this._areaObj = this._area ? this.hass.areas[this._area] : undefined;
+        this._areaChips = loadAreaChips(this._config?.chips || [], this.hass);
+
+        const { controlTiles, controlColumns } = loadControlTiles(this._config.tiles || [], this.hass, this._isTablet);
         this._controlTiles = controlTiles;
         this._controlColumns = controlColumns;
 
-        this._audioCards = loadAudioCards(this.hass!, this._config?.audio_player || "");
+        this._audioCards = loadAudioCards(this.hass, this._config?.audio_player || "");
     }
 }

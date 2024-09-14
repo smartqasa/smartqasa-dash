@@ -9375,10 +9375,12 @@ let PanelCard = class PanelCard extends h {
         this._startResetTimer();
     }
     async _loadContent() {
-        await loadHeaderChips(this.hass);
-        this._areaObj = this._area ? this.hass?.areas[this._area] : undefined;
+        if (!this.hass || !this._config)
+            return;
+        this._headerChips = await loadHeaderChips(this.hass);
+        this._areaObj = this._area ? this.hass.areas[this._area] : undefined;
         this._areaChips = loadAreaChips(this._config?.chips || [], this.hass);
-        const { controlTiles, controlColumns } = loadControlTiles(this._config?.tiles || [], this.hass, this._isTablet);
+        const { controlTiles, controlColumns } = loadControlTiles(this._config.tiles || [], this.hass, this._isTablet);
         this._controlTiles = controlTiles;
         this._controlColumns = controlColumns;
         this._audioCards = loadAudioCards(this.hass, this._config?.audio_player || "");
