@@ -9169,14 +9169,11 @@ function loadAudioCards(hass, player) {
 }
 
 function renderEntertain(cards) {
-    const cardStyle = {
-        "border-radius": "var(--sq-card-border-radius, 0.8rem)",
-    };
     return ke `
         <div class="entertain-container">
-            <div class="entertain-card" style=${se(cardStyle)}>${cards[0]}</div>
-            <div class="entertain-card" style=${se(cardStyle)}>${cards[1]}</div>
-            <div class="entertain-card" style=${se(cardStyle)}>${cards[2]}</div>
+            <hui-card class="entertain-card">${cards[0]}</hui-card>
+            <hui-card class="entertain-card">${cards[1]}</hui-card>
+            <hui-card class="entertain-card">${cards[2]}</hui-card>
         </div>
     `;
 }

@@ -1,6 +1,5 @@
-import { HomeAssistant, LovelaceCard } from "../types";
-import { styleMap } from "lit/directives/style-map.js";
 import { html, TemplateResult } from "lit";
+import { HomeAssistant, LovelaceCard } from "../types";
 import { loadAudioCards } from "./audio";
 
 export function loadEntertainCards(hass: HomeAssistant, audioPlayer: string): LovelaceCard[] {
@@ -9,15 +8,11 @@ export function loadEntertainCards(hass: HomeAssistant, audioPlayer: string): Lo
 }
 
 export function renderEntertain(cards: LovelaceCard[]): TemplateResult {
-    const cardStyle = {
-        "border-radius": "var(--sq-card-border-radius, 0.8rem)",
-    };
-
     return html`
         <div class="entertain-container">
-            <div class="entertain-card" style=${styleMap(cardStyle)}>${cards[0]}</div>
-            <div class="entertain-card" style=${styleMap(cardStyle)}>${cards[1]}</div>
-            <div class="entertain-card" style=${styleMap(cardStyle)}>${cards[2]}</div>
+            <hui-card class="entertain-card">${cards[0]}</hui-card>
+            <hui-card class="entertain-card">${cards[1]}</hui-card>
+            <hui-card class="entertain-card">${cards[2]}</hui-card>
         </div>
     `;
 }
