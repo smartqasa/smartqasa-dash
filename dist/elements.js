@@ -8952,6 +8952,7 @@ const dialogTable = {
 };
 
 function handleHome() {
+    console.log("View mode:", window.smartqasa.viewMode);
     if (window.smartqasa.viewMode !== "control") {
         window.smartqasa.viewMode = "control";
         return;
@@ -9236,7 +9237,6 @@ let PanelCard = class PanelCard extends h {
     constructor() {
         super();
         this._isAdminMode = false;
-        this._viewMode = "control";
         this._isPhone = getDeviceType() === "phone";
         this._isTablet = getDeviceType() === "tablet";
         this._isPortrait = getDeviceOrientation() === "portrait";
@@ -9248,13 +9248,15 @@ let PanelCard = class PanelCard extends h {
         this._controlTiles = [];
         this._controlColumns = [];
         this._audioCards = [];
-        this._boundHandleDeviceChanges = this._handleDeviceChanges.bind(this);
-        this._boundStartResetTimer = this._startResetTimer.bind(this);
+        this._viewMode = "control";
+        window.smartqasa.viewMode = "control";
         Object.defineProperty(window.smartqasa, "viewMode", {
             set: (newMode) => {
                 this._viewMode = newMode;
             },
         });
+        this._boundHandleDeviceChanges = this._handleDeviceChanges.bind(this);
+        this._boundStartResetTimer = this._startResetTimer.bind(this);
     }
     connectedCallback() {
         super.connectedCallback();
@@ -9308,7 +9310,7 @@ let PanelCard = class PanelCard extends h {
         }
     }
     render() {
-        const viewMode = this._viewMode;
+        const viewMode = this._viewMode || "control";
         let content;
         // prettier-ignore
         switch (viewMode) {
@@ -14620,7 +14622,6 @@ ThermostatTile = __decorate([
 var version = "2024.9.14b-1";
 
 window.smartqasa = window.smartqasa || {};
-window.smartqasa.viewMode = "control";
 window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();
 window.smartqasa.startArea = window.smartqasa.startArea || location.pathname.split("/").pop();
 window.smartqasa.service = function (service, data) {

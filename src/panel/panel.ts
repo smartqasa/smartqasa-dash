@@ -39,7 +39,7 @@ export class PanelCard extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() private _config?: Config;
     @state() private _isAdminMode = false;
-    @state() private _viewMode: "control" | "entertain" = "control";
+    @state() private _viewMode;
     @state() private _isPhone: boolean = getDeviceType() === "phone";
     @state() private _isTablet: boolean = getDeviceType() === "tablet";
     @state() private _isPortrait: boolean = getDeviceOrientation() === "portrait";
@@ -69,14 +69,18 @@ export class PanelCard extends LitElement {
 
     constructor() {
         super();
-        this._boundHandleDeviceChanges = this._handleDeviceChanges.bind(this);
-        this._boundStartResetTimer = this._startResetTimer.bind(this);
+
+        this._viewMode = "control";
+        window.smartqasa.viewMode = "control";
 
         Object.defineProperty(window.smartqasa, "viewMode", {
             set: (newMode: "control" | "entertain") => {
                 this._viewMode = newMode;
             },
         });
+
+        this._boundHandleDeviceChanges = this._handleDeviceChanges.bind(this);
+        this._boundStartResetTimer = this._startResetTimer.bind(this);
     }
 
     public connectedCallback(): void {
@@ -145,8 +149,7 @@ export class PanelCard extends LitElement {
     }
 
     protected render(): TemplateResult {
-        const viewMode = this._viewMode;
-
+        const viewMode = this._viewMode || "control";
         let content;
         // prettier-ignore
         switch (viewMode) {
