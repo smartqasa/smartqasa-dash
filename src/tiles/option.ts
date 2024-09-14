@@ -4,7 +4,7 @@ import { styleMap } from "lit/directives/style-map.js";
 
 import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
 import { callService } from "../utils/call-service";
-import { menuConfig } from "../../archive/menu-config";
+import { menuConfig } from "../misc/menu-config";
 import { phaseIcons, modeIcons } from "../const";
 
 import tileBaseStyle from "../css/tile-base.css";

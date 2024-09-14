@@ -3,7 +3,7 @@ import { navigateToArea } from "../utils/navigate-to-area";
 import { dialogTable } from "../tables/dialogs";
 
 export function renderFooter(): TemplateResult {
-    console.log("Footer", window.smartqasa);
+    console.log("Footer viewMode", window.smartqasa.viewMode);
     function renderFooterButton(icon: string, name: string, action: () => void): TemplateResult {
         return html`
             <div
@@ -20,7 +20,7 @@ export function renderFooter(): TemplateResult {
     }
 
     function handleHome(): void {
-        console.log("View mode:", window.smartqasa.viewMode);
+        console.log("Handle Home viewMode:", window.smartqasa.viewMode);
 
         if (window.smartqasa.viewMode !== "control") {
             window.smartqasa.viewMode = "control";

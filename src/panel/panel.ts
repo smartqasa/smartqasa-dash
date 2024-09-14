@@ -149,6 +149,7 @@ export class PanelCard extends LitElement {
     }
 
     protected render(): TemplateResult {
+        console.log("Panel viewMode", window.smartqasa.viewMode);
         const viewMode = this._viewMode;
         let content;
         // prettier-ignore

@@ -8953,7 +8953,7 @@ const dialogTable = {
 };
 
 function renderFooter() {
-    console.log("Footer", window.smartqasa);
+    console.log("Footer viewMode", window.smartqasa.viewMode);
     function renderFooterButton(icon, name, action) {
         return ke `
             <div
@@ -8969,7 +8969,7 @@ function renderFooter() {
         `;
     }
     function handleHome() {
-        console.log("View mode:", window.smartqasa.viewMode);
+        console.log("Handle Home viewMode:", window.smartqasa.viewMode);
         if (window.smartqasa.viewMode !== "control") {
             window.smartqasa.viewMode = "control";
             return;
@@ -9312,6 +9312,7 @@ let PanelCard = class PanelCard extends h {
         }
     }
     render() {
+        console.log("Panel viewMode", window.smartqasa.viewMode);
         const viewMode = this._viewMode;
         let content;
         // prettier-ignore
@@ -14625,7 +14626,7 @@ var version = "2024.9.14b-1";
 
 window.smartqasa = window.smartqasa || {};
 window.smartqasa.viewMode = "control";
-window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();
 window.smartqasa.startArea = window.smartqasa.startArea || location.pathname.split("/").pop();
+console.log("Index:", window.smartqasa);
 window.customCards = window.customCards ?? [];
 console.info(`%c SmartQasa ⏏ ${version} `, "background-color: #0000ff; color: #ffffff; font-weight: 700;");

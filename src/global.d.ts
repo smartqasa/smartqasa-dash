@@ -27,10 +27,9 @@ declare interface Window {
         startApplication: (packageName: string) => void;
     };
     smartqasa: {
-        homePath?: string;
-        startArea?: string;
         menuConfig?: any;
         menuTab: number;
+        startArea?: string;
         viewMode: string;
         service: (service: string, data?: object) => void;
     };
