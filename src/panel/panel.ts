@@ -3,11 +3,12 @@ import { customElement, property, state } from "lit/decorators.js";
 
 import { HassArea, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 import { getDeviceOrientation, getDeviceType } from "../utils/device-info";
+import { createElements } from "../utils/create-elements";
 import Swiper from "swiper";
 import { SwiperOptions } from "swiper/types";
 import { Navigation } from "swiper/modules";
-import { loadHeaderChips, renderHeader } from "./header";
-import { loadAreaChips, renderArea } from "./area";
+import { renderHeader } from "./header";
+import { renderArea } from "./area";
 import { loadControlTiles, renderControls } from "./controls";
 import { renderEntertain } from "./entertain";
 import { renderFooter } from "./footer";
@@ -15,9 +16,9 @@ import { loadAudioCards } from "./audio";
 
 import panelStyles from "../css/panel.css";
 import swiperStyles from "swiper/swiper-bundle.css";
-import defaultImage from "../assets/images/default.png";
 
 interface Config extends LovelaceCardConfig {
+    header_chips?: LovelaceCardConfig[];
     area: string;
     name?: string;
     picture?: string;
@@ -48,8 +49,8 @@ export class PanelCard extends LitElement {
     private _boundHandleDeviceChanges = () => this._handleDeviceChanges();
     private _boundStartResetTimer = () => this._startResetTimer();
     private _viewModeChangedHandler = () => this.requestUpdate();
-    private _timeIntervalId: number | undefined;
 
+    private _timeIntervalId: number | undefined;
     private _resetTimer?: ReturnType<typeof setTimeout>;
     private _area?: string;
     private _areaObj?: HassArea;
@@ -240,13 +241,13 @@ export class PanelCard extends LitElement {
         this._startResetTimer();
     }
 
-    private async _loadContent(): Promise<void> {
+    private _loadContent(): void {
         if (!this.hass || !this._config) return;
 
-        this._headerChips = await loadHeaderChips(this.hass);
+        this._headerChips = createElements(this._config.header_chips || [], this.hass);
 
         this._areaObj = this._area ? this.hass.areas[this._area] : undefined;
-        this._areaChips = loadAreaChips(this._config?.chips || [], this.hass);
+        this._areaChips = createElements(this._config.chips || [], this.hass);
 
         const { controlTiles, controlColumns } = loadControlTiles(this._config.tiles || [], this.hass, this._isTablet);
         this._controlTiles = controlTiles;

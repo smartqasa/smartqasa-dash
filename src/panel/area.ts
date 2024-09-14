@@ -7,7 +7,7 @@ import defaultImage from "../assets/images/default.png";
 export function loadAreaChips(chipsConfig: LovelaceCardConfig[], hass: HomeAssistant): LovelaceCard[] {
     return chipsConfig.map((config) => {
         const chip = createElement(config) as LovelaceCard;
-        chip.hass = hass;
+        if (hass) chip.hass = hass;
         return chip;
     });
 }

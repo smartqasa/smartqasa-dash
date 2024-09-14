@@ -4,6 +4,7 @@ import { html, TemplateResult } from "lit";
 import { formattedTime, formattedDate } from "../utils/format-date-time";
 import { loadYamlAsJson } from "../utils/load-yaml-as-json";
 
+/*
 export async function loadHeaderChips(hass: HomeAssistant): Promise<LovelaceCard[]> {
     let chipsConfig: LovelaceCardConfig[] = [];
     try {
@@ -14,12 +15,14 @@ export async function loadHeaderChips(hass: HomeAssistant): Promise<LovelaceCard
         return [];
     }
 
+
     return chipsConfig.map((config) => {
         const chip = createElement(config) as LovelaceCard;
         if (hass) chip.hass = hass;
         return chip;
     });
 }
+*/
 
 export function renderHeader(headerChips: LovelaceCard[]): TemplateResult {
     function launchClock(e: Event): void {
