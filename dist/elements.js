@@ -8951,7 +8951,6 @@ const dialogTable = {
     },
 };
 
-// Define each handler directly
 function handleHome() {
     if (window.smartqasa.viewMode !== "control") {
         window.smartqasa.viewMode = "control";
@@ -9229,7 +9228,7 @@ window.customCards.push({
 });
 let PanelCard = class PanelCard extends h {
     static { this.styles = [r$3(css_248z$5), r$3(css_248z$6)]; }
-    async setConfig(config) {
+    setConfig(config) {
         this._config = { ...config };
         this._area = this._config.area;
     }

@@ -2,7 +2,6 @@ import { html, TemplateResult } from "lit";
 import { navigateToArea } from "../utils/navigate-to-area";
 import { dialogTable } from "../tables/dialogs";
 
-// Define each handler directly
 function handleHome(): void {
     if (window.smartqasa.viewMode !== "control") {
         window.smartqasa.viewMode = "control";

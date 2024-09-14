@@ -62,7 +62,7 @@ export class PanelCard extends LitElement {
 
     static styles: CSSResultGroup = [unsafeCSS(swiperStyles), unsafeCSS(panelStyles)];
 
-    public async setConfig(config: Config) {
+    public setConfig(config: Config) {
         this._config = { ...config };
         this._area = this._config.area;
     }
