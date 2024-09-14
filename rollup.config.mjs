@@ -13,6 +13,7 @@ export default {
         file: "dist/elements.js",
         format: "es",
         name: "SmartQasaElements",
+        inlineDynamicImports: true,
     },
     plugins: [
         babel({
