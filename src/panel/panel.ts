@@ -18,7 +18,6 @@ import panelStyles from "../css/panel.css";
 import swiperStyles from "swiper/swiper-bundle.css";
 
 interface Config extends LovelaceCardConfig {
-    header_chips?: LovelaceCardConfig[];
     area: string;
     name?: string;
     picture?: string;
@@ -245,6 +244,7 @@ export class PanelCard extends LitElement {
         if (!this.hass || !this._config) return;
 
         const headerChipsConfig = (window.smartqasa.chipsConfig as LovelaceCardConfig[]) ?? [];
+        console.log("Load Content...", headerChipsConfig);
         this._headerChips = createElements(headerChipsConfig, this.hass);
 
         this._areaObj = this._area ? this.hass.areas[this._area] : undefined;
