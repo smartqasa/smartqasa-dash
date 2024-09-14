@@ -149,7 +149,7 @@ export class PanelCard extends LitElement {
     }
 
     protected render(): TemplateResult {
-        const viewMode = this._viewMode || "control";
+        const viewMode = this._viewMode;
         let content;
         // prettier-ignore
         switch (viewMode) {

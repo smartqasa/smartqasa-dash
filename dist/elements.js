@@ -9310,7 +9310,7 @@ let PanelCard = class PanelCard extends h {
         }
     }
     render() {
-        const viewMode = this._viewMode || "control";
+        const viewMode = this._viewMode;
         let content;
         // prettier-ignore
         switch (viewMode) {
