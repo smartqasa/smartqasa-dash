@@ -9383,9 +9383,8 @@ let PanelCard = class PanelCard extends h {
     _loadContent() {
         if (!this.hass || !this._config)
             return;
-        const headerChipsConfig = window.smartqasa.chipsConfig ?? [];
-        console.log("Load Content...", headerChipsConfig);
-        this._headerChips = createElements(headerChipsConfig, this.hass);
+        this._headerChips = createElements(window.smartqasa.chipsConfig, this.hass);
+        console.log("Header chips:", this._headerChips);
         this._areaObj = this._area ? this.hass.areas[this._area] : undefined;
         this._areaChips = createElements(this._config.chips || [], this.hass);
         const { controlTiles, controlColumns } = loadControlTiles(this._config.tiles || [], this.hass, this._isTablet);
