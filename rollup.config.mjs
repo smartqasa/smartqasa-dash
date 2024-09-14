@@ -40,5 +40,4 @@ export default {
             fileName: "[dirname][hash][extname]",
         }),
     ],
-    context: "window", // Set the context to window to avoid 'this' being undefined
 };

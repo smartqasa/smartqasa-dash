@@ -9226,7 +9226,6 @@ let PanelCard = class PanelCard extends h {
         this._boundHandleDeviceChanges = () => this._handleDeviceChanges();
         this._boundStartResetTimer = () => this._startResetTimer();
         this._viewModeChangedHandler = () => this.requestUpdate();
-        this._headerChipsChangedHandler = () => this.requestUpdate();
         this._headerChips = [];
         this._areaChips = [];
         this._controlTiles = [];
@@ -9253,10 +9252,8 @@ let PanelCard = class PanelCard extends h {
             const isAdminMode = this.hass.states["input_boolean.admin_mode"]?.state === "on";
             this._isAdminMode = (this.hass.user?.is_admin ?? false) || isAdminMode;
         }
-        if (this.hass && !this._headerChips) {
-            const headerChipsConfig = window.smartqasa.chipsConfig;
-            if (headerChipsConfig)
-                this._headerChips = createElements(window.smartqasa.chipsConfig, this.hass);
+        if (this.hass && this._headerChips.length === 0 && window.smartqasa.chipsConfig.length > 0) {
+            this._headerChips = createElements(window.smartqasa.chipsConfig, this.hass);
         }
         if (changedProps.has("_config") && this._config)
             this._loadContent();
