@@ -118,7 +118,7 @@ export class PanelCard extends LitElement {
     }
 
     protected updated(): void {
-        if (this._isTablet && this._controlTiles.length > 1 && !this._swiper) {
+        if (this._isTablet && this._controlTiles.length > 1) {
             this._initializeSwiper();
         }
     }
@@ -188,7 +188,7 @@ export class PanelCard extends LitElement {
         this._isPortrait = orientation === "portrait";
         this._isLandscape = orientation === "landscape";
 
-        if (this._isTablet && this._controlTiles.length > 1 && !this._swiper) {
+        if (this._isTablet && this._controlTiles.length > 1) {
             this._initializeSwiper();
         }
     }

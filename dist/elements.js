@@ -9278,7 +9278,7 @@ let PanelCard = class PanelCard extends h {
         this._loadContent();
     }
     updated() {
-        if (this._isTablet && this._controlTiles.length > 1 && !this._swiper) {
+        if (this._isTablet && this._controlTiles.length > 1) {
             this._initializeSwiper();
         }
     }
@@ -9338,7 +9338,7 @@ let PanelCard = class PanelCard extends h {
         const orientation = getDeviceOrientation();
         this._isPortrait = orientation === "portrait";
         this._isLandscape = orientation === "landscape";
-        if (this._isTablet && this._controlTiles.length > 1 && !this._swiper) {
+        if (this._isTablet && this._controlTiles.length > 1) {
             this._initializeSwiper();
         }
     }
