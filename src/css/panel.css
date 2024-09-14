@@ -163,7 +163,7 @@
     gap: var(--sq-tile-spacing, 0.8rem);
 }
 .entertain-card {
-    display: flex;
+    display: block;
 }
 
 /* Tablet Portrait */
