@@ -9,6 +9,4 @@ export function navigateToArea(area: any) {
 
     window.history.pushState(null, "", url.toString());
     window.dispatchEvent(new CustomEvent("location-changed"));
-
-    window.smartqasa.viewMode = "area";
 }

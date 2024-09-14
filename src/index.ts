@@ -12,7 +12,7 @@ declare global {
             startArea?: string;
             menuConfig?: any;
             menuTab: number;
-            viewMode: "area" | "entertain";
+            viewMode: "control" | "entertain";
             service: (service: string, data?: object) => void;
         };
     }

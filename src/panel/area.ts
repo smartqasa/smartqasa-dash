@@ -1,8 +1,7 @@
-import { HassArea, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
+import { HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 import { createElement } from "../utils/create-element";
 import { html, nothing, TemplateResult } from "lit";
-import { formattedTime, formattedDate } from "../utils/format-date-time";
-import { loadYamlAsJson } from "../utils/load-yaml-as-json";
+import { renderFooter } from "./footer";
 import defaultImage from "../assets/images/default.png";
 
 export async function loadAreaPicture(configFileName: string, area: string): Promise<string> {
@@ -28,6 +27,14 @@ export async function loadAreaPicture(configFileName: string, area: string): Pro
     return defaultImage;
 }
 
+export function loadAreaChips(chipsConfig: LovelaceCardConfig[], hass: HomeAssistant): LovelaceCard[] {
+    return chipsConfig.map((config) => {
+        const chip = createElement(config) as LovelaceCard;
+        chip.hass = hass;
+        return chip;
+    });
+}
+
 export function renderArea(
     name: string,
     picture: string,
@@ -42,7 +49,7 @@ export function renderArea(
             ${chips.length > 0
                 ? html` <div class="area-chips">${chips.map((chip) => html`<div class="chip">${chip}</div>`)}</div> `
                 : nothing}
-            ${isPhone && isLandscape ? html`<div class="footer-container">${"this._renderFooter()"}</div>` : nothing}
+            ${isPhone && isLandscape ? html`<div class="footer-container">${renderFooter()}</div>` : nothing}
         </div>
     `;
 }

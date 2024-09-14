@@ -7,12 +7,11 @@ import { navigateToArea } from "../utils/navigate-to-area";
 import Swiper from "swiper";
 import { SwiperOptions } from "swiper/types";
 import { Navigation } from "swiper/modules";
-import { createElement } from "../utils/create-element";
-import { loadYamlAsJson } from "../utils/load-yaml-as-json";
 import { dialogTable } from "../tables/dialogs";
 import { loadHeaderChips, renderHeader } from "./header";
-import { loadAreaPicture, renderArea } from "./area";
+import { loadAreaPicture, loadAreaChips, renderArea } from "./area";
 import { loadControlTiles, renderControls } from "./controls";
+import { renderFooter } from "./footer";
 import { loadAudioCards } from "./audio";
 
 import panelStyles from "../css/panel.css";
@@ -48,7 +47,7 @@ export class PanelCard extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() private _config?: Config;
     @state() private _isAdminMode = false;
-    @state() private _displayMode: "control" | "entertain" = "control";
+    @state() private _viewMode: "control" | "entertain" = "control";
     @state() private _isPhone: boolean = getDeviceType() === "phone";
     @state() private _isTablet: boolean = getDeviceType() === "tablet";
     @state() private _isPortrait: boolean = getDeviceOrientation() === "portrait";
@@ -74,13 +73,18 @@ export class PanelCard extends LitElement {
     public async setConfig(config: Config) {
         this._config = { ...config };
         this._area = this._config.area;
-        this._areaPicture = await loadAreaPicture(this._config.picture || "", this._area);
     }
 
     constructor() {
         super();
         this._boundHandleDeviceChanges = this._handleDeviceChanges.bind(this);
         this._boundStartResetTimer = this._startResetTimer.bind(this);
+
+        Object.defineProperty(window.smartqasa, "viewMode", {
+            set: (newMode: "control" | "entertain") => {
+                this._viewMode = newMode;
+            },
+        });
     }
 
     public connectedCallback(): void {
@@ -149,11 +153,11 @@ export class PanelCard extends LitElement {
     }
 
     protected render(): TemplateResult {
-        const displayMode = this._displayMode;
+        const viewMode = this._viewMode;
 
         let content;
         // prettier-ignore
-        switch (displayMode) {
+        switch (viewMode) {
             case "control":
                 const name = this._config?.name ?? this._areaObj?.name ?? "Area";
                 content = html`
@@ -174,12 +178,12 @@ export class PanelCard extends LitElement {
             <div
                 class="container"
                 ?admin=${this._isAdminMode}
-                ?control=${displayMode === "control"}
-                ?entertain=${displayMode === "entertain"}
+                ?control=${viewMode === "control"}
+                ?entertain=${viewMode === "entertain"}
             >
                 ${this._isTablet ? renderHeader(this._headerChips) : nothing}
                 ${content}
-                ${this._isPhone && this._isLandscape ? nothing : this._renderFooter()}
+                ${this._isPhone && this._isLandscape ? nothing : renderFooter()}
             </div>
         `;
     }
@@ -192,49 +196,6 @@ export class PanelCard extends LitElement {
         const orientation = getDeviceOrientation();
         this._isPortrait = orientation === "portrait";
         this._isLandscape = orientation === "landscape";
-    }
-
-    private _renderArea(): TemplateResult {
-        const name = this._config?.name ?? this._areaObj?.name ?? "Area";
-
-        const isPhoneLandscape = this._isPhone && this._isLandscape;
-
-        return html`
-            <div class="area-container">
-                <div class="area-name ${this._isPhone ? "overlay" : ""}">${name}</div>
-                <img class="area-picture" src=${this._areaPicture} alt="Area picture..." loading="lazy" />
-                ${this._areaChips.length > 0
-                    ? html`
-                          <div class="area-chips">
-                              ${this._areaChips.map((chip) => html`<div class="chip">${chip}</div>`)}
-                          </div>
-                      `
-                    : nothing}
-                ${isPhoneLandscape ? html`<div class="footer-container">${this._renderFooter()}</div>` : nothing}
-            </div>
-        `;
-    }
-
-    private async _getAreaPicture(): Promise<string> {
-        if (this._areaPicture !== defaultImage) return this._areaPicture;
-
-        if (this._config?.picture) {
-            const configPictureFile = `/local/smartqasa/pictures/${this._config.picture}`;
-            try {
-                const response = await fetch(configPictureFile, { method: "HEAD" });
-                if (response.ok) return (this._areaPicture = configPictureFile);
-            } catch (error) {
-                console.error("Picture from config not found, using defaultImage", error);
-            }
-        }
-
-        const areaFileName = `/local/smartqasa/pictures/${this._area}.png`;
-        try {
-            const response = await fetch(areaFileName, { method: "HEAD" });
-            if (response.ok) return (this._areaPicture = areaFileName);
-        } catch (error) {}
-
-        return (this._areaPicture = defaultImage);
     }
 
     private _renderEntertain(): TemplateResult {
@@ -319,9 +280,6 @@ export class PanelCard extends LitElement {
     }
 
     private _loadContent(): void {
-        this._areaObj = this._area ? this.hass?.areas[this._area] : undefined;
-        this._areaName = this._config?.name ?? this._areaObj?.name ?? "Area";
-
         loadHeaderChips(this.hass!)
             .then((headerChips) => {
                 this._headerChips = headerChips;
@@ -330,73 +288,26 @@ export class PanelCard extends LitElement {
                 console.error("Error loading header chips:", error);
             });
 
-        this._loadAreaChips(this._config?.chips || [])
-            .then((areaChips) => {
-                this._areaChips = areaChips;
+        this._areaObj = this._area ? this.hass?.areas[this._area] : undefined;
+        this._areaName = this._config?.name ?? this._areaObj?.name ?? "Area";
+        loadAreaPicture(this._config?.picture || "", this._area!)
+            .then((areaPicture) => {
+                this._areaPicture = areaPicture;
             })
             .catch((error) => {
-                console.error("Error loading area chips:", error);
+                console.error("Error loading area picture:", error);
             });
+        this._areaChips = loadAreaChips(this._config?.chips || [], this.hass!);
 
         const { controlTiles, controlColumns } = loadControlTiles(
             this._config?.tiles || [],
             this.hass!,
             this._isTablet
         );
-
         this._controlTiles = controlTiles;
         this._controlColumns = controlColumns;
 
         this._audioCards = loadAudioCards(this.hass!, this._config?.audio_player || "");
-    }
-
-    private async _loadHeaderChips(): Promise<LovelaceCard[]> {
-        let chipsConfig: LovelaceCardConfig[] = [];
-        try {
-            const yamlFilePath = "/local/smartqasa/config/chips.yaml";
-            chipsConfig = (await loadYamlAsJson(yamlFilePath)) as LovelaceCardConfig[];
-        } catch (error) {
-            console.error("Error loading header chips:", error);
-            return [];
-        }
-
-        return chipsConfig.map((config) => {
-            const chip = createElement(config) as LovelaceCard;
-            chip.hass = this.hass;
-            return chip;
-        });
-    }
-
-    private async _loadAreaChips(chipsConfig: LovelaceCardConfig[]): Promise<LovelaceCard[]> {
-        return chipsConfig.map((config) => {
-            const chip = createElement(config) as LovelaceCard;
-            chip.hass = this.hass;
-            return chip;
-        });
-    }
-
-    private _launchClock(e: Event): void {
-        e.stopPropagation();
-
-        if (typeof window.fully !== "undefined" && window.fully.startApplication) {
-            window.fully.startApplication("com.google.android.deskclock");
-        } else {
-            console.warn("fully.startApplication is not available.");
-        }
-    }
-
-    private _handleSwiperNavigation(e: Event, direction: "prev" | "next"): void {
-        e.stopPropagation();
-
-        if (this._swiper) {
-            if (direction === "prev") {
-                this._swiper.slidePrev();
-            } else {
-                this._swiper.slideNext();
-            }
-
-            //this._startResetTimer();
-        }
     }
 
     private _handleFooterAction(e: Event, methodName: keyof ActionHandlers): void {
@@ -410,8 +321,8 @@ export class PanelCard extends LitElement {
     }
 
     private _handleHome(): void {
-        if (this._displayMode !== "control") {
-            this._displayMode = "control";
+        if (this._viewMode !== "control") {
+            this._viewMode = "control";
             return;
         }
 
@@ -430,13 +341,13 @@ export class PanelCard extends LitElement {
     }
 
     private _handleAreas(): void {
-        this._displayMode = "control";
+        this._viewMode = "control";
         const dialogObj = dialogTable["areas"];
         window.browser_mod?.service("popup", { ...dialogObj.data });
     }
 
     private _handleEntertain(): void {
-        this._displayMode = "entertain";
+        this._viewMode = "entertain";
     }
 
     private _handleMenu(): void {
