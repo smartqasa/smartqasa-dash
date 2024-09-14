@@ -4,6 +4,36 @@ console.log("Index View mode:", window.smartqasa.viewMode);
 window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();
 window.smartqasa.startArea = window.smartqasa.startArea || location.pathname.split("/").pop();
 
+import { PopupDialog, PopupData } from "./utils/popup-dialog";
+
+window.smartqasa.service = function (service: string, data?: PopupData) {
+    if (service === "popup") {
+        const popup = document.createElement("smartqasa-popup-dialog") as PopupDialog;
+
+        if (data?.title) popup.title = data.title;
+        if (data?.size) popup.size = data.size;
+        if (data?.timeout) popup.timeout = data.timeout;
+        if (data?.card) popup.card = data.card;
+
+        document.body.appendChild(popup);
+
+        popup.addEventListener("smartqasa-popup-close", () => {
+            document.body.removeChild(popup);
+        });
+    } else if (service === "popup_close") {
+        console.log("Closing popup via service");
+        const popup = document.querySelector("smartqasa-popup-dialog");
+        if (popup) {
+            console.log("Popup found, dispatching close event");
+            popup.dispatchEvent(new CustomEvent("smartqasa-popup-close"));
+        } else {
+            console.warn("No popup found to close");
+        }
+    } else {
+        console.warn(`Service ${service} is not implemented in smartqasa.`);
+    }
+};
+
 window.customCards = window.customCards ?? [];
 
 // Panel
@@ -57,6 +87,8 @@ import "./tiles/shade";
 import "./tiles/switch";
 import "./tiles/theme";
 import "./tiles/thermostat";
+
+//import "./utils/popup-dialog";
 
 // Log version info
 import { version } from "../package.json";

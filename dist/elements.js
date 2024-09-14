@@ -14623,7 +14623,8 @@ ThermostatTile = __decorate([
 var version = "2024.9.14b-1";
 
 window.smartqasa = window.smartqasa || {};
-window.smartqasa.viewMode = window.smartqasa.viewMode || "control";
+window.smartqasa.viewMode = "control";
+console.log("Index View mode:", window.smartqasa.viewMode);
 window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();
 window.smartqasa.startArea = window.smartqasa.startArea || location.pathname.split("/").pop();
 window.smartqasa.service = function (service, data) {
