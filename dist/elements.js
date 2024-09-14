@@ -10431,12 +10431,24 @@ let SonosCard = class SonosCard extends h {
         this._config = { ...config };
         this._loadCards();
     }
+    willUpdate(_changedProperties) {
+        if (_changedProperties.has("hass") && this.hass) {
+            if (this._speakers)
+                this._speakers.hass = this.hass;
+            if (this._player)
+                this._player.hass = this.hass;
+            if (this._media)
+                this._media.hass = this.hass;
+        }
+    }
     render() {
+        if (!this._config || !this.hass)
+            return D;
         return ke `
-            <div class="entertain-container">
-                <div class="entertain-card">${this._speakers}</div>
-                <div class="entertain-card">${this._player}</div>
-                <div class="entertain-card">${this._media}</div>
+            <div class="container">
+                <div class="speakers">${this._speakers}</div>
+                <div class="player">${this._player}</div>
+                <div class="media">${this._media}</div>
             </div>
         `;
     }

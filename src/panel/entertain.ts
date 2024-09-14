@@ -10,9 +10,9 @@ export function loadEntertainCards(hass: HomeAssistant, audioPlayer: string): Lo
 export function renderEntertain(cards: LovelaceCard[]): TemplateResult {
     return html`
         <div class="entertain-container">
-            <hui-card class="entertain-card">${cards[0]}</hui-card>
-            <hui-card class="entertain-card">${cards[1]}</hui-card>
-            <hui-card class="entertain-card">${cards[2]}</hui-card>
+            <div class="entertain-card">${cards[0]}</div>
+            <div class="entertain-card">${cards[1]}</div>
+            <div class="entertain-card">${cards[2]}</div>
         </div>
     `;
 }

@@ -46,12 +46,21 @@ class SonosCard extends LitElement {
         this._loadCards();
     }
 
-    protected render(): TemplateResult {
+    protected willUpdate(_changedProperties: PropertyValues): void {
+        if (_changedProperties.has("hass") && this.hass) {
+            if (this._speakers) this._speakers.hass = this.hass;
+            if (this._player) this._player.hass = this.hass;
+            if (this._media) this._media.hass = this.hass;
+        }
+    }
+
+    protected render(): TemplateResult | typeof nothing {
+        if (!this._config || !this.hass) return nothing;
         return html`
-            <div class="entertain-container">
-                <div class="entertain-card">${this._speakers}</div>
-                <div class="entertain-card">${this._player}</div>
-                <div class="entertain-card">${this._media}</div>
+            <div class="container">
+                <div class="speakers">${this._speakers}</div>
+                <div class="player">${this._player}</div>
+                <div class="media">${this._media}</div>
             </div>
         `;
     }
