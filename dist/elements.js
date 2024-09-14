@@ -8970,7 +8970,6 @@ function handleHome() {
     }
 }
 function handleAreas() {
-    window.smartqasa.viewMode = "control";
     const dialogObj = dialogTable["areas"];
     window.browser_mod?.service("popup", { ...dialogObj.data });
 }
@@ -14619,6 +14618,7 @@ ThermostatTile = __decorate([
 var version = "2024.9.12b-2";
 
 window.smartqasa = window.smartqasa || {};
+window.smartqasa.viewMode = "control";
 window.smartqasa.homePath = window.smartqasa.homePath || location.pathname.split("/").pop();
 window.smartqasa.startArea = window.smartqasa.startArea || location.pathname.split("/").pop();
 window.smartqasa.service = function (service, data) {

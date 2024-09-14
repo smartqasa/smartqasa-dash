@@ -9,7 +9,7 @@ import { Navigation } from "swiper/modules";
 import { loadHeaderChips, renderHeader } from "./header";
 import { loadAreaPicture, loadAreaChips, renderArea } from "./area";
 import { loadControlTiles, renderControls } from "./controls";
-import { loadEntertainCards, renderEntertain } from "./entertain";
+import { renderEntertain } from "./entertain";
 import { renderFooter } from "./footer";
 import { loadAudioCards } from "./audio";
 

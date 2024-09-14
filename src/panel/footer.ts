@@ -23,7 +23,6 @@ function handleHome(): void {
 }
 
 function handleAreas(): void {
-    window.smartqasa.viewMode = "control";
     const dialogObj = dialogTable["areas"];
     window.browser_mod?.service("popup", { ...dialogObj.data });
 }
