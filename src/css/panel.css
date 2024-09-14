@@ -160,10 +160,6 @@
     overflow-y: auto;
     justify-content: center;
     align-items: center;
-    gap: var(--sq-tile-spacing, 0.8rem);
-}
-.entertain-card {
-    display: block;
 }
 
 /* Tablet Portrait */

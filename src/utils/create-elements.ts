@@ -5,8 +5,7 @@ export const createElements = (config: LovelaceCardConfig[], hass: HomeAssistant
     if (!config || config.length === 0) return [];
 
     return config.map((elementConfig) => {
-        const element = createElement(elementConfig) as LovelaceCard;
-        if (hass) element.hass = hass;
+        const element = createElement(elementConfig, hass) as LovelaceCard;
         return element;
     });
 };

@@ -13,6 +13,7 @@ export function loadAudioCards(hass: HomeAssistant, player: string): LovelaceCar
     createCards(0, {
         type: "custom:sonos-card",
         entityId: player,
+        heightPercentage: "75",
         showVolumeUpAndDownButtons: true,
         sections: ["volumes", "groups", "grouping"],
     });
@@ -20,12 +21,14 @@ export function loadAudioCards(hass: HomeAssistant, player: string): LovelaceCar
     createCards(1, {
         type: "custom:sonos-card",
         entityId: player,
+        heightPercentage: "75",
         showVolumeUpAndDownButtons: true,
         sections: ["player"],
     });
 
     createCards(2, {
         type: "custom:sonos-card",
+        heightPercentage: "75",
         mediaBrowserItemsPerRow: 3,
         mediaBrowserShowTitleForThumbnailIcons: true,
         showVolumeUpAndDownButtons: true,

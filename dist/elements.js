@@ -3954,7 +3954,7 @@ function getDeviceType() {
 }
 let deviceType = getDeviceType();
 
-const createElement$1 = (config) => {
+const createElement$1 = (config, hass) => {
     if (!config || typeof config !== "object" || !config.type) {
         console.error("Error: Invalid or missing 'type' in config:", config);
         return undefined;
@@ -3976,6 +3976,8 @@ const createElement$1 = (config) => {
         console.error(`Error: Failed to set config for element '${tag}'.`, err);
         return undefined;
     }
+    if (hass)
+        element.hass = hass;
     return element;
 };
 
@@ -3983,9 +3985,7 @@ const createElements = (config, hass) => {
     if (!config || config.length === 0)
         return [];
     return config.map((elementConfig) => {
-        const element = createElement$1(elementConfig);
-        if (hass)
-            element.hass = hass;
+        const element = createElement$1(elementConfig, hass);
         return element;
     });
 };
@@ -9149,17 +9149,20 @@ function loadAudioCards(hass, player) {
     createCards(0, {
         type: "custom:sonos-card",
         entityId: player,
+        heightPercentage: "75",
         showVolumeUpAndDownButtons: true,
         sections: ["volumes", "groups", "grouping"],
     });
     createCards(1, {
         type: "custom:sonos-card",
         entityId: player,
+        heightPercentage: "75",
         showVolumeUpAndDownButtons: true,
         sections: ["player"],
     });
     createCards(2, {
         type: "custom:sonos-card",
+        heightPercentage: "75",
         mediaBrowserItemsPerRow: 3,
         mediaBrowserShowTitleForThumbnailIcons: true,
         showVolumeUpAndDownButtons: true,
@@ -10399,6 +10402,80 @@ __decorate([
 ScreenSaver = __decorate([
     t$1("smartqasa-screensaver-card")
 ], ScreenSaver);
+
+window.customCards.push({
+    type: "smartqasa-sonos-card",
+    name: "SmartQasa Sonos Card",
+    preview: false,
+    description: "A SmartQasa element that display a set of Sonos card.",
+});
+let SonosCard = class SonosCard extends h {
+    static get styles() {
+        return i$2 `
+            .container {
+                display: flex;
+                gap: var(--sq-tile-spacing, 0.8rem);
+            }
+            .speakers {
+                width: 0.3fr;
+            }
+            .player {
+                width: 0.4fr;
+            }
+            .media {
+                width: 0.3fr;
+            }
+        `;
+    }
+    setConfig(config) {
+        this._config = { ...config };
+        this._loadCards();
+    }
+    render() {
+        return ke `
+            <div class="entertain-container">
+                <div class="entertain-card">${this._speakers}</div>
+                <div class="entertain-card">${this._player}</div>
+                <div class="entertain-card">${this._media}</div>
+            </div>
+        `;
+    }
+    _loadCards() {
+        if (!this.hass || !this._config)
+            return;
+        this._speakers = createElement$1({
+            type: "custom:sonos-card",
+            entityId: this._config.entity,
+            heightPercentage: "75",
+            showVolumeUpAndDownButtons: true,
+            sections: ["volumes", "groups", "grouping"],
+        }, this.hass);
+        this._player = createElement$1({
+            type: "custom:sonos-card",
+            entityId: this._config.entity,
+            heightPercentage: "75",
+            showVolumeUpAndDownButtons: true,
+            sections: ["player"],
+        }, this.hass);
+        this._media = createElement$1({
+            type: "custom:sonos-card",
+            heightPercentage: "75",
+            mediaBrowserItemsPerRow: 3,
+            mediaBrowserShowTitleForThumbnailIcons: true,
+            showVolumeUpAndDownButtons: true,
+            sections: ["media browser"],
+        }, this.hass);
+    }
+};
+__decorate([
+    n({ attribute: false })
+], SonosCard.prototype, "hass", void 0);
+__decorate([
+    r()
+], SonosCard.prototype, "_config", void 0);
+SonosCard = __decorate([
+    t$1("smartqasa-grid-stack")
+], SonosCard);
 
 window.customCards.push({
     type: "smartqasa-vertical-stack",
