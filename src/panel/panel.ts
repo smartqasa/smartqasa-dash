@@ -51,6 +51,7 @@ export class PanelCard extends LitElement {
     private _areaName: string = "Area";
     private _areaPicture: string = defaultImage;
     private _timeIntervalId: number | undefined;
+
     private _resetTimer?: ReturnType<typeof setTimeout>;
     private _area?: string;
     private _areaObj?: HassArea;

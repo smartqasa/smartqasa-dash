@@ -6,7 +6,7 @@ export function loadAudioCards(hass: HomeAssistant, player: string): LovelaceCar
 
     const createCards = (index: number, config: LovelaceCardConfig) => {
         const card = createElement(config) as LovelaceCard;
-        card.hass = hass;
+        if (hass) card.hass = hass;
         cards[index] = card;
     };
 

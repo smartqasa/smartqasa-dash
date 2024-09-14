@@ -1,9 +1,10 @@
-import { HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
+import { HomeAssistant, LovelaceCard } from "../types";
 import { html, TemplateResult } from "lit";
 import { loadAudioCards } from "./audio";
 
 export function loadEntertainCards(hass: HomeAssistant, audioPlayer: string): LovelaceCard[] {
-    return loadAudioCards(hass, audioPlayer);
+    const cards: LovelaceCard[] = loadAudioCards(hass, audioPlayer);
+    return cards;
 }
 
 export function renderEntertain(cards: LovelaceCard[]): TemplateResult {

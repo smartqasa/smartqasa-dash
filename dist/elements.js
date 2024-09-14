@@ -8540,7 +8540,8 @@ async function loadHeaderChips(hass) {
     }
     return chipsConfig.map((config) => {
         const chip = createElement(config);
-        chip.hass = hass;
+        if (hass)
+            chip.hass = hass;
         return chip;
     });
 }
@@ -9149,7 +9150,8 @@ function loadAudioCards(hass, player) {
     const cards = [];
     const createCards = (index, config) => {
         const card = createElement(config);
-        card.hass = hass;
+        if (hass)
+            card.hass = hass;
         cards[index] = card;
     };
     createCards(0, {
