@@ -243,6 +243,7 @@ export class PanelCard extends LitElement {
     private _loadContent(): void {
         if (!this.hass || !this._config) return;
 
+        console.log("Header chips config:", window.smartqasa.chipsConfig);
         this._headerChips = createElements(window.smartqasa.chipsConfig, this.hass);
         console.log("Header chips:", this._headerChips);
 

@@ -9383,6 +9383,7 @@ let PanelCard = class PanelCard extends h {
     _loadContent() {
         if (!this.hass || !this._config)
             return;
+        console.log("Header chips config:", window.smartqasa.chipsConfig);
         this._headerChips = createElements(window.smartqasa.chipsConfig, this.hass);
         console.log("Header chips:", this._headerChips);
         this._areaObj = this._area ? this.hass.areas[this._area] : undefined;
@@ -14608,7 +14609,6 @@ async function preloadChipsConfig() {
         const yamlFilePath = "/local/smartqasa/config/chips.yaml";
         const chipsConfig = await loadYamlAsJson(yamlFilePath);
         window.smartqasa.chipsConfig = chipsConfig;
-        console.info("Preloaded chipsConfig:", window.smartqasa.chipsConfig);
     }
     catch (error) {
         console.error("Error preloading chipsConfig:", error);

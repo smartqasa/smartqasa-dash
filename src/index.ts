@@ -12,7 +12,6 @@ async function preloadChipsConfig() {
         const yamlFilePath = "/local/smartqasa/config/chips.yaml";
         const chipsConfig = await loadYamlAsJson<LovelaceCardConfig[]>(yamlFilePath);
         window.smartqasa.chipsConfig = chipsConfig;
-        console.info("Preloaded chipsConfig:", window.smartqasa.chipsConfig);
     } catch (error) {
         console.error("Error preloading chipsConfig:", error);
         window.smartqasa.chipsConfig = [];
