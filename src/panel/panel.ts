@@ -48,6 +48,7 @@ export class PanelCard extends LitElement {
     private _boundHandleDeviceChanges = () => this._handleDeviceChanges();
     private _boundStartResetTimer = () => this._startResetTimer();
     private _viewModeChangedHandler = () => this.requestUpdate();
+    private _headerChipsChangedHandler = () => this.requestUpdate();
 
     private _timeIntervalId: number | undefined;
     private _resetTimer?: ReturnType<typeof setTimeout>;
@@ -85,6 +86,11 @@ export class PanelCard extends LitElement {
         if (this.hass) {
             const isAdminMode = this.hass.states["input_boolean.admin_mode"]?.state === "on";
             this._isAdminMode = (this.hass.user?.is_admin ?? false) || isAdminMode;
+        }
+
+        if (this.hass && !this._headerChips) {
+            const headerChipsConfig = window.smartqasa.chipsConfig;
+            if (headerChipsConfig) this._headerChips = createElements(window.smartqasa.chipsConfig, this.hass);
         }
 
         if (changedProps.has("_config") && this._config) this._loadContent();
@@ -243,9 +249,8 @@ export class PanelCard extends LitElement {
     private _loadContent(): void {
         if (!this.hass || !this._config) return;
 
-        console.log("Header chips config:", window.smartqasa.chipsConfig);
-        this._headerChips = createElements(window.smartqasa.chipsConfig, this.hass);
-        console.log("Header chips:", this._headerChips);
+        const headerChipsConfig = window.smartqasa.chipsConfig;
+        if (headerChipsConfig) this._headerChips = createElements(window.smartqasa.chipsConfig, this.hass);
 
         this._areaObj = this._area ? this.hass.areas[this._area] : undefined;
         this._areaChips = createElements(this._config.chips || [], this.hass);
