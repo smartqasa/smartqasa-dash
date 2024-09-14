@@ -5,6 +5,7 @@ import { renderFooter } from "./footer";
 import defaultImage from "../assets/images/default.png";
 
 export async function loadAreaPicture(configFileName: string, area: string): Promise<string> {
+    console.log("loadAreaPicture", configFileName, area);
     if (configFileName) {
         const path = `/local/smartqasa/pictures/${configFileName}`;
         try {

@@ -43,6 +43,7 @@ export class PanelCard extends LitElement {
     @state() private _isTablet: boolean = getDeviceType() === "tablet";
     @state() private _isPortrait: boolean = getDeviceOrientation() === "portrait";
     @state() private _isLandscape: boolean = getDeviceOrientation() === "landscape";
+    @state() private _swiper: Swiper | undefined;
 
     private _boundHandleDeviceChanges = () => this._handleDeviceChanges();
     private _boundStartResetTimer = () => this._startResetTimer();
@@ -50,7 +51,6 @@ export class PanelCard extends LitElement {
     private _areaName: string = "Area";
     private _areaPicture: string = defaultImage;
     private _timeIntervalId: number | undefined;
-    private _swiper: Swiper | undefined;
     private _resetTimer?: ReturnType<typeof setTimeout>;
     private _area?: string;
     private _areaObj?: HassArea;
@@ -183,7 +183,9 @@ export class PanelCard extends LitElement {
         this._isPortrait = orientation === "portrait";
         this._isLandscape = orientation === "landscape";
 
-        this.requestUpdate();
+        if (this._isTablet && this._controlTiles.length > 1 && !this._swiper) {
+            this._initializeSwiper();
+        }
     }
 
     private _syncTime(): void {
