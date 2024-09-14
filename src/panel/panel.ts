@@ -48,8 +48,6 @@ export class PanelCard extends LitElement {
     private _boundHandleDeviceChanges = () => this._handleDeviceChanges();
     private _boundStartResetTimer = () => this._startResetTimer();
     private _viewModeChangedHandler = () => this.requestUpdate();
-    private _areaName: string = "Area";
-    private _areaPicture: string = defaultImage;
     private _timeIntervalId: number | undefined;
 
     private _resetTimer?: ReturnType<typeof setTimeout>;
@@ -93,7 +91,6 @@ export class PanelCard extends LitElement {
 
         if (changedProps.has("hass") && this.hass) {
             this._areaObj = this._area ? this.hass?.areas[this._area] : undefined;
-            this._areaName = this._config?.name ?? this._areaObj?.name ?? "Area";
 
             const updateHassForCards = (cards: LovelaceCard[]) => {
                 cards.forEach((card) => {
@@ -243,17 +240,10 @@ export class PanelCard extends LitElement {
         this._startResetTimer();
     }
 
-    private _loadContent(): void {
-        loadHeaderChips(this.hass!)
-            .then((headerChips) => {
-                this._headerChips = headerChips;
-            })
-            .catch((error) => {
-                console.error("Error loading header chips:", error);
-            });
+    private async _loadContent(): Promise<void> {
+        await loadHeaderChips(this.hass!);
 
         this._areaObj = this._area ? this.hass?.areas[this._area] : undefined;
-        this._areaName = this._config?.name ?? this._areaObj?.name ?? "Area";
         this._areaChips = loadAreaChips(this._config?.chips || [], this.hass!);
 
         const { controlTiles, controlColumns } = loadControlTiles(

@@ -9220,8 +9220,6 @@ let PanelCard = class PanelCard extends h {
         this._boundHandleDeviceChanges = () => this._handleDeviceChanges();
         this._boundStartResetTimer = () => this._startResetTimer();
         this._viewModeChangedHandler = () => this.requestUpdate();
-        this._areaName = "Area";
-        this._areaPicture = img$25;
         this._headerChips = [];
         this._areaChips = [];
         this._controlTiles = [];
@@ -9252,7 +9250,6 @@ let PanelCard = class PanelCard extends h {
             this._loadContent();
         if (changedProps.has("hass") && this.hass) {
             this._areaObj = this._area ? this.hass?.areas[this._area] : undefined;
-            this._areaName = this._config?.name ?? this._areaObj?.name ?? "Area";
             const updateHassForCards = (cards) => {
                 cards.forEach((card) => {
                     card.hass = this.hass;
@@ -9377,16 +9374,9 @@ let PanelCard = class PanelCard extends h {
         }
         this._startResetTimer();
     }
-    _loadContent() {
-        loadHeaderChips(this.hass)
-            .then((headerChips) => {
-            this._headerChips = headerChips;
-        })
-            .catch((error) => {
-            console.error("Error loading header chips:", error);
-        });
+    async _loadContent() {
+        await loadHeaderChips(this.hass);
         this._areaObj = this._area ? this.hass?.areas[this._area] : undefined;
-        this._areaName = this._config?.name ?? this._areaObj?.name ?? "Area";
         this._areaChips = loadAreaChips(this._config?.chips || [], this.hass);
         const { controlTiles, controlColumns } = loadControlTiles(this._config?.tiles || [], this.hass, this._isTablet);
         this._controlTiles = controlTiles;
