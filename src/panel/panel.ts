@@ -102,7 +102,7 @@ export class PanelCard extends LitElement {
                 });
             };
 
-            if (this._isTablet && this._headerChips.length) updateHassForCards(this._headerChips);
+            if (this._isTablet && this._headerChips.length > 0) updateHassForCards(this._headerChips);
 
             if (this._areaChips.length) updateHassForCards(this._areaChips);
 

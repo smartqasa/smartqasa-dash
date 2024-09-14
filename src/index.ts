@@ -8,13 +8,13 @@ import { loadYamlAsJson } from "./utils/load-yaml-as-json";
 import { LovelaceCardConfig } from "./types";
 
 async function preloadChipsConfig() {
+    window.smartqasa.chipsConfig = [];
     try {
         const yamlFilePath = "/local/smartqasa/config/chips.yaml";
         const chipsConfig = await loadYamlAsJson<LovelaceCardConfig[]>(yamlFilePath);
         window.smartqasa.chipsConfig = chipsConfig;
     } catch (error) {
         console.error("Error preloading chipsConfig:", error);
-        window.smartqasa.chipsConfig = [];
     }
 }
 

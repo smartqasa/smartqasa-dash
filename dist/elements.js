@@ -9264,7 +9264,7 @@ let PanelCard = class PanelCard extends h {
                     card.hass = this.hass;
                 });
             };
-            if (this._isTablet && this._headerChips.length)
+            if (this._isTablet && this._headerChips.length > 0)
                 updateHassForCards(this._headerChips);
             if (this._areaChips.length)
                 updateHassForCards(this._areaChips);
@@ -14608,6 +14608,7 @@ window.smartqasa.viewMode = "control";
 window.smartqasa.startArea = window.smartqasa.startArea || location.pathname.split("/").pop();
 window.customCards = window.customCards ?? [];
 async function preloadChipsConfig() {
+    window.smartqasa.chipsConfig = [];
     try {
         const yamlFilePath = "/local/smartqasa/config/chips.yaml";
         const chipsConfig = await loadYamlAsJson(yamlFilePath);
@@ -14615,7 +14616,6 @@ async function preloadChipsConfig() {
     }
     catch (error) {
         console.error("Error preloading chipsConfig:", error);
-        window.smartqasa.chipsConfig = [];
     }
 }
 preloadChipsConfig();
