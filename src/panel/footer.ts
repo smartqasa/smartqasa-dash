@@ -24,6 +24,7 @@ export function renderFooter(): TemplateResult {
 
         if (window.smartqasa.viewMode !== "control") {
             window.smartqasa.viewMode = "control";
+            window.dispatchEvent(new Event("viewModeChanged"));
             return;
         }
 
@@ -50,6 +51,7 @@ export function renderFooter(): TemplateResult {
 
     function handleEntertain(): void {
         window.smartqasa.viewMode = "entertain";
+        window.dispatchEvent(new Event("viewModeChanged"));
     }
 
     function handleMenu(): void {

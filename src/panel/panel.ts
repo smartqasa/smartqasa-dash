@@ -39,12 +39,12 @@ export class PanelCard extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() private _config?: Config;
     @state() private _isAdminMode = false;
-    @state() private _viewMode;
     @state() private _isPhone: boolean = getDeviceType() === "phone";
     @state() private _isTablet: boolean = getDeviceType() === "tablet";
     @state() private _isPortrait: boolean = getDeviceOrientation() === "portrait";
     @state() private _isLandscape: boolean = getDeviceOrientation() === "landscape";
 
+    private _boundRequestUpdate: () => void;
     private _boundHandleDeviceChanges: () => void;
     private _boundStartResetTimer: () => void;
     private _areaName: string = "Area";
@@ -70,15 +70,7 @@ export class PanelCard extends LitElement {
     constructor() {
         super();
 
-        this._viewMode = "control";
-        window.smartqasa.viewMode = "control";
-
-        Object.defineProperty(window.smartqasa, "viewMode", {
-            set: (newMode: "control" | "entertain") => {
-                this._viewMode = newMode;
-            },
-        });
-
+        this._boundRequestUpdate = this.requestUpdate.bind(this);
         this._boundHandleDeviceChanges = this._handleDeviceChanges.bind(this);
         this._boundStartResetTimer = this._startResetTimer.bind(this);
     }
@@ -88,11 +80,14 @@ export class PanelCard extends LitElement {
 
         this._syncTime();
 
+        window.smartqasa.viewMode = "control";
+
+        this._loadContent();
+
+        window.addEventListener("viewModeChanged", this._boundRequestUpdate);
         window.addEventListener("resize", this._boundHandleDeviceChanges);
         window.addEventListener("orientationchange", this._boundHandleDeviceChanges);
         window.addEventListener("touchstart", this._boundStartResetTimer, { passive: true });
-
-        this._loadContent();
 
         this._startResetTimer();
     }
@@ -135,6 +130,7 @@ export class PanelCard extends LitElement {
     public disconnectedCallback(): void {
         super.disconnectedCallback();
 
+        window.removeEventListener("viewModeChanged", this._boundRequestUpdate);
         window.removeEventListener("resize", this._boundHandleDeviceChanges);
         window.removeEventListener("orientationchange", this._boundHandleDeviceChanges);
         window.removeEventListener("touchstart", this._boundStartResetTimer);
@@ -150,7 +146,7 @@ export class PanelCard extends LitElement {
 
     protected render(): TemplateResult {
         console.log("Panel viewMode", window.smartqasa.viewMode);
-        const viewMode = this._viewMode;
+        const viewMode = window.smartqasa.viewMode;
         let content;
         // prettier-ignore
         switch (viewMode) {

@@ -8972,6 +8972,7 @@ function renderFooter() {
         console.log("Handle Home viewMode:", window.smartqasa.viewMode);
         if (window.smartqasa.viewMode !== "control") {
             window.smartqasa.viewMode = "control";
+            window.dispatchEvent(new Event("viewModeChanged"));
             return;
         }
         const startArea = window.smartqasa.startArea;
@@ -8995,6 +8996,7 @@ function renderFooter() {
     }
     function handleEntertain() {
         window.smartqasa.viewMode = "entertain";
+        window.dispatchEvent(new Event("viewModeChanged"));
     }
     function handleMenu() {
         window.smartqasa.menuTab = 0;
@@ -9250,23 +9252,19 @@ let PanelCard = class PanelCard extends h {
         this._controlTiles = [];
         this._controlColumns = [];
         this._audioCards = [];
-        this._viewMode = "control";
-        window.smartqasa.viewMode = "control";
-        Object.defineProperty(window.smartqasa, "viewMode", {
-            set: (newMode) => {
-                this._viewMode = newMode;
-            },
-        });
+        this._boundRequestUpdate = this.requestUpdate.bind(this);
         this._boundHandleDeviceChanges = this._handleDeviceChanges.bind(this);
         this._boundStartResetTimer = this._startResetTimer.bind(this);
     }
     connectedCallback() {
         super.connectedCallback();
         this._syncTime();
+        window.smartqasa.viewMode = "control";
+        this._loadContent();
+        window.addEventListener("viewModeChanged", this._boundRequestUpdate);
         window.addEventListener("resize", this._boundHandleDeviceChanges);
         window.addEventListener("orientationchange", this._boundHandleDeviceChanges);
         window.addEventListener("touchstart", this._boundStartResetTimer, { passive: true });
-        this._loadContent();
         this._startResetTimer();
     }
     willUpdate(changedProps) {
@@ -9301,6 +9299,7 @@ let PanelCard = class PanelCard extends h {
     }
     disconnectedCallback() {
         super.disconnectedCallback();
+        window.removeEventListener("viewModeChanged", this._boundRequestUpdate);
         window.removeEventListener("resize", this._boundHandleDeviceChanges);
         window.removeEventListener("orientationchange", this._boundHandleDeviceChanges);
         window.removeEventListener("touchstart", this._boundStartResetTimer);
@@ -9313,7 +9312,7 @@ let PanelCard = class PanelCard extends h {
     }
     render() {
         console.log("Panel viewMode", window.smartqasa.viewMode);
-        const viewMode = this._viewMode;
+        const viewMode = window.smartqasa.viewMode;
         let content;
         // prettier-ignore
         switch (viewMode) {
@@ -9427,9 +9426,6 @@ __decorate([
 __decorate([
     r()
 ], PanelCard.prototype, "_isAdminMode", void 0);
-__decorate([
-    r()
-], PanelCard.prototype, "_viewMode", void 0);
 __decorate([
     r()
 ], PanelCard.prototype, "_isPhone", void 0);
