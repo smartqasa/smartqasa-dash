@@ -3,7 +3,9 @@ import { navigateToArea } from "../utils/navigate-to-area";
 import { dialogTable } from "../tables/dialogs";
 
 function handleHome(): void {
+    window.smartqasa.viewMode = window.smartqasa.viewMode || "control";
     console.log("View mode:", window.smartqasa.viewMode);
+
     if (window.smartqasa.viewMode !== "control") {
         window.smartqasa.viewMode = "control";
         return;
