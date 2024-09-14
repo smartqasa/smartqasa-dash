@@ -8544,16 +8544,17 @@ async function loadHeaderChips(hass) {
         return chip;
     });
 }
-const launchClock = (e) => {
-    e.stopPropagation();
-    if (typeof window.fully !== "undefined" && window.fully.startApplication) {
-        window.fully.startApplication("com.google.android.deskclock");
-    }
-    else {
-        console.warn("fully.startApplication is not available.");
-    }
-};
 function renderHeader(headerChips) {
+    console.log("Header", window.smartqasa);
+    function launchClock(e) {
+        e.stopPropagation();
+        if (typeof window.fully !== "undefined" && window.fully.startApplication) {
+            window.fully.startApplication("com.google.android.deskclock");
+        }
+        else {
+            console.warn("fully.startApplication is not available.");
+        }
+    }
     return ke `
         <div class="header-container">
             <div class="header-time-date" @click="${launchClock}">
@@ -8952,6 +8953,7 @@ const dialogTable = {
 };
 
 function renderFooter() {
+    console.log("Footer", window.smartqasa);
     function renderFooterButton(icon, name, action) {
         return ke `
             <div
@@ -8967,7 +8969,6 @@ function renderFooter() {
         `;
     }
     function handleHome() {
-        window.smartqasa.viewMode = window.smartqasa.viewMode || "control";
         console.log("View mode:", window.smartqasa.viewMode);
         if (window.smartqasa.viewMode !== "control") {
             window.smartqasa.viewMode = "control";

@@ -21,17 +21,18 @@ export async function loadHeaderChips(hass: HomeAssistant): Promise<LovelaceCard
     });
 }
 
-const launchClock = (e: Event): void => {
-    e.stopPropagation();
-
-    if (typeof window.fully !== "undefined" && window.fully.startApplication) {
-        window.fully.startApplication("com.google.android.deskclock");
-    } else {
-        console.warn("fully.startApplication is not available.");
-    }
-};
-
 export function renderHeader(headerChips: LovelaceCard[]): TemplateResult {
+    console.log("Header", window.smartqasa);
+    function launchClock(e: Event): void {
+        e.stopPropagation();
+
+        if (typeof window.fully !== "undefined" && window.fully.startApplication) {
+            window.fully.startApplication("com.google.android.deskclock");
+        } else {
+            console.warn("fully.startApplication is not available.");
+        }
+    }
+
     return html`
         <div class="header-container">
             <div class="header-time-date" @click="${launchClock}">
