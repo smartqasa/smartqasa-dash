@@ -9278,9 +9278,13 @@ let PanelCard = class PanelCard extends h {
         this._loadContent();
     }
     updated() {
+        /*
+
         if (this._isTablet && this._controlTiles.length > 1) {
             this._initializeSwiper();
         }
+
+        */
     }
     disconnectedCallback() {
         super.disconnectedCallback();

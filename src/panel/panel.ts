@@ -118,9 +118,13 @@ export class PanelCard extends LitElement {
     }
 
     protected updated(): void {
+        /*
+
         if (this._isTablet && this._controlTiles.length > 1) {
             this._initializeSwiper();
         }
+
+        */
     }
 
     public disconnectedCallback(): void {
