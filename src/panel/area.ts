@@ -4,30 +4,6 @@ import { html, nothing, TemplateResult } from "lit";
 import { renderFooter } from "./footer";
 import defaultImage from "../assets/images/default.png";
 
-export async function loadAreaPicture(configFileName: string, area: string): Promise<string> {
-    console.log("loadAreaPicture", configFileName, area);
-    if (configFileName) {
-        const path = `/local/smartqasa/pictures/${configFileName}`;
-        try {
-            const response = await fetch(path, { method: "HEAD" });
-            if (response.ok) return path;
-        } catch (error) {
-            console.error("Picture from config not found, using defaultImage", error);
-            return defaultImage;
-        }
-    }
-
-    const areaFileName = `/local/smartqasa/pictures/${area}.png`;
-    try {
-        const response = await fetch(areaFileName, { method: "HEAD" });
-        if (response.ok) return areaFileName;
-    } catch (error) {
-        return defaultImage;
-    }
-
-    return defaultImage;
-}
-
 export function loadAreaChips(chipsConfig: LovelaceCardConfig[], hass: HomeAssistant): LovelaceCard[] {
     return chipsConfig.map((config) => {
         const chip = createElement(config) as LovelaceCard;
@@ -43,10 +19,17 @@ export function renderArea(
     isPhone: boolean,
     isLandscape: boolean
 ): TemplateResult {
+    if (!picture) picture = `/local/smartqasa/pictures/${name}.png`;
+
     return html`
         <div class="area-container">
             <div class="area-name ${isPhone ? "overlay" : ""}">${name}</div>
-            <img class="area-picture" src=${picture} alt="Area picture..." />
+            <img
+                class="area-picture"
+                src=${picture}
+                alt="Area picture..."
+                @error=${(e: Event) => ((e.target as HTMLImageElement).src = defaultImage)}
+            />
             ${chips.length > 0
                 ? html` <div class="area-chips">${chips.map((chip) => html`<div class="chip">${chip}</div>`)}</div> `
                 : nothing}

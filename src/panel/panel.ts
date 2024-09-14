@@ -7,7 +7,7 @@ import Swiper from "swiper";
 import { SwiperOptions } from "swiper/types";
 import { Navigation } from "swiper/modules";
 import { loadHeaderChips, renderHeader } from "./header";
-import { loadAreaPicture, loadAreaChips, renderArea } from "./area";
+import { loadAreaChips, renderArea } from "./area";
 import { loadControlTiles, renderControls } from "./controls";
 import { renderEntertain } from "./entertain";
 import { renderFooter } from "./footer";
@@ -251,13 +251,6 @@ export class PanelCard extends LitElement {
 
         this._areaObj = this._area ? this.hass?.areas[this._area] : undefined;
         this._areaName = this._config?.name ?? this._areaObj?.name ?? "Area";
-        loadAreaPicture(this._config?.picture || "", this._area!)
-            .then((areaPicture) => {
-                this._areaPicture = areaPicture;
-            })
-            .catch((error) => {
-                console.error("Error loading area picture:", error);
-            });
         this._areaChips = loadAreaChips(this._config?.chips || [], this.hass!);
 
         const { controlTiles, controlColumns } = loadControlTiles(
