@@ -3864,13 +3864,15 @@ const loadYamlAsJson = async (yamlFilePath) => {
     }
 };
 
-var version = "2024.9.14b-1";
+var version = "2024.9.14b-2";
 
 async function init() {
+    // Initialize smartqasa globals
     window.smartqasa = window.smartqasa || {};
     window.smartqasa.viewMode = "control";
     window.smartqasa.startArea = window.smartqasa.startArea || location.pathname.split("/").pop();
     window.customCards = window.customCards ?? [];
+    // Preload chips config
     try {
         const yamlFilePath = "/local/smartqasa/config/chips.yaml";
         const chipsConfig = await loadYamlAsJson(yamlFilePath);
@@ -3880,54 +3882,59 @@ async function init() {
         console.error("Error preloading chipsConfig:", error);
         window.smartqasa.chipsConfig = [];
     }
-    // Panel
-    Promise.resolve().then(function () { return panel; });
-    // Cards
-    Promise.resolve().then(function () { return areas; });
-    Promise.resolve().then(function () { return gridStack; });
-    Promise.resolve().then(function () { return groupStack; });
-    Promise.resolve().then(function () { return horizontalStack; });
-    Promise.resolve().then(function () { return menu; });
-    Promise.resolve().then(function () { return moreInfo; });
-    Promise.resolve().then(function () { return pinVerify; });
-    Promise.resolve().then(function () { return screensaver; });
-    Promise.resolve().then(function () { return verticalStack; });
-    Promise.resolve().then(function () { return tvRemote; });
-    Promise.resolve().then(function () { return weather$1; });
-    // Chips
-    Promise.resolve().then(function () { return admin; });
-    Promise.resolve().then(function () { return custom; });
-    Promise.resolve().then(function () { return dialog$1; });
-    Promise.resolve().then(function () { return motion; });
-    Promise.resolve().then(function () { return navigate; });
-    Promise.resolve().then(function () { return routine$1; });
-    Promise.resolve().then(function () { return select$1; });
-    Promise.resolve().then(function () { return thermostat$1; });
-    Promise.resolve().then(function () { return weather; });
-    // Tiles
-    Promise.resolve().then(function () { return action; });
-    Promise.resolve().then(function () { return allOff; });
-    Promise.resolve().then(function () { return app; });
-    Promise.resolve().then(function () { return area; });
-    Promise.resolve().then(function () { return dialog; });
-    Promise.resolve().then(function () { return fan; });
-    Promise.resolve().then(function () { return garage; });
-    Promise.resolve().then(function () { return heater; });
-    Promise.resolve().then(function () { return light; });
-    Promise.resolve().then(function () { return lightEditor; });
-    Promise.resolve().then(function () { return lock; });
-    Promise.resolve().then(function () { return option; });
-    Promise.resolve().then(function () { return robot; });
-    Promise.resolve().then(function () { return roku; });
-    Promise.resolve().then(function () { return routine; });
-    Promise.resolve().then(function () { return select; });
-    Promise.resolve().then(function () { return sensor; });
-    Promise.resolve().then(function () { return poolLight; });
-    Promise.resolve().then(function () { return poolLightSequencer; });
-    Promise.resolve().then(function () { return shade; });
-    Promise.resolve().then(function () { return _switch; });
-    Promise.resolve().then(function () { return theme; });
-    Promise.resolve().then(function () { return thermostat; });
+    // Dynamically load Panel and other components
+    await Promise.resolve().then(function () { return panel; });
+    // Load cards and chips in parallel
+    await Promise.all([
+        // Cards
+        Promise.resolve().then(function () { return areas; }),
+        Promise.resolve().then(function () { return gridStack; }),
+        Promise.resolve().then(function () { return groupStack; }),
+        Promise.resolve().then(function () { return horizontalStack; }),
+        Promise.resolve().then(function () { return menu; }),
+        Promise.resolve().then(function () { return moreInfo; }),
+        Promise.resolve().then(function () { return pinVerify; }),
+        Promise.resolve().then(function () { return screensaver; }),
+        Promise.resolve().then(function () { return verticalStack; }),
+        Promise.resolve().then(function () { return tvRemote; }),
+        Promise.resolve().then(function () { return weather$1; }),
+        // Chips
+        Promise.resolve().then(function () { return admin; }),
+        Promise.resolve().then(function () { return custom; }),
+        Promise.resolve().then(function () { return dialog$1; }),
+        Promise.resolve().then(function () { return motion; }),
+        Promise.resolve().then(function () { return navigate; }),
+        Promise.resolve().then(function () { return routine$1; }),
+        Promise.resolve().then(function () { return select$1; }),
+        Promise.resolve().then(function () { return thermostat$1; }),
+        Promise.resolve().then(function () { return weather; }),
+    ]);
+    // Load tiles in parallel
+    await Promise.all([
+        Promise.resolve().then(function () { return action; }),
+        Promise.resolve().then(function () { return allOff; }),
+        Promise.resolve().then(function () { return app; }),
+        Promise.resolve().then(function () { return area; }),
+        Promise.resolve().then(function () { return dialog; }),
+        Promise.resolve().then(function () { return fan; }),
+        Promise.resolve().then(function () { return garage; }),
+        Promise.resolve().then(function () { return heater; }),
+        Promise.resolve().then(function () { return light; }),
+        Promise.resolve().then(function () { return lightEditor; }),
+        Promise.resolve().then(function () { return lock; }),
+        Promise.resolve().then(function () { return option; }),
+        Promise.resolve().then(function () { return robot; }),
+        Promise.resolve().then(function () { return roku; }),
+        Promise.resolve().then(function () { return routine; }),
+        Promise.resolve().then(function () { return select; }),
+        Promise.resolve().then(function () { return sensor; }),
+        Promise.resolve().then(function () { return poolLight; }),
+        Promise.resolve().then(function () { return poolLightSequencer; }),
+        Promise.resolve().then(function () { return shade; }),
+        Promise.resolve().then(function () { return _switch; }),
+        Promise.resolve().then(function () { return theme; }),
+        Promise.resolve().then(function () { return thermostat; }),
+    ]);
     // Log version info
     console.info(`%c SmartQasa ⏏ ${version} `, "background-color: #0000ff; color: #ffffff; font-weight: 700;");
 }
