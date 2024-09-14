@@ -44,11 +44,9 @@ export class PanelCard extends LitElement {
     @state() private _isPortrait: boolean = getDeviceOrientation() === "portrait";
     @state() private _isLandscape: boolean = getDeviceOrientation() === "landscape";
 
-    /*
-    private _boundRequestUpdate: () => void;
-    private _boundHandleDeviceChanges: () => void;
-    private _boundStartResetTimer: () => void;
-    */
+    private _boundHandleDeviceChanges = () => this._handleDeviceChanges();
+    private _boundStartResetTimer = () => this._startResetTimer();
+    private _viewModeChangedHandler = () => this.requestUpdate();
     private _areaName: string = "Area";
     private _areaPicture: string = defaultImage;
     private _timeIntervalId: number | undefined;
@@ -69,16 +67,6 @@ export class PanelCard extends LitElement {
         this._area = this._config.area;
     }
 
-    /*
-    constructor() {
-        super();
-
-        this._boundRequestUpdate = this.requestUpdate.bind(this);
-        this._boundHandleDeviceChanges = this._handleDeviceChanges.bind(this);
-        this._boundStartResetTimer = this._startResetTimer.bind(this);
-    }
-    */
-
     public connectedCallback(): void {
         super.connectedCallback();
 
@@ -88,10 +76,10 @@ export class PanelCard extends LitElement {
 
         this._loadContent();
 
-        window.addEventListener("viewModeChanged", () => this.requestUpdate());
-        window.addEventListener("resize", this._handleDeviceChanges);
-        window.addEventListener("orientationchange", this._handleDeviceChanges);
-        window.addEventListener("touchstart", this._startResetTimer, { passive: true });
+        window.addEventListener("resize", this._boundHandleDeviceChanges);
+        window.addEventListener("orientationchange", this._boundHandleDeviceChanges);
+        window.addEventListener("touchstart", this._boundStartResetTimer, { passive: true });
+        window.addEventListener("viewModeChanged", this._viewModeChangedHandler);
 
         this._startResetTimer();
     }
@@ -134,10 +122,10 @@ export class PanelCard extends LitElement {
     public disconnectedCallback(): void {
         super.disconnectedCallback();
 
-        window.removeEventListener("viewModeChanged", () => this.requestUpdate());
-        window.removeEventListener("resize", this._handleDeviceChanges);
-        window.removeEventListener("orientationchange", this._handleDeviceChanges);
-        window.removeEventListener("touchstart", this._startResetTimer);
+        window.removeEventListener("resize", this._boundHandleDeviceChanges);
+        window.removeEventListener("orientationchange", this._boundHandleDeviceChanges);
+        window.removeEventListener("touchstart", this._boundStartResetTimer);
+        window.removeEventListener("viewModeChanged", this._viewModeChangedHandler);
 
         if (this._timeIntervalId !== undefined) {
             clearInterval(this._timeIntervalId);
@@ -149,8 +137,8 @@ export class PanelCard extends LitElement {
     }
 
     protected render(): TemplateResult {
-        console.log("Panel viewMode", window.smartqasa.viewMode);
         const viewMode = window.smartqasa.viewMode;
+
         let content;
         // prettier-ignore
         switch (viewMode) {

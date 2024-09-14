@@ -20,8 +20,6 @@ export function renderFooter(): TemplateResult {
     }
 
     function handleHome(): void {
-        console.log("Handle Home viewMode:", window.smartqasa.viewMode);
-
         if (window.smartqasa.viewMode !== "control") {
             window.smartqasa.viewMode = "control";
             window.dispatchEvent(new Event("viewModeChanged"));
@@ -31,12 +29,7 @@ export function renderFooter(): TemplateResult {
         const startArea = window.smartqasa.startArea;
         if (!startArea) return;
 
-        const url = new URL(location.href);
-        const pathSegments = url.pathname.split("/");
-        const currentArea = pathSegments.pop();
-
-        console.log("Current area:", currentArea);
-        console.log("Start area:", startArea);
+        const currentArea = new URL(location.href).pathname.split("/").pop();
         if (currentArea !== startArea) {
             navigateToArea(startArea);
         } else {

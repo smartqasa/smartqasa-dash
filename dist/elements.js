@@ -8969,7 +8969,6 @@ function renderFooter() {
         `;
     }
     function handleHome() {
-        console.log("Handle Home viewMode:", window.smartqasa.viewMode);
         if (window.smartqasa.viewMode !== "control") {
             window.smartqasa.viewMode = "control";
             window.dispatchEvent(new Event("viewModeChanged"));
@@ -8978,11 +8977,7 @@ function renderFooter() {
         const startArea = window.smartqasa.startArea;
         if (!startArea)
             return;
-        const url = new URL(location.href);
-        const pathSegments = url.pathname.split("/");
-        const currentArea = pathSegments.pop();
-        console.log("Current area:", currentArea);
-        console.log("Start area:", startArea);
+        const currentArea = new URL(location.href).pathname.split("/").pop();
         if (currentArea !== startArea) {
             navigateToArea(startArea);
         }
@@ -9240,11 +9235,9 @@ let PanelCard = class PanelCard extends h {
         this._isTablet = getDeviceType() === "tablet";
         this._isPortrait = getDeviceOrientation() === "portrait";
         this._isLandscape = getDeviceOrientation() === "landscape";
-        /*
-        private _boundRequestUpdate: () => void;
-        private _boundHandleDeviceChanges: () => void;
-        private _boundStartResetTimer: () => void;
-        */
+        this._boundHandleDeviceChanges = () => this._handleDeviceChanges();
+        this._boundStartResetTimer = () => this._startResetTimer();
+        this._viewModeChangedHandler = () => this.requestUpdate();
         this._areaName = "Area";
         this._areaPicture = img$25;
         this._headerChips = [];
@@ -9258,24 +9251,15 @@ let PanelCard = class PanelCard extends h {
         this._config = { ...config };
         this._area = this._config.area;
     }
-    /*
-    constructor() {
-        super();
-
-        this._boundRequestUpdate = this.requestUpdate.bind(this);
-        this._boundHandleDeviceChanges = this._handleDeviceChanges.bind(this);
-        this._boundStartResetTimer = this._startResetTimer.bind(this);
-    }
-    */
     connectedCallback() {
         super.connectedCallback();
         this._syncTime();
         window.smartqasa.viewMode = "control";
         this._loadContent();
-        window.addEventListener("viewModeChanged", () => this.requestUpdate());
-        window.addEventListener("resize", this._handleDeviceChanges);
-        window.addEventListener("orientationchange", this._handleDeviceChanges);
-        window.addEventListener("touchstart", this._startResetTimer, { passive: true });
+        window.addEventListener("resize", this._boundHandleDeviceChanges);
+        window.addEventListener("orientationchange", this._boundHandleDeviceChanges);
+        window.addEventListener("touchstart", this._boundStartResetTimer, { passive: true });
+        window.addEventListener("viewModeChanged", this._viewModeChangedHandler);
         this._startResetTimer();
     }
     willUpdate(changedProps) {
@@ -9310,10 +9294,10 @@ let PanelCard = class PanelCard extends h {
     }
     disconnectedCallback() {
         super.disconnectedCallback();
-        window.removeEventListener("viewModeChanged", () => this.requestUpdate());
-        window.removeEventListener("resize", this._handleDeviceChanges);
-        window.removeEventListener("orientationchange", this._handleDeviceChanges);
-        window.removeEventListener("touchstart", this._startResetTimer);
+        window.removeEventListener("resize", this._boundHandleDeviceChanges);
+        window.removeEventListener("orientationchange", this._boundHandleDeviceChanges);
+        window.removeEventListener("touchstart", this._boundStartResetTimer);
+        window.removeEventListener("viewModeChanged", this._viewModeChangedHandler);
         if (this._timeIntervalId !== undefined) {
             clearInterval(this._timeIntervalId);
         }
@@ -9322,7 +9306,6 @@ let PanelCard = class PanelCard extends h {
         }
     }
     render() {
-        console.log("Panel viewMode", window.smartqasa.viewMode);
         const viewMode = window.smartqasa.viewMode;
         let content;
         // prettier-ignore
@@ -14634,6 +14617,5 @@ var version = "2024.9.14b-1";
 window.smartqasa = window.smartqasa || {};
 window.smartqasa.viewMode = "control";
 window.smartqasa.startArea = window.smartqasa.startArea || location.pathname.split("/").pop();
-console.log("Index:", window.smartqasa);
 window.customCards = window.customCards ?? [];
 console.info(`%c SmartQasa ⏏ ${version} `, "background-color: #0000ff; color: #ffffff; font-weight: 700;");

@@ -2,8 +2,6 @@ window.smartqasa = window.smartqasa || {};
 window.smartqasa.viewMode = "control";
 window.smartqasa.startArea = window.smartqasa.startArea || location.pathname.split("/").pop();
 
-console.log("Index:", window.smartqasa);
-
 window.customCards = window.customCards ?? [];
 
 // Panel
