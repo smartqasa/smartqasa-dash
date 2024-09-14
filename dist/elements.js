@@ -9017,14 +9017,13 @@ function loadAreaChips(chipsConfig, hass) {
     });
 }
 function renderArea(name, picture, chips, isPhone, isLandscape) {
-    if (!picture)
-        picture = `/local/smartqasa/pictures/${name}.png`;
+    const picturePath = `/local/smartqasa/pictures/${picture}.png`;
     return ke `
         <div class="area-container">
             <div class="area-name ${isPhone ? "overlay" : ""}">${name}</div>
             <img
                 class="area-picture"
-                src=${picture}
+                src=${picturePath}
                 alt="Area picture..."
                 @error=${(e) => (e.target.src = img$25)}
             />
@@ -9291,14 +9290,17 @@ let PanelCard = class PanelCard extends h {
         }
     }
     render() {
+        if (!this.hass || !this._config || !this._area)
+            return D;
         const viewMode = window.smartqasa.viewMode;
         let content;
         // prettier-ignore
         switch (viewMode) {
             case "control":
-                this._config?.name ?? this._areaObj?.name ?? "Area";
+                const name = this._config?.name ?? this._areaObj?.name ?? "Area";
+                const picture = this._config.picture ?? `${this._area}.png`;
                 content = ke `
-                    ${renderArea(this._areaName, this._areaPicture, this._areaChips, this._isPhone, this._isLandscape)}
+                    ${renderArea(name, picture, this._areaChips, this._isPhone, this._isLandscape)}
                     ${renderControls(this._controlTiles, this._controlColumns, this._isPhone, this._swiper)}
                 `;
                 break;

@@ -139,7 +139,9 @@ export class PanelCard extends LitElement {
         }
     }
 
-    protected render(): TemplateResult {
+    protected render(): TemplateResult | typeof nothing {
+        if (!this.hass || !this._config || !this._area) return nothing;
+
         const viewMode = window.smartqasa.viewMode;
 
         let content;
@@ -147,8 +149,9 @@ export class PanelCard extends LitElement {
         switch (viewMode) {
             case "control":
                 const name = this._config?.name ?? this._areaObj?.name ?? "Area";
+                const picture = this._config.picture ?? `${this._area}.png`;
                 content = html`
-                    ${renderArea(this._areaName, this._areaPicture, this._areaChips, this._isPhone, this._isLandscape)}
+                    ${renderArea(name, picture, this._areaChips, this._isPhone, this._isLandscape)}
                     ${renderControls(this._controlTiles, this._controlColumns, this._isPhone, this._swiper)}
                 `;
                 break;

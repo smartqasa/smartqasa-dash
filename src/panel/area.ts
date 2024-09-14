@@ -19,14 +19,14 @@ export function renderArea(
     isPhone: boolean,
     isLandscape: boolean
 ): TemplateResult {
-    if (!picture) picture = `/local/smartqasa/pictures/${name}.png`;
+    const picturePath = `/local/smartqasa/pictures/${picture}.png`;
 
     return html`
         <div class="area-container">
             <div class="area-name ${isPhone ? "overlay" : ""}">${name}</div>
             <img
                 class="area-picture"
-                src=${picture}
+                src=${picturePath}
                 alt="Area picture..."
                 @error=${(e: Event) => ((e.target as HTMLImageElement).src = defaultImage)}
             />
