@@ -27,7 +27,7 @@ declare interface Window {
         startApplication: (packageName: string) => void;
     };
     smartqasa: {
-        chipsConfig: Array<Object>;
+        chipsConfig?: any;
         menuConfig?: any;
         menuTab: number;
         startArea?: string;
