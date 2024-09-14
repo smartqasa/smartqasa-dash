@@ -8962,6 +8962,8 @@ function handleHome() {
     const url = new URL(location.href);
     const pathSegments = url.pathname.split("/");
     const currentArea = pathSegments.pop();
+    console.log("Current area:", currentArea);
+    console.log("Start area:", startArea);
     if (currentArea !== startArea) {
         navigateToArea(startArea);
     }

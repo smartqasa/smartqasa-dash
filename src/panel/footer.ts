@@ -15,6 +15,8 @@ function handleHome(): void {
     const pathSegments = url.pathname.split("/");
     const currentArea = pathSegments.pop();
 
+    console.log("Current area:", currentArea);
+    console.log("Start area:", startArea);
     if (currentArea !== startArea) {
         navigateToArea(startArea);
     } else {
