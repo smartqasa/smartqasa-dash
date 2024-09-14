@@ -9,6 +9,7 @@ import { Navigation } from "swiper/modules";
 import { loadHeaderChips, renderHeader } from "./header";
 import { loadAreaPicture, loadAreaChips, renderArea } from "./area";
 import { loadControlTiles, renderControls } from "./controls";
+import { loadEntertainCards, renderEntertain } from "./entertain";
 import { renderFooter } from "./footer";
 import { loadAudioCards } from "./audio";
 
@@ -157,7 +158,7 @@ export class PanelCard extends LitElement {
                 `;
                 break;
             case "entertain":
-                content = html`${this._renderEntertain()}`;
+                content = html`${renderEntertain(this._audioCards || [])}`;
                 break;
             default:
                 content = nothing;
@@ -187,16 +188,6 @@ export class PanelCard extends LitElement {
         const orientation = getDeviceOrientation();
         this._isPortrait = orientation === "portrait";
         this._isLandscape = orientation === "landscape";
-    }
-
-    private _renderEntertain(): TemplateResult {
-        return html`
-            <div class="entertain-container">
-                <div class="entertain-card">${this._audioCards[0]}</div>
-                <div class="entertain-card">${this._audioCards[1]}</div>
-                <div class="entertain-card">${this._audioCards[2]}</div>
-            </div>
-        `;
     }
 
     private _syncTime(): void {

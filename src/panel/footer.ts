@@ -1,4 +1,3 @@
-import { HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 import { html, TemplateResult } from "lit";
 import { navigateToArea } from "../utils/navigate-to-area";
 import { dialogTable } from "../tables/dialogs";

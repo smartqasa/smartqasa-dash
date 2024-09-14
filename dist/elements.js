@@ -9156,26 +9156,36 @@ function loadAudioCards(hass, player) {
     createCards(0, {
         type: "custom:sonos-card",
         entityId: player,
-        heightPercentage: "auto",
+        heightPercentage: "75",
         showVolumeUpAndDownButtons: true,
         sections: ["volumes", "groups", "grouping"],
     });
     createCards(1, {
         type: "custom:sonos-card",
         entityId: player,
-        heightPercentage: "auto",
+        heightPercentage: "75",
         showVolumeUpAndDownButtons: true,
         sections: ["player"],
     });
     createCards(2, {
         type: "custom:sonos-card",
-        heightPercentage: "auto",
+        heightPercentage: "75",
         mediaBrowserItemsPerRow: 3,
         mediaBrowserShowTitleForThumbnailIcons: true,
         showVolumeUpAndDownButtons: true,
         sections: ["media browser"],
     });
     return cards || [];
+}
+
+function renderEntertain(cards) {
+    return ke `
+        <div class="entertain-container">
+            <div class="entertain-card">${cards[0]}</div>
+            <div class="entertain-card">${cards[1]}</div>
+            <div class="entertain-card">${cards[2]}</div>
+        </div>
+    `;
 }
 
 function styleInject(css, ref) {
@@ -9310,7 +9320,7 @@ let PanelCard = class PanelCard extends h {
                 `;
                 break;
             case "entertain":
-                content = ke `${this._renderEntertain()}`;
+                content = ke `${renderEntertain(this._audioCards || [])}`;
                 break;
             default:
                 content = D;
@@ -9337,15 +9347,6 @@ let PanelCard = class PanelCard extends h {
         const orientation = getDeviceOrientation();
         this._isPortrait = orientation === "portrait";
         this._isLandscape = orientation === "landscape";
-    }
-    _renderEntertain() {
-        return ke `
-            <div class="entertain-container">
-                <div class="entertain-card">${this._audioCards[0]}</div>
-                <div class="entertain-card">${this._audioCards[1]}</div>
-                <div class="entertain-card">${this._audioCards[2]}</div>
-            </div>
-        `;
     }
     _syncTime() {
         const syncTime = () => {
