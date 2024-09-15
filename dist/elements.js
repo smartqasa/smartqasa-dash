@@ -9271,7 +9271,7 @@ let PanelCard = class PanelCard extends h {
                 `;
                 break;
             case "entertain":
-                content = this._audioCard ? ke `${this._audioCard}` : D;
+                content = this._audioCard ? ke `AUDIO CARD TRUE` : ke `AUDIO CARD FALSE`;
                 break;
             default:
                 content = D;

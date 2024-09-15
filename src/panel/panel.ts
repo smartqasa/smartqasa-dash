@@ -160,7 +160,7 @@ export class PanelCard extends LitElement {
                 `;
                 break;
             case "entertain":
-                content = this._audioCard ? html`${this._audioCard}` : nothing;
+                content = this._audioCard ? html`AUDIO CARD TRUE` : html`AUDIO CARD FALSE`;
                 break;
             default:
                 content = nothing;
