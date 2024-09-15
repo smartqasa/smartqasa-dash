@@ -146,8 +146,6 @@ export class PanelCard extends LitElement {
 
         const viewMode = window.smartqasa.viewMode;
 
-        console.log("View Mode: ", viewMode);
-
         let content;
         // prettier-ignore
         switch (viewMode) {
@@ -160,7 +158,7 @@ export class PanelCard extends LitElement {
                 `;
                 break;
             case "entertain":
-                content = this._audioCard ? html`AUDIO CARD TRUE` : html`AUDIO CARD FALSE`;
+                content = this._audioCard ? html`${this._audioCard}` : nothing;
                 break;
             default:
                 content = nothing;
@@ -263,8 +261,7 @@ export class PanelCard extends LitElement {
 
         this._audioCard = createElement(
             {
-                type: "custom:smartqasa-sonos-card",
-                entity: this._config.audio_player,
+                type: "custom:smartqasa-weather-card",
             },
             this.hass
         );

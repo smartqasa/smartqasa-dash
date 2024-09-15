@@ -9258,7 +9258,6 @@ let PanelCard = class PanelCard extends h {
         if (!this.hass || !this._config || !this._area)
             return D;
         const viewMode = window.smartqasa.viewMode;
-        console.log("View Mode: ", viewMode);
         let content;
         // prettier-ignore
         switch (viewMode) {
@@ -9271,7 +9270,7 @@ let PanelCard = class PanelCard extends h {
                 `;
                 break;
             case "entertain":
-                content = this._audioCard ? ke `AUDIO CARD TRUE` : ke `AUDIO CARD FALSE`;
+                content = this._audioCard ? ke `${this._audioCard}` : D;
                 break;
             default:
                 content = D;
@@ -9356,8 +9355,7 @@ let PanelCard = class PanelCard extends h {
         this._controlTiles = controlTiles;
         this._controlColumns = controlColumns;
         this._audioCard = createElement$1({
-            type: "custom:smartqasa-sonos-card",
-            entity: this._config.audio_player,
+            type: "custom:smartqasa-weather-card",
         }, this.hass);
         console.log("Audio Card:", this._audioCard);
     }
