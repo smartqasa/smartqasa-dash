@@ -3,6 +3,7 @@ import { customElement, property, state } from "lit/decorators.js";
 
 import { HassArea, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 import { getDeviceOrientation, getDeviceType } from "../utils/device-info";
+import { createElement } from "../utils/create-element";
 import { createElements } from "../utils/create-elements";
 import Swiper from "swiper";
 import { SwiperOptions } from "swiper/types";
@@ -145,6 +146,15 @@ export class PanelCard extends LitElement {
 
         const viewMode = window.smartqasa.viewMode;
 
+        const audioCard = createElement(
+            {
+                type: "custom:smartqasa-sonos-card",
+                entity: this._config.audio_player,
+            },
+            this.hass
+        );
+        console.log("Audio Card:", audioCard);
+
         let content;
         // prettier-ignore
         switch (viewMode) {
@@ -157,8 +167,7 @@ export class PanelCard extends LitElement {
                 `;
                 break;
             case "entertain":
-                content = renderEntertain(this._config.audioPlayer, this.hass);
-                console.log("Entertain content:", content);
+                content = audioCard ? html`${audioCard}` : nothing;
                 break;
             default:
                 content = nothing;

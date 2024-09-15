@@ -9136,14 +9136,6 @@ function renderControls(controlTiles, controlColumns, isPhone, swiper) {
     `;
 }
 
-function renderEntertain(entity, hass) {
-    const audioCard = createElement$1({
-        type: "custom:smartqasa-sonos-card",
-        entity: entity,
-    }, hass);
-    return ke ` <div class="entertain-container">${audioCard ? ke `${audioCard}` : D}</div> `;
-}
-
 function loadAudioCards(hass, player) {
     const cards = [];
     const createCards = (index, config) => {
@@ -9300,6 +9292,11 @@ let PanelCard = class PanelCard extends h {
         if (!this.hass || !this._config || !this._area)
             return D;
         const viewMode = window.smartqasa.viewMode;
+        const audioCard = createElement$1({
+            type: "custom:smartqasa-sonos-card",
+            entity: this._config.audio_player,
+        }, this.hass);
+        console.log("Audio Card:", audioCard);
         let content;
         // prettier-ignore
         switch (viewMode) {
@@ -9312,8 +9309,7 @@ let PanelCard = class PanelCard extends h {
                 `;
                 break;
             case "entertain":
-                content = renderEntertain(this._config.audioPlayer, this.hass);
-                console.log("Entertain content:", content);
+                content = audioCard ? ke `${audioCard}` : D;
                 break;
             default:
                 content = D;

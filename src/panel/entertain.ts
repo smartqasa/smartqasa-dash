@@ -11,5 +11,6 @@ export function renderEntertain(entity: string, hass: HomeAssistant): TemplateRe
         hass
     );
 
-    return html` <div class="entertain-container">${audioCard ? html`${audioCard}` : nothing}</div> `;
+    console.log("Audio Card:", audioCard);
+    return html`<div class="entertain-container">${audioCard ? html`${audioCard}` : nothing}</div>`;
 }
