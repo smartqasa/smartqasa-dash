@@ -3976,7 +3976,7 @@ const createElement$1 = (config, hass) => {
         console.error(`Error: Failed to set config for element '${tag}'.`, err);
         return undefined;
     }
-    if (config.type === "custom:smartqasa-sonos-card")
+    if (config.type === "custom:sonos-card")
         console.log("Creating element for config:", element);
     if (hass)
         element.hass = hass;
