@@ -9356,8 +9356,8 @@ let PanelCard = class PanelCard extends h {
         this._controlTiles = controlTiles;
         this._controlColumns = controlColumns;
         this._audioCard = createElement$1({
-            type: "custom:smartqasa-sonos-card",
-            entity: this._config.audio_player,
+            type: "custom:sonos-card",
+            entity_id: this._config.audio_player,
         }, this.hass);
         console.log("Audio Card:", this._audioCard);
     }
@@ -14639,7 +14639,7 @@ ThermostatTile = __decorate([
     t$1("smartqasa-thermostat-tile")
 ], ThermostatTile);
 
-var version = "2024.9.15b-2";
+var version = "2024.9.15b-3";
 
 window.smartqasa = window.smartqasa || {};
 window.smartqasa.viewMode = "control";
