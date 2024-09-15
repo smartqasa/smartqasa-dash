@@ -11142,14 +11142,19 @@ let WeatherCard = class WeatherCard extends h {
     static get styles() {
         return i$2 `
             .container {
+                width: 100%;
+                height: 100%;
                 display: grid;
-                grid-template-columns: 0.8fr 1fr;
+                grid-template-columns: 40% 60%;
                 gap: var(--sq-tile-spacing, 0.8rem);
             }
             .left-column {
                 display: flex;
                 flex-direction: column;
                 gap: var(--sq-tile-spacing, 0.8rem);
+            }
+            .left-column > * {
+                flex-grow: 1;
             }
         `;
     }
@@ -11212,7 +11217,6 @@ let WeatherCard = class WeatherCard extends h {
                 <div class="left-column">
                     ${this._hourlyForecastCard || D} ${this._dailyForecastCard || D}
                 </div>
-
                 ${this._radarMapCard || D}
             </div>
         `;
