@@ -10411,80 +10411,69 @@ window.customCards.push({
     type: "smartqasa-sonos-card",
     name: "SmartQasa Sonos Card",
     preview: false,
-    description: "A SmartQasa element that display a set of Sonos card.",
+    description: "A SmartQasa element that display a set of Sonos cards.",
 });
 let SonosCard = class SonosCard extends h {
     static get styles() {
         return i$2 `
             .container {
-                display: flex;
-                gap: var(--sq-tile-spacing, 0.8rem);
-            }
-            .speakers {
-                width: 0.3fr;
-            }
-            .player {
-                width: 0.4fr;
-            }
-            .media {
-                width: 0.3fr;
+                display: grid;
+                grid-template-columns: 1fr 1fr 1fr;
+                gap: var(--sq-card-spacing, 0.8rem);
             }
         `;
     }
     setConfig(config) {
         this._config = { ...config };
-        this._loadCards();
-    }
-    willUpdate(_changedProperties) {
-        if (_changedProperties.has("hass") && this.hass) {
-            if (this._speakers)
-                this._speakers.hass = this.hass;
-            if (this._player)
-                this._player.hass = this.hass;
-            if (this._media)
-                this._media.hass = this.hass;
+        if (this._config.entity) {
+            this._entity = this._config.entity.startsWith("media_player.") ? this._config.entity : "undefined";
         }
     }
-    render() {
-        if (!this._config || !this.hass)
-            return D;
-        return ke `
-            <div class="container">
-                <div class="speakers">${this._speakers ? this._createCardElement(this._speakers) : D}</div>
-                <div class="player">${this._player ? this._createCardElement(this._player) : D}</div>
-                <div class="media">${this._media ? this._createCardElement(this._media) : D}</div>
-            </div>
-        `;
-    }
-    _createCardElement(card) {
-        const element = card;
-        return ke `${element}`;
-    }
-    _loadCards() {
-        if (!this.hass || !this._config)
-            return;
-        this._speakers = createElement$1({
+    firstUpdated() {
+        this._speakersCard = createElement$1({
             type: "custom:sonos-card",
-            entityId: this._config.entity,
+            entityId: this._entity,
             heightPercentage: "75",
             showVolumeUpAndDownButtons: true,
             sections: ["volumes", "groups", "grouping"],
-        }, this.hass);
-        this._player = createElement$1({
+        });
+        this._playerCard = createElement$1({
             type: "custom:sonos-card",
-            entityId: this._config.entity,
+            entityId: this._entity,
             heightPercentage: "75",
             showVolumeUpAndDownButtons: true,
             sections: ["player"],
-        }, this.hass);
-        this._media = createElement$1({
+        });
+        this._mediaCard = createElement$1({
             type: "custom:sonos-card",
             heightPercentage: "75",
             mediaBrowserItemsPerRow: 3,
             mediaBrowserShowTitleForThumbnailIcons: true,
             showVolumeUpAndDownButtons: true,
             sections: ["media browser"],
-        }, this.hass);
+        });
+    }
+    willUpdate(changedProps) {
+        if (!this.hass || !this._entity)
+            return;
+        if (changedProps.has("hass")) {
+            if (this._speakersCard)
+                this._speakersCard.hass = this.hass;
+            if (this._playerCard)
+                this._playerCard.hass = this.hass;
+            if (this._mediaCard)
+                this._mediaCard.hass = this.hass;
+        }
+    }
+    render() {
+        // prettier-ignore
+        return ke `
+            <div class="container">
+                ${this._speakersCard || D}
+                ${this._playerCard || D}
+                ${this._mediaCard || D}
+            </div>
+        `;
     }
 };
 __decorate([
@@ -11192,7 +11181,7 @@ let WeatherCard = class WeatherCard extends h {
         });
         this._dailyForecastCard = createElement$1({
             type: "weather-forecast",
-            entity: "weather.forecast_home",
+            entity: this._entity,
             forecast_type: "daily",
             show_current: false,
             show_forecast: true,

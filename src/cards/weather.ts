@@ -1,7 +1,7 @@
 import { css, html, LitElement, PropertyValues, TemplateResult, nothing } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 
-import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
+import { HomeAssistant, LovelaceCardConfig } from "../types";
 import { createElement } from "../utils/create-element";
 
 interface Config extends LovelaceCardConfig {
@@ -63,7 +63,7 @@ export class WeatherCard extends LitElement {
 
         this._dailyForecastCard = createElement({
             type: "weather-forecast",
-            entity: "weather.forecast_home",
+            entity: this._entity,
             forecast_type: "daily",
             show_current: false,
             show_forecast: true,
