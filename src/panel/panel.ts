@@ -157,7 +157,8 @@ export class PanelCard extends LitElement {
                 `;
                 break;
             case "entertain":
-                content = html`${renderEntertain(this._config.audioPlayer, this.hass)}`;
+                content = renderEntertain(this._config.audioPlayer, this.hass);
+                console.log("Entertain content:", content);
                 break;
             default:
                 content = nothing;
