@@ -29,7 +29,7 @@ export class WeatherCard extends LitElement {
         return css`
             .container {
                 display: grid;
-                grid-template-columns: 0.7fr 1fr;
+                grid-template-columns: 0.8fr 1fr;
                 gap: var(--sq-tile-spacing, 0.8rem);
             }
             .left-column {
@@ -67,7 +67,7 @@ export class WeatherCard extends LitElement {
         this._dailyForecastCard = createElement(
             {
                 type: "weather-forecast",
-                entity: this._entity,
+                entity: "weather.forecast_home",
                 forecast_type: "daily",
                 show_current: false,
                 show_forecast: true,
@@ -108,11 +108,10 @@ export class WeatherCard extends LitElement {
         return html`
             <div class="container">
                 <div class="left-column">
-                    <div>${this._hourlyForecastCard ? html`${this._hourlyForecastCard}` : nothing}</div>
-                    <div>${this._dailyForecastCard ? html`${this._dailyForecastCard}` : nothing}</div>
+                    ${this._hourlyForecastCard || nothing} ${this._dailyForecastCard || nothing}
                 </div>
 
-                <div>${this._radarMapCard ? html`${this._radarMapCard}` : nothing}</div>
+                ${this._radarMapCard || nothing}
             </div>
         `;
     }

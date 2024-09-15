@@ -11143,7 +11143,7 @@ let WeatherCard = class WeatherCard extends h {
         return i$2 `
             .container {
                 display: grid;
-                grid-template-columns: 0.7fr 1fr;
+                grid-template-columns: 0.8fr 1fr;
                 gap: var(--sq-tile-spacing, 0.8rem);
             }
             .left-column {
@@ -11174,7 +11174,7 @@ let WeatherCard = class WeatherCard extends h {
         }, this.hass);
         this._dailyForecastCard = createElement$1({
             type: "weather-forecast",
-            entity: this._entity,
+            entity: "weather.forecast_home",
             forecast_type: "daily",
             show_current: false,
             show_forecast: true,
@@ -11210,11 +11210,10 @@ let WeatherCard = class WeatherCard extends h {
         return ke `
             <div class="container">
                 <div class="left-column">
-                    <div>${this._hourlyForecastCard ? ke `${this._hourlyForecastCard}` : D}</div>
-                    <div>${this._dailyForecastCard ? ke `${this._dailyForecastCard}` : D}</div>
+                    ${this._hourlyForecastCard || D} ${this._dailyForecastCard || D}
                 </div>
 
-                <div>${this._radarMapCard ? ke `${this._radarMapCard}` : D}</div>
+                ${this._radarMapCard || D}
             </div>
         `;
     }
