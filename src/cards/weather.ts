@@ -28,8 +28,7 @@ export class WeatherCard extends LitElement {
     static get styles() {
         return css`
             .container {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
+                display: flex;
                 gap: var(--sq-tile-spacing, 0.8rem);
             }
             .left-column {

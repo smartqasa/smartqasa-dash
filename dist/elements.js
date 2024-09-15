@@ -11141,8 +11141,7 @@ let WeatherCard = class WeatherCard extends h {
     static get styles() {
         return i$2 `
             .container {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
+                display: flex;
                 gap: var(--sq-tile-spacing, 0.8rem);
             }
             .left-column {
