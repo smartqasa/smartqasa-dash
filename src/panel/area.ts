@@ -22,7 +22,7 @@ export function renderArea(
                 @error=${(e: Event) => ((e.target as HTMLImageElement).src = defaultImage)}
             />
             ${chips.length > 0
-                ? html` <div class="area-chips">${chips.map((chip) => html`<div class="chip">${chip}</div>`)}</div> `
+                ? html`<div class="area-chips">${chips.map((chip) => html`<div class="chip">${chip}</div>`)}</div>`
                 : nothing}
             ${isPhone && isLandscape ? html`<div class="footer-container">${renderFooter()}</div>` : nothing}
         </div>

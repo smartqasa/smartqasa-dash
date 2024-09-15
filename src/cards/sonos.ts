@@ -56,13 +56,19 @@ class SonosCard extends LitElement {
 
     protected render(): TemplateResult | typeof nothing {
         if (!this._config || !this.hass) return nothing;
+
         return html`
             <div class="container">
-                <div class="speakers">${this._speakers}</div>
-                <div class="player">${this._player}</div>
-                <div class="media">${this._media}</div>
+                <div class="speakers">${this._speakers ? this._createCardElement(this._speakers) : nothing}</div>
+                <div class="player">${this._player ? this._createCardElement(this._player) : nothing}</div>
+                <div class="media">${this._media ? this._createCardElement(this._media) : nothing}</div>
             </div>
         `;
+    }
+
+    private _createCardElement(card: LovelaceCard): TemplateResult {
+        const element = card as unknown as HTMLElement;
+        return html`${element}`;
     }
 
     private _loadCards(): void {

@@ -160,6 +160,7 @@
     overflow-y: auto;
     justify-content: center;
     align-items: center;
+    gap: var(--sq-card-spacing, 0.8rem);
 }
 
 /* Tablet Portrait */
