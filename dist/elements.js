@@ -3959,6 +3959,8 @@ const createElement$1 = (config, hass) => {
         console.error("Error: Invalid or missing 'type' in config:", config);
         return undefined;
     }
+    if (config.type === "custom:smartqasa-sonos-card")
+        console.log("Creating element for config:", config);
     const tag = config.type.startsWith("custom:") ? config.type.replace("custom:", "") : `hui-${config.type}-card`;
     if (!customElements.get(tag)) {
         console.error(`Error: Custom element '${tag}' is not registered.`);
@@ -9355,7 +9357,8 @@ let PanelCard = class PanelCard extends h {
         this._controlTiles = controlTiles;
         this._controlColumns = controlColumns;
         this._audioCard = createElement$1({
-            type: "custom:smartqasa-weather-card",
+            type: "custom:smartqasa-sonos-card",
+            entity: this._config.audio_player,
         }, this.hass);
         console.log("Audio Card:", this._audioCard);
     }
@@ -9487,17 +9490,6 @@ AreasCard = __decorate([
     t$1("smartqasa-areas-card")
 ], AreasCard);
 
-const createCards = (cardsConfig, hass) => {
-    if (!cardsConfig || cardsConfig.length === 0)
-        return [];
-    return cardsConfig.map((cardConfig) => {
-        const card = createElement$1(cardConfig);
-        if (hass)
-            card.hass = hass;
-        return card;
-    });
-};
-
 window.customCards.push({
     type: "smartqasa-grid-stack",
     name: "SmartQasa Grid Stack",
@@ -9532,7 +9524,7 @@ let GridStack = class GridStack extends h {
         const configChanged = changedProps.has("_config");
         if ((hassChanged || configChanged) && this._config) {
             if (this.hass && this._config.cards.length > 0) {
-                this._cards = createCards(this._config.cards, this.hass);
+                this._cards = createElements(this._config.cards, this.hass);
             }
         }
         if (hassChanged && this._cards.length > 0) {
@@ -9702,7 +9694,7 @@ let HorizontalStack = class HorizontalStack extends h {
         const configChanged = changedProps.has("_config");
         if ((hassChanged || configChanged) && this._config) {
             if (this.hass && this._config.cards.length > 0) {
-                this._cards = createCards(this._config.cards, this.hass);
+                this._cards = createElements(this._config.cards, this.hass);
             }
         }
         if (hassChanged && this._cards.length > 0) {
@@ -10476,7 +10468,7 @@ let VerticalStack = class VerticalStack extends h {
         const configChanged = changedProps.has("_config");
         if ((hassChanged || configChanged) && this._config) {
             if (this.hass && this._config.cards.length > 0) {
-                this._cards = createCards(this._config.cards, this.hass);
+                this._cards = createElements(this._config.cards, this.hass);
             }
         }
         if (hassChanged && this._cards.length > 0) {

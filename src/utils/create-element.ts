@@ -6,6 +6,8 @@ export const createElement = (config: LovelaceCardConfig, hass?: HomeAssistant):
         return undefined;
     }
 
+    if (config.type === "custom:smartqasa-sonos-card") console.log("Creating element for config:", config);
+
     const tag = config.type.startsWith("custom:") ? config.type.replace("custom:", "") : `hui-${config.type}-card`;
     if (!customElements.get(tag)) {
         console.error(`Error: Custom element '${tag}' is not registered.`);

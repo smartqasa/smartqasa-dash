@@ -4,7 +4,7 @@ import { styleMap } from "lit/directives/style-map.js";
 
 import { HomeAssistant, LovelaceCardConfig, LovelaceCard } from "../types";
 import { deviceType } from "../utils/device-info";
-import { createCards } from "../utils/create-cards";
+import { createElements } from "../utils/create-elements";
 
 interface Config extends LovelaceCardConfig {
     columns?: number;
@@ -50,7 +50,7 @@ class GridStack extends LitElement {
 
         if ((hassChanged || configChanged) && this._config) {
             if (this.hass && this._config.cards.length > 0) {
-                this._cards = createCards(this._config.cards, this.hass);
+                this._cards = createElements(this._config.cards, this.hass);
             }
         }
 

@@ -165,7 +165,6 @@ export class PanelCard extends LitElement {
                 break;
         }
         console.log("Content:", content);
-
         // prettier-ignore
         return html`
             <div
@@ -261,7 +260,8 @@ export class PanelCard extends LitElement {
 
         this._audioCard = createElement(
             {
-                type: "custom:smartqasa-weather-card",
+                type: "custom:smartqasa-sonos-card",
+                entity: this._config.audio_player,
             },
             this.hass
         );

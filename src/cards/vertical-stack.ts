@@ -2,7 +2,7 @@ import { css, html, LitElement, nothing, PropertyValues } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 
 import { HomeAssistant, LovelaceCardConfig, LovelaceCard } from "../types";
-import { createCards } from "../utils/create-cards";
+import { createElements } from "../utils/create-elements";
 
 interface Config extends LovelaceCardConfig {
     cards: LovelaceCardConfig[];
@@ -47,7 +47,7 @@ class VerticalStack extends LitElement {
 
         if ((hassChanged || configChanged) && this._config) {
             if (this.hass && this._config.cards.length > 0) {
-                this._cards = createCards(this._config.cards, this.hass);
+                this._cards = createElements(this._config.cards, this.hass);
             }
         }
 
