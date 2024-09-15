@@ -11141,6 +11141,11 @@ window.customCards.push({
 let WeatherCard = class WeatherCard extends h {
     static get styles() {
         return i$2 `
+            :host {
+                display: block;
+                width: 100%;
+                height: 100%;
+            }
             .container {
                 width: 100%;
                 height: 100%;

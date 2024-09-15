@@ -27,6 +27,11 @@ export class WeatherCard extends LitElement {
 
     static get styles() {
         return css`
+            :host {
+                display: block;
+                width: 100%;
+                height: 100%;
+            }
             .container {
                 width: 100%;
                 height: 100%;
