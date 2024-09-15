@@ -3959,8 +3959,6 @@ const createElement$1 = (config, hass) => {
         console.error("Error: Invalid or missing 'type' in config:", config);
         return undefined;
     }
-    if (config.type === "custom:smartqasa-sonos-card")
-        console.log("Creating element for config:", config);
     const tag = config.type.startsWith("custom:") ? config.type.replace("custom:", "") : `hui-${config.type}-card`;
     if (!customElements.get(tag)) {
         console.error(`Error: Custom element '${tag}' is not registered.`);
@@ -3978,6 +3976,8 @@ const createElement$1 = (config, hass) => {
         console.error(`Error: Failed to set config for element '${tag}'.`, err);
         return undefined;
     }
+    if (config.type === "custom:smartqasa-sonos-card")
+        console.log("Creating element for config:", element);
     if (hass)
         element.hass = hass;
     return element;

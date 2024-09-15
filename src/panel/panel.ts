@@ -11,9 +11,7 @@ import { Navigation } from "swiper/modules";
 import { renderHeader } from "./header";
 import { renderArea } from "./area";
 import { loadControlTiles, renderControls } from "./controls";
-import { renderEntertain } from "./entertain";
 import { renderFooter } from "./footer";
-import { loadAudioCards } from "./audio";
 
 import panelStyles from "../css/panel.css";
 import swiperStyles from "swiper/swiper-bundle.css";
