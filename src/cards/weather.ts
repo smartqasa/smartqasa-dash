@@ -33,16 +33,22 @@ export class WeatherCard extends LitElement {
                 height: 100%;
             }
             .container {
+                display: flex;
                 width: 100%;
                 height: 100%;
-                display: grid;
-                grid-template-columns: 0.8fr 1fr;
                 gap: var(--sq-tile-spacing, 0.8rem);
+                align-items: stretch;
             }
             .left-column {
                 display: flex;
                 flex-direction: column;
+                flex: 0 0 40%;
                 gap: var(--sq-tile-spacing, 0.8rem);
+            }
+            .right-column {
+                display: flex;
+                flex: 1 0 60%;
+                align-items: stretch;
             }
         `;
     }
@@ -118,7 +124,7 @@ export class WeatherCard extends LitElement {
                     ${this._hourlyForecastCard ? html`${this._hourlyForecastCard}` : nothing}
                     ${this._dailyForecastCard ? html`${this._dailyForecastCard}` : nothing}
                 </div>
-                <div>${this._radarMapCard ? html`${this._radarMapCard}` : nothing}</div>
+                <div class="right-column">${this._radarMapCard ? html`${this._radarMapCard}` : nothing}</div>
             </div>
         `;
     }

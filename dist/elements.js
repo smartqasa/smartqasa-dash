@@ -11147,16 +11147,22 @@ let WeatherCard = class WeatherCard extends h {
                 height: 100%;
             }
             .container {
+                display: flex;
                 width: 100%;
                 height: 100%;
-                display: grid;
-                grid-template-columns: 0.8fr 1fr;
                 gap: var(--sq-tile-spacing, 0.8rem);
+                align-items: stretch;
             }
             .left-column {
                 display: flex;
                 flex-direction: column;
+                flex: 0 0 40%;
                 gap: var(--sq-tile-spacing, 0.8rem);
+            }
+            .right-column {
+                display: flex;
+                flex: 1 0 60%;
+                align-items: stretch;
             }
         `;
     }
@@ -11220,7 +11226,7 @@ let WeatherCard = class WeatherCard extends h {
                     ${this._hourlyForecastCard ? ke `${this._hourlyForecastCard}` : D}
                     ${this._dailyForecastCard ? ke `${this._dailyForecastCard}` : D}
                 </div>
-                <div>${this._radarMapCard ? ke `${this._radarMapCard}` : D}</div>
+                <div class="right-column">${this._radarMapCard ? ke `${this._radarMapCard}` : D}</div>
             </div>
         `;
     }
