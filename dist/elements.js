@@ -10375,8 +10375,6 @@ let SonosPanelCard = class SonosPanelCard extends h {
         }
     }
     willUpdate(changedProps) {
-        if (!this._entity)
-            return;
         if (changedProps.has("hass") && this.hass) {
             [this._speakersCard, this._playerCard, this._mediaCard].forEach((card) => {
                 if (card)

@@ -44,8 +44,6 @@ export class SonosPanelCard extends LitElement {
     }
 
     protected willUpdate(changedProps: PropertyValues): void {
-        if (!this._entity) return;
-
         if (changedProps.has("hass") && this.hass) {
             [this._speakersCard, this._playerCard, this._mediaCard].forEach((card) => {
                 if (card) card.hass = this.hass;
