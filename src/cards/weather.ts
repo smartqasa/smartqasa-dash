@@ -27,11 +27,21 @@ export class WeatherCard extends LitElement {
 
     static get styles() {
         return css`
+            :host {
+                display: block;
+                width: 100%;
+                height: 100%;
+            }
             .container {
                 display: flex;
                 gap: var(--sq-tile-spacing, 0.8rem);
             }
             .left-column {
+                display: flex;
+                flex-direction: column;
+                gap: var(--sq-tile-spacing, 0.8rem);
+            }
+            .right-column {
                 display: flex;
                 flex-direction: column;
                 gap: var(--sq-tile-spacing, 0.8rem);
@@ -95,13 +105,16 @@ export class WeatherCard extends LitElement {
     }
 
     protected render(): TemplateResult {
+        // prettier-ignore
         return html`
             <div class="container">
                 <div class="left-column">
-                    ${this._hourlyForecastCard || nothing} ${this._dailyForecastCard || nothing}
+                    ${this._hourlyForecastCard || nothing}
+                    ${this._dailyForecastCard || nothing}
                 </div>
-
-                ${this._radarMapCard || nothing}
+                <div class="right-column">
+                    ${this._radarMapCard || nothing}
+                </div>
             </div>
         `;
     }

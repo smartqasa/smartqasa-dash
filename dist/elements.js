@@ -11140,11 +11140,21 @@ window.customCards.push({
 let WeatherCard = class WeatherCard extends h {
     static get styles() {
         return i$2 `
+            :host {
+                display: block;
+                width: 100%;
+                height: 100%;
+            }
             .container {
                 display: flex;
                 gap: var(--sq-tile-spacing, 0.8rem);
             }
             .left-column {
+                display: flex;
+                flex-direction: column;
+                gap: var(--sq-tile-spacing, 0.8rem);
+            }
+            .right-column {
                 display: flex;
                 flex-direction: column;
                 gap: var(--sq-tile-spacing, 0.8rem);
@@ -11205,13 +11215,16 @@ let WeatherCard = class WeatherCard extends h {
         }
     }
     render() {
+        // prettier-ignore
         return ke `
             <div class="container">
                 <div class="left-column">
-                    ${this._hourlyForecastCard || D} ${this._dailyForecastCard || D}
+                    ${this._hourlyForecastCard || D}
+                    ${this._dailyForecastCard || D}
                 </div>
-
-                ${this._radarMapCard || D}
+                <div class="right-column">
+                    ${this._radarMapCard || D}
+                </div>
             </div>
         `;
     }
