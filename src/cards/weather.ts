@@ -1,7 +1,7 @@
 import { css, html, LitElement, PropertyValues, TemplateResult, nothing } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 
-import { HomeAssistant, LovelaceCardConfig } from "../types";
+import { HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 import { createElement } from "../utils/create-element";
 
 interface Config extends LovelaceCardConfig {
@@ -21,9 +21,9 @@ export class WeatherCard extends LitElement {
     @state() private _config?: Config;
     private _entity?: string;
 
-    private _hourlyForecastCard?: any;
-    private _dailyForecastCard?: any;
-    private _radarMapCard?: any;
+    private _hourlyForecastCard?: LovelaceCard;
+    private _dailyForecastCard?: LovelaceCard;
+    private _radarMapCard?: LovelaceCard;
 
     static get styles() {
         return css`

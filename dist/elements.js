@@ -9138,6 +9138,14 @@ function renderControls(controlTiles, controlColumns, isPhone, swiper) {
     `;
 }
 
+function renderEntertain(entity, hass) {
+    const audioCard = createElement$1({
+        type: "custom:smartqasa-sonos-card",
+        entity: entity,
+    }, hass);
+    return ke ` <div class="entertain-container">${audioCard ? audioCard : D}</div> `;
+}
+
 function loadAudioCards(hass, player) {
     const cards = [];
     const createCards = (index, config) => {
@@ -9169,20 +9177,6 @@ function loadAudioCards(hass, player) {
         sections: ["media browser"],
     });
     return cards || [];
-}
-
-function renderEntertain(cards) {
-    function _createCardElement(card) {
-        const element = card;
-        return ke `${element}`;
-    }
-    return ke `
-        <div class="entertain-container">
-            <div class="entertain-card">${cards[0] ? _createCardElement(cards[0]) : D}</div>
-            <div class="entertain-card">${cards[1] ? _createCardElement(cards[1]) : D}</div>
-            <div class="entertain-card">${cards[2] ? _createCardElement(cards[2]) : D}</div>
-        </div>
-    `;
 }
 
 function styleInject(css, ref) {
@@ -9314,13 +9308,12 @@ let PanelCard = class PanelCard extends h {
             case "control":
                 const name = this._config?.name ?? this._areaObj?.name ?? "Area";
                 const picture = this._config.picture ?? `${this._area}.png`;
-                content = ke `
-                    ${renderArea(name, picture, this._areaChips, this._isPhone, this._isLandscape)}
-                    ${renderControls(this._controlTiles, this._controlColumns, this._isPhone, this._swiper)}
-                `;
+                content =
+                    renderArea(name, picture, this._areaChips, this._isPhone, this._isLandscape);
+                renderControls(this._controlTiles, this._controlColumns, this._isPhone, this._swiper);
                 break;
             case "entertain":
-                content = ke `${renderEntertain(this._audioCards || [])}`;
+                content = renderEntertain(this._config.audioPlayer, this.hass);
                 break;
             default:
                 content = D;
