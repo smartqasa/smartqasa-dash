@@ -9308,12 +9308,13 @@ let PanelCard = class PanelCard extends h {
             case "control":
                 const name = this._config?.name ?? this._areaObj?.name ?? "Area";
                 const picture = this._config.picture ?? `${this._area}.png`;
-                content =
-                    renderArea(name, picture, this._areaChips, this._isPhone, this._isLandscape);
-                renderControls(this._controlTiles, this._controlColumns, this._isPhone, this._swiper);
+                content = ke `
+                    ${renderArea(name, picture, this._areaChips, this._isPhone, this._isLandscape)}
+                    ${renderControls(this._controlTiles, this._controlColumns, this._isPhone, this._swiper)}
+                `;
                 break;
             case "entertain":
-                content = renderEntertain(this._config.audioPlayer, this.hass);
+                content = ke `${renderEntertain(this._config.audioPlayer, this.hass)}`;
                 break;
             default:
                 content = D;
