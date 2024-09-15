@@ -16,7 +16,7 @@ window.customCards.push({
 });
 
 @customElement("smartqasa-sonos-card")
-export class SonosCard extends LitElement {
+export class SonosPanelCard extends LitElement {
     @property({ attribute: false }) private hass?: HomeAssistant;
     @state() private _config?: Config;
     private _entity?: string;
@@ -28,6 +28,8 @@ export class SonosCard extends LitElement {
     static get styles() {
         return css`
             .container {
+                width: 100%;
+                height: 100%;
                 display: grid;
                 grid-template-columns: 1fr 1fr 1fr;
                 gap: var(--sq-card-spacing, 0.8rem);
@@ -44,30 +46,39 @@ export class SonosCard extends LitElement {
     }
 
     protected firstUpdated(): void {
-        this._speakersCard = createElement({
-            type: "custom:sonos-card",
-            entityId: this._entity,
-            heightPercentage: "75",
-            showVolumeUpAndDownButtons: true,
-            sections: ["volumes", "groups", "grouping"],
-        });
+        this._speakersCard = createElement(
+            {
+                type: "custom:sonos-card",
+                entityId: this._entity,
+                heightPercentage: "75",
+                showVolumeUpAndDownButtons: true,
+                sections: ["volumes", "groups", "grouping"],
+            },
+            this.hass
+        );
 
-        this._playerCard = createElement({
-            type: "custom:sonos-card",
-            entityId: this._entity,
-            heightPercentage: "75",
-            showVolumeUpAndDownButtons: true,
-            sections: ["player"],
-        });
+        this._playerCard = createElement(
+            {
+                type: "custom:sonos-card",
+                entityId: this._entity,
+                heightPercentage: "75",
+                showVolumeUpAndDownButtons: true,
+                sections: ["player"],
+            },
+            this.hass
+        );
 
-        this._mediaCard = createElement({
-            type: "custom:sonos-card",
-            heightPercentage: "75",
-            mediaBrowserItemsPerRow: 3,
-            mediaBrowserShowTitleForThumbnailIcons: true,
-            showVolumeUpAndDownButtons: true,
-            sections: ["media browser"],
-        });
+        this._mediaCard = createElement(
+            {
+                type: "custom:sonos-card",
+                heightPercentage: "75",
+                mediaBrowserItemsPerRow: 3,
+                mediaBrowserShowTitleForThumbnailIcons: true,
+                showVolumeUpAndDownButtons: true,
+                sections: ["media browser"],
+            },
+            this.hass
+        );
     }
 
     protected willUpdate(changedProps: PropertyValues): void {

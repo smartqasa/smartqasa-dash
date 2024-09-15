@@ -10405,10 +10405,12 @@ window.customCards.push({
     preview: false,
     description: "A SmartQasa element that display a set of Sonos cards.",
 });
-let SonosCard = class SonosCard extends h {
+let SonosPanelCard = class SonosPanelCard extends h {
     static get styles() {
         return i$2 `
             .container {
+                width: 100%;
+                height: 100%;
                 display: grid;
                 grid-template-columns: 1fr 1fr 1fr;
                 gap: var(--sq-card-spacing, 0.8rem);
@@ -10428,14 +10430,14 @@ let SonosCard = class SonosCard extends h {
             heightPercentage: "75",
             showVolumeUpAndDownButtons: true,
             sections: ["volumes", "groups", "grouping"],
-        });
+        }, this.hass);
         this._playerCard = createElement$1({
             type: "custom:sonos-card",
             entityId: this._entity,
             heightPercentage: "75",
             showVolumeUpAndDownButtons: true,
             sections: ["player"],
-        });
+        }, this.hass);
         this._mediaCard = createElement$1({
             type: "custom:sonos-card",
             heightPercentage: "75",
@@ -10443,7 +10445,7 @@ let SonosCard = class SonosCard extends h {
             mediaBrowserShowTitleForThumbnailIcons: true,
             showVolumeUpAndDownButtons: true,
             sections: ["media browser"],
-        });
+        }, this.hass);
     }
     willUpdate(changedProps) {
         if (!this.hass || !this._entity)
@@ -10469,13 +10471,13 @@ let SonosCard = class SonosCard extends h {
 };
 __decorate([
     n({ attribute: false })
-], SonosCard.prototype, "hass", void 0);
+], SonosPanelCard.prototype, "hass", void 0);
 __decorate([
     r()
-], SonosCard.prototype, "_config", void 0);
-SonosCard = __decorate([
+], SonosPanelCard.prototype, "_config", void 0);
+SonosPanelCard = __decorate([
     t$1("smartqasa-sonos-card")
-], SonosCard);
+], SonosPanelCard);
 
 window.customCards.push({
     type: "smartqasa-vertical-stack",
@@ -11139,12 +11141,9 @@ window.customCards.push({
 let WeatherCard = class WeatherCard extends h {
     static get styles() {
         return i$2 `
-            :host {
-                display: block;
+            .container {
                 width: 100%;
                 height: 100%;
-            }
-            .container {
                 display: grid;
                 grid-template-columns: 0.8fr 1fr;
                 gap: var(--sq-tile-spacing, 0.8rem);
@@ -11174,14 +11173,14 @@ let WeatherCard = class WeatherCard extends h {
             show_current: true,
             show_forecast: true,
             secondary_info_attribute: "wind_speed",
-        });
+        }, this.hass);
         this._dailyForecastCard = createElement$1({
             type: "weather-forecast",
             entity: this._entity,
             forecast_type: "daily",
             show_current: false,
             show_forecast: true,
-        });
+        }, this.hass);
         this._radarMapCard = createElement$1({
             type: "custom:weather-radar-card",
             frame_count: 10,
@@ -11195,7 +11194,7 @@ let WeatherCard = class WeatherCard extends h {
             show_scale: true,
             extra_labels: true,
             map_style: "Voyager",
-        });
+        }, this.hass);
     }
     willUpdate(changedProps) {
         if (!this.hass || !this._entity)
@@ -11212,7 +11211,7 @@ let WeatherCard = class WeatherCard extends h {
     render() {
         return ke `
             <div class="container">
-                <div>
+                <div class="left-column">
                     ${this._hourlyForecastCard ? ke `${this._hourlyForecastCard}` : D}
                     ${this._dailyForecastCard ? ke `${this._dailyForecastCard}` : D}
                 </div>

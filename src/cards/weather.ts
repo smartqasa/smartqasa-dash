@@ -27,12 +27,9 @@ export class WeatherCard extends LitElement {
 
     static get styles() {
         return css`
-            :host {
-                display: block;
+            .container {
                 width: 100%;
                 height: 100%;
-            }
-            .container {
                 display: grid;
                 grid-template-columns: 0.8fr 1fr;
                 gap: var(--sq-tile-spacing, 0.8rem);
@@ -56,38 +53,47 @@ export class WeatherCard extends LitElement {
     }
 
     protected firstUpdated(): void {
-        this._hourlyForecastCard = createElement({
-            type: "weather-forecast",
-            entity: this._entity,
-            forecast_type: "hourly",
-            name: "Forecast",
-            show_current: true,
-            show_forecast: true,
-            secondary_info_attribute: "wind_speed",
-        });
+        this._hourlyForecastCard = createElement(
+            {
+                type: "weather-forecast",
+                entity: this._entity,
+                forecast_type: "hourly",
+                name: "Forecast",
+                show_current: true,
+                show_forecast: true,
+                secondary_info_attribute: "wind_speed",
+            },
+            this.hass
+        );
 
-        this._dailyForecastCard = createElement({
-            type: "weather-forecast",
-            entity: this._entity,
-            forecast_type: "daily",
-            show_current: false,
-            show_forecast: true,
-        });
+        this._dailyForecastCard = createElement(
+            {
+                type: "weather-forecast",
+                entity: this._entity,
+                forecast_type: "daily",
+                show_current: false,
+                show_forecast: true,
+            },
+            this.hass
+        );
 
-        this._radarMapCard = createElement({
-            type: "custom:weather-radar-card",
-            frame_count: 10,
-            show_marker: true,
-            show_range: true,
-            show_zoom: true,
-            show_recenter: true,
-            show_playback: true,
-            zoom_level: 20,
-            square_map: true,
-            show_scale: true,
-            extra_labels: true,
-            map_style: "Voyager",
-        });
+        this._radarMapCard = createElement(
+            {
+                type: "custom:weather-radar-card",
+                frame_count: 10,
+                show_marker: true,
+                show_range: true,
+                show_zoom: true,
+                show_recenter: true,
+                show_playback: true,
+                zoom_level: 20,
+                square_map: true,
+                show_scale: true,
+                extra_labels: true,
+                map_style: "Voyager",
+            },
+            this.hass
+        );
     }
 
     protected willUpdate(changedProps: PropertyValues): void {
@@ -103,7 +109,7 @@ export class WeatherCard extends LitElement {
     protected render(): TemplateResult {
         return html`
             <div class="container">
-                <div>
+                <div class="left-column">
                     ${this._hourlyForecastCard ? html`${this._hourlyForecastCard}` : nothing}
                     ${this._dailyForecastCard ? html`${this._dailyForecastCard}` : nothing}
                 </div>
