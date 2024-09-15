@@ -164,7 +164,6 @@ export class PanelCard extends LitElement {
                 content = nothing;
                 break;
         }
-        console.log("Content:", content);
         // prettier-ignore
         return html`
             <div

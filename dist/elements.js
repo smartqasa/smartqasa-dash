@@ -9278,7 +9278,6 @@ let PanelCard = class PanelCard extends h {
                 content = D;
                 break;
         }
-        console.log("Content:", content);
         // prettier-ignore
         return ke `
             <div
