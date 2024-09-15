@@ -11141,29 +11141,15 @@ window.customCards.push({
 let WeatherCard = class WeatherCard extends h {
     static get styles() {
         return i$2 `
-            :host {
-                display: block;
-                width: 100%;
-                height: 100%;
-            }
             .container {
-                display: flex;
-                width: 100%;
-                height: 100%;
+                display: grid;
+                grid-template-columns: 0.7fr 1fr;
                 gap: var(--sq-tile-spacing, 0.8rem);
-                align-items: stretch;
             }
             .left-column {
                 display: flex;
                 flex-direction: column;
-                flex: 0 0 40%;
                 gap: var(--sq-tile-spacing, 0.8rem);
-            }
-            .right-column {
-                display: flex;
-                flex: 1 0 60%;
-                width: 100%;
-                align-items: stretch;
             }
         `;
     }
@@ -11207,7 +11193,6 @@ let WeatherCard = class WeatherCard extends h {
             extra_labels: true,
             map_style: "Voyager",
         }, this.hass);
-        console.log("Radar Map Card: ", this._radarMapCard);
     }
     willUpdate(changedProps) {
         if (!this.hass || !this._entity)
@@ -11225,10 +11210,11 @@ let WeatherCard = class WeatherCard extends h {
         return ke `
             <div class="container">
                 <div class="left-column">
-                    ${this._hourlyForecastCard ? ke `${this._hourlyForecastCard}` : D}
-                    ${this._dailyForecastCard ? ke `${this._dailyForecastCard}` : D}
+                    <div>${this._hourlyForecastCard ? ke `${this._hourlyForecastCard}` : D}</div>
+                    <div>${this._dailyForecastCard ? ke `${this._dailyForecastCard}` : D}</div>
                 </div>
-                <div class="right-column">${this._radarMapCard ? ke `${this._radarMapCard}` : D}</div>
+
+                <div>${this._radarMapCard ? ke `${this._radarMapCard}` : D}</div>
             </div>
         `;
     }

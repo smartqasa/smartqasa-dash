@@ -27,29 +27,15 @@ export class WeatherCard extends LitElement {
 
     static get styles() {
         return css`
-            :host {
-                display: block;
-                width: 100%;
-                height: 100%;
-            }
             .container {
-                display: flex;
-                width: 100%;
-                height: 100%;
+                display: grid;
+                grid-template-columns: 0.7fr 1fr;
                 gap: var(--sq-tile-spacing, 0.8rem);
-                align-items: stretch;
             }
             .left-column {
                 display: flex;
                 flex-direction: column;
-                flex: 0 0 40%;
                 gap: var(--sq-tile-spacing, 0.8rem);
-            }
-            .right-column {
-                display: flex;
-                flex: 1 0 60%;
-                width: 100%;
-                align-items: stretch;
             }
         `;
     }
@@ -106,7 +92,6 @@ export class WeatherCard extends LitElement {
             },
             this.hass
         );
-        console.log("Radar Map Card: ", this._radarMapCard);
     }
 
     protected willUpdate(changedProps: PropertyValues): void {
@@ -123,10 +108,11 @@ export class WeatherCard extends LitElement {
         return html`
             <div class="container">
                 <div class="left-column">
-                    ${this._hourlyForecastCard ? html`${this._hourlyForecastCard}` : nothing}
-                    ${this._dailyForecastCard ? html`${this._dailyForecastCard}` : nothing}
+                    <div>${this._hourlyForecastCard ? html`${this._hourlyForecastCard}` : nothing}</div>
+                    <div>${this._dailyForecastCard ? html`${this._dailyForecastCard}` : nothing}</div>
                 </div>
-                <div class="right-column">${this._radarMapCard ? html`${this._radarMapCard}` : nothing}</div>
+
+                <div>${this._radarMapCard ? html`${this._radarMapCard}` : nothing}</div>
             </div>
         `;
     }
