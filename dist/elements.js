@@ -11206,6 +11206,7 @@ let WeatherCard = class WeatherCard extends h {
             extra_labels: true,
             map_style: "Voyager",
         }, this.hass);
+        console.log("Radar Map Card: ", this._radarMapCard);
     }
     willUpdate(changedProps) {
         if (!this.hass || !this._entity)

@@ -105,6 +105,7 @@ export class WeatherCard extends LitElement {
             },
             this.hass
         );
+        console.log("Radar Map Card: ", this._radarMapCard);
     }
 
     protected willUpdate(changedProps: PropertyValues): void {
