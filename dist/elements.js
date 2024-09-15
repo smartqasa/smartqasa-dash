@@ -9141,7 +9141,7 @@ function renderEntertain(entity, hass) {
         type: "custom:smartqasa-sonos-card",
         entity: entity,
     }, hass);
-    return ke ` <div class="entertain-container">${audioCard ? audioCard : D}</div> `;
+    return ke ` <div class="entertain-container">${audioCard ? ke `${audioCard}` : D}</div> `;
 }
 
 function loadAudioCards(hass, player) {
@@ -9312,7 +9312,8 @@ let PanelCard = class PanelCard extends h {
                 `;
                 break;
             case "entertain":
-                content = ke `${renderEntertain(this._config.audioPlayer, this.hass)}`;
+                content = renderEntertain(this._config.audioPlayer, this.hass);
+                console.log("Entertain content:", content);
                 break;
             default:
                 content = D;
@@ -14688,7 +14689,7 @@ ThermostatTile = __decorate([
     t$1("smartqasa-thermostat-tile")
 ], ThermostatTile);
 
-var version = "2024.9.15b-1";
+var version = "2024.9.15b-2";
 
 window.smartqasa = window.smartqasa || {};
 window.smartqasa.viewMode = "control";
