@@ -146,6 +146,8 @@ export class PanelCard extends LitElement {
 
         const viewMode = window.smartqasa.viewMode;
 
+        console.log("View Mode: ", viewMode);
+
         let content;
         // prettier-ignore
         switch (viewMode) {
@@ -164,6 +166,7 @@ export class PanelCard extends LitElement {
                 content = nothing;
                 break;
         }
+        console.log("Content:", content);
 
         // prettier-ignore
         return html`
@@ -265,5 +268,6 @@ export class PanelCard extends LitElement {
             },
             this.hass
         );
+        console.log("Audio Card:", this._audioCard);
     }
 }

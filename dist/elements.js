@@ -9258,6 +9258,7 @@ let PanelCard = class PanelCard extends h {
         if (!this.hass || !this._config || !this._area)
             return D;
         const viewMode = window.smartqasa.viewMode;
+        console.log("View Mode: ", viewMode);
         let content;
         // prettier-ignore
         switch (viewMode) {
@@ -9276,6 +9277,7 @@ let PanelCard = class PanelCard extends h {
                 content = D;
                 break;
         }
+        console.log("Content:", content);
         // prettier-ignore
         return ke `
             <div
@@ -9357,6 +9359,7 @@ let PanelCard = class PanelCard extends h {
             type: "custom:smartqasa-sonos-card",
             entity: this._config.audio_player,
         }, this.hass);
+        console.log("Audio Card:", this._audioCard);
     }
 };
 __decorate([
