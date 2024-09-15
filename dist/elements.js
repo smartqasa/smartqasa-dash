@@ -10458,12 +10458,11 @@ let SonosCard = class SonosCard extends h {
         }
     }
     render() {
-        // prettier-ignore
         return ke `
             <div class="container">
-                ${this._speakersCard || D}
-                ${this._playerCard || D}
-                ${this._mediaCard || D}
+                <div>${this._speakersCard ? ke `${this._speakersCard}` : D}</div>
+                <div>${this._playerCard ? ke `${this._playerCard}` : D}</div>
+                <div>${this._mediaCard ? ke `${this._mediaCard}` : D}</div>
             </div>
         `;
     }
@@ -11146,15 +11145,11 @@ let WeatherCard = class WeatherCard extends h {
                 height: 100%;
             }
             .container {
-                display: flex;
+                display: grid;
+                grid-template-columns: 0.8fr 1fr;
                 gap: var(--sq-tile-spacing, 0.8rem);
             }
             .left-column {
-                display: flex;
-                flex-direction: column;
-                gap: var(--sq-tile-spacing, 0.8rem);
-            }
-            .right-column {
                 display: flex;
                 flex-direction: column;
                 gap: var(--sq-tile-spacing, 0.8rem);
@@ -11215,16 +11210,13 @@ let WeatherCard = class WeatherCard extends h {
         }
     }
     render() {
-        // prettier-ignore
         return ke `
             <div class="container">
-                <div class="left-column">
-                    ${this._hourlyForecastCard || D}
-                    ${this._dailyForecastCard || D}
+                <div>
+                    ${this._hourlyForecastCard ? ke `${this._hourlyForecastCard}` : D}
+                    ${this._dailyForecastCard ? ke `${this._dailyForecastCard}` : D}
                 </div>
-                <div class="right-column">
-                    ${this._radarMapCard || D}
-                </div>
+                <div>${this._radarMapCard ? ke `${this._radarMapCard}` : D}</div>
             </div>
         `;
     }

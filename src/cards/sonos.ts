@@ -81,12 +81,11 @@ export class SonosCard extends LitElement {
     }
 
     protected render(): TemplateResult {
-        // prettier-ignore
         return html`
             <div class="container">
-                ${this._speakersCard || nothing}
-                ${this._playerCard || nothing}
-                ${this._mediaCard || nothing}
+                <div>${this._speakersCard ? html`${this._speakersCard}` : nothing}</div>
+                <div>${this._playerCard ? html`${this._playerCard}` : nothing}</div>
+                <div>${this._mediaCard ? html`${this._mediaCard}` : nothing}</div>
             </div>
         `;
     }

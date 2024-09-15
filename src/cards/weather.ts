@@ -33,15 +33,11 @@ export class WeatherCard extends LitElement {
                 height: 100%;
             }
             .container {
-                display: flex;
+                display: grid;
+                grid-template-columns: 0.8fr 1fr;
                 gap: var(--sq-tile-spacing, 0.8rem);
             }
             .left-column {
-                display: flex;
-                flex-direction: column;
-                gap: var(--sq-tile-spacing, 0.8rem);
-            }
-            .right-column {
                 display: flex;
                 flex-direction: column;
                 gap: var(--sq-tile-spacing, 0.8rem);
@@ -105,16 +101,13 @@ export class WeatherCard extends LitElement {
     }
 
     protected render(): TemplateResult {
-        // prettier-ignore
         return html`
             <div class="container">
-                <div class="left-column">
-                    ${this._hourlyForecastCard || nothing}
-                    ${this._dailyForecastCard || nothing}
+                <div>
+                    ${this._hourlyForecastCard ? html`${this._hourlyForecastCard}` : nothing}
+                    ${this._dailyForecastCard ? html`${this._dailyForecastCard}` : nothing}
                 </div>
-                <div class="right-column">
-                    ${this._radarMapCard || nothing}
-                </div>
+                <div>${this._radarMapCard ? html`${this._radarMapCard}` : nothing}</div>
             </div>
         `;
     }
