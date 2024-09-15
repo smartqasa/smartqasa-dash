@@ -46,11 +46,38 @@ export class WeatherCard extends LitElement {
     public setConfig(config: Config): void {
         this._config = { ...config };
 
-        if (this._config.entity) {
-            this._entity = this._config.entity.startsWith("weather.") ? this._config.entity : "undefined";
+        if (this._config.entity && this._config.entity.startsWith("weather.")) {
+            this._entity = this._config.entity;
         } else {
             this._entity = "weather.forecast_home";
         }
+    }
+
+    protected willUpdate(changedProps: PropertyValues): void {
+        if (!this._entity) return;
+
+        if (changedProps.has("hass") && this.hass) {
+            [this._hourlyForecastCard, this._dailyForecastCard, this._radarMapCard].forEach((card) => {
+                if (card) card.hass = this.hass;
+            });
+        }
+    }
+
+    protected render(): TemplateResult {
+        const renderCard = (card: LovelaceCard | undefined): TemplateResult | typeof nothing => {
+            if (!card) return nothing;
+            const element = card as unknown as HTMLElement;
+            return html`${element}`;
+        };
+
+        return html`
+            <div class="container">
+                <div class="left-column">
+                    ${renderCard(this._hourlyForecastCard)} ${renderCard(this._dailyForecastCard)}
+                </div>
+                ${renderCard(this._radarMapCard)}
+            </div>
+        `;
     }
 
     protected firstUpdated(): void {
@@ -70,7 +97,7 @@ export class WeatherCard extends LitElement {
         this._dailyForecastCard = createElement(
             {
                 type: "weather-forecast",
-                entity: "weather.forecast_home",
+                entity: this._entity,
                 forecast_type: "daily",
                 show_current: false,
                 show_forecast: true,
@@ -95,26 +122,5 @@ export class WeatherCard extends LitElement {
             },
             this.hass
         );
-    }
-
-    protected willUpdate(changedProps: PropertyValues): void {
-        if (!this.hass || !this._entity) return;
-
-        if (changedProps.has("hass")) {
-            if (this._hourlyForecastCard) this._hourlyForecastCard.hass = this.hass;
-            if (this._dailyForecastCard) this._dailyForecastCard.hass = this.hass;
-            if (this._radarMapCard) this._radarMapCard.hass = this.hass;
-        }
-    }
-
-    protected render(): TemplateResult {
-        return html`
-            <div class="container">
-                <div class="left-column">
-                    ${this._hourlyForecastCard || nothing} ${this._dailyForecastCard || nothing}
-                </div>
-                ${this._radarMapCard || nothing}
-            </div>
-        `;
     }
 }

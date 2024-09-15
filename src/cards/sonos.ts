@@ -28,8 +28,6 @@ export class SonosPanelCard extends LitElement {
     static get styles() {
         return css`
             .container {
-                width: 100%;
-                height: 100%;
                 display: grid;
                 grid-template-columns: 1fr 1fr 1fr;
                 gap: var(--sq-card-spacing, 0.8rem);
@@ -42,6 +40,16 @@ export class SonosPanelCard extends LitElement {
 
         if (this._config.entity) {
             this._entity = this._config.entity.startsWith("media_player.") ? this._config.entity : "undefined";
+        }
+    }
+
+    protected willUpdate(changedProps: PropertyValues): void {
+        if (!this._entity) return;
+
+        if (changedProps.has("hass") && this.hass) {
+            [this._speakersCard, this._playerCard, this._mediaCard].forEach((card) => {
+                if (card) card.hass = this.hass;
+            });
         }
     }
 
@@ -81,22 +89,16 @@ export class SonosPanelCard extends LitElement {
         );
     }
 
-    protected willUpdate(changedProps: PropertyValues): void {
-        if (!this.hass || !this._entity) return;
-
-        if (changedProps.has("hass")) {
-            if (this._speakersCard) this._speakersCard.hass = this.hass;
-            if (this._playerCard) this._playerCard.hass = this.hass;
-            if (this._mediaCard) this._mediaCard.hass = this.hass;
-        }
-    }
-
     protected render(): TemplateResult {
+        const renderCard = (card: LovelaceCard | undefined): TemplateResult | typeof nothing => {
+            if (!card) return nothing;
+            const element = card as unknown as HTMLElement;
+            return html`${element}`;
+        };
+
         return html`
             <div class="container">
-                <div>${this._speakersCard ? html`${this._speakersCard}` : nothing}</div>
-                <div>${this._playerCard ? html`${this._playerCard}` : nothing}</div>
-                <div>${this._mediaCard ? html`${this._mediaCard}` : nothing}</div>
+                ${renderCard(this._speakersCard)} ${renderCard(this._playerCard)} ${renderCard(this._mediaCard)}
             </div>
         `;
     }

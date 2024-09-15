@@ -10409,8 +10409,6 @@ let SonosPanelCard = class SonosPanelCard extends h {
     static get styles() {
         return i$2 `
             .container {
-                width: 100%;
-                height: 100%;
                 display: grid;
                 grid-template-columns: 1fr 1fr 1fr;
                 gap: var(--sq-card-spacing, 0.8rem);
@@ -10421,6 +10419,16 @@ let SonosPanelCard = class SonosPanelCard extends h {
         this._config = { ...config };
         if (this._config.entity) {
             this._entity = this._config.entity.startsWith("media_player.") ? this._config.entity : "undefined";
+        }
+    }
+    willUpdate(changedProps) {
+        if (!this._entity)
+            return;
+        if (changedProps.has("hass") && this.hass) {
+            [this._speakersCard, this._playerCard, this._mediaCard].forEach((card) => {
+                if (card)
+                    card.hass = this.hass;
+            });
         }
     }
     firstUpdated() {
@@ -10447,24 +10455,16 @@ let SonosPanelCard = class SonosPanelCard extends h {
             sections: ["media browser"],
         }, this.hass);
     }
-    willUpdate(changedProps) {
-        if (!this.hass || !this._entity)
-            return;
-        if (changedProps.has("hass")) {
-            if (this._speakersCard)
-                this._speakersCard.hass = this.hass;
-            if (this._playerCard)
-                this._playerCard.hass = this.hass;
-            if (this._mediaCard)
-                this._mediaCard.hass = this.hass;
-        }
-    }
     render() {
+        const renderCard = (card) => {
+            if (!card)
+                return D;
+            const element = card;
+            return ke `${element}`;
+        };
         return ke `
             <div class="container">
-                <div>${this._speakersCard ? ke `${this._speakersCard}` : D}</div>
-                <div>${this._playerCard ? ke `${this._playerCard}` : D}</div>
-                <div>${this._mediaCard ? ke `${this._mediaCard}` : D}</div>
+                ${renderCard(this._speakersCard)} ${renderCard(this._playerCard)} ${renderCard(this._mediaCard)}
             </div>
         `;
     }
@@ -11158,12 +11158,38 @@ let WeatherCard = class WeatherCard extends h {
     }
     setConfig(config) {
         this._config = { ...config };
-        if (this._config.entity) {
-            this._entity = this._config.entity.startsWith("weather.") ? this._config.entity : "undefined";
+        if (this._config.entity && this._config.entity.startsWith("weather.")) {
+            this._entity = this._config.entity;
         }
         else {
             this._entity = "weather.forecast_home";
         }
+    }
+    willUpdate(changedProps) {
+        if (!this._entity)
+            return;
+        if (changedProps.has("hass") && this.hass) {
+            [this._hourlyForecastCard, this._dailyForecastCard, this._radarMapCard].forEach((card) => {
+                if (card)
+                    card.hass = this.hass;
+            });
+        }
+    }
+    render() {
+        const renderCard = (card) => {
+            if (!card)
+                return D;
+            const element = card;
+            return ke `${element}`;
+        };
+        return ke `
+            <div class="container">
+                <div class="left-column">
+                    ${renderCard(this._hourlyForecastCard)} ${renderCard(this._dailyForecastCard)}
+                </div>
+                ${renderCard(this._radarMapCard)}
+            </div>
+        `;
     }
     firstUpdated() {
         this._hourlyForecastCard = createElement$1({
@@ -11177,7 +11203,7 @@ let WeatherCard = class WeatherCard extends h {
         }, this.hass);
         this._dailyForecastCard = createElement$1({
             type: "weather-forecast",
-            entity: "weather.forecast_home",
+            entity: this._entity,
             forecast_type: "daily",
             show_current: false,
             show_forecast: true,
@@ -11196,28 +11222,6 @@ let WeatherCard = class WeatherCard extends h {
             extra_labels: true,
             map_style: "Voyager",
         }, this.hass);
-    }
-    willUpdate(changedProps) {
-        if (!this.hass || !this._entity)
-            return;
-        if (changedProps.has("hass")) {
-            if (this._hourlyForecastCard)
-                this._hourlyForecastCard.hass = this.hass;
-            if (this._dailyForecastCard)
-                this._dailyForecastCard.hass = this.hass;
-            if (this._radarMapCard)
-                this._radarMapCard.hass = this.hass;
-        }
-    }
-    render() {
-        return ke `
-            <div class="container">
-                <div class="left-column">
-                    ${this._hourlyForecastCard || D} ${this._dailyForecastCard || D}
-                </div>
-                ${this._radarMapCard || D}
-            </div>
-        `;
     }
 };
 __decorate([
