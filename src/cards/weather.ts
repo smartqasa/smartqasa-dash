@@ -5,7 +5,7 @@ import { HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 import { createElement } from "../utils/create-element";
 
 interface Config extends LovelaceCardConfig {
-    entity: string;
+    entity?: string;
 }
 
 window.customCards.push({
