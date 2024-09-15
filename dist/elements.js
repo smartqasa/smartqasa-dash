@@ -11162,6 +11162,7 @@ let WeatherCard = class WeatherCard extends h {
             .right-column {
                 display: flex;
                 flex: 1 0 60%;
+                width: 100%;
                 align-items: stretch;
             }
         `;
