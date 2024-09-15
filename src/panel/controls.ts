@@ -36,9 +36,8 @@ export function loadControlTiles(
                 currentPage.push(blankTile as unknown as LovelaceCard);
             }
         } else {
-            const tile = createElement(config) as LovelaceCard;
+            const tile = createElement(config, hass) as LovelaceCard;
             if (tile) {
-                tile.hass = hass;
                 currentPage.push(tile);
             } else {
                 console.error("Failed to create tile for config:", config);
