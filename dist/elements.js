@@ -3976,8 +3976,6 @@ const createElement$1 = (config, hass) => {
         console.error(`Error: Failed to set config for element '${tag}'.`, err);
         return undefined;
     }
-    if (config.type === "custom:sonos-card")
-        console.log("Creating element for config:", element);
     if (hass)
         element.hass = hass;
     return element;
@@ -9355,11 +9353,15 @@ let PanelCard = class PanelCard extends h {
         const { controlTiles, controlColumns } = loadControlTiles(this._config.tiles || [], this.hass, this._isTablet);
         this._controlTiles = controlTiles;
         this._controlColumns = controlColumns;
-        this._audioCard = createElement$1({
-            type: "custom:sonos-card",
+        const elementConfig = {
+            type: "custom:smartqas-sonos-card",
             entity_id: this._config.audio_player,
-        }, this.hass);
-        console.log("Audio Card:", this._audioCard);
+        };
+        const element = document.createElement("smartqasa-sonos-card");
+        element.setConfig(elementConfig);
+        element.hass = this.hass;
+        console.log("Creating element for config:", element);
+        this._audioCard = element;
     }
 };
 __decorate([

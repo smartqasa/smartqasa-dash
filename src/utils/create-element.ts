@@ -25,8 +25,6 @@ export const createElement = (config: LovelaceCardConfig, hass?: HomeAssistant):
         return undefined;
     }
 
-    if (config.type === "custom:sonos-card") console.log("Creating element for config:", element);
-
     if (hass) element.hass = hass;
     return element;
 };
