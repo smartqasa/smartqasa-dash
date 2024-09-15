@@ -58,7 +58,7 @@ export class PanelCard extends LitElement {
     private _areaChips: LovelaceCard[] = [];
     private _controlTiles: LovelaceCard[][] = [];
     private _controlColumns: number[] = [];
-    private _audioCards: LovelaceCard[] = [];
+    private _audioCard: LovelaceCard | undefined;
 
     static styles: CSSResultGroup = [unsafeCSS(swiperStyles), unsafeCSS(panelStyles)];
 
@@ -146,15 +146,6 @@ export class PanelCard extends LitElement {
 
         const viewMode = window.smartqasa.viewMode;
 
-        const audioCard = createElement(
-            {
-                type: "custom:smartqasa-sonos-card",
-                entity: this._config.audio_player,
-            },
-            this.hass
-        );
-        console.log("Audio Card:", audioCard);
-
         let content;
         // prettier-ignore
         switch (viewMode) {
@@ -167,7 +158,7 @@ export class PanelCard extends LitElement {
                 `;
                 break;
             case "entertain":
-                content = audioCard ? html`${audioCard}` : nothing;
+                content = this._audioCard ? html`${this._audioCard}` : nothing;
                 break;
             default:
                 content = nothing;
@@ -267,6 +258,12 @@ export class PanelCard extends LitElement {
         this._controlTiles = controlTiles;
         this._controlColumns = controlColumns;
 
-        this._audioCards = loadAudioCards(this.hass, this._config?.audio_player || "");
+        this._audioCard = createElement(
+            {
+                type: "custom:smartqasa-sonos-card",
+                entity: this._config.audio_player,
+            },
+            this.hass
+        );
     }
 }

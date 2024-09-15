@@ -9136,39 +9136,6 @@ function renderControls(controlTiles, controlColumns, isPhone, swiper) {
     `;
 }
 
-function loadAudioCards(hass, player) {
-    const cards = [];
-    const createCards = (index, config) => {
-        const card = createElement$1(config);
-        if (hass)
-            card.hass = hass;
-        cards[index] = card;
-    };
-    createCards(0, {
-        type: "custom:sonos-card",
-        entityId: player,
-        heightPercentage: "75",
-        showVolumeUpAndDownButtons: true,
-        sections: ["volumes", "groups", "grouping"],
-    });
-    createCards(1, {
-        type: "custom:sonos-card",
-        entityId: player,
-        heightPercentage: "75",
-        showVolumeUpAndDownButtons: true,
-        sections: ["player"],
-    });
-    createCards(2, {
-        type: "custom:sonos-card",
-        heightPercentage: "75",
-        mediaBrowserItemsPerRow: 3,
-        mediaBrowserShowTitleForThumbnailIcons: true,
-        showVolumeUpAndDownButtons: true,
-        sections: ["media browser"],
-    });
-    return cards || [];
-}
-
 function styleInject(css, ref) {
   if ( ref === void 0 ) ref = {};
   var insertAt = ref.insertAt;
@@ -9223,7 +9190,6 @@ let PanelCard = class PanelCard extends h {
         this._areaChips = [];
         this._controlTiles = [];
         this._controlColumns = [];
-        this._audioCards = [];
     }
     static { this.styles = [r$3(css_248z$5), r$3(css_248z$6)]; }
     setConfig(config) {
@@ -9292,11 +9258,6 @@ let PanelCard = class PanelCard extends h {
         if (!this.hass || !this._config || !this._area)
             return D;
         const viewMode = window.smartqasa.viewMode;
-        const audioCard = createElement$1({
-            type: "custom:smartqasa-sonos-card",
-            entity: this._config.audio_player,
-        }, this.hass);
-        console.log("Audio Card:", audioCard);
         let content;
         // prettier-ignore
         switch (viewMode) {
@@ -9309,7 +9270,7 @@ let PanelCard = class PanelCard extends h {
                 `;
                 break;
             case "entertain":
-                content = audioCard ? ke `${audioCard}` : D;
+                content = this._audioCard ? ke `${this._audioCard}` : D;
                 break;
             default:
                 content = D;
@@ -9392,7 +9353,10 @@ let PanelCard = class PanelCard extends h {
         const { controlTiles, controlColumns } = loadControlTiles(this._config.tiles || [], this.hass, this._isTablet);
         this._controlTiles = controlTiles;
         this._controlColumns = controlColumns;
-        this._audioCards = loadAudioCards(this.hass, this._config?.audio_player || "");
+        this._audioCard = createElement$1({
+            type: "custom:smartqasa-sonos-card",
+            entity: this._config.audio_player,
+        }, this.hass);
     }
 };
 __decorate([
