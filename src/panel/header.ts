@@ -1,28 +1,6 @@
-import { HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
-import { createElement } from "../utils/create-element";
+import { LovelaceCard } from "../types";
 import { html, TemplateResult } from "lit";
 import { formattedTime, formattedDate } from "../utils/format-date-time";
-import { loadYamlAsJson } from "../utils/load-yaml-as-json";
-
-/*
-export async function loadHeaderChips(hass: HomeAssistant): Promise<LovelaceCard[]> {
-    let chipsConfig: LovelaceCardConfig[] = [];
-    try {
-        const yamlFilePath = "/local/smartqasa/config/chips.yaml";
-        chipsConfig = (await loadYamlAsJson(yamlFilePath)) as LovelaceCardConfig[];
-    } catch (error) {
-        console.error("Error loading header chips:", error);
-        return [];
-    }
-
-
-    return chipsConfig.map((config) => {
-        const chip = createElement(config) as LovelaceCard;
-        if (hass) chip.hass = hass;
-        return chip;
-    });
-}
-*/
 
 export function renderHeader(headerChips: LovelaceCard[]): TemplateResult {
     function launchClock(e: Event): void {

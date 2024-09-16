@@ -8544,25 +8544,6 @@ const formattedTime = (date = new Date()) => {
     return `${hours % 12 || 12}:${minutes < 10 ? "0" + minutes : minutes}`;
 };
 
-/*
-export async function loadHeaderChips(hass: HomeAssistant): Promise<LovelaceCard[]> {
-    let chipsConfig: LovelaceCardConfig[] = [];
-    try {
-        const yamlFilePath = "/local/smartqasa/config/chips.yaml";
-        chipsConfig = (await loadYamlAsJson(yamlFilePath)) as LovelaceCardConfig[];
-    } catch (error) {
-        console.error("Error loading header chips:", error);
-        return [];
-    }
-
-
-    return chipsConfig.map((config) => {
-        const chip = createElement(config) as LovelaceCard;
-        if (hass) chip.hass = hass;
-        return chip;
-    });
-}
-*/
 function renderHeader(headerChips) {
     function launchClock(e) {
         e.stopPropagation();
@@ -9354,7 +9335,7 @@ let PanelCard = class PanelCard extends h {
         this._controlTiles = controlTiles;
         this._controlColumns = controlColumns;
         const elementConfig = {
-            type: "custom:smartqas-sonos-card",
+            type: "custom:smartqasa-sonos-card",
             entity: this._config.audio_player,
         };
         const element = document.createElement("smartqasa-sonos-card");
