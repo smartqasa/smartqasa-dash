@@ -10464,7 +10464,7 @@ let VerticalStack = class VerticalStack extends h {
                 display: flex;
                 flex-direction: column;
             }
-            .hui-card:not(:last-child) {
+            .card:not(:last-child) {
                 padding-bottom: 0.8rem;
             }
         `;
@@ -10494,7 +10494,9 @@ let VerticalStack = class VerticalStack extends h {
     render() {
         if (!this._config || !this.hass || this._cards.length === 0)
             return D;
-        return ke ` <div class="container">${this._cards.map((card) => ke `<hui-card>${card}</hui-card>`)}</div> `;
+        return ke `
+            <div class="container">${this._cards.map((card) => ke `<hui-card class="card">${card}</hui-card>`)}</div>
+        `;
     }
 };
 __decorate([

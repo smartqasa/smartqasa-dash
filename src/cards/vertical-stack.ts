@@ -31,7 +31,7 @@ class VerticalStack extends LitElement implements LovelaceCard {
                 display: flex;
                 flex-direction: column;
             }
-            .hui-card:not(:last-child) {
+            .card:not(:last-child) {
                 padding-bottom: 0.8rem;
             }
         `;
@@ -64,6 +64,8 @@ class VerticalStack extends LitElement implements LovelaceCard {
 
     protected render() {
         if (!this._config || !this.hass || this._cards.length === 0) return nothing;
-        return html` <div class="container">${this._cards.map((card) => html`<hui-card>${card}</hui-card>`)}</div> `;
+        return html`
+            <div class="container">${this._cards.map((card) => html`<hui-card class="card">${card}</hui-card>`)}</div>
+        `;
     }
 }
