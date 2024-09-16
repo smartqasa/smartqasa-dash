@@ -10350,9 +10350,7 @@ let SonosPanelCard = class SonosPanelCard extends h {
                 gap: var(--sq-card-spacing, 0.8rem);
             }
             .card {
-                display: flex;
-                width: 100%;
-                height: 100%;
+                display: block;
             }
         `;
     }
@@ -10370,31 +10368,6 @@ let SonosPanelCard = class SonosPanelCard extends h {
             });
         }
     }
-    firstUpdated() {
-        this._speakersCard = createElement$1({
-            type: "custom:sonos-card",
-            entityId: this._entity,
-            heightPercentage: "75",
-            showVolumeUpAndDownButtons: true,
-            sections: ["volumes", "groups", "grouping"],
-        }, this.hass);
-        console.log("Speakers Card:", this._speakersCard);
-        this._playerCard = createElement$1({
-            type: "custom:sonos-card",
-            entityId: this._entity,
-            heightPercentage: "75",
-            showVolumeUpAndDownButtons: true,
-            sections: ["player"],
-        }, this.hass);
-        this._mediaCard = createElement$1({
-            type: "custom:sonos-card",
-            heightPercentage: "75",
-            mediaBrowserItemsPerRow: 3,
-            mediaBrowserShowTitleForThumbnailIcons: true,
-            showVolumeUpAndDownButtons: true,
-            sections: ["media browser"],
-        }, this.hass);
-    }
     render() {
         const renderCard = (card) => {
             if (!card)
@@ -10408,6 +10381,30 @@ let SonosPanelCard = class SonosPanelCard extends h {
                 ${renderCard(this._speakersCard)} ${renderCard(this._playerCard)} ${renderCard(this._mediaCard)}
             </div>
         `;
+    }
+    firstUpdated() {
+        this._speakersCard = createElement$1({
+            type: "custom:sonos-card",
+            entityId: this._entity,
+            heightPercentage: "75",
+            showVolumeUpAndDownButtons: true,
+            sections: '["volumes", "groups", "grouping"]',
+        }, this.hass);
+        this._playerCard = createElement$1({
+            type: "custom:sonos-card",
+            entityId: this._entity,
+            heightPercentage: "75",
+            showVolumeUpAndDownButtons: true,
+            sections: '["player"]',
+        }, this.hass);
+        this._mediaCard = createElement$1({
+            type: "custom:sonos-card",
+            heightPercentage: "75",
+            mediaBrowserItemsPerRow: 3,
+            mediaBrowserShowTitleForThumbnailIcons: true,
+            showVolumeUpAndDownButtons: true,
+            sections: '["media browser"]',
+        }, this.hass);
     }
 };
 __decorate([
