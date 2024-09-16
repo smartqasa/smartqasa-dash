@@ -10349,6 +10349,11 @@ let SonosPanelCard = class SonosPanelCard extends h {
                 grid-template-columns: 1fr 1fr 1fr;
                 gap: var(--sq-card-spacing, 0.8rem);
             }
+            .card {
+                display: flex;
+                width: 100%;
+                height: 100%;
+            }
         `;
     }
     setConfig(config) {
@@ -10396,7 +10401,7 @@ let SonosPanelCard = class SonosPanelCard extends h {
                 return D;
             const element = card;
             console.log("Element:", element);
-            return ke `${element}`;
+            return ke `<div class="card">${element}</div>`;
         };
         return ke `
             <div class="container">

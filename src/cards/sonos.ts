@@ -32,6 +32,11 @@ export class SonosPanelCard extends LitElement {
                 grid-template-columns: 1fr 1fr 1fr;
                 gap: var(--sq-card-spacing, 0.8rem);
             }
+            .card {
+                display: flex;
+                width: 100%;
+                height: 100%;
+            }
         `;
     }
 
@@ -93,7 +98,7 @@ export class SonosPanelCard extends LitElement {
             if (!card) return nothing;
             const element = card as unknown as HTMLElement;
             console.log("Element:", element);
-            return html`${element}`;
+            return html`<div class="card">${element}</div>`;
         };
 
         return html`
