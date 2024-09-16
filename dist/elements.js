@@ -10373,6 +10373,7 @@ let SonosPanelCard = class SonosPanelCard extends h {
             showVolumeUpAndDownButtons: true,
             sections: ["volumes", "groups", "grouping"],
         }, this.hass);
+        console.log("Speakers Card:", this._speakersCard);
         this._playerCard = createElement$1({
             type: "custom:sonos-card",
             entityId: this._entity,
@@ -10394,6 +10395,7 @@ let SonosPanelCard = class SonosPanelCard extends h {
             if (!card)
                 return D;
             const element = card;
+            console.log("Element:", element);
             return ke `${element}`;
         };
         return ke `

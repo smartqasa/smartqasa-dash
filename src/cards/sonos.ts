@@ -62,6 +62,7 @@ export class SonosPanelCard extends LitElement {
             },
             this.hass
         );
+        console.log("Speakers Card:", this._speakersCard);
 
         this._playerCard = createElement(
             {
@@ -91,6 +92,7 @@ export class SonosPanelCard extends LitElement {
         const renderCard = (card: LovelaceCard | undefined): TemplateResult | typeof nothing => {
             if (!card) return nothing;
             const element = card as unknown as HTMLElement;
+            console.log("Element:", element);
             return html`${element}`;
         };
 
