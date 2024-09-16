@@ -25,7 +25,7 @@ export const createElement = (config: LovelaceCardConfig, hass?: HomeAssistant):
         return undefined;
     }
 
-    if (config.tag === "custom:smartqasa-sonos-card") {
+    if (config.type === "custom:smartqasa-sonos-card") {
         console.log("Element:", element);
     }
 
