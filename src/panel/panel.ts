@@ -160,7 +160,7 @@ export class PanelCard extends LitElement implements LovelaceCard {
                 `;
                 break;
             case "entertain":
-                content = this._audioCard ? html`<ha-card>${this._audioCard}</ha-card>` : nothing;
+                content = this._audioCard ? html`<div class=entertain-container><hui-card>${this._audioCard}</hui-card></div>` : nothing;
                 break;
             default:
                 content = nothing;

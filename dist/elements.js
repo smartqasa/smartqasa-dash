@@ -9254,7 +9254,7 @@ let PanelCard = class PanelCard extends h {
                 `;
                 break;
             case "entertain":
-                content = this._audioCard ? ke `<ha-card>${this._audioCard}</ha-card>` : D;
+                content = this._audioCard ? ke `<div class=entertain-container><hui-card>${this._audioCard}</hui-card></div>` : D;
                 break;
             default:
                 content = D;
@@ -10463,7 +10463,7 @@ let VerticalStack = class VerticalStack extends h {
                 display: flex;
                 flex-direction: column;
             }
-            .element:not(:last-child) {
+            .hui-card:not(:last-child) {
                 padding-bottom: 0.8rem;
             }
         `;
@@ -10493,7 +10493,7 @@ let VerticalStack = class VerticalStack extends h {
     render() {
         if (!this._config || !this.hass || this._cards.length === 0)
             return D;
-        return ke ` <div class="container">${this._cards.map((card) => ke `<ha-card>${card}</ha-card>`)}</div> `;
+        return ke ` <div class="container">${this._cards.map((card) => ke `<hui-card>${card}</hui-card>`)}</div> `;
     }
 };
 __decorate([
