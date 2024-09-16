@@ -6,7 +6,7 @@ import { createElement } from "../utils/create-element";
 interface Config extends LovelaceCardConfig {
     filter_type: "group" | "domain";
     filter_value: string;
-    card_type: string;
+    tile_type: string;
 }
 
 window.customCards.push({
@@ -24,7 +24,7 @@ class GroupStack extends LitElement implements LovelaceCard {
 
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() protected _config?: Config;
-    @state() private _cards: LovelaceCard[] = [];
+    @state() private _tiles: LovelaceCard[] = [];
 
     static get styles() {
         return css`
@@ -32,18 +32,21 @@ class GroupStack extends LitElement implements LovelaceCard {
                 display: flex;
                 flex-direction: column;
             }
-            .element:not(:last-child) {
-                padding-bottom: 0.8rem;
+            .tile {
+                height: var(--sq-tile-height);
+            }
+            .tile:not(:last-child) {
+                padding-bottom: var(--sq-tile-spacing);
             }
         `;
     }
 
     public setConfig(config: Config): void {
-        if (!config.filter_type || !config.filter_value || !config.card_type) {
+        if (!config.filter_type || !config.filter_value || !config.tile_type) {
             throw new Error("filter_type, filter_value, and card_type must be provided in the config.");
         }
         this._config = { ...config };
-        this._cards = [];
+        this._tiles = [];
     }
 
     protected willUpdate(changedProps: PropertyValues) {
@@ -72,33 +75,31 @@ class GroupStack extends LitElement implements LovelaceCard {
                 entityNameMap.sort((a, b) => a.friendlyName.localeCompare(b.friendlyName));
                 entityIds = entityNameMap.map((item) => item.entityId);
 
-                this._cards = entityIds.map((entityId) => {
-                    const cardConfig: LovelaceCardConfig = {
-                        type: this._config!.card_type,
+                this._tiles = entityIds.map((entityId) => {
+                    const tileConfig: LovelaceCardConfig = {
+                        type: this._config!.tile_type,
                         entity: entityId,
                     };
-                    const card = createElement(cardConfig) as LovelaceCard;
-                    card.hass = this.hass!;
-                    return card;
+                    const tile = createElement(tileConfig) as LovelaceCard;
+                    tile.hass = this.hass!;
+                    return tile;
                 });
             } else {
-                this._cards = [];
+                this._tiles = [];
             }
         }
     }
 
     protected updated(changedProps: PropertyValues) {
         if (changedProps.has("hass") && this.hass) {
-            this._cards.forEach((card) => {
-                card.hass = this.hass!;
+            this._tiles.forEach((tile) => {
+                tile.hass = this.hass!;
             });
         }
     }
 
     protected render(): TemplateResult | typeof nothing {
-        if (!this._config || !this.hass || this._cards.length === 0) return nothing;
-        return html`
-            <div class="container">${this._cards.map((card) => html`<div class="element">${card}</div>`)}</div>
-        `;
+        if (!this.hass || this._tiles.length === 0) return nothing;
+        return html` <div class="container">${this._tiles.map((tile) => html`<div class="tile">${tile}</div>`)}</div> `;
     }
 }

@@ -2,7 +2,7 @@ export const listDialogConfig: any = (
     dialogTitle: string,
     filterType: "domain" | "group",
     filterValue: string,
-    cardType: string
+    tileType: string
 ) => {
     return {
         title: dialogTitle,
@@ -11,7 +11,7 @@ export const listDialogConfig: any = (
             type: "custom:smartqasa-group-stack",
             filter_type: filterType,
             filter_value: filterValue,
-            card_type: `custom:smartqasa-${cardType}-tile`,
+            tile_type: `custom:smartqasa-${tileType}-tile`,
         },
     };
 };

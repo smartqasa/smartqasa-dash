@@ -8577,7 +8577,7 @@ function navigateToArea(area) {
     window.dispatchEvent(new CustomEvent("location-changed"));
 }
 
-const listDialogConfig = (dialogTitle, filterType, filterValue, cardType) => {
+const listDialogConfig = (dialogTitle, filterType, filterValue, tileType) => {
     return {
         title: dialogTitle,
         timeout: 60000,
@@ -8585,7 +8585,7 @@ const listDialogConfig = (dialogTitle, filterType, filterValue, cardType) => {
             type: "custom:smartqasa-group-stack",
             filter_type: filterType,
             filter_value: filterValue,
-            card_type: `custom:smartqasa-${cardType}-tile`,
+            tile_type: `custom:smartqasa-${tileType}-tile`,
         },
     };
 };
@@ -9254,7 +9254,7 @@ let PanelCard = class PanelCard extends h {
                 `;
                 break;
             case "entertain":
-                content = this._audioCard ? ke `<div class=entertain-container><hui-card>${this._audioCard}</hui-card></div>` : D;
+                content = this._audioCard ? ke `<div class=entertain-container>${this._audioCard}</div>` : D;
                 break;
             default:
                 content = D;
@@ -9557,7 +9557,7 @@ window.customCards.push({
 let GroupStack = class GroupStack extends h {
     constructor() {
         super(...arguments);
-        this._cards = [];
+        this._tiles = [];
     }
     getCardSize() {
         return 4;
@@ -9568,17 +9568,20 @@ let GroupStack = class GroupStack extends h {
                 display: flex;
                 flex-direction: column;
             }
-            .element:not(:last-child) {
-                padding-bottom: 0.8rem;
+            .tile {
+                height: var(--sq-tile-height);
+            }
+            .tile:not(:last-child) {
+                padding-bottom: var(--sq-tile-spacing);
             }
         `;
     }
     setConfig(config) {
-        if (!config.filter_type || !config.filter_value || !config.card_type) {
+        if (!config.filter_type || !config.filter_value || !config.tile_type) {
             throw new Error("filter_type, filter_value, and card_type must be provided in the config.");
         }
         this._config = { ...config };
-        this._cards = [];
+        this._tiles = [];
     }
     willUpdate(changedProps) {
         if ((changedProps.has("_config") || changedProps.has("hass")) && this._config && this.hass) {
@@ -9603,34 +9606,32 @@ let GroupStack = class GroupStack extends h {
                 });
                 entityNameMap.sort((a, b) => a.friendlyName.localeCompare(b.friendlyName));
                 entityIds = entityNameMap.map((item) => item.entityId);
-                this._cards = entityIds.map((entityId) => {
-                    const cardConfig = {
-                        type: this._config.card_type,
+                this._tiles = entityIds.map((entityId) => {
+                    const tileConfig = {
+                        type: this._config.tile_type,
                         entity: entityId,
                     };
-                    const card = createElement$1(cardConfig);
-                    card.hass = this.hass;
-                    return card;
+                    const tile = createElement$1(tileConfig);
+                    tile.hass = this.hass;
+                    return tile;
                 });
             }
             else {
-                this._cards = [];
+                this._tiles = [];
             }
         }
     }
     updated(changedProps) {
         if (changedProps.has("hass") && this.hass) {
-            this._cards.forEach((card) => {
-                card.hass = this.hass;
+            this._tiles.forEach((tile) => {
+                tile.hass = this.hass;
             });
         }
     }
     render() {
-        if (!this._config || !this.hass || this._cards.length === 0)
+        if (!this.hass || this._tiles.length === 0)
             return D;
-        return ke `
-            <div class="container">${this._cards.map((card) => ke `<div class="element">${card}</div>`)}</div>
-        `;
+        return ke ` <div class="container">${this._tiles.map((tile) => ke `<div class="tile">${tile}</div>`)}</div> `;
     }
 };
 __decorate([
@@ -9641,7 +9642,7 @@ __decorate([
 ], GroupStack.prototype, "_config", void 0);
 __decorate([
     r()
-], GroupStack.prototype, "_cards", void 0);
+], GroupStack.prototype, "_tiles", void 0);
 GroupStack = __decorate([
     t$1("smartqasa-group-stack")
 ], GroupStack);
@@ -12071,7 +12072,7 @@ ThermostatChip = __decorate([
     t$1("smartqasa-weather-chip")
 ], ThermostatChip);
 
-var css_248z$1 = ".container {\n    display: grid;\n    width: 100%;\n    height: 100%;\n    box-sizing: border-box;\n    border: var(--sq-card-border, none);\n    border-radius: var(--sq-card-border-radius, 1.5rem);\n    grid-template-areas: \"i n\";\n    grid-template-columns: auto 1fr;\n    grid-column-gap: 1rem;\n    grid-row-gap: 0.4rem;\n    padding: var(--sq-tile-padding, 1rem);\n    background-color: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));\n    overflow: hidden;\n    -webkit-tap-highlight-color: transparent;\n    cursor: pointer;\n}\n\n.container:focus,\n.container:active {\n    background-color: var(--sq-ripple-color);\n    border-radius: var(--sq-card-border-radius, 1.5rem);\n    outline: none;\n}\n\n.icon {\n    grid-area: i;\n    display: flex;\n    justify-content: center;\n    align-self: center;\n    height: var(--sq-icon-size, 1.8rem);\n    width: var(--sq-icon-size, 1.8rem);\n    padding: var(--sq-tile-padding, 1rem);\n    border-radius: 50%;\n    transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;\n}\n.name {\n    grid-area: n;\n    place-self: center start;\n    max-height: 3.6rem;\n    line-height: 1.2;\n    max-width: 100%;\n    text-align: left;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: normal;\n    font-weight: var(--sq-primary-font-weight, 400);\n    font-size: var(--sq-primary-font-size, 1.5rem);\n    color: rgb(var(--sq-primary-font-rgb, 128, 128, 128));\n}\n\n@keyframes blink {\n    50% {\n        opacity: 0.25;\n    }\n}\n\n@keyframes spin {\n    from {\n        transform: rotate(0deg);\n    }\n    to {\n        transform: rotate(360deg);\n    }\n}\n";
+var css_248z$1 = ".container {\n    display: grid;\n    width: 100%;\n    height: 100%;\n    box-sizing: border-box;\n    border: var(--sq-card-border);\n    border-radius: var(--sq-card-border-radius);\n    grid-template-areas: \"i n\";\n    grid-template-columns: auto 1fr;\n    grid-column-gap: 1rem;\n    grid-row-gap: 0.4rem;\n    padding: var(--sq-tile-padding);\n    background-color: var(--sq-card-background-color);\n    overflow: hidden;\n    -webkit-tap-highlight-color: transparent;\n    cursor: pointer;\n}\n\n.container:focus,\n.container:active {\n    background-color: var(--sq-ripple-color);\n    border-radius: var(--sq-card-border-radius);\n    outline: none;\n}\n\n.icon {\n    grid-area: i;\n    display: flex;\n    justify-content: center;\n    align-self: center;\n    height: var(--sq-icon-size);\n    width: var(--sq-icon-size);\n    padding: var(--sq-tile-padding);\n    border-radius: 50%;\n    transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;\n}\n.name {\n    grid-area: n;\n    place-self: center start;\n    max-height: 3.6rem;\n    line-height: 1.2;\n    max-width: 100%;\n    text-align: left;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: normal;\n    font-weight: var(--sq-primary-font-weight);\n    font-size: var(--sq-primary-font-size);\n    color: rgb(var(--sq-primary-font-rgb));\n}\n\n@keyframes blink {\n    50% {\n        opacity: 0.25;\n    }\n}\n\n@keyframes spin {\n    from {\n        transform: rotate(0deg);\n    }\n    to {\n        transform: rotate(360deg);\n    }\n}\n";
 styleInject(css_248z$1);
 
 window.customCards.push({
@@ -12933,7 +12934,7 @@ function entityListDialog(dialogTitle, filterType, filterValue, tileType) {
     window.browser_mod?.service("popup", dialogConfig);
 }
 
-var css_248z = ".container {\n    grid-template-areas: \"i n\" \"i s\";\n    grid-row-gap: 0.3rem;\n}\n.name {\n    place-self: end start;\n}\n.state {\n    grid-area: s;\n    align-self: start;\n    text-align: left;\n    text-overflow: ellipsis;\n    overflow: hidden;\n    font-weight: var(--sq-secondary-font-weight, 300);\n    font-size: var(--sq-secondary-font-size, 1rem);\n    color: rgb(var(--sq-secondary-font-rgb, 0, 0, 0));\n}\n";
+var css_248z = ".container {\n    grid-template-areas: \"i n\" \"i s\";\n    grid-row-gap: 0.3rem;\n}\n.name {\n    place-self: end start;\n}\n.state {\n    grid-area: s;\n    align-self: start;\n    text-align: left;\n    text-overflow: ellipsis;\n    overflow: hidden;\n    font-weight: var(--sq-secondary-font-weight);\n    font-size: var(--sq-secondary-font-size);\n    color: rgb(var(--sq-secondary-font-rgb));\n}\n";
 styleInject(css_248z);
 
 window.customCards.push({
