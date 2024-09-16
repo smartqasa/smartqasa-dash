@@ -3964,7 +3964,7 @@ const createElement$1 = (config, hass) => {
         console.error(`Error: Custom element '${tag}' is not registered.`);
         return undefined;
     }
-    const element = window.document.createElement(tag);
+    const element = document.createElement(tag);
     if (typeof element.setConfig !== "function") {
         console.error(`Error: The element '${tag}' does not implement 'setConfig'.`, element);
         return undefined;

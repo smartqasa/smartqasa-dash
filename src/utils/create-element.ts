@@ -12,7 +12,7 @@ export const createElement = (config: LovelaceCardConfig, hass?: HomeAssistant):
         return undefined;
     }
 
-    const element = window.document.createElement(tag) as LovelaceCard;
+    const element = document.createElement(tag) as LovelaceCard;
     if (typeof element.setConfig !== "function") {
         console.error(`Error: The element '${tag}' does not implement 'setConfig'.`, element);
         return undefined;
