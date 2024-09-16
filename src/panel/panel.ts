@@ -261,5 +261,6 @@ export class PanelCard extends LitElement {
         };
 
         this._audioCard = createElement(audioCardConfig, this.hass);
+        console.log("Audio Card:", this._audioCard);
     }
 }

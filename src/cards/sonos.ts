@@ -11,7 +11,7 @@ interface Config extends LovelaceCardConfig {
 window.customCards.push({
     type: "smartqasa-sonos-card",
     name: "SmartQasa Sonos Card",
-    preview: false,
+    preview: true,
     description: "A SmartQasa element that display a set of Sonos cards.",
 });
 
@@ -58,7 +58,6 @@ export class SonosPanelCard extends LitElement {
         const renderCard = (card: LovelaceCard | undefined): TemplateResult | typeof nothing => {
             if (!card) return nothing;
             const element = card as unknown as HTMLElement;
-            console.log("Element:", element);
             return html`<div class="card">${element}</div>`;
         };
 

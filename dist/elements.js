@@ -3976,6 +3976,9 @@ const createElement$1 = (config, hass) => {
         console.error(`Error: Failed to set config for element '${tag}'.`, err);
         return undefined;
     }
+    if (config.tag === "custom:smartqasa-sonos-card") {
+        console.log("Element:", element);
+    }
     if (hass)
         element.hass = hass;
     return element;
@@ -9339,6 +9342,7 @@ let PanelCard = class PanelCard extends h {
             entity: this._config.audio_player,
         };
         this._audioCard = createElement$1(audioCardConfig, this.hass);
+        console.log("Audio Card:", this._audioCard);
     }
 };
 __decorate([
@@ -10334,7 +10338,7 @@ ScreenSaver = __decorate([
 window.customCards.push({
     type: "smartqasa-sonos-card",
     name: "SmartQasa Sonos Card",
-    preview: false,
+    preview: true,
     description: "A SmartQasa element that display a set of Sonos cards.",
 });
 let SonosPanelCard = class SonosPanelCard extends h {
@@ -10369,7 +10373,6 @@ let SonosPanelCard = class SonosPanelCard extends h {
             if (!card)
                 return D;
             const element = card;
-            console.log("Element:", element);
             return ke `<div class="card">${element}</div>`;
         };
         return ke `
