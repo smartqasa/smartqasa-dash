@@ -40,4 +40,5 @@ export default {
             fileName: "[dirname][hash][extname]",
         }),
     ],
+    context: "window",
 };

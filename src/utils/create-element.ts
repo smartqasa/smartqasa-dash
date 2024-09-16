@@ -1,6 +1,6 @@
 import { HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 
-export const createElement = (config: any, hass?: HomeAssistant): LovelaceCard | undefined => {
+export const createElement = (config: LovelaceCardConfig, hass?: HomeAssistant): LovelaceCard | undefined => {
     if (!config || typeof config !== "object" || !config.type) {
         console.error("Error: Invalid or missing 'type' in config:", config);
         return undefined;
@@ -12,7 +12,7 @@ export const createElement = (config: any, hass?: HomeAssistant): LovelaceCard |
         return undefined;
     }
 
-    const element = window.document.createElement(tag);
+    const element = document.createElement(tag) as LovelaceCard;
     if (typeof element.setConfig !== "function") {
         console.error(`Error: The element '${tag}' does not implement 'setConfig'.`, element);
         return undefined;
