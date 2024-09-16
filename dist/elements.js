@@ -11095,6 +11095,9 @@ let WeatherCard = class WeatherCard extends h {
             .left-column > * {
                 flex-grow: 1;
             }
+            .card {
+                display: block;
+            }
         `;
     }
     setConfig(config) {
@@ -11121,7 +11124,7 @@ let WeatherCard = class WeatherCard extends h {
             if (!card)
                 return D;
             const element = card;
-            return ke `${element}`;
+            return ke `<div class="card">${element}</div>`;
         };
         return ke `
             <div class="container">
