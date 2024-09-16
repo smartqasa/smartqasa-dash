@@ -3976,9 +3976,6 @@ const createElement$1 = (config, hass) => {
         console.error(`Error: Failed to set config for element '${tag}'.`, err);
         return undefined;
     }
-    if (config.type === "custom:smartqasa-sonos-card") {
-        console.log("Element:", element);
-    }
     if (hass)
         element.hass = hass;
     return element;
@@ -11130,9 +11127,6 @@ let WeatherCard = class WeatherCard extends h {
             .left-column > * {
                 flex-grow: 1;
             }
-            .card {
-                display: block;
-            }
         `;
     }
     setConfig(config) {
@@ -11159,7 +11153,7 @@ let WeatherCard = class WeatherCard extends h {
             if (!card)
                 return D;
             const element = card;
-            return ke `<div class="card">${element}</div>`;
+            return ke `<ha-card>${element}</ha-card>`;
         };
         return ke `
             <div class="container">

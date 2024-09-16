@@ -44,9 +44,6 @@ export class WeatherCard extends LitElement implements LovelaceCard {
             .left-column > * {
                 flex-grow: 1;
             }
-            .card {
-                display: block;
-            }
         `;
     }
 
@@ -74,7 +71,7 @@ export class WeatherCard extends LitElement implements LovelaceCard {
         const renderCard = (card: LovelaceCard | undefined): TemplateResult | typeof nothing => {
             if (!card) return nothing;
             const element = card as unknown as HTMLElement;
-            return html`<div class="card">${element}</div>`;
+            return html`<ha-card>${element}</ha-card>`;
         };
 
         return html`
