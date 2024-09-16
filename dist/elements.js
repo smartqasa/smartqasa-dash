@@ -9175,6 +9175,9 @@ let PanelCard = class PanelCard extends h {
         this._controlTiles = [];
         this._controlColumns = [];
     }
+    getCardSize() {
+        return 100;
+    }
     static { this.styles = [r$3(css_248z$5), r$3(css_248z$6)]; }
     setConfig(config) {
         this._config = { ...config };
@@ -9374,6 +9377,9 @@ PanelCard = __decorate([
 ], PanelCard);
 
 let AreasCard = class AreasCard extends h {
+    getCardSize() {
+        return 4;
+    }
     setConfig() { }
     static get styles() {
         return i$2 `
@@ -9483,6 +9489,9 @@ let GridStack = class GridStack extends h {
         super(...arguments);
         this._cards = [];
     }
+    getCardSize() {
+        return 4;
+    }
     static get styles() {
         return i$2 `
             .container {
@@ -9552,6 +9561,9 @@ let GroupStack = class GroupStack extends h {
     constructor() {
         super(...arguments);
         this._cards = [];
+    }
+    getCardSize() {
+        return 4;
     }
     static get styles() {
         return i$2 `
@@ -9648,6 +9660,9 @@ let HorizontalStack = class HorizontalStack extends h {
         super(...arguments);
         this._cards = [];
     }
+    getCardSize() {
+        return 1;
+    }
     static get styles() {
         return i$2 `
             .container {
@@ -9708,6 +9723,9 @@ HorizontalStack = __decorate([
 ], HorizontalStack);
 
 let MenuCard = class MenuCard extends h {
+    getCardSize() {
+        return 4;
+    }
     setConfig() { }
     static get styles() {
         return i$2 `
@@ -9892,6 +9910,9 @@ MenuCard = __decorate([
 ], MenuCard);
 
 let MoreInfoCard = class MoreInfoCard extends h {
+    getCardSize() {
+        return 4;
+    }
     static { this.styles = i$2 `
         .container {
             padding: var(--sq-card-padding, 1rem);
@@ -9965,6 +9986,9 @@ let PinVerifyCard = class PinVerifyCard extends h {
         this._inputPin = "";
         this._maskedPin = "";
         this._pinState = "";
+    }
+    getCardSize() {
+        return 4;
     }
     static { this.styles = i$2 `
         :host {
@@ -10162,6 +10186,9 @@ let ScreenSaver = class ScreenSaver extends h {
         this._time = "Loading...";
         this._date = "Loading...";
     }
+    getCardSize() {
+        return 100;
+    }
     static get styles() {
         return i$2 `
             :host {
@@ -10342,6 +10369,9 @@ window.customCards.push({
     description: "A SmartQasa element that display a set of Sonos cards.",
 });
 let SonosPanelCard = class SonosPanelCard extends h {
+    getCardSize() {
+        return 10;
+    }
     static get styles() {
         return i$2 `
             .container {
@@ -10426,6 +10456,9 @@ let VerticalStack = class VerticalStack extends h {
     constructor() {
         super(...arguments);
         this._cards = [];
+    }
+    getCardSize() {
+        return 1;
     }
     static get styles() {
         return i$2 `
@@ -10754,6 +10787,9 @@ let TVRemoteCard = class TVRemoteCard extends h {
         super(...arguments);
         this._entities = {};
     }
+    getCardSize() {
+        return 10;
+    }
     static get styles() {
         return i$2 `
             :host {
@@ -11076,6 +11112,9 @@ window.customCards.push({
     description: "A SmartQasa element that displays a grid of weather info.",
 });
 let WeatherCard = class WeatherCard extends h {
+    getCardSize() {
+        return 10;
+    }
     static get styles() {
         return i$2 `
             .container {
@@ -11188,6 +11227,9 @@ let AdminChip = class AdminChip extends h {
         super(...arguments);
         this._entity = "input_boolean.admin_mode";
     }
+    getCardSize() {
+        return 1;
+    }
     static { this.styles = r$3(css_248z$4); }
     setConfig() { }
     updated(changedProps) {
@@ -11237,6 +11279,9 @@ window.customCards.push({
     description: "A SmartQasa chip for custom configurations.",
 });
 let CustomChip = class CustomChip extends h {
+    getCardSize() {
+        return 1;
+    }
     static { this.styles = [r$3(css_248z$4), r$3(css_248z$3)]; }
     setConfig(config) {
         this._config = { ...config };
@@ -11327,6 +11372,9 @@ window.customCards.push({
     description: "A SmartQasa chip for dialog.",
 });
 let DialogChip = class DialogChip extends h {
+    getCardSize() {
+        return 1;
+    }
     static { this.styles = [r$3(css_248z$4), r$3(css_248z$3)]; }
     setConfig(config) {
         this._config = { ...config };
@@ -11394,6 +11442,9 @@ window.customCards.push({
     description: "A SmartQasa chip for toggling a motion sensor automation entity.",
 });
 let MotionChip = class MotionChip extends h {
+    getCardSize() {
+        return 1;
+    }
     static { this.styles = [r$3(css_248z$4), r$3(css_248z$3)]; }
     setConfig(config) {
         this._config = { ...config };
@@ -11474,6 +11525,9 @@ window.customCards.push({
     description: "A SmartQasa chip for navigating to a previous/next area.",
 });
 let NavigateChip = class NavigateChip extends h {
+    getCardSize() {
+        return 1;
+    }
     static { this.styles = r$3(css_248z$2); }
     setConfig(config) {
         this._areaPrev = config.area_prev || undefined;
@@ -11552,6 +11606,9 @@ let RoutineChip = class RoutineChip extends h {
     constructor() {
         super(...arguments);
         this._running = false;
+    }
+    getCardSize() {
+        return 1;
     }
     static { this.styles = [r$3(css_248z$4), r$3(css_248z$3)]; }
     setConfig(config) {
@@ -11818,6 +11875,9 @@ window.customCards.push({
     description: "A SmartQasa chip for selecting an option for a input_select entity.",
 });
 let SelectChip = class SelectChip extends h {
+    getCardSize() {
+        return 1;
+    }
     static { this.styles = r$3(chipBaseStyle); }
     setConfig(config) {
         this._config = { ...config };
@@ -11902,6 +11962,9 @@ window.customCards.push({
     description: "A SmartQasa chip that displays a thermostat.",
 });
 let ThermostatChip$1 = class ThermostatChip extends h {
+    getCardSize() {
+        return 1;
+    }
     static { this.styles = [r$3(css_248z$4), r$3(css_248z$3)]; }
     setConfig(config) {
         this._config = { ...config };
@@ -11965,6 +12028,9 @@ window.customCards.push({
     description: "A SmartQasa chip for displaying the weather card.",
 });
 let ThermostatChip = class ThermostatChip extends h {
+    getCardSize() {
+        return 1;
+    }
     static { this.styles = [r$3(css_248z$4), r$3(css_248z$3)]; }
     setConfig(config) {
         this._config = { ...config };
@@ -12026,6 +12092,9 @@ let ActionTile = class ActionTile extends h {
     constructor() {
         super(...arguments);
         this._running = false;
+    }
+    getCardSize() {
+        return 1;
     }
     static { this.styles = r$3(css_248z$1); }
     setConfig(config) {
@@ -12110,6 +12179,9 @@ let AllOffTile = class AllOffTile extends h {
     constructor() {
         super(...arguments);
         this._running = false;
+    }
+    getCardSize() {
+        return 1;
     }
     static { this.styles = r$3(css_248z$1); }
     setConfig(config) {
@@ -12651,6 +12723,9 @@ window.customCards.push({
     description: "A SmartQasa tile for launching applications from the dashboard",
 });
 let AppTile = class AppTile extends h {
+    getCardSize() {
+        return 1;
+    }
     static { this.styles = r$3(css_248z$1); }
     setConfig(config) {
         if (!config.app)
@@ -12721,6 +12796,9 @@ window.customCards.push({
     description: "A SmartQasa card for navigating to an area panel.",
 });
 let AreaTile = class AreaTile extends h {
+    getCardSize() {
+        return 1;
+    }
     static { this.styles = r$3(css_248z$1); }
     setConfig(config) {
         this._config = { ...config };
@@ -12873,6 +12951,9 @@ window.customCards.push({
     description: "A SmartQasa tile for controlling a fan entity.",
 });
 let FanTile = class FanTile extends h {
+    getCardSize() {
+        return 1;
+    }
     static { this.styles = [r$3(css_248z$1), r$3(css_248z)]; }
     setConfig(config) {
         this._config = { ...config };
@@ -12975,6 +13056,9 @@ window.customCards.push({
     description: "A SmartQasa tile for controlling a garage cover entity.",
 });
 let GarageTile = class GarageTile extends h {
+    getCardSize() {
+        return 1;
+    }
     static { this.styles = [r$3(css_248z$1), r$3(css_248z)]; }
     setConfig(config) {
         this._config = { ...config };
@@ -13078,6 +13162,9 @@ window.customCards.push({
     description: "A SmartQasa tile for controlling a water heater entity.",
 });
 let HeaterTile = class HeaterTile extends h {
+    getCardSize() {
+        return 1;
+    }
     static { this.styles = [r$3(css_248z$1), r$3(css_248z)]; }
     setConfig(config) {
         this._config = { ...config };
@@ -13156,6 +13243,9 @@ window.customCards.push({
     description: "A SmartQasa tile for controlling a light entity.",
 });
 let LightTile = class LightTile extends h {
+    getCardSize() {
+        return 1;
+    }
     static { this.styles = [r$3(css_248z$1), r$3(css_248z)]; }
     setConfig(config) {
         this._config = { ...config };
@@ -13317,6 +13407,9 @@ let LockTile = class LockTile extends h {
         super(...arguments);
         this._running = false;
     }
+    getCardSize() {
+        return 1;
+    }
     static { this.styles = [r$3(css_248z$1), r$3(css_248z)]; }
     setConfig(config) {
         this._config = { ...config };
@@ -13451,6 +13544,9 @@ let OptionTile = class OptionTile extends h {
         super(...arguments);
         this._running = false;
     }
+    getCardSize() {
+        return 1;
+    }
     static { this.styles = r$3(css_248z$1); }
     setConfig(config) {
         this._config = { ...config };
@@ -13572,6 +13668,9 @@ window.customCards.push({
     description: "A SmartQasa tile for controlling a robot vacuum entity.",
 });
 let RobotTile = class RobotTile extends h {
+    getCardSize() {
+        return 1;
+    }
     static { this.styles = [r$3(css_248z$1), r$3(css_248z)]; }
     setConfig(config) {
         this._config = { ...config };
@@ -13684,6 +13783,9 @@ window.customCards.push({
     description: "A SmartQasa tile for controlling a Roku media_player entity.",
 });
 let RokuTile = class RokuTile extends h {
+    getCardSize() {
+        return 1;
+    }
     static { this.styles = [r$3(css_248z$1), r$3(css_248z)]; }
     setConfig(config) {
         this._config = { ...config };
@@ -13797,6 +13899,9 @@ let RoutineTile = class RoutineTile extends h {
         super(...arguments);
         this._running = false;
     }
+    getCardSize() {
+        return 1;
+    }
     static { this.styles = r$3(css_248z$1); }
     setConfig(config) {
         this._config = { ...config };
@@ -13894,6 +13999,9 @@ window.customCards.push({
     description: "A SmartQasa tile for displaying an Input Select entity.",
 });
 let SelectTile = class SelectTile extends h {
+    getCardSize() {
+        return 1;
+    }
     static { this.styles = [r$3(css_248z$1), r$3(css_248z)]; }
     setConfig(config) {
         this._config = { ...config };
@@ -13962,6 +14070,9 @@ window.customCards.push({
     description: "A SmartQasa tile for observing a binary_sensor entity.",
 });
 let SensorTile = class SensorTile extends h {
+    getCardSize() {
+        return 1;
+    }
     static { this.styles = [r$3(css_248z$1), r$3(css_248z)]; }
     setConfig(config) {
         this._config = { ...config };
@@ -14104,6 +14215,9 @@ window.customCards.push({
     description: "A SmartQasa tile for controlling a pool color light or switch entity.",
 });
 let PoolLightTile = class PoolLightTile extends h {
+    getCardSize() {
+        return 1;
+    }
     static { this.styles = [r$3(css_248z$1), r$3(css_248z)]; }
     setConfig(config) {
         this._config = { ...config };
@@ -14198,6 +14312,9 @@ let PoolLightSequencerTile = class PoolLightSequencerTile extends h {
         super(...arguments);
         this._running = false;
     }
+    getCardSize() {
+        return 1;
+    }
     static { this.styles = r$3(css_248z$1); }
     setConfig(config) {
         this._config = { ...config };
@@ -14286,6 +14403,9 @@ window.customCards.push({
     description: "A SmartQasa tile for controlling a window shade entity.",
 });
 let ShadeTile = class ShadeTile extends h {
+    getCardSize() {
+        return 1;
+    }
     static { this.styles = [r$3(css_248z$1), r$3(css_248z)]; }
     setConfig(config) {
         this._config = { ...config };
@@ -14429,6 +14549,9 @@ window.customCards.push({
     description: "A SmartQasa tile for toggling an entity.",
 });
 let SwitchTile = class SwitchTile extends h {
+    getCardSize() {
+        return 1;
+    }
     static { this.styles = [r$3(css_248z$1), r$3(css_248z)]; }
     setConfig(config) {
         this._config = { ...config };
@@ -14506,6 +14629,9 @@ window.customCards.push({
     description: "A SmartQasa tile for setting the display theme.",
 });
 let ThemeTile = class ThemeTile extends h {
+    getCardSize() {
+        return 1;
+    }
     static { this.styles = r$3(css_248z$1); }
     setConfig(config) {
         this._config = { ...config };
@@ -14549,6 +14675,9 @@ window.customCards.push({
     description: "A SmartQasa tile for controlling a thermostat climate entity.",
 });
 let ThermostatTile = class ThermostatTile extends h {
+    getCardSize() {
+        return 1;
+    }
     static { this.styles = [r$3(css_248z$1), r$3(css_248z)]; }
     setConfig(config) {
         this._config = { ...config };

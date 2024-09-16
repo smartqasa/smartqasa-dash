@@ -2,7 +2,7 @@ import { CSSResult, html, LitElement, TemplateResult, unsafeCSS } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 
-import { LovelaceCardConfig } from "../types";
+import { LovelaceCard, LovelaceCardConfig } from "../types";
 
 import tileBaseStyle from "../css/tile-base.css";
 
@@ -20,8 +20,12 @@ window.customCards.push({
 });
 
 @customElement("smartqasa-theme-tile")
-export class ThemeTile extends LitElement {
-    @state() private _config?: Config;
+export class ThemeTile extends LitElement implements LovelaceCard {
+    public getCardSize(): number {
+        return 1;
+    }
+
+    @state() protected _config?: Config;
 
     static styles: CSSResult = unsafeCSS(tileBaseStyle);
 

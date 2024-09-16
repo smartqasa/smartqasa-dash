@@ -2,7 +2,7 @@ import { CSSResult, html, LitElement, PropertyValues, TemplateResult, unsafeCSS 
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 
-import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
+import { HassEntity, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 import { callService } from "../utils/call-service";
 import { menuConfig } from "../misc/menu-config";
 import { phaseIcons, modeIcons } from "../const";
@@ -23,9 +23,13 @@ window.customCards.push({
 });
 
 @customElement("smartqasa-option-tile")
-export class OptionTile extends LitElement {
+export class OptionTile extends LitElement implements LovelaceCard {
+    public getCardSize(): number {
+        return 1;
+    }
+
     @property({ attribute: false }) public hass?: HomeAssistant;
-    @state() private _config?: Config;
+    @state() protected _config?: Config;
     @state() private _stateObj?: HassEntity;
     @state() private _running: boolean = false;
     private _entity?: string;

@@ -3,7 +3,7 @@ import { customElement, state } from "lit/decorators.js";
 
 @customElement("smartqasa-light-tile-editor")
 export class LightTileEditor extends LitElement {
-    @state() private _config: any;
+    @state() protected _config: any;
 
     setConfig(config: any) {
         this._config = { ...config }; // Ensure updates trigger reactivity

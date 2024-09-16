@@ -16,9 +16,13 @@ window.customCards.push({
 });
 
 @customElement("smartqasa-weather-card")
-export class WeatherCard extends LitElement {
-    @property({ attribute: false }) private hass?: HomeAssistant;
-    @state() private _config?: Config;
+export class WeatherCard extends LitElement implements LovelaceCard {
+    public getCardSize(): number {
+        return 10;
+    }
+
+    @property({ attribute: false }) public hass?: HomeAssistant;
+    @state() protected _config?: Config;
     private _entity?: string;
 
     private _hourlyForecastCard?: LovelaceCard;

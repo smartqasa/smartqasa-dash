@@ -2,7 +2,7 @@ import { css, html, LitElement, nothing, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 
-import { HomeAssistant, LovelaceCardConfig } from "../types";
+import { HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 
 interface Config extends LovelaceCardConfig {
     title?: string;
@@ -18,9 +18,13 @@ window.customCards.push({
 });
 
 @customElement("smartqasa-pin-verify-card")
-export class PinVerifyCard extends LitElement {
+export class PinVerifyCard extends LitElement implements LovelaceCard {
+    public getCardSize(): number {
+        return 4;
+    }
+
     @property({ attribute: false }) public hass?: HomeAssistant;
-    @state() private _config?: Config;
+    @state() protected _config?: Config;
     @state() private _inputPin: string = "";
     @state() private _maskedPin: string = "";
     @state() private _pinState: string = "";

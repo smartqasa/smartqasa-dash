@@ -1,7 +1,7 @@
 import { CSSResultGroup, html, LitElement, nothing, PropertyValues, TemplateResult, unsafeCSS } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 
-import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
+import { HassEntity, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 import { dialogTable } from "../tables/dialogs";
 import { styleMap } from "lit/directives/style-map.js";
 
@@ -22,9 +22,13 @@ window.customCards.push({
 });
 
 @customElement("smartqasa-dialog-chip")
-export class DialogChip extends LitElement {
+export class DialogChip extends LitElement implements LovelaceCard {
+    public getCardSize(): number {
+        return 1;
+    }
+
     @property({ attribute: false }) public hass?: HomeAssistant;
-    @state() private _config?: Config;
+    @state() protected _config?: Config;
     private _dialog?: string;
     private _dialogObj?: any;
     private _entity?: string;

@@ -14,7 +14,11 @@ interface Tab {
 }
 
 @customElement("smartqasa-menu-card")
-export class MenuCard extends LitElement {
+export class MenuCard extends LitElement implements LovelaceCard {
+    public getCardSize(): number {
+        return 4;
+    }
+
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() private _tabs: Tab[] = [];
     @state() private _bodyTiles: LovelaceCard[][] = [];

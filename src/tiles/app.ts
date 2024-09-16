@@ -1,7 +1,7 @@
 import { CSSResult, html, LitElement, TemplateResult, unsafeCSS } from "lit";
 import { customElement, state } from "lit/decorators.js";
 
-import { LovelaceCardConfig } from "../types";
+import { LovelaceCard, LovelaceCardConfig } from "../types";
 import appTable from "../tables/apps";
 
 import tileBaseStyle from "../css/tile-base.css";
@@ -19,8 +19,12 @@ window.customCards.push({
 });
 
 @customElement("smartqasa-app-tile")
-export class AppTile extends LitElement {
-    @state() private _config?: Config;
+export class AppTile extends LitElement implements LovelaceCard {
+    getCardSize(): number | Promise<number> {
+        return 1;
+    }
+
+    @state() protected _config?: Config;
     private _appObj?: any;
 
     static styles: CSSResult = unsafeCSS(tileBaseStyle);

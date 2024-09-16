@@ -1,6 +1,6 @@
 import { css, CSSResultGroup, html, LitElement, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
-import { LovelaceCardConfig } from "../types";
+import { LovelaceCard, LovelaceCardConfig } from "../types";
 import { formattedDate, formattedTime } from "../utils/format-date-time";
 import logoImage from "../assets/images/logo.png";
 
@@ -18,8 +18,12 @@ window.customCards.push({
 });
 
 @customElement("smartqasa-screensaver-card")
-export class ScreenSaver extends LitElement {
-    @state() private _config?: Config;
+export class ScreenSaver extends LitElement implements LovelaceCard {
+    public getCardSize(): number {
+        return 100;
+    }
+
+    @state() protected _config?: Config;
     @state() private _time: string = "Loading...";
     @state() private _date: string = "Loading...";
 

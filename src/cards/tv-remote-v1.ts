@@ -2,7 +2,7 @@ import { css, CSSResult, html, LitElement, PropertyValues, TemplateResult } from
 import { customElement, property, state } from "lit/decorators.js";
 
 import { HassEntity } from "home-assistant-js-websocket";
-import { HomeAssistant, LovelaceCardConfig } from "../types";
+import { HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 import { callService } from "../utils/call-service";
 import channelTable from "../tables/channels"; // Adjust the import path as needed
 
@@ -22,7 +22,7 @@ window.customCards.push({
 });
 
 @customElement("smartqasa-tv-remote-card-v1")
-export class TVRemoteCardV1 extends LitElement {
+export class TVRemoteCardV1 extends LitElement implements LovelaceCard {
     getCardSize() {
         return 7;
     }

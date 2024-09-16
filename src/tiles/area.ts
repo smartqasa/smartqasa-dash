@@ -2,7 +2,7 @@ import { CSSResult, html, LitElement, PropertyValues, TemplateResult, unsafeCSS 
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 
-import { HassArea, HomeAssistant, LovelaceCardConfig } from "../types";
+import { HassArea, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 import { navigateToArea } from "../utils/navigate-to-area";
 
 import tileBaseStyle from "../css/tile-base.css";
@@ -21,9 +21,13 @@ window.customCards.push({
 });
 
 @customElement("smartqasa-area-tile")
-export class AreaTile extends LitElement {
+export class AreaTile extends LitElement implements LovelaceCard {
+    getCardSize(): number | Promise<number> {
+        return 1;
+    }
+
     @property({ attribute: false }) public hass?: HomeAssistant;
-    @state() private _config?: Config;
+    @state() protected _config?: Config;
     private _area?: string;
     private _areaObj?: HassArea;
 

@@ -3,7 +3,7 @@ import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 
 import { HassEntity } from "home-assistant-js-websocket";
-import { HomeAssistant, LovelaceCardConfig } from "../types";
+import { HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 import { moreInfoDialog } from "../dialogs/more-info-dialog";
 
 import tileBaseStyle from "../css/tile-base.css";
@@ -24,9 +24,13 @@ window.customCards.push({
 });
 
 @customElement("smartqasa-sensor-tile")
-export class SensorTile extends LitElement {
+export class SensorTile extends LitElement implements LovelaceCard {
+    public getCardSize(): number {
+        return 1;
+    }
+
     @property({ attribute: false }) public hass?: HomeAssistant;
-    @state() private _config?: Config;
+    @state() protected _config?: Config;
     private _entity?: string;
     private _stateObj?: HassEntity;
 

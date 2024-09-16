@@ -2,7 +2,7 @@ import { CSSResult, html, LitElement, PropertyValues, TemplateResult, unsafeCSS 
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 
-import { LovelaceCardConfig } from "../types";
+import { LovelaceCard, LovelaceCardConfig } from "../types";
 import { dialogTable } from "../tables/dialogs";
 import { menuConfig } from "../misc/menu-config";
 
@@ -23,7 +23,7 @@ window.customCards.push({
 });
 
 @customElement("smartqasa-dialog-tile")
-export class DialogTile extends LitElement {
+export class DialogTile extends LitElement implements LovelaceCard {
     getCardSize(): number {
         return 1;
     }

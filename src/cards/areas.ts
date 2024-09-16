@@ -7,7 +7,11 @@ import { getDeviceType, getDeviceOrientation } from "../utils/device-info";
 import { createElement } from "../utils/create-element";
 
 @customElement("smartqasa-areas-card")
-export class AreasCard extends LitElement {
+export class AreasCard extends LitElement implements LovelaceCard {
+    public getCardSize(): number {
+        return 4;
+    }
+
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() private _areaTiles: LovelaceCard[] = [];
     @state() private _gridStyle = {};

@@ -2,7 +2,7 @@ import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult, unsaf
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 
-import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
+import { HassEntity, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 import { callService } from "../utils/call-service";
 import { moreInfoDialog } from "../dialogs/more-info-dialog";
 
@@ -24,9 +24,13 @@ window.customCards.push({
 });
 
 @customElement("smartqasa-switch-tile")
-export class SwitchTile extends LitElement {
+export class SwitchTile extends LitElement implements LovelaceCard {
+    public getCardSize(): number {
+        return 1;
+    }
+
     @property({ attribute: false }) public hass?: HomeAssistant;
-    @state() private _config?: Config;
+    @state() protected _config?: Config;
     private _entity?: string;
     private _stateObj?: HassEntity;
 

@@ -1,7 +1,7 @@
 import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult, unsafeCSS } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 
-import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
+import { HassEntity, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 import { dialogTable } from "../tables/dialogs";
 
 import chipBaseStyle from "../css/chip-base.css";
@@ -19,9 +19,13 @@ window.customCards.push({
 });
 
 @customElement("smartqasa-weather-chip")
-export class ThermostatChip extends LitElement {
+export class ThermostatChip extends LitElement implements LovelaceCard {
+    public getCardSize(): number {
+        return 1;
+    }
+
     @property({ attribute: false }) public hass?: HomeAssistant;
-    @state() private _config?: Config;
+    @state() protected _config?: Config;
     private _entity?: string;
     private _stateObj?: HassEntity;
 

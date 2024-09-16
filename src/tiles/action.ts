@@ -2,7 +2,7 @@ import { CSSResult, html, LitElement, PropertyValues, TemplateResult, unsafeCSS 
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 
-import { HomeAssistant, LovelaceCardConfig } from "../types";
+import { HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 import { callService } from "../utils/call-service";
 
 import tileBaseStyle from "../css/tile-base.css";
@@ -26,9 +26,13 @@ window.customCards.push({
 });
 
 @customElement("smartqasa-action-tile")
-export class ActionTile extends LitElement {
+export class ActionTile extends LitElement implements LovelaceCard {
+    getCardSize(): number | Promise<number> {
+        return 1;
+    }
+
     @property({ attribute: false }) public hass?: HomeAssistant;
-    @state() private _config?: Config;
+    @state() protected _config?: Config;
     @state() private _running: boolean = false;
 
     static styles: CSSResult = unsafeCSS(tileBaseStyle);

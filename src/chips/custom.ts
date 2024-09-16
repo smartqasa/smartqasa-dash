@@ -2,7 +2,7 @@ import { CSSResultGroup, html, LitElement, nothing, PropertyValues, TemplateResu
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 
-import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../types";
+import { HassEntity, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 import { loadYamlAsJson } from "../utils/load-yaml-as-json";
 
 import chipBaseStyle from "../css/chip-base.css";
@@ -28,9 +28,13 @@ window.customCards.push({
 });
 
 @customElement("smartqasa-custom-chip")
-export class CustomChip extends LitElement {
+export class CustomChip extends LitElement implements LovelaceCard {
+    public getCardSize(): number {
+        return 1;
+    }
+
     @property({ attribute: false }) public hass?: HomeAssistant;
-    @state() private _config?: Config;
+    @state() protected _config?: Config;
     @state() private _dialogObj?: DialogObj;
     @state() private _stateObj?: HassEntity;
 

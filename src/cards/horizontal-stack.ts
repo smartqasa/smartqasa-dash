@@ -16,9 +16,13 @@ window.customCards.push({
 });
 
 @customElement("smartqasa-horizontal-stack")
-class HorizontalStack extends LitElement {
-    @property({ attribute: false }) private hass?: HomeAssistant;
-    @state() private _config?: Config;
+class HorizontalStack extends LitElement implements LovelaceCard {
+    public getCardSize(): number {
+        return 1;
+    }
+
+    @property({ attribute: false }) public hass?: HomeAssistant;
+    @state() protected _config?: Config;
     @state() private _cards: LovelaceCard[] = [];
 
     static get styles() {

@@ -19,9 +19,13 @@ window.customCards.push({
 });
 
 @customElement("smartqasa-grid-stack")
-class GridStack extends LitElement {
-    @property({ attribute: false }) private hass?: HomeAssistant;
-    @state() private _config?: Config;
+class GridStack extends LitElement implements LovelaceCard {
+    public getCardSize(): number {
+        return 4;
+    }
+
+    @property({ attribute: false }) public hass?: HomeAssistant;
+    @state() protected _config?: Config;
     @state() private _cards: LovelaceCard[] = [];
 
     static get styles() {

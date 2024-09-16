@@ -2,7 +2,7 @@ import { CSSResult, html, LitElement, nothing, PropertyValues, TemplateResult, u
 import { customElement, property, state } from "lit/decorators.js";
 
 import { navigateToArea } from "../utils/navigate-to-area";
-import { HassArea, HomeAssistant, LovelaceCardConfig } from "../types";
+import { HassArea, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 
 import chipDoubleStyle from "../css/chip-double.css";
 
@@ -18,7 +18,11 @@ window.customCards.push({
 });
 
 @customElement("smartqasa-navigate-chip")
-export class NavigateChip extends LitElement {
+export class NavigateChip extends LitElement implements LovelaceCard {
+    public getCardSize(): number {
+        return 1;
+    }
+
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() private _areaPrev?: string;
     @state() private _areaNext?: string;

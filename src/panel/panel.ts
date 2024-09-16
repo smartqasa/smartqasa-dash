@@ -34,9 +34,13 @@ window.customCards.push({
     description: "A SmartQasa card for rendering an panel.",
 });
 @customElement("smartqasa-panel-card")
-export class PanelCard extends LitElement {
+export class PanelCard extends LitElement implements LovelaceCard {
+    public getCardSize(): number {
+        return 100;
+    }
+
     @property({ attribute: false }) public hass?: HomeAssistant;
-    @state() private _config?: Config;
+    @state() protected _config?: Config;
     @state() private _isAdminMode = false;
     @state() private _isPhone: boolean = getDeviceType() === "phone";
     @state() private _isTablet: boolean = getDeviceType() === "tablet";
