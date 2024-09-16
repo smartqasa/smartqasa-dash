@@ -160,6 +160,7 @@
     justify-content: center;
     align-items: center;
     gap: var(--sq-card-spacing, 0.8rem);
+    --ha-card-border-radius: var(--sq-card-border-radius);
 }
 
 /* Tablet Portrait */
