@@ -9334,15 +9334,11 @@ let PanelCard = class PanelCard extends h {
         const { controlTiles, controlColumns } = loadControlTiles(this._config.tiles || [], this.hass, this._isTablet);
         this._controlTiles = controlTiles;
         this._controlColumns = controlColumns;
-        const elementConfig = {
+        const audioCardConfig = {
             type: "custom:smartqasa-sonos-card",
             entity: this._config.audio_player,
         };
-        const element = document.createElement("smartqasa-sonos-card");
-        element.setConfig(elementConfig);
-        element.hass = this.hass;
-        console.log("Creating element for config:", element);
-        this._audioCard = element;
+        this._audioCard = createElement$1(audioCardConfig, this.hass);
     }
 };
 __decorate([

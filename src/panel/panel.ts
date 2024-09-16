@@ -255,17 +255,11 @@ export class PanelCard extends LitElement {
         this._controlTiles = controlTiles;
         this._controlColumns = controlColumns;
 
-        const elementConfig = {
+        const audioCardConfig = {
             type: "custom:smartqasa-sonos-card",
             entity: this._config.audio_player,
         };
 
-        const element = document.createElement("smartqasa-sonos-card") as LovelaceCard;
-        element.setConfig(elementConfig);
-        element.hass = this.hass;
-
-        console.log("Creating element for config:", element);
-
-        this._audioCard = element;
+        this._audioCard = createElement(audioCardConfig, this.hass);
     }
 }
