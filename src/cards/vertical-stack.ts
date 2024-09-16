@@ -64,8 +64,6 @@ class VerticalStack extends LitElement implements LovelaceCard {
 
     protected render() {
         if (!this._config || !this.hass || this._cards.length === 0) return nothing;
-        return html`
-            <div class="container">${this._cards.map((card) => html`<div class="element">${card}</div>`)}</div>
-        `;
+        return html` <div class="container">${this._cards.map((card) => html`<ha-card>${card}</ha-card>`)}</div> `;
     }
 }
