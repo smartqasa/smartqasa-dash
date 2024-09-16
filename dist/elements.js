@@ -9338,8 +9338,8 @@ let PanelCard = class PanelCard extends h {
         this._controlTiles = controlTiles;
         this._controlColumns = controlColumns;
         const audioCardConfig = {
-            type: "custom:smartqasa-sonos-card",
-            entity: this._config.audio_player,
+            type: "custom:sonos-card",
+            entity_id: this._config.audio_player,
         };
         this._audioCard = createElement$1(audioCardConfig, this.hass);
         console.log("Audio Card:", this._audioCard);
