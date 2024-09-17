@@ -262,6 +262,9 @@ export class PanelCard extends LitElement implements LovelaceCard {
         const audioCardConfig = {
             type: "custom:sonos-card",
             entity_id: this._config.audio_player,
+            heightPercentage: "75",
+            showVolumeUpAndDownButtons: true,
+            sections: '["volumes", "groups", "grouping"]',
         } as LovelaceCardConfig;
 
         const audioCard = createElement(audioCardConfig, this.hass) as LovelaceCard;
