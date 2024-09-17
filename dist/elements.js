@@ -9341,7 +9341,9 @@ let PanelCard = class PanelCard extends h {
             type: "custom:sonos-card",
             entity_id: this._config.audio_player,
         };
-        this._audioCard = createElement$1(audioCardConfig, this.hass);
+        const audioCard = createElement$1(audioCardConfig, this.hass);
+        audioCard.style.borderRadius = "var(--sq-card-border-radius)";
+        this._audioCard = audioCard;
         console.log("Audio Card:", this._audioCard);
     }
 };

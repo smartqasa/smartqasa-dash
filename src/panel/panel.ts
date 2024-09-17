@@ -264,7 +264,9 @@ export class PanelCard extends LitElement implements LovelaceCard {
             entity_id: this._config.audio_player,
         } as LovelaceCardConfig;
 
-        this._audioCard = createElement(audioCardConfig, this.hass) as LovelaceCard;
+        const audioCard = createElement(audioCardConfig, this.hass) as LovelaceCard;
+        audioCard.style.borderRadius = "var(--sq-card-border-radius)";
+        this._audioCard = audioCard;
         console.log("Audio Card:", this._audioCard);
     }
 }
