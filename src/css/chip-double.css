@@ -1,6 +1,6 @@
 .container {
     display: flex;
-    margin: 0 var(--sq-chip-spacing, 0.4rem);
+    margin: 0 var(--sq-chip-spacing);
     align-items: center;
     justify-content: center;
     border: var(--sq-card-border);
@@ -31,7 +31,7 @@
 .icon1::after {
     content: "";
     width: 1px;
-    height: var(--sq-icon-size, 1.8rem);
+    height: var(--sq-icon-size);
     background-color: rgb(128, 128, 128);
     margin-left: 0.3rem;
 }
