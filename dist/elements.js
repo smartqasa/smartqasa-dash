@@ -9340,6 +9340,7 @@ let PanelCard = class PanelCard extends h {
         const audioCardConfig = {
             type: "custom:sonos-card",
             entity_id: this._config.audio_player,
+            title: "Speakers",
             heightPercentage: "75",
             showVolumeUpAndDownButtons: true,
             sections: '["volumes", "groups", "grouping"]',
