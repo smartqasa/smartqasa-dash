@@ -162,7 +162,7 @@
     gap: var(--sq-card-spacing);
     --ha-card-border-radius: var(--sq-card-border-radius);
 }
-.card {
+.ha-card {
     border-radius: var(--sq-card-border-radius);
 }
 

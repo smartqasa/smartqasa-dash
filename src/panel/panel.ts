@@ -265,7 +265,7 @@ export class PanelCard extends LitElement implements LovelaceCard {
         } as LovelaceCardConfig;
 
         const audioCard = createElement(audioCardConfig, this.hass) as LovelaceCard;
-        audioCard.className = "card";
+        audioCard.className = "ha-card";
         this._audioCard = audioCard;
     }
 }
