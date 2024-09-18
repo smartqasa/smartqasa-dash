@@ -12,11 +12,11 @@ export const listDialogConfig: any = (
             filter_type: filterType,
             filter_value: filterValue,
             tile_type: `custom:smartqasa-${tileType}-tile`,
-            dialog: {},
+            callingDialog: {},
         },
     };
 
-    dialogConfig.content.dialog = {
+    dialogConfig.content.callingDialog = {
         ...dialogConfig,
     };
 

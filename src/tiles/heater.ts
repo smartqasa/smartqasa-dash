@@ -104,6 +104,6 @@ export class HeaterTile extends LitElement implements LovelaceCard {
 
     private _showMoreInfo(e: Event): void {
         e.stopPropagation();
-        moreInfoDialog(this._config, this._stateObj);
+        moreInfoDialog(this._stateObj, this._config?.callingDialog);
     }
 }

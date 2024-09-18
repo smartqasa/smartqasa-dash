@@ -8586,10 +8586,10 @@ const listDialogConfig = (dialogTitle, filterType, filterValue, tileType) => {
             filter_type: filterType,
             filter_value: filterValue,
             tile_type: `custom:smartqasa-${tileType}-tile`,
-            dialog: {},
+            callingDialog: {},
         },
     };
-    dialogConfig.content.dialog = {
+    dialogConfig.content.callingDialog = {
         ...dialogConfig,
     };
     return dialogConfig;
@@ -11932,32 +11932,30 @@ SelectChip = __decorate([
     t$1("smartqasa-select-chip")
 ], SelectChip);
 
-function moreInfoDialog$1(config, stateObj) {
-    if (!config || !stateObj)
+function dialogPopup(dialogConfig, prevDialogConfig) {
+    if (prevDialogConfig && Object.keys(prevDialogConfig).length > 0) {
+        dialogConfig.dismiss_action = {
+            service: "browser_mod.popup",
+            data: prevDialogConfig,
+        };
+        window.browser_mod?.service("popup", dialogConfig);
+    }
+}
+
+function moreInfoDialog(stateObj, callingDialogConfig) {
+    if (!stateObj)
         return;
     const title = stateObj.attributes.friendly_name || stateObj.entity_id;
-    let dialogConfig = {
+    const dialogConfig = {
         title: title,
-        dismissable: true,
         timeout: 60000,
         content: {
             type: "custom:smartqasa-more-info-card",
             entity: stateObj.entity_id,
             background: false,
         },
-        ...(config.dialog_title && {
-            dismiss_action: {
-                service: "browser_mod.popup",
-                data: {
-                    ...listDialogConfig(config.dialog_title, config.filter_type, config.filter_value, config.tile_type),
-                },
-            },
-        }),
     };
-    if (!window.browser_mod) {
-        console.error("browser_mod is not available");
-    }
-    window.browser_mod?.service("popup", dialogConfig);
+    dialogPopup(dialogConfig, callingDialogConfig);
 }
 
 window.customCards.push({
@@ -12013,7 +12011,7 @@ let ThermostatChip = class ThermostatChip extends h {
     }
     _showMoreInfo(e) {
         e.stopPropagation();
-        moreInfoDialog$1(this._config, this._stateObj);
+        moreInfoDialog(this._stateObj, this._config?.callingDialog);
     }
 };
 __decorate([
@@ -13014,7 +13012,7 @@ let FanTile = class FanTile extends h {
     }
     _showMoreInfo(e) {
         e.stopPropagation();
-        moreInfoDialog$1(this._config, this._stateObj);
+        moreInfoDialog(this._stateObj, this._config?.callingDialog);
     }
     _showEntityList(e) {
         e.stopPropagation();
@@ -13131,7 +13129,7 @@ let GarageTile = class GarageTile extends h {
     }
     _showMoreInfo(e) {
         e.stopPropagation();
-        moreInfoDialog$1(this._config, this._stateObj);
+        moreInfoDialog(this._stateObj, this._config?.callingDialog);
     }
 };
 __decorate([
@@ -13212,7 +13210,7 @@ let HeaterTile = class HeaterTile extends h {
     }
     _showMoreInfo(e) {
         e.stopPropagation();
-        moreInfoDialog$1(this._config, this._stateObj);
+        moreInfoDialog(this._stateObj, this._config?.callingDialog);
     }
 };
 __decorate([
@@ -13299,7 +13297,7 @@ let LightTile = class LightTile extends h {
     }
     _showMoreInfo(e) {
         e.stopPropagation();
-        moreInfoDialog$1(this._config, this._stateObj);
+        moreInfoDialog(this._stateObj, this._config?.callingDialog);
     }
     _showEntityList(e) {
         e.stopPropagation();
@@ -13396,32 +13394,6 @@ __decorate([
 LightTileEditor = __decorate([
     t$1("smartqasa-light-tile-editor")
 ], LightTileEditor);
-
-function dialogPopup(dialogConfig, prevDialogConfig) {
-    if (prevDialogConfig && Object.keys(prevDialogConfig).length > 0) {
-        dialogConfig.dismiss_action = {
-            service: "browser_mod.popup",
-            data: prevDialogConfig,
-        };
-        window.browser_mod?.service("popup", dialogConfig);
-    }
-}
-
-function moreInfoDialog(stateObj, callingDialogConfig) {
-    if (!stateObj)
-        return;
-    const title = stateObj.attributes.friendly_name || stateObj.entity_id;
-    const dialogConfig = {
-        title: title,
-        timeout: 60000,
-        content: {
-            type: "custom:smartqasa-more-info-card",
-            entity: stateObj.entity_id,
-            background: false,
-        },
-    };
-    dialogPopup(dialogConfig, callingDialogConfig);
-}
 
 window.customCards.push({
     type: "smartqasa-lock-tile",
@@ -13529,7 +13501,7 @@ let LockTile = class LockTile extends h {
     }
     _showMoreInfo(e) {
         e.stopPropagation();
-        moreInfoDialog(this._stateObj, this._config?.dialog);
+        moreInfoDialog(this._stateObj, this._config?.callingDialog);
     }
 };
 __decorate([
@@ -13787,7 +13759,7 @@ let RobotTile = class RobotTile extends h {
     }
     _showMoreInfo(e) {
         e.stopPropagation();
-        moreInfoDialog$1(this._config, this._stateObj);
+        moreInfoDialog(this._stateObj, this._config?.callingDialog);
     }
 };
 __decorate([
@@ -14149,7 +14121,7 @@ let SensorTile = class SensorTile extends h {
     }
     _showMoreInfo(e) {
         e.stopPropagation();
-        moreInfoDialog$1(this._config, this._stateObj);
+        moreInfoDialog(this._stateObj, this._config?.callingDialog);
     }
 };
 __decorate([
@@ -14542,7 +14514,7 @@ let ShadeTile = class ShadeTile extends h {
     }
     _showMoreInfo(e) {
         e.stopPropagation();
-        moreInfoDialog$1(this._config, this._stateObj);
+        moreInfoDialog(this._stateObj, this._config?.callingDialog);
     }
     _showEntityList(e) {
         e.stopPropagation();
@@ -14636,7 +14608,7 @@ let SwitchTile = class SwitchTile extends h {
     }
     _showMoreInfo(e) {
         e.stopPropagation();
-        moreInfoDialog$1(this._config, this._stateObj);
+        moreInfoDialog(this._stateObj, this._config?.callingDialog);
     }
 };
 __decorate([
@@ -14771,7 +14743,7 @@ let ThermostatTile = class ThermostatTile extends h {
     }
     _showMoreInfo(e) {
         e.stopPropagation();
-        moreInfoDialog$1(this._config, this._stateObj);
+        moreInfoDialog(this._stateObj, this._config?.callingDialog);
     }
 };
 __decorate([
