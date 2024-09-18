@@ -8969,9 +8969,7 @@ async function dialogPopup(dialogConfig, callingDialogConfig) {
             data: callingDialogConfig,
         };
     }
-    await setTimeout(() => {
-        window.browser_mod?.service("popup", dialogConfig);
-    }, 100);
+    await window.browser_mod?.service("popup", dialogConfig);
 }
 
 function renderFooter() {
