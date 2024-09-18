@@ -4,7 +4,7 @@ import { styleMap } from "lit/directives/style-map.js";
 
 import { HassEntity, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 import { callService } from "../utils/call-service";
-import { moreInfoDialog } from "../dialogs/more-info-dialog";
+import { moreInfoDialog } from "../dialogs/more-info-dialog-v2";
 
 import tileBaseStyle from "../css/tile-base.css";
 import tileStateStyle from "../css/tile-state.css";
@@ -142,6 +142,17 @@ export class LockTile extends LitElement implements LovelaceCard {
 
     private _showMoreInfo(e: Event): void {
         e.stopPropagation();
-        moreInfoDialog(this._config, this._stateObj);
+
+        const dialogConfig = moreInfoDialog(this._stateObj);
+        if (!dialogConfig) return;
+
+        if (this._config?.dialog) {
+            dialogConfig.dismiss_action = {
+                service: "browser_mod.popup",
+                data: this._config.dialog,
+            };
+        }
+
+        window.browser_mod?.service("popup", dialogConfig);
     }
 }

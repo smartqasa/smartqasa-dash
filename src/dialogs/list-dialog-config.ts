@@ -4,7 +4,7 @@ export const listDialogConfig: any = (
     filterValue: string,
     tileType: string
 ) => {
-    return {
+    const dialogConfig = {
         title: dialogTitle,
         timeout: 60000,
         content: {
@@ -12,6 +12,13 @@ export const listDialogConfig: any = (
             filter_type: filterType,
             filter_value: filterValue,
             tile_type: `custom:smartqasa-${tileType}-tile`,
+            dialog: {},
         },
     };
+
+    dialogConfig.content.dialog = {
+        ...dialogConfig,
+    };
+
+    return dialogConfig;
 };

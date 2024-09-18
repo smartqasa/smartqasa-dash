@@ -14,8 +14,8 @@ declare module "*.png" {
 }
 
 declare module "*.webp" {
-    const content: string;
-    export default content;
+    const value: string;
+    export default value;
 }
 
 declare interface DialogConfig {

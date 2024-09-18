@@ -4,7 +4,6 @@ import { styleMap } from "lit/directives/style-map.js";
 
 import { LovelaceCard, LovelaceCardConfig } from "../types";
 import { dialogTable } from "../tables/dialogs";
-import { menuConfig } from "../misc/menu-config";
 
 import tileBaseStyle from "../css/tile-base.css";
 
@@ -77,20 +76,6 @@ export class DialogTile extends LitElement implements LovelaceCard {
         if (!this.dialogObj || !this.config) return;
 
         const dialogConfig = { ...this.dialogObj.data };
-
-        /*
-        const menuTab = this._config.menu_tab;
-
-        if (menuTab !== undefined && menuTab >= 0 && menuTab <= 3) {
-            const dismissData = await menuConfig(menuTab);
-            dialogConfig.dismiss_action = {
-                service: "browser_mod.popup",
-                data: {
-                    ...dismissData,
-                },
-            };
-        }
-        */
 
         window.browser_mod?.service("popup", dialogConfig);
     }
