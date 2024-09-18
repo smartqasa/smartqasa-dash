@@ -8971,7 +8971,7 @@ async function dialogPopup(dialogConfig, callingDialogConfig) {
     await window.browser_mod?.service("close_popup");
     await setTimeout(() => {
         window.browser_mod?.service("popup", dialogConfig);
-    }, 500);
+    }, 100);
 }
 
 function renderFooter() {
