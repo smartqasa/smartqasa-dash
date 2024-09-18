@@ -11437,12 +11437,9 @@ let DialogChip = class DialogChip extends h {
     }
     _showDialog(e) {
         e.stopPropagation();
-        if (!window.browser_mod) {
-            console.error("browser_mod is not available!");
+        if (!this._dialogObj)
             return;
-        }
-        const dialogConfig = { ...this._dialogObj.data };
-        window.browser_mod.service("popup", dialogConfig);
+        dialogPopup(this._dialogObj.data);
     }
 };
 __decorate([

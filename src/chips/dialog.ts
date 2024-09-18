@@ -1,9 +1,10 @@
 import { CSSResultGroup, html, LitElement, nothing, PropertyValues, TemplateResult, unsafeCSS } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
+import { styleMap } from "lit/directives/style-map.js";
 
 import { HassEntity, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 import { dialogTable } from "../tables/dialogs";
-import { styleMap } from "lit/directives/style-map.js";
+import { dialogPopup } from "../dialogs/dialog-popup";
 
 import chipBaseStyle from "../css/chip-base.css";
 import chipTextStyle from "../css/chip-text.css";
@@ -88,12 +89,7 @@ export class DialogChip extends LitElement implements LovelaceCard {
 
     private _showDialog(e: Event): void {
         e.stopPropagation();
-        if (!window.browser_mod) {
-            console.error("browser_mod is not available!");
-            return;
-        }
-
-        const dialogConfig = { ...this._dialogObj.data };
-        window.browser_mod.service("popup", dialogConfig);
+        if (!this._dialogObj) return;
+        dialogPopup(this._dialogObj.data);
     }
 }
