@@ -1,6 +1,6 @@
 import { dialogPopup } from "./dialog-popup";
 
-export async function moreInfoDialog(stateObj: any, callingDialogConfig: DialogConfig): Promise<void> {
+export function moreInfoDialog(stateObj: any, callingDialogConfig: DialogConfig): void {
     if (!stateObj) return;
 
     const title = stateObj.attributes.friendly_name || stateObj.entity_id;
@@ -15,5 +15,6 @@ export async function moreInfoDialog(stateObj: any, callingDialogConfig: DialogC
         },
     };
 
-    await dialogPopup(dialogConfig, callingDialogConfig);
+    console.log("More Info Dialog: ", callingDialogConfig);
+    dialogPopup(dialogConfig, callingDialogConfig);
 }

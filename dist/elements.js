@@ -8963,9 +8963,7 @@ async function dialogPopup(dialogConfig, callingDialogConfig) {
             data: callingDialogConfig,
         };
     }
-    setTimeout(() => {
-        window.browser_mod?.service("popup", dialogConfig);
-    }, 500);
+    await window.browser_mod?.service("popup", dialogConfig);
 }
 
 function renderFooter() {
@@ -11949,7 +11947,7 @@ SelectChip = __decorate([
     t$1("smartqasa-select-chip")
 ], SelectChip);
 
-async function moreInfoDialog(stateObj, callingDialogConfig) {
+function moreInfoDialog(stateObj, callingDialogConfig) {
     if (!stateObj)
         return;
     const title = stateObj.attributes.friendly_name || stateObj.entity_id;
@@ -11962,7 +11960,8 @@ async function moreInfoDialog(stateObj, callingDialogConfig) {
             background: false,
         },
     };
-    await dialogPopup(dialogConfig, callingDialogConfig);
+    console.log("More Info Dialog: ", callingDialogConfig);
+    dialogPopup(dialogConfig, callingDialogConfig);
 }
 
 window.customCards.push({
@@ -12920,7 +12919,7 @@ let DialogTile = class DialogTile extends h {
         if (!this._dialogObj)
             return;
         console.log("Dialog Tile: ", this._config?.callingDialog);
-        dialogPopup(this._dialogObj.data, this._config?.callingDialog);
+        dialogPopup(this._dialogObj.data, this._config?.callingDialog || undefined);
     }
 };
 __decorate([
