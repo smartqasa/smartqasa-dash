@@ -183,6 +183,13 @@ export class MenuCard extends LitElement implements LovelaceCard {
     private async _loadMenuTiles(tilesConfig: LovelaceCardConfig[]): Promise<LovelaceCard[]> {
         const tiles: LovelaceCard[] = [];
         for (const config of tilesConfig) {
+            config.callingDialog = {
+                title: "Menu",
+                timeout: 120000,
+                content: {
+                    type: "custom:smartqasa-menu-card",
+                },
+            };
             const tile = createElement(config) as LovelaceCard;
             if (tile) {
                 tile.hass = this.hass;

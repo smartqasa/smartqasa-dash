@@ -1,6 +1,7 @@
 import { html, TemplateResult } from "lit";
 import { navigateToArea } from "../utils/navigate-to-area";
 import { dialogTable } from "../tables/dialogs";
+import { dialogPopup } from "../dialogs/dialog-popup";
 
 export function renderFooter(): TemplateResult {
     function renderFooterButton(icon: string, name: string, action: () => void): TemplateResult {
@@ -38,7 +39,7 @@ export function renderFooter(): TemplateResult {
 
     function handleAreas(): void {
         const dialogObj = dialogTable["areas"];
-        window.browser_mod?.service("popup", { ...dialogObj.data });
+        window.browser_mod?.service("popup", dialogObj.data);
     }
 
     function handleEntertain(): void {
@@ -50,7 +51,7 @@ export function renderFooter(): TemplateResult {
         window.smartqasa.menuTab = 0;
 
         const dialogObj = dialogTable["menu"];
-        window.browser_mod?.service("popup", { ...dialogObj.data });
+        dialogPopup(dialogObj.data, dialogObj.data);
     }
 
     return html`

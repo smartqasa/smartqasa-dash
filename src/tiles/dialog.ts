@@ -4,6 +4,7 @@ import { styleMap } from "lit/directives/style-map.js";
 
 import { LovelaceCard, LovelaceCardConfig } from "../types";
 import { dialogTable } from "../tables/dialogs";
+import { dialogPopup } from "../dialogs/dialog-popup";
 
 import tileBaseStyle from "../css/tile-base.css";
 
@@ -26,14 +27,14 @@ export class DialogTile extends LitElement implements LovelaceCard {
         return 1;
     }
 
-    @state() private config?: Config;
-    @state() private dialogObj?: any;
+    @state() private _config?: Config;
+    @state() private _dialogObj?: any;
 
     static styles: CSSResult = unsafeCSS(tileBaseStyle);
 
     setConfig(config: Config): void {
-        this.config = { ...config };
-        this.dialogObj = dialogTable[config.dialog];
+        this._config = { ...config };
+        this._dialogObj = dialogTable[config.dialog];
     }
 
     protected render(): TemplateResult {
@@ -56,15 +57,15 @@ export class DialogTile extends LitElement implements LovelaceCard {
     private _updateState(): { icon: string; iconAnimation?: string; iconColor: string; name: string } {
         let icon, iconAnimation, iconColor, name;
 
-        if (this.config && this.dialogObj) {
-            icon = this.config.icon || this.dialogObj.icon;
+        if (this._config && this._dialogObj) {
+            icon = this._config.icon || this._dialogObj.icon;
             iconColor = "var(--sq-inactive-rgb)";
-            name = this.config.name || this.dialogObj.name;
+            name = this._config.name || this._dialogObj.name;
         } else {
-            icon = this.config?.icon || "hass:help-rhombus";
+            icon = this._config?.icon || "hass:help-rhombus";
             iconAnimation = "none";
             iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            name = this.config?.name || "Unknown";
+            name = this._config?.name || "Unknown";
         }
 
         return { icon, iconAnimation, iconColor, name };
@@ -72,10 +73,9 @@ export class DialogTile extends LitElement implements LovelaceCard {
 
     private _showDialog(e: Event) {
         e.stopPropagation();
-        if (!this.dialogObj || !this.config) return;
+        if (!this._dialogObj || !this._config) return;
 
-        const dialogConfig = { ...this.dialogObj.data };
-
-        window.browser_mod?.service("popup", dialogConfig);
+        const dialogConfig = this._dialogObj.data;
+        dialogPopup(dialogConfig, this._config?.callingDialog);
     }
 }

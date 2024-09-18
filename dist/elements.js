@@ -8956,6 +8956,16 @@ const dialogTable = {
     },
 };
 
+function dialogPopup(dialogConfig, callingDialogConfig) {
+    if (callingDialogConfig && Object.keys(callingDialogConfig).length > 0) {
+        dialogConfig.dismiss_action = {
+            service: "browser_mod.popup",
+            data: callingDialogConfig,
+        };
+    }
+    window.browser_mod?.service("popup", dialogConfig);
+}
+
 function renderFooter() {
     function renderFooterButton(icon, name, action) {
         return ke `
@@ -8990,7 +9000,7 @@ function renderFooter() {
     }
     function handleAreas() {
         const dialogObj = dialogTable["areas"];
-        window.browser_mod?.service("popup", { ...dialogObj.data });
+        window.browser_mod?.service("popup", dialogObj.data);
     }
     function handleEntertain() {
         window.smartqasa.viewMode = "entertain";
@@ -8999,7 +9009,7 @@ function renderFooter() {
     function handleMenu() {
         window.smartqasa.menuTab = 0;
         const dialogObj = dialogTable["menu"];
-        window.browser_mod?.service("popup", { ...dialogObj.data });
+        dialogPopup(dialogObj.data, dialogObj.data);
     }
     return ke `
         <div class="footer-container">
@@ -9879,6 +9889,13 @@ let MenuCard = class MenuCard extends h {
     async _loadMenuTiles(tilesConfig) {
         const tiles = [];
         for (const config of tilesConfig) {
+            config.callingDialog = {
+                title: "Menu",
+                timeout: 120000,
+                content: {
+                    type: "custom:smartqasa-menu-card",
+                },
+            };
             const tile = createElement$1(config);
             if (tile) {
                 tile.hass = this.hass;
@@ -11932,16 +11949,6 @@ SelectChip = __decorate([
     t$1("smartqasa-select-chip")
 ], SelectChip);
 
-function dialogPopup(dialogConfig, callingDialogConfig) {
-    if (callingDialogConfig && Object.keys(callingDialogConfig).length > 0) {
-        dialogConfig.dismiss_action = {
-            service: "browser_mod.popup",
-            data: callingDialogConfig,
-        };
-    }
-    window.browser_mod?.service("popup", dialogConfig);
-}
-
 function moreInfoDialog(stateObj, callingDialogConfig) {
     if (!stateObj)
         return;
@@ -12874,8 +12881,8 @@ let DialogTile = class DialogTile extends h {
     }
     static { this.styles = r$3(css_248z$1); }
     setConfig(config) {
-        this.config = { ...config };
-        this.dialogObj = dialogTable[config.dialog];
+        this._config = { ...config };
+        this._dialogObj = dialogTable[config.dialog];
     }
     render() {
         const { icon, iconAnimation, iconColor, name } = this._updateState();
@@ -12895,33 +12902,33 @@ let DialogTile = class DialogTile extends h {
     }
     _updateState() {
         let icon, iconAnimation, iconColor, name;
-        if (this.config && this.dialogObj) {
-            icon = this.config.icon || this.dialogObj.icon;
+        if (this._config && this._dialogObj) {
+            icon = this._config.icon || this._dialogObj.icon;
             iconColor = "var(--sq-inactive-rgb)";
-            name = this.config.name || this.dialogObj.name;
+            name = this._config.name || this._dialogObj.name;
         }
         else {
-            icon = this.config?.icon || "hass:help-rhombus";
+            icon = this._config?.icon || "hass:help-rhombus";
             iconAnimation = "none";
             iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            name = this.config?.name || "Unknown";
+            name = this._config?.name || "Unknown";
         }
         return { icon, iconAnimation, iconColor, name };
     }
     _showDialog(e) {
         e.stopPropagation();
-        if (!this.dialogObj || !this.config)
+        if (!this._dialogObj || !this._config)
             return;
-        const dialogConfig = { ...this.dialogObj.data };
-        window.browser_mod?.service("popup", dialogConfig);
+        const dialogConfig = this._dialogObj.data;
+        dialogPopup(dialogConfig, this._config?.callingDialog);
     }
 };
 __decorate([
     r()
-], DialogTile.prototype, "config", void 0);
+], DialogTile.prototype, "_config", void 0);
 __decorate([
     r()
-], DialogTile.prototype, "dialogObj", void 0);
+], DialogTile.prototype, "_dialogObj", void 0);
 DialogTile = __decorate([
     t$1("smartqasa-dialog-tile")
 ], DialogTile);
