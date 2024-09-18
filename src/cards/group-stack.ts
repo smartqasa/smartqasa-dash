@@ -79,7 +79,7 @@ class GroupStack extends LitElement implements LovelaceCard {
                     const tileConfig: LovelaceCardConfig = {
                         type: this._config!.tile_type,
                         entity: entityId,
-                        dialog: this._config!.dialog,
+                        callingDialog: this._config!.callingDialog,
                     };
                     const tile = createElement(tileConfig) as LovelaceCard;
                     tile.hass = this.hass!;

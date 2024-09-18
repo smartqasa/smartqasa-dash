@@ -1,8 +1,8 @@
-export function dialogPopup(dialogConfig: DialogConfig, prevDialogConfig: DialogConfig): void {
-    if (prevDialogConfig && Object.keys(prevDialogConfig).length > 0) {
+export function dialogPopup(dialogConfig: DialogConfig, callingDialogConfig: DialogConfig): void {
+    if (callingDialogConfig && Object.keys(callingDialogConfig).length > 0) {
         dialogConfig.dismiss_action = {
             service: "browser_mod.popup",
-            data: prevDialogConfig,
+            data: callingDialogConfig,
         };
 
         window.browser_mod?.service("popup", dialogConfig);
