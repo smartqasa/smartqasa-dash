@@ -11,7 +11,6 @@ interface Config extends LovelaceCardConfig {
     dialog: string;
     icon?: string;
     name?: string;
-    menu_tab?: number;
 }
 
 window.customCards.push({

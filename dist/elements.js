@@ -13398,7 +13398,7 @@ LightTileEditor = __decorate([
 ], LightTileEditor);
 
 function dialogPopup(dialogConfig, prevDialogConfig) {
-    if (prevDialogConfig) {
+    if (prevDialogConfig && Object.keys(prevDialogConfig).length > 0) {
         dialogConfig.dismiss_action = {
             service: "browser_mod.popup",
             data: prevDialogConfig,
