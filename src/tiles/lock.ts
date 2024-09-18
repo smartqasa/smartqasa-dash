@@ -142,6 +142,7 @@ export class LockTile extends LitElement implements LovelaceCard {
 
     private _showMoreInfo(e: Event): void {
         e.stopPropagation();
+        console.log("Lock Tile: ", this._config?.callingDialog);
         moreInfoDialog(this._stateObj, this._config?.callingDialog);
     }
 }

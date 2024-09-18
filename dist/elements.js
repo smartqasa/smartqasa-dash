@@ -12912,10 +12912,9 @@ let DialogTile = class DialogTile extends h {
     }
     _showDialog(e) {
         e.stopPropagation();
-        if (!this._dialogObj || !this._config)
+        if (!this._dialogObj)
             return;
-        const dialogConfig = this._dialogObj.data;
-        dialogPopup(dialogConfig, this._config?.callingDialog);
+        dialogPopup(this._dialogObj.data, this._config?.callingDialog);
     }
 };
 __decorate([
@@ -12930,7 +12929,7 @@ DialogTile = __decorate([
 
 function entityListDialog(dialogTitle, filterType, filterValue, tileType) {
     const dialogConfig = listDialogConfig(dialogTitle, filterType, filterValue, tileType);
-    window.browser_mod?.service("popup", dialogConfig);
+    dialogPopup(dialogConfig);
 }
 
 var css_248z = ".container {\n    grid-template-areas: \"i n\" \"i s\";\n    grid-row-gap: 0.3rem;\n}\n.name {\n    place-self: end start;\n}\n.state {\n    grid-area: s;\n    align-self: start;\n    text-align: left;\n    text-overflow: ellipsis;\n    overflow: hidden;\n    font-weight: var(--sq-secondary-font-weight);\n    font-size: var(--sq-secondary-font-size);\n    color: rgb(var(--sq-secondary-font-rgb));\n}\n";
@@ -13503,6 +13502,7 @@ let LockTile = class LockTile extends h {
     }
     _showMoreInfo(e) {
         e.stopPropagation();
+        console.log("Lock Tile: ", this._config?.callingDialog);
         moreInfoDialog(this._stateObj, this._config?.callingDialog);
     }
 };
