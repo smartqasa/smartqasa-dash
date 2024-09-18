@@ -9601,50 +9601,50 @@ let GroupStack = class GroupStack extends h {
         this._config = { ...config };
         this._tiles = [];
     }
-    willUpdate(changedProps) {
-        if ((changedProps.has("_config") || changedProps.has("hass")) && this._config && this.hass) {
-            let entityIds = [];
-            if (this._config.filter_type === "group") {
-                const groupEntity = this.hass.states[this._config.filter_value];
-                if (groupEntity && groupEntity.attributes.entity_id) {
-                    entityIds = groupEntity.attributes.entity_id;
-                }
-            }
-            else if (this._config.filter_type === "domain") {
-                const domain = this._config.filter_value;
-                entityIds = Object.keys(this.hass.states).filter((entityId) => {
-                    return entityId.startsWith(`${domain}.`);
-                });
-            }
-            if (entityIds.length > 0) {
-                const entityNameMap = entityIds.map((entityId) => {
-                    const entity = this.hass.states[entityId];
-                    const friendlyName = entity?.attributes.friendly_name?.toLowerCase() || "";
-                    return { entityId, friendlyName };
-                });
-                entityNameMap.sort((a, b) => a.friendlyName.localeCompare(b.friendlyName));
-                entityIds = entityNameMap.map((item) => item.entityId);
-                this._tiles = entityIds.map((entityId) => {
-                    const tileConfig = {
-                        type: this._config.tile_type,
-                        entity: entityId,
-                        callingDialog: this._config.callingDialog,
-                    };
-                    console.log("Group Stack: ", this._config.callingDialog);
-                    const tile = createElement$1(tileConfig);
-                    tile.hass = this.hass;
-                    return tile;
-                });
-            }
-            else {
-                this._tiles = [];
-            }
-        }
-    }
     render() {
         if (!this.hass || this._tiles.length === 0)
             return D;
         return ke ` <div class="container">${this._tiles.map((tile) => ke `<div class="tile">${tile}</div>`)}</div> `;
+    }
+    firstUpdated(changedProps) {
+        if (!this._config || !this.hass)
+            return;
+        let entityIds = [];
+        if (this._config.filter_type === "group") {
+            const groupEntity = this.hass.states[this._config.filter_value];
+            if (groupEntity && groupEntity.attributes.entity_id) {
+                entityIds = groupEntity.attributes.entity_id;
+            }
+        }
+        else if (this._config.filter_type === "domain") {
+            const domain = this._config.filter_value;
+            entityIds = Object.keys(this.hass.states).filter((entityId) => {
+                return entityId.startsWith(`${domain}.`);
+            });
+        }
+        if (entityIds.length > 0) {
+            const entityNameMap = entityIds.map((entityId) => {
+                const entity = this.hass.states[entityId];
+                const friendlyName = entity?.attributes.friendly_name?.toLowerCase() || "";
+                return { entityId, friendlyName };
+            });
+            entityNameMap.sort((a, b) => a.friendlyName.localeCompare(b.friendlyName));
+            entityIds = entityNameMap.map((item) => item.entityId);
+            this._tiles = entityIds.map((entityId) => {
+                const tileConfig = {
+                    type: this._config.tile_type,
+                    entity: entityId,
+                    callingDialog: this._config.callingDialog,
+                };
+                console.log("Group Stack: ", this._config.callingDialog);
+                const tile = createElement$1(tileConfig);
+                tile.hass = this.hass;
+                return tile;
+            });
+        }
+        else {
+            this._tiles = [];
+        }
     }
     updated(changedProps) {
         if (changedProps.has("hass") && this.hass) {

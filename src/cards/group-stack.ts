@@ -49,52 +49,51 @@ class GroupStack extends LitElement implements LovelaceCard {
         this._tiles = [];
     }
 
-    protected willUpdate(changedProps: PropertyValues) {
-        if ((changedProps.has("_config") || changedProps.has("hass")) && this._config && this.hass) {
-            let entityIds: string[] = [];
-
-            if (this._config.filter_type === "group") {
-                const groupEntity = this.hass.states[this._config.filter_value];
-                if (groupEntity && groupEntity.attributes.entity_id) {
-                    entityIds = groupEntity.attributes.entity_id as string[];
-                }
-            } else if (this._config.filter_type === "domain") {
-                const domain = this._config.filter_value;
-                entityIds = Object.keys(this.hass.states).filter((entityId) => {
-                    return entityId.startsWith(`${domain}.`);
-                });
-            }
-
-            if (entityIds.length > 0) {
-                const entityNameMap = entityIds.map((entityId) => {
-                    const entity = this.hass!.states[entityId];
-                    const friendlyName = entity?.attributes.friendly_name?.toLowerCase() || "";
-                    return { entityId, friendlyName };
-                });
-
-                entityNameMap.sort((a, b) => a.friendlyName.localeCompare(b.friendlyName));
-                entityIds = entityNameMap.map((item) => item.entityId);
-
-                this._tiles = entityIds.map((entityId) => {
-                    const tileConfig: LovelaceCardConfig = {
-                        type: this._config!.tile_type,
-                        entity: entityId,
-                        callingDialog: this._config!.callingDialog,
-                    };
-                    console.log("Group Stack: ", this._config!.callingDialog);
-                    const tile = createElement(tileConfig) as LovelaceCard;
-                    tile.hass = this.hass!;
-                    return tile;
-                });
-            } else {
-                this._tiles = [];
-            }
-        }
-    }
-
     protected render(): TemplateResult | typeof nothing {
         if (!this.hass || this._tiles.length === 0) return nothing;
         return html` <div class="container">${this._tiles.map((tile) => html`<div class="tile">${tile}</div>`)}</div> `;
+    }
+
+    protected firstUpdated(changedProps: PropertyValues) {
+        if (!this._config || !this.hass) return;
+        let entityIds: string[] = [];
+
+        if (this._config.filter_type === "group") {
+            const groupEntity = this.hass.states[this._config.filter_value];
+            if (groupEntity && groupEntity.attributes.entity_id) {
+                entityIds = groupEntity.attributes.entity_id as string[];
+            }
+        } else if (this._config.filter_type === "domain") {
+            const domain = this._config.filter_value;
+            entityIds = Object.keys(this.hass.states).filter((entityId) => {
+                return entityId.startsWith(`${domain}.`);
+            });
+        }
+
+        if (entityIds.length > 0) {
+            const entityNameMap = entityIds.map((entityId) => {
+                const entity = this.hass!.states[entityId];
+                const friendlyName = entity?.attributes.friendly_name?.toLowerCase() || "";
+                return { entityId, friendlyName };
+            });
+
+            entityNameMap.sort((a, b) => a.friendlyName.localeCompare(b.friendlyName));
+            entityIds = entityNameMap.map((item) => item.entityId);
+
+            this._tiles = entityIds.map((entityId) => {
+                const tileConfig: LovelaceCardConfig = {
+                    type: this._config!.tile_type,
+                    entity: entityId,
+                    callingDialog: this._config!.callingDialog,
+                };
+                console.log("Group Stack: ", this._config!.callingDialog);
+                const tile = createElement(tileConfig) as LovelaceCard;
+                tile.hass = this.hass!;
+                return tile;
+            });
+        } else {
+            this._tiles = [];
+        }
     }
 
     protected updated(changedProps: PropertyValues) {
