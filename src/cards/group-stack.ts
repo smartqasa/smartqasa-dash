@@ -99,7 +99,7 @@ class GroupStack extends LitElement implements LovelaceCard {
     protected updated(changedProps: PropertyValues) {
         if (changedProps.has("hass") && this.hass) {
             this._tiles.forEach((tile) => {
-                tile.hass = this.hass!;
+                if (tile.hass !== this.hass) tile.hass = this.hass!;
             });
         }
     }

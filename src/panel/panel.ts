@@ -101,7 +101,7 @@ export class PanelCard extends LitElement implements LovelaceCard {
 
             const updateHassForCards = (cards: LovelaceCard[]) => {
                 cards.forEach((card) => {
-                    card.hass = this.hass;
+                    if (card.hass !== this.hass) card.hass = this.hass;
                 });
             };
 

@@ -9217,7 +9217,8 @@ let PanelCard = class PanelCard extends h {
             this._areaObj = this._area ? this.hass?.areas[this._area] : undefined;
             const updateHassForCards = (cards) => {
                 cards.forEach((card) => {
-                    card.hass = this.hass;
+                    if (card.hass !== this.hass)
+                        card.hass = this.hass;
                 });
             };
             if (this._isTablet && this._headerChips.length > 0)
@@ -9649,7 +9650,8 @@ let GroupStack = class GroupStack extends h {
     updated(changedProps) {
         if (changedProps.has("hass") && this.hass) {
             this._tiles.forEach((tile) => {
-                tile.hass = this.hass;
+                if (tile.hass !== this.hass)
+                    tile.hass = this.hass;
             });
         }
     }
