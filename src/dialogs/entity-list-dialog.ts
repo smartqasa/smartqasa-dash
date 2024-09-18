@@ -1,4 +1,5 @@
 import { listDialogConfig } from "./list-dialog-config";
+import { dialogPopup } from "./dialog-popup";
 
 export function entityListDialog(
     dialogTitle: string,
@@ -8,5 +9,5 @@ export function entityListDialog(
 ) {
     const dialogConfig = listDialogConfig(dialogTitle, filterType, filterValue, tileType);
 
-    window.browser_mod?.service("popup", dialogConfig);
+    dialogPopup(dialogConfig);
 }

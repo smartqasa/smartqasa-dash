@@ -73,9 +73,7 @@ export class DialogTile extends LitElement implements LovelaceCard {
 
     private _showDialog(e: Event) {
         e.stopPropagation();
-        if (!this._dialogObj || !this._config) return;
-
-        const dialogConfig = this._dialogObj.data;
-        dialogPopup(dialogConfig, this._config?.callingDialog);
+        if (!this._dialogObj) return;
+        dialogPopup(this._dialogObj.data, this._config?.callingDialog);
     }
 }
