@@ -8917,7 +8917,7 @@ const dialogTable = {
     shades: {
         icon: "hass:roller-shade",
         name: "Shades",
-        data: listDialogConfig("Robots", "group", "cover.all_window_shades", "shade"),
+        data: listDialogConfig("Shades", "group", "cover.all_window_shades", "shade"),
     },
     speed_test: {
         icon: "hass:gauge",
