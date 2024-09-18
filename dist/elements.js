@@ -8962,7 +8962,6 @@ const dialogTable = {
 };
 
 async function dialogPopup(dialogConfig, callingDialogConfig) {
-    await window.browser_mod?.service("close_popup");
     if (callingDialogConfig && Object.keys(callingDialogConfig).length > 0) {
         dialogConfig.dismiss_action = {
             service: "browser_mod.popup",
@@ -9895,13 +9894,13 @@ let MenuCard = class MenuCard extends h {
     async _loadMenuTiles(tilesConfig) {
         const tiles = [];
         for (const config of tilesConfig) {
-            config.callingDialog = {
+            /*config.callingDialog = {
                 title: "Menu",
                 timeout: 120000,
                 content: {
                     type: "custom:smartqasa-menu-card",
                 },
-            };
+            };*/
             const tile = createElement$1(config);
             if (tile) {
                 tile.hass = this.hass;
