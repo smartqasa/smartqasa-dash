@@ -1,6 +1,6 @@
 import { dialogPopup } from "./dialog-popup";
 
-export function moreInfoDialog(stateObj: any, callingDialogConfig: DialogConfig): void {
+export function moreInfoDialog(stateObj: any, callingDialogConfig?: DialogConfig): void {
     if (!stateObj) return;
 
     const title = stateObj.attributes.friendly_name || stateObj.entity_id;
@@ -16,5 +16,5 @@ export function moreInfoDialog(stateObj: any, callingDialogConfig: DialogConfig)
     };
 
     console.log("More Info Dialog: ", callingDialogConfig);
-    dialogPopup(dialogConfig, callingDialogConfig);
+    dialogPopup(dialogConfig, callingDialogConfig || undefined);
 }

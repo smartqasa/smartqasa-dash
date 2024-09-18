@@ -8963,6 +8963,7 @@ async function dialogPopup(dialogConfig, callingDialogConfig) {
             data: callingDialogConfig,
         };
     }
+    await window.browser_mod?.service("close_popup");
     await window.browser_mod?.service("popup", dialogConfig);
 }
 
@@ -11961,7 +11962,7 @@ function moreInfoDialog(stateObj, callingDialogConfig) {
         },
     };
     console.log("More Info Dialog: ", callingDialogConfig);
-    dialogPopup(dialogConfig, callingDialogConfig);
+    dialogPopup(dialogConfig, callingDialogConfig || undefined);
 }
 
 window.customCards.push({
