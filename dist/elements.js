@@ -9630,6 +9630,7 @@ let GroupStack = class GroupStack extends h {
                         entity: entityId,
                         callingDialog: this._config.callingDialog,
                     };
+                    console.log("Group Stack: ", this._config.callingDialog);
                     const tile = createElement$1(tileConfig);
                     tile.hass = this.hass;
                     return tile;
