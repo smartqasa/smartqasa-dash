@@ -11269,6 +11269,10 @@ AdminChip = __decorate([
     t$1("smartqasa-admin-chip")
 ], AdminChip);
 
+function dialogPopup(dialogConfig) {
+    window.browser_mod?.service("popup", dialogConfig);
+}
+
 var css_248z$3 = ".container {\n    justify-content: flex-start;\n}\n\n.icon {\n    padding-right: calc(var(--sq-chip-padding) / 2);\n    align-items: center;\n    justify-content: center;\n}\n\n.text {\n    display: flex;\n    padding: var(--sq-chip-padding);\n    padding-left: 0;\n    line-height: var(--sq-icon-size);\n    font-weight: var(--sq-primary-font-weight);\n    font-size: var(--sq-primary-font-size);\n    color: rgb(var(--sq-primary-font-rgb));\n    text-align: left;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: nowrap;\n    align-items: center;\n}\n";
 styleInject(css_248z$3);
 
@@ -11343,10 +11347,8 @@ let CustomChip = class CustomChip extends h {
     }
     _showDialog(e) {
         e.stopPropagation();
-        if (!this._dialogObj)
-            return;
-        const dialogConfig = { ...this._dialogObj.data };
-        window.browser_mod?.service("popup", dialogConfig);
+        if (this._dialogObj)
+            dialogPopup(this._dialogObj.data);
     }
 };
 __decorate([
@@ -11961,7 +11963,7 @@ window.customCards.push({
     preview: true,
     description: "A SmartQasa chip that displays a thermostat.",
 });
-let ThermostatChip$1 = class ThermostatChip extends h {
+let ThermostatChip = class ThermostatChip extends h {
     getCardSize() {
         return 1;
     }
@@ -12013,13 +12015,13 @@ let ThermostatChip$1 = class ThermostatChip extends h {
 };
 __decorate([
     n({ attribute: false })
-], ThermostatChip$1.prototype, "hass", void 0);
+], ThermostatChip.prototype, "hass", void 0);
 __decorate([
     r()
-], ThermostatChip$1.prototype, "_config", void 0);
-ThermostatChip$1 = __decorate([
+], ThermostatChip.prototype, "_config", void 0);
+ThermostatChip = __decorate([
     t$1("smartqasa-thermostat-chip")
-], ThermostatChip$1);
+], ThermostatChip);
 
 window.customCards.push({
     type: "smartqasa-weather-chip",
@@ -12027,7 +12029,7 @@ window.customCards.push({
     preview: true,
     description: "A SmartQasa chip for displaying the weather card.",
 });
-let ThermostatChip = class ThermostatChip extends h {
+let WeatherChip = class WeatherChip extends h {
     getCardSize() {
         return 1;
     }
@@ -12065,19 +12067,19 @@ let ThermostatChip = class ThermostatChip extends h {
     _showDialog(e) {
         e.stopPropagation();
         const dialogObj = dialogTable.weather;
-        const dialogConfig = { ...dialogObj.data };
-        window.browser_mod?.service("popup", dialogConfig);
+        if (dialogObj)
+            dialogPopup(dialogObj.data);
     }
 };
 __decorate([
     n({ attribute: false })
-], ThermostatChip.prototype, "hass", void 0);
+], WeatherChip.prototype, "hass", void 0);
 __decorate([
     r()
-], ThermostatChip.prototype, "_config", void 0);
-ThermostatChip = __decorate([
+], WeatherChip.prototype, "_config", void 0);
+WeatherChip = __decorate([
     t$1("smartqasa-weather-chip")
-], ThermostatChip);
+], WeatherChip);
 
 var css_248z$1 = ".container {\n    display: grid;\n    width: 100%;\n    height: 100%;\n    box-sizing: border-box;\n    border: var(--sq-card-border);\n    border-radius: var(--sq-card-border-radius);\n    grid-template-areas: \"i n\";\n    grid-template-columns: auto 1fr;\n    grid-column-gap: 1rem;\n    grid-row-gap: 0.4rem;\n    padding: var(--sq-tile-padding);\n    background-color: var(--sq-card-background-color);\n    overflow: hidden;\n    -webkit-tap-highlight-color: transparent;\n    cursor: pointer;\n}\n\n.container:focus,\n.container:active {\n    background-color: var(--sq-ripple-color);\n    border-radius: var(--sq-card-border-radius);\n    outline: none;\n}\n\n.icon {\n    grid-area: i;\n    display: flex;\n    justify-content: center;\n    align-self: center;\n    height: var(--sq-icon-size);\n    width: var(--sq-icon-size);\n    padding: var(--sq-tile-padding);\n    border-radius: 50%;\n    transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;\n}\n.name {\n    grid-area: n;\n    place-self: center start;\n    max-height: 3.6rem;\n    line-height: 1.2;\n    max-width: 100%;\n    text-align: left;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: normal;\n    font-weight: var(--sq-primary-font-weight);\n    font-size: var(--sq-primary-font-size);\n    color: rgb(var(--sq-primary-font-rgb));\n}\n\n@keyframes blink {\n    50% {\n        opacity: 0.25;\n    }\n}\n\n@keyframes spin {\n    from {\n        transform: rotate(0deg);\n    }\n    to {\n        transform: rotate(360deg);\n    }\n}\n";
 styleInject(css_248z$1);

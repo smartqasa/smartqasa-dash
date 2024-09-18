@@ -3,6 +3,7 @@ import { customElement, property, state } from "lit/decorators.js";
 
 import { HassEntity, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 import { dialogTable } from "../tables/dialogs";
+import { dialogPopup } from "../dialogs/dialog-popup";
 
 import chipBaseStyle from "../css/chip-base.css";
 import chipTextStyle from "../css/chip-text.css";
@@ -19,7 +20,7 @@ window.customCards.push({
 });
 
 @customElement("smartqasa-weather-chip")
-export class ThermostatChip extends LitElement implements LovelaceCard {
+export class WeatherChip extends LitElement implements LovelaceCard {
     public getCardSize(): number {
         return 1;
     }
@@ -70,7 +71,6 @@ export class ThermostatChip extends LitElement implements LovelaceCard {
     private _showDialog(e: Event): void {
         e.stopPropagation();
         const dialogObj = dialogTable.weather;
-        const dialogConfig = { ...dialogObj.data };
-        window.browser_mod?.service("popup", dialogConfig);
+        if (dialogObj) dialogPopup(dialogObj.data);
     }
 }

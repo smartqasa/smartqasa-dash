@@ -18,6 +18,16 @@ declare module "*.webp" {
     export default content;
 }
 
+declare interface DialogConfig {
+    title: string;
+    size: "normal" | "wide" | "fullscreen";
+    timeout: number;
+    dismissable: boolean;
+    dismiss_action: any;
+    autoclose: boolean;
+    content: any;
+}
+
 declare interface Window {
     browser_mod?: {
         service: (service: string, data?: object) => void;
@@ -28,6 +38,7 @@ declare interface Window {
     };
     smartqasa: {
         chipsConfig?: any;
+        dialogStack?: DialogConfig[];
         menuConfig?: any;
         menuTab: number;
         startArea?: string;

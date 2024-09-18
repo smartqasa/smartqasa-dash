@@ -171,13 +171,3 @@ type LovelaceLayoutOptions = {
     grid_columns?: number;
     grid_rows?: number;
 };
-
-export interface DialogConfig {
-    title: string;
-    size: "normal" | "wide" | "fullscreen";
-    timeout: number;
-    dismissable: boolean;
-    dismiss_action: any;
-    autoclose: boolean;
-    content: any;
-}
