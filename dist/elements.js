@@ -13311,16 +13311,25 @@ let LightTile = class LightTile extends h {
     }
     _showEntityList(e) {
         e.stopPropagation();
-        if (!this._stateObj)
+        if (!this.hass || !this._config || !this._stateObj)
             return;
-        const group = this._config.group || `${this._entity}_group`;
-        const groupObj = this.hass?.states[group];
-        if (!groupObj)
-            return;
-        const entityIds = groupObj.attributes?.entity_id;
-        if (entityIds.length === 0)
-            return;
-        const friendlyName = this._stateObj.attributes?.friendly_name || "Unknown";
+        let group;
+        if (this._config.group) {
+            group = this._config.group;
+            const groupObj = this.hass.states[group];
+            if (!groupObj || groupObj.attributes?.entity_id?.length === 0)
+                return;
+        }
+        else if (this._stateObj.attributes?.entity_id?.length > 0) {
+            group = this._entity;
+        }
+        else {
+            group = `${this._entity}_group`;
+            const groupObj = this.hass.states[group];
+            if (!groupObj || groupObj.attributes?.entity_id?.length === 0)
+                return;
+        }
+        const friendlyName = this._stateObj.attributes?.friendly_name ?? "Unknown";
         entityListDialog(friendlyName, "group", group, "light");
     }
 };
