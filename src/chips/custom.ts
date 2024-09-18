@@ -4,7 +4,6 @@ import { styleMap } from "lit/directives/style-map.js";
 
 import { HassEntity, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 import { loadYamlAsJson } from "../utils/load-yaml-as-json";
-import { dialogPopup } from "../dialogs/dialog-popup";
 
 import chipBaseStyle from "../css/chip-base.css";
 import chipTextStyle from "../css/chip-text.css";
@@ -110,6 +109,7 @@ export class CustomChip extends LitElement implements LovelaceCard {
 
     private _showDialog(e: Event): void {
         e.stopPropagation();
-        if (this._dialogObj) dialogPopup(this._dialogObj.data);
+        const dialogObj = this._dialogObj;
+        if (dialogObj?.data) window.browser_mod?.service("popup", dialogObj.data);
     }
 }

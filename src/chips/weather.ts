@@ -3,7 +3,6 @@ import { customElement, property, state } from "lit/decorators.js";
 
 import { HassEntity, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 import { dialogTable } from "../tables/dialogs";
-import { dialogPopup } from "../dialogs/dialog-popup";
 
 import chipBaseStyle from "../css/chip-base.css";
 import chipTextStyle from "../css/chip-text.css";
@@ -71,6 +70,6 @@ export class WeatherChip extends LitElement implements LovelaceCard {
     private _showDialog(e: Event): void {
         e.stopPropagation();
         const dialogObj = dialogTable.weather;
-        if (dialogObj) dialogPopup(dialogObj.data);
+        if (dialogObj?.data) window.browser_mod?.service("popup", dialogObj.data);
     }
 }

@@ -11269,10 +11269,6 @@ AdminChip = __decorate([
     t$1("smartqasa-admin-chip")
 ], AdminChip);
 
-function dialogPopup(dialogConfig) {
-    window.browser_mod?.service("popup", dialogConfig);
-}
-
 var css_248z$3 = ".container {\n    justify-content: flex-start;\n}\n\n.icon {\n    padding-right: calc(var(--sq-chip-padding) / 2);\n    align-items: center;\n    justify-content: center;\n}\n\n.text {\n    display: flex;\n    padding: var(--sq-chip-padding);\n    padding-left: 0;\n    line-height: var(--sq-icon-size);\n    font-weight: var(--sq-primary-font-weight);\n    font-size: var(--sq-primary-font-size);\n    color: rgb(var(--sq-primary-font-rgb));\n    text-align: left;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: nowrap;\n    align-items: center;\n}\n";
 styleInject(css_248z$3);
 
@@ -11347,8 +11343,9 @@ let CustomChip = class CustomChip extends h {
     }
     _showDialog(e) {
         e.stopPropagation();
-        if (this._dialogObj)
-            dialogPopup(this._dialogObj.data);
+        const dialogObj = this._dialogObj;
+        if (dialogObj?.data)
+            window.browser_mod?.service("popup", dialogObj.data);
     }
 };
 __decorate([
@@ -12067,8 +12064,8 @@ let WeatherChip = class WeatherChip extends h {
     _showDialog(e) {
         e.stopPropagation();
         const dialogObj = dialogTable.weather;
-        if (dialogObj)
-            dialogPopup(dialogObj.data);
+        if (dialogObj?.data)
+            window.browser_mod?.service("popup", dialogObj.data);
     }
 };
 __decorate([

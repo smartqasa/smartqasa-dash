@@ -36,7 +36,7 @@ export default {
         url({
             limit: 0,
             destDir: "dist/assets",
-            include: ["**/*.webp"],
+            include: ["**/*.webp", "**/*.png", "**/*.jpg", "**/*.jpeg", "**/*.gif", "**/*.svg"],
             fileName: "[dirname][hash][extname]",
         }),
     ],

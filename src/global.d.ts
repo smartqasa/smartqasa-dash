@@ -22,10 +22,11 @@ declare interface DialogConfig {
     title: string;
     size: "normal" | "wide" | "fullscreen";
     timeout: number;
+    timeout_action: object;
     dismissable: boolean;
-    dismiss_action: any;
+    dismiss_action: object;
     autoclose: boolean;
-    content: any;
+    content: object;
 }
 
 declare interface Window {
@@ -38,7 +39,6 @@ declare interface Window {
     };
     smartqasa: {
         chipsConfig?: any;
-        dialogStack?: DialogConfig[];
         menuConfig?: any;
         menuTab: number;
         startArea?: string;
