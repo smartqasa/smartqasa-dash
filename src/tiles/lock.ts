@@ -140,9 +140,9 @@ export class LockTile extends LitElement implements LovelaceCard {
         }, 500);
     }
 
-    private async _showMoreInfo(e: Event): Promise<void> {
+    private _showMoreInfo(e: Event): void {
         e.stopPropagation();
         console.log("Lock Tile: ", this._config?.callingDialog);
-        await moreInfoDialog(this._stateObj, this._config?.callingDialog);
+        moreInfoDialog(this._stateObj, this._config?.callingDialog);
     }
 }

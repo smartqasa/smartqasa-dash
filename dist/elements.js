@@ -8963,7 +8963,9 @@ async function dialogPopup(dialogConfig, callingDialogConfig) {
             data: callingDialogConfig,
         };
     }
-    await window.browser_mod?.service("popup", dialogConfig);
+    setTimeout(() => {
+        window.browser_mod?.service("popup", dialogConfig);
+    }, 500);
 }
 
 function renderFooter() {
@@ -13504,10 +13506,10 @@ let LockTile = class LockTile extends h {
             this._running = false;
         }, 500);
     }
-    async _showMoreInfo(e) {
+    _showMoreInfo(e) {
         e.stopPropagation();
         console.log("Lock Tile: ", this._config?.callingDialog);
-        await moreInfoDialog(this._stateObj, this._config?.callingDialog);
+        moreInfoDialog(this._stateObj, this._config?.callingDialog);
     }
 };
 __decorate([
