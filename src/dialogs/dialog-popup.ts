@@ -4,7 +4,6 @@ export function dialogPopup(dialogConfig: DialogConfig, callingDialogConfig: Dia
             service: "browser_mod.popup",
             data: callingDialogConfig,
         };
-
-        window.browser_mod?.service("popup", dialogConfig);
     }
+    window.browser_mod?.service("popup", dialogConfig);
 }

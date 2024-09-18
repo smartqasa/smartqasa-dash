@@ -11938,8 +11938,8 @@ function dialogPopup(dialogConfig, callingDialogConfig) {
             service: "browser_mod.popup",
             data: callingDialogConfig,
         };
-        window.browser_mod?.service("popup", dialogConfig);
     }
+    window.browser_mod?.service("popup", dialogConfig);
 }
 
 function moreInfoDialog(stateObj, callingDialogConfig) {
