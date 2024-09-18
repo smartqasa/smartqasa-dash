@@ -9620,7 +9620,7 @@ let GroupStack = class GroupStack extends h {
                     const tileConfig = {
                         type: this._config.tile_type,
                         entity: entityId,
-                        dialog: this._config.dialog,
+                        callingDialog: this._config.callingDialog,
                     };
                     const tile = createElement$1(tileConfig);
                     tile.hass = this.hass;
@@ -11932,11 +11932,11 @@ SelectChip = __decorate([
     t$1("smartqasa-select-chip")
 ], SelectChip);
 
-function dialogPopup(dialogConfig, prevDialogConfig) {
-    if (prevDialogConfig && Object.keys(prevDialogConfig).length > 0) {
+function dialogPopup(dialogConfig, callingDialogConfig) {
+    if (callingDialogConfig && Object.keys(callingDialogConfig).length > 0) {
         dialogConfig.dismiss_action = {
             service: "browser_mod.popup",
-            data: prevDialogConfig,
+            data: callingDialogConfig,
         };
         window.browser_mod?.service("popup", dialogConfig);
     }
@@ -14756,7 +14756,7 @@ ThermostatTile = __decorate([
     t$1("smartqasa-thermostat-tile")
 ], ThermostatTile);
 
-var version = "2024.9.16b-1";
+var version = "2024.9.18b-1";
 
 window.smartqasa = window.smartqasa || {};
 window.smartqasa.viewMode = "control";
