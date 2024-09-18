@@ -8914,6 +8914,11 @@ const dialogTable = {
         entity: "binary_sensor.all_window_sensors",
         data: listDialogConfig("Window Sensors", "group", "binary_sensor.all_window_sensors", "sensor"),
     },
+    shades: {
+        icon: "hass:roller-shade",
+        name: "Shades",
+        data: listDialogConfig("Robots", "group", "cover.all_window_shades", "shade"),
+    },
     speed_test: {
         icon: "hass:gauge",
         name: "Speed Test",
