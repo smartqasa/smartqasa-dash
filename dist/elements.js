@@ -8956,14 +8956,14 @@ const dialogTable = {
     },
 };
 
-function dialogPopup(dialogConfig, callingDialogConfig) {
+async function dialogPopup(dialogConfig, callingDialogConfig) {
     if (callingDialogConfig && Object.keys(callingDialogConfig).length > 0) {
         dialogConfig.dismiss_action = {
             service: "browser_mod.popup",
             data: callingDialogConfig,
         };
     }
-    window.browser_mod?.service("popup", dialogConfig);
+    await window.browser_mod?.service("popup", dialogConfig);
 }
 
 function renderFooter() {
@@ -11947,7 +11947,7 @@ SelectChip = __decorate([
     t$1("smartqasa-select-chip")
 ], SelectChip);
 
-function moreInfoDialog(stateObj, callingDialogConfig) {
+async function moreInfoDialog(stateObj, callingDialogConfig) {
     if (!stateObj)
         return;
     const title = stateObj.attributes.friendly_name || stateObj.entity_id;
@@ -11960,7 +11960,7 @@ function moreInfoDialog(stateObj, callingDialogConfig) {
             background: false,
         },
     };
-    dialogPopup(dialogConfig, callingDialogConfig);
+    await dialogPopup(dialogConfig, callingDialogConfig);
 }
 
 window.customCards.push({
@@ -13504,10 +13504,10 @@ let LockTile = class LockTile extends h {
             this._running = false;
         }, 500);
     }
-    _showMoreInfo(e) {
+    async _showMoreInfo(e) {
         e.stopPropagation();
         console.log("Lock Tile: ", this._config?.callingDialog);
-        moreInfoDialog(this._stateObj, this._config?.callingDialog);
+        await moreInfoDialog(this._stateObj, this._config?.callingDialog);
     }
 };
 __decorate([
