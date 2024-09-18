@@ -12973,8 +12973,8 @@ let FanTile = class FanTile extends h {
             animation: iconAnimation,
         };
         return ke `
-            <div class="container" @click=${this._showMoreInfo} @contextmenu=${this._showEntityList}>
-                <div class="icon" @click=${this._toggleEntity} style="${se(iconStyles)}">
+            <div class="container" @click=${this._toggleEntity} @contextmenu=${this._showEntityList}>
+                <div class="icon" @click=${this._showMoreInfo} style="${se(iconStyles)}">
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
                 <div class="name">${name}</div>
@@ -13076,8 +13076,8 @@ let GarageTile = class GarageTile extends h {
             animation: iconAnimation,
         };
         return ke `
-            <div class="container" @click=${this._showMoreInfo}>
-                <div class="icon" @click=${this._toggleEntity} style="${se(iconStyles)}">
+            <div class="container" @click=${this._toggleEntity}>
+                <div class="icon" @click=${this._showMoreInfo} style="${se(iconStyles)}">
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
                 <div class="name">${name}</div>
@@ -13182,8 +13182,8 @@ let HeaterTile = class HeaterTile extends h {
             animation: iconAnimation,
         };
         return ke `
-            <div class="container" @click=${this._showMoreInfo}>
-                <div class="icon" @click=${this._toggleEntity} style="${se(iconStyles)}">
+            <div class="container" @click=${this._toggleEntity}>
+                <div class="icon" @click=${this._showMoreInfo} style="${se(iconStyles)}">
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
                 <div class="name">${name}</div>
@@ -13265,8 +13265,8 @@ let LightTile = class LightTile extends h {
             animation: iconAnimation,
         };
         return ke `
-            <div class="container" @click=${this._showMoreInfo} @contextmenu=${this._showEntityList}>
-                <div class="icon" @click=${this._toggleEntity} style="${se(iconStyles)}">
+            <div class="container" @click=${this._toggleEntity} @contextmenu=${this._showEntityList}>
+                <div class="icon" @click=${this._showMoreInfo} style="${se(iconStyles)}">
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
                 <div class="name">${name}</div>
@@ -13428,8 +13428,8 @@ let LockTile = class LockTile extends h {
             animation: iconAnimation,
         };
         return ke `
-            <div class="container" @click=${this._showMoreInfo}>
-                <div class="icon" @click=${this._toggleEntity} style="${se(iconStyles)}">
+            <div class="container" @click=${this._toggleEntity}>
+                <div class="icon" @click=${this._showMoreInfo} style="${se(iconStyles)}">
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
                 <div class="name">${name}</div>
@@ -13688,8 +13688,8 @@ let RobotTile = class RobotTile extends h {
             animation: iconAnimation,
         };
         return ke `
-            <div class="container" @click=${this._showMoreInfo}>
-                <div class="icon" @click=${this._toggleEntity} style="${se(iconStyles)}">
+            <div class="container" @click=${this._toggleEntity}>
+                <div class="icon" @click=${this._showMoreInfo} style="${se(iconStyles)}">
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
                 <div class="name">${name}</div>
@@ -13803,8 +13803,8 @@ let RokuTile = class RokuTile extends h {
             animation: iconAnimation,
         };
         return ke `
-            <div class="container" @click=${this._showMoreInfo}>
-                <div class="icon" @click=${this._toggleEntity} style="${se(iconStyles)}">
+            <div class="container" @click=${this._toggleEntity}>
+                <div class="icon" @click=${this._showMoreInfo} style="${se(iconStyles)}">
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
                 <div class="name">${name}</div>
@@ -14237,8 +14237,8 @@ let PoolLightTile = class PoolLightTile extends h {
             animation: iconAnimation,
         };
         return ke `
-            <div class="container" @click=${this._showColorList}>
-                <div class="icon" @click=${this._toggleEntity} style="${se(iconStyles)}">
+            <div class="container" @click=${this._toggleEntity}>
+                <div class="icon" @click=${this._showColorList} style="${se(iconStyles)}">
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
                 <div class="name">${name}</div>
@@ -14423,8 +14423,8 @@ let ShadeTile = class ShadeTile extends h {
             animation: iconAnimation,
         };
         return ke `
-            <div class="container" @click=${this._showMoreInfo} @contextmenu=${this._showEntityList}>
-                <div class="icon" @click=${this._toggleEntity} style="${se(iconStyles)}">
+            <div class="container" @click=${this._toggleEntity} @contextmenu=${this._showEntityList}>
+                <div class="icon" @click=${this._showMoreInfo} style="${se(iconStyles)}">
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
                 <div class="name">${name}</div>
@@ -14571,8 +14571,8 @@ let SwitchTile = class SwitchTile extends h {
             animation: iconAnimation,
         };
         return ke `
-            <div class="container" @click=${this._showMoreInfo}>
-                <div class="icon" @click=${this._toggleEntity} style="${se(iconStyles)}">
+            <div class="container" @click=${this._toggleEntity}>
+                <div class="icon" @click=${this._showMoreInfo} style="${se(iconStyles)}">
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
                 <div class="name">${name}</div>
@@ -14695,8 +14695,8 @@ let ThermostatTile = class ThermostatTile extends h {
             animation: iconAnimation,
         };
         return ke `
-            <div class="container" @click=${this._showMoreInfo}>
-                <div class="icon" @click=${this._toggleEntity} style="${se(iconStyles)}">
+            <div class="container" @click=${this._toggleEntity}>
+                <div class="icon" @click=${this._showMoreInfo} style="${se(iconStyles)}">
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
                 <div class="name">${name}</div>

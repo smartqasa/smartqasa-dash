@@ -57,8 +57,8 @@ export class ShadeTile extends LitElement implements LovelaceCard {
         };
 
         return html`
-            <div class="container" @click=${this._showMoreInfo} @contextmenu=${this._showEntityList}>
-                <div class="icon" @click=${this._toggleEntity} style="${styleMap(iconStyles)}">
+            <div class="container" @click=${this._toggleEntity} @contextmenu=${this._showEntityList}>
+                <div class="icon" @click=${this._showMoreInfo} style="${styleMap(iconStyles)}">
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
                 <div class="name">${name}</div>

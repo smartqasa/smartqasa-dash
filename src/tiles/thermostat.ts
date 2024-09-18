@@ -55,8 +55,8 @@ export class ThermostatTile extends LitElement implements LovelaceCard {
             animation: iconAnimation,
         };
         return html`
-            <div class="container" @click=${this._showMoreInfo}>
-                <div class="icon" @click=${this._toggleEntity} style="${styleMap(iconStyles)}">
+            <div class="container" @click=${this._toggleEntity}>
+                <div class="icon" @click=${this._showMoreInfo} style="${styleMap(iconStyles)}">
                     <ha-icon .icon=${icon}></ha-icon>
                 </div>
                 <div class="name">${name}</div>
