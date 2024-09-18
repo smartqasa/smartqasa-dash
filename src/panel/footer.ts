@@ -38,8 +38,7 @@ export function renderFooter(): TemplateResult {
     }
 
     function handleAreas(): void {
-        const dialogObj = dialogTable["areas"];
-        window.browser_mod?.service("popup", dialogObj.data);
+        dialogPopup(dialogTable["areas"].data);
     }
 
     function handleEntertain(): void {
@@ -49,9 +48,7 @@ export function renderFooter(): TemplateResult {
 
     function handleMenu(): void {
         window.smartqasa.menuTab = 0;
-
-        const dialogObj = dialogTable["menu"];
-        dialogPopup(dialogObj.data, dialogObj.data);
+        dialogPopup(dialogTable["menu"].data);
     }
 
     return html`

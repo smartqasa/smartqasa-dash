@@ -8999,8 +8999,7 @@ function renderFooter() {
         }
     }
     function handleAreas() {
-        const dialogObj = dialogTable["areas"];
-        window.browser_mod?.service("popup", dialogObj.data);
+        dialogPopup(dialogTable["areas"].data);
     }
     function handleEntertain() {
         window.smartqasa.viewMode = "entertain";
@@ -9008,8 +9007,7 @@ function renderFooter() {
     }
     function handleMenu() {
         window.smartqasa.menuTab = 0;
-        const dialogObj = dialogTable["menu"];
-        dialogPopup(dialogObj.data, dialogObj.data);
+        dialogPopup(dialogTable["menu"].data);
     }
     return ke `
         <div class="footer-container">
