@@ -26,7 +26,7 @@ class GridStack extends LitElement implements LovelaceCard {
 
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() protected _config?: Config;
-    @state() private _cards: LovelaceCard[] = [];
+    @state() private _tiles: LovelaceCard[] = [];
 
     static get styles() {
         return css`
@@ -35,8 +35,8 @@ class GridStack extends LitElement implements LovelaceCard {
                 grid-template-rows: var(--sq-tile-height, 7rem);
                 gap: var(--sq-tile-spacing, 0.8rem);
             }
-            .element {
-                width: 100%;
+            .tile {
+                height: var(--sq-tile-height);
             }
         `;
     }
@@ -53,20 +53,20 @@ class GridStack extends LitElement implements LovelaceCard {
         const configChanged = changedProps.has("_config");
 
         if ((hassChanged || configChanged) && this._config) {
-            if (this.hass && this._config.cards.length > 0) {
-                this._cards = createElements(this._config.cards, this.hass);
+            if (this.hass && this._config.tiles.length > 0) {
+                this._tiles = createElements(this._config.tiles, this.hass);
             }
         }
 
-        if (hassChanged && this._cards.length > 0) {
-            this._cards.forEach((card) => {
-                card.hass = this.hass;
+        if (hassChanged && this._tiles.length > 0) {
+            this._tiles.forEach((tile) => {
+                tile.hass = this.hass;
             });
         }
     }
 
     protected render(): TemplateResult | typeof nothing {
-        if (!this._config || !this.hass || this._cards.length === 0) return nothing;
+        if (!this._config || !this.hass || this._tiles.length === 0) return nothing;
         const columns = this._config.columns || 3;
         const gridStyle = {
             gridTemplateColumns:
@@ -75,7 +75,7 @@ class GridStack extends LitElement implements LovelaceCard {
 
         return html`
             <div class="container" style=${styleMap(gridStyle)}>
-                ${this._cards.map((card) => html`<div class="element">${card}</div>`)}
+                ${this._tiles.map((tile) => html`<div class="element">${tile}</div>`)}
             </div>
         `;
     }

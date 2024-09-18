@@ -9489,7 +9489,7 @@ window.customCards.push({
 let GridStack = class GridStack extends h {
     constructor() {
         super(...arguments);
-        this._cards = [];
+        this._tiles = [];
     }
     getCardSize() {
         return 4;
@@ -9501,8 +9501,8 @@ let GridStack = class GridStack extends h {
                 grid-template-rows: var(--sq-tile-height, 7rem);
                 gap: var(--sq-tile-spacing, 0.8rem);
             }
-            .element {
-                width: 100%;
+            .tile {
+                height: var(--sq-tile-height);
             }
         `;
     }
@@ -9516,18 +9516,18 @@ let GridStack = class GridStack extends h {
         const hassChanged = changedProps.has("hass");
         const configChanged = changedProps.has("_config");
         if ((hassChanged || configChanged) && this._config) {
-            if (this.hass && this._config.cards.length > 0) {
-                this._cards = createElements(this._config.cards, this.hass);
+            if (this.hass && this._config.tiles.length > 0) {
+                this._tiles = createElements(this._config.tiles, this.hass);
             }
         }
-        if (hassChanged && this._cards.length > 0) {
-            this._cards.forEach((card) => {
-                card.hass = this.hass;
+        if (hassChanged && this._tiles.length > 0) {
+            this._tiles.forEach((tile) => {
+                tile.hass = this.hass;
             });
         }
     }
     render() {
-        if (!this._config || !this.hass || this._cards.length === 0)
+        if (!this._config || !this.hass || this._tiles.length === 0)
             return D;
         const columns = this._config.columns || 3;
         const gridStyle = {
@@ -9535,7 +9535,7 @@ let GridStack = class GridStack extends h {
         };
         return ke `
             <div class="container" style=${se(gridStyle)}>
-                ${this._cards.map((card) => ke `<div class="element">${card}</div>`)}
+                ${this._tiles.map((tile) => ke `<div class="element">${tile}</div>`)}
             </div>
         `;
     }
@@ -9548,7 +9548,7 @@ __decorate([
 ], GridStack.prototype, "_config", void 0);
 __decorate([
     r()
-], GridStack.prototype, "_cards", void 0);
+], GridStack.prototype, "_tiles", void 0);
 GridStack = __decorate([
     t$1("smartqasa-grid-stack")
 ], GridStack);
