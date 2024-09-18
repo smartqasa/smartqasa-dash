@@ -7,5 +7,8 @@ export async function dialogPopup(dialogConfig: DialogConfig, callingDialogConfi
     }
 
     await window.browser_mod?.service("close_popup");
-    await window.browser_mod?.service("popup", dialogConfig);
+
+    await setTimeout(() => {
+        window.browser_mod?.service("popup", dialogConfig);
+    }, 500);
 }

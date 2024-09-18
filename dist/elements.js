@@ -8964,7 +8964,9 @@ async function dialogPopup(dialogConfig, callingDialogConfig) {
         };
     }
     await window.browser_mod?.service("close_popup");
-    await window.browser_mod?.service("popup", dialogConfig);
+    await setTimeout(() => {
+        window.browser_mod?.service("popup", dialogConfig);
+    }, 500);
 }
 
 function renderFooter() {
@@ -9638,7 +9640,6 @@ let GroupStack = class GroupStack extends h {
                     entity: entityId,
                     callingDialog: this._config.callingDialog,
                 };
-                console.log("Group Stack: ", this._config.callingDialog);
                 const tile = createElement$1(tileConfig);
                 tile.hass = this.hass;
                 return tile;
@@ -11961,7 +11962,6 @@ function moreInfoDialog(stateObj, callingDialogConfig) {
             background: false,
         },
     };
-    console.log("More Info Dialog: ", callingDialogConfig);
     dialogPopup(dialogConfig, callingDialogConfig || undefined);
 }
 
@@ -12919,7 +12919,6 @@ let DialogTile = class DialogTile extends h {
         e.stopPropagation();
         if (!this._dialogObj)
             return;
-        console.log("Dialog Tile: ", this._config?.callingDialog);
         dialogPopup(this._dialogObj.data, this._config?.callingDialog || undefined);
     }
 };
@@ -13508,7 +13507,6 @@ let LockTile = class LockTile extends h {
     }
     _showMoreInfo(e) {
         e.stopPropagation();
-        console.log("Lock Tile: ", this._config?.callingDialog);
         moreInfoDialog(this._stateObj, this._config?.callingDialog);
     }
 };

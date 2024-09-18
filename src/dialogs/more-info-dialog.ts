@@ -15,6 +15,5 @@ export function moreInfoDialog(stateObj: any, callingDialogConfig?: DialogConfig
         },
     };
 
-    console.log("More Info Dialog: ", callingDialogConfig);
     dialogPopup(dialogConfig, callingDialogConfig || undefined);
 }
