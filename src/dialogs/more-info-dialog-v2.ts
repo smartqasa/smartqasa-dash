@@ -1,9 +1,11 @@
-export const moreInfoDialog = (stateObj: any): DialogConfig | undefined => {
-    if (!stateObj) return undefined;
+import { dialogPopup } from "./dialog-popup";
+
+export function moreInfoDialog(stateObj: any, callingDialogConfig: DialogConfig): void {
+    if (!stateObj) return;
 
     const title = stateObj.attributes.friendly_name || stateObj.entity_id;
 
-    let dialogConfig: any = {
+    const dialogConfig: any = {
         title: title,
         timeout: 60000,
         content: {
@@ -13,5 +15,5 @@ export const moreInfoDialog = (stateObj: any): DialogConfig | undefined => {
         },
     };
 
-    return dialogConfig;
-};
+    dialogPopup(dialogConfig, callingDialogConfig);
+}

@@ -142,17 +142,6 @@ export class LockTile extends LitElement implements LovelaceCard {
 
     private _showMoreInfo(e: Event): void {
         e.stopPropagation();
-
-        const dialogConfig = moreInfoDialog(this._stateObj);
-        if (!dialogConfig) return;
-
-        if (this._config?.dialog) {
-            dialogConfig.dismiss_action = {
-                service: "browser_mod.popup",
-                data: this._config.dialog,
-            };
-        }
-
-        window.browser_mod?.service("popup", dialogConfig);
+        moreInfoDialog(this._stateObj, this._config?.dialog);
     }
 }

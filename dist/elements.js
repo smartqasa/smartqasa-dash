@@ -13397,11 +13397,21 @@ LightTileEditor = __decorate([
     t$1("smartqasa-light-tile-editor")
 ], LightTileEditor);
 
-const moreInfoDialog = (stateObj) => {
+function dialogPopup(dialogConfig, prevDialogConfig) {
+    if (prevDialogConfig) {
+        dialogConfig.dismiss_action = {
+            service: "browser_mod.popup",
+            data: prevDialogConfig,
+        };
+        window.browser_mod?.service("popup", dialogConfig);
+    }
+}
+
+function moreInfoDialog(stateObj, callingDialogConfig) {
     if (!stateObj)
-        return undefined;
+        return;
     const title = stateObj.attributes.friendly_name || stateObj.entity_id;
-    let dialogConfig = {
+    const dialogConfig = {
         title: title,
         timeout: 60000,
         content: {
@@ -13410,8 +13420,8 @@ const moreInfoDialog = (stateObj) => {
             background: false,
         },
     };
-    return dialogConfig;
-};
+    dialogPopup(dialogConfig, callingDialogConfig);
+}
 
 window.customCards.push({
     type: "smartqasa-lock-tile",
@@ -13519,16 +13529,7 @@ let LockTile = class LockTile extends h {
     }
     _showMoreInfo(e) {
         e.stopPropagation();
-        const dialogConfig = moreInfoDialog(this._stateObj);
-        if (!dialogConfig)
-            return;
-        if (this._config?.dialog) {
-            dialogConfig.dismiss_action = {
-                service: "browser_mod.popup",
-                data: this._config.dialog,
-            };
-        }
-        window.browser_mod?.service("popup", dialogConfig);
+        moreInfoDialog(this._stateObj, this._config?.dialog);
     }
 };
 __decorate([
