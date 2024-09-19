@@ -32,6 +32,9 @@ class VerticalStack extends LitElement implements LovelaceCard {
                 display: flex;
                 flex-direction: column;
             }
+            .card {
+                min-height: var(--sq-tile-height);
+            }
             .card:not(:last-child) {
                 padding-bottom: 0.8rem;
             }

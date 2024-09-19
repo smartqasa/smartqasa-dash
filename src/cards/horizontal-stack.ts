@@ -50,20 +50,15 @@ class HorizontalStack extends LitElement implements LovelaceCard {
         this._config = { ...config };
     }
 
-    protected willUpdate(changedProps: PropertyValues): void {
-        const hassChanged = changedProps.has("hass");
-        const configChanged = changedProps.has("_config");
-
-        if ((hassChanged || configChanged) && this._config) {
-            if (this.hass && this._config.cards.length > 0) {
-                this._cards = createElements(this._config.cards, this.hass);
-            }
+    protected willUpdate(changedProps: PropertyValues) {
+        if (changedProps.has("hass") && this._cards.length > 0) {
+            this._cards.forEach((card) => {
+                if (card.hass !== this.hass) card.hass = this.hass;
+            });
         }
 
-        if (hassChanged && this._cards.length > 0) {
-            this._cards.forEach((card) => {
-                card.hass = this.hass;
-            });
+        if (changedProps.has("_config") && this._config) {
+            this._createCards();
         }
     }
 
@@ -73,7 +68,25 @@ class HorizontalStack extends LitElement implements LovelaceCard {
         const containerClass = this._config.justify_right ? "container justify-right" : "container";
 
         return html`
-            <div class="${containerClass}">${this._cards.map((card) => html`<div class="element">${card}</div>`)}</div>
+            <div class="${containerClass}">
+                ${this._cards.map((card, index) => html`<div class="element" .key=${index}>${card}</div>`)}
+            </div>
         `;
+    }
+
+    protected firstupdated(): void {
+        if (!this._config || !this.hass) return;
+
+        this._createCards();
+    }
+
+    private _createCards(): void {
+        if (!this._config || !this.hass) return;
+
+        if (this._config.cards.length > 0) {
+            this._cards = createElements(this._config.cards, this.hass);
+        } else {
+            this._cards = [];
+        }
     }
 }
