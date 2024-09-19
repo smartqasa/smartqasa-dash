@@ -49,12 +49,25 @@ class GroupStack extends LitElement implements LovelaceCard {
         this._tiles = [];
     }
 
-    protected render(): TemplateResult | typeof nothing {
-        if (!this.hass || this._tiles.length === 0) return nothing;
-        return html` <div class="container">${this._tiles.map((tile) => html`<div class="tile">${tile}</div>`)}</div> `;
+    protected willUpdate(changedProps: PropertyValues) {
+        if (changedProps.has("hass") && this.hass) {
+            this._tiles.forEach((tile) => {
+                if (tile.hass !== this.hass) tile.hass = this.hass;
+            });
+        }
     }
 
-    protected firstUpdated(changedProps: PropertyValues) {
+    protected render(): TemplateResult | typeof nothing {
+        if (!this.hass || this._tiles.length === 0) return nothing;
+
+        return html`
+            <div class="container">
+                ${this._tiles.map((tile, index) => html` <div class="tile" .key=${index}>${tile}</div> `)}
+            </div>
+        `;
+    }
+
+    protected firstUpdated(): void {
         if (!this._config || !this.hass) return;
         let entityIds: string[] = [];
 
@@ -92,14 +105,6 @@ class GroupStack extends LitElement implements LovelaceCard {
             });
         } else {
             this._tiles = [];
-        }
-    }
-
-    protected updated(changedProps: PropertyValues) {
-        if (changedProps.has("hass") && this.hass) {
-            this._tiles.forEach((tile) => {
-                if (tile.hass !== this.hass) tile.hass = this.hass!;
-            });
         }
     }
 }

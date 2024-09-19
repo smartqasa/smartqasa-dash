@@ -36,7 +36,7 @@ class GridStack extends LitElement implements LovelaceCard {
                 gap: var(--sq-tile-spacing, 0.8rem);
             }
             .tile {
-                height: var(--sq-tile-height);
+                min-height: var(--sq-tile-height);
             }
         `;
     }
@@ -49,16 +49,17 @@ class GridStack extends LitElement implements LovelaceCard {
     }
 
     protected willUpdate(changedProps: PropertyValues): void {
-        const hassChanged = changedProps.has("hass");
-        const configChanged = changedProps.has("_config");
+        if (!this.hass || !this._config) return;
 
-        if ((hassChanged || configChanged) && this._config) {
+        if (changedProps.has("_config")) {
             if (this.hass && this._config.tiles.length > 0) {
                 this._tiles = createElements(this._config.tiles, this.hass);
+            } else {
+                this._tiles = [];
             }
         }
 
-        if (hassChanged && this._tiles.length > 0) {
+        if (changedProps.has("hass") && this._tiles.length > 0) {
             this._tiles.forEach((tile) => {
                 tile.hass = this.hass;
             });
@@ -78,5 +79,13 @@ class GridStack extends LitElement implements LovelaceCard {
                 ${this._tiles.map((tile) => html`<div class="element">${tile}</div>`)}
             </div>
         `;
+    }
+
+    firstUpdated(): void {
+        if (!this.hass || !this._config) return;
+
+        if (this.hass && this._config.tiles.length > 0) {
+            this._tiles = createElements(this._config.tiles, this.hass);
+        }
     }
 }
