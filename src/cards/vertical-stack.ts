@@ -3,6 +3,7 @@ import { customElement, property, state } from "lit/decorators.js";
 
 import { HomeAssistant, LovelaceCardConfig, LovelaceCard } from "../types";
 import { createElements } from "../utils/create-elements";
+import { thermostatIcons } from "../const";
 
 interface Config extends LovelaceCardConfig {
     cards: LovelaceCardConfig[];
@@ -46,19 +47,16 @@ class VerticalStack extends LitElement implements LovelaceCard {
     }
 
     protected willUpdate(changedProps: PropertyValues) {
-        const hassChanged = changedProps.has("hass");
-        const configChanged = changedProps.has("_config");
-
-        if ((hassChanged || configChanged) && this._config) {
-            if (this.hass && this._config.cards.length > 0) {
-                this._cards = createElements(this._config.cards, this.hass);
-            }
+        if (changedProps.has("hass") && this._cards.length > 0) {
+            this._cards.forEach((card) => {
+                if (card.hass !== this.hass) card.hass = this.hass;
+            });
         }
 
-        if (hassChanged && this._cards.length > 0) {
-            this._cards.forEach((card) => {
-                card.hass = this.hass;
-            });
+        if (changedProps.has("_config") && this._config) {
+            this._createCards();
+        } else {
+            this._cards = [];
         }
     }
 
@@ -67,5 +65,16 @@ class VerticalStack extends LitElement implements LovelaceCard {
         return html`
             <div class="container">${this._cards.map((card) => html`<hui-card class="card">${card}</hui-card>`)}</div>
         `;
+    }
+
+    protected firstupdated(): void {
+        if (!this._config || !this.hass) return;
+
+        this._createCards();
+    }
+
+    private _createCards(): void {
+        if (!this._config || this._config.cards.length === 0 || !this.hass) return;
+        this._cards = createElements(this._config.cards, this.hass);
     }
 }

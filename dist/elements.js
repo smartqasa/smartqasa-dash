@@ -10691,17 +10691,17 @@ let VerticalStack = class VerticalStack extends h {
         }
     }
     willUpdate(changedProps) {
-        const hassChanged = changedProps.has("hass");
-        const configChanged = changedProps.has("_config");
-        if ((hassChanged || configChanged) && this._config) {
-            if (this.hass && this._config.cards.length > 0) {
-                this._cards = createElements(this._config.cards, this.hass);
-            }
-        }
-        if (hassChanged && this._cards.length > 0) {
+        if (changedProps.has("hass") && this._cards.length > 0) {
             this._cards.forEach((card) => {
-                card.hass = this.hass;
+                if (card.hass !== this.hass)
+                    card.hass = this.hass;
             });
+        }
+        if (changedProps.has("_config") && this._config) {
+            this._createCards();
+        }
+        else {
+            this._cards = [];
         }
     }
     render() {
@@ -10710,6 +10710,16 @@ let VerticalStack = class VerticalStack extends h {
         return ke `
             <div class="container">${this._cards.map((card) => ke `<hui-card class="card">${card}</hui-card>`)}</div>
         `;
+    }
+    firstupdated() {
+        if (!this._config || !this.hass)
+            return;
+        this._createCards();
+    }
+    _createCards() {
+        if (!this._config || this._config.cards.length === 0 || !this.hass)
+            return;
+        this._cards = createElements(this._config.cards, this.hass);
     }
 };
 __decorate([
