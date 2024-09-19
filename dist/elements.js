@@ -10705,7 +10705,9 @@ let VerticalStack = class VerticalStack extends h {
         if (!this._config || !this.hass || this._cards.length === 0)
             return D;
         return ke `
-            <div class="container">${this._cards.map((card) => ke `<hui-card class="card">${card}</hui-card>`)}</div>
+            <div class="container">
+                ${this._cards.map((card, index) => ke `<div class="card" .key=${index}>${card}</div>`)}
+            </div>
         `;
     }
     firstupdated() {
