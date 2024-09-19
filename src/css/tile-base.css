@@ -2,6 +2,7 @@
     display: grid;
     width: 100%;
     height: 100%;
+    box-sizing: border-box;
     border: var(--sq-card-border);
     border-radius: var(--sq-card-border-radius);
     grid-template-areas: "i n";
