@@ -10700,9 +10700,6 @@ let VerticalStack = class VerticalStack extends h {
         if (changedProps.has("_config") && this._config) {
             this._createCards();
         }
-        else {
-            this._cards = [];
-        }
     }
     render() {
         if (!this._config || !this.hass || this._cards.length === 0)
@@ -10717,9 +10714,14 @@ let VerticalStack = class VerticalStack extends h {
         this._createCards();
     }
     _createCards() {
-        if (!this._config || this._config.cards.length === 0 || !this.hass)
+        if (!this._config || !this.hass)
             return;
-        this._cards = createElements(this._config.cards, this.hass);
+        if (this._config.cards.length > 0) {
+            this._cards = createElements(this._config.cards, this.hass);
+        }
+        else {
+            this._cards = [];
+        }
     }
 };
 __decorate([

@@ -55,8 +55,6 @@ class VerticalStack extends LitElement implements LovelaceCard {
 
         if (changedProps.has("_config") && this._config) {
             this._createCards();
-        } else {
-            this._cards = [];
         }
     }
 
@@ -74,7 +72,12 @@ class VerticalStack extends LitElement implements LovelaceCard {
     }
 
     private _createCards(): void {
-        if (!this._config || this._config.cards.length === 0 || !this.hass) return;
-        this._cards = createElements(this._config.cards, this.hass);
+        if (!this._config || !this.hass) return;
+
+        if (this._config.cards.length > 0) {
+            this._cards = createElements(this._config.cards, this.hass);
+        } else {
+            this._cards = [];
+        }
     }
 }
