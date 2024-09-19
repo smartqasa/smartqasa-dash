@@ -57,15 +57,15 @@ export class MenuCard extends LitElement implements LovelaceCard {
                 align-items: center;
                 padding: 0.5rem 1rem;
                 border-radius: 5px;
-                font-size: var(--sq-primary-font-size, 1.5rem);
-                font-weight: var(--sq-primary-font-weight, 300);
-                color: rgb(var(--sq-inactive-rgb, 128, 128, 128));
+                font-size: var(--sq-primary-font-size);
+                font-weight: var(--sq-primary-font-weight);
+                color: rgb(var(--sq-inactive-rgb));
                 transition: background-color 0.3s;
                 cursor: pointer;
             }
             .tab[selected] {
-                font-weight: var(--sq-primary-font-weight, 400);
-                color: rgb(var(--sq-primary-font-rgb, 128, 128, 128));
+                font-weight: var(--sq-primary-font-weight);
+                color: rgb(var(--sq-primary-font-rgb));
             }
             .tab ha-icon {
                 margin-right: 0.5rem;
@@ -79,13 +79,12 @@ export class MenuCard extends LitElement implements LovelaceCard {
             .tiles {
                 display: grid;
                 padding: 1rem 0 0 0;
-                gap: var(--sq-tile-spacing, 0.8rem);
-                grid-auto-rows: var(--sq-tile-height, 7rem);
+                gap: var(--sq-tile-spacing);
+                grid-auto-rows: var(--sq-tile-height);
                 overflow-y: auto;
             }
             .tile {
-                width: 100%;
-                height: 100%;
+                display: block;
             }
         `;
     }

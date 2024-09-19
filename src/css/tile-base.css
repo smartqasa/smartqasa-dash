@@ -30,7 +30,7 @@
     align-self: center;
     height: var(--sq-icon-size);
     width: var(--sq-icon-size);
-    padding: var(--sq-tile-padding);
+    padding: auto;
     border-radius: 50%;
     transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;
 }

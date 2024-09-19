@@ -69,7 +69,7 @@ export class ActionTile extends LitElement implements LovelaceCard {
             if (this._running) {
                 icon = "hass:rotate-right";
                 iconAnimation = "spin 1.0s linear infinite";
-                iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
+                iconColor = "var(--sq-rgb-blue)";
             } else {
                 icon = this._config.icon || "hass:help-rhombus";
                 iconAnimation = "none";
@@ -79,7 +79,7 @@ export class ActionTile extends LitElement implements LovelaceCard {
         } else {
             icon = "hass:alert-rhombus";
             iconAnimation = "none";
-            iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+            iconColor = "var(--sq-unavailable-rgb)";
             name = "Unknown";
         }
 

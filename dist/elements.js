@@ -9947,15 +9947,15 @@ let MenuCard = class MenuCard extends h {
                 align-items: center;
                 padding: 0.5rem 1rem;
                 border-radius: 5px;
-                font-size: var(--sq-primary-font-size, 1.5rem);
-                font-weight: var(--sq-primary-font-weight, 300);
-                color: rgb(var(--sq-inactive-rgb, 128, 128, 128));
+                font-size: var(--sq-primary-font-size);
+                font-weight: var(--sq-primary-font-weight);
+                color: rgb(var(--sq-inactive-rgb));
                 transition: background-color 0.3s;
                 cursor: pointer;
             }
             .tab[selected] {
-                font-weight: var(--sq-primary-font-weight, 400);
-                color: rgb(var(--sq-primary-font-rgb, 128, 128, 128));
+                font-weight: var(--sq-primary-font-weight);
+                color: rgb(var(--sq-primary-font-rgb));
             }
             .tab ha-icon {
                 margin-right: 0.5rem;
@@ -9969,13 +9969,12 @@ let MenuCard = class MenuCard extends h {
             .tiles {
                 display: grid;
                 padding: 1rem 0 0 0;
-                gap: var(--sq-tile-spacing, 0.8rem);
-                grid-auto-rows: var(--sq-tile-height, 7rem);
+                gap: var(--sq-tile-spacing);
+                grid-auto-rows: var(--sq-tile-height);
                 overflow-y: auto;
             }
             .tile {
-                width: 100%;
-                height: 100%;
+                display: block;
             }
         `;
     }
@@ -12361,7 +12360,7 @@ var weather = /*#__PURE__*/Object.freeze({
   get WeatherChip () { return WeatherChip; }
 });
 
-var css_248z$1 = ".container {\n    display: grid;\n    width: 100%;\n    height: 100%;\n    box-sizing: border-box;\n    border: var(--sq-card-border);\n    border-radius: var(--sq-card-border-radius);\n    grid-template-areas: \"i n\";\n    grid-template-columns: auto 1fr;\n    grid-column-gap: 1rem;\n    grid-row-gap: 0.4rem;\n    padding: var(--sq-tile-padding);\n    background-color: var(--sq-card-background-color);\n    overflow: hidden;\n    -webkit-tap-highlight-color: transparent;\n    cursor: pointer;\n}\n\n.container:focus,\n.container:active {\n    background-color: var(--sq-ripple-color);\n    border-radius: var(--sq-card-border-radius);\n    outline: none;\n}\n\n.icon {\n    grid-area: i;\n    display: flex;\n    justify-content: center;\n    align-self: center;\n    height: var(--sq-icon-size);\n    width: var(--sq-icon-size);\n    padding: var(--sq-tile-padding);\n    border-radius: 50%;\n    transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;\n}\n.name {\n    grid-area: n;\n    place-self: center start;\n    max-height: 3.6rem;\n    line-height: 1.2;\n    max-width: 100%;\n    text-align: left;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: normal;\n    font-weight: var(--sq-primary-font-weight);\n    font-size: var(--sq-primary-font-size);\n    color: rgb(var(--sq-primary-font-rgb));\n}\n\n@keyframes blink {\n    50% {\n        opacity: 0.25;\n    }\n}\n\n@keyframes spin {\n    from {\n        transform: rotate(0deg);\n    }\n    to {\n        transform: rotate(360deg);\n    }\n}\n";
+var css_248z$1 = ".container {\n    display: grid;\n    width: 100%;\n    height: 100%;\n    box-sizing: border-box;\n    border: var(--sq-card-border);\n    border-radius: var(--sq-card-border-radius);\n    grid-template-areas: \"i n\";\n    grid-template-columns: auto 1fr;\n    grid-column-gap: 1rem;\n    grid-row-gap: 0.4rem;\n    padding: var(--sq-tile-padding);\n    background-color: var(--sq-card-background-color);\n    overflow: hidden;\n    -webkit-tap-highlight-color: transparent;\n    cursor: pointer;\n}\n\n.container:focus,\n.container:active {\n    background-color: var(--sq-ripple-color);\n    border-radius: var(--sq-card-border-radius);\n    outline: none;\n}\n\n.icon {\n    grid-area: i;\n    display: flex;\n    justify-content: center;\n    align-self: center;\n    height: var(--sq-icon-size);\n    width: var(--sq-icon-size);\n    padding: auto;\n    border-radius: 50%;\n    transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;\n}\n.name {\n    grid-area: n;\n    place-self: center start;\n    max-height: 3.6rem;\n    line-height: 1.2;\n    max-width: 100%;\n    text-align: left;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: normal;\n    font-weight: var(--sq-primary-font-weight);\n    font-size: var(--sq-primary-font-size);\n    color: rgb(var(--sq-primary-font-rgb));\n}\n\n@keyframes blink {\n    50% {\n        opacity: 0.25;\n    }\n}\n\n@keyframes spin {\n    from {\n        transform: rotate(0deg);\n    }\n    to {\n        transform: rotate(360deg);\n    }\n}\n";
 styleInject(css_248z$1);
 
 window.customCards.push({
@@ -12407,7 +12406,7 @@ let ActionTile = class ActionTile extends h {
             if (this._running) {
                 icon = "hass:rotate-right";
                 iconAnimation = "spin 1.0s linear infinite";
-                iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
+                iconColor = "var(--sq-rgb-blue)";
             }
             else {
                 icon = this._config.icon || "hass:help-rhombus";
@@ -12419,7 +12418,7 @@ let ActionTile = class ActionTile extends h {
         else {
             icon = "hass:alert-rhombus";
             iconAnimation = "none";
-            iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+            iconColor = "var(--sq-unavailable-rgb)";
             name = "Unknown";
         }
         return { icon, iconAnimation, iconColor, name };
