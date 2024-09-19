@@ -1,8 +1,11 @@
+:host {
+    display: block;
+    box-sizing: border-box;
+}
 .container {
     display: grid;
     width: 100%;
     height: 100%;
-    box-sizing: border-box;
     border: var(--sq-card-border);
     border-radius: var(--sq-card-border-radius);
     grid-template-areas: "i n";
@@ -30,7 +33,7 @@
     align-self: center;
     height: var(--sq-icon-size);
     width: var(--sq-icon-size);
-    padding: auto;
+    padding: var(--sq-tile-padding);
     border-radius: 50%;
     transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;
 }
