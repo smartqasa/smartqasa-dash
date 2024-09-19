@@ -3,7 +3,6 @@ import { customElement, property, state } from "lit/decorators.js";
 
 import { HomeAssistant, LovelaceCardConfig, LovelaceCard } from "../types";
 import { createElements } from "../utils/create-elements";
-import { thermostatIcons } from "../const";
 
 interface Config extends LovelaceCardConfig {
     cards: LovelaceCardConfig[];
@@ -33,10 +32,10 @@ class VerticalStack extends LitElement implements LovelaceCard {
                 flex-direction: column;
             }
             .card {
-                min-height: var(--sq-tile-height);
+                height: var(--sq-tile-height);
             }
             .card:not(:last-child) {
-                padding-bottom: 0.8rem;
+                padding-bottom: var(--sq-tile-spacing);
             }
         `;
     }

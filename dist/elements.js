@@ -10692,10 +10692,10 @@ let VerticalStack = class VerticalStack extends h {
                 flex-direction: column;
             }
             .card {
-                min-height: var(--sq-tile-height);
+                height: var(--sq-tile-height);
             }
             .card:not(:last-child) {
-                padding-bottom: 0.8rem;
+                padding-bottom: var(--sq-tile-spacing);
             }
         `;
     }
