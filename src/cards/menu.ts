@@ -84,9 +84,6 @@ export class MenuCard extends LitElement implements LovelaceCard {
                 overflow-y: auto;
             }
             .tile {
-                display: flex;
-                justify-content: stretch;
-                align-items: stretch;
             }
         `;
     }

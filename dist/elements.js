@@ -9974,9 +9974,6 @@ let MenuCard = class MenuCard extends h {
                 overflow-y: auto;
             }
             .tile {
-                display: flex;
-                justify-content: stretch;
-                align-items: stretch;
             }
         `;
     }
