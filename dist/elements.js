@@ -9034,7 +9034,11 @@ function renderArea(name, picture, chips, isPhone, isLandscape) {
                 class="area-picture"
                 src="/local/smartqasa/pictures/${picture}"
                 alt="Area picture..."
-                @error=${(e) => (e.target.src = img$25)}
+                @error=${(e) => {
+        e.target.src = img$25;
+        e.preventDefault();
+        e.stopPropagation();
+    }}
             />
             ${chips.length > 0
         ? ke `<div class="area-chips">${chips.map((chip) => ke `<div class="chip">${chip}</div>`)}</div>`

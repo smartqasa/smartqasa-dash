@@ -17,7 +17,11 @@ export function renderArea(
                 class="area-picture"
                 src="/local/smartqasa/pictures/${picture}"
                 alt="Area picture..."
-                @error=${(e: Event) => ((e.target as HTMLImageElement).src = defaultImage)}
+                @error=${(e: Event) => {
+                    (e.target as HTMLImageElement).src = defaultImage;
+                    e.preventDefault();
+                    e.stopPropagation();
+                }}
             />
             ${chips.length > 0
                 ? html`<div class="area-chips">${chips.map((chip) => html`<div class="chip">${chip}</div>`)}</div>`
