@@ -149,11 +149,10 @@ export class PanelCard extends LitElement implements LovelaceCard {
         if (!this.hass || !this._config || !this._area) return nothing;
 
         const viewMode = window.smartqasa.viewMode;
-
+        const name = this._config?.name ?? this._areaObj?.name ?? "Area";
         let content;
         switch (viewMode) {
             case "control":
-                const name = this._config?.name ?? this._areaObj?.name ?? "Area";
                 const picture = this._config.picture ?? `${this._area}.png`;
                 content = html`
                     ${renderArea(name, picture, this._areaChips, this._isPhone, this._isLandscape)}
@@ -161,12 +160,12 @@ export class PanelCard extends LitElement implements LovelaceCard {
                 `;
                 break;
             case "entertain":
-                content =
-                    this._audioCards.length > 0
-                        ? html` <div class="entertain-container">
-                              ${this._audioCards[0]}${this._audioCards[1]}${this._audioCards[2]}
-                          </div>`
-                        : nothing;
+                content = html`
+                    <div class="entertain-container">
+                        <div class="area-name">${name}</div>
+                        ${this._audioCards.length > 0 ? this._audioCards.map((card) => card) : nothing}
+                    </div>
+                `;
                 break;
             default:
                 content = nothing;

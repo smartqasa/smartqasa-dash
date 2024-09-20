@@ -9423,10 +9423,10 @@ let PanelCard = class PanelCard extends h {
         if (!this.hass || !this._config || !this._area)
             return D;
         const viewMode = window.smartqasa.viewMode;
+        const name = this._config?.name ?? this._areaObj?.name ?? "Area";
         let content;
         switch (viewMode) {
             case "control":
-                const name = this._config?.name ?? this._areaObj?.name ?? "Area";
                 const picture = this._config.picture ?? `${this._area}.png`;
                 content = ke `
                     ${renderArea(name, picture, this._areaChips, this._isPhone, this._isLandscape)}
@@ -9434,12 +9434,12 @@ let PanelCard = class PanelCard extends h {
                 `;
                 break;
             case "entertain":
-                content =
-                    this._audioCards.length > 0
-                        ? ke ` <div class="entertain-container">
-                              ${this._audioCards[0]}${this._audioCards[1]}${this._audioCards[2]}
-                          </div>`
-                        : D;
+                content = ke `
+                    <div class="entertain-container">
+                        <div class="area-name">${name}</div>
+                        ${this._audioCards.length > 0 ? this._audioCards.map((card) => card) : D}
+                    </div>
+                `;
                 break;
             default:
                 content = D;
