@@ -169,7 +169,9 @@
     --ha-card-border-width: var(--sq-card-border-width);
 }
 
-.ha-card {
+.entertain-container,
+.entertain-container * {
+    /* For Chrome, Safari, and newer Edge */
     ::-webkit-scrollbar {
         width: 0;
         height: 0;
