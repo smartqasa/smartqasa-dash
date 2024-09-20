@@ -9486,6 +9486,7 @@ let PanelCard = class PanelCard extends h {
         this._audioCards[0] = createAudioCard({
             type: "custom:sonos-card",
             entity_id: this._config.audio_player,
+            widthPercentage: "75",
             heightPercentage: "75",
             title: "Speakers",
             showVolumeUpAndDownButtons: true,
