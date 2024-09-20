@@ -162,8 +162,11 @@
     gap: var(--sq-card-spacing);
     --ha-card-border-radius: var(--sq-card-border-radius);
 }
-.ha-card {
+.card {
     border-radius: var(--sq-card-border-radius);
+    border: Var(--sq-card-border);
+    box-shadow: var(--sq-card-box-shadow);
+    background-color: var(--sq-card-background-color);
 }
 
 /* Tablet Portrait */
