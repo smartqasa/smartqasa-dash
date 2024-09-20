@@ -161,10 +161,14 @@
     justify-content: center;
     align-items: center;
     gap: var(--sq-card-spacing);
-    --ha-card-border-radius: var(--sq-card-border-radius);
 }
+
 .ha-card {
     border-radius: var(--sq-card-border-radius);
+    ::-webkit-scrollbar {
+        width: 0;
+        height: 0;
+    }
 }
 
 /* Tablet Portrait */
