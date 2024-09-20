@@ -9254,6 +9254,46 @@ function renderControls(controlTiles, controlColumns, isPhone, swiper) {
     `;
 }
 
+function loadAudioCards(player_id, hass) {
+    const createAudioCard = (cardConfig) => {
+        const card = createElement$1(cardConfig, hass);
+        card.className = "ha-card";
+        return card;
+    };
+    const cards = [];
+    cards[0] = createAudioCard({
+        type: "custom:sonos-card",
+        sections: '["volumes", "groups", "grouping"]',
+        title: "Speakers",
+        entity_id: player_id,
+        widthPercentage: "33",
+        heightPercentage: "70",
+        showVolumeUpAndDownButtons: true,
+    });
+    cards[1] = createAudioCard({
+        type: "custom:sonos-card",
+        sections: ["player"],
+        title: "Player",
+        entityId: player_id,
+        widthPercentage: "60",
+        heightPercentage: "70",
+        labelForTheAllVolumesSlider: "All",
+        showVolumeUpAndDownButtons: false,
+    });
+    cards[2] = createAudioCard({
+        type: "custom:sonos-card",
+        sections: ["media browser"],
+        title: "Favorites",
+        entityId: player_id,
+        mediaBrowserTitle: "",
+        widthPercentage: "33",
+        heightPercentage: "70",
+        mediaBrowserItemsPerRow: 3,
+        hideBrowseMediaButton: true,
+    });
+    return cards || [];
+}
+
 function styleInject(css, ref) {
   if ( ref === void 0 ) ref = {};
   var insertAt = ref.insertAt;
@@ -9483,41 +9523,7 @@ let PanelCard = class PanelCard extends h {
         const { controlTiles, controlColumns } = loadControlTiles(this._config.tiles || [], this.hass, this._isTablet);
         this._controlTiles = controlTiles;
         this._controlColumns = controlColumns;
-        const createAudioCard = (cardConfig) => {
-            const card = createElement$1(cardConfig, this.hass);
-            card.className = "ha-card";
-            return card;
-        };
-        this._audioCards[0] = createAudioCard({
-            type: "custom:sonos-card",
-            sections: '["volumes", "groups", "grouping"]',
-            title: "Speakers",
-            entity_id: this._config.audio_player,
-            widthPercentage: "33",
-            heightPercentage: "70",
-            showVolumeUpAndDownButtons: true,
-        });
-        this._audioCards[1] = createAudioCard({
-            type: "custom:sonos-card",
-            sections: ["player"],
-            title: "Player",
-            entityId: this._config.audio_player,
-            widthPercentage: "60",
-            heightPercentage: "70",
-            labelForTheAllVolumesSlider: "All",
-            showVolumeUpAndDownButtons: false,
-        });
-        this._audioCards[2] = createAudioCard({
-            type: "custom:sonos-card",
-            sections: ["media browser"],
-            title: "Favorites",
-            entityId: this._config.audio_player,
-            mediaBrowserTitle: "",
-            widthPercentage: "33",
-            heightPercentage: "70",
-            mediaBrowserItemsPerRow: 3,
-            hideBrowseMediaButton: true,
-        });
+        this._audioCards = loadAudioCards(this._config.audio_player, this.hass);
     }
 };
 __decorate([

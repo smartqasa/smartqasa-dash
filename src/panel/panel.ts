@@ -11,6 +11,7 @@ import { Navigation } from "swiper/modules";
 import { renderHeader } from "./header";
 import { renderArea } from "./area";
 import { loadControlTiles, renderControls } from "./controls";
+import { loadAudioCards } from "./audio";
 import { renderFooter } from "./footer";
 
 import panelStyles from "../css/panel.css";
@@ -272,37 +273,6 @@ export class PanelCard extends LitElement implements LovelaceCard {
             return card;
         };
 
-        this._audioCards[0] = createAudioCard({
-            type: "custom:sonos-card",
-            sections: '["volumes", "groups", "grouping"]',
-            title: "Speakers",
-            entity_id: this._config.audio_player,
-            widthPercentage: "33",
-            heightPercentage: "70",
-            showVolumeUpAndDownButtons: true,
-        });
-
-        this._audioCards[1] = createAudioCard({
-            type: "custom:sonos-card",
-            sections: ["player"],
-            title: "Player",
-            entityId: this._config.audio_player,
-            widthPercentage: "60",
-            heightPercentage: "70",
-            labelForTheAllVolumesSlider: "All",
-            showVolumeUpAndDownButtons: false,
-        });
-
-        this._audioCards[2] = createAudioCard({
-            type: "custom:sonos-card",
-            sections: ["media browser"],
-            title: "Favorites",
-            entityId: this._config.audio_player,
-            mediaBrowserTitle: "",
-            widthPercentage: "33",
-            heightPercentage: "70",
-            mediaBrowserItemsPerRow: 3,
-            hideBrowseMediaButton: true,
-        });
+        this._audioCards = loadAudioCards(this._config.audio_player, this.hass);
     }
 }
