@@ -166,6 +166,7 @@
     border: Var(--sq-card-border);
     box-shadow: var(--sq-card-box-shadow);
     background-color: var(--sq-card-background-color);
+    --rgb-card-background-color: transparent;
 }
 
 /* Tablet Portrait */
