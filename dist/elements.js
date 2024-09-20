@@ -9982,6 +9982,7 @@ let MenuCard = class MenuCard extends h {
         this._tabs = [];
         this._bodyTiles = [];
         this._menuTab = window.smartqasa.menuTab || 0;
+        this._isAdminMode = false;
         this._gridStyle = {};
         this._deviceType = getDeviceType();
         this._boundHandleDeviceChanges = this._handleDeviceChanges.bind(this);
@@ -9999,8 +10000,11 @@ let MenuCard = class MenuCard extends h {
         if (changedProps.has("hass") && this.hass) {
             const currentTiles = this._bodyTiles[this._menuTab] || [];
             currentTiles.forEach((tile) => {
-                tile.hass = this.hass;
+                if (tile.hass !== this.hass)
+                    tile.hass = this.hass;
             });
+            const isAdminMode = this.hass.states["input_boolean.admin_mode"]?.state === "on";
+            this._isAdminMode = (this.hass.user?.is_admin ?? false) || isAdminMode;
         }
     }
     disconnectedCallback() {
@@ -10013,7 +10017,11 @@ let MenuCard = class MenuCard extends h {
         return ke `
             <div class="container">
                 <div class="tab-bar">
-                    ${this._tabs.map((tab, index) => ke `
+                    ${this._tabs.map((tab, index) => {
+            if (tab.tab === "Utility" && !this._isAdminMode) {
+                return D;
+            }
+            return ke `
                             <div
                                 class="tab"
                                 ?selected=${this._menuTab === index}
@@ -10023,7 +10031,8 @@ let MenuCard = class MenuCard extends h {
                                 <ha-icon .icon="${tab.icon}"></ha-icon>
                                 <span>${tab.tab}</span>
                             </div>
-                        `)}
+                        `;
+        })}
                 </div>
                 <div class="tiles" style=${se(this._gridStyle)}>
                     ${currentTiles.map((tile) => ke `<div class="tile">${tile}</div>`)}
@@ -10102,7 +10111,7 @@ __decorate([
 ], MenuCard.prototype, "_menuTab", void 0);
 __decorate([
     r()
-], MenuCard.prototype, "_gridStyle", void 0);
+], MenuCard.prototype, "_isAdminMode", void 0);
 MenuCard = __decorate([
     t$1("smartqasa-menu-card")
 ], MenuCard);

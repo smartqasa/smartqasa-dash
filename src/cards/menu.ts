@@ -1,4 +1,4 @@
-import { css, html, LitElement, PropertyValues, TemplateResult } from "lit";
+import { css, html, LitElement, nothing, PropertyValues, TemplateResult } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 
@@ -22,8 +22,9 @@ export class MenuCard extends LitElement implements LovelaceCard {
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() private _tabs: Tab[] = [];
     @state() private _bodyTiles: LovelaceCard[][] = [];
-    @state() private _menuTab = window.smartqasa.menuTab || 0;
-    @state() private _gridStyle = {};
+    @state() private _menuTab: number = window.smartqasa.menuTab || 0;
+    @state() private _isAdminMode: boolean = false;
+    private _gridStyle = {};
 
     private _boundHandleDeviceChanges: () => void;
     private _deviceType = getDeviceType();
@@ -110,8 +111,11 @@ export class MenuCard extends LitElement implements LovelaceCard {
         if (changedProps.has("hass") && this.hass) {
             const currentTiles = this._bodyTiles[this._menuTab] || [];
             currentTiles.forEach((tile) => {
-                tile.hass = this.hass;
+                if (tile.hass !== this.hass) tile.hass = this.hass;
             });
+
+            const isAdminMode = this.hass.states["input_boolean.admin_mode"]?.state === "on";
+            this._isAdminMode = (this.hass.user?.is_admin ?? false) || isAdminMode;
         }
     }
 
@@ -128,8 +132,11 @@ export class MenuCard extends LitElement implements LovelaceCard {
         return html`
             <div class="container">
                 <div class="tab-bar">
-                    ${this._tabs.map(
-                        (tab, index) => html`
+                    ${this._tabs.map((tab, index) => {
+                        if (tab.tab === "Utility" && !this._isAdminMode) {
+                            return nothing;
+                        }
+                        return html`
                             <div
                                 class="tab"
                                 ?selected=${this._menuTab === index}
@@ -139,8 +146,8 @@ export class MenuCard extends LitElement implements LovelaceCard {
                                 <ha-icon .icon="${tab.icon}"></ha-icon>
                                 <span>${tab.tab}</span>
                             </div>
-                        `
-                    )}
+                        `;
+                    })}
                 </div>
                 <div class="tiles" style=${styleMap(this._gridStyle)}>
                     ${currentTiles.map((tile) => html`<div class="tile">${tile}</div>`)}
