@@ -10018,7 +10018,7 @@ let MenuCard = class MenuCard extends h {
             <div class="container">
                 <div class="tab-bar">
                     ${this._tabs.map((tab, index) => {
-            if (tab.tab === "Utility" && !this._isAdminMode) {
+            if (tab.tab === "Utilities" && !this._isAdminMode) {
                 return D;
             }
             return ke `

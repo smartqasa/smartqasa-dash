@@ -133,7 +133,7 @@ export class MenuCard extends LitElement implements LovelaceCard {
             <div class="container">
                 <div class="tab-bar">
                     ${this._tabs.map((tab, index) => {
-                        if (tab.tab === "Utility" && !this._isAdminMode) {
+                        if (tab.tab === "Utilities" && !this._isAdminMode) {
                             return nothing;
                         }
                         return html`
