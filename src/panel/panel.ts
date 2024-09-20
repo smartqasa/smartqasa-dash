@@ -289,7 +289,7 @@ export class PanelCard extends LitElement implements LovelaceCard {
             widthPercentage: "60",
             heightPercentage: "70",
             labelForTheAllVolumesSlider: "All",
-            showVolumeUpAndDownButtons: true,
+            showVolumeUpAndDownButtons: false,
         });
 
         this._audioCards[2] = createAudioCard({

@@ -9504,7 +9504,7 @@ let PanelCard = class PanelCard extends h {
             widthPercentage: "60",
             heightPercentage: "70",
             labelForTheAllVolumesSlider: "All",
-            showVolumeUpAndDownButtons: true,
+            showVolumeUpAndDownButtons: false,
         });
         this._audioCards[2] = createAudioCard({
             type: "custom:sonos-card",
