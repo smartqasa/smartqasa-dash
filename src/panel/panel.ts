@@ -275,7 +275,7 @@ export class PanelCard extends LitElement implements LovelaceCard {
             sections: '["volumes", "groups", "grouping"]',
             title: "Speakers",
             entity_id: this._config.audio_player,
-            widthPercentage: "33",
+            widthPercentage: "30",
             heightPercentage: "70",
             showVolumeUpAndDownButtons: true,
         });
@@ -296,7 +296,7 @@ export class PanelCard extends LitElement implements LovelaceCard {
             sections: ["media browser"],
             title: "Favorites",
             mediaBrowserTitle: "",
-            widthPercentage: "33",
+            widthPercentage: "30",
             heightPercentage: "70",
             mediaBrowserItemsPerRow: 3,
             hideBrowseMediaButton: true,

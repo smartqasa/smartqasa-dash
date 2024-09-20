@@ -9490,7 +9490,7 @@ let PanelCard = class PanelCard extends h {
             sections: '["volumes", "groups", "grouping"]',
             title: "Speakers",
             entity_id: this._config.audio_player,
-            widthPercentage: "33",
+            widthPercentage: "30",
             heightPercentage: "70",
             showVolumeUpAndDownButtons: true,
         });
@@ -9509,7 +9509,7 @@ let PanelCard = class PanelCard extends h {
             sections: ["media browser"],
             title: "Favorites",
             mediaBrowserTitle: "",
-            widthPercentage: "33",
+            widthPercentage: "30",
             heightPercentage: "70",
             mediaBrowserItemsPerRow: 3,
             hideBrowseMediaButton: true,
