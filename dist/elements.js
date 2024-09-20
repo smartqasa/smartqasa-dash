@@ -9348,12 +9348,14 @@ let PanelCard = class PanelCard extends h {
             };
             if (this._isTablet && this._headerChips.length > 0)
                 updateHassForCards(this._headerChips);
-            if (this._areaChips.length)
+            if (this._areaChips.length > 0)
                 updateHassForCards(this._areaChips);
-            if (this._controlTiles.length)
+            if (this._controlTiles.length > 0)
                 this._controlTiles.forEach((page) => {
                     updateHassForCards(page);
                 });
+            if (this._audioCards.length > 0)
+                updateHassForCards(this._audioCards);
         }
     }
     firstUpdated() {
@@ -9490,7 +9492,7 @@ let PanelCard = class PanelCard extends h {
             sections: '["volumes", "groups", "grouping"]',
             title: "Speakers",
             entity_id: this._config.audio_player,
-            widthPercentage: "30",
+            widthPercentage: "33",
             heightPercentage: "70",
             showVolumeUpAndDownButtons: true,
         });
@@ -9499,7 +9501,7 @@ let PanelCard = class PanelCard extends h {
             sections: ["player"],
             title: "Player",
             entityId: this._config.audio_player,
-            widthPercentage: "50",
+            widthPercentage: "60",
             heightPercentage: "70",
             labelForTheAllVolumesSlider: "All",
             showVolumeUpAndDownButtons: true,
@@ -9509,7 +9511,7 @@ let PanelCard = class PanelCard extends h {
             sections: ["media browser"],
             title: "Favorites",
             mediaBrowserTitle: "",
-            widthPercentage: "30",
+            widthPercentage: "33",
             heightPercentage: "70",
             mediaBrowserItemsPerRow: 3,
             hideBrowseMediaButton: true,

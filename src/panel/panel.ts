@@ -107,12 +107,13 @@ export class PanelCard extends LitElement implements LovelaceCard {
 
             if (this._isTablet && this._headerChips.length > 0) updateHassForCards(this._headerChips);
 
-            if (this._areaChips.length) updateHassForCards(this._areaChips);
+            if (this._areaChips.length > 0) updateHassForCards(this._areaChips);
 
-            if (this._controlTiles.length)
+            if (this._controlTiles.length > 0)
                 this._controlTiles.forEach((page) => {
                     updateHassForCards(page);
                 });
+            if (this._audioCards.length > 0) updateHassForCards(this._audioCards);
         }
     }
 
@@ -275,7 +276,7 @@ export class PanelCard extends LitElement implements LovelaceCard {
             sections: '["volumes", "groups", "grouping"]',
             title: "Speakers",
             entity_id: this._config.audio_player,
-            widthPercentage: "30",
+            widthPercentage: "33",
             heightPercentage: "70",
             showVolumeUpAndDownButtons: true,
         });
@@ -285,7 +286,7 @@ export class PanelCard extends LitElement implements LovelaceCard {
             sections: ["player"],
             title: "Player",
             entityId: this._config.audio_player,
-            widthPercentage: "50",
+            widthPercentage: "60",
             heightPercentage: "70",
             labelForTheAllVolumesSlider: "All",
             showVolumeUpAndDownButtons: true,
@@ -296,7 +297,7 @@ export class PanelCard extends LitElement implements LovelaceCard {
             sections: ["media browser"],
             title: "Favorites",
             mediaBrowserTitle: "",
-            widthPercentage: "30",
+            widthPercentage: "33",
             heightPercentage: "70",
             mediaBrowserItemsPerRow: 3,
             hideBrowseMediaButton: true,
