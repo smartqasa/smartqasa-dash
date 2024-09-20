@@ -9493,6 +9493,7 @@ let PanelCard = class PanelCard extends h {
         this._audioCards[1] = createAudioCard({
             type: "custom:sonos-card",
             entityId: this._config.audio_player,
+            title: "Player",
             showVolumeUpAndDownButtons: true,
             sections: ["player"],
         });
