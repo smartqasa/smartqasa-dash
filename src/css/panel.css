@@ -167,6 +167,7 @@
     --ha-card-border-color: rgb(var(--sq-card-border-rgb));
     --ha-card-border-style: var(--sq-card-border-style);
     --ha-card-border-width: var(--sq-card-border-width);
+    --ha-card-header-font-size: var(--sq-primary-font-size);
 }
 
 .entertain-container,
