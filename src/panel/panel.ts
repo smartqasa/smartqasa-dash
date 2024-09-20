@@ -272,31 +272,35 @@ export class PanelCard extends LitElement implements LovelaceCard {
 
         this._audioCards[0] = createAudioCard({
             type: "custom:sonos-card",
+            sections: '["volumes", "groups", "grouping"]',
+            title: "Speakers",
             entity_id: this._config.audio_player,
             widthPercentage: "33",
-            heightPercentage: "75",
-            title: "Speakers",
+            heightPercentage: "70",
             showVolumeUpAndDownButtons: true,
-            sections: '["volumes", "groups", "grouping"]',
         });
 
         this._audioCards[1] = createAudioCard({
             type: "custom:sonos-card",
-            entityId: this._config.audio_player,
-            widthPercentage: "33",
-            heightPercentage: "75",
-            title: "Player",
-            showVolumeUpAndDownButtons: true,
             sections: ["player"],
+            title: "Player",
+            entityId: this._config.audio_player,
+            widthPercentage: "40",
+            heightPercentage: "70",
+            labelForTheAllVolumesSlider: "All",
+            showVolumeUpAndDownButtons: true,
+            artworkAsBackground: true,
         });
 
         this._audioCards[2] = createAudioCard({
             type: "custom:sonos-card",
-            entityId: this._config.audio_player,
-            widthPercentage: "33",
-            heightPercentage: "75",
-            title: "Favorites",
             sections: ["media browser"],
+            title: "Favorites",
+            mediaBrowserTitle: "",
+            widthPercentage: "33",
+            heightPercentage: "70",
+            mediaBrowserItemsPerRow: 3,
+            hideBrowseMediaButton: true,
         });
     }
 }
