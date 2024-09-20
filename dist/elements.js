@@ -9486,6 +9486,7 @@ let PanelCard = class PanelCard extends h {
         this._audioCards[0] = createAudioCard({
             type: "custom:sonos-card",
             entity_id: this._config.audio_player,
+            heightPercentage: "75",
             title: "Speakers",
             showVolumeUpAndDownButtons: true,
             sections: '["volumes", "groups", "grouping"]',
@@ -9493,6 +9494,7 @@ let PanelCard = class PanelCard extends h {
         this._audioCards[1] = createAudioCard({
             type: "custom:sonos-card",
             entityId: this._config.audio_player,
+            heightPercentage: "75",
             title: "Player",
             showVolumeUpAndDownButtons: true,
             sections: ["player"],
