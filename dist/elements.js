@@ -9499,7 +9499,7 @@ let PanelCard = class PanelCard extends h {
             sections: ["player"],
             title: "Player",
             entityId: this._config.audio_player,
-            widthPercentage: "40",
+            widthPercentage: "50",
             heightPercentage: "70",
             labelForTheAllVolumesSlider: "All",
             showVolumeUpAndDownButtons: true,
