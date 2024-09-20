@@ -9394,7 +9394,9 @@ let PanelCard = class PanelCard extends h {
             case "entertain":
                 content =
                     this._audioCards.length > 0
-                        ? ke ` <div class="entertain-container">${this._audioCards[0]}${this._audioCards[1]}</div>`
+                        ? ke ` <div class="entertain-container">
+                              ${this._audioCards[0]}${this._audioCards[1]}${this._audioCards[2]}
+                          </div>`
                         : D;
                 break;
             default:
@@ -9486,7 +9488,7 @@ let PanelCard = class PanelCard extends h {
         this._audioCards[0] = createAudioCard({
             type: "custom:sonos-card",
             entity_id: this._config.audio_player,
-            widthPercentage: "75",
+            widthPercentage: "33",
             heightPercentage: "75",
             title: "Speakers",
             showVolumeUpAndDownButtons: true,
@@ -9495,6 +9497,15 @@ let PanelCard = class PanelCard extends h {
         this._audioCards[1] = createAudioCard({
             type: "custom:sonos-card",
             entityId: this._config.audio_player,
+            heightPercentage: "75",
+            title: "Player",
+            showVolumeUpAndDownButtons: true,
+            sections: ["player"],
+        });
+        this._audioCards[2] = createAudioCard({
+            type: "custom:sonos-card",
+            entityId: this._config.audio_player,
+            widthPercentage: "33",
             heightPercentage: "75",
             title: "Player",
             showVolumeUpAndDownButtons: true,

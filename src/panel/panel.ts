@@ -161,7 +161,9 @@ export class PanelCard extends LitElement implements LovelaceCard {
             case "entertain":
                 content =
                     this._audioCards.length > 0
-                        ? html` <div class="entertain-container">${this._audioCards[0]}${this._audioCards[1]}</div>`
+                        ? html` <div class="entertain-container">
+                              ${this._audioCards[0]}${this._audioCards[1]}${this._audioCards[2]}
+                          </div>`
                         : nothing;
                 break;
             default:
@@ -271,7 +273,7 @@ export class PanelCard extends LitElement implements LovelaceCard {
         this._audioCards[0] = createAudioCard({
             type: "custom:sonos-card",
             entity_id: this._config.audio_player,
-            widthPercentage: "75",
+            widthPercentage: "33",
             heightPercentage: "75",
             title: "Speakers",
             showVolumeUpAndDownButtons: true,
@@ -281,6 +283,16 @@ export class PanelCard extends LitElement implements LovelaceCard {
         this._audioCards[1] = createAudioCard({
             type: "custom:sonos-card",
             entityId: this._config.audio_player,
+            heightPercentage: "75",
+            title: "Player",
+            showVolumeUpAndDownButtons: true,
+            sections: ["player"],
+        });
+
+        this._audioCards[2] = createAudioCard({
+            type: "custom:sonos-card",
+            entityId: this._config.audio_player,
+            widthPercentage: "33",
             heightPercentage: "75",
             title: "Player",
             showVolumeUpAndDownButtons: true,
