@@ -245,6 +245,7 @@ export class PanelCard extends LitElement implements LovelaceCard {
     }
 
     private _resetToFirstPage(): void {
+        window.smartqasa.viewMode = "control";
         if (this._swiper && this._swiper.activeIndex !== 0) {
             this._swiper.slideTo(0);
         }
@@ -267,7 +268,7 @@ export class PanelCard extends LitElement implements LovelaceCard {
 
         const createAudioCard = (cardConfig: LovelaceCardConfig): LovelaceCard => {
             const card = createElement(cardConfig, this.hass) as LovelaceCard;
-            card.className = "card";
+            card.className = "ha-card";
             return card;
         };
 

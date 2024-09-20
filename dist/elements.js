@@ -9466,6 +9466,7 @@ let PanelCard = class PanelCard extends h {
         }, 5 * 60 * 1000); // 5 minutes
     }
     _resetToFirstPage() {
+        window.smartqasa.viewMode = "control";
         if (this._swiper && this._swiper.activeIndex !== 0) {
             this._swiper.slideTo(0);
         }
@@ -9484,7 +9485,7 @@ let PanelCard = class PanelCard extends h {
         this._controlColumns = controlColumns;
         const createAudioCard = (cardConfig) => {
             const card = createElement$1(cardConfig, this.hass);
-            card.className = "card";
+            card.className = "ha-card";
             return card;
         };
         this._audioCards[0] = createAudioCard({

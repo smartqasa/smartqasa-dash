@@ -1,38 +1,46 @@
 import { HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 import { createElement } from "../utils/create-element";
 
-export function loadAudioCards(hass: HomeAssistant, player: string): LovelaceCard[] {
-    const cards: LovelaceCard[] = [];
-
-    const createCards = (index: number, config: LovelaceCardConfig) => {
-        const card = createElement(config) as LovelaceCard;
-        if (hass) card.hass = hass;
-        cards[index] = card;
+export function loadAudioCards(player_id: string, hass: HomeAssistant): LovelaceCard[] {
+    const createAudioCard = (cardConfig: LovelaceCardConfig): LovelaceCard => {
+        const card = createElement(cardConfig, hass) as LovelaceCard;
+        card.className = "ha-card";
+        return card;
     };
 
-    createCards(0, {
+    const cards: LovelaceCard[] = [];
+
+    cards[0] = createAudioCard({
         type: "custom:sonos-card",
-        entityId: player,
-        heightPercentage: "75",
+        sections: '["volumes", "groups", "grouping"]',
+        title: "Speakers",
+        entity_id: player_id,
+        widthPercentage: "33",
+        heightPercentage: "70",
         showVolumeUpAndDownButtons: true,
-        sections: ["volumes", "groups", "grouping"],
     });
 
-    createCards(1, {
+    cards[1] = createAudioCard({
         type: "custom:sonos-card",
-        entityId: player,
-        heightPercentage: "75",
-        showVolumeUpAndDownButtons: true,
         sections: ["player"],
+        title: "Player",
+        entityId: player_id,
+        widthPercentage: "60",
+        heightPercentage: "70",
+        labelForTheAllVolumesSlider: "All",
+        showVolumeUpAndDownButtons: false,
     });
 
-    createCards(2, {
+    cards[2] = createAudioCard({
         type: "custom:sonos-card",
-        heightPercentage: "75",
-        mediaBrowserItemsPerRow: 3,
-        mediaBrowserShowTitleForThumbnailIcons: true,
-        showVolumeUpAndDownButtons: true,
         sections: ["media browser"],
+        title: "Favorites",
+        entityId: player_id,
+        mediaBrowserTitle: "",
+        widthPercentage: "33",
+        heightPercentage: "70",
+        mediaBrowserItemsPerRow: 3,
+        hideBrowseMediaButton: true,
     });
 
     return cards || [];
