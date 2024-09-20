@@ -156,6 +156,12 @@
 .entertain-container {
     grid: entertain;
     display: flex;
+    flex-direction: column;
+    height: 100%;
+    gap: 2rem;
+}
+.entertain-cards {
+    display: flex;
     height: 100%;
     overflow-y: auto;
     justify-content: center;
