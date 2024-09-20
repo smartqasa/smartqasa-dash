@@ -163,6 +163,7 @@
     --ha-card-border-radius: var(--sq-card-border-radius);
 }
 .card {
+    height: 100%;
     border-radius: var(--sq-card-border-radius);
     border: Var(--sq-card-border);
     box-shadow: var(--sq-card-box-shadow);
