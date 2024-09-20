@@ -160,7 +160,6 @@
     justify-content: center;
     align-items: center;
     gap: var(--sq-card-spacing);
-    --ha-card-border-radius: var(--sq-card-border-radius);
 }
 .ha-card {
     height: 100%;
@@ -168,6 +167,7 @@
     border: Var(--sq-card-border);
     box-shadow: var(--sq-card-box-shadow);
     background-color: var(--sq-card-background-color);
+    --rgb-card-background-color: transparent;
 }
 
 /* Tablet Portrait */
