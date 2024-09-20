@@ -149,7 +149,6 @@ export class PanelCard extends LitElement implements LovelaceCard {
         const viewMode = window.smartqasa.viewMode;
 
         let content;
-        // prettier-ignore
         switch (viewMode) {
             case "control":
                 const name = this._config?.name ?? this._areaObj?.name ?? "Area";
@@ -160,12 +159,16 @@ export class PanelCard extends LitElement implements LovelaceCard {
                 `;
                 break;
             case "entertain":
-                content = this._audioCards.length > 0 ? html`<div class=entertain-container>${this._audioCards[0]} ${this._audioCards[1]}</div>` : nothing;
+                content =
+                    this._audioCards.length > 0
+                        ? html` <div class="entertain-container">${this._audioCards[0]}${this._audioCards[1]}</div>`
+                        : nothing;
                 break;
             default:
                 content = nothing;
                 break;
         }
+
         // prettier-ignore
         return html`
             <div
