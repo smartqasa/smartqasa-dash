@@ -170,15 +170,6 @@
     --ha-card-header-font-size: var(--sq-primary-font-size);
 }
 
-.entertain-container,
-.entertain-container * {
-    /* For Chrome, Safari, and newer Edge */
-    ::-webkit-scrollbar {
-        width: 0;
-        height: 0;
-    }
-}
-
 /* Tablet Portrait */
 @media (orientation: portrait) and (min-width: 601px), (orientation: portrait) and (width: 534px) {
     .area-picture {
