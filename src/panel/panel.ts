@@ -296,6 +296,7 @@ export class PanelCard extends LitElement implements LovelaceCard {
             type: "custom:sonos-card",
             sections: ["media browser"],
             title: "Favorites",
+            entityId: this._config.audio_player,
             mediaBrowserTitle: "",
             widthPercentage: "33",
             heightPercentage: "70",
