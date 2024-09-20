@@ -9308,6 +9308,7 @@ let PanelCard = class PanelCard extends h {
         this._areaChips = [];
         this._controlTiles = [];
         this._controlColumns = [];
+        this._audioCards = [];
     }
     getCardSize() {
         return 100;
@@ -9392,7 +9393,7 @@ let PanelCard = class PanelCard extends h {
                 `;
                 break;
             case "entertain":
-                content = this._audioCard ? ke `<div class=entertain-container>${this._audioCard}</div>` : D;
+                content = this._audioCards.length > 0 ? ke `<div class=entertain-container>${this._audioCards[0]}${this._audioCards[1]}</div>` : D;
                 break;
             default:
                 content = D;
@@ -9475,17 +9476,26 @@ let PanelCard = class PanelCard extends h {
         const { controlTiles, controlColumns } = loadControlTiles(this._config.tiles || [], this.hass, this._isTablet);
         this._controlTiles = controlTiles;
         this._controlColumns = controlColumns;
-        const cardConfig = {
+        const createAudioCard = (cardConfig) => {
+            const card = createElement$1(cardConfig, this.hass);
+            card.className = "card";
+            return card;
+        };
+        this._audioCards[0] = createAudioCard({
             type: "custom:sonos-card",
             entity_id: this._config.audio_player,
             title: "Speakers",
             heightPercentage: "75",
             showVolumeUpAndDownButtons: true,
             sections: '["volumes", "groups", "grouping"]',
-        };
-        const card = createElement$1(cardConfig, this.hass);
-        card.className = "card";
-        this._audioCard = card;
+        });
+        this._audioCards[1] = createAudioCard({
+            type: "custom:sonos-card",
+            entityId: this._config.audio_player,
+            heightPercentage: "75",
+            showVolumeUpAndDownButtons: true,
+            sections: ["player"],
+        });
     }
 };
 __decorate([

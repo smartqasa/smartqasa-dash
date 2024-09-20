@@ -60,7 +60,7 @@ export class PanelCard extends LitElement implements LovelaceCard {
     private _areaChips: LovelaceCard[] = [];
     private _controlTiles: LovelaceCard[][] = [];
     private _controlColumns: number[] = [];
-    private _audioCard: LovelaceCard | undefined;
+    private _audioCards: LovelaceCard[] = [];
 
     static styles: CSSResultGroup = [unsafeCSS(swiperStyles), unsafeCSS(panelStyles)];
 
@@ -160,7 +160,7 @@ export class PanelCard extends LitElement implements LovelaceCard {
                 `;
                 break;
             case "entertain":
-                content = this._audioCard ? html`<div class=entertain-container>${this._audioCard}</div>` : nothing;
+                content = this._audioCards.length > 0 ? html`<div class=entertain-container>${this._audioCards[0]} ${this._audioCards[1]}</div>` : nothing;
                 break;
             default:
                 content = nothing;
@@ -259,17 +259,27 @@ export class PanelCard extends LitElement implements LovelaceCard {
         this._controlTiles = controlTiles;
         this._controlColumns = controlColumns;
 
-        const cardConfig = {
+        const createAudioCard = (cardConfig: LovelaceCardConfig): LovelaceCard => {
+            const card = createElement(cardConfig, this.hass) as LovelaceCard;
+            card.className = "card";
+            return card;
+        };
+
+        this._audioCards[0] = createAudioCard({
             type: "custom:sonos-card",
             entity_id: this._config.audio_player,
             title: "Speakers",
             heightPercentage: "75",
             showVolumeUpAndDownButtons: true,
             sections: '["volumes", "groups", "grouping"]',
-        } as LovelaceCardConfig;
+        });
 
-        const card = createElement(cardConfig, this.hass) as LovelaceCard;
-        card.className = "card";
-        this._audioCard = card;
+        this._audioCards[1] = createAudioCard({
+            type: "custom:sonos-card",
+            entityId: this._config.audio_player,
+            heightPercentage: "75",
+            showVolumeUpAndDownButtons: true,
+            sections: ["player"],
+        });
     }
 }
