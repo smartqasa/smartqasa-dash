@@ -19,10 +19,10 @@ export const loadEntertainCards = (
         title: "Player",
         entityId: audioPlayer,
         widthPercentage: "100",
-        heightPercentage: "70",
+        heightPercentage: "80",
         labelForTheAllVolumesSlider: "All",
         showVolumeUpAndDownButtons: false,
-        mediaBrowserItemsPerRow: 5,
+        mediaBrowserItemsPerRow: 4,
         hideBrowseMediaButton: true,
     });
 
