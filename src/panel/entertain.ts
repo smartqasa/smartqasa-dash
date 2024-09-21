@@ -18,9 +18,12 @@ export const loadEntertainCards = (
         type: "custom:sonos-card",
         title: "Player",
         entityId: audioPlayer,
+        widthPercentage: "100",
+        heightPercentage: "85",
         labelForTheAllVolumesSlider: "All",
         showVolumeUpAndDownButtons: false,
-        mediaBrowserItemsPerRow: 4,
+        mediaBrowserItemsPerRow: 3,
+        mediaBrowserHideTitleForThumbnailIcons: true,
         hideBrowseMediaButton: true,
     });
 
