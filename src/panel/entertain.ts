@@ -27,7 +27,7 @@ export const loadEntertainCards = (
     });
 
     const videoCard = createCard({
-        type: "custom:tv-remote-card",
+        type: "custom:smartqasa-tv-remote-card",
         entity: videoPlayer,
         soundEntity: videoSound,
     });
