@@ -34,11 +34,10 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: var(--sq-tile-background-color);
-    border: var(--sq-tile-border);
-    border-radius: var(--sq-tile-border-radius);
+    background-color: var(--sq-card-background-color);
+    border: var(--sq-card-border);
+    border-radius: var(--sq-card-border-radius);
     text-align: center;
-    box-shadow: var(--sq-tile-box-shadow);
     cursor: pointer;
 }
 
@@ -50,6 +49,8 @@
     width: var(--sq-icon-size);
     padding: var(--sq-tile-padding);
     border-radius: 50%;
+    color: rgb(var(--sq-inactive-rgb));
+    background: rgba(var(--sq-inactive-rgb), var(--sq-icon-opacity));
 }
 
 .entertain-button span {
