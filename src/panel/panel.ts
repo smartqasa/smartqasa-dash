@@ -168,7 +168,7 @@ export class PanelCard extends LitElement implements LovelaceCard {
                         <div class="entertain-sidebar">
                             <div class="area-name">${name}</div>
                             <div class="entertain-button">
-                                <ha-icon>hass:music</ha-icon>
+                                <ha-icon>.icon="hass:music"</ha-icon>
                                 <span>Music</span>
                             </div>
                         </div>

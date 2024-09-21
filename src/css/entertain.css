@@ -9,22 +9,7 @@
 .entertain-sidebar {
     display: flex;
     flex-direction: column;
-}
-
-.entertain-cards {
-    display: flex;
-    height: 100%;
-    overflow-y: auto;
-    justify-content: center;
-    align-items: center;
-    gap: var(--sq-card-spacing);
-    --ha-card-border-radius: var(--sq-card-border-radius);
-    --ha-card-box-shadow: var(--sq-card-box-shadow);
-    --ha-card-background: var(--sq-card-background-color);
-    --ha-card-border-color: rgb(var(--sq-card-border-rgb));
-    --ha-card-border-style: var(--sq-card-border-style);
-    --ha-card-border-width: var(--sq-card-border-width);
-    --ha-card-header-font-size: var(--sq-primary-font-size);
+    gap: 2rem;
 }
 
 .entertain-button {
