@@ -45,8 +45,8 @@
     display: flex;
     justify-content: center;
     align-self: center;
-    height: var(--sq-icon-size);
     width: var(--sq-icon-size);
+    height: var(--sq-icon-size);
     padding: var(--sq-tile-padding);
     border-radius: 50%;
     color: rgb(var(--sq-inactive-rgb));
