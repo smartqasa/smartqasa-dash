@@ -164,7 +164,9 @@ export class PanelCard extends LitElement implements LovelaceCard {
             case "entertain":
                 content = html`
                     <div class="entertain-container">
-                        <div class="area-name">${name}</div>
+                        <div class="entertain-sidebar">
+                            <div class="area-name">${name}</div>
+                        </div>
                         <div class="entertain-cards">
                             ${this._entertainCards[0] ? this._entertainCards[0] : nothing}
                         </div>
