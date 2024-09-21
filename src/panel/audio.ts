@@ -16,7 +16,7 @@ export function loadAudioCard(player_id: string, hass: HomeAssistant): LovelaceC
         heightPercentage: "70",
         labelForTheAllVolumesSlider: "All",
         showVolumeUpAndDownButtons: false,
-        mediaBrowserItemsPerRow: 3,
+        mediaBrowserItemsPerRow: 5,
         hideBrowseMediaButton: true,
     });
 }

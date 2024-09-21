@@ -1,16 +1,40 @@
 import { html, nothing, TemplateResult } from "lit";
-import { HomeAssistant } from "../types";
+import { HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 import { createElement } from "../utils/create-element";
 
-export function renderEntertain(entity: string, hass: HomeAssistant): TemplateResult {
-    const audioCard = createElement(
-        {
-            type: "custom:smartqasa-sonos-card",
-            entity: entity,
-        },
-        hass
-    );
+export const loadEntertainCards = (
+    audioPlayer: string,
+    videoPlayer: string,
+    videoSound: string,
+    hass: HomeAssistant
+): LovelaceCard[] => {
+    const createCard = (cardConfig: LovelaceCardConfig): LovelaceCard => {
+        const card = createElement(cardConfig, hass) as LovelaceCard;
+        card.className = "ha-card";
+        return card;
+    };
 
-    console.log("Audio Card:", audioCard);
-    return html`<div class="entertain-container">${audioCard ? html`${audioCard}` : nothing}</div>`;
+    const audioCard = createCard({
+        type: "custom:sonos-card",
+        title: "Player",
+        entityId: audioPlayer,
+        widthPercentage: "100",
+        heightPercentage: "70",
+        labelForTheAllVolumesSlider: "All",
+        showVolumeUpAndDownButtons: false,
+        mediaBrowserItemsPerRow: 5,
+        hideBrowseMediaButton: true,
+    });
+
+    const videoCard = createCard({
+        type: "custom:tv-remote-card",
+        entity: videoPlayer,
+        soundEntity: videoSound,
+    });
+
+    return [audioCard || nothing, videoCard || nothing];
+};
+
+export function renderEntertain(type: number): TemplateResult {
+    return html`<div class="entertain-container"></div>`;
 }

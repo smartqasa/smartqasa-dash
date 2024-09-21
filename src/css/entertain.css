@@ -1,0 +1,57 @@
+.entertain-container {
+    grid: entertain;
+    display: grid;
+    height: 100%;
+    grid-template-columns: repeat(25%, 1fr);
+    gap: 2rem;
+    justify-content: center;
+}
+
+.entertain-button {
+    width: 10rem;
+    height: 10rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--sq-tile-background-color);
+    border: var(--sq-tile-border);
+    border-radius: var(--sq-tile-border-radius, 0.5rem);
+    cursor: pointer;
+    text-align: center;
+    box-shadow: var(--sq-tile-box-shadow);
+}
+
+.entertain-button ha-icon {
+    grid-area: i;
+    display: flex;
+    justify-content: center;
+    align-self: center;
+    height: var(--sq-icon-size);
+    width: var(--sq-icon-size);
+    padding: var(--sq-tile-padding);
+    border-radius: 50%;
+}
+
+.entertain-button span {
+    margin-top: 0.5rem;
+    font-weight: var(--sq-primary-font-weight);
+    font-size: var(--sq-primary-font-size);
+    color: rgb(var(--sq-primary-text-rgb));
+}
+
+.entertain-cards {
+    display: flex;
+    height: 100%;
+    overflow-y: auto;
+    justify-content: center;
+    align-items: center;
+    gap: var(--sq-card-spacing);
+    --ha-card-border-radius: var(--sq-card-border-radius);
+    --ha-card-box-shadow: var(--sq-card-box-shadow);
+    --ha-card-background: var(--sq-card-background-color);
+    --ha-card-border-color: rgb(var(--sq-card-border-rgb));
+    --ha-card-border-style: var(--sq-card-border-style);
+    --ha-card-border-width: var(--sq-card-border-width);
+    --ha-card-header-font-size: var(--sq-primary-font-size);
+}

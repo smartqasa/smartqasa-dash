@@ -11,10 +11,11 @@ import { Navigation } from "swiper/modules";
 import { renderHeader } from "./header";
 import { renderArea } from "./area";
 import { loadControlTiles, renderControls } from "./controls";
-import { loadAudioCard } from "./audio";
+import { loadEntertainCards } from "./entertain";
 import { renderFooter } from "./footer";
 
 import panelStyles from "../css/panel.css";
+import entertainStyles from "../css/entertain.css";
 import swiperStyles from "swiper/swiper-bundle.css";
 
 interface Config extends LovelaceCardConfig {
@@ -64,7 +65,7 @@ export class PanelCard extends LitElement implements LovelaceCard {
     private _entertainCards: LovelaceCard[] = [];
     private _entertainTab: number = 0;
 
-    static styles: CSSResultGroup = [unsafeCSS(swiperStyles), unsafeCSS(panelStyles)];
+    static styles: CSSResultGroup = [unsafeCSS(swiperStyles), unsafeCSS(panelStyles), unsafeCSS(entertainStyles)];
 
     public setConfig(config: Config) {
         this._config = { ...config };
@@ -269,12 +270,11 @@ export class PanelCard extends LitElement implements LovelaceCard {
         this._controlTiles = controlTiles;
         this._controlColumns = controlColumns;
 
-        const createAudioCard = (cardConfig: LovelaceCardConfig): LovelaceCard => {
-            const card = createElement(cardConfig, this.hass) as LovelaceCard;
-            card.className = "ha-card";
-            return card;
-        };
-
-        this._entertainCards[0] = loadAudioCard(this._config.audio_player, this.hass);
+        this._entertainCards = loadEntertainCards(
+            this._config.audio_player || "",
+            this._config.video_player || "",
+            this._config.video_sound || "",
+            this.hass
+        ) as LovelaceCard[];
     }
 }
