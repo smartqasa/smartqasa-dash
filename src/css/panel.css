@@ -20,23 +20,13 @@
 }
 .container[control] {
     grid-template-rows: auto auto 1fr auto;
-    grid-template-areas:
-        "header"
-        "area"
-        "control"
-        "footer";
 }
 
 .container[entertain] {
     grid-template-rows: auto 1fr auto;
-    grid-template-areas:
-        "header"
-        "entertain"
-        "footer";
 }
 
 .header-container {
-    grid-area: header;
     display: flex;
     justify-content: space-between;
 }
@@ -71,7 +61,6 @@
     display: flex;
 }
 .area-container {
-    grid-area: area;
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows:
@@ -109,7 +98,6 @@
     background-color: transparent;
 }
 .swiper {
-    grid-area: control;
     width: 100%;
 }
 .swiper-slide {
@@ -131,7 +119,6 @@
     height: 100%;
 }
 .footer-container {
-    grid-area: footer;
     display: flex;
     gap: 3rem;
     justify-content: center;
@@ -172,19 +159,12 @@
             auto
             minmax(0, 1fr)
             auto;
-        grid-template-areas:
-            "area"
-            "control"
-            "footer";
     }
     .area-container {
         grid-template-columns: 1fr;
         grid-template-rows:
             auto
             auto;
-        grid-template-areas:
-            "image"
-            "chips";
         gap: 1rem;
         position: relative;
     }
@@ -203,7 +183,6 @@
         border-radius: 0.2rem 0 0 0;
     }
     .control-container {
-        grid-area: control;
         display: flex;
         width: 100%;
         overflow-y: auto;
@@ -227,15 +206,11 @@
     .container[control] {
         grid-template-columns: 1fr 1fr;
         grid-template-rows: 100%;
-        grid-template-areas: "area control";
     }
     .area-container {
         grid-template-columns: 1fr;
         grid-template-rows: auto 1fr auto;
-        grid-template-areas:
-            "image"
-            "chips"
-            "footer-p-l";
+
         gap: 1rem;
         position: relative;
     }
@@ -254,11 +229,9 @@
         border-radius: 0.2rem 0 0 0;
     }
     .area-chips {
-        grid-area: chips;
         align-items: flex-start;
     }
     .footer-container {
-        grid-area: footer-p-l;
         display: flex;
         gap: 3rem;
         justify-content: center;
@@ -268,7 +241,6 @@
         display: none;
     }
     .control-container {
-        grid-area: control;
         display: flex;
         width: 100%;
         overflow-y: auto;
