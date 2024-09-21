@@ -15,6 +15,7 @@
 .entertain-button {
     width: 10rem;
     height: 10rem;
+    margin-left: 2rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
