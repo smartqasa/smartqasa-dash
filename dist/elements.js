@@ -9431,7 +9431,7 @@ let PanelCard = class PanelCard extends h {
                         <div class="entertain-sidebar">
                             <div class="area-name">${name}</div>
                             <div class="entertain-button">
-                                <ha-icon>mdi:music</ha-icon>
+                                <ha-icon>hass:music</ha-icon>
                                 <span>Music</span>
                             </div>
                         </div>
