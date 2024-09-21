@@ -152,6 +152,7 @@ export class PanelCard extends LitElement implements LovelaceCard {
 
         const viewMode = window.smartqasa.viewMode;
         const name = this._config?.name ?? this._areaObj?.name ?? "Area";
+        console.log("Entertain Cards: ", this._entertainCards);
         let content;
         switch (viewMode) {
             case "control":
@@ -167,9 +168,7 @@ export class PanelCard extends LitElement implements LovelaceCard {
                         <div class="entertain-sidebar">
                             <div class="area-name">${name}</div>
                         </div>
-                        <div class="entertain-cards">
-                            ${this._entertainCards[0] ? this._entertainCards[0] : nothing}
-                        </div>
+                        <div class="entertain-cards">${this._entertainCards[0]}</div>
                     </div>
                 `;
                 break;

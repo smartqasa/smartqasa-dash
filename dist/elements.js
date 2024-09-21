@@ -9413,6 +9413,7 @@ let PanelCard = class PanelCard extends h {
             return D;
         const viewMode = window.smartqasa.viewMode;
         const name = this._config?.name ?? this._areaObj?.name ?? "Area";
+        console.log("Entertain Cards: ", this._entertainCards);
         let content;
         switch (viewMode) {
             case "control":
@@ -9428,9 +9429,7 @@ let PanelCard = class PanelCard extends h {
                         <div class="entertain-sidebar">
                             <div class="area-name">${name}</div>
                         </div>
-                        <div class="entertain-cards">
-                            ${this._entertainCards[0] ? this._entertainCards[0] : D}
-                        </div>
+                        <div class="entertain-cards">${this._entertainCards[0]}</div>
                     </div>
                 `;
                 break;
