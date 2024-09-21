@@ -2,9 +2,9 @@ import { css, CSSResult, html, LitElement, PropertyValues, TemplateResult } from
 import { customElement, property, state } from "lit/decorators.js";
 
 import { HassEntity } from "home-assistant-js-websocket";
-import { HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
-import { callService } from "../utils/call-service";
-import channelTable from "../tables/channels"; // Adjust the import path as needed
+import { HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../src/types";
+import { callService } from "../src/utils/call-service";
+import channelTable from "../src/tables/channels"; // Adjust the import path as needed
 
 interface Config extends LovelaceCardConfig {
     entity: string;

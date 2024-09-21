@@ -18,8 +18,6 @@ export const loadEntertainCards = (
         type: "custom:sonos-card",
         title: "Player",
         entityId: audioPlayer,
-        widthPercentage: "100",
-        heightPercentage: "80",
         labelForTheAllVolumesSlider: "All",
         showVolumeUpAndDownButtons: false,
         mediaBrowserItemsPerRow: 4,
