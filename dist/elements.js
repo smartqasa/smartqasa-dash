@@ -9254,44 +9254,23 @@ function renderControls(controlTiles, controlColumns, isPhone, swiper) {
     `;
 }
 
-function loadAudioCards(player_id, hass) {
-    const createAudioCard = (cardConfig) => {
+function loadAudioCard(player_id, hass) {
+    const createCard = (cardConfig) => {
         const card = createElement$1(cardConfig, hass);
         card.className = "ha-card";
         return card;
     };
-    const cards = [];
-    cards[0] = createAudioCard({
+    return createCard({
         type: "custom:sonos-card",
-        sections: '["volumes", "groups", "grouping"]',
-        title: "Speakers",
-        entity_id: player_id,
-        widthPercentage: "33",
-        heightPercentage: "70",
-        showVolumeUpAndDownButtons: true,
-    });
-    cards[1] = createAudioCard({
-        type: "custom:sonos-card",
-        sections: ["player"],
         title: "Player",
         entityId: player_id,
-        widthPercentage: "60",
+        widthPercentage: "100",
         heightPercentage: "70",
         labelForTheAllVolumesSlider: "All",
         showVolumeUpAndDownButtons: false,
-    });
-    cards[2] = createAudioCard({
-        type: "custom:sonos-card",
-        sections: ["media browser"],
-        title: "Favorites",
-        entityId: player_id,
-        mediaBrowserTitle: "",
-        widthPercentage: "33",
-        heightPercentage: "70",
         mediaBrowserItemsPerRow: 3,
         hideBrowseMediaButton: true,
     });
-    return cards || [];
 }
 
 function styleInject(css, ref) {
@@ -9348,7 +9327,8 @@ let PanelCard = class PanelCard extends h {
         this._areaChips = [];
         this._controlTiles = [];
         this._controlColumns = [];
-        this._audioCards = [];
+        this._entertainCards = [];
+        this._entertainTab = 0;
     }
     getCardSize() {
         return 100;
@@ -9394,8 +9374,8 @@ let PanelCard = class PanelCard extends h {
                 this._controlTiles.forEach((page) => {
                     updateHassForCards(page);
                 });
-            if (this._audioCards.length > 0)
-                updateHassForCards(this._audioCards);
+            if (this._entertainCards.length > 0)
+                updateHassForCards(this._entertainCards);
         }
     }
     firstUpdated() {
@@ -9438,7 +9418,7 @@ let PanelCard = class PanelCard extends h {
                     <div class="entertain-container">
                         <div class="area-name">${name}</div>
                         <div class="entertain-cards">
-                            < ${this._audioCards.length > 0 ? this._audioCards.map((card) => card) : D}
+                            < ${this._entertainCards[0] ? this._entertainCards[0] : D}
                         </div>
                     </div>
                 `;
@@ -9525,7 +9505,7 @@ let PanelCard = class PanelCard extends h {
         const { controlTiles, controlColumns } = loadControlTiles(this._config.tiles || [], this.hass, this._isTablet);
         this._controlTiles = controlTiles;
         this._controlColumns = controlColumns;
-        this._audioCards = loadAudioCards(this._config.audio_player, this.hass);
+        this._entertainCards[0] = loadAudioCard(this._config.audio_player, this.hass);
     }
 };
 __decorate([

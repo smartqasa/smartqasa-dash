@@ -11,7 +11,7 @@ import { Navigation } from "swiper/modules";
 import { renderHeader } from "./header";
 import { renderArea } from "./area";
 import { loadControlTiles, renderControls } from "./controls";
-import { loadAudioCards } from "./audio";
+import { loadAudioCard } from "./audio";
 import { renderFooter } from "./footer";
 
 import panelStyles from "../css/panel.css";
@@ -61,7 +61,8 @@ export class PanelCard extends LitElement implements LovelaceCard {
     private _areaChips: LovelaceCard[] = [];
     private _controlTiles: LovelaceCard[][] = [];
     private _controlColumns: number[] = [];
-    private _audioCards: LovelaceCard[] = [];
+    private _entertainCards: LovelaceCard[] = [];
+    private _entertainTab: number = 0;
 
     static styles: CSSResultGroup = [unsafeCSS(swiperStyles), unsafeCSS(panelStyles)];
 
@@ -114,7 +115,7 @@ export class PanelCard extends LitElement implements LovelaceCard {
                 this._controlTiles.forEach((page) => {
                     updateHassForCards(page);
                 });
-            if (this._audioCards.length > 0) updateHassForCards(this._audioCards);
+            if (this._entertainCards.length > 0) updateHassForCards(this._entertainCards);
         }
     }
 
@@ -164,7 +165,7 @@ export class PanelCard extends LitElement implements LovelaceCard {
                     <div class="entertain-container">
                         <div class="area-name">${name}</div>
                         <div class="entertain-cards">
-                            < ${this._audioCards.length > 0 ? this._audioCards.map((card) => card) : nothing}
+                            < ${this._entertainCards[0] ? this._entertainCards[0] : nothing}
                         </div>
                     </div>
                 `;
@@ -274,6 +275,6 @@ export class PanelCard extends LitElement implements LovelaceCard {
             return card;
         };
 
-        this._audioCards = loadAudioCards(this._config.audio_player, this.hass);
+        this._entertainCards[0] = loadAudioCard(this._config.audio_player, this.hass);
     }
 }
