@@ -166,7 +166,7 @@ export class PanelCard extends LitElement implements LovelaceCard {
                     <div class="entertain-container">
                         <div class="area-name">${name}</div>
                         <div class="entertain-cards">
-                            < ${this._entertainCards[0] ? this._entertainCards[0] : nothing}
+                            ${this._entertainCards[0] ? this._entertainCards[0] : nothing}
                         </div>
                     </div>
                 `;

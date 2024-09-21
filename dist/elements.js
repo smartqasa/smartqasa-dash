@@ -9427,7 +9427,7 @@ let PanelCard = class PanelCard extends h {
                     <div class="entertain-container">
                         <div class="area-name">${name}</div>
                         <div class="entertain-cards">
-                            < ${this._entertainCards[0] ? this._entertainCards[0] : D}
+                            ${this._entertainCards[0] ? this._entertainCards[0] : D}
                         </div>
                     </div>
                 `;
