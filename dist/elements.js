@@ -9434,8 +9434,8 @@ let PanelCard = class PanelCard extends h {
                                 <ha-icon>mdi:music</ha-icon>
                                 <span>Music</span>
                             </div>
-                            <div class="entertain-cards">${this._entertainCards[0]}</div>
                         </div>
+                        <div class="entertain-cards">${this._entertainCards[0]}</div>
                     </div>
                 `;
                 break;
