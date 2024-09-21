@@ -9266,6 +9266,7 @@ const loadEntertainCards = (audioPlayer, videoPlayer, videoSound, hass) => {
         entityId: audioPlayer,
         widthPercentage: "100",
         heightPercentage: "85",
+        showSourceInPlayer: true,
         labelForTheAllVolumesSlider: "All",
         showVolumeUpAndDownButtons: false,
         mediaBrowserItemsPerRow: 3,
@@ -9277,7 +9278,7 @@ const loadEntertainCards = (audioPlayer, videoPlayer, videoSound, hass) => {
         entity: videoPlayer,
         soundEntity: videoSound,
     });
-    return [audioCard || D, videoCard || D];
+    return [audioCard, videoCard];
 };
 
 function styleInject(css, ref) {
@@ -9429,8 +9430,12 @@ let PanelCard = class PanelCard extends h {
                     <div class="entertain-container">
                         <div class="entertain-sidebar">
                             <div class="area-name">${name}</div>
+                            <div class="entertain-button">
+                                <ha-icon>mdi:music</ha-icon>
+                                <span>Music</span>
+                            </div>
+                            <div class="entertain-cards">${this._entertainCards[0]}</div>
                         </div>
-                        <div class="entertain-cards">${this._entertainCards[0]}</div>
                     </div>
                 `;
                 break;

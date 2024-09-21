@@ -20,12 +20,13 @@ export const loadEntertainCards = (
         entityId: audioPlayer,
         widthPercentage: "100",
         heightPercentage: "85",
+        showSourceInPlayer: true,
         labelForTheAllVolumesSlider: "All",
         showVolumeUpAndDownButtons: false,
         mediaBrowserItemsPerRow: 3,
         mediaBrowserHideTitleForThumbnailIcons: true,
         hideBrowseMediaButton: true,
-    });
+    }) as LovelaceCard;
 
     const videoCard = createCard({
         type: "custom:smartqasa-tv-remote-card",
@@ -33,7 +34,7 @@ export const loadEntertainCards = (
         soundEntity: videoSound,
     });
 
-    return [audioCard || nothing, videoCard || nothing];
+    return [audioCard, videoCard];
 };
 
 export function renderEntertain(type: number): TemplateResult {
