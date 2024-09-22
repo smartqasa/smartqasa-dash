@@ -9431,15 +9431,15 @@ let PanelCard = class PanelCard extends h {
                         <div class="entertain-sidebar">
                             <div class="area-name">${name}</div>
                             <div class="entertain-button">
-                                <ha-icon .icon="hass:music"></ha-icon>
+                                <ha-icon icon="hass:music"></ha-icon>
                                 <span>Audio</span>
                             </div>
                             <div class="entertain-button">
-                                <ha-icon .icon="hass:television-classic"></ha-icon>
+                                <ha-icon icon="hass:television-classic"></ha-icon>
                                 <span>Video</span>
                             </div>
                             <div class="entertain-button">
-                                <ha-icon .icon="hass:exit-to-app"></ha-icon>
+                                <ha-icon icon="hass:exit-to-app"></ha-icon>
                                 <span>Apps</span>
                             </div>
                         </div>
