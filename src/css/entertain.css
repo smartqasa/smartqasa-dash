@@ -40,7 +40,7 @@
 }
 
 .entertain-button span {
-    margin-top: 0.5rem;
+    margin-top: 0.7rem;
     font-weight: var(--sq-primary-font-weight);
     font-size: var(--sq-primary-font-size);
     color: rgb(var(--sq-primary-text-rgb));
@@ -50,7 +50,6 @@
     display: flex;
     height: 100%;
     overflow-y: auto;
-    justify-content: center;
     align-items: center;
     gap: var(--sq-card-spacing);
     --ha-card-border-radius: var(--sq-card-border-radius);
