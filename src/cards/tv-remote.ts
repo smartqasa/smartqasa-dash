@@ -39,7 +39,10 @@ export class TVRemoteCard extends LitElement implements LovelaceCard {
                 align-items: center;
                 height: 100%;
                 width: 100%;
+                border: var(--sq-card-border);
+                border-radius: var(--sq-card-border-radius);
                 box-sizing: border-box;
+                background-color: var(--sq-card-background-color);
             }
             .container {
                 display: flex;
@@ -74,15 +77,15 @@ export class TVRemoteCard extends LitElement implements LovelaceCard {
                 display: flex;
                 justify-content: center;
                 align-self: center;
-                margin: 0.8rem;
-                padding: 1rem;
+                margin: 0.6rem;
+                padding: 0.6rem 1rem;
                 border: var(--sq-card-border, none);
                 border-radius: var(--border-radius, 1rem);
                 background-color: rgba(var(--sq-inactive-rgb), var(--sq-icon-opacity, 0.2));
                 cursor: pointer;
             }
             ha-icon {
-                --mdc-icon-size: 2rem;
+                --mdc-icon-size: var(--sq-icon-size);
             }
             .app-section {
                 display: flex;
