@@ -48,10 +48,7 @@ export class TVRemoteCard extends LitElement implements LovelaceCard {
                 display: flex;
                 flex-direction: column;
                 width: fit-content;
-                margin: 1.2rem;
-                padding: 1.2rem;
-                border: none;
-                background-color: transparent;
+                padding: var(--sq-card-padding);
             }
             .name {
                 padding: 0.5rem;
