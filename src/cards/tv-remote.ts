@@ -37,8 +37,6 @@ export class TVRemoteCard extends LitElement implements LovelaceCard {
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                height: 100%;
-                width: 100%;
                 border: var(--sq-card-border);
                 border-radius: var(--sq-card-border-radius);
                 box-sizing: border-box;
@@ -75,7 +73,7 @@ export class TVRemoteCard extends LitElement implements LovelaceCard {
                 justify-content: center;
                 align-self: center;
                 margin: 0.6rem;
-                padding: 0.6rem 1rem;
+                padding: 0.7rem 1rem;
                 border: var(--sq-card-border, none);
                 border-radius: var(--border-radius, 1rem);
                 background-color: rgba(var(--sq-inactive-rgb), var(--sq-icon-opacity, 0.2));
@@ -109,7 +107,7 @@ export class TVRemoteCard extends LitElement implements LovelaceCard {
                 gap: 1rem;
                 justify-content: center;
                 width: 100%;
-                height: 33rem;
+                height: 25rem;
                 overflow: hidden;
                 overflow-y: auto;
                 scrollbar-width: none; /* Hide scrollbar for Firefox */
