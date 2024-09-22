@@ -24,6 +24,7 @@
     border: var(--sq-card-border);
     border-radius: var(--sq-card-border-radius);
     text-align: center;
+    -webkit-tap-highlight-color: transparent;
     cursor: pointer;
 }
 
@@ -44,6 +45,13 @@
     font-weight: var(--sq-primary-font-weight);
     font-size: var(--sq-primary-font-size);
     color: rgb(var(--sq-primary-text-rgb));
+}
+
+.entertain-button:focus,
+.entertain-button:active {
+    background-color: var(--sq-ripple-color);
+    border-radius: var(--sq-card-border-radius);
+    outline: none;
 }
 
 .entertain-cards {

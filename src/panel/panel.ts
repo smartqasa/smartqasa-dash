@@ -63,7 +63,7 @@ export class PanelCard extends LitElement implements LovelaceCard {
     private _controlTiles: LovelaceCard[][] = [];
     private _controlColumns: number[] = [];
     private _entertainCards: LovelaceCard[] = [];
-    private _entertainTab: number = 0;
+    @state() private _entertainTab: number = 0;
 
     static styles: CSSResultGroup = [unsafeCSS(swiperStyles), unsafeCSS(panelStyles), unsafeCSS(entertainStyles)];
 
@@ -167,20 +167,35 @@ export class PanelCard extends LitElement implements LovelaceCard {
                     <div class="entertain-container">
                         <div class="entertain-sidebar">
                             <div class="area-name">${name}</div>
-                            <div class="entertain-button">
+                            <div
+                                class="entertain-button"
+                                @click=${() => {
+                                    this._entertainTab = 0;
+                                }}
+                            >
                                 <ha-icon icon="hass:music"></ha-icon>
                                 <span>Audio</span>
                             </div>
-                            <div class="entertain-button">
+                            <div
+                                class="entertain-button"
+                                @click=${() => {
+                                    this._entertainTab = 1;
+                                }}
+                            >
                                 <ha-icon icon="hass:television-classic"></ha-icon>
                                 <span>Video</span>
                             </div>
-                            <div class="entertain-button">
+                            <div
+                                class="entertain-button"
+                                @click=${() => {
+                                    this._entertainTab = 2;
+                                }}
+                            >
                                 <ha-icon icon="hass:exit-to-app"></ha-icon>
                                 <span>Apps</span>
                             </div>
                         </div>
-                        <div class="entertain-cards">${this._entertainCards[0]}</div>
+                        <div class="entertain-cards">${this._entertainCards[this._entertainTab]}</div>
                     </div>
                 `;
                 break;
