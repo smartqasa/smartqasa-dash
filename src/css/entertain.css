@@ -9,13 +9,13 @@
 .entertain-sidebar {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: var(--sq-card-spacing);
 }
 
 .entertain-button {
     width: 10rem;
     height: 10rem;
-    margin-left: 2rem;
+    margin-left: 1rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
