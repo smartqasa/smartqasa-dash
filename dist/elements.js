@@ -10677,11 +10677,8 @@ let SonosPanelCard = class SonosPanelCard extends h {
         return i$2 `
             .container {
                 display: grid;
-                grid-template-columns: 0.7fr 1fr 0.7fr;
+                grid-template-columns: 0.8fr 1fr 0.8fr;
                 gap: var(--sq-card-spacing, 0.8rem);
-            }
-            .card {
-                display: block;
             }
         `;
     }
@@ -10704,7 +10701,7 @@ let SonosPanelCard = class SonosPanelCard extends h {
             if (!card)
                 return D;
             const element = card;
-            return ke `<div class="card">${element}</div>`;
+            return ke `<div>${element}</div>`;
         };
         return ke `
             <div class="container">

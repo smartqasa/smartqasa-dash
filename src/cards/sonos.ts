@@ -33,11 +33,8 @@ export class SonosPanelCard extends LitElement implements LovelaceCard {
         return css`
             .container {
                 display: grid;
-                grid-template-columns: 0.7fr 1fr 0.7fr;
+                grid-template-columns: 0.8fr 1fr 0.8fr;
                 gap: var(--sq-card-spacing, 0.8rem);
-            }
-            .card {
-                display: block;
             }
         `;
     }
@@ -62,7 +59,7 @@ export class SonosPanelCard extends LitElement implements LovelaceCard {
         const renderCard = (card: LovelaceCard | undefined): TemplateResult | typeof nothing => {
             if (!card) return nothing;
             const element = card as unknown as HTMLElement;
-            return html`<div class="card">${element}</div>`;
+            return html`<div>${element}</div>`;
         };
 
         return html`
