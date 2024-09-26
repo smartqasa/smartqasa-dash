@@ -344,7 +344,6 @@ export const dialogTable: DialogObject = {
         name: "Sonos",
         data: {
             title: "Sonos",
-            size: "wide",
             timeout: 600000,
             content: {
                 type: "custom:smartqasa-sonos-card",
