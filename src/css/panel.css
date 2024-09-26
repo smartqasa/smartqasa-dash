@@ -120,7 +120,7 @@
 }
 .footer-container {
     display: flex;
-    gap: 3rem;
+    gap: 4rem;
     justify-content: center;
     align-items: center;
 }

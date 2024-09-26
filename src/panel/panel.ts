@@ -116,7 +116,7 @@ export class PanelCard extends LitElement implements LovelaceCard {
                 this._controlTiles.forEach((page) => {
                     updateHassForCards(page);
                 });
-            if (this._entertainCards.length > 0) updateHassForCards(this._entertainCards);
+            //if (this._entertainCards.length > 0) updateHassForCards(this._entertainCards);
         }
     }
 
@@ -298,11 +298,13 @@ export class PanelCard extends LitElement implements LovelaceCard {
         this._controlTiles = controlTiles;
         this._controlColumns = controlColumns;
 
+        /*
         this._entertainCards = loadEntertainCards(
             this._config.audio_player || "",
             this._config.video_player || "",
             this._config.video_sound || "",
             this.hass
         ) as LovelaceCard[];
+        */
     }
 }

@@ -41,6 +41,11 @@ export function renderFooter(): TemplateResult {
         dialogPopup(dialogTable["areas"].data);
     }
 
+    function handleEntertain(): void {
+        window.smartqasa.viewMode = "entertain";
+        window.dispatchEvent(new Event("viewModeChanged"));
+    }
+
     function handleMenu(): void {
         window.smartqasa.menuTab = 0;
         dialogPopup(dialogTable["menu"].data);
@@ -50,6 +55,7 @@ export function renderFooter(): TemplateResult {
         <div class="footer-container">
             ${renderFooterButton("hass:home", "Home", handleHome)}
             ${renderFooterButton("hass:view-dashboard", "Areas", handleAreas)}
+            ${renderFooterButton("hass:music", "Entertainment", handleEntertain)}
             ${renderFooterButton("hass:menu", "Menu", handleMenu)}
         </div>
     `;
