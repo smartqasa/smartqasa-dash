@@ -10717,6 +10717,7 @@ let SonosPanelCard = class SonosPanelCard extends h {
             type: "custom:sonos-card",
             entityId: this._entity,
             heightPercentage: "75",
+            widthPercentage: "30",
             showVolumeUpAndDownButtons: true,
             sections: '["volumes", "groups", "grouping"]',
         }, this.hass);
@@ -10724,12 +10725,14 @@ let SonosPanelCard = class SonosPanelCard extends h {
             type: "custom:sonos-card",
             entityId: this._entity,
             heightPercentage: "75",
+            widthPercentage: "40",
             showVolumeUpAndDownButtons: true,
             sections: '["player"]',
         }, this.hass);
         this._mediaCard = createElement$1({
             type: "custom:sonos-card",
             heightPercentage: "75",
+            widthPercentage: "30",
             mediaBrowserItemsPerRow: 3,
             mediaBrowserShowTitleForThumbnailIcons: true,
             showVolumeUpAndDownButtons: true,
