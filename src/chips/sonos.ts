@@ -70,7 +70,7 @@ export class SonosChip extends LitElement implements LovelaceCard {
 
         let iconColor: string;
         if (state) {
-            iconColor = state === "playing" ? "var(--sq-rgb-blue)" : "var(--sq-inactive-rgb)";
+            iconColor = state === "playing" ? "var(--sq-rgb-blue)" : "var(--sq-primary-font-rgb)";
         } else {
             iconColor = "var(--sq-unavailable-rgb)";
         }
