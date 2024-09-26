@@ -1,7 +1,7 @@
-import { DialogObject } from "../types";
+import { DialogTable } from "../types";
 import { listDialogConfig } from "../dialogs/list-dialog-config";
 
-export const dialogTable: DialogObject = {
+export const dialogTable: DialogTable = {
     admin_mode: {
         icon: "hass:tools",
         name: "Admin Mode",

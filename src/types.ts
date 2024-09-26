@@ -27,7 +27,7 @@ export interface DialogEntry {
     data: any;
 }
 
-export interface DialogObject {
+export interface DialogTable {
     [key: string]: DialogEntry;
 }
 

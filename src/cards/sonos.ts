@@ -33,7 +33,7 @@ export class SonosPanelCard extends LitElement implements LovelaceCard {
         return css`
             .container {
                 display: grid;
-                grid-template-columns: 1fr 1fr 1fr;
+                grid-template-columns: 0.7fr 1fr 0.7fr;
                 gap: var(--sq-card-spacing, 0.8rem);
             }
             .card {
@@ -78,9 +78,9 @@ export class SonosPanelCard extends LitElement implements LovelaceCard {
                 type: "custom:sonos-card",
                 entityId: this._entity,
                 heightPercentage: "100",
-                widthPercentage: "50",
+                widthPercentage: "100",
                 showVolumeUpAndDownButtons: true,
-                sections: '["volumes", "grouping"]',
+                sections: '["volumes"]',
             },
             this.hass
         );
@@ -92,7 +92,7 @@ export class SonosPanelCard extends LitElement implements LovelaceCard {
                 heightPercentage: "100",
                 widthPercentage: "100",
                 showVolumeUpAndDownButtons: true,
-                sections: '["player","groups"]',
+                sections: '["player","groups", "grouping"]',
             },
             this.hass
         );
@@ -101,7 +101,7 @@ export class SonosPanelCard extends LitElement implements LovelaceCard {
             {
                 type: "custom:sonos-card",
                 heightPercentage: "100",
-                widthPercentage: "50",
+                widthPercentage: "100",
                 mediaBrowserItemsPerRow: 3,
                 mediaBrowserShowTitleForThumbnailIcons: true,
                 showVolumeUpAndDownButtons: true,
