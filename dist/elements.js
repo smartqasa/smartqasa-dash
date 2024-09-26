@@ -3921,7 +3921,7 @@ function displayBSoD(errorMessage) {
             Promise.resolve().then(function () { return moreInfo; }),
             Promise.resolve().then(function () { return pinVerify; }),
             Promise.resolve().then(function () { return screensaver; }),
-            Promise.resolve().then(function () { return sonos; }),
+            Promise.resolve().then(function () { return sonos$1; }),
             Promise.resolve().then(function () { return verticalStack; }),
             Promise.resolve().then(function () { return tvRemote; }),
             Promise.resolve().then(function () { return weather$1; }),
@@ -3935,6 +3935,7 @@ function displayBSoD(errorMessage) {
             Promise.resolve().then(function () { return navigate; }),
             Promise.resolve().then(function () { return routine$1; }),
             Promise.resolve().then(function () { return select$1; }),
+            Promise.resolve().then(function () { return sonos; }),
             Promise.resolve().then(function () { return thermostat$1; }),
             Promise.resolve().then(function () { return weather; }),
         ]);
@@ -10750,7 +10751,7 @@ SonosPanelCard = __decorate([
     t$1("smartqasa-sonos-card")
 ], SonosPanelCard);
 
-var sonos = /*#__PURE__*/Object.freeze({
+var sonos$1 = /*#__PURE__*/Object.freeze({
   __proto__: null,
   get SonosPanelCard () { return SonosPanelCard; }
 });
@@ -12184,6 +12185,86 @@ SelectChip = __decorate([
 var select$1 = /*#__PURE__*/Object.freeze({
   __proto__: null,
   get SelectChip () { return SelectChip; }
+});
+
+window.customCards.push({
+    type: "smartqasa-sonos-chip",
+    name: "SmartQasa Sonos Chip",
+    preview: true,
+    description: "A SmartQasa chip for displaying a Sonos dialog.",
+});
+let SonosChip = class SonosChip extends h {
+    constructor() {
+        super(...arguments);
+        this._icon = "hass:music";
+        this._iconStyles = {};
+    }
+    getCardSize() {
+        return 1;
+    }
+    static { this.styles = r$3(css_248z$4); }
+    setConfig(config) {
+        this._config = { ...config };
+        this._entity = this._config.entity?.startsWith("media_player.") ? this._config.entity : undefined;
+    }
+    shouldUpdate(changedProps) {
+        if (!this._config)
+            return false;
+        return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
+            changedProps.has("_config"));
+    }
+    willUpdate() {
+        this._updateState();
+    }
+    render() {
+        if (!this._config || !this._entity)
+            return D;
+        return ke `
+            <div class="container" @click=${this._showDialog}>
+                <div class="icon" style="${se(this._iconStyles)}">
+                    <ha-icon .icon=${this._icon}></ha-icon>
+                </div>
+            </div>
+        `;
+    }
+    _updateState() {
+        this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
+        const state = this._stateObj?.state;
+        let iconColor;
+        if (state) {
+            iconColor = state === "playing" ? "var(--sq-rgb-blue)" : "var(--sq-inactive-rgb)";
+        }
+        else {
+            iconColor = "var(--sq-unavailable-rgb)";
+        }
+        this._iconStyles = {
+            color: `rgb(${iconColor})`,
+        };
+    }
+    _showDialog(e) {
+        e.stopPropagation();
+        const dialogObj = dialogTable["sonos"];
+        if (!dialogObj)
+            return;
+        const dialogConfig = { ...dialogObj.data };
+        if (this._entity)
+            dialogConfig.content.entity = this._entity;
+        dialogPopup(dialogObj.data);
+    }
+};
+__decorate([
+    n({ attribute: false })
+], SonosChip.prototype, "hass", void 0);
+__decorate([
+    r()
+], SonosChip.prototype, "_config", void 0);
+SonosChip = __decorate([
+    t$1("smartqasa-sonos-chip")
+], SonosChip);
+
+var sonos = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  get SonosChip () { return SonosChip; }
 });
 
 function moreInfoDialog(stateObj, callingDialogConfig) {

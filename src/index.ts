@@ -81,6 +81,7 @@ function displayBSoD(errorMessage: string) {
             import("./chips/navigate"),
             import("./chips/routine"),
             import("./chips/select"),
+            import("./chips/sonos"),
             import("./chips/thermostat"),
             import("./chips/weather"),
         ]);
