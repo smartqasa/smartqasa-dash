@@ -2,7 +2,7 @@ import { CSSResult, html, LitElement, nothing, PropertyValues, TemplateResult, u
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 
-import { DialogEntry, HassEntity, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
+import { HassEntity, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 import { dialogTable } from "../tables/dialogs";
 import { dialogPopup } from "../dialogs/dialog-popup";
 
@@ -30,9 +30,8 @@ export class SonosChip extends LitElement implements LovelaceCard {
 
     private _entity?: string;
     private _stateObj?: HassEntity;
-    private _icon?: string = "hass:music";
+    private _icon: string = "hass:music";
     private _iconStyles: Record<string, string> = {};
-    private _dialogObj: DialogEntry = dialogTable["sonos"] || {};
 
     static styles: CSSResult = unsafeCSS(chipBaseStyle);
 
@@ -83,11 +82,12 @@ export class SonosChip extends LitElement implements LovelaceCard {
 
     private _showDialog(e: Event): void {
         e.stopPropagation();
-        if (!this._dialogObj.data) return;
+        const dialogObj = dialogTable["sonos"];
+        if (!dialogObj) return;
 
-        const dialogConfig = { ...this._dialogObj.data };
+        const dialogConfig = { ...dialogObj.data };
         if (this._entity) dialogConfig.content.entity = this._entity;
 
-        dialogPopup(this._dialogObj.data);
+        dialogPopup(dialogObj.data);
     }
 }
