@@ -86,7 +86,7 @@ export class SonosChip extends LitElement implements LovelaceCard {
         if (!dialogObj) return;
 
         const dialogConfig = { ...dialogObj.data };
-        if (this._entity) dialogConfig.content.entity = this._entity;
+        if (this._entity) dialogConfig.content.entityId = this._entity;
 
         dialogPopup(dialogObj.data);
     }

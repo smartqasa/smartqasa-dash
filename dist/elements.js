@@ -9042,7 +9042,14 @@ const dialogTable = {
             title: "Sonos",
             timeout: 600000,
             content: {
-                type: "custom:smartqasa-sonos-card",
+                type: "custom:sonos-card",
+                sections: ["player", "groups", "grouping", "volumes", "media browser"],
+                showVolumeUpAndDownButtons: true,
+                skipApplyButtonWhenGrouping: true,
+                mediaBrowserItemsPerRow: 5,
+                mediaBrowserTitle: "Favorites",
+                hideBrowseMediaButton: true,
+                mediaBrowserShowTitleForThumbnailIcons: true,
             },
         },
     },
@@ -12244,7 +12251,7 @@ let SonosChip = class SonosChip extends h {
             return;
         const dialogConfig = { ...dialogObj.data };
         if (this._entity)
-            dialogConfig.content.entity = this._entity;
+            dialogConfig.content.entityId = this._entity;
         dialogPopup(dialogObj.data);
     }
 };
