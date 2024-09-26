@@ -2,7 +2,7 @@ import { CSSResultGroup, html, LitElement, nothing, PropertyValues, TemplateResu
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 
-import { HassEntity, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
+import { DialogEntry, HassEntity, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 import { dialogTable } from "../tables/dialogs";
 import { dialogPopup } from "../dialogs/dialog-popup";
 
@@ -10,8 +10,7 @@ import chipBaseStyle from "../css/chip-base.css";
 import chipTextStyle from "../css/chip-text.css";
 
 interface Config extends LovelaceCardConfig {
-    dialog: string;
-    entity?: string;
+    dialog: keyof typeof dialogTable;
     label?: string;
 }
 
@@ -30,8 +29,8 @@ export class DialogChip extends LitElement implements LovelaceCard {
 
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() protected _config?: Config;
-    private _dialog?: string;
-    private _dialogObj?: any;
+    private _dialog?: keyof typeof dialogTable;
+    private _dialogObj?: DialogEntry;
     private _entity?: string;
     private _icon?: string;
     private _label?: string;
@@ -40,11 +39,14 @@ export class DialogChip extends LitElement implements LovelaceCard {
     static styles: CSSResultGroup = [unsafeCSS(chipBaseStyle), unsafeCSS(chipTextStyle)];
 
     public setConfig(config: Config): void {
-        this._config = { ...config };
+        if (!config.dialog) return;
+
+        this._config = config;
         this._dialog = this._config.dialog;
-        this._dialogObj = this._dialog ? dialogTable[this._dialog] : undefined;
+        this._dialogObj = dialogTable[this._dialog];
+
         this._entity = this._dialogObj?.entity;
-        this._icon = this._dialogObj?.icon;
+        this._icon = this._dialogObj?.icon || "hass:help-alert";
         this._label = this._config.label || "";
     }
 
@@ -73,7 +75,7 @@ export class DialogChip extends LitElement implements LovelaceCard {
         };
 
         const iconStyles = {
-            color: `rgb(${this._dialogObj.color || "var(--sq-rgb-orange)"})`,
+            color: this._dialogObj.color || "rgb(var(--sq-rgb-orange))",
             paddingRight: this._label ? "calc(var(--sq-chip-padding, 1rem) / 2)" : "var(--sq-chip-padding, 1rem)",
         };
 
@@ -90,6 +92,7 @@ export class DialogChip extends LitElement implements LovelaceCard {
     private _showDialog(e: Event): void {
         e.stopPropagation();
         if (!this._dialogObj) return;
+
         dialogPopup(this._dialogObj.data);
     }
 }

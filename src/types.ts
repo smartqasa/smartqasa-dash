@@ -19,6 +19,18 @@ declare global {
     }
 }
 
+export interface DialogEntry {
+    icon: string;
+    name: string;
+    entity?: string;
+    color?: string;
+    data: any;
+}
+
+export interface DialogObject {
+    [key: string]: DialogEntry;
+}
+
 type EntityCategory = "config" | "diagnostic";
 
 export interface EntityRegistryDisplayEntry {

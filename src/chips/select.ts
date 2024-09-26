@@ -5,7 +5,7 @@ import { HassEntity, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../
 import { selectOptionDialog } from "../dialogs/select-option-dialog";
 import { phaseIcons, modeIcons } from "../const";
 
-import { chipBaseStyle } from "../../archive/chip";
+import chipBaseStyle from "../css/chip-base.css";
 
 interface Config extends LovelaceCardConfig {
     entity: string;

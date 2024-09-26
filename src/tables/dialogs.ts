@@ -1,15 +1,7 @@
+import { DialogObject } from "../types";
 import { listDialogConfig } from "../dialogs/list-dialog-config";
 
-interface DialogTable {
-    [key: string]: {
-        icon: string;
-        name: string;
-        entity?: string;
-        data: any;
-    };
-}
-
-export const dialogTable: DialogTable = {
+export const dialogTable: DialogObject = {
     admin_mode: {
         icon: "hass:tools",
         name: "Admin Mode",
@@ -347,6 +339,25 @@ export const dialogTable: DialogTable = {
         data: listDialogConfig("Shades", "group", "cover.all_window_shades", "shade"),
     },
 
+    sonos: {
+        icon: "hass:music",
+        name: "Sonos",
+        data: {
+            title: "Sonos",
+            size: "wide",
+            timeout: 600000,
+            content: {
+                type: "custom:smartqasa-sonos-card",
+            },
+        },
+    },
+
+    sonos_players: {
+        icon: "hass:speaker-multiple",
+        name: "Sonos Players",
+        data: listDialogConfig("Sonos Players", "group", "media_player.all_sonos_players", "sonos"),
+    },
+
     speed_test: {
         icon: "hass:gauge",
         name: "Speed Test",
@@ -364,12 +375,6 @@ export const dialogTable: DialogTable = {
                 days_to_show: 3,
             },
         },
-    },
-
-    sonos_players: {
-        icon: "hass:speaker-multiple",
-        name: "Sonos Players",
-        data: listDialogConfig("Sonos Players", "group", "media_player.all_sonos_players", "sonos"),
     },
 
     thermostats: {

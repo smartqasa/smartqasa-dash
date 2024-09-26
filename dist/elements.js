@@ -9034,6 +9034,23 @@ const dialogTable = {
         name: "Shades",
         data: listDialogConfig("Shades", "group", "cover.all_window_shades", "shade"),
     },
+    sonos: {
+        icon: "hass:music",
+        name: "Sonos",
+        data: {
+            title: "Sonos",
+            size: "wide",
+            timeout: 600000,
+            content: {
+                type: "custom:smartqasa-sonos-card",
+            },
+        },
+    },
+    sonos_players: {
+        icon: "hass:speaker-multiple",
+        name: "Sonos Players",
+        data: listDialogConfig("Sonos Players", "group", "media_player.all_sonos_players", "sonos"),
+    },
     speed_test: {
         icon: "hass:gauge",
         name: "Speed Test",
@@ -9051,11 +9068,6 @@ const dialogTable = {
                 days_to_show: 3,
             },
         },
-    },
-    sonos_players: {
-        icon: "hass:speaker-multiple",
-        name: "Sonos Players",
-        data: listDialogConfig("Sonos Players", "group", "media_player.all_sonos_players", "sonos"),
     },
     thermostats: {
         icon: "hass:thermostat",
@@ -11533,7 +11545,7 @@ var weather$1 = /*#__PURE__*/Object.freeze({
   get WeatherCard () { return WeatherCard; }
 });
 
-var css_248z$4 = ".container {\n    display: flex;\n    margin: 0 var(--sq-chip-spacing, 0.4rem);\n    align-items: center;\n    justify-content: center;\n    width: fit-content;\n    border: var(--sq-card-border);\n    border-radius: var(--sq-chip-border-radius);\n    background-color: var(--sq-card-background-color);\n    transition: var(--sq-icon-transition, none);\n    overflow: hidden;\n    -webkit-tap-highlight-color: transparent;\n    cursor: pointer;\n}\n\n.container:focus,\n.container:active {\n    background-color: var(--sq-ripple-color);\n    border-radius: var(--sq-chip-border-radius);\n    outline: none;\n}\n\n.icon {\n    display: flex;\n    height: var(--sq-icon-size, 1.8rem);\n    width: var(--sq-icon-size, 1.8rem);\n    padding: var(--sq-chip-padding, 1rem);\n    color: rgb(var(--sq-primary-text-rgb));\n    transition: var(--sq-icon-transition, none);\n    align-items: center;\n    justify-content: center;\n}\n\n@keyframes blink {\n    50% {\n        opacity: 0.25;\n    }\n}\n\n@keyframes spin {\n    from {\n        transform: rotate(0deg);\n    }\n    to {\n        transform: rotate(360deg);\n    }\n}\n";
+var css_248z$4 = ".container {\n    display: flex;\n    margin: 0 var(--sq-chip-spacing, 0.4rem);\n    align-items: center;\n    justify-content: center;\n    width: fit-content;\n    border: var(--sq-card-border);\n    border-radius: var(--sq-chip-border-radius);\n    background-color: var(--sq-card-background-color);\n    transition: var(--sq-icon-transition, none);\n    overflow: hidden;\n    -webkit-tap-highlight-color: transparent;\n    cursor: pointer;\n}\n\n.container:focus,\n.container:active {\n    background-color: var(--sq-ripple-color);\n    border-radius: var(--sq-chip-border-radius);\n    outline: none;\n}\n\n.icon {\n    display: flex;\n    height: var(--sq-icon-size, 1.8rem);\n    width: var(--sq-icon-size, 1.8rem);\n    padding: var(--sq-chip-padding, 1rem);\n    color: rgb(var(--sq-inactive-rgb));\n    transition: var(--sq-icon-transition, none);\n    align-items: center;\n    justify-content: center;\n}\n\n@keyframes blink {\n    50% {\n        opacity: 0.25;\n    }\n}\n\n@keyframes spin {\n    from {\n        transform: rotate(0deg);\n    }\n    to {\n        transform: rotate(360deg);\n    }\n}\n";
 styleInject(css_248z$4);
 
 window.customCards.push({
@@ -11706,11 +11718,13 @@ let DialogChip = class DialogChip extends h {
     }
     static { this.styles = [r$3(css_248z$4), r$3(css_248z$3)]; }
     setConfig(config) {
-        this._config = { ...config };
+        if (!config.dialog)
+            return;
+        this._config = config;
         this._dialog = this._config.dialog;
-        this._dialogObj = this._dialog ? dialogTable[this._dialog] : undefined;
+        this._dialogObj = dialogTable[this._dialog];
         this._entity = this._dialogObj?.entity;
-        this._icon = this._dialogObj?.icon;
+        this._icon = this._dialogObj?.icon || "hass:help-alert";
         this._label = this._config.label || "";
     }
     shouldUpdate(changedProps) {
@@ -11732,7 +11746,7 @@ let DialogChip = class DialogChip extends h {
             display: `${display}`,
         };
         const iconStyles = {
-            color: `rgb(${this._dialogObj.color || "var(--sq-rgb-orange)"})`,
+            color: this._dialogObj.color || "rgb(var(--sq-rgb-orange))",
             paddingRight: this._label ? "calc(var(--sq-chip-padding, 1rem) / 2)" : "var(--sq-chip-padding, 1rem)",
         };
         return ke `
@@ -12105,115 +12119,6 @@ const thermostatIcons = {
     default: "hass:thermostat-cog",
 };
 
-const chipBaseStyle = i$2 `
-    .container {
-        display: flex;
-        margin: 0 var(--sq-chip-spacing, 0.4rem);
-        align-items: center;
-        justify-content: center;
-        width: fit-content;
-        border: var(--sq-card-border);
-        border-radius: var(--sq-chip-border-radius);
-        background-color: var(--sq-card-background-color);
-        transition: var(--sq-icon-transition, none);
-        overflow: hidden;
-        -webkit-tap-highlight-color: transparent;
-        cursor: pointer;
-    }
-
-    .container:focus,
-    .container:active {
-        background-color: var(--sq-ripple-color);
-        border-radius: var(--sq-chip-border-radius);
-        outline: none;
-    }
-
-    .icon {
-        display: flex;
-        height: var(--sq-icon-size, 1.8rem);
-        width: var(--sq-icon-size, 1.8rem);
-        padding: var(--sq-chip-padding, 1rem);
-        color: rgb(var(--sq-primary-text-rgb));
-        transition: var(--sq-icon-transition, none);
-        align-items: center;
-        justify-content: center;
-    }
-`;
-i$2 `
-    .container {
-        justify-content: flex-start;
-    }
-
-    .icon {
-        padding-right: calc(var(--sq-chip-padding, 1rem) / 2);
-        align-items: center;
-        justify-content: center;
-    }
-
-    .text {
-        display: flex;
-        padding: var(--sq-chip-padding, 1rem);
-        padding-left: 0;
-        line-height: var(--sq-icon-size, 1.8rem);
-        font-weight: var(--sq-primary-font-weight, 400);
-        font-size: var(--sq-primary-font-size, 1.5rem);
-        color: rgb(var(--sq-primary-font-rgb, 128, 128, 128));
-        text-align: left;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        align-items: center;
-    }
-`;
-i$2 `
-    .container {
-        display: flex;
-        margin: 0 var(--sq-chip-spacing, 0.4rem);
-        align-items: center;
-        justify-content: center;
-        border: var(--sq-card-border);
-        border-radius: var(--sq-chip-border-radius);
-        background-color: var(--sq-card-background-color);
-        overflow: hidden;
-        -webkit-tap-highlight-color: transparent;
-        cursor: pointer;
-    }
-
-    .container:focus,
-    .container:active {
-        background-color: inherit;
-        outline: none;
-    }
-
-    .icon1,
-    .icon2 {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        --mdc-icon-size: 3.6rem;
-        padding: 0.1rem;
-        color: rgb(var(--sq-primary-text-rgb));
-    }
-
-    .icon1::after {
-        content: "";
-        width: 1px;
-        height: var(--sq-icon-size, 1.8rem);
-        background-color: rgb(128, 128, 128);
-        margin-left: 0.3rem;
-    }
-`;
-i$2 `
-    @keyframes spin {
-        from {
-            transform: rotate(0deg);
-        }
-        to {
-            transform: rotate(360deg);
-        }
-    }
-`;
-
 window.customCards.push({
     type: "smartqasa-select-chip",
     name: "SmartQasa Input Select Chip",
@@ -12224,7 +12129,7 @@ let SelectChip = class SelectChip extends h {
     getCardSize() {
         return 1;
     }
-    static { this.styles = r$3(chipBaseStyle); }
+    static { this.styles = r$3(css_248z$4); }
     setConfig(config) {
         this._config = { ...config };
         this._entity = this._config.entity?.startsWith("input_select.") ? this._config.entity : undefined;
@@ -13665,7 +13570,7 @@ let LightTile = class LightTile extends h {
         else {
             icon = this._config.icon || "hass:lightbulb-alert";
             iconAnimation = "none";
-            iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+            iconColor = "var(--sq-unavailable-rgb)";
             name = this._config?.name || "Unknown";
             stateFmtd = "Unknown";
         }
