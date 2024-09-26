@@ -34,12 +34,18 @@ export class LightTile extends LitElement implements LovelaceCard {
     @state() protected _config?: Config;
     private _entity?: string;
     private _stateObj?: HassEntity;
+    private _icon: string = "hass:lightbulb-alert";
+    private _iconStyles: Record<string, string> = {};
+    private _name: string = "Unknown";
+    private _stateFmtd: string = "Unknown";
 
-    static styles: CSSResultGroup = [unsafeCSS(tileBaseStyle), unsafeCSS(tileStateStyle)];
+    static get styles(): CSSResultGroup {
+        return [unsafeCSS(tileBaseStyle), unsafeCSS(tileStateStyle)];
+    }
 
     public setConfig(config: Config): void {
         this._config = { ...config };
-        this._entity = this._config.entity.startsWith("light.") ? this._config.entity : undefined;
+        this._entity = config.entity?.startsWith("light.") ? config.entity : undefined;
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
@@ -49,57 +55,53 @@ export class LightTile extends LitElement implements LovelaceCard {
         );
     }
 
+    protected willUpdate(): void {
+        this._updateState();
+    }
+
     protected render(): TemplateResult | typeof nothing {
         if (!this._config || !this._entity) return nothing;
 
-        const { icon, iconAnimation, iconColor, name, stateFmtd } = this._updateState();
-        const iconStyles = {
-            color: `rgb(${iconColor})`,
-            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
-            animation: iconAnimation,
-        };
         return html`
             <div class="container" @click=${this._toggleEntity} @contextmenu=${this._showEntityList}>
-                <div class="icon" @click=${this._showMoreInfo} style="${styleMap(iconStyles)}">
-                    <ha-icon icon=${icon}></ha-icon>
+                <div class="icon" @click=${this._showMoreInfo} style=${styleMap(this._iconStyles)}>
+                    <ha-icon icon=${this._icon}></ha-icon>
                 </div>
-                <div class="name">${name}</div>
-                <div class="state">${stateFmtd}</div>
+                <div class="name">${this._name}</div>
+                <div class="state">${this._stateFmtd}</div>
             </div>
         `;
     }
 
-    private _updateState(): {
-        icon: string;
-        iconAnimation?: string;
-        iconColor: string;
-        name: string;
-        stateFmtd: string;
-    } {
-        let icon, iconAnimation, iconColor, name, stateFmtd;
+    private _updateState(): void {
+        let iconAnimation, iconColor;
 
         this._stateObj = this.hass && this._entity ? this.hass.states[this._entity] : undefined;
 
         if (this._stateObj) {
             const state = this._stateObj.state || "unknown";
-            icon = this._config!.icon || this._stateObj.attributes.icon || "hass:lightbulb";
+            this._icon = this._config!.icon || this._stateObj.attributes.icon || "hass:lightbulb";
             iconAnimation = "none";
             iconColor = state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
-            name = this._config!.name || this._stateObj.attributes.friendly_name || "Light";
-            stateFmtd = `${this.hass!.formatEntityState(this._stateObj)}${
+            this._name = this._config!.name || this._stateObj.attributes.friendly_name || "Light";
+            this._stateFmtd = `${this.hass!.formatEntityState(this._stateObj)}${
                 state === "on" && this._stateObj.attributes.brightness
                     ? " - " + this.hass!.formatEntityAttributeValue(this._stateObj, "brightness")
                     : ""
             }`;
         } else {
-            icon = this._config!.icon || "hass:lightbulb-alert";
+            this._icon = this._config!.icon || "hass:lightbulb-alert";
             iconAnimation = "none";
             iconColor = "var(--sq-unavailable-rgb)";
-            name = this._config?.name || "Unknown";
-            stateFmtd = "Unknown";
+            this._name = this._config?.name || "Unknown";
+            this._stateFmtd = "Unknown";
         }
 
-        return { icon, iconAnimation, iconColor, name, stateFmtd };
+        this._iconStyles = {
+            color: `rgb(${iconColor})`,
+            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
+            animation: iconAnimation,
+        };
     }
 
     private _toggleEntity(e: Event): void {
