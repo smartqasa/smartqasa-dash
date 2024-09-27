@@ -345,6 +345,9 @@ export const dialogTable: DialogTable = {
         data: {
             title: "Sonos",
             timeout: 600000,
+            style: {
+                "--control-button-padding": 0,
+            },
             content: {
                 type: "custom:sonos-card",
                 sections: ["player", "media browser", "groups", "grouping", "volumes"],
