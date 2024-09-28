@@ -36,8 +36,8 @@ export class LightTile extends LitElement implements LovelaceCard {
     private _stateObj?: HassEntity;
     private _icon: string = "hass:lightbulb-alert";
     private _iconStyles: Record<string, string> = {};
-    private _name: string = "Unknown";
-    private _stateFmtd: string = "Unknown";
+    private _name: string = "Unknown Light";
+    private _stateFmtd: string = "Unknown State";
 
     static get styles(): CSSResultGroup {
         return [unsafeCSS(tileBaseStyle), unsafeCSS(tileStateStyle)];

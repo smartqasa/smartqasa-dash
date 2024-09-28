@@ -187,12 +187,10 @@ export class MenuCard extends LitElement implements LovelaceCard {
                 {
                     type: "custom:smartqasa-dialog-tile",
                     dialog: "clean_screen",
-                    menu_tab: 3,
                 },
                 {
                     type: "custom:smartqasa-dialog-tile",
                     dialog: "display_themes",
-                    menu_tab: 3,
                 },
                 {
                     type: "custom:smartqasa-routine-tile",
@@ -202,7 +200,6 @@ export class MenuCard extends LitElement implements LovelaceCard {
                     type: "custom:smartqasa-action-tile",
                     icon: "mdi:wiper",
                     name: "Clear Cache",
-                    menu_tab: 3,
                     actions: [
                         {
                             action: "browser_mod.javascript",
@@ -215,76 +212,31 @@ export class MenuCard extends LitElement implements LovelaceCard {
                 {
                     type: "custom:smartqasa-dialog-tile",
                     dialog: "speed_test",
-                    menu_tab: 3,
                 },
                 {
-                    type: "custom:restriction-card",
-                    condition: {
-                        entity: "input_boolean.admin_mode",
-                        value: "off",
-                    },
-                    restrictions: {
-                        block: {
-                            condition: {
-                                entity: "input_boolean.admin_mode",
-                                value: "off",
-                            },
+                    type: "custom:smartqasa-action-tile",
+                    icon: "mdi:restart",
+                    name: "Reboot System",
+                    actions: [
+                        {
+                            action: "hassio.host_reboot",
                         },
-                    },
-                    card: {
-                        type: "custom:smartqasa-action-tile",
-                        icon: "mdi:restart",
-                        name: "Reboot System",
-                        menu_tab: 3,
-                        action: "hassio.host_reboot",
-                    },
+                    ],
                 },
                 {
-                    type: "custom:restriction-card",
-                    condition: {
-                        entity: "input_boolean.admin_mode",
-                        value: "off",
-                    },
-                    restrictions: {
-                        block: {
-                            condition: {
-                                entity: "input_boolean.admin_mode",
-                                value: "off",
-                            },
+                    type: "custom:smartqasa-action-tile",
+                    icon: "mdi:power",
+                    name: "Shutdown System",
+                    actions: [
+                        {
+                            action: "hassio.host_shutdown",
                         },
-                    },
-                    card: {
-                        type: "custom:smartqasa-action-tile",
-                        icon: "mdi:power",
-                        name: "Shutdown System",
-                        menu_tab: 3,
-                        action: "hassio.host_shutdown",
-                    },
+                    ],
                 },
                 {
-                    type: "custom:restriction-card",
-                    condition: {
-                        entity: "input_boolean.admin_mode",
-                        value: "off",
-                    },
-                    restrictions: {
-                        block: {
-                            condition: {
-                                entity: "input_boolean.admin_mode",
-                                value: "off",
-                            },
-                        },
-                    },
-                    card: {
-                        type: "custom:smartqasa-app-tile",
-                        app: "play_store",
-                        icon: "mdi:store",
-                    },
-                },
-                {
-                    type: "custom:smartqasa-dialog-tile",
-                    dialog: "admin_mode",
-                    menu_tab: 3,
+                    type: "custom:smartqasa-app-tile",
+                    app: "play_store",
+                    icon: "mdi:store",
                 },
             ],
         };

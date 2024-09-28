@@ -10076,12 +10076,10 @@ let MenuCard = class MenuCard extends h {
                 {
                     type: "custom:smartqasa-dialog-tile",
                     dialog: "clean_screen",
-                    menu_tab: 3,
                 },
                 {
                     type: "custom:smartqasa-dialog-tile",
                     dialog: "display_themes",
-                    menu_tab: 3,
                 },
                 {
                     type: "custom:smartqasa-routine-tile",
@@ -10091,7 +10089,6 @@ let MenuCard = class MenuCard extends h {
                     type: "custom:smartqasa-action-tile",
                     icon: "mdi:wiper",
                     name: "Clear Cache",
-                    menu_tab: 3,
                     actions: [
                         {
                             action: "browser_mod.javascript",
@@ -10104,76 +10101,31 @@ let MenuCard = class MenuCard extends h {
                 {
                     type: "custom:smartqasa-dialog-tile",
                     dialog: "speed_test",
-                    menu_tab: 3,
                 },
                 {
-                    type: "custom:restriction-card",
-                    condition: {
-                        entity: "input_boolean.admin_mode",
-                        value: "off",
-                    },
-                    restrictions: {
-                        block: {
-                            condition: {
-                                entity: "input_boolean.admin_mode",
-                                value: "off",
-                            },
+                    type: "custom:smartqasa-action-tile",
+                    icon: "mdi:restart",
+                    name: "Reboot System",
+                    actions: [
+                        {
+                            action: "hassio.host_reboot",
                         },
-                    },
-                    card: {
-                        type: "custom:smartqasa-action-tile",
-                        icon: "mdi:restart",
-                        name: "Reboot System",
-                        menu_tab: 3,
-                        action: "hassio.host_reboot",
-                    },
+                    ],
                 },
                 {
-                    type: "custom:restriction-card",
-                    condition: {
-                        entity: "input_boolean.admin_mode",
-                        value: "off",
-                    },
-                    restrictions: {
-                        block: {
-                            condition: {
-                                entity: "input_boolean.admin_mode",
-                                value: "off",
-                            },
+                    type: "custom:smartqasa-action-tile",
+                    icon: "mdi:power",
+                    name: "Shutdown System",
+                    actions: [
+                        {
+                            action: "hassio.host_shutdown",
                         },
-                    },
-                    card: {
-                        type: "custom:smartqasa-action-tile",
-                        icon: "mdi:power",
-                        name: "Shutdown System",
-                        menu_tab: 3,
-                        action: "hassio.host_shutdown",
-                    },
+                    ],
                 },
                 {
-                    type: "custom:restriction-card",
-                    condition: {
-                        entity: "input_boolean.admin_mode",
-                        value: "off",
-                    },
-                    restrictions: {
-                        block: {
-                            condition: {
-                                entity: "input_boolean.admin_mode",
-                                value: "off",
-                            },
-                        },
-                    },
-                    card: {
-                        type: "custom:smartqasa-app-tile",
-                        app: "play_store",
-                        icon: "mdi:store",
-                    },
-                },
-                {
-                    type: "custom:smartqasa-dialog-tile",
-                    dialog: "admin_mode",
-                    menu_tab: 3,
+                    type: "custom:smartqasa-app-tile",
+                    app: "play_store",
+                    icon: "mdi:store",
                 },
             ],
         };
@@ -13335,10 +13287,19 @@ window.customCards.push({
     description: "A SmartQasa tile for controlling a fan entity.",
 });
 let FanTile = class FanTile extends h {
+    constructor() {
+        super(...arguments);
+        this._icon = "hass:fan-alert";
+        this._iconStyles = {};
+        this._name = "Unknown Fan";
+        this._stateFmtd = "Unknown State";
+    }
     getCardSize() {
         return 1;
     }
-    static { this.styles = [r$3(css_248z$1), r$3(css_248z)]; }
+    static get styles() {
+        return [r$3(css_248z$1), r$3(css_248z)];
+    }
     setConfig(config) {
         this._config = { ...config };
         this._entity = this._config.entity.startsWith("fan.") ? this._config.entity : undefined;
@@ -13347,33 +13308,29 @@ let FanTile = class FanTile extends h {
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
             changedProps.has("_config"));
     }
+    willUpdate() {
+        this._updateState();
+    }
     render() {
         if (!this._config || !this._entity)
             return D;
-        const { icon, iconAnimation, iconColor, name, stateFmtd } = this._updateState();
-        const iconStyles = {
-            color: `rgb(${iconColor})`,
-            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
-            animation: iconAnimation,
-        };
         return ke `
             <div class="container" @click=${this._toggleEntity} @contextmenu=${this._showEntityList}>
-                <div class="icon" @click=${this._showMoreInfo} style="${se(iconStyles)}">
-                    <ha-icon .icon=${icon}></ha-icon>
+                <div class="icon" @click=${this._showMoreInfo} style=${se(this._iconStyles)}>
+                    <ha-icon icon=${this._icon}></ha-icon>
                 </div>
-                <div class="name">${name}</div>
-                <div class="state">${stateFmtd}</div>
+                <div class="name">${this._name}</div>
+                <div class="state">${this._stateFmtd}</div>
             </div>
         `;
     }
     _updateState() {
-        let icon, iconAnimation, iconColor, name, stateFmtd;
+        let iconAnimation, iconColor;
         this._stateObj = this.hass && this._entity ? this.hass.states[this._entity] : undefined;
         if (this._stateObj) {
             const state = this._stateObj.state || "unknown";
-            icon = this._config.icon || "hass:fan";
-            iconAnimation = "none";
-            if (state == "on" && icon === "hass:fan") {
+            this._icon = this._config.icon || this._stateObj.attributes.icon || "hass:lightbulb";
+            if (state == "on" && this._icon === "hass:fan") {
                 if (this._stateObj.attributes.percentage) {
                     const speed = 0.5 + (1 - this._stateObj.attributes.percentage / 100);
                     const direction = this._stateObj.attributes.direction == "reverse" ? "reverse" : "normal";
@@ -13384,19 +13341,23 @@ let FanTile = class FanTile extends h {
                 }
             }
             iconColor = state === "on" ? "var(--sq-fan-on-rgb)" : "var(--sq-inactive-rgb)";
-            name = this._config.name || this._stateObj.attributes.friendly_name || "Fan";
-            stateFmtd = `${this.hass.formatEntityState(this._stateObj)}${state === "on" && this._stateObj.attributes.percentage
+            this._name = this._config.name || this._stateObj.attributes.friendly_name || "Fan";
+            this._stateFmtd = `${this.hass.formatEntityState(this._stateObj)}${state === "on" && this._stateObj.attributes.percentage
                 ? " - " + this.hass.formatEntityAttributeValue(this._stateObj, "percentage")
                 : ""}`;
         }
         else {
-            icon = this._config.icon || "hass:lightbulb-alert";
+            this._icon = this._config.icon || "hass:fan-alert";
             iconAnimation = "none";
-            iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            name = this._config?.name || "Unknown";
-            stateFmtd = "Unknown";
+            iconColor = "var(--sq-unavailable-rgb)";
+            this._name = this._config?.name || "Unknown";
+            this._stateFmtd = "Unknown";
         }
-        return { icon, iconAnimation, iconColor, name, stateFmtd };
+        this._iconStyles = {
+            color: `rgb(${iconColor})`,
+            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
+            animation: iconAnimation || "none",
+        };
     }
     _toggleEntity(e) {
         e.stopPropagation();
@@ -13646,8 +13607,8 @@ let LightTile = class LightTile extends h {
         super(...arguments);
         this._icon = "hass:lightbulb-alert";
         this._iconStyles = {};
-        this._name = "Unknown";
-        this._stateFmtd = "Unknown";
+        this._name = "Unknown Light";
+        this._stateFmtd = "Unknown State";
     }
     getCardSize() {
         return 1;
