@@ -195,6 +195,7 @@ export class MenuCard extends LitElement implements LovelaceCard {
                 {
                     type: "custom:smartqasa-routine-tile",
                     entity: "script.system_tablet_reload",
+                    name: "Refresh Displays",
                 },
                 {
                     type: "custom:smartqasa-action-tile",

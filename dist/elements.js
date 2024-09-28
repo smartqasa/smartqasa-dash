@@ -10084,6 +10084,7 @@ let MenuCard = class MenuCard extends h {
                 {
                     type: "custom:smartqasa-routine-tile",
                     entity: "script.system_tablet_reload",
+                    name: "Refresh Displays",
                 },
                 {
                     type: "custom:smartqasa-action-tile",
@@ -13329,7 +13330,7 @@ let FanTile = class FanTile extends h {
         this._stateObj = this.hass && this._entity ? this.hass.states[this._entity] : undefined;
         if (this._stateObj) {
             const state = this._stateObj.state || "unknown";
-            this._icon = this._config.icon || this._stateObj.attributes.icon || "hass:lightbulb";
+            this._icon = this._config.icon || this._stateObj.attributes.icon || "hass:fan";
             if (state == "on" && this._icon === "hass:fan") {
                 if (this._stateObj.attributes.percentage) {
                     const speed = 0.5 + (1 - this._stateObj.attributes.percentage / 100);
@@ -13339,6 +13340,9 @@ let FanTile = class FanTile extends h {
                 else {
                     iconAnimation = `spin 0.5s linear infinite normal`;
                 }
+            }
+            else {
+                iconAnimation = "none";
             }
             iconColor = state === "on" ? "var(--sq-fan-on-rgb)" : "var(--sq-inactive-rgb)";
             this._name = this._config.name || this._stateObj.attributes.friendly_name || "Fan";
@@ -13356,7 +13360,7 @@ let FanTile = class FanTile extends h {
         this._iconStyles = {
             color: `rgb(${iconColor})`,
             backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
-            animation: iconAnimation || "none",
+            animation: iconAnimation,
         };
     }
     _toggleEntity(e) {
