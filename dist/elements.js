@@ -9299,7 +9299,7 @@ function styleInject(css, ref) {
   }
 }
 
-var css_248z$7 = ":host {\n    width: 100%;\n    background-attachment: fixed;\n    background-size: cover;\n    background-image: var(--sq-panel-image);\n    background-position: center;\n    background-repeat: no-repeat;\n}\n.container {\n    display: grid;\n    width: 100%;\n    height: 100vh;\n    grid-template-columns: 100%;\n    gap: 2rem;\n    padding: 1rem 1rem 0.5rem 1rem;\n    box-sizing: border-box;\n}\n.container[admin] {\n    height: calc(100vh - 56px);\n}\n.container[control] {\n    grid-template-rows: auto auto 1fr auto;\n}\n\n.container[entertain] {\n    grid-template-rows: auto 1fr auto;\n}\n\n.header-container {\n    display: flex;\n    justify-content: space-between;\n}\n.header-time-date {\n    display: flex;\n    flex-direction: column;\n    cursor: pointer;\n}\n.time,\n.date {\n    text-align: left;\n    white-space: nowrap;\n}\n.time {\n    line-height: 3rem;\n    font-size: var(--sq-title-font-size);\n    font-weight: var(--sq-title-font-weight);\n    color: rgb(var(--sq-title-font-rgb));\n}\n.date {\n    margin-top: 0.4rem;\n    font-size: var(--sq-primary-font-size);\n    font-weight: var(--sq-primary-font-weight);\n    color: rgb(var(--sq-secondary-font-rgb));\n}\n.header-chips {\n    display: flex;\n    margin-right: calc(var(--sq-chip-spacing) * -1);\n    justify-content: flex-end;\n}\n.chip {\n    display: flex;\n}\n.area-container {\n    display: grid;\n    grid-template-columns: 1fr 1fr;\n    grid-template-rows:\n        min-content\n        1fr;\n    grid-template-areas:\n        \"name image\"\n        \"chips image\";\n}\n.area-name {\n    grid-area: name;\n    line-height: normal;\n    text-align: left;\n    font-size: var(--sq-title-font-size);\n    font-weight: var(--sq-title-font-weight);\n    color: rgb(var(--sq-title-font-rgb));\n}\n.area-chips {\n    grid-area: chips;\n    display: flex;\n    flex-direction: row;\n    flex-wrap: wrap;\n    align-items: center;\n    justify-content: flex-start;\n    margin-left: calc(var(--sq-chip-spacing) * -1);\n}\n.area-picture {\n    grid-area: image;\n    width: 100%;\n    height: 20vh;\n    object-fit: cover;\n    border-radius: 0.2rem;\n    border: none;\n    box-shadow: none;\n    background-color: transparent;\n}\n.swiper {\n    width: 100%;\n}\n.swiper-slide {\n    align-content: center;\n    height: 100%;\n    overflow-y: auto;\n}\n.control-tiles {\n    display: grid;\n    width: min-content;\n    margin: auto;\n    grid-auto-rows: var(--sq-tile-height);\n    gap: var(--sq-tile-spacing);\n    overflow-y: auto;\n}\n.blank-tile {\n    visibility: hidden;\n    width: 100%;\n    height: 100%;\n}\n.footer-container {\n    display: flex;\n    gap: 4rem;\n    justify-content: center;\n    align-items: center;\n}\n.footer-icon {\n    height: var(--sq-icon-size);\n    width: var(--sq-icon-size);\n}\n.footer-button {\n    display: flex;\n    gap: 0.5rem;\n    padding: 1rem;\n    align-items: center;\n    justify-content: center;\n    font-size: var(--sq-primary-font-size);\n    font-weight: var(--sq-primary-font-weight);\n    color: rgb(var(--sq-secondary-font-rgb));\n    cursor: pointer;\n}\n\n/* Tablet Portrait */\n@media (orientation: portrait) and (min-width: 601px), (orientation: portrait) and (width: 534px) {\n    .area-picture {\n        height: 10vh;\n    }\n}\n\n/* Phone Portrait */\n@media (orientation: portrait) and (max-width: 534px),\n    (orientation: portrait) and (min-width: 535px) and (max-width: 600px) {\n    .container {\n        gap: 1rem;\n        padding: 0.6rem 0.6rem 0.3rem 0.6rem;\n    }\n    .container[control] {\n        grid-template-rows:\n            auto\n            minmax(0, 1fr)\n            auto;\n    }\n    .area-container {\n        grid-template-columns: 1fr;\n        grid-template-rows:\n            auto\n            auto;\n        gap: 1rem;\n        position: relative;\n    }\n    .area-picture {\n        height: 15vh;\n    }\n    .area-name.overlay {\n        position: absolute;\n        top: 0;\n        left: 0;\n        background-color: rgba(0, 0, 0, 0.5);\n        color: white;\n        padding: 0.5rem;\n        font-size: 2.5rem;\n        font-weight: var(--sq-title-font-weight, 400);\n        border-radius: 0.2rem 0 0 0;\n    }\n    .control-container {\n        display: flex;\n        width: 100%;\n        overflow-y: auto;\n    }\n    .control-tiles {\n        width: 100%;\n        margin: 0;\n        gap: var(--sq-tile-spacing, 0.8rem);\n    }\n    .footer-button span {\n        display: none;\n    }\n}\n/* Phone Landscape */\n@media (orientation: landscape) and (max-height: 534px),\n    (orientation: landscape) and (min-height: 535px) and (max-height: 600px) {\n    .container {\n        gap: 1rem;\n        padding: 0.6rem 0.6rem 0.3rem 0.6rem;\n    }\n    .container[control] {\n        grid-template-columns: 1fr 1fr;\n        grid-template-rows: 100%;\n    }\n    .area-container {\n        grid-template-columns: 1fr;\n        grid-template-rows: auto 1fr auto;\n\n        gap: 1rem;\n        position: relative;\n    }\n    .area-picture {\n        height: 35vh;\n    }\n    .area-name.overlay {\n        position: absolute;\n        top: 0;\n        left: 0;\n        background-color: rgba(0, 0, 0, 0.5);\n        color: white;\n        padding: 0.5rem;\n        font-size: 2.5rem;\n        font-weight: var(--sq-title-font-weight);\n        border-radius: 0.2rem 0 0 0;\n    }\n    .area-chips {\n        align-items: flex-start;\n    }\n    .footer-container {\n        display: flex;\n        gap: 3rem;\n        justify-content: center;\n        align-items: center;\n    }\n    .footer-button span {\n        display: none;\n    }\n    .control-container {\n        display: flex;\n        width: 100%;\n        overflow-y: auto;\n    }\n    .control-tiles {\n        width: 100%;\n        margin: 0;\n        gap: var(--sq-tile-spacing);\n    }\n}\n";
+var css_248z$7 = ":host {\n    width: 100%;\n    background-attachment: fixed;\n    background-size: cover;\n    background-image: var(--sq-panel-image);\n    background-position: center;\n    background-repeat: no-repeat;\n}\n.container {\n    display: grid;\n    width: 100%;\n    height: 100vh;\n    grid-template-columns: 100%;\n    grid-template-rows: auto auto 1fr auto;\n    grid-template-areas:\n        \"header\"\n        \"area\"\n        \"swiper\"\n        \"footer\";\n    gap: 2rem;\n    padding: 1rem 1rem 0.5rem 1rem;\n    box-sizing: border-box;\n}\n.container[admin] {\n    height: calc(100vh - 56px);\n}\n\n.header-container {\n    grid-area: header;\n    display: flex;\n    justify-content: space-between;\n}\n.header-time-date {\n    display: flex;\n    flex-direction: column;\n    cursor: pointer;\n}\n.time,\n.date {\n    text-align: left;\n    white-space: nowrap;\n}\n.time {\n    line-height: 3rem;\n    font-size: var(--sq-title-font-size);\n    font-weight: var(--sq-title-font-weight);\n    color: rgb(var(--sq-title-font-rgb));\n}\n.date {\n    margin-top: 0.4rem;\n    font-size: var(--sq-primary-font-size);\n    font-weight: var(--sq-primary-font-weight);\n    color: rgb(var(--sq-secondary-font-rgb));\n}\n.header-chips {\n    display: flex;\n    margin-right: calc(var(--sq-chip-spacing) * -1);\n    justify-content: flex-end;\n}\n.chip {\n    display: flex;\n}\n.area-container {\n    grid-area: area;\n    display: grid;\n    grid-template-columns: 1fr 1fr;\n    grid-template-rows:\n        min-content\n        1fr;\n    grid-template-areas:\n        \"name image\"\n        \"chips image\";\n}\n.area-name {\n    grid-area: name;\n    line-height: normal;\n    text-align: left;\n    font-size: var(--sq-title-font-size);\n    font-weight: var(--sq-title-font-weight);\n    color: rgb(var(--sq-title-font-rgb));\n}\n.area-chips {\n    grid-area: chips;\n    display: flex;\n    flex-direction: row;\n    flex-wrap: wrap;\n    align-items: center;\n    justify-content: flex-start;\n    margin-left: calc(var(--sq-chip-spacing) * -1);\n}\n.area-picture {\n    grid-area: image;\n    width: 100%;\n    height: 20vh;\n    object-fit: cover;\n    border-radius: 0.2rem;\n    border: none;\n    box-shadow: none;\n    background-color: transparent;\n}\n\n.swiper {\n    grid-area: swiper;\n    width: 100%;\n}\n.swiper-slide {\n    align-content: center;\n    height: 100%;\n    overflow-y: auto;\n}\n.control-tiles {\n    display: grid;\n    width: min-content;\n    margin: auto;\n    grid-auto-rows: var(--sq-tile-height);\n    gap: var(--sq-tile-spacing);\n    overflow-y: auto;\n}\n.blank-tile {\n    visibility: hidden;\n    width: 100%;\n    height: 100%;\n}\n.footer-container {\n    display: flex;\n    gap: 4rem;\n    justify-content: center;\n    align-items: center;\n}\n.footer-icon {\n    height: var(--sq-icon-size);\n    width: var(--sq-icon-size);\n}\n.footer-button {\n    display: flex;\n    gap: 0.5rem;\n    padding: 1rem;\n    align-items: center;\n    justify-content: center;\n    font-size: var(--sq-primary-font-size);\n    font-weight: var(--sq-primary-font-weight);\n    color: rgb(var(--sq-secondary-font-rgb));\n    cursor: pointer;\n}\n\n/* Tablet Portrait */\n@media (orientation: portrait) and (min-width: 601px), (orientation: portrait) and (width: 534px) {\n    .area-picture {\n        height: 10vh;\n    }\n}\n\n/* Phone Portrait */\n@media (orientation: portrait) and (max-width: 534px),\n    (orientation: portrait) and (min-width: 535px) and (max-width: 600px) {\n    .container {\n        grid-template-rows:\n            auto\n            minmax(0, 1fr)\n            auto;\n        grid-template-areas:\n            \"area\"\n            \"body\"\n            \"footer\";\n        gap: 1rem;\n        padding: 0.6rem 0.6rem 0.3rem 0.6rem;\n    }\n    .container[control] {\n        grid-template-rows:\n            auto\n            minmax(0, 1fr)\n            auto;\n    }\n    .area-container {\n        grid-template-columns: 1fr;\n        grid-template-rows:\n            auto\n            auto;\n        grid-template-areas:\n            \"image\"\n            \"chips\";\n        gap: 1rem;\n        position: relative;\n    }\n    .area-picture {\n        height: 15vh;\n    }\n    .area-name.overlay {\n        position: absolute;\n        top: 0;\n        left: 0;\n        background-color: rgba(0, 0, 0, 0.5);\n        color: white;\n        padding: 0.5rem;\n        font-size: 2.5rem;\n        font-weight: var(--sq-title-font-weight, 400);\n        border-radius: 0.2rem 0 0 0;\n    }\n    .control-container {\n        grid-area: body;\n        display: flex;\n        width: 100%;\n        overflow-y: auto;\n    }\n    .control-tiles {\n        width: 100%;\n        margin: 0;\n        gap: var(--sq-tile-spacing, 0.8rem);\n    }\n    .footer-button span {\n        display: none;\n    }\n}\n/* Phone Landscape */\n@media (orientation: landscape) and (max-height: 534px),\n    (orientation: landscape) and (min-height: 535px) and (max-height: 600px) {\n    .container {\n        grid-template-columns: 1fr 1fr;\n        grid-template-rows: 100%;\n        grid-template-areas: \"area body\";\n        gap: 1rem;\n        padding: 0.6rem 0.6rem 0.3rem 0.6rem;\n    }\n    .area-container {\n        grid-template-columns: 1fr;\n        grid-template-rows: auto 1fr auto;\n        grid-template-areas:\n            \"image\"\n            \"chips\"\n            \"footer-p-l\";\n        gap: 1rem;\n        position: relative;\n    }\n    .area-picture {\n        height: 35vh;\n    }\n    .area-name.overlay {\n        position: absolute;\n        top: 0;\n        left: 0;\n        background-color: rgba(0, 0, 0, 0.5);\n        color: white;\n        padding: 0.5rem;\n        font-size: 2.5rem;\n        font-weight: var(--sq-title-font-weight);\n        border-radius: 0.2rem 0 0 0;\n    }\n    .area-chips {\n        align-items: flex-start;\n    }\n    .footer-container {\n        grid-area: footer-p-l;\n        display: flex;\n        gap: 3rem;\n        justify-content: center;\n        align-items: center;\n    }\n    .footer-button span {\n        display: none;\n    }\n    .control-container {\n        grid-area: body;\n        display: flex;\n        width: 100%;\n        overflow-y: auto;\n    }\n    .control-tiles {\n        width: 100%;\n        margin: 0;\n        gap: var(--sq-tile-spacing);\n    }\n}\n";
 styleInject(css_248z$7);
 
 var css_248z$6 = ".entertain-container {\n    display: grid;\n    width: 100%;\n    height: 100%;\n    grid-template-columns: 25% 1fr;\n    gap: 2rem;\n}\n\n.entertain-sidebar {\n    display: flex;\n    flex-direction: column;\n    gap: var(--sq-card-spacing);\n}\n\n.entertain-button {\n    width: 9rem;\n    height: 9rem;\n    margin-left: 1rem;\n    display: flex;\n    flex-direction: column;\n    justify-content: center;\n    align-items: center;\n    background-color: var(--sq-card-background-color);\n    border: var(--sq-card-border);\n    border-radius: var(--sq-card-border-radius);\n    text-align: center;\n    -webkit-tap-highlight-color: transparent;\n    cursor: pointer;\n}\n\n.entertain-button ha-icon {\n    display: flex;\n    justify-content: center;\n    align-self: center;\n    width: var(--sq-icon-size);\n    height: var(--sq-icon-size);\n    padding: var(--sq-tile-padding);\n    border-radius: 50%;\n    color: rgb(var(--sq-inactive-rgb));\n    background: rgba(var(--sq-inactive-rgb), var(--sq-icon-opacity));\n}\n\n.entertain-button span {\n    margin-top: 0.7rem;\n    font-weight: var(--sq-primary-font-weight);\n    font-size: var(--sq-primary-font-size);\n    color: rgb(var(--sq-primary-text-rgb));\n}\n\n.entertain-button:focus,\n.entertain-button:active {\n    background-color: var(--sq-ripple-color);\n    border-radius: var(--sq-card-border-radius);\n    outline: none;\n}\n\n.entertain-cards {\n    display: flex;\n    height: 100%;\n    overflow-y: auto;\n    align-items: center;\n    gap: var(--sq-card-spacing);\n    --ha-card-border-radius: var(--sq-card-border-radius);\n    --ha-card-box-shadow: var(--sq-card-box-shadow);\n    --ha-card-background: var(--sq-card-background-color);\n    --ha-card-border-color: rgb(var(--sq-card-border-rgb));\n    --ha-card-border-style: var(--sq-card-border-style);\n    --ha-card-border-width: var(--sq-card-border-width);\n    --ha-card-header-font-size: var(--sq-primary-font-size);\n}\n";
@@ -9403,69 +9403,17 @@ let PanelCard = class PanelCard extends h {
     render() {
         if (!this.hass || !this._config || !this._area)
             return D;
-        const viewMode = window.smartqasa.viewMode;
         const name = this._config?.name ?? this._areaObj?.name ?? "Area";
-        console.log("Entertain Cards: ", this._entertainCards);
-        let content;
-        switch (viewMode) {
-            case "control":
-                const picture = this._config.picture ?? `${this._area}.png`;
-                content = ke `
-                    ${renderArea(name, picture, this._areaChips, this._isPhone, this._isLandscape)}
-                    ${renderControls(this._controlTiles, this._controlColumns, this._isPhone, this._swiper)}
-                `;
-                break;
-            case "entertain":
-                content = ke `
-                    <div class="entertain-container">
-                        <div class="entertain-sidebar">
-                            <div class="area-name">${name}</div>
-                            <div
-                                class="entertain-button"
-                                @click=${() => {
-                    this._entertainTab = 0;
-                }}
-                            >
-                                <ha-icon icon="hass:music"></ha-icon>
-                                <span>Audio</span>
-                            </div>
-                            <div
-                                class="entertain-button"
-                                @click=${() => {
-                    this._entertainTab = 1;
-                }}
-                            >
-                                <ha-icon icon="hass:television-classic"></ha-icon>
-                                <span>Video</span>
-                            </div>
-                            <div
-                                class="entertain-button"
-                                @click=${() => {
-                    this._entertainTab = 2;
-                }}
-                            >
-                                <ha-icon icon="hass:exit-to-app"></ha-icon>
-                                <span>Apps</span>
-                            </div>
-                        </div>
-                        <div class="entertain-cards">${this._entertainCards[this._entertainTab]}</div>
-                    </div>
-                `;
-                break;
-            default:
-                content = D;
-                break;
-        }
+        const picture = this._config.picture ?? `${this._area}.png`;
         // prettier-ignore
         return ke `
             <div
                 class="container"
                 ?admin=${this._isAdminMode}
-                ?control=${viewMode === "control"}
-                ?entertain=${viewMode === "entertain"}
             >
                 ${this._isTablet ? renderHeader(this._headerChips) : D}
-                ${content}
+                ${renderArea(name, picture, this._areaChips, this._isPhone, this._isLandscape)}
+                ${renderControls(this._controlTiles, this._controlColumns, this._isPhone, this._swiper)}
                 ${this._isPhone && this._isLandscape ? D : renderFooter()}
             </div>
         `;
@@ -10662,8 +10610,11 @@ let SonosPanelCard = class SonosPanelCard extends h {
         return i$2 `
             .container {
                 display: grid;
-                grid-template-columns: 0.8fr 1fr 0.8fr;
+                grid-template-columns: 1fr 1fr 1fr;
                 gap: var(--sq-card-spacing, 0.8rem);
+            }
+            .card {
+                display: block;
             }
         `;
     }
@@ -10686,7 +10637,7 @@ let SonosPanelCard = class SonosPanelCard extends h {
             if (!card)
                 return D;
             const element = card;
-            return ke `<div>${element}</div>`;
+            return ke `<div class="card">${element}</div>`;
         };
         return ke `
             <div class="container">
@@ -10698,23 +10649,20 @@ let SonosPanelCard = class SonosPanelCard extends h {
         this._speakersCard = createElement$1({
             type: "custom:sonos-card",
             entityId: this._entity,
-            heightPercentage: "100",
-            widthPercentage: "100",
+            heightPercentage: "75",
             showVolumeUpAndDownButtons: true,
-            sections: '["volumes"]',
+            sections: '["volumes", "groups", "grouping"]',
         }, this.hass);
         this._playerCard = createElement$1({
             type: "custom:sonos-card",
             entityId: this._entity,
-            heightPercentage: "100",
-            widthPercentage: "100",
+            heightPercentage: "75",
             showVolumeUpAndDownButtons: true,
-            sections: '["player","groups", "grouping"]',
+            sections: '["player"]',
         }, this.hass);
         this._mediaCard = createElement$1({
             type: "custom:sonos-card",
-            heightPercentage: "100",
-            widthPercentage: "100",
+            heightPercentage: "75",
             mediaBrowserItemsPerRow: 3,
             mediaBrowserShowTitleForThumbnailIcons: true,
             showVolumeUpAndDownButtons: true,
