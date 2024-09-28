@@ -12208,7 +12208,7 @@ let SonosChip = class SonosChip extends h {
         if (!this._config || !this._entity)
             return D;
         return ke `
-            <div class="container" @click=${this._showDialog}>
+            <div class="container" @click=${this._showDialog} @contextmenu=${this._launchClock}>
                 <div class="icon" style="${se(this._iconStyles)}">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
@@ -12238,6 +12238,15 @@ let SonosChip = class SonosChip extends h {
         if (this._entity)
             dialogConfig.content.entityId = this._entity;
         dialogPopup(dialogObj.data);
+    }
+    _launchClock(e) {
+        e.stopPropagation();
+        if (typeof window.fully !== "undefined" && window.fully.startApplication) {
+            window.fully.startApplication("com.sonos.acr2");
+        }
+        else {
+            console.warn("fully.startApplication is not available.");
+        }
     }
 };
 __decorate([

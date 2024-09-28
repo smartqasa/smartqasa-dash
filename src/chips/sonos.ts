@@ -56,7 +56,7 @@ export class SonosChip extends LitElement implements LovelaceCard {
         if (!this._config || !this._entity) return nothing;
 
         return html`
-            <div class="container" @click=${this._showDialog}>
+            <div class="container" @click=${this._showDialog} @contextmenu=${this._launchClock}>
                 <div class="icon" style="${styleMap(this._iconStyles)}">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
@@ -89,5 +89,15 @@ export class SonosChip extends LitElement implements LovelaceCard {
         if (this._entity) dialogConfig.content.entityId = this._entity;
 
         dialogPopup(dialogObj.data);
+    }
+
+    private _launchClock(e: Event): void {
+        e.stopPropagation();
+
+        if (typeof window.fully !== "undefined" && window.fully.startApplication) {
+            window.fully.startApplication("com.sonos.acr2");
+        } else {
+            console.warn("fully.startApplication is not available.");
+        }
     }
 }
