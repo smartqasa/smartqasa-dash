@@ -33,11 +33,8 @@ export class SonosPanelCard extends LitElement implements LovelaceCard {
         return css`
             .container {
                 display: grid;
-                grid-template-columns: 1fr 1fr 1fr;
+                grid-template-columns: 0.8fr 1fr 0.8fr;
                 gap: var(--sq-card-spacing, 0.8rem);
-            }
-            .card {
-                display: block;
             }
         `;
     }
@@ -62,7 +59,7 @@ export class SonosPanelCard extends LitElement implements LovelaceCard {
         const renderCard = (card: LovelaceCard | undefined): TemplateResult | typeof nothing => {
             if (!card) return nothing;
             const element = card as unknown as HTMLElement;
-            return html`<div class="card">${element}</div>`;
+            return html`<div>${element}</div>`;
         };
 
         return html`
@@ -77,9 +74,10 @@ export class SonosPanelCard extends LitElement implements LovelaceCard {
             {
                 type: "custom:sonos-card",
                 entityId: this._entity,
-                heightPercentage: "75",
+                heightPercentage: "100",
+                widthPercentage: "100",
                 showVolumeUpAndDownButtons: true,
-                sections: '["volumes", "groups", "grouping"]',
+                sections: '["volumes"]',
             },
             this.hass
         );
@@ -88,9 +86,10 @@ export class SonosPanelCard extends LitElement implements LovelaceCard {
             {
                 type: "custom:sonos-card",
                 entityId: this._entity,
-                heightPercentage: "75",
+                heightPercentage: "100",
+                widthPercentage: "100",
                 showVolumeUpAndDownButtons: true,
-                sections: '["player"]',
+                sections: '["player","groups", "grouping"]',
             },
             this.hass
         );
@@ -98,7 +97,8 @@ export class SonosPanelCard extends LitElement implements LovelaceCard {
         this._mediaCard = createElement(
             {
                 type: "custom:sonos-card",
-                heightPercentage: "75",
+                heightPercentage: "100",
+                widthPercentage: "100",
                 mediaBrowserItemsPerRow: 3,
                 mediaBrowserShowTitleForThumbnailIcons: true,
                 showVolumeUpAndDownButtons: true,

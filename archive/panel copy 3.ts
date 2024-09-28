@@ -150,19 +150,69 @@ export class PanelCard extends LitElement implements LovelaceCard {
     protected render(): TemplateResult | typeof nothing {
         if (!this.hass || !this._config || !this._area) return nothing;
 
+        const viewMode = window.smartqasa.viewMode;
         const name = this._config?.name ?? this._areaObj?.name ?? "Area";
-
-        const picture = this._config.picture ?? `${this._area}.png`;
+        let content;
+        switch (viewMode) {
+            case "control":
+                const picture = this._config.picture ?? `${this._area}.png`;
+                content = html`
+                    ${renderArea(name, picture, this._areaChips, this._isPhone, this._isLandscape)}
+                    ${renderControls(this._controlTiles, this._controlColumns, this._isPhone, this._swiper)}
+                `;
+                break;
+            case "entertain":
+                content = html`
+                    <div class="entertain-container">
+                        <div class="entertain-sidebar">
+                            <div class="area-name">${name}</div>
+                            <div
+                                class="entertain-button"
+                                @click=${() => {
+                                    this._entertainTab = 0;
+                                }}
+                            >
+                                <ha-icon icon="hass:music"></ha-icon>
+                                <span>Audio</span>
+                            </div>
+                            <div
+                                class="entertain-button"
+                                @click=${() => {
+                                    this._entertainTab = 1;
+                                }}
+                            >
+                                <ha-icon icon="hass:television-classic"></ha-icon>
+                                <span>Video</span>
+                            </div>
+                            <div
+                                class="entertain-button"
+                                @click=${() => {
+                                    this._entertainTab = 2;
+                                }}
+                            >
+                                <ha-icon icon="hass:exit-to-app"></ha-icon>
+                                <span>Apps</span>
+                            </div>
+                        </div>
+                        <div class="entertain-cards">${this._entertainCards[this._entertainTab]}</div>
+                    </div>
+                `;
+                break;
+            default:
+                content = nothing;
+                break;
+        }
 
         // prettier-ignore
         return html`
             <div
                 class="container"
                 ?admin=${this._isAdminMode}
+                ?control=${viewMode === "control"}
+                ?entertain=${viewMode === "entertain"}
             >
                 ${this._isTablet ? renderHeader(this._headerChips) : nothing}
-                ${renderArea(name, picture, this._areaChips, this._isPhone, this._isLandscape)}
-                ${renderControls(this._controlTiles, this._controlColumns, this._isPhone, this._swiper)}
+                ${content}
                 ${this._isPhone && this._isLandscape ? nothing : renderFooter()}
             </div>
         `;
