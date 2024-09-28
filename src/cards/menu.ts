@@ -176,8 +176,6 @@ export class MenuCard extends LitElement implements LovelaceCard {
                 throw new Error("Invalid tabs configuration");
             }
             this._tabs = tabsData;
-
-            this._bodyTiles = await Promise.all(this._tabs.map((tab) => this._loadMenuTiles(tab.tiles)));
         } catch (error) {
             console.error("Error loading menu tabs and tiles:", error);
         }
@@ -292,6 +290,8 @@ export class MenuCard extends LitElement implements LovelaceCard {
         };
 
         this._tabs.push(utilMenuTab);
+
+        this._bodyTiles = await Promise.all(this._tabs.map((tab) => this._loadMenuTiles(tab.tiles)));
     }
 
     private async _loadMenuTiles(tilesConfig: LovelaceCardConfig[]): Promise<LovelaceCard[]> {
