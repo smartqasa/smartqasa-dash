@@ -39,7 +39,7 @@ export class MenuCard extends LitElement implements LovelaceCard {
             }
             .container {
                 display: grid;
-                grid-templace-columns: 100%;
+                grid-template-columns: 100%;
                 grid-template-rows:
                     auto
                     1fr;
@@ -83,8 +83,6 @@ export class MenuCard extends LitElement implements LovelaceCard {
                 gap: var(--sq-tile-spacing);
                 grid-auto-rows: var(--sq-tile-height);
                 overflow-y: auto;
-            }
-            .tile {
             }
         `;
     }
@@ -150,7 +148,7 @@ export class MenuCard extends LitElement implements LovelaceCard {
                     })}
                 </div>
                 <div class="tiles" style=${styleMap(this._gridStyle)}>
-                    ${currentTiles.map((tile) => html`<div class="tile">${tile}</div>`)}
+                    ${currentTiles.map((tile) => html`<div>${tile}</div>`)}
                 </div>
             </div>
         `;

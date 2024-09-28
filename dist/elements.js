@@ -9934,7 +9934,7 @@ let MenuCard = class MenuCard extends h {
             }
             .container {
                 display: grid;
-                grid-templace-columns: 100%;
+                grid-template-columns: 100%;
                 grid-template-rows:
                     auto
                     1fr;
@@ -9978,8 +9978,6 @@ let MenuCard = class MenuCard extends h {
                 gap: var(--sq-tile-spacing);
                 grid-auto-rows: var(--sq-tile-height);
                 overflow-y: auto;
-            }
-            .tile {
             }
         `;
     }
@@ -10041,7 +10039,7 @@ let MenuCard = class MenuCard extends h {
         })}
                 </div>
                 <div class="tiles" style=${se(this._gridStyle)}>
-                    ${currentTiles.map((tile) => ke `<div class="tile">${tile}</div>`)}
+                    ${currentTiles.map((tile) => ke `<div>${tile}</div>`)}
                 </div>
             </div>
         `;
