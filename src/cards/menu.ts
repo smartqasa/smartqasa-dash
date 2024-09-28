@@ -183,6 +183,117 @@ export class MenuCard extends LitElement implements LovelaceCard {
         } catch (error) {
             console.error("Error loading menu tabs and tiles:", error);
         }
+
+        const utilMenuTab = {
+            tab: "Utilities",
+            icon: "mdi:toolbox",
+            tiles: [
+                {
+                    type: "custom:smartqasa-dialog-tile",
+                    dialog: "clean_screen",
+                    menu_tab: 3,
+                },
+                {
+                    type: "custom:smartqasa-dialog-tile",
+                    dialog: "display_themes",
+                    menu_tab: 3,
+                },
+                {
+                    type: "custom:smartqasa-routine-tile",
+                    entity: "script.system_tablet_reload",
+                },
+                {
+                    type: "custom:smartqasa-action-tile",
+                    icon: "mdi:wiper",
+                    name: "Clear Cache",
+                    menu_tab: 3,
+                    actions: [
+                        {
+                            action: "browser_mod.javascript",
+                            data: {
+                                code: "fully.clearCache()",
+                            },
+                        },
+                    ],
+                },
+                {
+                    type: "custom:smartqasa-dialog-tile",
+                    dialog: "speed_test",
+                    menu_tab: 3,
+                },
+                {
+                    type: "custom:restriction-card",
+                    condition: {
+                        entity: "input_boolean.admin_mode",
+                        value: "off",
+                    },
+                    restrictions: {
+                        block: {
+                            condition: {
+                                entity: "input_boolean.admin_mode",
+                                value: "off",
+                            },
+                        },
+                    },
+                    card: {
+                        type: "custom:smartqasa-action-tile",
+                        icon: "mdi:restart",
+                        name: "Reboot System",
+                        menu_tab: 3,
+                        action: "hassio.host_reboot",
+                    },
+                },
+                {
+                    type: "custom:restriction-card",
+                    condition: {
+                        entity: "input_boolean.admin_mode",
+                        value: "off",
+                    },
+                    restrictions: {
+                        block: {
+                            condition: {
+                                entity: "input_boolean.admin_mode",
+                                value: "off",
+                            },
+                        },
+                    },
+                    card: {
+                        type: "custom:smartqasa-action-tile",
+                        icon: "mdi:power",
+                        name: "Shutdown System",
+                        menu_tab: 3,
+                        action: "hassio.host_shutdown",
+                    },
+                },
+                {
+                    type: "custom:restriction-card",
+                    condition: {
+                        entity: "input_boolean.admin_mode",
+                        value: "off",
+                    },
+                    restrictions: {
+                        block: {
+                            condition: {
+                                entity: "input_boolean.admin_mode",
+                                value: "off",
+                            },
+                        },
+                    },
+                    card: {
+                        type: "custom:smartqasa-app-tile",
+                        app: "play_store",
+                        icon: "mdi:store",
+                    },
+                },
+                {
+                    type: "custom:smartqasa-dialog-tile",
+                    dialog: "admin_mode",
+                    menu_tab: 3,
+                },
+            ],
+        };
+
+        this._tabs.push(utilMenuTab);
     }
 
     private async _loadMenuTiles(tilesConfig: LovelaceCardConfig[]): Promise<LovelaceCard[]> {

@@ -3,7 +3,7 @@ import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 
 import { LovelaceCard, LovelaceCardConfig } from "../types";
-import { dialogTable } from "../tables/dialogs";
+import { dialogTable } from "../dialogs/dialog-table";
 import { dialogPopup } from "../dialogs/dialog-popup";
 
 import tileBaseStyle from "../css/tile-base.css";

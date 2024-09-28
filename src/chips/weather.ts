@@ -2,7 +2,7 @@ import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult, unsaf
 import { customElement, property, state } from "lit/decorators.js";
 
 import { HassEntity, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
-import { dialogTable } from "../tables/dialogs";
+import { dialogTable } from "../dialogs/dialog-table";
 
 import chipBaseStyle from "../css/chip-base.css";
 import chipTextStyle from "../css/chip-text.css";

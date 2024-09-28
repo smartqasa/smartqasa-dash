@@ -1,5 +1,5 @@
 import { DialogTable } from "../types";
-import { listDialogConfig } from "../dialogs/list-dialog-config";
+import { listDialogConfig } from "./list-dialog-config";
 
 export const dialogTable: DialogTable = {
     admin_mode: {

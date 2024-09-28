@@ -1,6 +1,6 @@
 import { html, TemplateResult } from "lit";
 import { navigateToArea } from "../utils/navigate-to-area";
-import { dialogTable } from "../tables/dialogs";
+import { dialogTable } from "../dialogs/dialog-table";
 import { dialogPopup } from "../dialogs/dialog-popup";
 
 export function renderFooter(): TemplateResult {
