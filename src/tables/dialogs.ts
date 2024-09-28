@@ -356,7 +356,6 @@ export const dialogTable: DialogTable = {
                 mediaBrowserTitle: "Favorites",
                 hideBrowseMediaButton: true,
                 mediaBrowserHideTitleForThumbnailIcons: true,
-                skipApplyButtonWhenGrouping: true,
                 mediaBrowserItemsPerRow: 6,
             },
         },
