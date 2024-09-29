@@ -12115,33 +12115,49 @@ let SonosChip = class SonosChip extends h {
         return [
             r$3(css_248z$4),
             r$3(`
+                @keyframes sound {
+                    0% {
+                        opacity: 0.35;
+                        height: 0.15rem;
+                    }
+                    100% {
+                        opacity: 1;
+                        height: var(--sq-icon-size);
+                    }
+                }
+
                 .bars {
                     display: flex;
                     justify-content: center;
                     align-items: center;
-                    height: var(--sq-icon-size, 1.8rem); /* Match icon size */
-                    width: var(--sq-icon-size, 1.8rem); /* Match icon size */
-                    padding: var(--sq-chip-padding, 1rem);
+                    width: 0.55rem;
+                    position: relative;
+                    margin-left: 1rem;
                 }
 
                 .bars > div {
-                    background: var(--accent-color);
+                    background: var(--secondary-text-color);
+                    bottom: 0.05rem;
                     height: 0.15rem;
+                    position: absolute;
                     width: 0.15rem;
-                    margin: 0 0.05rem;
-                    animation: blink 1s ease-in-out infinite;
+                    animation: sound 0ms -800ms linear infinite alternate;
+                    display: block;
                 }
 
-                .bars > div:nth-child(1) {
-                    animation-delay: -0.4s;
+                .bars > div:first-child {
+                    left: 0.05rem;
+                    animation-duration: 474ms;
                 }
 
                 .bars > div:nth-child(2) {
-                    animation-delay: -0.2s;
+                    left: 0.25rem;
+                    animation-duration: 433ms;
                 }
 
-                .bars > div:nth-child(3) {
-                    animation-delay: 0s;
+                .bars > div:last-child {
+                    left: 0.45rem;
+                    animation-duration: 407ms;
                 }
             `),
         ];
