@@ -3921,7 +3921,6 @@ function displayBSoD(errorMessage) {
             Promise.resolve().then(function () { return moreInfo; }),
             Promise.resolve().then(function () { return pinVerify; }),
             Promise.resolve().then(function () { return screensaver; }),
-            Promise.resolve().then(function () { return sonos$1; }),
             Promise.resolve().then(function () { return verticalStack; }),
             Promise.resolve().then(function () { return tvRemote; }),
             Promise.resolve().then(function () { return weather$1; }),
@@ -9052,7 +9051,7 @@ const dialogTable = {
                 mediaBrowserTitle: "Favorites",
                 hideBrowseMediaButton: true,
                 mediaBrowserHideTitleForThumbnailIcons: true,
-                mediaBrowserItemsPerRow: 6,
+                mediaBrowserItemsPerRow: 4,
             },
         },
     },
@@ -10653,95 +10652,6 @@ ScreenSaver = __decorate([
 var screensaver = /*#__PURE__*/Object.freeze({
   __proto__: null,
   get ScreenSaver () { return ScreenSaver; }
-});
-
-window.customCards.push({
-    type: "smartqasa-sonos-card",
-    name: "SmartQasa Sonos Card",
-    preview: true,
-    description: "A SmartQasa element that display a set of Sonos cards.",
-});
-let SonosPanelCard = class SonosPanelCard extends h {
-    getCardSize() {
-        return 10;
-    }
-    static get styles() {
-        return i$2 `
-            .container {
-                display: grid;
-                grid-template-columns: 1fr 1fr 1fr;
-                gap: var(--sq-card-spacing, 0.8rem);
-            }
-            .card {
-                display: block;
-            }
-        `;
-    }
-    setConfig(config) {
-        this._config = { ...config };
-        if (this._config.entity) {
-            this._entity = this._config.entity.startsWith("media_player.") ? this._config.entity : "undefined";
-        }
-    }
-    willUpdate(changedProps) {
-        if (changedProps.has("hass") && this.hass) {
-            [this._speakersCard, this._playerCard, this._mediaCard].forEach((card) => {
-                if (card)
-                    card.hass = this.hass;
-            });
-        }
-    }
-    render() {
-        const renderCard = (card) => {
-            if (!card)
-                return D;
-            const element = card;
-            return ke `<div class="card">${element}</div>`;
-        };
-        return ke `
-            <div class="container">
-                ${renderCard(this._speakersCard)} ${renderCard(this._playerCard)} ${renderCard(this._mediaCard)}
-            </div>
-        `;
-    }
-    firstUpdated() {
-        this._speakersCard = createElement$1({
-            type: "custom:sonos-card",
-            entityId: this._entity,
-            heightPercentage: "75",
-            showVolumeUpAndDownButtons: true,
-            sections: '["volumes", "groups", "grouping"]',
-        }, this.hass);
-        this._playerCard = createElement$1({
-            type: "custom:sonos-card",
-            entityId: this._entity,
-            heightPercentage: "75",
-            showVolumeUpAndDownButtons: true,
-            sections: '["player"]',
-        }, this.hass);
-        this._mediaCard = createElement$1({
-            type: "custom:sonos-card",
-            heightPercentage: "75",
-            mediaBrowserItemsPerRow: 3,
-            mediaBrowserShowTitleForThumbnailIcons: true,
-            showVolumeUpAndDownButtons: true,
-            sections: '["media browser"]',
-        }, this.hass);
-    }
-};
-__decorate([
-    n({ attribute: false })
-], SonosPanelCard.prototype, "hass", void 0);
-__decorate([
-    r()
-], SonosPanelCard.prototype, "_config", void 0);
-SonosPanelCard = __decorate([
-    t$1("smartqasa-sonos-card")
-], SonosPanelCard);
-
-var sonos$1 = /*#__PURE__*/Object.freeze({
-  __proto__: null,
-  get SonosPanelCard () { return SonosPanelCard; }
 });
 
 window.customCards.push({

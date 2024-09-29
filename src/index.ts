@@ -66,7 +66,6 @@ function displayBSoD(errorMessage: string) {
             import("./cards/more-info"),
             import("./cards/pin-verify"),
             import("./cards/screensaver"),
-            import("./cards/sonos"),
             import("./cards/vertical-stack"),
             import("./cards/tv-remote"),
             import("./cards/weather"),
