@@ -12128,10 +12128,10 @@ let SonosChip = class SonosChip extends h {
                 }
 
                 .bars > div {
-                    background: var(--secondary-text-color);
+                    background: rgb(var(--sq-primary-font-rgb));
                     height: 0.15rem; /* Initial height of the bars */
                     width: 0.15rem; /* Bar width */
-                    animation: sound 1s ease-in-out infinite;
+                    animation: sound 0ms -800ms linear infinite alternate;
                 }
 
                 .bars > div:first-child {
