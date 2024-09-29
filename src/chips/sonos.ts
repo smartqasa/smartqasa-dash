@@ -1,7 +1,5 @@
 import { CSSResult, html, LitElement, nothing, PropertyValues, TemplateResult, unsafeCSS } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
-import { styleMap } from "lit/directives/style-map.js";
-import { when } from "lit/directives/when.js";
 
 import { HassEntity, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 import { dialogTable } from "../dialogs/dialog-table";
@@ -54,7 +52,6 @@ export class SonosChip extends LitElement implements LovelaceCard {
                     align-items: center;
                     width: 0.55rem;
                     position: relative;
-                    margin-left: 1rem;
                 }
 
                 .bars > div {
@@ -115,15 +112,13 @@ export class SonosChip extends LitElement implements LovelaceCard {
                 </div>
             `;
         } else {
-            content = html`
-                <div class="icon">
-                    <ha-icon icon="hass:music"></ha-icon>
-                </div>
-            `;
+            content = html` <ha-icon icon="hass:music"></ha-icon> `;
         }
 
         return html`
-            <div class="container" @click=${this._showDialog} @contextmenu=${this._launchApp}>${content}</div>
+            <div class="container" @click=${this._showDialog} @contextmenu=${this._launchApp}>
+                <div class="icon">${content}</div>
+            </div>
         `;
     }
 

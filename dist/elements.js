@@ -12124,7 +12124,6 @@ let SonosChip = class SonosChip extends h {
                     align-items: center;
                     width: 0.55rem;
                     position: relative;
-                    margin-left: 1rem;
                 }
 
                 .bars > div {
@@ -12181,14 +12180,12 @@ let SonosChip = class SonosChip extends h {
             `;
         }
         else {
-            content = ke `
-                <div class="icon">
-                    <ha-icon icon="hass:music"></ha-icon>
-                </div>
-            `;
+            content = ke ` <ha-icon icon="hass:music"></ha-icon> `;
         }
         return ke `
-            <div class="container" @click=${this._showDialog} @contextmenu=${this._launchApp}>${content}</div>
+            <div class="container" @click=${this._showDialog} @contextmenu=${this._launchApp}>
+                <div class="icon">${content}</div>
+            </div>
         `;
     }
     _updateState() {
