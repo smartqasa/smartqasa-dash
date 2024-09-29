@@ -59,7 +59,7 @@ export class MotionChip extends LitElement implements LovelaceCard {
         return html`
             <div class="container" @click=${this._toggleEntity}>
                 <div class="icon" style="${styleMap(iconStyles)}">
-                    <ha-icon .icon=${icon}></ha-icon>
+                    <ha-icon icon=${icon}></ha-icon>
                 </div>
                 ${name ? html`<div class="text">${name}</div>` : null}
             </div>
