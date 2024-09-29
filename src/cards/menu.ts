@@ -141,7 +141,7 @@ export class MenuCard extends LitElement implements LovelaceCard {
                                 @click="${() => this._setMenuTab(index)}"
                                 ?icon-only=${this._deviceType === "phone"}
                             >
-                                <ha-icon .icon="${tab.icon}"></ha-icon>
+                                <ha-icon icon="${tab.icon}"></ha-icon>
                                 <span>${tab.tab}</span>
                             </div>
                         `;

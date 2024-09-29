@@ -32,7 +32,7 @@ export class DialogChip extends LitElement implements LovelaceCard {
     private _dialog?: keyof typeof dialogTable;
     private _dialogObj?: DialogEntry;
     private _entity?: string;
-    private _icon?: string;
+    private _icon: string = "hass:message-outline";
     private _label?: string;
     private _stateObj?: HassEntity;
 
@@ -82,7 +82,7 @@ export class DialogChip extends LitElement implements LovelaceCard {
         return html`
             <div class="container" style="${styleMap(containerStyles)}" @click=${this._showDialog}>
                 <div class="icon" style="${styleMap(iconStyles)}">
-                    <ha-icon .icon=${this._icon}></ha-icon>
+                    <ha-icon icon=${this._icon}></ha-icon>
                 </div>
                 ${this._label ? html`<div class="text">${this._label}</div>` : nothing}
             </div>

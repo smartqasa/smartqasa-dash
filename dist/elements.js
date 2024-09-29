@@ -10035,7 +10035,7 @@ let MenuCard = class MenuCard extends h {
                                 @click="${() => this._setMenuTab(index)}"
                                 ?icon-only=${this._deviceType === "phone"}
                             >
-                                <ha-icon .icon="${tab.icon}"></ha-icon>
+                                <ha-icon icon="${tab.icon}"></ha-icon>
                                 <span>${tab.tab}</span>
                             </div>
                         `;
@@ -11619,6 +11619,10 @@ window.customCards.push({
     description: "A SmartQasa chip for dialog.",
 });
 let DialogChip = class DialogChip extends h {
+    constructor() {
+        super(...arguments);
+        this._icon = "hass:message-outline";
+    }
     getCardSize() {
         return 1;
     }
@@ -11658,7 +11662,7 @@ let DialogChip = class DialogChip extends h {
         return ke `
             <div class="container" style="${se(containerStyles)}" @click=${this._showDialog}>
                 <div class="icon" style="${se(iconStyles)}">
-                    <ha-icon .icon=${this._icon}></ha-icon>
+                    <ha-icon icon=${this._icon}></ha-icon>
                 </div>
                 ${this._label ? ke `<div class="text">${this._label}</div>` : D}
             </div>
@@ -11894,7 +11898,7 @@ let RoutineChip = class RoutineChip extends h {
         return ke `
             <div class="container" @click=${this._runRoutine}>
                 <div class="icon" style="${se(iconStyles)}">
-                    <ha-icon .icon=${icon}></ha-icon>
+                    <ha-icon icon=${icon}></ha-icon>
                 </div>
                 ${name ? ke `<div class="text">${name}</div>` : null}
             </div>

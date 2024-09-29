@@ -13,7 +13,7 @@ export function renderFooter(): TemplateResult {
                     action();
                 }}
             >
-                <ha-icon .icon=${icon}></ha-icon>
+                <ha-icon icon=${icon}></ha-icon>
                 <span>${name}</span>
             </div>
         `;
