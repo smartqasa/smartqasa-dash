@@ -1,16 +1,12 @@
 import { LovelaceCard } from "../types";
 import { html, TemplateResult } from "lit";
 import { formattedTime, formattedDate } from "../utils/format-date-time";
+import { launchApp } from "../utils/launch-app";
 
 export function renderHeader(headerChips: LovelaceCard[]): TemplateResult {
     function launchClock(e: Event): void {
         e.stopPropagation();
-
-        if (typeof window.fully !== "undefined" && window.fully.startApplication) {
-            window.fully.startApplication("com.google.android.deskclock");
-        } else {
-            console.warn("fully.startApplication is not available.");
-        }
+        launchApp("com.google.android.deskclock");
     }
 
     return html`

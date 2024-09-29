@@ -3,6 +3,7 @@ import { customElement, state } from "lit/decorators.js";
 
 import { LovelaceCard, LovelaceCardConfig } from "../types";
 import appTable from "../tables/apps";
+import { launchApp } from "../utils/launch-app";
 
 import tileBaseStyle from "../css/tile-base.css";
 interface Config extends LovelaceCardConfig {
@@ -71,11 +72,7 @@ export class AppTile extends LitElement implements LovelaceCard {
         if (this._appObj.launcher == "uri_scheme" && this._appObj.uri_scheme) {
             window.location.href = this._appObj.uri_scheme;
         } else if (this._appObj.launcher == "package" && this._appObj.package) {
-            if (window.fully?.startApplication) {
-                window.fully.startApplication(this._appObj.package);
-            } else {
-                console.warn("fully.startApplication is not available.");
-            }
+            launchApp(this._appObj.package);
         } else {
             console.error("Neither URI scheme nor package has been specified.");
         }

@@ -6,6 +6,7 @@ import { when } from "lit/directives/when.js";
 import { HassEntity, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 import { dialogTable } from "../dialogs/dialog-table";
 import { dialogPopup } from "../dialogs/dialog-popup";
+import { launchApp } from "../utils/launch-app";
 
 import chipBaseStyle from "../css/chip-base.css";
 
@@ -38,48 +39,33 @@ export class SonosChip extends LitElement implements LovelaceCard {
         return [
             unsafeCSS(chipBaseStyle),
             unsafeCSS(`
-                @keyframes sound {
-                    0% {
-                        opacity: 0.35;
-                        height: 0.15rem;
-                    }
-                    100% {
-                        opacity: 1;
-                        height: 1rem;
-                    }
-                }
-
                 .bars {
                     display: flex;
-                    justify-content: center;  /* Horizontally center */
-                    align-items: center;      /* Vertically center */
-                    width: 100%;              /* Full width of container */
-                    height: 100%;             /* Full height of container */
+                    justify-content: center;
+                    align-items: center;
+                    height: var(--sq-icon-size, 1.8rem); /* Match icon size */
+                    width: var(--sq-icon-size, 1.8rem); /* Match icon size */
+                    padding: var(--sq-chip-padding, 1rem);
                 }
 
                 .bars > div {
                     background: var(--accent-color);
-                    bottom: 0.05rem;
                     height: 0.15rem;
-                    position: absolute;
                     width: 0.15rem;
-                    animation: sound 0ms -800ms linear infinite alternate;
-                    display: block;
+                    margin: 0 0.05rem;
+                    animation: blink 1s ease-in-out infinite;
                 }
 
-                .bars > div:first-child {
-                    left: 0.05rem;
-                    animation-duration: 474ms;
+                .bars > div:nth-child(1) {
+                    animation-delay: -0.4s;
                 }
 
                 .bars > div:nth-child(2) {
-                    left: 0.25rem;
-                    animation-duration: 433ms;
+                    animation-delay: -0.2s;
                 }
 
-                .bars > div:last-child {
-                    left: 0.45rem;
-                    animation-duration: 407ms;
+                .bars > div:nth-child(3) {
+                    animation-delay: 0s;
                 }
             `),
         ];
@@ -108,18 +94,16 @@ export class SonosChip extends LitElement implements LovelaceCard {
         const isPlaying = this._stateObj?.state === "playing";
 
         return html`
-            <div class="container" @click=${this._showDialog} @contextmenu=${this._launchSonos}>
+            <div class="container" @click=${this._showDialog} @contextmenu=${this._launchApp}>
                 ${when(
-                    !isPlaying, // Only render the icon when not playing
+                    !isPlaying, // Render icon when not playing
                     () => html`
                         <div class="icon" style="${styleMap(this._iconStyles)}">
                             <ha-icon .icon=${this._icon}></ha-icon>
                         </div>
-                    `
-                )}
-                ${when(
-                    isPlaying, // Only render the bars when playing
+                    `,
                     () => html`
+                        <!-- Render bars when playing -->
                         <div class="bars">
                             <div></div>
                             <div></div>
@@ -158,13 +142,8 @@ export class SonosChip extends LitElement implements LovelaceCard {
         dialogPopup(dialogObj.data);
     }
 
-    private _launchSonos(e: Event): void {
+    private _launchApp(e: Event): void {
         e.stopPropagation();
-
-        if (typeof window.fully !== "undefined" && window.fully.startApplication) {
-            window.fully.startApplication("com.sonos.acr2");
-        } else {
-            console.warn("fully.startApplication is not available.");
-        }
+        launchApp("com.sonos.acr2");
     }
 }
