@@ -12128,22 +12128,22 @@ let SonosChip = class SonosChip extends h {
                 }
 
                 .bars > div {
-                    background: rgb(var(--sq-primary-font-rgb));
+                    background: var(--accent-color);
                     height: 0.15rem; /* Initial height of the bars */
-                    width: 0.15rem; /* Bar width */
-                    animation: sound 0ms -800ms linear infinite alternate;
+                    width: 0.25rem; /* Bar width */
+                    animation: sound linear infinite alternate;
                 }
 
                 .bars > div:first-child {
-                    animation-duration: 474ms;
+                    animation-duration: 574ms;
                 }
 
                 .bars > div:nth-child(2) {
-                    animation-duration: 433ms;
+                    animation-duration: 533ms;
                 }
 
                 .bars > div:last-child {
-                    animation-duration: 407ms;
+                    animation-duration: 507ms;
                 }
             `,
         ];
