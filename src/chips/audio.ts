@@ -1,4 +1,4 @@
-import { css, CSSResult, html, LitElement, nothing, PropertyValues, TemplateResult, unsafeCSS } from "lit";
+import { CSSResultGroup, html, LitElement, nothing, PropertyValues, TemplateResult, unsafeCSS } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 
 import { HassEntity, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
@@ -7,6 +7,7 @@ import { dialogPopup } from "../dialogs/dialog-popup";
 import { launchApp } from "../utilities/launch-app";
 
 import chipBaseStyle from "../css/chip-base.css";
+import chipMusicStyle from "../css/chip-music.css";
 
 interface Config extends LovelaceCardConfig {
     entity?: string;
@@ -31,58 +32,8 @@ export class AudioChip extends LitElement implements LovelaceCard {
     private _entity?: string;
     private _stateObj?: HassEntity;
 
-    static get styles(): CSSResult[] {
-        return [
-            unsafeCSS(chipBaseStyle),
-            css`
-                @keyframes sound {
-                    0% {
-                        opacity: 0.35;
-                        height: 0.15rem;
-                    }
-                    100% {
-                        opacity: 1;
-                        height: var(--sq-icon-size, 1.8rem);
-                    }
-                }
-
-                .bars {
-                    display: flex;
-                    justify-content: center;
-                    align-items: flex-end;
-                    width: var(--sq-icon-size);
-                    height: var(--sq-icon-size);
-                    padding: var(--sq-chip-padding);
-                }
-
-                .bars > div {
-                    background: var(--accent-color);
-                    height: 0.15rem;
-                    width: 0.25rem;
-                    animation: sound 525ms linear -800ms infinite alternate;
-                }
-
-                .bars > div:first-child {
-                    animation-duration: 575ms;
-                }
-
-                .bars > div:nth-child(2) {
-                    animation-duration: 550ms;
-                }
-
-                .bars > div:nth-child(3) {
-                    animation-duration: 525ms;
-                }
-
-                .bars > div:nth-child(4) {
-                    animation-duration: 500ms;
-                }
-
-                .bars > div:last-child {
-                    animation-duration: 475ms;
-                }
-            `,
-        ];
+    static get styles(): CSSResultGroup[] {
+        return [unsafeCSS(chipBaseStyle), unsafeCSS(chipMusicStyle)];
     }
 
     public setConfig(config: Config): void {

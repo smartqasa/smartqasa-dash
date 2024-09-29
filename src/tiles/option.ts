@@ -106,6 +106,7 @@ export class OptionTile extends LitElement implements LovelaceCard {
         if (!this.hass || !this._config || !this._stateObj) return;
 
         this._running = true;
+        this.requestUpdate();
         await callService(this.hass, "input_select", "select_option", {
             entity_id: this._entity,
             option: this._config.option,
