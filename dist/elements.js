@@ -13836,19 +13836,29 @@ let LockTile = class LockTile extends h {
         `;
     }
     _updateState() {
+        let iconAnimation, iconColor;
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
         if (this._stateObj) {
             const state = this._stateObj.state || "unknown";
             const { icon, animation, color } = this._stateMap[state] || this._stateMap.default;
             this._icon = icon;
+            iconAnimation = animation;
+            iconColor = color;
             this._name = this._config?.name || this._stateObj.attributes.friendly_name || "Lock";
             this._stateFmtd = this.hass.formatEntityState(this._stateObj);
         }
         else {
             this._icon = this._config.icon || "hass:lock-alert-variant";
+            iconAnimation = "none";
+            iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
             this._name = this._config.name || "Unknown Lock";
             this._stateFmtd = "Unknown State";
         }
+        this._iconStyles = {
+            color: `rgb(${iconColor})`,
+            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
+            animation: iconAnimation,
+        };
     }
     _toggleEntity(e) {
         e.stopPropagation();

@@ -126,6 +126,12 @@ export class LockTile extends LitElement implements LovelaceCard {
             this._name = this._config!.name || "Unknown Lock";
             this._stateFmtd = "Unknown State";
         }
+
+        this._iconStyles = {
+            color: `rgb(${iconColor})`,
+            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
+            animation: iconAnimation,
+        };
     }
 
     private _toggleEntity(e: Event): void {
