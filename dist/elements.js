@@ -11451,7 +11451,7 @@ var weather$1 = /*#__PURE__*/Object.freeze({
   get WeatherCard () { return WeatherCard; }
 });
 
-var css_248z$4 = ".container {\n    display: flex;\n    margin: 0 var(--sq-chip-spacing, 0.4rem);\n    align-items: center;\n    justify-content: center;\n    width: fit-content;\n    border: var(--sq-card-border);\n    border-radius: var(--sq-chip-border-radius);\n    background-color: var(--sq-card-background-color);\n    transition: var(--sq-icon-transition, none);\n    overflow: hidden;\n    -webkit-tap-highlight-color: transparent;\n    cursor: pointer;\n}\n\n.container:focus,\n.container:active {\n    background-color: var(--sq-ripple-color);\n    border-radius: var(--sq-chip-border-radius);\n    outline: none;\n}\n\n.icon {\n    display: flex;\n    height: var(--sq-icon-size, 1.8rem);\n    width: var(--sq-icon-size, 1.8rem);\n    padding: var(--sq-chip-padding, 1rem);\n    color: rgb(var(--sq-primary-font-rgb));\n    transition: var(--sq-icon-transition, none);\n    align-items: center;\n    justify-content: center;\n}\n\n@keyframes blink {\n    50% {\n        opacity: 0.25;\n    }\n}\n\n@keyframes spin {\n    from {\n        transform: rotate(0deg);\n    }\n    to {\n        transform: rotate(360deg);\n    }\n}\n";
+var css_248z$4 = ".container {\n    display: flex;\n    margin: 0 var(--sq-chip-spacing);\n    align-items: center;\n    justify-content: center;\n    width: fit-content;\n    border: var(--sq-card-border);\n    border-radius: var(--sq-chip-border-radius);\n    background-color: var(--sq-card-background-color);\n    transition: var(--sq-icon-transition, none);\n    overflow: hidden;\n    -webkit-tap-highlight-color: transparent;\n    cursor: pointer;\n}\n\n.container:focus,\n.container:active {\n    background-color: var(--sq-ripple-color);\n    border-radius: var(--sq-chip-border-radius);\n    outline: none;\n}\n\n.icon {\n    display: flex;\n    height: var(--sq-icon-size);\n    width: var(--sq-icon-size);\n    padding: var(--sq-chip-padding);\n    color: rgb(var(--sq-primary-font-rgb));\n    transition: var(--sq-icon-transition, none);\n    align-items: center;\n    justify-content: center;\n}\n\n@keyframes blink {\n    50% {\n        opacity: 0.25;\n    }\n}\n\n@keyframes spin {\n    from {\n        transform: rotate(0deg);\n    }\n    to {\n        transform: rotate(360deg);\n    }\n}\n";
 styleInject(css_248z$4);
 
 window.customCards.push({
@@ -12106,7 +12106,7 @@ let SonosChip = class SonosChip extends h {
     static get styles() {
         return [
             r$3(css_248z$4),
-            r$3(`
+            i$2 `
                 @keyframes sound {
                     0% {
                         opacity: 0.35;
@@ -12120,10 +12120,12 @@ let SonosChip = class SonosChip extends h {
 
                 .bars {
                     display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    width: 0.55rem;
                     position: relative;
+                    width: var(--sq-icon-size);
+                    height: var(--sq-icon-size);
+                    padding: var(--sq-chip-padding);
+                    justify-content: center;
+                    align-items: flex-end;
                 }
 
                 .bars > div {
@@ -12150,7 +12152,7 @@ let SonosChip = class SonosChip extends h {
                     left: 0.45rem;
                     animation-duration: 407ms;
                 }
-            `),
+            `,
         ];
     }
     setConfig(config) {
@@ -12180,12 +12182,14 @@ let SonosChip = class SonosChip extends h {
             `;
         }
         else {
-            content = ke ` <ha-icon icon="hass:music"></ha-icon> `;
+            content = ke `
+                <div class="icon">
+                    <ha-icon icon="hass:music"></ha-icon>
+                </div>
+            `;
         }
         return ke `
-            <div class="container" @click=${this._showDialog} @contextmenu=${this._launchApp}>
-                <div class="icon">${content}</div>
-            </div>
+            <div class="container" @click=${this._showDialog} @contextmenu=${this._launchApp}>${content}</div>
         `;
     }
     _updateState() {

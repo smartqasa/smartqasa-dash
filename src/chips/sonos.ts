@@ -1,4 +1,4 @@
-import { CSSResult, html, LitElement, nothing, PropertyValues, TemplateResult, unsafeCSS } from "lit";
+import { css, CSSResult, html, LitElement, nothing, PropertyValues, TemplateResult, unsafeCSS } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 
 import { HassEntity, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
@@ -34,7 +34,7 @@ export class SonosChip extends LitElement implements LovelaceCard {
     static get styles(): CSSResult[] {
         return [
             unsafeCSS(chipBaseStyle),
-            unsafeCSS(`
+            css`
                 @keyframes sound {
                     0% {
                         opacity: 0.35;
@@ -48,10 +48,12 @@ export class SonosChip extends LitElement implements LovelaceCard {
 
                 .bars {
                     display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    width: 0.55rem;
                     position: relative;
+                    width: var(--sq-icon-size);
+                    height: var(--sq-icon-size);
+                    padding: var(--sq-chip-padding);
+                    justify-content: center;
+                    align-items: flex-end;
                 }
 
                 .bars > div {
@@ -78,7 +80,7 @@ export class SonosChip extends LitElement implements LovelaceCard {
                     left: 0.45rem;
                     animation-duration: 407ms;
                 }
-            `),
+            `,
         ];
     }
 
@@ -112,13 +114,15 @@ export class SonosChip extends LitElement implements LovelaceCard {
                 </div>
             `;
         } else {
-            content = html` <ha-icon icon="hass:music"></ha-icon> `;
+            content = html`
+                <div class="icon">
+                    <ha-icon icon="hass:music"></ha-icon>
+                </div>
+            `;
         }
 
         return html`
-            <div class="container" @click=${this._showDialog} @contextmenu=${this._launchApp}>
-                <div class="icon">${content}</div>
-            </div>
+            <div class="container" @click=${this._showDialog} @contextmenu=${this._launchApp}>${content}</div>
         `;
     }
 
