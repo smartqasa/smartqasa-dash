@@ -12114,42 +12114,35 @@ let SonosChip = class SonosChip extends h {
                     }
                     100% {
                         opacity: 1;
-                        height: var(--sq-icon-size);
+                        height: var(--sq-icon-size, 1.8rem);
                     }
                 }
 
                 .bars {
                     display: flex;
-                    position: relative;
+                    justify-content: space-between;
+                    align-items: flex-end;
                     width: var(--sq-icon-size);
                     height: var(--sq-icon-size);
                     padding: var(--sq-chip-padding);
-                    justify-content: center;
-                    align-items: flex-end;
                 }
 
                 .bars > div {
                     background: var(--secondary-text-color);
-                    bottom: 0.05rem;
-                    height: 0.15rem;
-                    position: absolute;
-                    width: 0.15rem;
-                    animation: sound 0ms -800ms linear infinite alternate;
-                    display: block;
+                    height: 0.15rem; /* Initial height of the bars */
+                    width: 0.15rem; /* Bar width */
+                    animation: sound 1s ease-in-out infinite;
                 }
 
                 .bars > div:first-child {
-                    left: 0.05rem;
                     animation-duration: 474ms;
                 }
 
                 .bars > div:nth-child(2) {
-                    left: 0.25rem;
                     animation-duration: 433ms;
                 }
 
                 .bars > div:last-child {
-                    left: 0.45rem;
                     animation-duration: 407ms;
                 }
             `,
