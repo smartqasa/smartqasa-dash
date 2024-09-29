@@ -74,13 +74,13 @@ function displayBSoD(errorMessage: string) {
         // Chips
         await Promise.all([
             import("./chips/admin"),
+            import("./chips/audio"),
             import("./chips/custom"),
             import("./chips/dialog"),
             import("./chips/motion"),
             import("./chips/navigate"),
             import("./chips/routine"),
             import("./chips/select"),
-            import("./chips/sonos"),
             import("./chips/thermostat"),
             import("./chips/weather"),
         ]);

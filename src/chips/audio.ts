@@ -13,14 +13,14 @@ interface Config extends LovelaceCardConfig {
 }
 
 window.customCards.push({
-    type: "smartqasa-sonos-chip",
-    name: "SmartQasa Sonos Chip",
+    type: "smartqasa-audio-chip",
+    name: "SmartQasa Audio Chip",
     preview: true,
-    description: "A SmartQasa chip for displaying a Sonos dialog.",
+    description: "A SmartQasa chip for displaying an audio dialog.",
 });
 
-@customElement("smartqasa-sonos-chip")
-export class SonosChip extends LitElement implements LovelaceCard {
+@customElement("smartqasa-audio-chip")
+export class AudioChip extends LitElement implements LovelaceCard {
     public getCardSize(): number {
         return 1;
     }

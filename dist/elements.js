@@ -3928,13 +3928,13 @@ function displayBSoD(errorMessage) {
         // Chips
         await Promise.all([
             Promise.resolve().then(function () { return admin; }),
+            Promise.resolve().then(function () { return audio; }),
             Promise.resolve().then(function () { return custom; }),
             Promise.resolve().then(function () { return dialog$1; }),
             Promise.resolve().then(function () { return motion; }),
             Promise.resolve().then(function () { return navigate; }),
             Promise.resolve().then(function () { return routine$1; }),
             Promise.resolve().then(function () { return select$1; }),
-            Promise.resolve().then(function () { return sonos; }),
             Promise.resolve().then(function () { return thermostat$1; }),
             Promise.resolve().then(function () { return weather; }),
         ]);
@@ -11512,6 +11512,141 @@ var admin = /*#__PURE__*/Object.freeze({
   get AdminChip () { return AdminChip; }
 });
 
+window.customCards.push({
+    type: "smartqasa-audio-chip",
+    name: "SmartQasa Audio Chip",
+    preview: true,
+    description: "A SmartQasa chip for displaying an audio dialog.",
+});
+let AudioChip = class AudioChip extends h {
+    getCardSize() {
+        return 1;
+    }
+    static get styles() {
+        return [
+            r$3(css_248z$4),
+            i$2 `
+                @keyframes sound {
+                    0% {
+                        opacity: 0.35;
+                        height: 0.15rem;
+                    }
+                    100% {
+                        opacity: 1;
+                        height: var(--sq-icon-size, 1.8rem);
+                    }
+                }
+
+                .bars {
+                    display: flex;
+                    justify-content: center;
+                    align-items: flex-end;
+                    width: var(--sq-icon-size);
+                    height: var(--sq-icon-size);
+                    padding: var(--sq-chip-padding);
+                }
+
+                .bars > div {
+                    background: var(--accent-color);
+                    height: 0.15rem;
+                    width: 0.25rem;
+                    animation: sound 525ms linear -800ms infinite alternate;
+                }
+
+                .bars > div:first-child {
+                    animation-duration: 575ms;
+                }
+
+                .bars > div:nth-child(2) {
+                    animation-duration: 550ms;
+                }
+
+                .bars > div:nth-child(3) {
+                    animation-duration: 525ms;
+                }
+
+                .bars > div:nth-child(4) {
+                    animation-duration: 500ms;
+                }
+
+                .bars > div:last-child {
+                    animation-duration: 475ms;
+                }
+            `,
+        ];
+    }
+    setConfig(config) {
+        this._config = { ...config };
+        this._entity = this._config.entity?.startsWith("media_player.") ? this._config.entity : undefined;
+    }
+    shouldUpdate(changedProps) {
+        if (!this._config)
+            return false;
+        return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
+            changedProps.has("_config"));
+    }
+    willUpdate() {
+        this._updateState();
+    }
+    render() {
+        if (!this._config || !this._entity)
+            return D;
+        let content;
+        if (this._stateObj?.state === "playing") {
+            content = ke `
+                <div class="bars">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            `;
+        }
+        else {
+            content = ke `
+                <div class="icon">
+                    <ha-icon icon="hass:music"></ha-icon>
+                </div>
+            `;
+        }
+        return ke `
+            <div class="container" @click=${this._showDialog} @contextmenu=${this._launchApp}>${content}</div>
+        `;
+    }
+    _updateState() {
+        this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
+    }
+    _showDialog(e) {
+        e.stopPropagation();
+        const dialogObj = dialogTable["sonos"];
+        if (!dialogObj)
+            return;
+        const dialogConfig = { ...dialogObj.data };
+        if (this._entity)
+            dialogConfig.content.entityId = this._entity;
+        dialogPopup(dialogObj.data);
+    }
+    _launchApp(e) {
+        e.stopPropagation();
+        launchApp("com.sonos.acr2");
+    }
+};
+__decorate([
+    n({ attribute: false })
+], AudioChip.prototype, "hass", void 0);
+__decorate([
+    r()
+], AudioChip.prototype, "_config", void 0);
+AudioChip = __decorate([
+    t$1("smartqasa-audio-chip")
+], AudioChip);
+
+var audio = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  get AudioChip () { return AudioChip; }
+});
+
 var css_248z$3 = ".container {\n    justify-content: flex-start;\n}\n\n.icon {\n    padding-right: calc(var(--sq-chip-padding) / 2);\n    align-items: center;\n    justify-content: center;\n}\n\n.text {\n    display: flex;\n    padding: var(--sq-chip-padding);\n    padding-left: 0;\n    line-height: var(--sq-icon-size);\n    font-weight: var(--sq-primary-font-weight);\n    font-size: var(--sq-primary-font-size);\n    color: rgb(var(--sq-primary-font-rgb));\n    text-align: left;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: nowrap;\n    align-items: center;\n}\n";
 styleInject(css_248z$3);
 
@@ -12091,141 +12226,6 @@ SelectChip = __decorate([
 var select$1 = /*#__PURE__*/Object.freeze({
   __proto__: null,
   get SelectChip () { return SelectChip; }
-});
-
-window.customCards.push({
-    type: "smartqasa-sonos-chip",
-    name: "SmartQasa Sonos Chip",
-    preview: true,
-    description: "A SmartQasa chip for displaying a Sonos dialog.",
-});
-let SonosChip = class SonosChip extends h {
-    getCardSize() {
-        return 1;
-    }
-    static get styles() {
-        return [
-            r$3(css_248z$4),
-            i$2 `
-                @keyframes sound {
-                    0% {
-                        opacity: 0.35;
-                        height: 0.15rem;
-                    }
-                    100% {
-                        opacity: 1;
-                        height: var(--sq-icon-size, 1.8rem);
-                    }
-                }
-
-                .bars {
-                    display: flex;
-                    justify-content: center;
-                    align-items: flex-end;
-                    width: var(--sq-icon-size);
-                    height: var(--sq-icon-size);
-                    padding: var(--sq-chip-padding);
-                }
-
-                .bars > div {
-                    background: var(--accent-color);
-                    height: 0.15rem;
-                    width: 0.25rem;
-                    animation: sound 525ms linear -800ms infinite alternate;
-                }
-
-                .bars > div:first-child {
-                    animation-duration: 575ms;
-                }
-
-                .bars > div:nth-child(2) {
-                    animation-duration: 550ms;
-                }
-
-                .bars > div:nth-child(3) {
-                    animation-duration: 525ms;
-                }
-
-                .bars > div:nth-child(4) {
-                    animation-duration: 500ms;
-                }
-
-                .bars > div:last-child {
-                    animation-duration: 475ms;
-                }
-            `,
-        ];
-    }
-    setConfig(config) {
-        this._config = { ...config };
-        this._entity = this._config.entity?.startsWith("media_player.") ? this._config.entity : undefined;
-    }
-    shouldUpdate(changedProps) {
-        if (!this._config)
-            return false;
-        return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
-            changedProps.has("_config"));
-    }
-    willUpdate() {
-        this._updateState();
-    }
-    render() {
-        if (!this._config || !this._entity)
-            return D;
-        let content;
-        if (this._stateObj?.state === "playing") {
-            content = ke `
-                <div class="bars">
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                </div>
-            `;
-        }
-        else {
-            content = ke `
-                <div class="icon">
-                    <ha-icon icon="hass:music"></ha-icon>
-                </div>
-            `;
-        }
-        return ke `
-            <div class="container" @click=${this._showDialog} @contextmenu=${this._launchApp}>${content}</div>
-        `;
-    }
-    _updateState() {
-        this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
-    }
-    _showDialog(e) {
-        e.stopPropagation();
-        const dialogObj = dialogTable["sonos"];
-        if (!dialogObj)
-            return;
-        const dialogConfig = { ...dialogObj.data };
-        if (this._entity)
-            dialogConfig.content.entityId = this._entity;
-        dialogPopup(dialogObj.data);
-    }
-    _launchApp(e) {
-        e.stopPropagation();
-        launchApp("com.sonos.acr2");
-    }
-};
-__decorate([
-    n({ attribute: false })
-], SonosChip.prototype, "hass", void 0);
-__decorate([
-    r()
-], SonosChip.prototype, "_config", void 0);
-SonosChip = __decorate([
-    t$1("smartqasa-sonos-chip")
-], SonosChip);
-
-var sonos = /*#__PURE__*/Object.freeze({
-  __proto__: null,
-  get SonosChip () { return SonosChip; }
 });
 
 function moreInfoDialog(stateObj, callingDialogConfig) {
