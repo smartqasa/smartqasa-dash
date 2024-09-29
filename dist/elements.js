@@ -9051,7 +9051,7 @@ const dialogTable = {
                 mediaBrowserTitle: "Favorites",
                 hideBrowseMediaButton: true,
                 mediaBrowserHideTitleForThumbnailIcons: false,
-                mediaBrowserItemsPerRow: 5,
+                mediaBrowserItemsPerRow: 4,
             },
         },
     },
