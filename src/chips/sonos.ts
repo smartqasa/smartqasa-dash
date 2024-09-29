@@ -58,8 +58,8 @@ export class SonosChip extends LitElement implements LovelaceCard {
                 .bars > div {
                     background: var(--accent-color);
                     height: 0.15rem;
-                    width: 0.2rem;
-                    animation: sound linear infinite alternate;
+                    width: 0.25rem;
+                    animation: sound 525ms linear -800ms infinite alternate;
                 }
 
                 .bars > div:first-child {
