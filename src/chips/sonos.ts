@@ -1,6 +1,7 @@
 import { CSSResult, html, LitElement, nothing, PropertyValues, TemplateResult, unsafeCSS } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
+import { when } from "lit/directives/when.js";
 
 import { HassEntity, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 import { dialogTable } from "../dialogs/dialog-table";
@@ -33,7 +34,55 @@ export class SonosChip extends LitElement implements LovelaceCard {
     private _icon: string = "hass:music";
     private _iconStyles: Record<string, string> = {};
 
-    static styles: CSSResult = unsafeCSS(chipBaseStyle);
+    static get styles(): CSSResult[] {
+        return [
+            unsafeCSS(chipBaseStyle),
+            // Add the new bar animation styles only
+            unsafeCSS(`
+              @keyframes sound {
+                  0% {
+                      opacity: 0.35;
+                      height: 0.15rem;
+                  }
+                  100% {
+                      opacity: 1;
+                      height: 1rem;
+                  }
+              }
+
+              .bars {
+                  width: 0.55rem;
+                  position: relative;
+                  margin-left: 1rem;
+              }
+
+              .bars > div {
+                  background: var(--secondary-text-color);
+                  bottom: 0.05rem;
+                  height: 0.15rem;
+                  position: absolute;
+                  width: 0.15rem;
+                  animation: sound 0ms -800ms linear infinite alternate;
+                  display: block;
+              }
+
+              .bars > div:first-child {
+                  left: 0.05rem;
+                  animation-duration: 474ms;
+              }
+
+              .bars > div:nth-child(2) {
+                  left: 0.25rem;
+                  animation-duration: 433ms;
+              }
+
+              .bars > div:last-child {
+                  left: 0.45rem;
+                  animation-duration: 407ms;
+              }
+            `),
+        ];
+    }
 
     public setConfig(config: Config): void {
         this._config = { ...config };
@@ -55,11 +104,23 @@ export class SonosChip extends LitElement implements LovelaceCard {
     protected render(): TemplateResult | typeof nothing {
         if (!this._config || !this._entity) return nothing;
 
+        const isPlaying = this._stateObj?.state === "playing";
+
         return html`
-            <div class="container" @click=${this._showDialog} @contextmenu=${this._launchClock}>
+            <div class="container" @click=${this._showDialog} @contextmenu=${this._launchSonos}>
                 <div class="icon" style="${styleMap(this._iconStyles)}">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
+                ${when(
+                    isPlaying,
+                    () => html`
+                        <div class="bars">
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        </div>
+                    `
+                )}
             </div>
         `;
     }
@@ -91,7 +152,7 @@ export class SonosChip extends LitElement implements LovelaceCard {
         dialogPopup(dialogObj.data);
     }
 
-    private _launchClock(e: Event): void {
+    private _launchSonos(e: Event): void {
         e.stopPropagation();
 
         if (typeof window.fully !== "undefined" && window.fully.startApplication) {

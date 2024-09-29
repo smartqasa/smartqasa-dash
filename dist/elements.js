@@ -12085,6 +12085,13 @@ var select$1 = /*#__PURE__*/Object.freeze({
   get SelectChip () { return SelectChip; }
 });
 
+/**
+ * @license
+ * Copyright 2021 Google LLC
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+function nn(n,r,t){return n?r(n):t?.(n)}
+
 window.customCards.push({
     type: "smartqasa-sonos-chip",
     name: "SmartQasa Sonos Chip",
@@ -12100,7 +12107,55 @@ let SonosChip = class SonosChip extends h {
     getCardSize() {
         return 1;
     }
-    static { this.styles = r$3(css_248z$4); }
+    static get styles() {
+        return [
+            r$3(css_248z$4),
+            // Add the new bar animation styles only
+            r$3(`
+              @keyframes sound {
+                  0% {
+                      opacity: 0.35;
+                      height: 0.15rem;
+                  }
+                  100% {
+                      opacity: 1;
+                      height: 1rem;
+                  }
+              }
+
+              .bars {
+                  width: 0.55rem;
+                  position: relative;
+                  margin-left: 1rem;
+              }
+
+              .bars > div {
+                  background: var(--secondary-text-color);
+                  bottom: 0.05rem;
+                  height: 0.15rem;
+                  position: absolute;
+                  width: 0.15rem;
+                  animation: sound 0ms -800ms linear infinite alternate;
+                  display: block;
+              }
+
+              .bars > div:first-child {
+                  left: 0.05rem;
+                  animation-duration: 474ms;
+              }
+
+              .bars > div:nth-child(2) {
+                  left: 0.25rem;
+                  animation-duration: 433ms;
+              }
+
+              .bars > div:last-child {
+                  left: 0.45rem;
+                  animation-duration: 407ms;
+              }
+            `),
+        ];
+    }
     setConfig(config) {
         this._config = { ...config };
         this._entity = this._config.entity?.startsWith("media_player.") ? this._config.entity : undefined;
@@ -12117,11 +12172,19 @@ let SonosChip = class SonosChip extends h {
     render() {
         if (!this._config || !this._entity)
             return D;
+        const isPlaying = this._stateObj?.state === "playing";
         return ke `
-            <div class="container" @click=${this._showDialog} @contextmenu=${this._launchClock}>
+            <div class="container" @click=${this._showDialog} @contextmenu=${this._launchSonos}>
                 <div class="icon" style="${se(this._iconStyles)}">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
+                ${nn(isPlaying, () => ke `
+                        <div class="bars">
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        </div>
+                    `)}
             </div>
         `;
     }
@@ -12149,7 +12212,7 @@ let SonosChip = class SonosChip extends h {
             dialogConfig.content.entityId = this._entity;
         dialogPopup(dialogObj.data);
     }
-    _launchClock(e) {
+    _launchSonos(e) {
         e.stopPropagation();
         if (typeof window.fully !== "undefined" && window.fully.startApplication) {
             window.fully.startApplication("com.sonos.acr2");
