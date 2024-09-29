@@ -12181,13 +12181,11 @@ let SonosChip = class SonosChip extends h {
         const isPlaying = this._stateObj?.state === "playing";
         return ke `
             <div class="container" @click=${this._showDialog} @contextmenu=${this._launchApp}>
-                ${nn(!isPlaying, // Render icon when not playing
-        () => ke `
-                        <div class="icon" style="${se(this._iconStyles)}">
+                ${nn(!isPlaying, () => ke `
+                        <div class="icon">
                             <ha-icon .icon=${this._icon}></ha-icon>
                         </div>
                     `, () => ke `
-                        <!-- Render bars when playing -->
                         <div class="bars">
                             <div></div>
                             <div></div>
@@ -12199,17 +12197,6 @@ let SonosChip = class SonosChip extends h {
     }
     _updateState() {
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
-        const state = this._stateObj?.state;
-        let iconColor;
-        if (state) {
-            iconColor = state === "playing" ? "var(--sq-rgb-blue)" : "var(--sq-primary-font-rgb)";
-        }
-        else {
-            iconColor = "var(--sq-unavailable-rgb)";
-        }
-        this._iconStyles = {
-            color: `rgb(${iconColor})`,
-        };
     }
     _showDialog(e) {
         e.stopPropagation();

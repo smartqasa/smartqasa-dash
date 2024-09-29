@@ -112,14 +112,13 @@ export class SonosChip extends LitElement implements LovelaceCard {
         return html`
             <div class="container" @click=${this._showDialog} @contextmenu=${this._launchApp}>
                 ${when(
-                    !isPlaying, // Render icon when not playing
+                    !isPlaying,
                     () => html`
-                        <div class="icon" style="${styleMap(this._iconStyles)}">
+                        <div class="icon">
                             <ha-icon .icon=${this._icon}></ha-icon>
                         </div>
                     `,
                     () => html`
-                        <!-- Render bars when playing -->
                         <div class="bars">
                             <div></div>
                             <div></div>
@@ -133,18 +132,6 @@ export class SonosChip extends LitElement implements LovelaceCard {
 
     private _updateState(): void {
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
-        const state = this._stateObj?.state;
-
-        let iconColor: string;
-        if (state) {
-            iconColor = state === "playing" ? "var(--sq-rgb-blue)" : "var(--sq-primary-font-rgb)";
-        } else {
-            iconColor = "var(--sq-unavailable-rgb)";
-        }
-
-        this._iconStyles = {
-            color: `rgb(${iconColor})`,
-        };
     }
 
     private _showDialog(e: Event): void {
