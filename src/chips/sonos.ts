@@ -32,8 +32,6 @@ export class SonosChip extends LitElement implements LovelaceCard {
 
     private _entity?: string;
     private _stateObj?: HassEntity;
-    private _icon: string = "hass:music";
-    private _iconStyles: Record<string, string> = {};
 
     static get styles(): CSSResult[] {
         return [
@@ -107,26 +105,25 @@ export class SonosChip extends LitElement implements LovelaceCard {
     protected render(): TemplateResult | typeof nothing {
         if (!this._config || !this._entity) return nothing;
 
-        const isPlaying = this._stateObj?.state === "playing";
+        let content;
+        if (this._stateObj?.state === "playing") {
+            content = html`
+                <div class="bars">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            `;
+        } else {
+            content = html`
+                <div class="icon">
+                    <ha-icon icon="hass:music"></ha-icon>
+                </div>
+            `;
+        }
 
         return html`
-            <div class="container" @click=${this._showDialog} @contextmenu=${this._launchApp}>
-                ${when(
-                    !isPlaying,
-                    () => html`
-                        <div class="icon">
-                            <ha-icon .icon=${this._icon}></ha-icon>
-                        </div>
-                    `,
-                    () => html`
-                        <div class="bars">
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                        </div>
-                    `
-                )}
-            </div>
+            <div class="container" @click=${this._showDialog} @contextmenu=${this._launchApp}>${content}</div>
         `;
     }
 

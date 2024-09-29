@@ -12089,13 +12089,6 @@ var select$1 = /*#__PURE__*/Object.freeze({
   get SelectChip () { return SelectChip; }
 });
 
-/**
- * @license
- * Copyright 2021 Google LLC
- * SPDX-License-Identifier: BSD-3-Clause
- */
-function nn(n,r,t){return n?r(n):t?.(n)}
-
 window.customCards.push({
     type: "smartqasa-sonos-chip",
     name: "SmartQasa Sonos Chip",
@@ -12103,11 +12096,6 @@ window.customCards.push({
     description: "A SmartQasa chip for displaying a Sonos dialog.",
 });
 let SonosChip = class SonosChip extends h {
-    constructor() {
-        super(...arguments);
-        this._icon = "hass:music";
-        this._iconStyles = {};
-    }
     getCardSize() {
         return 1;
     }
@@ -12178,21 +12166,25 @@ let SonosChip = class SonosChip extends h {
     render() {
         if (!this._config || !this._entity)
             return D;
-        const isPlaying = this._stateObj?.state === "playing";
+        let content;
+        if (this._stateObj?.state === "playing") {
+            content = ke `
+                <div class="bars">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            `;
+        }
+        else {
+            content = ke `
+                <div class="icon">
+                    <ha-icon icon="hass:music"></ha-icon>
+                </div>
+            `;
+        }
         return ke `
-            <div class="container" @click=${this._showDialog} @contextmenu=${this._launchApp}>
-                ${nn(!isPlaying, () => ke `
-                        <div class="icon">
-                            <ha-icon .icon=${this._icon}></ha-icon>
-                        </div>
-                    `, () => ke `
-                        <div class="bars">
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                        </div>
-                    `)}
-            </div>
+            <div class="container" @click=${this._showDialog} @contextmenu=${this._launchApp}>${content}</div>
         `;
     }
     _updateState() {
