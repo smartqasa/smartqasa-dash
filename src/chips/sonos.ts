@@ -48,7 +48,6 @@ export class SonosChip extends LitElement implements LovelaceCard {
 
                 .bars {
                     display: flex;
-                    justify-content: space-between;
                     align-items: flex-end;
                     width: var(--sq-icon-size);
                     height: var(--sq-icon-size);
@@ -63,15 +62,19 @@ export class SonosChip extends LitElement implements LovelaceCard {
                 }
 
                 .bars > div:first-child {
-                    animation-duration: 574ms;
+                    animation-duration: 575ms;
                 }
 
                 .bars > div:nth-child(2) {
-                    animation-duration: 533ms;
+                    animation-duration: 550ms;
+                }
+
+                .bars > div:nth-child(3) {
+                    animation-duration: 525ms;
                 }
 
                 .bars > div:last-child {
-                    animation-duration: 507ms;
+                    animation-duration: 500ms;
                 }
             `,
         ];
@@ -101,6 +104,7 @@ export class SonosChip extends LitElement implements LovelaceCard {
         if (this._stateObj?.state === "playing") {
             content = html`
                 <div class="bars">
+                    <div></div>
                     <div></div>
                     <div></div>
                     <div></div>

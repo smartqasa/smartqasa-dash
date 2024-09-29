@@ -12120,7 +12120,6 @@ let SonosChip = class SonosChip extends h {
 
                 .bars {
                     display: flex;
-                    justify-content: space-between;
                     align-items: flex-end;
                     width: var(--sq-icon-size);
                     height: var(--sq-icon-size);
@@ -12135,15 +12134,19 @@ let SonosChip = class SonosChip extends h {
                 }
 
                 .bars > div:first-child {
-                    animation-duration: 574ms;
+                    animation-duration: 575ms;
                 }
 
                 .bars > div:nth-child(2) {
-                    animation-duration: 533ms;
+                    animation-duration: 550ms;
+                }
+
+                .bars > div:nth-child(3) {
+                    animation-duration: 525ms;
                 }
 
                 .bars > div:last-child {
-                    animation-duration: 507ms;
+                    animation-duration: 500ms;
                 }
             `,
         ];
@@ -12168,6 +12171,7 @@ let SonosChip = class SonosChip extends h {
         if (this._stateObj?.state === "playing") {
             content = ke `
                 <div class="bars">
+                    <div></div>
                     <div></div>
                     <div></div>
                     <div></div>
