@@ -2,9 +2,9 @@ import { CSSResultGroup, html, LitElement, nothing, PropertyValues, TemplateResu
 import { customElement, property, state } from "lit/decorators.js";
 
 import { HassArea, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
-import { getDeviceOrientation, getDeviceType } from "../utils/device-info";
-import { createElement } from "../utils/create-element";
-import { createElements } from "../utils/create-elements";
+import { getDeviceOrientation, getDeviceType } from "../utilities/device-info";
+import { createElement } from "../utilities/create-element";
+import { createElements } from "../utilities/create-elements";
 import Swiper from "swiper";
 import { SwiperOptions } from "swiper/types";
 import { Navigation } from "swiper/modules";

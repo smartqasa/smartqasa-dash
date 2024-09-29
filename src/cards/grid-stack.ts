@@ -3,8 +3,8 @@ import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 
 import { HomeAssistant, LovelaceCardConfig, LovelaceCard } from "../types";
-import { deviceType } from "../utils/device-info";
-import { createElements } from "../utils/create-elements";
+import { deviceType } from "../utilities/device-info";
+import { createElements } from "../utilities/create-elements";
 
 interface Config extends LovelaceCardConfig {
     columns?: number;

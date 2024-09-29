@@ -3,8 +3,8 @@ import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 
 import { HassArea, HomeAssistant, LovelaceCard } from "../types";
-import { getDeviceType, getDeviceOrientation } from "../utils/device-info";
-import { createElement } from "../utils/create-element";
+import { getDeviceType, getDeviceOrientation } from "../utilities/device-info";
+import { createElement } from "../utilities/create-element";
 
 @customElement("smartqasa-areas-card")
 export class AreasCard extends LitElement implements LovelaceCard {

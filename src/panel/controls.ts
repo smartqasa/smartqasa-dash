@@ -1,5 +1,5 @@
 import { HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
-import { createElement } from "../utils/create-element";
+import { createElement } from "../utilities/create-element";
 import { html, nothing, TemplateResult } from "lit";
 import { styleMap } from "lit/directives/style-map.js";
 import Swiper from "swiper/types/swiper-class";

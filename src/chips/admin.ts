@@ -3,7 +3,7 @@ import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 
 import { HassEntity, HomeAssistant, LovelaceCard } from "../types";
-import { callService } from "../utils/call-service";
+import { callService } from "../utilities/call-service";
 
 import chipBaseStyle from "../css/chip-base.css";
 

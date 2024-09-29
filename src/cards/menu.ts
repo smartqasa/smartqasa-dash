@@ -3,9 +3,9 @@ import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 
 import { HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
-import { loadYamlAsJson } from "../utils/load-yaml-as-json";
-import { getDeviceType, getDeviceOrientation } from "../utils/device-info";
-import { createElement } from "../utils/create-element";
+import { loadYamlAsJson } from "../utilities/load-yaml-as-json";
+import { getDeviceType, getDeviceOrientation } from "../utilities/device-info";
+import { createElement } from "../utilities/create-element";
 
 interface Tab {
     tab: string;

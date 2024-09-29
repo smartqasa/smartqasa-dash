@@ -2,7 +2,7 @@ import { css, html, LitElement, nothing, PropertyValues } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 
 import { HomeAssistant, LovelaceCardConfig, LovelaceCard } from "../types";
-import { createElements } from "../utils/create-elements";
+import { createElements } from "../utilities/create-elements";
 
 interface Config extends LovelaceCardConfig {
     cards: LovelaceCardConfig[];

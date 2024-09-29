@@ -1,7 +1,7 @@
 import { LovelaceCard } from "../types";
 import { html, TemplateResult } from "lit";
-import { formattedTime, formattedDate } from "../utils/format-date-time";
-import { launchApp } from "../utils/launch-app";
+import { formattedTime, formattedDate } from "../utilities/format-date-time";
+import { launchApp } from "../utilities/launch-app";
 
 export function renderHeader(headerChips: LovelaceCard[]): TemplateResult {
     function launchClock(e: Event): void {

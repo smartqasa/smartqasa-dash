@@ -1,6 +1,6 @@
 import { css, html, LitElement, PropertyValues } from "lit";
 import { customElement, property, state, query } from "lit/decorators.js";
-import { createElement } from "../utils/create-element";
+import { createElement } from "./create-element";
 import { HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 
 export interface PopupData {

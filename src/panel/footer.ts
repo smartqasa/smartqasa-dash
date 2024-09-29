@@ -1,5 +1,5 @@
 import { html, TemplateResult } from "lit";
-import { navigateToArea } from "../utils/navigate-to-area";
+import { navigateToArea } from "../utilities/navigate-to-area";
 import { dialogTable } from "../dialogs/dialog-table";
 import { dialogPopup } from "../dialogs/dialog-popup";
 

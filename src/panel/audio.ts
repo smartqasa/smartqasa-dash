@@ -1,5 +1,5 @@
 import { HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
-import { createElement } from "../utils/create-element";
+import { createElement } from "../utilities/create-element";
 
 export function loadAudioCards(player_id: string, hass: HomeAssistant): LovelaceCard[] {
     const createAudioCard = (cardConfig: LovelaceCardConfig): LovelaceCard => {

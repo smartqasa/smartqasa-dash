@@ -3,7 +3,7 @@ import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 
 import { HassEntity, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
-import { callService } from "../utils/call-service";
+import { callService } from "../utilities/call-service";
 import { sequenceTable } from "../tables/pool-light-sequences";
 
 import tileBaseStyle from "../css/tile-base.css";

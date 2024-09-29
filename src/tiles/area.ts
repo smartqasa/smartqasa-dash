@@ -3,7 +3,7 @@ import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 
 import { HassArea, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
-import { navigateToArea } from "../utils/navigate-to-area";
+import { navigateToArea } from "../utilities/navigate-to-area";
 
 import tileBaseStyle from "../css/tile-base.css";
 

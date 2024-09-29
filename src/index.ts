@@ -5,7 +5,7 @@ window.smartqasa.startArea = window.smartqasa.startArea || location.pathname.spl
 window.customCards = window.customCards ?? [];
 
 // Utility Imports
-import { loadYamlAsJson } from "./utils/load-yaml-as-json";
+import { loadYamlAsJson } from "./utilities/load-yaml-as-json";
 import { LovelaceCardConfig } from "./types";
 
 // Function to display a 'blue screen of death' style error

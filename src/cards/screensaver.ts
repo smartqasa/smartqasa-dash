@@ -1,7 +1,7 @@
 import { css, CSSResultGroup, html, LitElement, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { LovelaceCard, LovelaceCardConfig } from "../types";
-import { formattedDate, formattedTime } from "../utils/format-date-time";
+import { formattedDate, formattedTime } from "../utilities/format-date-time";
 import logoImage from "../assets/images/logo.png";
 
 interface Config extends LovelaceCardConfig {

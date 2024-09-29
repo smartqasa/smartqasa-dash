@@ -4,7 +4,7 @@ import { customElement, property, state } from "lit/decorators.js";
 import { HassEntity, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 import { dialogTable } from "../dialogs/dialog-table";
 import { dialogPopup } from "../dialogs/dialog-popup";
-import { launchApp } from "../utils/launch-app";
+import { launchApp } from "../utilities/launch-app";
 
 import chipBaseStyle from "../css/chip-base.css";
 

@@ -1,7 +1,7 @@
 import { CSSResult, html, LitElement, nothing, PropertyValues, TemplateResult, unsafeCSS } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 
-import { navigateToArea } from "../utils/navigate-to-area";
+import { navigateToArea } from "../utilities/navigate-to-area";
 import { HassArea, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 
 import chipDoubleStyle from "../css/chip-double.css";
