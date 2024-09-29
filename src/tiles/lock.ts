@@ -1,4 +1,4 @@
-import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult, unsafeCSS } from "lit";
+import { CSSResultGroup, html, LitElement, nothing, PropertyValues, TemplateResult, unsafeCSS } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 
@@ -31,9 +31,49 @@ export class LockTile extends LitElement implements LovelaceCard {
     @state() protected _config?: Config;
     @state() private _stateObj?: HassEntity;
     @state() private _running: boolean = false;
-    private _entity?: string;
 
-    static styles: CSSResultGroup = [unsafeCSS(tileBaseStyle), unsafeCSS(tileStateStyle)];
+    private _entity?: string;
+    private _icon: string = "hass:lock-alert";
+    private _iconStyles: Record<string, string> = {};
+    private _name: string = "Unknown Lock";
+    private _stateFmtd: string = "Unknown State";
+
+    private readonly _stateMap: Record<string, { icon: string; animation: string; color: string }> = {
+        locked: {
+            icon: "hass:lock",
+            animation: "none",
+            color: "var(--sq-inactive-rgb)",
+        },
+        unlocking: {
+            icon: "hass:rotate-right",
+            animation: "spin 1.0s linear infinite",
+            color: "var(--sq-lock-unlocking-rgb)",
+        },
+        unlocked: {
+            icon: "hass:lock-open",
+            animation: "none",
+            color: "var(--sq-lock-unlocked-rgb)",
+        },
+        locking: {
+            icon: "hass:rotate-right",
+            animation: "spin 1.0s linear infinite",
+            color: "var(--sq-lock-locking-rgb)",
+        },
+        jammed: {
+            icon: "hass:lock-open",
+            animation: "blink 1.0s linear infinite",
+            color: "var(--sq-lock-jammed-rgb, 255, 0, 0)",
+        },
+        default: {
+            icon: "hass:lock-alert",
+            animation: "none",
+            color: "var(--sq-unavailable-rgb)",
+        },
+    };
+
+    static get styles(): CSSResultGroup {
+        return [unsafeCSS(tileBaseStyle), unsafeCSS(tileStateStyle)];
+    }
 
     public setConfig(config: Config): void {
         this._config = { ...config };
@@ -48,80 +88,44 @@ export class LockTile extends LitElement implements LovelaceCard {
         );
     }
 
-    protected render(): TemplateResult {
-        const { icon, iconAnimation, iconColor, name, stateFmtd } = this._updateState();
-        const iconStyles = {
-            color: `rgb(${iconColor})`,
-            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
-            animation: iconAnimation,
-        };
+    protected willUpdate(): void {
+        this._updateState();
+    }
+
+    protected render(): TemplateResult | typeof nothing {
+        if (!this._config || !this._entity) return nothing;
+
         return html`
             <div class="container" @click=${this._toggleEntity}>
-                <div class="icon" @click=${this._showMoreInfo} style="${styleMap(iconStyles)}">
-                    <ha-icon .icon=${icon}></ha-icon>
+                <div class="icon" @click=${this._showMoreInfo} style=${styleMap(this._iconStyles)}>
+                    <ha-icon icon=${this._icon}></ha-icon>
                 </div>
-                <div class="name">${name}</div>
-                <div class="state">${stateFmtd}</div>
+                <div class="name">${this._name}</div>
+                <div class="state">${this._stateFmtd}</div>
             </div>
         `;
     }
 
-    private _updateState(): {
-        icon: string;
-        iconAnimation: string;
-        iconColor: string;
-        name: string;
-        stateFmtd: string;
-    } {
-        let icon, iconAnimation, iconColor, name, stateFmtd;
+    private _updateState(): void {
+        let iconAnimation, iconColor;
 
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
 
         if (this._stateObj) {
             const state = this._stateObj.state || "unknown";
-            switch (state) {
-                case "locked":
-                    icon = "hass:lock";
-                    iconAnimation = "none";
-                    iconColor = "var(--sq-inactive-rgb)";
-                    break;
-                case "unlocking":
-                    icon = "hass:rotate-right";
-                    iconAnimation = "spin 1.0s linear infinite";
-                    iconColor = "var(--sq-lock-unlocking-rgb)";
-                    break;
-                case "unlocked":
-                    icon = "hass:lock-open";
-                    iconAnimation = "none";
-                    iconColor = "var(--sq-lock-unlocked-rgb)";
-                    break;
-                case "locking":
-                    icon = "hass:rotate-right";
-                    iconAnimation = "spin 1.0s linear infinite";
-                    iconColor = "var(--sq-lock-locking-rgb)";
-                    break;
-                case "jammed":
-                    icon = "hass:lock-open";
-                    iconAnimation = "blink 1.0s linear infinite";
-                    iconColor = "var(--sq-lock-jammed-rgb, 255, 0, 0)";
-                    break;
-                default:
-                    icon = "hass:lock-alert";
-                    iconAnimation = "none";
-                    iconColor = "var(--sq-unavailable-rgb)";
-                    break;
-            }
-            name = this._config!.name || this._stateObj.attributes.friendly_name || "Lock";
-            stateFmtd = this.hass!.formatEntityState(this._stateObj);
+            const { icon, animation, color } = this._stateMap[state] || this._stateMap.default;
+            this._icon = icon;
+            iconAnimation = animation;
+            iconColor = color;
+            this._name = this._config?.name || this._stateObj.attributes.friendly_name || "Lock";
+            this._stateFmtd = this.hass!.formatEntityState(this._stateObj);
         } else {
-            icon = this._config!.icon || "hass:garage-alert-variant";
+            this._icon = this._config!.icon || "hass:lock-alert-variant";
             iconAnimation = "none";
             iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            name = this._config!.name || "Unknown";
-            stateFmtd = "Unknown";
+            this._name = this._config!.name || "Unknown Lock";
+            this._stateFmtd = "Unknown State";
         }
-
-        return { icon, iconAnimation, iconColor, name, stateFmtd };
     }
 
     private _toggleEntity(e: Event): void {

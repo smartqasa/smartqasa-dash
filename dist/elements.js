@@ -13767,11 +13767,49 @@ let LockTile = class LockTile extends h {
     constructor() {
         super(...arguments);
         this._running = false;
+        this._icon = "hass:lock-alert";
+        this._iconStyles = {};
+        this._name = "Unknown Lock";
+        this._stateFmtd = "Unknown State";
+        this._stateMap = {
+            locked: {
+                icon: "hass:lock",
+                animation: "none",
+                color: "var(--sq-inactive-rgb)",
+            },
+            unlocking: {
+                icon: "hass:rotate-right",
+                animation: "spin 1.0s linear infinite",
+                color: "var(--sq-lock-unlocking-rgb)",
+            },
+            unlocked: {
+                icon: "hass:lock-open",
+                animation: "none",
+                color: "var(--sq-lock-unlocked-rgb)",
+            },
+            locking: {
+                icon: "hass:rotate-right",
+                animation: "spin 1.0s linear infinite",
+                color: "var(--sq-lock-locking-rgb)",
+            },
+            jammed: {
+                icon: "hass:lock-open",
+                animation: "blink 1.0s linear infinite",
+                color: "var(--sq-lock-jammed-rgb, 255, 0, 0)",
+            },
+            default: {
+                icon: "hass:lock-alert",
+                animation: "none",
+                color: "var(--sq-unavailable-rgb)",
+            },
+        };
     }
     getCardSize() {
         return 1;
     }
-    static { this.styles = [r$3(css_248z$1), r$3(css_248z)]; }
+    static get styles() {
+        return [r$3(css_248z$1), r$3(css_248z)];
+    }
     setConfig(config) {
         this._config = { ...config };
         this._entity = this._config.entity?.startsWith("lock.") ? this._config.entity : undefined;
@@ -13781,71 +13819,36 @@ let LockTile = class LockTile extends h {
             changedProps.has("_config") ||
             changedProps.has("_running"));
     }
+    willUpdate() {
+        this._updateState();
+    }
     render() {
-        const { icon, iconAnimation, iconColor, name, stateFmtd } = this._updateState();
-        const iconStyles = {
-            color: `rgb(${iconColor})`,
-            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
-            animation: iconAnimation,
-        };
+        if (!this._config || !this._entity)
+            return D;
         return ke `
             <div class="container" @click=${this._toggleEntity}>
-                <div class="icon" @click=${this._showMoreInfo} style="${se(iconStyles)}">
-                    <ha-icon .icon=${icon}></ha-icon>
+                <div class="icon" @click=${this._showMoreInfo} style=${se(this._iconStyles)}>
+                    <ha-icon icon=${this._icon}></ha-icon>
                 </div>
-                <div class="name">${name}</div>
-                <div class="state">${stateFmtd}</div>
+                <div class="name">${this._name}</div>
+                <div class="state">${this._stateFmtd}</div>
             </div>
         `;
     }
     _updateState() {
-        let icon, iconAnimation, iconColor, name, stateFmtd;
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
         if (this._stateObj) {
             const state = this._stateObj.state || "unknown";
-            switch (state) {
-                case "locked":
-                    icon = "hass:lock";
-                    iconAnimation = "none";
-                    iconColor = "var(--sq-inactive-rgb)";
-                    break;
-                case "unlocking":
-                    icon = "hass:rotate-right";
-                    iconAnimation = "spin 1.0s linear infinite";
-                    iconColor = "var(--sq-lock-unlocking-rgb)";
-                    break;
-                case "unlocked":
-                    icon = "hass:lock-open";
-                    iconAnimation = "none";
-                    iconColor = "var(--sq-lock-unlocked-rgb)";
-                    break;
-                case "locking":
-                    icon = "hass:rotate-right";
-                    iconAnimation = "spin 1.0s linear infinite";
-                    iconColor = "var(--sq-lock-locking-rgb)";
-                    break;
-                case "jammed":
-                    icon = "hass:lock-open";
-                    iconAnimation = "blink 1.0s linear infinite";
-                    iconColor = "var(--sq-lock-jammed-rgb, 255, 0, 0)";
-                    break;
-                default:
-                    icon = "hass:lock-alert";
-                    iconAnimation = "none";
-                    iconColor = "var(--sq-unavailable-rgb)";
-                    break;
-            }
-            name = this._config.name || this._stateObj.attributes.friendly_name || "Lock";
-            stateFmtd = this.hass.formatEntityState(this._stateObj);
+            const { icon, animation, color } = this._stateMap[state] || this._stateMap.default;
+            this._icon = icon;
+            this._name = this._config?.name || this._stateObj.attributes.friendly_name || "Lock";
+            this._stateFmtd = this.hass.formatEntityState(this._stateObj);
         }
         else {
-            icon = this._config.icon || "hass:garage-alert-variant";
-            iconAnimation = "none";
-            iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            name = this._config.name || "Unknown";
-            stateFmtd = "Unknown";
+            this._icon = this._config.icon || "hass:lock-alert-variant";
+            this._name = this._config.name || "Unknown Lock";
+            this._stateFmtd = "Unknown State";
         }
-        return { icon, iconAnimation, iconColor, name, stateFmtd };
     }
     _toggleEntity(e) {
         e.stopPropagation();
