@@ -7,6 +7,7 @@ import { dialogPopup } from "../dialogs/dialog-popup";
 import { launchApp } from "../utilities/launch-app";
 
 import tileBaseStyle from "../css/tile-base.css";
+import tileStateStyle from "../css/tile-state.css";
 import musicBarsStyle from "../css/music-bars.css";
 
 interface Config extends LovelaceCardConfig {
@@ -35,7 +36,7 @@ export class AudioTile extends LitElement implements LovelaceCard {
     private _stateFmtd: string = "Unknown State";
 
     static get styles(): CSSResultGroup[] {
-        return [unsafeCSS(tileBaseStyle), unsafeCSS(musicBarsStyle)];
+        return [unsafeCSS(tileBaseStyle), unsafeCSS(tileStateStyle), unsafeCSS(musicBarsStyle)];
     }
 
     public setConfig(config: Config): void {

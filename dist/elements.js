@@ -10695,30 +10695,24 @@ let VerticalStack = class VerticalStack extends h {
             this._config = { ...config };
         }
     }
-    willUpdate(changedProps) {
-        if (changedProps.has("hass") && this._cards.length > 0) {
+    render() {
+        if (!this._config || !this.hass || this._cards.length === 0)
+            return D;
+        return ke ` <div class="container">${this._cards.map((card) => ke `<div class="card">${card}</div>`)}</div> `;
+    }
+    firstupdated() {
+        this._createCards();
+    }
+    updated(changedProps) {
+        if (changedProps.has("hass") && this.hass && this._cards.length > 0) {
             this._cards.forEach((card) => {
                 if (card.hass !== this.hass)
                     card.hass = this.hass;
             });
         }
-        if (changedProps.has("_config") && this._config) {
+        if (changedProps.has("_config")) {
             this._createCards();
         }
-    }
-    render() {
-        if (!this._config || !this.hass || this._cards.length === 0)
-            return D;
-        return ke `
-            <div class="container">
-                ${this._cards.map((card, index) => ke `<div class="card" .key=${index}>${card}</div>`)}
-            </div>
-        `;
-    }
-    firstupdated() {
-        if (!this._config || !this.hass)
-            return;
-        this._createCards();
     }
     _createCards() {
         if (!this._config || !this.hass)
@@ -13127,6 +13121,9 @@ var area = /*#__PURE__*/Object.freeze({
   get AreaTile () { return AreaTile; }
 });
 
+var css_248z = ".container {\n    grid-template-areas: \"i n\" \"i s\";\n    grid-row-gap: 0.3rem;\n}\n.name {\n    place-self: end start;\n}\n.state {\n    grid-area: s;\n    align-self: start;\n    text-align: left;\n    text-overflow: ellipsis;\n    overflow: hidden;\n    font-weight: var(--sq-secondary-font-weight);\n    font-size: var(--sq-secondary-font-size);\n    color: rgb(var(--sq-secondary-font-rgb));\n}\n";
+styleInject(css_248z);
+
 window.customCards.push({
     type: "smartqasa-audio-tile",
     name: "SmartQasa Audio Tile",
@@ -13144,7 +13141,7 @@ let AudioTile = class AudioTile extends h {
         return 1;
     }
     static get styles() {
-        return [r$3(css_248z$1), r$3(css_248z$4)];
+        return [r$3(css_248z$1), r$3(css_248z), r$3(css_248z$4)];
     }
     setConfig(config) {
         this._config = { ...config };
@@ -13309,9 +13306,6 @@ function entityListDialog(dialogTitle, filterType, filterValue, tileType) {
     const dialogConfig = listDialogConfig(dialogTitle, filterType, filterValue, tileType);
     dialogPopup(dialogConfig);
 }
-
-var css_248z = ".container {\n    grid-template-areas: \"i n\" \"i s\";\n    grid-row-gap: 0.3rem;\n}\n.name {\n    place-self: end start;\n}\n.state {\n    grid-area: s;\n    align-self: start;\n    text-align: left;\n    text-overflow: ellipsis;\n    overflow: hidden;\n    font-weight: var(--sq-secondary-font-weight);\n    font-size: var(--sq-secondary-font-size);\n    color: rgb(var(--sq-secondary-font-rgb));\n}\n";
-styleInject(css_248z);
 
 window.customCards.push({
     type: "smartqasa-fan-tile",
