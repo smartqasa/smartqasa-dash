@@ -32,8 +32,14 @@ export class ThermostatTile extends LitElement implements LovelaceCard {
     @state() protected _config?: Config;
     private _entity?: string;
     private _stateObj?: HassEntity;
+    private _icon: string = "hass:thermostat";
+    private _iconStyles: Record<string, string> = {};
+    private _name: string = "Unknown Thermostat";
+    private _stateFmtd: string = "Unknown State";
 
-    static styles: CSSResultGroup = [unsafeCSS(tileBaseStyle), unsafeCSS(tileStateStyle)];
+    static get styles(): CSSResultGroup {
+        return [unsafeCSS(tileBaseStyle), unsafeCSS(tileStateStyle)];
+    }
 
     public setConfig(config: Config): void {
         this._config = { ...config };
@@ -47,69 +53,56 @@ export class ThermostatTile extends LitElement implements LovelaceCard {
         );
     }
 
+    protected willUpdate(): void {
+        this._updateState();
+    }
+
     protected render(): TemplateResult {
-        const { icon, iconAnimation, iconColor, name, stateFmtd } = this._updateState();
-        const iconStyles = {
-            color: `rgb(${iconColor})`,
-            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
-            animation: iconAnimation,
-        };
         return html`
-            <div class="container" @click=${this._toggleEntity}>
-                <div class="icon" @click=${this._showMoreInfo} style="${styleMap(iconStyles)}">
-                    <ha-icon .icon=${icon}></ha-icon>
+            <div class="container" @click=${this._showMoreInfo}>
+                <div class="icon" style="${styleMap(this._iconStyles)}">
+                    <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
-                <div class="name">${name}</div>
-                <div class="state">${stateFmtd}</div>
+                <div class="name">${this._name}</div>
+                <div class="state">${this._stateFmtd}</div>
             </div>
         `;
     }
 
-    private _updateState(): {
-        icon: string;
-        iconAnimation?: string;
-        iconColor: string;
-        name: string;
-        stateFmtd: string;
-    } {
-        let icon, iconAnimation, iconColor, name, stateFmtd;
-
+    private _updateState(): void {
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
 
+        let iconColor;
         if (this._stateObj) {
             const state = this._stateObj.state || "unknown";
-            icon = thermostatIcons[state] || thermostatIcons.default;
-            iconAnimation = "none";
+            this._icon = thermostatIcons[state] || thermostatIcons.default;
             const hvacAction = this._stateObj.attributes.hvac_action || "idle";
             if (state === "off") {
                 iconColor = thermostatColors.off;
             } else {
                 iconColor = thermostatColors[hvacAction] || thermostatColors.idle;
             }
-            name = this._config!.name || this._stateObj.attributes.friendly_name || "Thermostat";
-            stateFmtd = this.hass!.formatEntityState(this._stateObj);
+            this._name = this._config!.name || this._stateObj.attributes.friendly_name || "Thermostat";
+            this._stateFmtd = this.hass!.formatEntityState(this._stateObj);
             if (state !== "off") {
                 if (this._stateObj.attributes.current_temperature) {
-                    stateFmtd += ` - ${this._stateObj.attributes.current_temperature}°`;
+                    this._stateFmtd += ` - ${this._stateObj.attributes.current_temperature}°`;
                 }
                 if (this._stateObj.attributes.current_humidity) {
-                    stateFmtd += ` / ${this._stateObj.attributes.current_humidity}%`;
+                    this._stateFmtd += ` / ${this._stateObj.attributes.current_humidity}%`;
                 }
             }
         } else {
-            icon = this._config!.icon || "hass:thermostat";
-            iconAnimation = "none";
+            this._icon = this._config!.icon || "hass:thermostat";
             iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            name = this._config?.name || "Unknown";
-            stateFmtd = "Unknown";
+            this._name = this._config?.name || "Unknown";
+            this._stateFmtd = "Unknown";
         }
 
-        return { icon, iconAnimation, iconColor, name, stateFmtd };
-    }
-
-    private _toggleEntity(e: Event): void {
-        e.stopPropagation();
-        callService(this.hass, "climate", "toggle", { entity_id: this._entity });
+        const iconStyles = {
+            color: `rgb(${iconColor})`,
+            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
+        };
     }
 
     private _showMoreInfo(e: Event): void {

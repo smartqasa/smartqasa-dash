@@ -91,6 +91,7 @@ function displayBSoD(errorMessage: string) {
             import("./tiles/all-off"),
             import("./tiles/app"),
             import("./tiles/area"),
+            import("./tiles/audio"),
             import("./tiles/dialog"),
             import("./tiles/fan"),
             import("./tiles/garage"),

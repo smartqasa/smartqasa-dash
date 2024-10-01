@@ -3928,7 +3928,7 @@ function displayBSoD(errorMessage) {
         // Chips
         await Promise.all([
             Promise.resolve().then(function () { return admin; }),
-            Promise.resolve().then(function () { return audio; }),
+            Promise.resolve().then(function () { return audio$1; }),
             Promise.resolve().then(function () { return custom; }),
             Promise.resolve().then(function () { return dialog$1; }),
             Promise.resolve().then(function () { return motion; }),
@@ -3944,6 +3944,7 @@ function displayBSoD(errorMessage) {
             Promise.resolve().then(function () { return allOff; }),
             Promise.resolve().then(function () { return app; }),
             Promise.resolve().then(function () { return area; }),
+            Promise.resolve().then(function () { return audio; }),
             Promise.resolve().then(function () { return dialog; }),
             Promise.resolve().then(function () { return fan; }),
             Promise.resolve().then(function () { return garage; }),
@@ -11595,7 +11596,7 @@ AudioChip = __decorate([
     t$1("smartqasa-audio-chip")
 ], AudioChip);
 
-var audio = /*#__PURE__*/Object.freeze({
+var audio$1 = /*#__PURE__*/Object.freeze({
   __proto__: null,
   get AudioChip () { return AudioChip; }
 });
@@ -13124,6 +13125,116 @@ AreaTile = __decorate([
 var area = /*#__PURE__*/Object.freeze({
   __proto__: null,
   get AreaTile () { return AreaTile; }
+});
+
+window.customCards.push({
+    type: "smartqasa-audio-tile",
+    name: "SmartQasa Audio Tile",
+    preview: true,
+    description: "A SmartQasa tile for displaying an audio dialog.",
+});
+let AudioTile = class AudioTile extends h {
+    constructor() {
+        super(...arguments);
+        this._iconHtml = ke ``;
+        this._name = "Unknown Speaker";
+        this._stateFmtd = "Unknown State";
+    }
+    getCardSize() {
+        return 1;
+    }
+    static get styles() {
+        return [r$3(css_248z$1), r$3(css_248z$4)];
+    }
+    setConfig(config) {
+        this._config = { ...config };
+        this._entity = this._config.entity?.startsWith("media_player.") ? this._config.entity : undefined;
+    }
+    shouldUpdate(changedProps) {
+        if (!this._config)
+            return false;
+        return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
+            changedProps.has("_config"));
+    }
+    willUpdate() {
+        this._updateState();
+    }
+    render() {
+        if (!this._config || !this._entity)
+            return D;
+        return ke `
+            <div class="container" @click=${this._showDialog}>
+                ${this._iconHtml}
+                <div class="name">${this._name}</div>
+                <div class="state">${this._stateFmtd}</div>
+            </div>
+        `;
+    }
+    _updateState() {
+        this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
+        if (this._stateObj) {
+            if (this._stateObj.state === "playing") {
+                this._iconHtml = ke `
+                    <div class="bars" @click(${this._launchApp})>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div>
+                `;
+            }
+            else {
+                this._iconHtml = ke `
+                    <div class="icon" @click(${this._launchApp})>
+                        <ha-icon icon="hass:music"></ha-icon>
+                    </div>
+                `;
+            }
+            this._stateObj.state || "unknown";
+            this._name = this._config.name || this._stateObj.attributes.friendly_name || "Speaker";
+            this._stateFmtd = `${this.hass.formatEntityState(this._stateObj)}${this._stateObj.attributes.volume_level
+                ? " - " + this.hass.formatEntityAttributeValue(this._stateObj, "volume_level")
+                : ""}`;
+        }
+        else {
+            this._iconHtml = ke `
+                <div class="icon">
+                    <ha-icon icon="hass:music"></ha-icon>
+                </div>
+            `;
+            this._name = this._config?.name || "Unknown Speaker";
+            this._stateFmtd = "Unknown State";
+        }
+    }
+    _showDialog(e) {
+        e.stopPropagation();
+        const dialogObj = dialogTable["sonos"];
+        if (!dialogObj)
+            return;
+        const dialogConfig = { ...dialogObj.data };
+        if (this._entity)
+            dialogConfig.content.entityId = this._entity;
+        dialogPopup(dialogObj.data);
+    }
+    _launchApp(e) {
+        e.stopPropagation();
+        launchApp("com.sonos.acr2");
+    }
+};
+__decorate([
+    n({ attribute: false })
+], AudioTile.prototype, "hass", void 0);
+__decorate([
+    r()
+], AudioTile.prototype, "_config", void 0);
+AudioTile = __decorate([
+    t$1("smartqasa-audio-tile")
+], AudioTile);
+
+var audio = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  get AudioTile () { return AudioTile; }
 });
 
 window.customCards.push({
@@ -15067,10 +15178,19 @@ window.customCards.push({
     description: "A SmartQasa tile for controlling a thermostat climate entity.",
 });
 let ThermostatTile = class ThermostatTile extends h {
+    constructor() {
+        super(...arguments);
+        this._icon = "hass:thermostat";
+        this._iconStyles = {};
+        this._name = "Unknown Thermostat";
+        this._stateFmtd = "Unknown State";
+    }
     getCardSize() {
         return 1;
     }
-    static { this.styles = [r$3(css_248z$1), r$3(css_248z)]; }
+    static get styles() {
+        return [r$3(css_248z$1), r$3(css_248z)];
+    }
     setConfig(config) {
         this._config = { ...config };
         this._entity = this._config.entity?.startsWith("climate.") ? this._config.entity : undefined;
@@ -15079,60 +15199,42 @@ let ThermostatTile = class ThermostatTile extends h {
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
             changedProps.has("_config"));
     }
+    willUpdate() {
+        this._updateState();
+    }
     render() {
-        const { icon, iconAnimation, iconColor, name, stateFmtd } = this._updateState();
-        const iconStyles = {
-            color: `rgb(${iconColor})`,
-            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
-            animation: iconAnimation,
-        };
         return ke `
-            <div class="container" @click=${this._toggleEntity}>
-                <div class="icon" @click=${this._showMoreInfo} style="${se(iconStyles)}">
-                    <ha-icon .icon=${icon}></ha-icon>
+            <div class="container" @click=${this._showMoreInfo}>
+                <div class="icon" style="${se(this._iconStyles)}">
+                    <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
-                <div class="name">${name}</div>
-                <div class="state">${stateFmtd}</div>
+                <div class="name">${this._name}</div>
+                <div class="state">${this._stateFmtd}</div>
             </div>
         `;
     }
     _updateState() {
-        let icon, iconAnimation, iconColor, name, stateFmtd;
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
         if (this._stateObj) {
             const state = this._stateObj.state || "unknown";
-            icon = thermostatIcons[state] || thermostatIcons.default;
-            iconAnimation = "none";
-            const hvacAction = this._stateObj.attributes.hvac_action || "idle";
-            if (state === "off") {
-                iconColor = thermostatColors.off;
-            }
-            else {
-                iconColor = thermostatColors[hvacAction] || thermostatColors.idle;
-            }
-            name = this._config.name || this._stateObj.attributes.friendly_name || "Thermostat";
-            stateFmtd = this.hass.formatEntityState(this._stateObj);
+            this._icon = thermostatIcons[state] || thermostatIcons.default;
+            this._stateObj.attributes.hvac_action || "idle";
+            this._name = this._config.name || this._stateObj.attributes.friendly_name || "Thermostat";
+            this._stateFmtd = this.hass.formatEntityState(this._stateObj);
             if (state !== "off") {
                 if (this._stateObj.attributes.current_temperature) {
-                    stateFmtd += ` - ${this._stateObj.attributes.current_temperature}°`;
+                    this._stateFmtd += ` - ${this._stateObj.attributes.current_temperature}°`;
                 }
                 if (this._stateObj.attributes.current_humidity) {
-                    stateFmtd += ` / ${this._stateObj.attributes.current_humidity}%`;
+                    this._stateFmtd += ` / ${this._stateObj.attributes.current_humidity}%`;
                 }
             }
         }
         else {
-            icon = this._config.icon || "hass:thermostat";
-            iconAnimation = "none";
-            iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            name = this._config?.name || "Unknown";
-            stateFmtd = "Unknown";
+            this._icon = this._config.icon || "hass:thermostat";
+            this._name = this._config?.name || "Unknown";
+            this._stateFmtd = "Unknown";
         }
-        return { icon, iconAnimation, iconColor, name, stateFmtd };
-    }
-    _toggleEntity(e) {
-        e.stopPropagation();
-        callService(this.hass, "climate", "toggle", { entity_id: this._entity });
     }
     _showMoreInfo(e) {
         e.stopPropagation();
