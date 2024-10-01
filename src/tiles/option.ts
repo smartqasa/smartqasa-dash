@@ -1,4 +1,4 @@
-import { CSSResult, html, LitElement, PropertyValues, TemplateResult, unsafeCSS } from "lit";
+import { CSSResult, html, LitElement, nothing, PropertyValues, TemplateResult, unsafeCSS } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 
@@ -33,6 +33,9 @@ export class OptionTile extends LitElement implements LovelaceCard {
     @state() private _stateObj?: HassEntity;
     @state() private _running: boolean = false;
     private _entity?: string;
+    private _icon: string = "hass:form-dropdown";
+    private _iconStyles: Record<string, string> = {};
+    private _name: string = "Unknown Lock";
 
     static styles: CSSResult = unsafeCSS(tileBaseStyle);
 
@@ -49,56 +52,53 @@ export class OptionTile extends LitElement implements LovelaceCard {
         );
     }
 
-    protected render(): TemplateResult {
-        const { icon, iconAnimation, iconColor, name } = this._updateState();
-        const iconStyles = {
-            color: `rgb(${iconColor})`,
-            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
-            animation: iconAnimation,
-        };
+    protected willUpdate(): void {
+        this._updateState();
+    }
+
+    protected render(): TemplateResult | typeof nothing {
+        if (!this._config || !this._entity) return nothing;
+
         return html`
             <div class="container" @click=${this._selectOption}>
-                <div class="icon" style="${styleMap(iconStyles)}">
-                    <ha-icon .icon=${icon}></ha-icon>
+                <div class="icon" style="${styleMap(this._iconStyles)}">
+                    <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
-                <div class="name">${name}</div>
+                <div class="name">${this._name}</div>
             </div>
         `;
     }
 
-    private _updateState(): { icon: string; iconAnimation: string; iconColor: string; name: string } {
-        let icon, iconAnimation, iconColor, name;
-
+    private _updateState(): void {
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
 
-        if (this._config && this.hass && this._stateObj) {
+        let iconAnimation, iconColor;
+        if (this._stateObj) {
             if (this._running) {
-                icon = "hass:rotate-right";
+                this._icon = "hass:rotate-right";
                 iconAnimation = "spin 1.0s linear infinite";
                 iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
             } else {
                 if (this._entity === "input_select.location_phase") {
-                    icon = phaseIcons[this._config.option] || phaseIcons.default;
+                    this._icon = phaseIcons[this._config!.option] || phaseIcons.default;
                 } else if (this._entity === "input_select.location_mode") {
-                    icon = modeIcons[this._config.option] || modeIcons.default;
+                    this._icon = modeIcons[this._config!.option] || modeIcons.default;
                 } else {
-                    icon = this._config.icon || this._stateObj.attributes.icon || "hass:form-dropdown";
+                    this._icon = this._config!.icon || this._stateObj.attributes.icon || "hass:form-dropdown";
                 }
                 iconAnimation = "none";
                 iconColor =
-                    this._stateObj.state === this._config.option
+                    this._stateObj.state === this._config!.option
                         ? "var(--sq-rgb-blue, 25, 125, 255)"
                         : "var(--sq-inactive-rgb)";
             }
-            name = this._config.option || "Unknown";
+            this._name = this._config!.option || "Unknown";
         } else {
-            icon = this._config?.icon || "hass:form-dropdown";
+            this._icon = this._config?.icon || "hass:form-dropdown";
             iconAnimation = "none";
             iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            name = this._config?.option || "Unknown";
+            this._name = this._config?.option || "Unknown";
         }
-
-        return { icon, iconAnimation, iconColor, name };
     }
 
     private async _selectOption(e: Event): Promise<void> {

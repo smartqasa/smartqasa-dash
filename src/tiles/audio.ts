@@ -6,7 +6,7 @@ import { dialogTable } from "../dialogs/dialog-table";
 import { dialogPopup } from "../dialogs/dialog-popup";
 import { launchApp } from "../utilities/launch-app";
 
-import chipBaseStyle from "../css/chip-base.css";
+import tileBaseStyle from "../css/tile-base.css";
 import musicBarsStyle from "../css/music-bars.css";
 
 interface Config extends LovelaceCardConfig {
@@ -14,14 +14,14 @@ interface Config extends LovelaceCardConfig {
 }
 
 window.customCards.push({
-    type: "smartqasa-audio-chip",
-    name: "SmartQasa Audio Chip",
+    type: "smartqasa-audio-tile",
+    name: "SmartQasa Audio Tile",
     preview: true,
-    description: "A SmartQasa chip for displaying an audio dialog.",
+    description: "A SmartQasa tile for displaying an audio dialog.",
 });
 
-@customElement("smartqasa-audio-chip")
-export class AudioChip extends LitElement implements LovelaceCard {
+@customElement("smartqasa-audio-tile")
+export class AudioTile extends LitElement implements LovelaceCard {
     public getCardSize(): number {
         return 1;
     }
@@ -30,9 +30,12 @@ export class AudioChip extends LitElement implements LovelaceCard {
     @state() protected _config?: Config;
     private _entity?: string;
     private _stateObj?: HassEntity;
+    private _iconHtml: TemplateResult = html``;
+    private _name: string = "Unknown Speaker";
+    private _stateFmtd: string = "Unknown State";
 
     static get styles(): CSSResultGroup[] {
-        return [unsafeCSS(chipBaseStyle), unsafeCSS(musicBarsStyle)];
+        return [unsafeCSS(tileBaseStyle), unsafeCSS(musicBarsStyle)];
     }
 
     public setConfig(config: Config): void {
@@ -55,32 +58,53 @@ export class AudioChip extends LitElement implements LovelaceCard {
     protected render(): TemplateResult | typeof nothing {
         if (!this._config || !this._entity) return nothing;
 
-        let content;
-        if (this._stateObj?.state === "playing") {
-            content = html`
-                <div class="bars">
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                </div>
-            `;
-        } else {
-            content = html`
-                <div class="icon">
-                    <ha-icon icon="hass:music"></ha-icon>
-                </div>
-            `;
-        }
-
         return html`
-            <div class="container" @click=${this._showDialog} @contextmenu=${this._launchApp}>${content}</div>
+            <div class="container" @click=${this._showDialog}>
+                ${this._iconHtml}
+                <div class="name">${this._name}</div>
+                <div class="state">${this._stateFmtd}</div>
+            </div>
         `;
     }
 
     private _updateState(): void {
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
+
+        if (this._stateObj) {
+            if (this._stateObj.state === "playing") {
+                this._iconHtml = html`
+                    <div class="bars" @click(${this._launchApp})>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div>
+                `;
+            } else {
+                this._iconHtml = html`
+                    <div class="icon" @click(${this._launchApp})>
+                        <ha-icon icon="hass:music"></ha-icon>
+                    </div>
+                `;
+            }
+
+            const state = this._stateObj.state || "unknown";
+            this._name = this._config!.name || this._stateObj.attributes.friendly_name || "Speaker";
+            this._stateFmtd = `${this.hass!.formatEntityState(this._stateObj)}${
+                this._stateObj.attributes.volume_level
+                    ? " - " + this.hass!.formatEntityAttributeValue(this._stateObj, "volume_level")
+                    : ""
+            }`;
+        } else {
+            this._iconHtml = html`
+                <div class="icon">
+                    <ha-icon icon="hass:music"></ha-icon>
+                </div>
+            `;
+            this._name = this._config?.name || "Unknown Speaker";
+            this._stateFmtd = "Unknown State";
+        }
     }
 
     private _showDialog(e: Event): void {

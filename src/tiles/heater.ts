@@ -3,7 +3,6 @@ import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 
 import { HassEntity, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
-import { callService } from "../utilities/call-service";
 import { moreInfoDialog } from "../dialogs/more-info-dialog";
 import { heaterColors } from "../const";
 
@@ -32,6 +31,10 @@ export class HeaterTile extends LitElement implements LovelaceCard {
     @state() protected _config?: Config;
     @state() private _stateObj?: HassEntity;
     private _entity?: string;
+    private _icon: string = "hass:water-boiler-alert";
+    private _iconStyles: Record<string, string> = {};
+    private _name: string = "Unknown Heater";
+    private _stateFmtd: string = "Unknown State";
 
     static styles: CSSResultGroup = [unsafeCSS(tileBaseStyle), unsafeCSS(tileStateStyle)];
 
@@ -47,59 +50,46 @@ export class HeaterTile extends LitElement implements LovelaceCard {
         );
     }
 
+    protected willUpdate(): void {
+        this._updateState();
+    }
+
     protected render(): TemplateResult {
-        const { icon, iconAnimation, iconColor, name, stateFmtd } = this._updateState();
-        const iconStyles = {
-            color: `rgb(${iconColor})`,
-            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
-            animation: iconAnimation,
-        };
         return html`
-            <div class="container" @click=${this._toggleEntity}>
-                <div class="icon" @click=${this._showMoreInfo} style="${styleMap(iconStyles)}">
-                    <ha-icon .icon=${icon}></ha-icon>
+            <div class="container" @click=${this._showMoreInfo}>
+                <div class="icon" style="${styleMap(this._iconStyles)}">
+                    <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
-                <div class="name">${name}</div>
-                <div class="state">${stateFmtd}</div>
+                <div class="name">${this._name}</div>
+                <div class="state">${this._stateFmtd}</div>
             </div>
         `;
     }
 
-    private _updateState(): {
-        icon: string;
-        iconAnimation?: string;
-        iconColor: string;
-        name: string;
-        stateFmtd: string;
-    } {
-        let icon, iconAnimation, iconColor, name, stateFmtd;
-
+    private _updateState(): void {
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
 
+        let iconColor;
         if (this._stateObj) {
             const state = this._stateObj.state || "unknown";
-            icon = this._config!.icon || "hass:water-thermometer";
-            iconAnimation = "none";
+            this._icon = this._config!.icon || "hass:water-boiler";
             iconColor = heaterColors[state] || heaterColors.idle;
-            name = this._config!.name || this._stateObj.attributes.friendly_name || "Heater";
-            stateFmtd = this.hass!.formatEntityState(this._stateObj);
+            this._name = this._config!.name || this._stateObj.attributes.friendly_name || "Heater";
+            this._stateFmtd = this.hass!.formatEntityState(this._stateObj);
             if (state !== "off" && this._stateObj.attributes.temperature) {
-                stateFmtd += ` - ${this._stateObj.attributes.temperature}°`;
+                this._stateFmtd += ` - ${this._stateObj.attributes.temperature}°`;
             }
         } else {
-            icon = this._config!.icon || "hass:water-thermometer";
-            iconAnimation = "none";
+            this._icon = this._config!.icon || "hass:water-boiler-alert";
             iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            name = this._config!.name || "Unknown";
-            stateFmtd = "Unknown";
+            this._name = this._config!.name || "Unknown";
+            this._stateFmtd = "Unknown";
         }
 
-        return { icon, iconAnimation, iconColor, name, stateFmtd };
-    }
-
-    private _toggleEntity(e: Event): void {
-        e.stopPropagation();
-        callService(this.hass, "water_heater", "toggle", { entity_id: this._entity });
+        this._iconStyles = {
+            color: `rgb(${iconColor})`,
+            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
+        };
     }
 
     private _showMoreInfo(e: Event): void {
