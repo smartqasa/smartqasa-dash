@@ -73,7 +73,7 @@ export class AudioTile extends LitElement implements LovelaceCard {
         if (this._stateObj) {
             if (this._stateObj.state === "playing") {
                 this._iconHtml = html`
-                    <div class="bars" @click(${this._launchApp})>
+                    <div class="bars" @click=${this._launchApp}>
                         <div></div>
                         <div></div>
                         <div></div>
@@ -83,7 +83,7 @@ export class AudioTile extends LitElement implements LovelaceCard {
                 `;
             } else {
                 this._iconHtml = html`
-                    <div class="icon" @click(${this._launchApp})>
+                    <div class="icon" @click=${this._launchApp}>
                         <ha-icon icon="hass:music"></ha-icon>
                     </div>
                 `;

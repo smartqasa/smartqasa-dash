@@ -32,6 +32,8 @@
     width: var(--sq-icon-size);
     padding: var(--sq-tile-padding);
     border-radius: 50%;
+    color: rgb(var(--sq-inactive-rgb));
+    background-color: rgb(var(--sq-inactive-rgb), var(--sq-icon-opacity));
     transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;
 }
 .name {
