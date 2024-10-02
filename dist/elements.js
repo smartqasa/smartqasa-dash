@@ -11383,7 +11383,7 @@ let WeatherCard = class WeatherCard extends h {
             return;
         if (changedProps.has("hass") && this.hass) {
             [this._hourlyForecastCard, this._dailyForecastCard, this._radarMapCard].forEach((card) => {
-                if (card)
+                if (card && card.hass !== this.hass)
                     card.hass = this.hass;
             });
         }

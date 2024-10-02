@@ -62,7 +62,7 @@ export class WeatherCard extends LitElement implements LovelaceCard {
 
         if (changedProps.has("hass") && this.hass) {
             [this._hourlyForecastCard, this._dailyForecastCard, this._radarMapCard].forEach((card) => {
-                if (card) card.hass = this.hass;
+                if (card && card.hass !== this.hass) card.hass = this.hass;
             });
         }
     }
