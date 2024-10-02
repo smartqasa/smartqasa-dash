@@ -28,6 +28,7 @@ export class ThermostatChip extends LitElement implements LovelaceCard {
 
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() protected _config?: Config;
+
     private _entity?: string;
     private _stateObj?: HassEntity;
     private _icon: string = "hass:thermostat";
@@ -86,7 +87,6 @@ export class ThermostatChip extends LitElement implements LovelaceCard {
 
         this._iconStyles = {
             color: `rgb(${iconColor})`,
-            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
         };
         this._icon = icon;
         this._temperature = temperature;

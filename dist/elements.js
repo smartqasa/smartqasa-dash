@@ -12288,7 +12288,6 @@ let ThermostatChip = class ThermostatChip extends h {
         }
         this._iconStyles = {
             color: `rgb(${iconColor})`,
-            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
         };
         this._icon = icon;
         this._temperature = temperature;
