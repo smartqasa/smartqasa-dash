@@ -11452,7 +11452,7 @@ var weather$1 = /*#__PURE__*/Object.freeze({
   get WeatherCard () { return WeatherCard; }
 });
 
-var css_248z$6 = ".container {\n    display: flex;\n    margin: 0 var(--sq-chip-spacing);\n    align-items: center;\n    justify-content: center;\n    width: fit-content;\n    border: var(--sq-card-border);\n    border-radius: var(--sq-chip-border-radius);\n    background-color: var(--sq-card-background-color);\n    transition: var(--sq-icon-transition, none);\n    overflow: hidden;\n    -webkit-tap-highlight-color: transparent;\n    cursor: pointer;\n}\n\n.container:focus,\n.container:active {\n    background-color: var(--sq-ripple-color);\n    border-radius: var(--sq-chip-border-radius);\n    outline: none;\n}\n\n.icon {\n    display: flex;\n    height: var(--sq-icon-size);\n    width: var(--sq-icon-size);\n    padding: var(--sq-chip-padding);\n    color: rgb(var(--sq-primary-font-rgb));\n    transition: var(--sq-icon-transition, none);\n    align-items: center;\n    justify-content: center;\n}\n\n@keyframes blink {\n    50% {\n        opacity: 0.25;\n    }\n}\n\n@keyframes spin {\n    from {\n        transform: rotate(0deg);\n    }\n    to {\n        transform: rotate(360deg);\n    }\n}\n";
+var css_248z$6 = ".container {\n    display: flex;\n    margin: 0 var(--sq-chip-spacing);\n    align-items: center;\n    justify-content: center;\n    width: fit-content;\n    border: var(--sq-card-border);\n    border-radius: var(--sq-chip-border-radius);\n    background-color: var(--sq-card-background-color);\n    transition: var(--sq-icon-transition, none);\n    overflow: hidden;\n    -webkit-tap-highlight-color: transparent;\n    cursor: pointer;\n}\n\n.container:focus,\n.container:active {\n    background-color: var(--sq-ripple-color);\n    border-radius: var(--sq-chip-border-radius);\n    outline: none;\n}\n\n.icon {\n    display: flex;\n    height: var(--sq-icon-size);\n    width: var(--sq-icon-size);\n    padding: var(--sq-chip-padding);\n    color: rgb(var(--sq-primary-font-rgb));\n    transition: var(--sq-icon-transition);\n    align-items: center;\n    justify-content: center;\n}\n\n@keyframes blink {\n    50% {\n        opacity: 0.25;\n    }\n}\n\n@keyframes spin {\n    from {\n        transform: rotate(0deg);\n    }\n    to {\n        transform: rotate(360deg);\n    }\n}\n";
 styleInject(css_248z$6);
 
 window.customCards.push({
@@ -11513,7 +11513,7 @@ var admin = /*#__PURE__*/Object.freeze({
   get AdminChip () { return AdminChip; }
 });
 
-var css_248z$5 = "@keyframes sound {\n    0% {\n        opacity: 0.35;\n        height: 0.15rem;\n    }\n    100% {\n        opacity: 1;\n        height: var(--sq-icon-size, 1.8rem);\n    }\n}\n\n.bars {\n    display: flex;\n    justify-content: center;\n    align-items: flex-end;\n    width: var(--sq-icon-size);\n    height: var(--sq-icon-size);\n    padding: var(--sq-chip-padding);\n}\n\n.bars > div {\n    background: var(--accent-color);\n    height: 0.15rem;\n    width: 0.25rem;\n    animation: sound 525ms linear -800ms infinite alternate;\n}\n\n.bars > div:first-child {\n    animation-duration: 575ms;\n}\n\n.bars > div:nth-child(2) {\n    animation-duration: 550ms;\n}\n\n.bars > div:nth-child(3) {\n    animation-duration: 525ms;\n}\n\n.bars > div:nth-child(4) {\n    animation-duration: 500ms;\n}\n\n.bars > div:last-child {\n    animation-duration: 475ms;\n}\n";
+var css_248z$5 = "@keyframes sound {\n    0% {\n        opacity: 0.35;\n        height: 0.15rem;\n    }\n    100% {\n        opacity: 1;\n        height: var(--sq-icon-size, 1.8rem);\n    }\n}\n\n.bars {\n    display: flex;\n    flex: 0 0 auto;\n    width: var(--sq-icon-size);\n    height: var(--sq-icon-size);\n    padding: var(--sq-chip-padding);\n    border-radius: 50%;\n    justify-content: center;\n    align-items: flex-end;\n}\n\n.bars.chip {\n    margin: auto 0;\n    padding: var(--sq-tile-padding);\n    color: rgb(var(--sq-inactive-rgb));\n    background-color: rgba(var(--sq-inactive-rgb), var(--sq-icon-opacity));\n    transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;\n}\n\n.bars.tile {\n    margin: auto 0;\n    padding: var(--sq-tile-padding);\n    color: rgb(var(--sq-inactive-rgb));\n    background-color: rgba(var(--sq-inactive-rgb), var(--sq-icon-opacity));\n    transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;\n}\n\n.bars > div {\n    background: var(--accent-color);\n    height: 0.15rem;\n    width: 0.25rem;\n    animation: sound 525ms linear -800ms infinite alternate;\n}\n\n.bars > div:first-child {\n    animation-duration: 575ms;\n}\n\n.bars > div:nth-child(2) {\n    animation-duration: 550ms;\n}\n\n.bars > div:nth-child(3) {\n    animation-duration: 525ms;\n}\n\n.bars > div:nth-child(4) {\n    animation-duration: 500ms;\n}\n\n.bars > div:last-child {\n    animation-duration: 475ms;\n}\n";
 styleInject(css_248z$5);
 
 window.customCards.push({
@@ -13127,7 +13127,7 @@ var area = /*#__PURE__*/Object.freeze({
   get AreaTile () { return AreaTile; }
 });
 
-var css_248z$1 = ".container {\n    grid-template-areas:\n        \"i n\"\n        \"i s\";\n    grid-row-gap: 0.3rem;\n}\n.name {\n    place-self: end start;\n}\n.state {\n    grid-area: s;\n    align-self: start;\n    text-align: left;\n    text-overflow: ellipsis;\n    overflow: hidden;\n    font-weight: var(--sq-secondary-font-weight);\n    font-size: var(--sq-secondary-font-size);\n    color: rgb(var(--sq-secondary-font-rgb));\n}\n";
+var css_248z$1 = ".container {\n    display: flex;\n    width: 100%;\n    height: 100%;\n    box-sizing: border-box;\n    border: var(--sq-card-border);\n    border-radius: var(--sq-card-border-radius);\n    padding: var(--sq-tile-padding);\n    background-color: var(--sq-card-background-color);\n    column-gap: 1rem;\n    overflow: hidden;\n    -webkit-tap-highlight-color: transparent;\n    cursor: pointer;\n}\n\n.container:focus,\n.container:active {\n    background-color: var(--sq-ripple-color);\n    border-radius: var(--sq-card-border-radius);\n    outline: none;\n}\n\n.icon {\n    display: flex;\n    flex: 0 0 auto;\n    width: var(--sq-icon-size);\n    height: var(--sq-icon-size);\n    margin: auto 0;\n    padding: var(--sq-tile-padding);\n    border-radius: 50%;\n    color: rgb(var(--sq-inactive-rgb));\n    background-color: rgba(var(--sq-inactive-rgb), var(--sq-icon-opacity));\n    transition: var(--sq-icon-transition);\n}\n\n.text {\n    display: flex;\n    flex-direction: column;\n    align-items: flex-start;\n    justify-content: center;\n    row-gap: 0.3rem;\n    overflow: hidden;\n}\n\n.name {\n    display: -webkit-box;\n    -webkit-line-clamp: 2;\n    -webkit-box-orient: vertical;\n    line-clamp: 2;\n    line-height: 1;\n    text-align: left;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: normal;\n    font-weight: var(--sq-primary-font-weight);\n    font-size: var(--sq-primary-font-size);\n    color: rgb(var(--sq-primary-font-rgb));\n}\n\n.state {\n    text-align: left;\n    text-overflow: ellipsis;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: normal;\n    font-weight: var(--sq-secondary-font-weight);\n    font-size: var(--sq-secondary-font-size);\n    color: rgb(var(--sq-secondary-font-rgb));\n}\n\n@keyframes blink {\n    50% {\n        opacity: 0.25;\n    }\n}\n\n@keyframes spin {\n    from {\n        transform: rotate(0deg);\n    }\n    to {\n        transform: rotate(360deg);\n    }\n}\n";
 styleInject(css_248z$1);
 
 window.customCards.push({
@@ -13147,7 +13147,7 @@ let AudioTile = class AudioTile extends h {
         return 1;
     }
     static get styles() {
-        return [r$3(css_248z$2), r$3(css_248z$1), r$3(css_248z$5)];
+        return [r$3(css_248z$1), r$3(css_248z$5)];
     }
     setConfig(config) {
         this._config = { ...config };
@@ -13168,8 +13168,10 @@ let AudioTile = class AudioTile extends h {
         return ke `
             <div class="container" @click=${this._showDialog}>
                 ${this._iconHtml}
-                <div class="name">${this._name}</div>
-                <div class="state">${this._stateFmtd}</div>
+                <div class="text">
+                    <div class="name">${this._name}</div>
+                    <div class="state">${this._stateFmtd}</div>
+                </div>
             </div>
         `;
     }
@@ -13178,7 +13180,7 @@ let AudioTile = class AudioTile extends h {
         if (this._stateObj) {
             if (this._stateObj.state === "playing") {
                 this._iconHtml = ke `
-                    <div class="bars" @click=${this._launchApp}>
+                    <div class="bars tile" @click=${this._launchApp}>
                         <div></div>
                         <div></div>
                         <div></div>
@@ -13313,6 +13315,9 @@ function entityListDialog(dialogTitle, filterType, filterValue, tileType) {
     dialogPopup(dialogConfig);
 }
 
+var css_248z = ".container {\n    grid-template-areas:\n        \"i n\"\n        \"i s\";\n    grid-row-gap: 0.3rem;\n}\n.name {\n    place-self: end start;\n}\n.state {\n    grid-area: s;\n    align-self: start;\n    text-align: left;\n    text-overflow: ellipsis;\n    overflow: hidden;\n    font-weight: var(--sq-secondary-font-weight);\n    font-size: var(--sq-secondary-font-size);\n    color: rgb(var(--sq-secondary-font-rgb));\n}\n";
+styleInject(css_248z);
+
 window.customCards.push({
     type: "smartqasa-fan-tile",
     name: "SmartQasa Fan Tile",
@@ -13331,7 +13336,7 @@ let FanTile = class FanTile extends h {
         return 1;
     }
     static get styles() {
-        return [r$3(css_248z$2), r$3(css_248z$1)];
+        return [r$3(css_248z$2), r$3(css_248z)];
     }
     setConfig(config) {
         this._config = { ...config };
@@ -13445,7 +13450,7 @@ let GarageTile = class GarageTile extends h {
     getCardSize() {
         return 1;
     }
-    static { this.styles = [r$3(css_248z$2), r$3(css_248z$1)]; }
+    static { this.styles = [r$3(css_248z$2), r$3(css_248z)]; }
     setConfig(config) {
         this._config = { ...config };
         this._entity = this._config.entity?.startsWith("cover.") ? this._config.entity : undefined;
@@ -13563,7 +13568,7 @@ let HeaterTile = class HeaterTile extends h {
     getCardSize() {
         return 1;
     }
-    static { this.styles = [r$3(css_248z$2), r$3(css_248z$1)]; }
+    static { this.styles = [r$3(css_248z$2), r$3(css_248z)]; }
     setConfig(config) {
         this._config = { ...config };
         this._entity = this._config.entity?.startsWith("water_heater.") ? this._config.entity : undefined;
@@ -13633,9 +13638,6 @@ var heater = /*#__PURE__*/Object.freeze({
   get HeaterTile () { return HeaterTile; }
 });
 
-var css_248z = ".container {\n    display: flex;\n    width: 100%;\n    height: 100%;\n    box-sizing: border-box;\n    border: var(--sq-card-border);\n    border-radius: var(--sq-card-border-radius);\n    padding: var(--sq-tile-padding);\n    background-color: var(--sq-card-background-color);\n    column-gap: 1rem;\n    overflow: hidden;\n    -webkit-tap-highlight-color: transparent;\n    cursor: pointer;\n}\n\n.container:focus,\n.container:active {\n    background-color: var(--sq-ripple-color);\n    border-radius: var(--sq-card-border-radius);\n    outline: none;\n}\n\n.icon {\n    display: flex;\n    flex: 0 0 auto;\n    margin: auto 0;\n    width: var(--sq-icon-size);\n    height: var(--sq-icon-size);\n    justify-content: center;\n    align-items: center;\n    padding: var(--sq-tile-padding);\n    border-radius: 50%;\n    color: rgb(var(--sq-inactive-rgb));\n    background-color: rgba(var(--sq-inactive-rgb), var(--sq-icon-opacity));\n    transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;\n}\n\n.text {\n    display: flex;\n    flex-direction: column;\n    align-items: flex-start;\n    justify-content: center;\n    row-gap: 0.3rem;\n    overflow: hidden;\n}\n\n.name {\n    display: -webkit-box;\n    -webkit-line-clamp: 2;\n    -webkit-box-orient: vertical;\n    line-clamp: 2;\n    line-height: 1;\n    text-align: left;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: normal;\n    font-weight: var(--sq-primary-font-weight);\n    font-size: var(--sq-primary-font-size);\n    color: rgb(var(--sq-primary-font-rgb));\n}\n\n.state {\n    text-align: left;\n    text-overflow: ellipsis;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: normal;\n    font-weight: var(--sq-secondary-font-weight);\n    font-size: var(--sq-secondary-font-size);\n    color: rgb(var(--sq-secondary-font-rgb));\n}\n\n@keyframes blink {\n    50% {\n        opacity: 0.25;\n    }\n}\n\n@keyframes spin {\n    from {\n        transform: rotate(0deg);\n    }\n    to {\n        transform: rotate(360deg);\n    }\n}\n";
-styleInject(css_248z);
-
 window.customCards.push({
     type: "smartqasa-light-tile",
     name: "SmartQasa Light Tile",
@@ -13654,7 +13656,7 @@ let LightTile = class LightTile extends h {
         return 1;
     }
     static get styles() {
-        return r$3(css_248z);
+        return r$3(css_248z$1);
     }
     setConfig(config) {
         this._config = { ...config };
@@ -13878,7 +13880,7 @@ let LockTile = class LockTile extends h {
         return 1;
     }
     static get styles() {
-        return [r$3(css_248z$2), r$3(css_248z$1)];
+        return [r$3(css_248z$2), r$3(css_248z)];
     }
     setConfig(config) {
         this._config = { ...config };
@@ -14120,7 +14122,7 @@ let RobotTile = class RobotTile extends h {
     getCardSize() {
         return 1;
     }
-    static { this.styles = [r$3(css_248z$2), r$3(css_248z$1)]; }
+    static { this.styles = [r$3(css_248z$2), r$3(css_248z)]; }
     setConfig(config) {
         this._config = { ...config };
         this._entity = this._config.entity?.startsWith("vacuum.") ? this._config.entity : undefined;
@@ -14240,7 +14242,7 @@ let RokuTile = class RokuTile extends h {
     getCardSize() {
         return 1;
     }
-    static { this.styles = [r$3(css_248z$2), r$3(css_248z$1)]; }
+    static { this.styles = [r$3(css_248z$2), r$3(css_248z)]; }
     setConfig(config) {
         this._config = { ...config };
         this._entity = this._config.entity.startsWith("media_player.") ? this._config.entity : undefined;
@@ -14466,7 +14468,7 @@ let SelectTile = class SelectTile extends h {
     getCardSize() {
         return 1;
     }
-    static { this.styles = [r$3(css_248z$2), r$3(css_248z$1)]; }
+    static { this.styles = [r$3(css_248z$2), r$3(css_248z)]; }
     setConfig(config) {
         this._config = { ...config };
         this._entity = this._config.entity?.startsWith("input_select.") ? this._config.entity : undefined;
@@ -14542,7 +14544,7 @@ let SensorTile = class SensorTile extends h {
     getCardSize() {
         return 1;
     }
-    static { this.styles = [r$3(css_248z$2), r$3(css_248z$1)]; }
+    static { this.styles = [r$3(css_248z$2), r$3(css_248z)]; }
     setConfig(config) {
         this._config = { ...config };
         this._entity = this._config.entity?.startsWith("binary_sensor.") ? this._config.entity : undefined;
@@ -14692,7 +14694,7 @@ let PoolLightTile = class PoolLightTile extends h {
     getCardSize() {
         return 1;
     }
-    static { this.styles = [r$3(css_248z$2), r$3(css_248z$1)]; }
+    static { this.styles = [r$3(css_248z$2), r$3(css_248z)]; }
     setConfig(config) {
         this._config = { ...config };
         this._entity = ["light", "switch"].includes(this._config.entity?.split(".")[0])
@@ -14890,7 +14892,7 @@ let ShadeTile = class ShadeTile extends h {
     getCardSize() {
         return 1;
     }
-    static { this.styles = [r$3(css_248z$2), r$3(css_248z$1)]; }
+    static { this.styles = [r$3(css_248z$2), r$3(css_248z)]; }
     setConfig(config) {
         this._config = { ...config };
         this._entity = this._config.entity?.startsWith("cover.") ? this._config.entity : undefined;
@@ -15049,7 +15051,7 @@ let SwitchTile = class SwitchTile extends h {
         return 1;
     }
     static get styles() {
-        return [r$3(css_248z$2), r$3(css_248z$1)];
+        return [r$3(css_248z$2), r$3(css_248z)];
     }
     setConfig(config) {
         this._config = { ...config };
@@ -15194,7 +15196,7 @@ let ThermostatTile = class ThermostatTile extends h {
         return 1;
     }
     static get styles() {
-        return [r$3(css_248z$2), r$3(css_248z$1)];
+        return [r$3(css_248z$2), r$3(css_248z)];
     }
     setConfig(config) {
         this._config = { ...config };

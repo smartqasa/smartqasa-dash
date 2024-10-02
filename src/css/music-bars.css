@@ -11,11 +11,29 @@
 
 .bars {
     display: flex;
-    justify-content: center;
-    align-items: flex-end;
+    flex: 0 0 auto;
     width: var(--sq-icon-size);
     height: var(--sq-icon-size);
     padding: var(--sq-chip-padding);
+    border-radius: 50%;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+.bars.chip {
+    margin: auto 0;
+    padding: var(--sq-tile-padding);
+    color: rgb(var(--sq-inactive-rgb));
+    background-color: rgba(var(--sq-inactive-rgb), var(--sq-icon-opacity));
+    transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;
+}
+
+.bars.tile {
+    margin: auto 0;
+    padding: var(--sq-tile-padding);
+    color: rgb(var(--sq-inactive-rgb));
+    background-color: rgba(var(--sq-inactive-rgb), var(--sq-icon-opacity));
+    transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;
 }
 
 .bars > div {

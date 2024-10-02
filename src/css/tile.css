@@ -23,16 +23,14 @@
 .icon {
     display: flex;
     flex: 0 0 auto;
-    margin: auto 0;
     width: var(--sq-icon-size);
     height: var(--sq-icon-size);
-    justify-content: center;
-    align-items: center;
+    margin: auto 0;
     padding: var(--sq-tile-padding);
     border-radius: 50%;
     color: rgb(var(--sq-inactive-rgb));
     background-color: rgba(var(--sq-inactive-rgb), var(--sq-icon-opacity));
-    transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;
+    transition: var(--sq-icon-transition);
 }
 
 .text {

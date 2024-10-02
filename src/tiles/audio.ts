@@ -6,8 +6,7 @@ import { dialogTable } from "../dialogs/dialog-table";
 import { dialogPopup } from "../dialogs/dialog-popup";
 import { launchApp } from "../utilities/launch-app";
 
-import tileBaseStyle from "../css/tile-base.css";
-import tileStateStyle from "../css/tile-state.css";
+import tileBaseStyle from "../css/tile.css";
 import musicBarsStyle from "../css/music-bars.css";
 
 interface Config extends LovelaceCardConfig {
@@ -36,7 +35,7 @@ export class AudioTile extends LitElement implements LovelaceCard {
     private _stateFmtd: string = "Unknown State";
 
     static get styles(): CSSResultGroup[] {
-        return [unsafeCSS(tileBaseStyle), unsafeCSS(tileStateStyle), unsafeCSS(musicBarsStyle)];
+        return [unsafeCSS(tileBaseStyle), unsafeCSS(musicBarsStyle)];
     }
 
     public setConfig(config: Config): void {
@@ -62,8 +61,10 @@ export class AudioTile extends LitElement implements LovelaceCard {
         return html`
             <div class="container" @click=${this._showDialog}>
                 ${this._iconHtml}
-                <div class="name">${this._name}</div>
-                <div class="state">${this._stateFmtd}</div>
+                <div class="text">
+                    <div class="name">${this._name}</div>
+                    <div class="state">${this._stateFmtd}</div>
+                </div>
             </div>
         `;
     }
@@ -74,7 +75,7 @@ export class AudioTile extends LitElement implements LovelaceCard {
         if (this._stateObj) {
             if (this._stateObj.state === "playing") {
                 this._iconHtml = html`
-                    <div class="bars" @click=${this._launchApp}>
+                    <div class="bars tile" @click=${this._launchApp}>
                         <div></div>
                         <div></div>
                         <div></div>
