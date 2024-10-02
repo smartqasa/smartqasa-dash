@@ -34,7 +34,7 @@ export class SonosPanelCard extends LitElement implements LovelaceCard {
             .container {
                 display: grid;
                 grid-template-columns: 1fr 1fr 1fr;
-                gap: var(--sq-card-spacing, 0.8rem);
+                gap: var(--sq-card-spacing);
             }
             .card {
                 display: block;
