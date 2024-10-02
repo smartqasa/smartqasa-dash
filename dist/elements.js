@@ -13638,6 +13638,8 @@ let HeaterTile = class HeaterTile extends h {
         this._updateState();
     }
     render() {
+        if (!this._config || !this._entity)
+            return D;
         return ke `
             <div class="container" @click=${this._showMoreInfo}>
                 <div class="icon" style="${se(this._iconStyles)}">
@@ -14184,12 +14186,6 @@ var option = /*#__PURE__*/Object.freeze({
   get OptionTile () { return OptionTile; }
 });
 
-var css_248z$1 = ".container {\n    display: grid;\n    width: 100%;\n    height: 100%;\n    box-sizing: border-box;\n    border: var(--sq-card-border);\n    border-radius: var(--sq-card-border-radius);\n    grid-template-areas: \"i n\";\n    grid-template-columns: auto 1fr;\n    grid-column-gap: 1rem;\n    grid-row-gap: 0.4rem;\n    padding: var(--sq-tile-padding);\n    background-color: var(--sq-card-background-color);\n    overflow: hidden;\n    -webkit-tap-highlight-color: transparent;\n    cursor: pointer;\n}\n\n.container:focus,\n.container:active {\n    background-color: var(--sq-ripple-color);\n    border-radius: var(--sq-card-border-radius);\n    outline: none;\n}\n\n.icon {\n    grid-area: i;\n    display: flex;\n    justify-content: center;\n    align-self: center;\n    height: var(--sq-icon-size);\n    width: var(--sq-icon-size);\n    padding: var(--sq-tile-padding);\n    border-radius: 50%;\n    color: rgb(var(--sq-inactive-rgb));\n    background-color: rgb(var(--sq-inactive-rgb), var(--sq-icon-opacity));\n    transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;\n}\n.name {\n    grid-area: n;\n    place-self: center start;\n    max-height: 3.6rem;\n    line-height: 1;\n    max-width: 100%;\n    text-align: left;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: normal;\n    font-weight: var(--sq-primary-font-weight);\n    font-size: var(--sq-primary-font-size);\n    color: rgb(var(--sq-primary-font-rgb));\n}\n\n@keyframes blink {\n    50% {\n        opacity: 0.25;\n    }\n}\n\n@keyframes spin {\n    from {\n        transform: rotate(0deg);\n    }\n    to {\n        transform: rotate(360deg);\n    }\n}\n";
-styleInject(css_248z$1);
-
-var css_248z = ".container {\n    grid-template-areas:\n        \"i n\"\n        \"i s\";\n    grid-row-gap: 0.3rem;\n}\n.name {\n    place-self: end start;\n}\n.state {\n    grid-area: s;\n    align-self: start;\n    text-align: left;\n    text-overflow: ellipsis;\n    overflow: hidden;\n    font-weight: var(--sq-secondary-font-weight);\n    font-size: var(--sq-secondary-font-size);\n    color: rgb(var(--sq-secondary-font-rgb));\n}\n";
-styleInject(css_248z);
-
 window.customCards.push({
     type: "smartqasa-robot-tile",
     name: "SmartQasa Robot Tile",
@@ -14197,10 +14193,51 @@ window.customCards.push({
     description: "A SmartQasa tile for controlling a robot vacuum entity.",
 });
 let RobotTile = class RobotTile extends h {
+    constructor() {
+        super(...arguments);
+        this._icon = "hass:robot-vacuum-variant";
+        this._iconStyles = {};
+        this._name = "Unknown Robot";
+        this._stateFmtd = "Unknown State";
+        this._stateMap = {
+            cleaning: {
+                stateIcon: "hass:robot-vacuum-variant",
+                stateAnimation: "none",
+                stateColor: "var(--sq-vacuum-cleaning-rgb, 0, 150, 136)",
+            },
+            docked: {
+                stateIcon: "hass:robot-vacuum-variant",
+                stateAnimation: "none",
+                stateColor: "var(--sq-inactive-rgb)",
+            },
+            idle: {
+                stateIcon: "hass:robot-vacuum-variant",
+                stateAnimation: "blink 2.0s linear infinite",
+                stateColor: "var(--sq-vacuum-idle-rgb, 190, 75, 85)",
+            },
+            paused: {
+                stateIcon: "hass:robot-vacuum-variant",
+                stateAnimation: "blink 2.0s linear infinite",
+                stateColor: "var(--sq-vacuum-paused-rgb, 190, 75, 85)",
+            },
+            returning: {
+                stateIcon: "hass:robot-vacuum-variant",
+                stateAnimation: "blink 2.0s linear infinite",
+                stateColor: "var(--sq-vacuum-returning-rgb, 0, 150, 136)",
+            },
+            default: {
+                stateIcon: "hass:robot-vacuum-variant-alert",
+                stateAnimation: "none",
+                stateColor: "var(--sq-unavailable-rgb, 255, 0, 255)",
+            },
+        };
+    }
     getCardSize() {
         return 1;
     }
-    static { this.styles = [r$3(css_248z$1), r$3(css_248z)]; }
+    static get styles() {
+        return r$3(css_248z$2);
+    }
     setConfig(config) {
         this._config = { ...config };
         this._entity = this._config.entity?.startsWith("vacuum.") ? this._config.entity : undefined;
@@ -14209,60 +14246,31 @@ let RobotTile = class RobotTile extends h {
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
             changedProps.has("_config"));
     }
+    willUpdate() {
+        this._updateState();
+    }
     render() {
-        const { icon, iconAnimation, iconColor, name, stateFmtd } = this._updateState();
-        const iconStyles = {
-            color: `rgb(${iconColor})`,
-            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
-            animation: iconAnimation,
-        };
+        if (!this._config || !this._entity)
+            return D;
         return ke `
             <div class="container" @click=${this._toggleEntity}>
-                <div class="icon" @click=${this._showMoreInfo} style="${se(iconStyles)}">
-                    <ha-icon .icon=${icon}></ha-icon>
+                <div class="icon" @click=${this._showMoreInfo} style="${se(this._iconStyles)}">
+                    <ha-icon icon=${this._icon}></ha-icon>
                 </div>
-                <div class="name">${name}</div>
-                <div class="state">${stateFmtd}</div>
+                <div class="name">${this._name}</div>
+                <div class="state">${this._stateFmtd}</div>
             </div>
         `;
     }
     _updateState() {
-        let icon, iconAnimation, iconColor, name, stateFmtd;
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
-        if (this._config && this._stateObj) {
+        let icon, iconAnimation, iconColor, name, stateFmtd;
+        if (this._stateObj) {
             const state = this._stateObj.state || "unknown";
-            switch (state) {
-                case "cleaning":
-                    icon = "hass:robot-vacuum-variant";
-                    iconAnimation = "none";
-                    iconColor = "var(--sq-vacuum-cleaning-rgb, 0, 150, 136)";
-                    break;
-                case "docked":
-                    icon = "hass:robot-vacuum-variant";
-                    iconAnimation = "none";
-                    iconColor = "var(--sq-inactive-rgb)";
-                    break;
-                case "idle":
-                    icon = "hass:robot-vacuum-variant";
-                    iconAnimation = "blink 2.0s linear infinite";
-                    iconColor = "var(--sq-vacuum-idle-rgb, 190, 75, 85)";
-                    break;
-                case "paused":
-                    icon = "hass:robot-vacuum-variant";
-                    iconAnimation = "blink 2.0s linear infinite";
-                    iconColor = "var(--sq-vacuum-paused-rgb, 190, 75, 85)";
-                    break;
-                case "returning":
-                    icon = "hass:robot-vacuum-variant";
-                    iconAnimation = "blink 2.0s linear infinite";
-                    iconColor = "var(--sq-vacuum-returning-rgb, 0, 150, 136)";
-                    break;
-                default:
-                    icon = "hass:robot-vacuum-variant-alert";
-                    iconAnimation = "none";
-                    iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-                    break;
-            }
+            const { stateIcon, stateAnimation, stateColor } = this._stateMap[state] || this._stateMap.default;
+            icon = this._config.icon || stateIcon || "hass:vacuum-variant";
+            iconAnimation = stateAnimation;
+            iconColor = stateColor;
             name = this._config.name || this._stateObj.attributes.friendly_name || "Robot";
             stateFmtd =
                 this.hass?.formatEntityState(this._stateObj) +
@@ -14273,11 +14281,18 @@ let RobotTile = class RobotTile extends h {
         else {
             icon = this._config?.icon || "hass:robot-vacuum-variant-alert";
             iconAnimation = "none";
-            iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+            iconColor = "var(--sq-unavailable-rgb)";
             name = this._config?.name || "Unknown";
             stateFmtd = "Unknown";
         }
-        return { icon, iconAnimation, iconColor, name, stateFmtd };
+        this._iconStyles = {
+            color: `rgb(${iconColor})`,
+            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
+            animation: iconAnimation,
+        };
+        this._icon = icon;
+        this._name = name;
+        this._stateFmtd = stateFmtd;
     }
     _toggleEntity(e) {
         e.stopPropagation();
@@ -14317,10 +14332,19 @@ window.customCards.push({
     description: "A SmartQasa tile for controlling a Roku media_player entity.",
 });
 let RokuTile = class RokuTile extends h {
+    constructor() {
+        super(...arguments);
+        this._icon = "hass:audio-video";
+        this._iconStyles = {};
+        this._name = "Unknown Roku";
+        this._stateFmtd = "Unknown State";
+    }
     getCardSize() {
         return 1;
     }
-    static { this.styles = [r$3(css_248z$1), r$3(css_248z)]; }
+    static get styles() {
+        return r$3(css_248z$2);
+    }
     setConfig(config) {
         this._config = { ...config };
         this._entity = this._config.entity.startsWith("media_player.") ? this._config.entity : undefined;
@@ -14329,29 +14353,27 @@ let RokuTile = class RokuTile extends h {
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
             changedProps.has("_config"));
     }
+    willUpdate() {
+        this._updateState();
+    }
     render() {
-        const { icon, iconAnimation, iconColor, name, stateFmtd } = this._updateState();
-        const iconStyles = {
-            color: `rgb(${iconColor})`,
-            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
-            animation: iconAnimation,
-        };
+        if (!this._config || !this._entity)
+            return D;
         return ke `
             <div class="container" @click=${this._toggleEntity}>
-                <div class="icon" @click=${this._showMoreInfo} style="${se(iconStyles)}">
-                    <ha-icon .icon=${icon}></ha-icon>
+                <div class="icon" @click=${this._showMoreInfo} style="${se(this._iconStyles)}">
+                    <ha-icon icon=${this._icon}></ha-icon>
                 </div>
-                <div class="name">${name}</div>
-                <div class="state">${stateFmtd}</div>
+                <div class="name">${this._name}</div>
+                <div class="state">${this._stateFmtd}</div>
             </div>
         `;
     }
     _updateState() {
-        let icon, iconAnimation, iconColor, name, stateFmtd;
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
+        let icon, iconColor, name, stateFmtd;
         if (this._stateObj) {
             icon = this._config?.icon || this._stateObj.attributes.icon || "hass:audio-video";
-            iconAnimation = "none";
             const state = this._stateObj.state || "unknown";
             switch (state) {
                 case "idle":
@@ -14378,12 +14400,17 @@ let RokuTile = class RokuTile extends h {
         }
         else {
             icon = this._config.icon || "hass:audio-video-off";
-            iconAnimation = "none";
             iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
             name = this._config.name || "Unknown";
             stateFmtd = "Unknown";
         }
-        return { icon, iconAnimation, iconColor, name, stateFmtd };
+        this._iconStyles = {
+            color: `rgb(${iconColor})`,
+            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
+        };
+        this._icon = icon;
+        this._name = name;
+        this._stateFmtd = stateFmtd;
     }
     _toggleEntity(e) {
         e.stopPropagation();
@@ -14437,13 +14464,18 @@ let RoutineTile = class RoutineTile extends h {
     constructor() {
         super(...arguments);
         this._running = false;
+        this._icon = "hass:play-circle";
+        this._iconStyles = {};
+        this._name = "Unknown Routine";
     }
     getCardSize() {
         return 1;
     }
-    static { this.styles = r$3(css_248z$1); }
+    static get styles() {
+        return r$3(css_248z$2);
+    }
     setConfig(config) {
-        this._config = { ...config };
+        this._config = config;
         this._entity = ["automation", "scene", "script"].includes(this._config.entity?.split(".")[0])
             ? this._config.entity
             : undefined;
@@ -14453,45 +14485,48 @@ let RoutineTile = class RoutineTile extends h {
             (changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
             changedProps.has("_config"));
     }
+    willUpdated() {
+        this._updateState();
+    }
     render() {
-        const { icon, iconAnimation, iconColor, name } = this._updateState();
-        const iconStyles = {
-            color: `rgb(${iconColor})`,
-            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
-            animation: iconAnimation,
-        };
+        if (!this._config || !this._entity)
+            return D;
         return ke `
             <div class="container" @click=${this._runRoutine}>
-                <div class="icon" style="${se(iconStyles)}">
-                    <ha-icon .icon=${icon}></ha-icon>
+                <div class="icon" style="${se(this._iconStyles)}">
+                    <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
-                <div class="name">${name}</div>
+                <div class="text">
+                    <div class="name">${this._name}</div>
+                </div>
             </div>
         `;
     }
     _updateState() {
-        let icon, iconAnimation, iconColor, name;
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
-        if (this._config && this._stateObj) {
+        let icon, iconColor, name;
+        if (this._stateObj) {
             if (this._running) {
                 icon = "hass:rotate-right";
-                iconAnimation = "spin 1.0s linear infinite";
-                iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
+                iconColor = "var(--sq-rgb-blue)";
             }
             else {
-                icon = this._config.icon || this._stateObj.attributes.icon || "hass:help-rhombus";
-                iconAnimation = "none";
+                icon = this._config.icon || this._stateObj.attributes.icon || "hass:play-circle";
                 iconColor = "var(--sq-inactive-rgb)";
             }
             name = this._config.name || this._stateObj.attributes.friendly_name || "Roku";
         }
         else {
             icon = "hass:alert-rhombus";
-            iconAnimation = "none";
             iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
             name = "Unknown";
         }
-        return { icon, iconAnimation, iconColor, name };
+        this._iconStyles = {
+            color: `rgb(${iconColor})`,
+            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
+        };
+        this._icon = icon;
+        this._name = name;
     }
     _runRoutine(e) {
         e.stopPropagation();
@@ -14543,10 +14578,19 @@ window.customCards.push({
     description: "A SmartQasa tile for displaying an Input Select entity.",
 });
 let SelectTile = class SelectTile extends h {
+    constructor() {
+        super(...arguments);
+        this._icon = "hass:form-dropdown";
+        this._iconStyles = {};
+        this._name = "Unknown Select";
+        this._stateFmtd = "Unknown State";
+    }
     getCardSize() {
         return 1;
     }
-    static { this.styles = [r$3(css_248z$1), r$3(css_248z)]; }
+    static get styles() {
+        return r$3(css_248z$2);
+    }
     setConfig(config) {
         this._config = { ...config };
         this._entity = this._config.entity?.startsWith("input_select.") ? this._config.entity : undefined;
@@ -14555,42 +14599,47 @@ let SelectTile = class SelectTile extends h {
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
             (changedProps.has("_config") && this._config));
     }
+    willUpdate() {
+        this._updateState();
+    }
     render() {
-        const { icon, iconAnimation, iconColor, name, stateFmtd } = this._updateState();
-        const iconStyles = {
-            color: `rgb(${iconColor})`,
-            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
-            animation: iconAnimation,
-        };
+        if (!this._config || !this._entity)
+            return D;
         return ke `
             <div class="container" @click=${this._showOptions}>
-                <div class="icon" style="${se(iconStyles)}">
-                    <ha-icon .icon=${icon}></ha-icon>
+                <div class="icon" style="${se(this._iconStyles)}">
+                    <ha-icon icon=${this._icon}></ha-icon>
                 </div>
-                <div class="name">${name}</div>
-                <div class="state">${stateFmtd}</div>
+                <div class="text">
+                    <div class="name">${this._name}</div>
+                    <div class="state">${this._stateFmtd}</div>
+                </div>
             </div>
         `;
     }
     _updateState() {
-        let icon, iconAnimation, iconColor, name, stateFmtd;
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
+        let icon, iconColor, name, stateFmtd;
         if (this._config && this.hass && this._stateObj) {
             this._stateObj.state || "unknown";
             icon = this._config.icon || this._stateObj.attributes?.icon || "hass:form-dropdown";
-            iconAnimation = "none";
             iconColor = "var(--sq-inactive-rgb)";
             name = this._config.name || this._stateObj.attributes?.friendly_name || "Select List";
             stateFmtd = this.hass.formatEntityState(this._stateObj) || "Unknown";
         }
         else {
             icon = this._config?.icon || "hass:form-dropdown";
-            iconAnimation = "none";
             iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
             name = this._config?.name || "Unknown";
             stateFmtd = "Unknown";
         }
-        return { icon, iconAnimation, iconColor, name, stateFmtd };
+        this._iconStyles = {
+            color: `rgb(${iconColor})`,
+            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
+        };
+        this._icon = icon;
+        this._name = name;
+        this._stateFmtd = stateFmtd;
     }
     _showOptions(e) {
         e.stopPropagation();
@@ -14611,6 +14660,12 @@ var select = /*#__PURE__*/Object.freeze({
   __proto__: null,
   get SelectTile () { return SelectTile; }
 });
+
+var css_248z$1 = ".container {\n    display: grid;\n    width: 100%;\n    height: 100%;\n    box-sizing: border-box;\n    border: var(--sq-card-border);\n    border-radius: var(--sq-card-border-radius);\n    grid-template-areas: \"i n\";\n    grid-template-columns: auto 1fr;\n    grid-column-gap: 1rem;\n    grid-row-gap: 0.4rem;\n    padding: var(--sq-tile-padding);\n    background-color: var(--sq-card-background-color);\n    overflow: hidden;\n    -webkit-tap-highlight-color: transparent;\n    cursor: pointer;\n}\n\n.container:focus,\n.container:active {\n    background-color: var(--sq-ripple-color);\n    border-radius: var(--sq-card-border-radius);\n    outline: none;\n}\n\n.icon {\n    grid-area: i;\n    display: flex;\n    justify-content: center;\n    align-self: center;\n    height: var(--sq-icon-size);\n    width: var(--sq-icon-size);\n    padding: var(--sq-tile-padding);\n    border-radius: 50%;\n    color: rgb(var(--sq-inactive-rgb));\n    background-color: rgb(var(--sq-inactive-rgb), var(--sq-icon-opacity));\n    transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;\n}\n.name {\n    grid-area: n;\n    place-self: center start;\n    max-height: 3.6rem;\n    line-height: 1;\n    max-width: 100%;\n    text-align: left;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: normal;\n    font-weight: var(--sq-primary-font-weight);\n    font-size: var(--sq-primary-font-size);\n    color: rgb(var(--sq-primary-font-rgb));\n}\n\n@keyframes blink {\n    50% {\n        opacity: 0.25;\n    }\n}\n\n@keyframes spin {\n    from {\n        transform: rotate(0deg);\n    }\n    to {\n        transform: rotate(360deg);\n    }\n}\n";
+styleInject(css_248z$1);
+
+var css_248z = ".container {\n    grid-template-areas:\n        \"i n\"\n        \"i s\";\n    grid-row-gap: 0.3rem;\n}\n.name {\n    place-self: end start;\n}\n.state {\n    grid-area: s;\n    align-self: start;\n    text-align: left;\n    text-overflow: ellipsis;\n    overflow: hidden;\n    font-weight: var(--sq-secondary-font-weight);\n    font-size: var(--sq-secondary-font-size);\n    color: rgb(var(--sq-secondary-font-rgb));\n}\n";
+styleInject(css_248z);
 
 window.customCards.push({
     type: "smartqasa-sensor-tile",
@@ -14769,10 +14824,19 @@ window.customCards.push({
     description: "A SmartQasa tile for controlling a pool color light or switch entity.",
 });
 let PoolLightTile = class PoolLightTile extends h {
+    constructor() {
+        super(...arguments);
+        this._icon = "hass:lightbulb";
+        this._iconStyles = {};
+        this._name = "Unknown Light";
+        this._stateFmtd = "Unknown State";
+    }
     getCardSize() {
         return 1;
     }
-    static { this.styles = [r$3(css_248z$1), r$3(css_248z)]; }
+    static get styles() {
+        return r$3(css_248z$2);
+    }
     setConfig(config) {
         this._config = { ...config };
         this._entity = ["light", "switch"].includes(this._config.entity?.split(".")[0])
@@ -14783,26 +14847,27 @@ let PoolLightTile = class PoolLightTile extends h {
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
             (changedProps.has("config") && this._config));
     }
+    willUpdate() {
+        this._updateState();
+    }
     render() {
-        const { icon, iconAnimation, iconColor, name, stateFmtd } = this._updateState();
-        const iconStyles = {
-            color: `rgb(${iconColor})`,
-            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
-            animation: iconAnimation,
-        };
+        if (!this._config || !this._entity)
+            return D;
         return ke `
             <div class="container" @click=${this._toggleEntity}>
-                <div class="icon" @click=${this._showColorList} style="${se(iconStyles)}">
-                    <ha-icon .icon=${icon}></ha-icon>
+                <div class="icon" @click=${this._showColorList} style="${se(this._iconStyles)}">
+                    <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
-                <div class="name">${name}</div>
-                <div class="state">${stateFmtd}</div>
+                <div class="text">
+                    <div class="name">${this._name}</div>
+                    <div class="state">${this._stateFmtd}</div>
+                </div>
             </div>
         `;
     }
     _updateState() {
-        let icon, iconAnimation, iconColor, name, stateFmtd;
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
+        let icon, iconColor, name, stateFmtd;
         if (this._stateObj) {
             const state = this._stateObj.state || "unknown";
             icon = this._config.icon || this._stateObj.attributes.icon || "hass:lightbulb";
@@ -14816,12 +14881,17 @@ let PoolLightTile = class PoolLightTile extends h {
         }
         else {
             icon = this._config.icon || "hass:lightbulb-alert";
-            iconAnimation = "none";
             iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
             name = this._config.name || "Unknown";
             stateFmtd = "Unknown";
         }
-        return { icon, iconAnimation, iconColor, name, stateFmtd };
+        this._iconStyles = {
+            color: `rgb(${iconColor})`,
+            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
+        };
+        this._icon = icon;
+        this._name = name;
+        this._stateFmtd = stateFmtd;
     }
     _toggleEntity(e) {
         e.stopPropagation();
@@ -15284,7 +15354,7 @@ let ThermostatTile = class ThermostatTile extends h {
         return 1;
     }
     static get styles() {
-        return [r$3(css_248z$1), r$3(css_248z)];
+        return r$3(css_248z$2);
     }
     setConfig(config) {
         this._config = { ...config };
@@ -15301,7 +15371,7 @@ let ThermostatTile = class ThermostatTile extends h {
         return ke `
             <div class="container" @click=${this._showMoreInfo}>
                 <div class="icon" style="${se(this._iconStyles)}">
-                    <ha-icon .icon=${this._icon}></ha-icon>
+                    <ha-icon icon=${this._icon}></ha-icon>
                 </div>
                 <div class="name">${this._name}</div>
                 <div class="state">${this._stateFmtd}</div>
@@ -15310,12 +15380,19 @@ let ThermostatTile = class ThermostatTile extends h {
     }
     _updateState() {
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
+        let icon, iconColor, name, stateFmtd;
         if (this._stateObj) {
             const state = this._stateObj.state || "unknown";
-            this._icon = thermostatIcons[state] || thermostatIcons.default;
-            this._stateObj.attributes.hvac_action || "idle";
-            this._name = this._config.name || this._stateObj.attributes.friendly_name || "Thermostat";
-            this._stateFmtd = this.hass.formatEntityState(this._stateObj);
+            icon = thermostatIcons[state] || thermostatIcons.default;
+            const hvacAction = this._stateObj.attributes.hvac_action || "idle";
+            if (state === "off") {
+                iconColor = thermostatColors.off;
+            }
+            else {
+                iconColor = thermostatColors[hvacAction] || thermostatColors.idle;
+            }
+            name = this._config.name || this._stateObj.attributes.friendly_name || "Thermostat";
+            stateFmtd = this.hass.formatEntityState(this._stateObj);
             if (state !== "off") {
                 if (this._stateObj.attributes.current_temperature) {
                     this._stateFmtd += ` - ${this._stateObj.attributes.current_temperature}°`;
@@ -15326,10 +15403,18 @@ let ThermostatTile = class ThermostatTile extends h {
             }
         }
         else {
-            this._icon = this._config.icon || "hass:thermostat";
-            this._name = this._config?.name || "Unknown";
-            this._stateFmtd = "Unknown";
+            icon = this._config.icon || "hass:thermostat";
+            iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+            name = this._config?.name || "Unknown";
+            stateFmtd = "Unknown";
         }
+        this._iconStyles = {
+            color: `rgb(${iconColor})`,
+            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
+        };
+        this._icon = icon;
+        this._name = name;
+        this._stateFmtd = stateFmtd;
     }
     _showMoreInfo(e) {
         e.stopPropagation();

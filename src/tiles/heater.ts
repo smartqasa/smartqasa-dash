@@ -1,4 +1,4 @@
-import { CSSResult, html, LitElement, PropertyValues, TemplateResult, unsafeCSS } from "lit";
+import { CSSResult, html, LitElement, nothing, PropertyValues, TemplateResult, unsafeCSS } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 
@@ -53,7 +53,8 @@ export class HeaterTile extends LitElement implements LovelaceCard {
         this._updateState();
     }
 
-    protected render(): TemplateResult {
+    protected render(): TemplateResult | typeof nothing {
+        if (!this._config || !this._entity) return nothing;
         return html`
             <div class="container" @click=${this._showMoreInfo}>
                 <div class="icon" style="${styleMap(this._iconStyles)}">

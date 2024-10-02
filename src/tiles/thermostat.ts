@@ -1,14 +1,12 @@
-import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult, unsafeCSS } from "lit";
+import { CSSResult, html, LitElement, PropertyValues, TemplateResult, unsafeCSS } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 
 import { HassEntity, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
-import { callService } from "../utilities/call-service";
 import { moreInfoDialog } from "../dialogs/more-info-dialog";
 import { thermostatIcons, thermostatColors } from "../const";
 
-import tileBaseStyle from "../css/tile-base.css";
-import tileStateStyle from "../css/tile-state.css";
+import tileStyle from "../css/tile.css";
 
 interface Config extends LovelaceCardConfig {
     entity: string;
@@ -24,12 +22,13 @@ window.customCards.push({
 
 @customElement("smartqasa-thermostat-tile")
 export class ThermostatTile extends LitElement implements LovelaceCard {
-    public getCardSize(): number {
+    public getCardSize(): number | Promise<number> {
         return 1;
     }
 
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() protected _config?: Config;
+
     private _entity?: string;
     private _stateObj?: HassEntity;
     private _icon: string = "hass:thermostat";
@@ -37,8 +36,8 @@ export class ThermostatTile extends LitElement implements LovelaceCard {
     private _name: string = "Unknown Thermostat";
     private _stateFmtd: string = "Unknown State";
 
-    static get styles(): CSSResultGroup {
-        return [unsafeCSS(tileBaseStyle), unsafeCSS(tileStateStyle)];
+    static get styles(): CSSResult {
+        return unsafeCSS(tileStyle);
     }
 
     public setConfig(config: Config): void {
@@ -61,7 +60,7 @@ export class ThermostatTile extends LitElement implements LovelaceCard {
         return html`
             <div class="container" @click=${this._showMoreInfo}>
                 <div class="icon" style="${styleMap(this._iconStyles)}">
-                    <ha-icon .icon=${this._icon}></ha-icon>
+                    <ha-icon icon=${this._icon}></ha-icon>
                 </div>
                 <div class="name">${this._name}</div>
                 <div class="state">${this._stateFmtd}</div>
@@ -72,18 +71,18 @@ export class ThermostatTile extends LitElement implements LovelaceCard {
     private _updateState(): void {
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
 
-        let iconColor;
+        let icon, iconColor, name, stateFmtd;
         if (this._stateObj) {
             const state = this._stateObj.state || "unknown";
-            this._icon = thermostatIcons[state] || thermostatIcons.default;
+            icon = thermostatIcons[state] || thermostatIcons.default;
             const hvacAction = this._stateObj.attributes.hvac_action || "idle";
             if (state === "off") {
                 iconColor = thermostatColors.off;
             } else {
                 iconColor = thermostatColors[hvacAction] || thermostatColors.idle;
             }
-            this._name = this._config!.name || this._stateObj.attributes.friendly_name || "Thermostat";
-            this._stateFmtd = this.hass!.formatEntityState(this._stateObj);
+            name = this._config!.name || this._stateObj.attributes.friendly_name || "Thermostat";
+            stateFmtd = this.hass!.formatEntityState(this._stateObj);
             if (state !== "off") {
                 if (this._stateObj.attributes.current_temperature) {
                     this._stateFmtd += ` - ${this._stateObj.attributes.current_temperature}°`;
@@ -93,16 +92,19 @@ export class ThermostatTile extends LitElement implements LovelaceCard {
                 }
             }
         } else {
-            this._icon = this._config!.icon || "hass:thermostat";
+            icon = this._config!.icon || "hass:thermostat";
             iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            this._name = this._config?.name || "Unknown";
-            this._stateFmtd = "Unknown";
+            name = this._config?.name || "Unknown";
+            stateFmtd = "Unknown";
         }
 
-        const iconStyles = {
+        this._iconStyles = {
             color: `rgb(${iconColor})`,
             backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
         };
+        this._icon = icon;
+        this._name = name;
+        this._stateFmtd = stateFmtd;
     }
 
     private _showMoreInfo(e: Event): void {

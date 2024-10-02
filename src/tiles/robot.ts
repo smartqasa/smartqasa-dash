@@ -1,4 +1,4 @@
-import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult, unsafeCSS } from "lit";
+import { CSSResult, html, LitElement, nothing, PropertyValues, TemplateResult, unsafeCSS } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 
@@ -6,8 +6,7 @@ import { HassEntity, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../
 import { callService } from "../utilities/call-service";
 import { moreInfoDialog } from "../dialogs/more-info-dialog";
 
-import tileBaseStyle from "../css/tile-base.css";
-import tileStateStyle from "../css/tile-state.css";
+import tileStyle from "../css/tile.css";
 
 interface Config extends LovelaceCardConfig {
     entity: string;
@@ -23,16 +22,56 @@ window.customCards.push({
 
 @customElement("smartqasa-robot-tile")
 export class RobotTile extends LitElement implements LovelaceCard {
-    public getCardSize(): number {
+    public getCardSize(): number | Promise<number> {
         return 1;
     }
 
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() protected _config?: Config;
     @state() private _stateObj?: HassEntity;
-    private _entity?: string;
 
-    static styles: CSSResultGroup = [unsafeCSS(tileBaseStyle), unsafeCSS(tileStateStyle)];
+    private _entity?: string;
+    private _icon: string = "hass:robot-vacuum-variant";
+    private _iconStyles: Record<string, string> = {};
+    private _name: string = "Unknown Robot";
+    private _stateFmtd: string = "Unknown State";
+
+    private readonly _stateMap: Record<string, { stateIcon: string; stateAnimation: string; stateColor: string }> = {
+        cleaning: {
+            stateIcon: "hass:robot-vacuum-variant",
+            stateAnimation: "none",
+            stateColor: "var(--sq-vacuum-cleaning-rgb, 0, 150, 136)",
+        },
+        docked: {
+            stateIcon: "hass:robot-vacuum-variant",
+            stateAnimation: "none",
+            stateColor: "var(--sq-inactive-rgb)",
+        },
+        idle: {
+            stateIcon: "hass:robot-vacuum-variant",
+            stateAnimation: "blink 2.0s linear infinite",
+            stateColor: "var(--sq-vacuum-idle-rgb, 190, 75, 85)",
+        },
+        paused: {
+            stateIcon: "hass:robot-vacuum-variant",
+            stateAnimation: "blink 2.0s linear infinite",
+            stateColor: "var(--sq-vacuum-paused-rgb, 190, 75, 85)",
+        },
+        returning: {
+            stateIcon: "hass:robot-vacuum-variant",
+            stateAnimation: "blink 2.0s linear infinite",
+            stateColor: "var(--sq-vacuum-returning-rgb, 0, 150, 136)",
+        },
+        default: {
+            stateIcon: "hass:robot-vacuum-variant-alert",
+            stateAnimation: "none",
+            stateColor: "var(--sq-unavailable-rgb, 255, 0, 255)",
+        },
+    };
+
+    static get styles(): CSSResult {
+        return unsafeCSS(tileStyle);
+    }
 
     public setConfig(config: Config): void {
         this._config = { ...config };
@@ -46,70 +85,35 @@ export class RobotTile extends LitElement implements LovelaceCard {
         );
     }
 
-    protected render(): TemplateResult {
-        const { icon, iconAnimation, iconColor, name, stateFmtd } = this._updateState();
-        const iconStyles = {
-            color: `rgb(${iconColor})`,
-            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
-            animation: iconAnimation,
-        };
+    protected willUpdate(): void {
+        this._updateState();
+    }
+
+    protected render(): TemplateResult | typeof nothing {
+        if (!this._config || !this._entity) return nothing;
+
         return html`
             <div class="container" @click=${this._toggleEntity}>
-                <div class="icon" @click=${this._showMoreInfo} style="${styleMap(iconStyles)}">
-                    <ha-icon .icon=${icon}></ha-icon>
+                <div class="icon" @click=${this._showMoreInfo} style="${styleMap(this._iconStyles)}">
+                    <ha-icon icon=${this._icon}></ha-icon>
                 </div>
-                <div class="name">${name}</div>
-                <div class="state">${stateFmtd}</div>
+                <div class="name">${this._name}</div>
+                <div class="state">${this._stateFmtd}</div>
             </div>
         `;
     }
 
-    private _updateState(): {
-        icon: string;
-        iconAnimation?: string;
-        iconColor: string;
-        name: string;
-        stateFmtd: string;
-    } {
-        let icon, iconAnimation, iconColor, name, stateFmtd;
-
+    private _updateState(): void {
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
 
-        if (this._config && this._stateObj) {
+        let icon, iconAnimation, iconColor, name, stateFmtd;
+        if (this._stateObj) {
             const state = this._stateObj.state || "unknown";
-            switch (state) {
-                case "cleaning":
-                    icon = "hass:robot-vacuum-variant";
-                    iconAnimation = "none";
-                    iconColor = "var(--sq-vacuum-cleaning-rgb, 0, 150, 136)";
-                    break;
-                case "docked":
-                    icon = "hass:robot-vacuum-variant";
-                    iconAnimation = "none";
-                    iconColor = "var(--sq-inactive-rgb)";
-                    break;
-                case "idle":
-                    icon = "hass:robot-vacuum-variant";
-                    iconAnimation = "blink 2.0s linear infinite";
-                    iconColor = "var(--sq-vacuum-idle-rgb, 190, 75, 85)";
-                    break;
-                case "paused":
-                    icon = "hass:robot-vacuum-variant";
-                    iconAnimation = "blink 2.0s linear infinite";
-                    iconColor = "var(--sq-vacuum-paused-rgb, 190, 75, 85)";
-                    break;
-                case "returning":
-                    icon = "hass:robot-vacuum-variant";
-                    iconAnimation = "blink 2.0s linear infinite";
-                    iconColor = "var(--sq-vacuum-returning-rgb, 0, 150, 136)";
-                    break;
-                default:
-                    icon = "hass:robot-vacuum-variant-alert";
-                    iconAnimation = "none";
-                    iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-                    break;
-            }
-            name = this._config.name || this._stateObj.attributes.friendly_name || "Robot";
+            const { stateIcon, stateAnimation, stateColor } = this._stateMap[state] || this._stateMap.default;
+            icon = this._config!.icon || stateIcon || "hass:vacuum-variant";
+            iconAnimation = stateAnimation;
+            iconColor = stateColor;
+            name = this._config!.name || this._stateObj.attributes.friendly_name || "Robot";
             stateFmtd =
                 this.hass?.formatEntityState(this._stateObj) +
                 (this._stateObj.attributes.battery_level
@@ -118,12 +122,19 @@ export class RobotTile extends LitElement implements LovelaceCard {
         } else {
             icon = this._config?.icon || "hass:robot-vacuum-variant-alert";
             iconAnimation = "none";
-            iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+            iconColor = "var(--sq-unavailable-rgb)";
             name = this._config?.name || "Unknown";
             stateFmtd = "Unknown";
         }
 
-        return { icon, iconAnimation, iconColor, name, stateFmtd };
+        this._iconStyles = {
+            color: `rgb(${iconColor})`,
+            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
+            animation: iconAnimation,
+        };
+        this._icon = icon;
+        this._name = name;
+        this._stateFmtd = stateFmtd;
     }
 
     private _toggleEntity(e: Event): void {
