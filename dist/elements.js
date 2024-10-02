@@ -13352,7 +13352,9 @@ let DialogTile = class DialogTile extends h {
                 <div class="icon" style="${se(this._iconStyles)}">
                     <ha-icon icon=${this._icon}></ha-icon>
                 </div>
-                <div class="name">${this._name}</div>
+                <div class="text">
+                    <div class="name">${this._name}</div>
+                </div>
             </div>
         `;
     }
