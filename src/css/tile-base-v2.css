@@ -23,7 +23,7 @@
 .icon {
     display: flex;
     flex: 0 0 auto;
-    margin: auto;
+    margin: auto 0;
     width: var(--sq-icon-size);
     height: var(--sq-icon-size);
     justify-content: center;
