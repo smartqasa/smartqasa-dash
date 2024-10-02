@@ -23,6 +23,7 @@
 .icon {
     display: flex;
     flex: 0 0 auto;
+    margin: auto;
     width: var(--sq-icon-size);
     height: var(--sq-icon-size);
     justify-content: center;
@@ -48,6 +49,7 @@
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     line-clamp: 2;
+    line-height: 1;
     text-align: left;
     overflow: hidden;
     text-overflow: ellipsis;

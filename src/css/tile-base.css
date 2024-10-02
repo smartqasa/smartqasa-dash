@@ -40,7 +40,7 @@
     grid-area: n;
     place-self: center start;
     max-height: 3.6rem;
-    line-height: 1.2;
+    line-height: 1;
     max-width: 100%;
     text-align: left;
     overflow: hidden;
