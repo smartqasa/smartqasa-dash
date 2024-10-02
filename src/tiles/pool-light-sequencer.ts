@@ -74,7 +74,7 @@ export class PoolLightSequencerTile extends LitElement implements LovelaceCard {
             if (this._running) {
                 icon = "hass:rotate-right";
                 iconAnimation = "spin 1.0s linear infinite";
-                iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
+                iconColor = "var(--sq-blue-rgb-blue)";
             } else {
                 icon = this._config.icon || this._stateObj.attributes.icon || "hass:lightbulb";
                 iconAnimation = "none";
@@ -84,7 +84,7 @@ export class PoolLightSequencerTile extends LitElement implements LovelaceCard {
         } else {
             icon = "hass:alert-rhombus";
             iconAnimation = "none";
-            iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+            iconColor = "var(--sq-unavailable-rgb)";
             name = "Unknown";
         }
 

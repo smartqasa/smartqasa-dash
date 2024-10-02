@@ -43,7 +43,7 @@ export class AdminChip extends LitElement implements LovelaceCard {
 
         const icon = "hass:tools";
         const iconStyles = {
-            color: "rgb(var(--sq-rgb-orange, 255, 120, 0))",
+            color: "rgb(var(--sq-orange-rgb))",
             animation: "blink 2.0s linear infinite",
         };
 

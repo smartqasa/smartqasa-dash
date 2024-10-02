@@ -80,7 +80,7 @@ export class OptionTile extends LitElement implements LovelaceCard {
             if (this._running) {
                 this._icon = "hass:rotate-right";
                 iconAnimation = "spin 1.0s linear infinite";
-                iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
+                iconColor = "var(--sq-blue-rgb)";
             } else {
                 if (this._entity === "input_select.location_phase") {
                     this._icon = phaseIcons[this._config!.option] || phaseIcons.default;
@@ -92,7 +92,7 @@ export class OptionTile extends LitElement implements LovelaceCard {
                 iconAnimation = "none";
                 iconColor =
                     this._stateObj.state === this._config!.option
-                        ? "var(--sq-rgb-blue, 25, 125, 255)"
+                        ? "var(--sq-blue-rgb-blue)"
                         : "var(--sq-inactive-rgb)";
             }
             this._name = this._config!.option || "Unknown";

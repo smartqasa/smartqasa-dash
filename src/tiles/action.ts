@@ -79,7 +79,7 @@ export class ActionTile extends LitElement implements LovelaceCard {
             if (this._running) {
                 this._icon = "hass:rotate-right";
                 iconAnimation = "spin 1.0s linear infinite";
-                iconColor = "var(--sq-rgb-blue)";
+                iconColor = "var(--sq-blue-rgb)";
             } else {
                 this._icon = this._config.icon || "hass:help-rhombus";
                 iconAnimation = "none";

@@ -82,7 +82,7 @@ export class RoutineTile extends LitElement implements LovelaceCard {
             if (this._running) {
                 icon = "hass:rotate-right";
                 iconAnimation = "spin 1.0s linear infinite";
-                iconColor = "var(--sq-rgb-blue)";
+                iconColor = "var(--sq-blue-rgb)";
             } else {
                 icon = this._config!.icon || this._stateObj.attributes.icon || "hass:play-circle";
                 iconAnimation = "none";

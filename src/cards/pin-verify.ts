@@ -126,12 +126,12 @@ export class PinVerifyCard extends LitElement implements LovelaceCard {
         } else if (this._pinState === "valid") {
             maskedPin = "PIN Accepted";
             pinStyles = {
-                color: "rgb(var(--sq-rgb-green))",
+                color: "rgb(var(--sq-green-rgb))",
             };
         } else {
             maskedPin = "Invalid PIN";
             pinStyles = {
-                color: "rgb(var(--sq-rgb-red))",
+                color: "rgb(var(--sq-red-rgb))",
             };
         }
         return html`

@@ -78,8 +78,8 @@ export class DialogChip extends LitElement implements LovelaceCard {
         };
 
         const iconStyles = {
-            color: this._dialogObj.color || "rgb(var(--sq-rgb-orange))",
-            paddingRight: this._label ? "calc(var(--sq-chip-padding, 1rem) / 2)" : "var(--sq-chip-padding, 1rem)",
+            color: this._dialogObj.color || "rgb(var(--sq-orange-rgb))",
+            paddingRight: this._label ? "calc(var(--sq-chip-padding) / 2)" : "var(--sq-chip-padding)",
         };
 
         return html`

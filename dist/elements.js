@@ -10364,13 +10364,13 @@ let PinVerifyCard = class PinVerifyCard extends h {
         else if (this._pinState === "valid") {
             maskedPin = "PIN Accepted";
             pinStyles = {
-                color: "rgb(var(--sq-rgb-green))",
+                color: "rgb(var(--sq-green-rgb))",
             };
         }
         else {
             maskedPin = "Invalid PIN";
             pinStyles = {
-                color: "rgb(var(--sq-rgb-red))",
+                color: "rgb(var(--sq-red-rgb))",
             };
         }
         return ke `
@@ -11484,7 +11484,7 @@ let AdminChip = class AdminChip extends h {
             return D;
         const icon = "hass:tools";
         const iconStyles = {
-            color: "rgb(var(--sq-rgb-orange, 255, 120, 0))",
+            color: "rgb(var(--sq-orange-rgb))",
             animation: "blink 2.0s linear infinite",
         };
         return ke `
@@ -11755,8 +11755,8 @@ let DialogChip = class DialogChip extends h {
             display: `${display}`,
         };
         const iconStyles = {
-            color: this._dialogObj.color || "rgb(var(--sq-rgb-orange))",
-            paddingRight: this._label ? "calc(var(--sq-chip-padding, 1rem) / 2)" : "var(--sq-chip-padding, 1rem)",
+            color: this._dialogObj.color || "rgb(var(--sq-orange-rgb))",
+            paddingRight: this._label ? "calc(var(--sq-chip-padding) / 2)" : "var(--sq-chip-padding)",
         };
         return ke `
             <div class="container" style="${se(containerStyles)}" @click=${this._showDialog}>
@@ -12023,7 +12023,7 @@ let RoutineChip = class RoutineChip extends h {
             if (this._running) {
                 icon = "hass:rotate-right";
                 iconAnimation = "spin 1.0s linear infinite";
-                iconColor = "var(--sq-rgb-blue)";
+                iconColor = "var(--sq-blue-rgb)";
             }
             else {
                 icon = this._config.icon || this._stateObj.attributes.icon || "hass:play-circle";
@@ -12431,7 +12431,7 @@ let ActionTile = class ActionTile extends h {
             if (this._running) {
                 this._icon = "hass:rotate-right";
                 iconAnimation = "spin 1.0s linear infinite";
-                iconColor = "var(--sq-rgb-blue)";
+                iconColor = "var(--sq-blue-rgb)";
             }
             else {
                 this._icon = this._config.icon || "hass:help-rhombus";
@@ -12537,7 +12537,7 @@ let AllOffTile = class AllOffTile extends h {
             if (this._running) {
                 icon = "hass:rotate-right";
                 iconAnimation = "spin 1.0s linear infinite";
-                iconColor = "var(--sq-rgb-blue)";
+                iconColor = "var(--sq-blue-rgb)";
             }
             else {
                 icon = this._config.icon || "hass:power";
@@ -14165,7 +14165,7 @@ let OptionTile = class OptionTile extends h {
                     this._icon = this._config.icon || this._stateObj.attributes.icon || "hass:form-dropdown";
                 }
                 this._stateObj.state === this._config.option
-                        ? "var(--sq-rgb-blue, 25, 125, 255)"
+                        ? "var(--sq-blue-rgb-blue)"
                         : "var(--sq-inactive-rgb)";
             }
             this._name = this._config.option || "Unknown";
@@ -14557,7 +14557,7 @@ let RoutineTile = class RoutineTile extends h {
             if (this._running) {
                 icon = "hass:rotate-right";
                 iconAnimation = "spin 1.0s linear infinite";
-                iconColor = "var(--sq-rgb-blue)";
+                iconColor = "var(--sq-blue-rgb)";
             }
             else {
                 icon = this._config.icon || this._stateObj.attributes.icon || "hass:play-circle";
@@ -15045,7 +15045,7 @@ let PoolLightSequencerTile = class PoolLightSequencerTile extends h {
             if (this._running) {
                 icon = "hass:rotate-right";
                 iconAnimation = "spin 1.0s linear infinite";
-                iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
+                iconColor = "var(--sq-blue-rgb-blue)";
             }
             else {
                 icon = this._config.icon || this._stateObj.attributes.icon || "hass:lightbulb";
@@ -15057,7 +15057,7 @@ let PoolLightSequencerTile = class PoolLightSequencerTile extends h {
         else {
             icon = "hass:alert-rhombus";
             iconAnimation = "none";
-            iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+            iconColor = "var(--sq-unavailable-rgb)";
             name = "Unknown";
         }
         this._iconStyles = {
