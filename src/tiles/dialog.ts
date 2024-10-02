@@ -51,7 +51,7 @@ export class DialogTile extends LitElement implements LovelaceCard {
         return html`
             <div class="container" @click=${this._showDialog}>
                 <div class="icon" style="${styleMap(this._iconStyles)}">
-                    <ha-icon .icon=${this._icon}></ha-icon>
+                    <ha-icon icon=${this._icon}></ha-icon>
                 </div>
                 <div class="name">${this._name}</div>
             </div>

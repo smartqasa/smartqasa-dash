@@ -13,8 +13,8 @@ interface ActionConfig {
 }
 
 interface Config extends LovelaceCardConfig {
-    icon?: string;
-    name?: string;
+    icon: string;
+    name: string;
     actions: ActionConfig[];
 }
 
@@ -35,6 +35,7 @@ export class ActionTile extends LitElement implements LovelaceCard {
     @state() protected _config?: Config;
     @state() private _running: boolean = false;
 
+    private _actions: ActionConfig[] = [];
     private _icon: string = "hass:alert-rhombus";
     private _iconStyles: Record<string, string> = {};
     private _name: string = "Unknown Action";
@@ -45,6 +46,7 @@ export class ActionTile extends LitElement implements LovelaceCard {
 
     public setConfig(config: Config): void {
         this._config = config;
+        this._actions = config.actions || [];
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
@@ -57,10 +59,11 @@ export class ActionTile extends LitElement implements LovelaceCard {
 
     protected render(): TemplateResult | typeof nothing {
         if (!this._config) return nothing;
+
         return html`
             <div class="container" @click=${this._runActions}>
                 <div class="icon" style="${styleMap(this._iconStyles)}">
-                    <ha-icon .icon=${this._icon}></ha-icon>
+                    <ha-icon icon=${this._icon}></ha-icon>
                 </div>
                 <div class="text">
                     <div class="name">${this._name}</div>

@@ -24,7 +24,7 @@ window.customCards.push({
 
 @customElement("smartqasa-sensor-tile")
 export class SensorTile extends LitElement implements LovelaceCard {
-    public getCardSize(): number {
+    public getCardSize(): number | Promise<number> {
         return 1;
     }
 
@@ -79,7 +79,7 @@ export class SensorTile extends LitElement implements LovelaceCard {
             if (!this._config!.icon) {
                 iconTemplate = html`<ha-state-icon .hass=${this.hass} .stateObj=${this._stateObj}></ha-state-icon>`;
             } else {
-                iconTemplate = html`<ha-icon .icon=${this._config!.icon}></ha-icon>`;
+                iconTemplate = html`<ha-icon icon=${this._config!.icon}></ha-icon>`;
             }
             iconColor = this._stateObj.state === "on" ? "var(--sq-binary_sensor-on-rgb)" : "var(--sq-inactive-rgb)";
             name = this._config!.name || this._stateObj.attributes.friendly_name || "Sensor";

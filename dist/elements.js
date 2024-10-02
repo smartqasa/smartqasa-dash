@@ -9122,7 +9122,7 @@ function renderFooter() {
             action();
         }}
             >
-                <ha-icon .icon=${icon}></ha-icon>
+                <ha-icon icon=${icon}></ha-icon>
                 <span>${name}</span>
             </div>
         `;
@@ -11223,7 +11223,7 @@ let TVRemoteCard = class TVRemoteCard extends h {
     _renderButton(category, button, icon) {
         return ke `
             <div class="icon" data-category=${category} data-button=${button} @click=${this._handleButton}>
-                <ha-icon .icon=${icon}></ha-icon>
+                <ha-icon icon=${icon}></ha-icon>
             </div>
         `;
     }
@@ -11670,12 +11670,12 @@ let CustomChip = class CustomChip extends h {
         const iconStyles = {
             color: `rgb(${iconColor})`,
             backgroundColor: "transparent",
-            paddingRight: text ? "calc(var(--sq-chip-padding, 1rem) / 2)" : "var(--sq-chip-padding, 1rem)",
+            paddingRight: text ? "calc(var(--sq-chip-padding) / 2)" : "var(--sq-chip-padding)",
         };
         return ke `
             <div class="container" @click=${this._showDialog}>
                 <div class="icon" style="${se(iconStyles)}">
-                    <ha-icon .icon=${icon}></ha-icon>
+                    <ha-icon icon=${icon}></ha-icon>
                 </div>
                 ${text ? ke `<div class="text">${text}</div>` : null}
             </div>
@@ -11809,7 +11809,7 @@ let MotionChip = class MotionChip extends h {
         return [r$3(css_248z$4), r$3(css_248z$2)];
     }
     setConfig(config) {
-        this._config = { ...config };
+        this._config = config;
         this._entity = this._config.entity?.startsWith("automation.") ? this._config.entity : undefined;
     }
     shouldUpdate(changedProps) {
@@ -11860,7 +11860,7 @@ let MotionChip = class MotionChip extends h {
         name = this._config?.name || "";
         this._iconStyles = {
             color: `rgb(${iconColor})`,
-            paddingRight: name ? "calc(var(--sq-chip-padding, 1rem) / 2)" : "var(--sq-chip-padding, 1rem)",
+            paddingRight: name ? "calc(var(--sq-chip-padding) / 2)" : "var(--sq-chip-padding)",
         };
         this._icon = icon;
         this._name = name;
@@ -11920,10 +11920,10 @@ let NavigateChip = class NavigateChip extends h {
         return ke `
             <div class="container">
                 <div class="icon1" @click=${this._navigatePrev}>
-                    <ha-icon .icon=${iconPrev}></ha-icon>
+                    <ha-icon icon=${iconPrev}></ha-icon>
                 </div>
                 <div class="icon2" @click=${this._navigateNext}>
-                    <ha-icon .icon=${iconNext}></ha-icon>
+                    <ha-icon icon=${iconNext}></ha-icon>
                 </div>
             </div>
         `;
@@ -12390,6 +12390,7 @@ let ActionTile = class ActionTile extends h {
     constructor() {
         super(...arguments);
         this._running = false;
+        this._actions = [];
         this._icon = "hass:alert-rhombus";
         this._iconStyles = {};
         this._name = "Unknown Action";
@@ -12402,6 +12403,7 @@ let ActionTile = class ActionTile extends h {
     }
     setConfig(config) {
         this._config = config;
+        this._actions = config.actions || [];
     }
     shouldUpdate(changedProps) {
         return !!(changedProps.has("_config") || changedProps.has("_running"));
@@ -12415,7 +12417,7 @@ let ActionTile = class ActionTile extends h {
         return ke `
             <div class="container" @click=${this._runActions}>
                 <div class="icon" style="${se(this._iconStyles)}">
-                    <ha-icon .icon=${this._icon}></ha-icon>
+                    <ha-icon icon=${this._icon}></ha-icon>
                 </div>
                 <div class="text">
                     <div class="name">${this._name}</div>
@@ -12503,8 +12505,8 @@ let AllOffTile = class AllOffTile extends h {
         return r$3(css_248z);
     }
     setConfig(config) {
-        this._config = { ...config };
-        this._area = this._config?.area;
+        this._config = config;
+        this._area = config.area;
     }
     shouldUpdate(changedProps) {
         return !!(changedProps.has("running") ||
@@ -13157,7 +13159,7 @@ let AreaTile = class AreaTile extends h {
         return ke `
             <div class="container" @click=${this._navigateToArea}>
                 <div class="icon" style="${se(this._iconStyles)}">
-                    <ha-icon .icon=${this._icon}></ha-icon>
+                    <ha-icon icon=${this._icon}></ha-icon>
                 </div>
                 <div class="text">
                     <div class="name">${this._name}</div>
@@ -13348,7 +13350,7 @@ let DialogTile = class DialogTile extends h {
         return ke `
             <div class="container" @click=${this._showDialog}>
                 <div class="icon" style="${se(this._iconStyles)}">
-                    <ha-icon .icon=${this._icon}></ha-icon>
+                    <ha-icon icon=${this._icon}></ha-icon>
                 </div>
                 <div class="name">${this._name}</div>
             </div>
@@ -14762,7 +14764,7 @@ let SensorTile = class SensorTile extends h {
                 iconTemplate = ke `<ha-state-icon .hass=${this.hass} .stateObj=${this._stateObj}></ha-state-icon>`;
             }
             else {
-                iconTemplate = ke `<ha-icon .icon=${this._config.icon}></ha-icon>`;
+                iconTemplate = ke `<ha-icon icon=${this._config.icon}></ha-icon>`;
             }
             iconColor = this._stateObj.state === "on" ? "var(--sq-binary_sensor-on-rgb)" : "var(--sq-inactive-rgb)";
             name = this._config.name || this._stateObj.attributes.friendly_name || "Sensor";
@@ -14914,7 +14916,7 @@ let PoolLightTile = class PoolLightTile extends h {
         return ke `
             <div class="container" @click=${this._toggleEntity}>
                 <div class="icon" @click=${this._showColorList} style="${se(this._iconStyles)}">
-                    <ha-icon .icon=${this._icon}></ha-icon>
+                    <ha-icon icon=${this._icon}></ha-icon>
                 </div>
                 <div class="text">
                     <div class="name">${this._name}</div>

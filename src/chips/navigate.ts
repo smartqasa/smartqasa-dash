@@ -19,7 +19,7 @@ window.customCards.push({
 
 @customElement("smartqasa-navigate-chip")
 export class NavigateChip extends LitElement implements LovelaceCard {
-    public getCardSize(): number {
+    public getCardSize(): number | Promise<number> {
         return 1;
     }
 
@@ -58,10 +58,10 @@ export class NavigateChip extends LitElement implements LovelaceCard {
         return html`
             <div class="container">
                 <div class="icon1" @click=${this._navigatePrev}>
-                    <ha-icon .icon=${iconPrev}></ha-icon>
+                    <ha-icon icon=${iconPrev}></ha-icon>
                 </div>
                 <div class="icon2" @click=${this._navigateNext}>
-                    <ha-icon .icon=${iconNext}></ha-icon>
+                    <ha-icon icon=${iconNext}></ha-icon>
                 </div>
             </div>
         `;

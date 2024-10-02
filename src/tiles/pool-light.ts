@@ -65,7 +65,7 @@ export class PoolLightTile extends LitElement implements LovelaceCard {
         return html`
             <div class="container" @click=${this._toggleEntity}>
                 <div class="icon" @click=${this._showColorList} style="${styleMap(this._iconStyles)}">
-                    <ha-icon .icon=${this._icon}></ha-icon>
+                    <ha-icon icon=${this._icon}></ha-icon>
                 </div>
                 <div class="text">
                     <div class="name">${this._name}</div>

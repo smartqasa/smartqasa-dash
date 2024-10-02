@@ -41,8 +41,8 @@ export class AllOffTile extends LitElement implements LovelaceCard {
     }
 
     public setConfig(config: Config): void {
-        this._config = { ...config };
-        this._area = this._config?.area;
+        this._config = config;
+        this._area = config.area;
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {

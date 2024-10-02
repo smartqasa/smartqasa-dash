@@ -96,13 +96,13 @@ export class CustomChip extends LitElement implements LovelaceCard {
         const iconStyles = {
             color: `rgb(${iconColor})`,
             backgroundColor: "transparent",
-            paddingRight: text ? "calc(var(--sq-chip-padding, 1rem) / 2)" : "var(--sq-chip-padding, 1rem)",
+            paddingRight: text ? "calc(var(--sq-chip-padding) / 2)" : "var(--sq-chip-padding)",
         };
 
         return html`
             <div class="container" @click=${this._showDialog}>
                 <div class="icon" style="${styleMap(iconStyles)}">
-                    <ha-icon .icon=${icon}></ha-icon>
+                    <ha-icon icon=${icon}></ha-icon>
                 </div>
                 ${text ? html`<div class="text">${text}</div>` : null}
             </div>

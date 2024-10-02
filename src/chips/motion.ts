@@ -40,7 +40,7 @@ export class MotionChip extends LitElement implements LovelaceCard {
     }
 
     public setConfig(config: Config): void {
-        this._config = { ...config };
+        this._config = config;
         this._entity = this._config.entity?.startsWith("automation.") ? this._config.entity : undefined;
     }
 
@@ -97,7 +97,7 @@ export class MotionChip extends LitElement implements LovelaceCard {
         name = this._config?.name || "";
         this._iconStyles = {
             color: `rgb(${iconColor})`,
-            paddingRight: name ? "calc(var(--sq-chip-padding, 1rem) / 2)" : "var(--sq-chip-padding, 1rem)",
+            paddingRight: name ? "calc(var(--sq-chip-padding) / 2)" : "var(--sq-chip-padding)",
         };
         this._icon = icon;
         this._name = name;

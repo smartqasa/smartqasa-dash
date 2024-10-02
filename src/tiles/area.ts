@@ -58,7 +58,7 @@ export class AreaTile extends LitElement implements LovelaceCard {
         return html`
             <div class="container" @click=${this._navigateToArea}>
                 <div class="icon" style="${styleMap(this._iconStyles)}">
-                    <ha-icon .icon=${this._icon}></ha-icon>
+                    <ha-icon icon=${this._icon}></ha-icon>
                 </div>
                 <div class="text">
                     <div class="name">${this._name}</div>

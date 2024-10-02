@@ -242,7 +242,7 @@ export class TVRemoteCard extends LitElement implements LovelaceCard {
     private _renderButton(category: string, button: string, icon: string): TemplateResult {
         return html`
             <div class="icon" data-category=${category} data-button=${button} @click=${this._handleButton}>
-                <ha-icon .icon=${icon}></ha-icon>
+                <ha-icon icon=${icon}></ha-icon>
             </div>
         `;
     }
