@@ -1,4 +1,4 @@
-import { CSSResultGroup, html, LitElement, nothing, PropertyValues, TemplateResult, unsafeCSS } from "lit";
+import { CSSResult, html, LitElement, nothing, PropertyValues, TemplateResult, unsafeCSS } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 
@@ -7,8 +7,7 @@ import { callService } from "../utilities/call-service";
 import { moreInfoDialog } from "../dialogs/more-info-dialog";
 import { entityListDialog } from "../dialogs/entity-list-dialog";
 
-import tileBaseStyle from "../css/tile-base.css";
-import tileStateStyle from "../css/tile-state.css";
+import tileBaseStyle from "../css/tile-base-v2.css";
 
 interface Config extends LovelaceCardConfig {
     entity: string;
@@ -39,8 +38,8 @@ export class LightTile extends LitElement implements LovelaceCard {
     private _name: string = "Unknown Light";
     private _stateFmtd: string = "Unknown State";
 
-    static get styles(): CSSResultGroup {
-        return [unsafeCSS(tileBaseStyle), unsafeCSS(tileStateStyle)];
+    static get styles(): CSSResult {
+        return unsafeCSS(tileBaseStyle);
     }
 
     public setConfig(config: Config): void {
@@ -67,8 +66,10 @@ export class LightTile extends LitElement implements LovelaceCard {
                 <div class="icon" @click=${this._showMoreInfo} style=${styleMap(this._iconStyles)}>
                     <ha-icon icon=${this._icon}></ha-icon>
                 </div>
-                <div class="name">${this._name}</div>
-                <div class="state">${this._stateFmtd}</div>
+                <div class="text">
+                    <div class="name">${this._name}</div>
+                    <div class="state">${this._stateFmtd}</div>
+                </div>
             </div>
         `;
     }
