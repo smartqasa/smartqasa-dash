@@ -41,11 +41,8 @@ class VerticalStack extends LitElement implements LovelaceCard {
     }
 
     public setConfig(config: Config) {
-        if (!config.cards) {
-            this._config = { ...config, cards: [] };
-        } else {
-            this._config = { ...config };
-        }
+        if (!config) return;
+        this._config = config;
     }
 
     protected render() {
@@ -69,11 +66,15 @@ class VerticalStack extends LitElement implements LovelaceCard {
         }
     }
 
-    private _createCards(): void {
+    private async _createCards(): Promise<void> {
         if (!this._config || !this.hass) return;
 
-        if (this._config.cards.length > 0) {
-            this._cards = createElements(this._config.cards, this.hass);
+        if (this._cards.length > 0) {
+            try {
+                this._cards = await createElements(this._config.cards, this.hass);
+            } catch (error) {
+                console.error("Error creating cards:", error);
+            }
         } else {
             this._cards = [];
         }

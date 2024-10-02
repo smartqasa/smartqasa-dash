@@ -10688,12 +10688,9 @@ let VerticalStack = class VerticalStack extends h {
         `;
     }
     setConfig(config) {
-        if (!config.cards) {
-            this._config = { ...config, cards: [] };
-        }
-        else {
-            this._config = { ...config };
-        }
+        if (!config)
+            return;
+        this._config = config;
     }
     render() {
         if (!this._config || !this.hass || this._cards.length === 0)
@@ -10714,11 +10711,16 @@ let VerticalStack = class VerticalStack extends h {
             this._createCards();
         }
     }
-    _createCards() {
+    async _createCards() {
         if (!this._config || !this.hass)
             return;
-        if (this._config.cards.length > 0) {
-            this._cards = createElements(this._config.cards, this.hass);
+        if (this._cards.length > 0) {
+            try {
+                this._cards = await createElements(this._config.cards, this.hass);
+            }
+            catch (error) {
+                console.error("Error creating cards:", error);
+            }
         }
         else {
             this._cards = [];
