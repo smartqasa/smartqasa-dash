@@ -22,7 +22,7 @@ window.customCards.push({
 
 @customElement("smartqasa-motion-chip")
 export class MotionChip extends LitElement implements LovelaceCard {
-    public getCardSize(): number {
+    public getCardSize(): number | Promise<number> {
         return 1;
     }
 
@@ -30,6 +30,9 @@ export class MotionChip extends LitElement implements LovelaceCard {
     @state() protected _config?: Config;
     private _entity?: string;
     private _stateObj?: HassEntity;
+    private _icon: string = "hass:motion-sensor";
+    private _iconStyles: Record<string, string> = {};
+    private _name: string = "";
 
     static styles: CSSResultGroup = [unsafeCSS(chipBaseStyle), unsafeCSS(chipTextStyle)];
 
@@ -46,32 +49,28 @@ export class MotionChip extends LitElement implements LovelaceCard {
         );
     }
 
+    protected willUpdate(): void {
+        this._updateState();
+    }
+
     protected render(): TemplateResult | typeof nothing {
         if (!this._entity) return nothing;
 
-        const { icon, iconColor, name } = this._updateState();
-
-        const iconStyles = {
-            color: `rgb(${iconColor})`,
-            paddingRight: name ? "calc(var(--sq-chip-padding, 1rem) / 2)" : "var(--sq-chip-padding, 1rem)",
-        };
-
         return html`
             <div class="container" @click=${this._toggleEntity}>
-                <div class="icon" style="${styleMap(iconStyles)}">
-                    <ha-icon icon=${icon}></ha-icon>
+                <div class="icon" style="${styleMap(this._iconStyles)}">
+                    <ha-icon icon=${this._icon}></ha-icon>
                 </div>
-                ${name ? html`<div class="text">${name}</div>` : null}
+                ${this._name ? html`<div class="text">${this._name}</div>` : null}
             </div>
         `;
     }
 
-    private _updateState(): { icon: string; iconColor: string; name: string } {
-        let icon, iconColor, name;
-
+    private _updateState(): void {
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
 
-        if (this._config && this._stateObj) {
+        let icon, iconColor, name;
+        if (this._stateObj) {
             const state = this._stateObj.state || undefined;
             switch (state) {
                 case "on":
@@ -80,20 +79,25 @@ export class MotionChip extends LitElement implements LovelaceCard {
                     break;
                 case "off":
                     icon = "hass:motion-sensor-off";
-                    iconColor = "var(--sq-red-rgb, 255, 0, 0)";
+                    iconColor = "var(--sq-red-rgb)";
                     break;
                 default:
                     icon = "hass:motion-sensor-off";
-                    iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+                    iconColor = "var(--sq-unavailable-rgb)";
                     break;
             }
         } else {
             icon = this._config?.icon || "hass:lightbulb-alert";
-            iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+            iconColor = "var(--sq-unavailable-rgb)";
         }
-        name = this._config?.name || "";
 
-        return { icon, iconColor, name };
+        name = this._config?.name || "";
+        this._iconStyles = {
+            color: `rgb(${iconColor})`,
+            paddingRight: name ? "calc(var(--sq-chip-padding, 1rem) / 2)" : "var(--sq-chip-padding, 1rem)",
+        };
+        this._icon = icon;
+        this._name = name;
     }
 
     private _toggleEntity(e: Event): void {

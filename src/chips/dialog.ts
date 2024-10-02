@@ -23,12 +23,13 @@ window.customCards.push({
 
 @customElement("smartqasa-dialog-chip")
 export class DialogChip extends LitElement implements LovelaceCard {
-    public getCardSize(): number {
+    public getCardSize(): number | Promise<number> {
         return 1;
     }
 
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() protected _config?: Config;
+
     private _dialog?: keyof typeof dialogTable;
     private _dialogObj?: DialogEntry;
     private _entity?: string;
@@ -36,7 +37,9 @@ export class DialogChip extends LitElement implements LovelaceCard {
     private _label?: string;
     private _stateObj?: HassEntity;
 
-    static styles: CSSResultGroup = [unsafeCSS(chipBaseStyle), unsafeCSS(chipTextStyle)];
+    static get styles(): CSSResultGroup {
+        return [unsafeCSS(chipBaseStyle), unsafeCSS(chipTextStyle)];
+    }
 
     public setConfig(config: Config): void {
         if (!config.dialog) return;

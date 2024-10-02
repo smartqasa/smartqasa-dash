@@ -65,7 +65,7 @@ export class SelectChip extends LitElement implements LovelaceCard {
         return html`
             <div class="container" @click=${this._showOptions}>
                 <div class="icon">
-                    <ha-icon .icon=${icon}></ha-icon>
+                    <ha-icon icon=${icon}></ha-icon>
                 </div>
             </div>
         `;

@@ -22,7 +22,7 @@ window.customCards.push({
 
 @customElement("smartqasa-thermostat-chip")
 export class ThermostatChip extends LitElement implements LovelaceCard {
-    public getCardSize(): number {
+    public getCardSize(): number | Promise<number> {
         return 1;
     }
 
@@ -30,11 +30,16 @@ export class ThermostatChip extends LitElement implements LovelaceCard {
     @state() protected _config?: Config;
     private _entity?: string;
     private _stateObj?: HassEntity;
+    private _icon: string = "hass:thermostat";
+    private _iconStyles: Record<string, string> = {};
+    private _temperature: string = "??";
 
-    static styles: CSSResultGroup = [unsafeCSS(chipBaseStyle), unsafeCSS(chipTextStyle)];
+    static get styles(): CSSResultGroup {
+        return [unsafeCSS(chipBaseStyle), unsafeCSS(chipTextStyle)];
+    }
 
     public setConfig(config: Config): void {
-        this._config = { ...config };
+        this._config = config;
         this._entity = this._config.entity?.startsWith("climate.") ? this._config.entity : undefined;
     }
 
@@ -46,26 +51,27 @@ export class ThermostatChip extends LitElement implements LovelaceCard {
         );
     }
 
+    protected willUpdate(): void {
+        this._updateState();
+    }
+
     protected render(): TemplateResult | typeof nothing {
         if (!this._entity) return nothing;
 
-        const { icon, iconColor, temperature } = this._updateState();
-
         return html`
             <div class="container" @click=${this._showMoreInfo}>
-                <div class="icon" id="icon" style="color: rgb(${iconColor});">
-                    <ha-icon .icon=${icon}></ha-icon>
+                <div class="icon" id="icon" style="${styleMap(this._iconStyles)}">
+                    <ha-icon icon=${this._icon}></ha-icon>
                 </div>
-                <div class="text">${temperature}°</div>
+                <div class="text">${this._temperature}°</div>
             </div>
         `;
     }
 
     private _updateState() {
-        let icon, iconAnimation, iconColor, temperature;
-
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
 
+        let icon, iconColor, temperature;
         if (this._stateObj) {
             const state = this._stateObj.state;
             icon = thermostatIcons[state] || thermostatIcons.default;
@@ -78,7 +84,12 @@ export class ThermostatChip extends LitElement implements LovelaceCard {
             temperature = "??";
         }
 
-        return { icon, iconAnimation, iconColor, temperature };
+        this._iconStyles = {
+            color: `rgb(${iconColor})`,
+            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
+        };
+        this._icon = icon;
+        this._temperature = temperature;
     }
 
     private _showMoreInfo(e: Event): void {

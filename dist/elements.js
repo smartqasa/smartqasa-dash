@@ -11715,7 +11715,9 @@ let DialogChip = class DialogChip extends h {
     getCardSize() {
         return 1;
     }
-    static { this.styles = [r$3(css_248z$4), r$3(css_248z$2)]; }
+    static get styles() {
+        return [r$3(css_248z$4), r$3(css_248z$2)];
+    }
     setConfig(config) {
         if (!config.dialog)
             return;
@@ -11786,6 +11788,12 @@ window.customCards.push({
     description: "A SmartQasa chip for toggling a motion sensor automation entity.",
 });
 let MotionChip = class MotionChip extends h {
+    constructor() {
+        super(...arguments);
+        this._icon = "hass:motion-sensor";
+        this._iconStyles = {};
+        this._name = "";
+    }
     getCardSize() {
         return 1;
     }
@@ -11800,27 +11808,25 @@ let MotionChip = class MotionChip extends h {
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
             changedProps.has("_config"));
     }
+    willUpdate() {
+        this._updateState();
+    }
     render() {
         if (!this._entity)
             return D;
-        const { icon, iconColor, name } = this._updateState();
-        const iconStyles = {
-            color: `rgb(${iconColor})`,
-            paddingRight: name ? "calc(var(--sq-chip-padding, 1rem) / 2)" : "var(--sq-chip-padding, 1rem)",
-        };
         return ke `
             <div class="container" @click=${this._toggleEntity}>
-                <div class="icon" style="${se(iconStyles)}">
-                    <ha-icon icon=${icon}></ha-icon>
+                <div class="icon" style="${se(this._iconStyles)}">
+                    <ha-icon icon=${this._icon}></ha-icon>
                 </div>
-                ${name ? ke `<div class="text">${name}</div>` : null}
+                ${this._name ? ke `<div class="text">${this._name}</div>` : null}
             </div>
         `;
     }
     _updateState() {
-        let icon, iconColor, name;
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
-        if (this._config && this._stateObj) {
+        let icon, iconColor, name;
+        if (this._stateObj) {
             const state = this._stateObj.state || undefined;
             switch (state) {
                 case "on":
@@ -11829,20 +11835,25 @@ let MotionChip = class MotionChip extends h {
                     break;
                 case "off":
                     icon = "hass:motion-sensor-off";
-                    iconColor = "var(--sq-red-rgb, 255, 0, 0)";
+                    iconColor = "var(--sq-red-rgb)";
                     break;
                 default:
                     icon = "hass:motion-sensor-off";
-                    iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+                    iconColor = "var(--sq-unavailable-rgb)";
                     break;
             }
         }
         else {
             icon = this._config?.icon || "hass:lightbulb-alert";
-            iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+            iconColor = "var(--sq-unavailable-rgb)";
         }
         name = this._config?.name || "";
-        return { icon, iconColor, name };
+        this._iconStyles = {
+            color: `rgb(${iconColor})`,
+            paddingRight: name ? "calc(var(--sq-chip-padding, 1rem) / 2)" : "var(--sq-chip-padding, 1rem)",
+        };
+        this._icon = icon;
+        this._name = name;
     }
     _toggleEntity(e) {
         e.stopPropagation();
@@ -11960,13 +11971,18 @@ let RoutineChip = class RoutineChip extends h {
     constructor() {
         super(...arguments);
         this._running = false;
+        this._icon = "hass:play-circle";
+        this._iconStyles = {};
+        this._name = "";
     }
     getCardSize() {
         return 1;
     }
-    static { this.styles = [r$3(css_248z$4), r$3(css_248z$2)]; }
+    static get styles() {
+        return [r$3(css_248z$4), r$3(css_248z$2)];
+    }
     setConfig(config) {
-        this._config = { ...config };
+        this._config = config;
         this._entity = ["automation", "scene", "script"].includes(this._config.entity?.split(".")[0])
             ? this._config.entity
             : undefined;
@@ -11975,35 +11991,32 @@ let RoutineChip = class RoutineChip extends h {
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
             (changedProps.has("_config") && this._config));
     }
+    willUpdate() {
+        this._updateState();
+    }
     render() {
-        if (!this._entity)
+        if (!this._config || !this._entity)
             return D;
-        const { icon, iconAnimation, iconColor, name } = this._updateState();
-        const iconStyles = {
-            color: `rgb(${iconColor})`,
-            animation: iconAnimation,
-            paddingRight: name ? "calc(var(--sq-chip-padding, 1rem) / 2)" : "var(--sq-chip-padding, 1rem)",
-        };
         return ke `
             <div class="container" @click=${this._runRoutine}>
-                <div class="icon" style="${se(iconStyles)}">
-                    <ha-icon icon=${icon}></ha-icon>
+                <div class="icon" style="${se(this._iconStyles)}">
+                    <ha-icon icon=${this._icon}></ha-icon>
                 </div>
-                ${name ? ke `<div class="text">${name}</div>` : null}
+                ${this._name ? ke `<div class="text">${this._name}</div>` : null}
             </div>
         `;
     }
     _updateState() {
-        let icon, iconAnimation, iconColor, name;
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
+        let icon, iconAnimation, iconColor;
         if (this._stateObj) {
             if (this._running) {
                 icon = "hass:rotate-right";
                 iconAnimation = "spin 1.0s linear infinite";
-                iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
+                iconColor = "var(--sq-rgb-blue)";
             }
             else {
-                icon = this._config.icon || this._stateObj.attributes.icon || "hass:help-rhombus";
+                icon = this._config.icon || this._stateObj.attributes.icon || "hass:play-circle";
                 iconAnimation = "none";
                 iconColor = this._config.color || "var(--sq-primary-text-rgb)";
             }
@@ -12013,8 +12026,14 @@ let RoutineChip = class RoutineChip extends h {
             iconAnimation = "none";
             iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
         }
-        name = this._config?.name || "";
-        return { icon, iconAnimation, iconColor, name };
+        const name = this._config?.name || "";
+        this._iconStyles = {
+            color: `rgb(${iconColor})`,
+            animation: iconAnimation,
+            paddingRight: name ? "calc(var(--sq-chip-padding, 1rem) / 2)" : "var(--sq-chip-padding, 1rem)",
+        };
+        this._icon = icon;
+        this._name = name;
     }
     _runRoutine(e) {
         e.stopPropagation();
@@ -12157,7 +12176,7 @@ let SelectChip = class SelectChip extends h {
         return ke `
             <div class="container" @click=${this._showOptions}>
                 <div class="icon">
-                    <ha-icon .icon=${icon}></ha-icon>
+                    <ha-icon icon=${icon}></ha-icon>
                 </div>
             </div>
         `;
@@ -12205,12 +12224,20 @@ window.customCards.push({
     description: "A SmartQasa chip that displays a thermostat.",
 });
 let ThermostatChip = class ThermostatChip extends h {
+    constructor() {
+        super(...arguments);
+        this._icon = "hass:thermostat";
+        this._iconStyles = {};
+        this._temperature = "??";
+    }
     getCardSize() {
         return 1;
     }
-    static { this.styles = [r$3(css_248z$4), r$3(css_248z$2)]; }
+    static get styles() {
+        return [r$3(css_248z$4), r$3(css_248z$2)];
+    }
     setConfig(config) {
-        this._config = { ...config };
+        this._config = config;
         this._entity = this._config.entity?.startsWith("climate.") ? this._config.entity : undefined;
     }
     shouldUpdate(changedProps) {
@@ -12219,22 +12246,24 @@ let ThermostatChip = class ThermostatChip extends h {
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
             changedProps.has("_config"));
     }
+    willUpdate() {
+        this._updateState();
+    }
     render() {
         if (!this._entity)
             return D;
-        const { icon, iconColor, temperature } = this._updateState();
         return ke `
             <div class="container" @click=${this._showMoreInfo}>
-                <div class="icon" id="icon" style="color: rgb(${iconColor});">
-                    <ha-icon .icon=${icon}></ha-icon>
+                <div class="icon" id="icon" style="${se(this._iconStyles)}">
+                    <ha-icon icon=${this._icon}></ha-icon>
                 </div>
-                <div class="text">${temperature}°</div>
+                <div class="text">${this._temperature}°</div>
             </div>
         `;
     }
     _updateState() {
-        let icon, iconAnimation, iconColor, temperature;
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
+        let icon, iconColor, temperature;
         if (this._stateObj) {
             const state = this._stateObj.state;
             icon = thermostatIcons[state] || thermostatIcons.default;
@@ -12247,7 +12276,12 @@ let ThermostatChip = class ThermostatChip extends h {
             iconColor = thermostatColors.default;
             temperature = "??";
         }
-        return { icon, iconAnimation, iconColor, temperature };
+        this._iconStyles = {
+            color: `rgb(${iconColor})`,
+            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
+        };
+        this._icon = icon;
+        this._temperature = temperature;
     }
     _showMoreInfo(e) {
         e.stopPropagation();
