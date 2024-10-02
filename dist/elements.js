@@ -12332,7 +12332,7 @@ var weather = /*#__PURE__*/Object.freeze({
   get WeatherChip () { return WeatherChip; }
 });
 
-var css_248z$2 = ".container {\n    display: grid;\n    width: 100%;\n    height: 100%;\n    box-sizing: border-box;\n    border: var(--sq-card-border);\n    border-radius: var(--sq-card-border-radius);\n    grid-template-areas: \"i n\";\n    grid-template-columns: auto 1fr;\n    grid-column-gap: 1rem;\n    grid-row-gap: 0.4rem;\n    padding: var(--sq-tile-padding);\n    background-color: var(--sq-card-background-color);\n    overflow: hidden;\n    -webkit-tap-highlight-color: transparent;\n    cursor: pointer;\n}\n\n.container:focus,\n.container:active {\n    background-color: var(--sq-ripple-color);\n    border-radius: var(--sq-card-border-radius);\n    outline: none;\n}\n\n.icon {\n    grid-area: i;\n    display: flex;\n    justify-content: center;\n    align-self: center;\n    height: var(--sq-icon-size);\n    width: var(--sq-icon-size);\n    padding: var(--sq-tile-padding);\n    border-radius: 50%;\n    color: rgb(var(--sq-inactive-rgb));\n    background-color: rgb(var(--sq-inactive-rgb), var(--sq-icon-opacity));\n    transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;\n}\n.name {\n    grid-area: n;\n    place-self: center start;\n    max-height: 3.6rem;\n    line-height: 1;\n    max-width: 100%;\n    text-align: left;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: normal;\n    font-weight: var(--sq-primary-font-weight);\n    font-size: var(--sq-primary-font-size);\n    color: rgb(var(--sq-primary-font-rgb));\n}\n\n@keyframes blink {\n    50% {\n        opacity: 0.25;\n    }\n}\n\n@keyframes spin {\n    from {\n        transform: rotate(0deg);\n    }\n    to {\n        transform: rotate(360deg);\n    }\n}\n";
+var css_248z$2 = ".container {\n    display: flex;\n    width: 100%;\n    height: 100%;\n    box-sizing: border-box;\n    border: var(--sq-card-border);\n    border-radius: var(--sq-card-border-radius);\n    padding: var(--sq-tile-padding);\n    background-color: var(--sq-card-background-color);\n    column-gap: 1rem;\n    overflow: hidden;\n    -webkit-tap-highlight-color: transparent;\n    cursor: pointer;\n}\n\n.container:focus,\n.container:active {\n    background-color: var(--sq-ripple-color);\n    border-radius: var(--sq-card-border-radius);\n    outline: none;\n}\n\n.icon {\n    display: flex;\n    flex: 0 0 auto;\n    width: var(--sq-icon-size);\n    height: var(--sq-icon-size);\n    margin: auto 0;\n    padding: var(--sq-tile-padding);\n    border-radius: 50%;\n    color: rgb(var(--sq-inactive-rgb));\n    background-color: rgba(var(--sq-inactive-rgb), var(--sq-icon-opacity));\n    transition: var(--sq-icon-transition);\n}\n\n.text {\n    display: flex;\n    flex-direction: column;\n    align-items: flex-start;\n    justify-content: center;\n    row-gap: 0.3rem;\n    overflow: hidden;\n}\n\n.name {\n    display: -webkit-box;\n    -webkit-line-clamp: 2;\n    -webkit-box-orient: vertical;\n    line-clamp: 2;\n    line-height: 1;\n    text-align: left;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: normal;\n    font-weight: var(--sq-primary-font-weight);\n    font-size: var(--sq-primary-font-size);\n    color: rgb(var(--sq-primary-font-rgb));\n}\n\n.state {\n    text-align: left;\n    text-overflow: ellipsis;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: normal;\n    font-weight: var(--sq-secondary-font-weight);\n    font-size: var(--sq-secondary-font-size);\n    color: rgb(var(--sq-secondary-font-rgb));\n}\n\n@keyframes blink {\n    50% {\n        opacity: 0.25;\n    }\n}\n\n@keyframes spin {\n    from {\n        transform: rotate(0deg);\n    }\n    to {\n        transform: rotate(360deg);\n    }\n}\n";
 styleInject(css_248z$2);
 
 window.customCards.push({
@@ -12345,55 +12345,63 @@ let ActionTile = class ActionTile extends h {
     constructor() {
         super(...arguments);
         this._running = false;
+        this._icon = "hass:alert-rhombus";
+        this._iconStyles = {};
+        this._name = "Unknown Action";
     }
     getCardSize() {
         return 1;
     }
-    static { this.styles = r$3(css_248z$2); }
+    static get styles() {
+        return r$3(css_248z$2);
+    }
     setConfig(config) {
-        this._config = { ...config };
+        this._config = config;
     }
     shouldUpdate(changedProps) {
-        return !!(changedProps.has("_running") || changedProps.has("hass") || changedProps.has("_config"));
+        return !!(changedProps.has("_config") || changedProps.has("_running"));
     }
     render() {
-        const { icon, iconAnimation, iconColor, name } = this._updateState();
-        const iconStyles = {
-            color: `rgb(${iconColor})`,
-            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
-            animation: iconAnimation,
-        };
+        if (!this._config)
+            return D;
         return ke `
             <div class="container" @click=${this._runActions}>
-                <div class="icon" style="${se(iconStyles)}">
-                    <ha-icon .icon=${icon}></ha-icon>
+                <div class="icon" style="${se(this._iconStyles)}">
+                    <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
-                <div class="name">${name}</div>
+                <div class="name">${this._name}</div>
             </div>
         `;
     }
+    updated() {
+        this._updateState();
+    }
     _updateState() {
-        let icon, iconAnimation, iconColor, name;
+        let iconAnimation, iconColor;
         if (this._config) {
             if (this._running) {
-                icon = "hass:rotate-right";
+                this._icon = "hass:rotate-right";
                 iconAnimation = "spin 1.0s linear infinite";
                 iconColor = "var(--sq-rgb-blue)";
             }
             else {
-                icon = this._config.icon || "hass:help-rhombus";
+                this._icon = this._config.icon || "hass:help-rhombus";
                 iconAnimation = "none";
                 iconColor = "var(--sq-inactive-rgb)";
             }
-            name = this._config.name || "Action Tile";
+            this._name = this._config.name || "Action Tile";
         }
         else {
-            icon = "hass:alert-rhombus";
+            this._icon = "hass:alert-rhombus";
             iconAnimation = "none";
             iconColor = "var(--sq-unavailable-rgb)";
-            name = "Unknown";
+            this._name = "Unknown";
         }
-        return { icon, iconAnimation, iconColor, name };
+        this._iconStyles = {
+            color: `rgb(${iconColor})`,
+            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
+            animation: iconAnimation,
+        };
     }
     async _runActions(e) {
         e.stopPropagation();
@@ -12437,6 +12445,9 @@ let AllOffTile = class AllOffTile extends h {
     constructor() {
         super(...arguments);
         this._running = false;
+        this._icon = "hass:alert-rhombus";
+        this._iconStyles = {};
+        this._name = "Unknown Area";
     }
     getCardSize() {
         return 1;
@@ -12452,44 +12463,45 @@ let AllOffTile = class AllOffTile extends h {
             changedProps.has("_config"));
     }
     render() {
-        const { icon, iconAnimation, iconColor, name } = this._updateState();
-        const iconStyles = {
-            color: `rgb(${iconColor})`,
-            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity))`,
-            animation: iconAnimation,
-        };
         return ke `
             <div class="container" @click=${this._runRoutine}>
-                <div class="icon" style="${se(iconStyles)}">
-                    <ha-icon .icon=${icon}></ha-icon>
+                <div class="icon" style="${se(this._iconStyles)}">
+                    <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
-                <div class="name">${name}</div>
+                <div class="name">${this._name}</div>
             </div>
         `;
     }
+    updated() {
+        this._updateState();
+    }
     _updateState() {
-        let icon, iconAnimation, iconColor, name;
         this._areaObj = this._area ? this.hass?.areas[this._area] : undefined;
+        let iconAnimation, iconColor;
         if (this._config && this._areaObj) {
             if (this._running) {
-                icon = "hass:rotate-right";
+                this._icon = "hass:rotate-right";
                 iconAnimation = "spin 1.0s linear infinite";
-                iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
+                iconColor = "var(--sq-rgb-blue)";
             }
             else {
-                icon = this._config.icon || "hass:power";
+                this._icon = this._config.icon || "hass:power";
                 iconAnimation = "none";
                 iconColor = "var(--sq-inactive-rgb)";
             }
-            name = this._config.name || this._areaObj.name || "All Off";
+            this._name = this._config.name || this._areaObj.name || "All Off";
         }
         else {
-            icon = "hass:alert-rhombus";
+            this._icon = "hass:alert-rhombus";
             iconAnimation = "none";
-            iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            name = "Unknown";
+            iconColor = "var(--sq-unavailable-rgb)";
+            this._name = "Unknown Area";
         }
-        return { icon, iconAnimation, iconColor, name };
+        this._iconStyles = {
+            color: `rgb(${iconColor})`,
+            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
+            animation: iconAnimation,
+        };
     }
     async _runRoutine(e) {
         e.stopPropagation();
@@ -12979,6 +12991,9 @@ const appTable = {
     },
 };
 
+var css_248z$1 = ".container {\n    display: grid;\n    width: 100%;\n    height: 100%;\n    box-sizing: border-box;\n    border: var(--sq-card-border);\n    border-radius: var(--sq-card-border-radius);\n    grid-template-areas: \"i n\";\n    grid-template-columns: auto 1fr;\n    grid-column-gap: 1rem;\n    grid-row-gap: 0.4rem;\n    padding: var(--sq-tile-padding);\n    background-color: var(--sq-card-background-color);\n    overflow: hidden;\n    -webkit-tap-highlight-color: transparent;\n    cursor: pointer;\n}\n\n.container:focus,\n.container:active {\n    background-color: var(--sq-ripple-color);\n    border-radius: var(--sq-card-border-radius);\n    outline: none;\n}\n\n.icon {\n    grid-area: i;\n    display: flex;\n    justify-content: center;\n    align-self: center;\n    height: var(--sq-icon-size);\n    width: var(--sq-icon-size);\n    padding: var(--sq-tile-padding);\n    border-radius: 50%;\n    color: rgb(var(--sq-inactive-rgb));\n    background-color: rgb(var(--sq-inactive-rgb), var(--sq-icon-opacity));\n    transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;\n}\n.name {\n    grid-area: n;\n    place-self: center start;\n    max-height: 3.6rem;\n    line-height: 1;\n    max-width: 100%;\n    text-align: left;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: normal;\n    font-weight: var(--sq-primary-font-weight);\n    font-size: var(--sq-primary-font-size);\n    color: rgb(var(--sq-primary-font-rgb));\n}\n\n@keyframes blink {\n    50% {\n        opacity: 0.25;\n    }\n}\n\n@keyframes spin {\n    from {\n        transform: rotate(0deg);\n    }\n    to {\n        transform: rotate(360deg);\n    }\n}\n";
+styleInject(css_248z$1);
+
 window.customCards.push({
     type: "smartqasa-app-tile",
     name: "SmartQasa App Tile",
@@ -12989,7 +13004,7 @@ let AppTile = class AppTile extends h {
     getCardSize() {
         return 1;
     }
-    static { this.styles = r$3(css_248z$2); }
+    static { this.styles = r$3(css_248z$1); }
     setConfig(config) {
         if (!config.app)
             throw new Error("A valid app must be specified.");
@@ -13062,7 +13077,7 @@ let AreaTile = class AreaTile extends h {
     getCardSize() {
         return 1;
     }
-    static { this.styles = r$3(css_248z$2); }
+    static { this.styles = r$3(css_248z$1); }
     setConfig(config) {
         this._config = { ...config };
         this._area = this._config.area;
@@ -13127,9 +13142,6 @@ var area = /*#__PURE__*/Object.freeze({
   get AreaTile () { return AreaTile; }
 });
 
-var css_248z$1 = ".container {\n    display: flex;\n    width: 100%;\n    height: 100%;\n    box-sizing: border-box;\n    border: var(--sq-card-border);\n    border-radius: var(--sq-card-border-radius);\n    padding: var(--sq-tile-padding);\n    background-color: var(--sq-card-background-color);\n    column-gap: 1rem;\n    overflow: hidden;\n    -webkit-tap-highlight-color: transparent;\n    cursor: pointer;\n}\n\n.container:focus,\n.container:active {\n    background-color: var(--sq-ripple-color);\n    border-radius: var(--sq-card-border-radius);\n    outline: none;\n}\n\n.icon {\n    display: flex;\n    flex: 0 0 auto;\n    width: var(--sq-icon-size);\n    height: var(--sq-icon-size);\n    margin: auto 0;\n    padding: var(--sq-tile-padding);\n    border-radius: 50%;\n    color: rgb(var(--sq-inactive-rgb));\n    background-color: rgba(var(--sq-inactive-rgb), var(--sq-icon-opacity));\n    transition: var(--sq-icon-transition);\n}\n\n.text {\n    display: flex;\n    flex-direction: column;\n    align-items: flex-start;\n    justify-content: center;\n    row-gap: 0.3rem;\n    overflow: hidden;\n}\n\n.name {\n    display: -webkit-box;\n    -webkit-line-clamp: 2;\n    -webkit-box-orient: vertical;\n    line-clamp: 2;\n    line-height: 1;\n    text-align: left;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: normal;\n    font-weight: var(--sq-primary-font-weight);\n    font-size: var(--sq-primary-font-size);\n    color: rgb(var(--sq-primary-font-rgb));\n}\n\n.state {\n    text-align: left;\n    text-overflow: ellipsis;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: normal;\n    font-weight: var(--sq-secondary-font-weight);\n    font-size: var(--sq-secondary-font-size);\n    color: rgb(var(--sq-secondary-font-rgb));\n}\n\n@keyframes blink {\n    50% {\n        opacity: 0.25;\n    }\n}\n\n@keyframes spin {\n    from {\n        transform: rotate(0deg);\n    }\n    to {\n        transform: rotate(360deg);\n    }\n}\n";
-styleInject(css_248z$1);
-
 window.customCards.push({
     type: "smartqasa-audio-tile",
     name: "SmartQasa Audio Tile",
@@ -13147,7 +13159,7 @@ let AudioTile = class AudioTile extends h {
         return 1;
     }
     static get styles() {
-        return [r$3(css_248z$1), r$3(css_248z$5)];
+        return [r$3(css_248z$2), r$3(css_248z$5)];
     }
     setConfig(config) {
         this._config = { ...config };
@@ -13252,7 +13264,7 @@ let DialogTile = class DialogTile extends h {
     getCardSize() {
         return 1;
     }
-    static { this.styles = r$3(css_248z$2); }
+    static { this.styles = r$3(css_248z$1); }
     setConfig(config) {
         this._config = { ...config };
         this._dialogObj = dialogTable[config.dialog];
@@ -13336,7 +13348,7 @@ let FanTile = class FanTile extends h {
         return 1;
     }
     static get styles() {
-        return [r$3(css_248z$2), r$3(css_248z)];
+        return [r$3(css_248z$1), r$3(css_248z)];
     }
     setConfig(config) {
         this._config = { ...config };
@@ -13450,7 +13462,7 @@ let GarageTile = class GarageTile extends h {
     getCardSize() {
         return 1;
     }
-    static { this.styles = [r$3(css_248z$2), r$3(css_248z)]; }
+    static { this.styles = [r$3(css_248z$1), r$3(css_248z)]; }
     setConfig(config) {
         this._config = { ...config };
         this._entity = this._config.entity?.startsWith("cover.") ? this._config.entity : undefined;
@@ -13568,7 +13580,7 @@ let HeaterTile = class HeaterTile extends h {
     getCardSize() {
         return 1;
     }
-    static { this.styles = [r$3(css_248z$2), r$3(css_248z)]; }
+    static { this.styles = [r$3(css_248z$1), r$3(css_248z)]; }
     setConfig(config) {
         this._config = { ...config };
         this._entity = this._config.entity?.startsWith("water_heater.") ? this._config.entity : undefined;
@@ -13656,10 +13668,10 @@ let LightTile = class LightTile extends h {
         return 1;
     }
     static get styles() {
-        return r$3(css_248z$1);
+        return r$3(css_248z$2);
     }
     setConfig(config) {
-        this._config = { ...config };
+        this._config = config;
         this._entity = config.entity?.startsWith("light.") ? config.entity : undefined;
     }
     shouldUpdate(changedProps) {
@@ -13880,7 +13892,7 @@ let LockTile = class LockTile extends h {
         return 1;
     }
     static get styles() {
-        return [r$3(css_248z$2), r$3(css_248z)];
+        return [r$3(css_248z$1), r$3(css_248z)];
     }
     setConfig(config) {
         this._config = { ...config };
@@ -14001,7 +14013,7 @@ let OptionTile = class OptionTile extends h {
     getCardSize() {
         return 1;
     }
-    static { this.styles = r$3(css_248z$2); }
+    static { this.styles = r$3(css_248z$1); }
     setConfig(config) {
         this._config = { ...config };
         this._entity = this._config.entity?.startsWith("input_select.") ? this._config.entity : undefined;
@@ -14122,7 +14134,7 @@ let RobotTile = class RobotTile extends h {
     getCardSize() {
         return 1;
     }
-    static { this.styles = [r$3(css_248z$2), r$3(css_248z)]; }
+    static { this.styles = [r$3(css_248z$1), r$3(css_248z)]; }
     setConfig(config) {
         this._config = { ...config };
         this._entity = this._config.entity?.startsWith("vacuum.") ? this._config.entity : undefined;
@@ -14242,7 +14254,7 @@ let RokuTile = class RokuTile extends h {
     getCardSize() {
         return 1;
     }
-    static { this.styles = [r$3(css_248z$2), r$3(css_248z)]; }
+    static { this.styles = [r$3(css_248z$1), r$3(css_248z)]; }
     setConfig(config) {
         this._config = { ...config };
         this._entity = this._config.entity.startsWith("media_player.") ? this._config.entity : undefined;
@@ -14363,7 +14375,7 @@ let RoutineTile = class RoutineTile extends h {
     getCardSize() {
         return 1;
     }
-    static { this.styles = r$3(css_248z$2); }
+    static { this.styles = r$3(css_248z$1); }
     setConfig(config) {
         this._config = { ...config };
         this._entity = ["automation", "scene", "script"].includes(this._config.entity?.split(".")[0])
@@ -14468,7 +14480,7 @@ let SelectTile = class SelectTile extends h {
     getCardSize() {
         return 1;
     }
-    static { this.styles = [r$3(css_248z$2), r$3(css_248z)]; }
+    static { this.styles = [r$3(css_248z$1), r$3(css_248z)]; }
     setConfig(config) {
         this._config = { ...config };
         this._entity = this._config.entity?.startsWith("input_select.") ? this._config.entity : undefined;
@@ -14544,7 +14556,7 @@ let SensorTile = class SensorTile extends h {
     getCardSize() {
         return 1;
     }
-    static { this.styles = [r$3(css_248z$2), r$3(css_248z)]; }
+    static { this.styles = [r$3(css_248z$1), r$3(css_248z)]; }
     setConfig(config) {
         this._config = { ...config };
         this._entity = this._config.entity?.startsWith("binary_sensor.") ? this._config.entity : undefined;
@@ -14694,7 +14706,7 @@ let PoolLightTile = class PoolLightTile extends h {
     getCardSize() {
         return 1;
     }
-    static { this.styles = [r$3(css_248z$2), r$3(css_248z)]; }
+    static { this.styles = [r$3(css_248z$1), r$3(css_248z)]; }
     setConfig(config) {
         this._config = { ...config };
         this._entity = ["light", "switch"].includes(this._config.entity?.split(".")[0])
@@ -14796,7 +14808,7 @@ let PoolLightSequencerTile = class PoolLightSequencerTile extends h {
     getCardSize() {
         return 1;
     }
-    static { this.styles = r$3(css_248z$2); }
+    static { this.styles = r$3(css_248z$1); }
     setConfig(config) {
         this._config = { ...config };
         this._sequenceObj = config.sequence ? sequenceTable[config.sequence] : undefined;
@@ -14892,7 +14904,7 @@ let ShadeTile = class ShadeTile extends h {
     getCardSize() {
         return 1;
     }
-    static { this.styles = [r$3(css_248z$2), r$3(css_248z)]; }
+    static { this.styles = [r$3(css_248z$1), r$3(css_248z)]; }
     setConfig(config) {
         this._config = { ...config };
         this._entity = this._config.entity?.startsWith("cover.") ? this._config.entity : undefined;
@@ -15051,7 +15063,7 @@ let SwitchTile = class SwitchTile extends h {
         return 1;
     }
     static get styles() {
-        return [r$3(css_248z$2), r$3(css_248z)];
+        return [r$3(css_248z$1), r$3(css_248z)];
     }
     setConfig(config) {
         this._config = { ...config };
@@ -15137,7 +15149,7 @@ let ThemeTile = class ThemeTile extends h {
     getCardSize() {
         return 1;
     }
-    static { this.styles = r$3(css_248z$2); }
+    static { this.styles = r$3(css_248z$1); }
     setConfig(config) {
         this._config = { ...config };
     }
@@ -15196,7 +15208,7 @@ let ThermostatTile = class ThermostatTile extends h {
         return 1;
     }
     static get styles() {
-        return [r$3(css_248z$2), r$3(css_248z)];
+        return [r$3(css_248z$1), r$3(css_248z)];
     }
     setConfig(config) {
         this._config = { ...config };

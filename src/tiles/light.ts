@@ -7,7 +7,7 @@ import { callService } from "../utilities/call-service";
 import { moreInfoDialog } from "../dialogs/more-info-dialog";
 import { entityListDialog } from "../dialogs/entity-list-dialog";
 
-import tileBaseStyle from "../css/tile.css";
+import tileStyle from "../css/tile.css";
 
 interface Config extends LovelaceCardConfig {
     entity: string;
@@ -39,11 +39,11 @@ export class LightTile extends LitElement implements LovelaceCard {
     private _stateFmtd: string = "Unknown State";
 
     static get styles(): CSSResult {
-        return unsafeCSS(tileBaseStyle);
+        return unsafeCSS(tileStyle);
     }
 
     public setConfig(config: Config): void {
-        this._config = { ...config };
+        this._config = config;
         this._entity = config.entity?.startsWith("light.") ? config.entity : undefined;
     }
 

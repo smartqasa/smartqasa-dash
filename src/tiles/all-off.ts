@@ -5,7 +5,7 @@ import { styleMap } from "lit/directives/style-map.js";
 import { HassArea, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 import { callService } from "../utilities/call-service";
 
-import tileBaseStyle from "../css/tile-base.css";
+import tileStyle from "../css/tile.css";
 
 interface Config extends LovelaceCardConfig {
     area: string;
@@ -31,8 +31,11 @@ export class AllOffTile extends LitElement implements LovelaceCard {
     @state() private _running: boolean = false;
     private _area?: string;
     private _areaObj?: HassArea;
+    private _icon: string = "hass:alert-rhombus";
+    private _iconStyles: Record<string, string> = {};
+    private _name: string = "Unknown Area";
 
-    static styles: CSSResult = unsafeCSS(tileBaseStyle);
+    static styles: CSSResult = unsafeCSS(tileStyle);
 
     public setConfig(config: Config): void {
         this._config = { ...config };
@@ -48,46 +51,47 @@ export class AllOffTile extends LitElement implements LovelaceCard {
     }
 
     protected render(): TemplateResult {
-        const { icon, iconAnimation, iconColor, name } = this._updateState();
-        const iconStyles = {
-            color: `rgb(${iconColor})`,
-            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity))`,
-            animation: iconAnimation,
-        };
         return html`
             <div class="container" @click=${this._runRoutine}>
-                <div class="icon" style="${styleMap(iconStyles)}">
-                    <ha-icon .icon=${icon}></ha-icon>
+                <div class="icon" style="${styleMap(this._iconStyles)}">
+                    <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
-                <div class="name">${name}</div>
+                <div class="name">${this._name}</div>
             </div>
         `;
     }
 
-    private _updateState(): { icon: string; iconAnimation: string; iconColor: string; name: string } {
-        let icon, iconAnimation, iconColor, name;
+    protected updated(): void {
+        this._updateState();
+    }
 
+    private _updateState(): void {
         this._areaObj = this._area ? this.hass?.areas[this._area] : undefined;
 
+        let iconAnimation, iconColor;
         if (this._config && this._areaObj) {
             if (this._running) {
-                icon = "hass:rotate-right";
+                this._icon = "hass:rotate-right";
                 iconAnimation = "spin 1.0s linear infinite";
-                iconColor = "var(--sq-rgb-blue, 25, 125, 255)";
+                iconColor = "var(--sq-rgb-blue)";
             } else {
-                icon = this._config.icon || "hass:power";
+                this._icon = this._config.icon || "hass:power";
                 iconAnimation = "none";
                 iconColor = "var(--sq-inactive-rgb)";
             }
-            name = this._config.name || this._areaObj.name || "All Off";
+            this._name = this._config.name || this._areaObj.name || "All Off";
         } else {
-            icon = "hass:alert-rhombus";
+            this._icon = "hass:alert-rhombus";
             iconAnimation = "none";
-            iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            name = "Unknown";
+            iconColor = "var(--sq-unavailable-rgb)";
+            this._name = "Unknown Area";
         }
 
-        return { icon, iconAnimation, iconColor, name };
+        this._iconStyles = {
+            color: `rgb(${iconColor})`,
+            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
+            animation: iconAnimation,
+        };
     }
 
     private async _runRoutine(e: Event): Promise<void> {

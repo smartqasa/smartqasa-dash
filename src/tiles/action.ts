@@ -1,11 +1,11 @@
-import { CSSResult, html, LitElement, PropertyValues, TemplateResult, unsafeCSS } from "lit";
+import { CSSResult, html, LitElement, nothing, PropertyValues, TemplateResult, unsafeCSS } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 
 import { HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 import { callService } from "../utilities/call-service";
 
-import tileBaseStyle from "../css/tile-base.css";
+import tileStyle from "../css/tile.css";
 
 interface ActionConfig {
     action: string;
@@ -34,56 +34,64 @@ export class ActionTile extends LitElement implements LovelaceCard {
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() protected _config?: Config;
     @state() private _running: boolean = false;
+    private _icon: string = "hass:alert-rhombus";
+    private _iconStyles: Record<string, string> = {};
+    private _name: string = "Unknown Action";
 
-    static styles: CSSResult = unsafeCSS(tileBaseStyle);
+    static get styles(): CSSResult {
+        return unsafeCSS(tileStyle);
+    }
 
     public setConfig(config: Config): void {
-        this._config = { ...config };
+        this._config = config;
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
-        return !!(changedProps.has("_running") || changedProps.has("hass") || changedProps.has("_config"));
+        return !!(changedProps.has("_config") || changedProps.has("_running"));
     }
 
-    protected render(): TemplateResult {
-        const { icon, iconAnimation, iconColor, name } = this._updateState();
-        const iconStyles = {
-            color: `rgb(${iconColor})`,
-            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
-            animation: iconAnimation,
-        };
+    protected render(): TemplateResult | typeof nothing {
+        if (!this._config) return nothing;
         return html`
             <div class="container" @click=${this._runActions}>
-                <div class="icon" style="${styleMap(iconStyles)}">
-                    <ha-icon .icon=${icon}></ha-icon>
+                <div class="icon" style="${styleMap(this._iconStyles)}">
+                    <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
-                <div class="name">${name}</div>
+                <div class="name">${this._name}</div>
             </div>
         `;
     }
 
-    private _updateState(): { icon: string; iconAnimation: string; iconColor: string; name: string } {
-        let icon, iconAnimation, iconColor, name;
+    protected updated(): void {
+        this._updateState();
+    }
+
+    private _updateState(): void {
+        let iconAnimation, iconColor;
 
         if (this._config) {
             if (this._running) {
-                icon = "hass:rotate-right";
+                this._icon = "hass:rotate-right";
                 iconAnimation = "spin 1.0s linear infinite";
                 iconColor = "var(--sq-rgb-blue)";
             } else {
-                icon = this._config.icon || "hass:help-rhombus";
+                this._icon = this._config.icon || "hass:help-rhombus";
                 iconAnimation = "none";
                 iconColor = "var(--sq-inactive-rgb)";
             }
-            name = this._config.name || "Action Tile";
+            this._name = this._config.name || "Action Tile";
         } else {
-            icon = "hass:alert-rhombus";
+            this._icon = "hass:alert-rhombus";
             iconAnimation = "none";
             iconColor = "var(--sq-unavailable-rgb)";
-            name = "Unknown";
+            this._name = "Unknown";
         }
 
-        return { icon, iconAnimation, iconColor, name };
+        this._iconStyles = {
+            color: `rgb(${iconColor})`,
+            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
+            animation: iconAnimation,
+        };
     }
 
     private async _runActions(e: Event): Promise<void> {
