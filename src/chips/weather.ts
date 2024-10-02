@@ -20,7 +20,7 @@ window.customCards.push({
 
 @customElement("smartqasa-weather-chip")
 export class WeatherChip extends LitElement implements LovelaceCard {
-    public getCardSize(): number {
+    public getCardSize(): number | Promise<number> {
         return 1;
     }
 
@@ -29,7 +29,9 @@ export class WeatherChip extends LitElement implements LovelaceCard {
     private _entity?: string;
     private _stateObj?: HassEntity;
 
-    static styles: CSSResultGroup = [unsafeCSS(chipBaseStyle), unsafeCSS(chipTextStyle)];
+    static get styles(): CSSResultGroup {
+        return [unsafeCSS(chipBaseStyle), unsafeCSS(chipTextStyle)];
+    }
 
     public setConfig(config: Config): void {
         this._config = { ...config };

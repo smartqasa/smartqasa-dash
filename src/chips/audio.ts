@@ -22,14 +22,16 @@ window.customCards.push({
 
 @customElement("smartqasa-audio-chip")
 export class AudioChip extends LitElement implements LovelaceCard {
-    public getCardSize(): number {
+    public getCardSize(): number | Promise<number> {
         return 1;
     }
 
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() protected _config?: Config;
+
     private _entity?: string;
     private _stateObj?: HassEntity;
+    private _iconTemplate?: TemplateResult;
 
     static get styles(): CSSResultGroup[] {
         return [unsafeCSS(chipBaseStyle), unsafeCSS(musicBarsStyle)];
@@ -75,12 +77,35 @@ export class AudioChip extends LitElement implements LovelaceCard {
         }
 
         return html`
-            <div class="container" @click=${this._showDialog} @contextmenu=${this._launchApp}>${content}</div>
+            <div class="container" @click=${this._showDialog} @contextmenu=${this._launchApp}>
+                ${this._iconTemplate}
+            </div>
         `;
     }
 
     private _updateState(): void {
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
+
+        let iconTemplate;
+        if (this._stateObj?.state === "playing") {
+            iconTemplate = html`
+                <div class="bars">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            `;
+        } else {
+            iconTemplate = html`
+                <div class="icon">
+                    <ha-icon icon="hass:music"></ha-icon>
+                </div>
+            `;
+        }
+
+        this._iconTemplate = iconTemplate;
     }
 
     private _showDialog(e: Event): void {

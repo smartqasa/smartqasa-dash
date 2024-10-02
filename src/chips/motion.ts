@@ -28,13 +28,16 @@ export class MotionChip extends LitElement implements LovelaceCard {
 
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() protected _config?: Config;
+
     private _entity?: string;
     private _stateObj?: HassEntity;
     private _icon: string = "hass:motion-sensor";
     private _iconStyles: Record<string, string> = {};
     private _name: string = "";
 
-    static styles: CSSResultGroup = [unsafeCSS(chipBaseStyle), unsafeCSS(chipTextStyle)];
+    static get styles(): CSSResultGroup {
+        return [unsafeCSS(chipBaseStyle), unsafeCSS(chipTextStyle)];
+    }
 
     public setConfig(config: Config): void {
         this._config = { ...config };

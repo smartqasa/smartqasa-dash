@@ -11469,7 +11469,9 @@ let AdminChip = class AdminChip extends h {
     getCardSize() {
         return 1;
     }
-    static { this.styles = r$3(css_248z$4); }
+    static get styles() {
+        return r$3(css_248z$4);
+    }
     setConfig() { }
     updated(changedProps) {
         super.updated(changedProps);
@@ -11488,7 +11490,7 @@ let AdminChip = class AdminChip extends h {
         return ke `
             <div class="container" @click=${this._toggleEntity}>
                 <div class="icon" style="${se(iconStyles)}">
-                    <ha-icon .icon=${icon}></ha-icon>
+                    <ha-icon icon=${icon}></ha-icon>
                 </div>
             </div>
         `;
@@ -11545,9 +11547,18 @@ let AudioChip = class AudioChip extends h {
     render() {
         if (!this._config || !this._entity)
             return D;
-        let content;
+        if (this._stateObj?.state === "playing") ;
+        return ke `
+            <div class="container" @click=${this._showDialog} @contextmenu=${this._launchApp}>
+                ${this._iconTemplate}
+            </div>
+        `;
+    }
+    _updateState() {
+        this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
+        let iconTemplate;
         if (this._stateObj?.state === "playing") {
-            content = ke `
+            iconTemplate = ke `
                 <div class="bars">
                     <div></div>
                     <div></div>
@@ -11558,18 +11569,13 @@ let AudioChip = class AudioChip extends h {
             `;
         }
         else {
-            content = ke `
+            iconTemplate = ke `
                 <div class="icon">
                     <ha-icon icon="hass:music"></ha-icon>
                 </div>
             `;
         }
-        return ke `
-            <div class="container" @click=${this._showDialog} @contextmenu=${this._launchApp}>${content}</div>
-        `;
-    }
-    _updateState() {
-        this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
+        this._iconTemplate = iconTemplate;
     }
     _showDialog(e) {
         e.stopPropagation();
@@ -11614,12 +11620,14 @@ let CustomChip = class CustomChip extends h {
     getCardSize() {
         return 1;
     }
-    static { this.styles = [r$3(css_248z$4), r$3(css_248z$2)]; }
+    static get styles() {
+        return [r$3(css_248z$4), r$3(css_248z$2)];
+    }
     setConfig(config) {
         this._config = { ...config };
-        this.loadDialogObj();
+        this._loadDialogObj();
     }
-    async loadDialogObj() {
+    async _loadDialogObj() {
         if (!this._config?.dialog_file)
             return;
         try {
@@ -11636,7 +11644,7 @@ let CustomChip = class CustomChip extends h {
             changedProps.has("_config"));
     }
     render() {
-        if (!this._dialogObj)
+        if (!this._config || !this._dialogObj)
             return D;
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
         const icon = this._dialogObj.icon || "mdi:help-circle";
@@ -11797,7 +11805,9 @@ let MotionChip = class MotionChip extends h {
     getCardSize() {
         return 1;
     }
-    static { this.styles = [r$3(css_248z$4), r$3(css_248z$2)]; }
+    static get styles() {
+        return [r$3(css_248z$4), r$3(css_248z$2)];
+    }
     setConfig(config) {
         this._config = { ...config };
         this._entity = this._config.entity?.startsWith("automation.") ? this._config.entity : undefined;
@@ -12313,7 +12323,9 @@ let WeatherChip = class WeatherChip extends h {
     getCardSize() {
         return 1;
     }
-    static { this.styles = [r$3(css_248z$4), r$3(css_248z$2)]; }
+    static get styles() {
+        return [r$3(css_248z$4), r$3(css_248z$2)];
+    }
     setConfig(config) {
         this._config = { ...config };
         this._entity = this._config.entity?.startsWith("weather.") ? this._config.entity : undefined;

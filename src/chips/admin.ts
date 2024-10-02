@@ -16,15 +16,18 @@ window.customCards.push({
 
 @customElement("smartqasa-admin-chip")
 export class AdminChip extends LitElement implements LovelaceCard {
-    public getCardSize(): number {
+    public getCardSize(): number | Promise<number> {
         return 1;
     }
 
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() private _stateObj?: HassEntity;
+
     private _entity = "input_boolean.admin_mode";
 
-    static styles: CSSResult = unsafeCSS(chipBaseStyle);
+    static get styles(): CSSResult {
+        return unsafeCSS(chipBaseStyle);
+    }
 
     public setConfig(): void {}
 
@@ -47,7 +50,7 @@ export class AdminChip extends LitElement implements LovelaceCard {
         return html`
             <div class="container" @click=${this._toggleEntity}>
                 <div class="icon" style="${styleMap(iconStyles)}">
-                    <ha-icon .icon=${icon}></ha-icon>
+                    <ha-icon icon=${icon}></ha-icon>
                 </div>
             </div>
         `;

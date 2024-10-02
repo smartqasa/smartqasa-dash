@@ -40,14 +40,16 @@ export class CustomChip extends LitElement implements LovelaceCard {
 
     private _entity?: string;
 
-    static styles: CSSResultGroup = [unsafeCSS(chipBaseStyle), unsafeCSS(chipTextStyle)];
+    static get styles(): CSSResultGroup {
+        return [unsafeCSS(chipBaseStyle), unsafeCSS(chipTextStyle)];
+    }
 
     public setConfig(config: Config): void {
         this._config = { ...config };
-        this.loadDialogObj();
+        this._loadDialogObj();
     }
 
-    private async loadDialogObj(): Promise<void> {
+    private async _loadDialogObj(): Promise<void> {
         if (!this._config?.dialog_file) return;
         try {
             const path = `/local/smartqasa/dialogs/${this._config.dialog_file}`;
@@ -66,7 +68,7 @@ export class CustomChip extends LitElement implements LovelaceCard {
     }
 
     protected render(): TemplateResult | typeof nothing {
-        if (!this._dialogObj) return nothing;
+        if (!this._config || !this._dialogObj) return nothing;
 
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
 
