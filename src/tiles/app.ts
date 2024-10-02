@@ -5,7 +5,7 @@ import { LovelaceCard, LovelaceCardConfig } from "../types";
 import appTable from "../tables/apps";
 import { launchApp } from "../utilities/launch-app";
 
-import tileBaseStyle from "../css/tile-base.css";
+import tileStyle from "../css/tile.css";
 interface Config extends LovelaceCardConfig {
     app: string;
     icon?: string;
@@ -28,7 +28,9 @@ export class AppTile extends LitElement implements LovelaceCard {
     @state() protected _config?: Config;
     private _appObj?: any;
 
-    static styles: CSSResult = unsafeCSS(tileBaseStyle);
+    static get styles(): CSSResult {
+        return unsafeCSS(tileStyle);
+    }
 
     public setConfig(config: Config): void {
         if (!config.app) throw new Error("A valid app must be specified.");
@@ -61,7 +63,9 @@ export class AppTile extends LitElement implements LovelaceCard {
         return html`
             <div class="container" @click=${this.launchApp}>
                 <div class="icon" style=${iconStyle}>${iconTemplate}</div>
-                <div class="name">${name}</div>
+                <div class="text">
+                    <div class="name">${name}</div>
+                </div>
             </div>
         `;
     }

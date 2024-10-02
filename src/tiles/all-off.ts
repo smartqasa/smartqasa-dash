@@ -35,7 +35,9 @@ export class AllOffTile extends LitElement implements LovelaceCard {
     private _iconStyles: Record<string, string> = {};
     private _name: string = "Unknown Area";
 
-    static styles: CSSResult = unsafeCSS(tileStyle);
+    static get styles(): CSSResult {
+        return unsafeCSS(tileStyle);
+    }
 
     public setConfig(config: Config): void {
         this._config = { ...config };

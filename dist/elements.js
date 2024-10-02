@@ -12369,7 +12369,9 @@ let ActionTile = class ActionTile extends h {
                 <div class="icon" style="${se(this._iconStyles)}">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
-                <div class="name">${this._name}</div>
+                <div class="text">
+                    <div class="name">${this._name}</div>
+                </div>
             </div>
         `;
     }
@@ -12452,7 +12454,9 @@ let AllOffTile = class AllOffTile extends h {
     getCardSize() {
         return 1;
     }
-    static { this.styles = r$3(css_248z$2); }
+    static get styles() {
+        return r$3(css_248z$2);
+    }
     setConfig(config) {
         this._config = { ...config };
         this._area = this._config?.area;
@@ -12468,7 +12472,9 @@ let AllOffTile = class AllOffTile extends h {
                 <div class="icon" style="${se(this._iconStyles)}">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
-                <div class="name">${this._name}</div>
+                <div class="text">
+                    <div class="name">${this._name}</div>
+                </div>
             </div>
         `;
     }
@@ -12991,9 +12997,6 @@ const appTable = {
     },
 };
 
-var css_248z$1 = ".container {\n    display: grid;\n    width: 100%;\n    height: 100%;\n    box-sizing: border-box;\n    border: var(--sq-card-border);\n    border-radius: var(--sq-card-border-radius);\n    grid-template-areas: \"i n\";\n    grid-template-columns: auto 1fr;\n    grid-column-gap: 1rem;\n    grid-row-gap: 0.4rem;\n    padding: var(--sq-tile-padding);\n    background-color: var(--sq-card-background-color);\n    overflow: hidden;\n    -webkit-tap-highlight-color: transparent;\n    cursor: pointer;\n}\n\n.container:focus,\n.container:active {\n    background-color: var(--sq-ripple-color);\n    border-radius: var(--sq-card-border-radius);\n    outline: none;\n}\n\n.icon {\n    grid-area: i;\n    display: flex;\n    justify-content: center;\n    align-self: center;\n    height: var(--sq-icon-size);\n    width: var(--sq-icon-size);\n    padding: var(--sq-tile-padding);\n    border-radius: 50%;\n    color: rgb(var(--sq-inactive-rgb));\n    background-color: rgb(var(--sq-inactive-rgb), var(--sq-icon-opacity));\n    transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;\n}\n.name {\n    grid-area: n;\n    place-self: center start;\n    max-height: 3.6rem;\n    line-height: 1;\n    max-width: 100%;\n    text-align: left;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: normal;\n    font-weight: var(--sq-primary-font-weight);\n    font-size: var(--sq-primary-font-size);\n    color: rgb(var(--sq-primary-font-rgb));\n}\n\n@keyframes blink {\n    50% {\n        opacity: 0.25;\n    }\n}\n\n@keyframes spin {\n    from {\n        transform: rotate(0deg);\n    }\n    to {\n        transform: rotate(360deg);\n    }\n}\n";
-styleInject(css_248z$1);
-
 window.customCards.push({
     type: "smartqasa-app-tile",
     name: "SmartQasa App Tile",
@@ -13004,7 +13007,9 @@ let AppTile = class AppTile extends h {
     getCardSize() {
         return 1;
     }
-    static { this.styles = r$3(css_248z$1); }
+    static get styles() {
+        return r$3(css_248z$2);
+    }
     setConfig(config) {
         if (!config.app)
             throw new Error("A valid app must be specified.");
@@ -13038,7 +13043,9 @@ let AppTile = class AppTile extends h {
         return ke `
             <div class="container" @click=${this.launchApp}>
                 <div class="icon" style=${iconStyle}>${iconTemplate}</div>
-                <div class="name">${name}</div>
+                <div class="text">
+                    <div class="name">${name}</div>
+                </div>
             </div>
         `;
     }
@@ -13074,12 +13081,20 @@ window.customCards.push({
     description: "A SmartQasa card for navigating to an area panel.",
 });
 let AreaTile = class AreaTile extends h {
+    constructor() {
+        super(...arguments);
+        this._icon = "hass:alert-rhombus";
+        this._iconStyles = {};
+        this._name = "Unknown Area";
+    }
     getCardSize() {
         return 1;
     }
-    static { this.styles = r$3(css_248z$1); }
+    static get styles() {
+        return r$3(css_248z$2);
+    }
     setConfig(config) {
-        this._config = { ...config };
+        this._config = config;
         this._area = this._config.area;
     }
     shouldUpdate(changedProps) {
@@ -13087,37 +13102,37 @@ let AreaTile = class AreaTile extends h {
             (changedProps.has("_config") && this._config));
     }
     render() {
-        const { icon, iconAnimation, iconColor, name } = this.updateState();
-        const iconStyles = {
-            color: `rgb(${iconColor})`,
-            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
-            animation: iconAnimation,
-        };
         return ke `
             <div class="container" @click=${this._navigateToArea}>
-                <div class="icon" style="${se(iconStyles)}">
-                    <ha-icon .icon=${icon}></ha-icon>
+                <div class="icon" style="${se(this._iconStyles)}">
+                    <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
-                <div class="name">${name}</div>
+                <div class="text">
+                    <div class="name">${this._name}</div>
+                </div>
             </div>
         `;
     }
-    updateState() {
-        let icon, iconAnimation, iconColor, name;
+    updated() {
+        this._updateState();
+    }
+    _updateState() {
         this._areaObj = this._area ? this.hass?.areas[this._area] : undefined;
+        let iconColor;
         if (this._config && this._areaObj) {
-            icon = this._config.icon || this._areaObj.icon || "hass:help-rhombus";
-            iconAnimation = "none";
+            this._icon = this._config.icon || this._areaObj.icon || "hass:help-rhombus";
             iconColor = "var(--sq-inactive-rgb)";
-            name = this._config.name || this._areaObj.name || "Area";
+            this._name = this._config.name || this._areaObj.name || "Area";
         }
         else {
-            icon = "hass:alert-rhombus";
-            iconAnimation = "none";
+            this._icon = "hass:alert-rhombus";
             iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            name = "Unknown";
+            this._name = "Unknown Area";
         }
-        return { icon, iconAnimation, iconColor, name };
+        this._iconStyles = {
+            color: `rgb(${iconColor})`,
+            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
+        };
     }
     _navigateToArea(e) {
         e.stopPropagation();
@@ -13253,6 +13268,9 @@ var audio = /*#__PURE__*/Object.freeze({
   __proto__: null,
   get AudioTile () { return AudioTile; }
 });
+
+var css_248z$1 = ".container {\n    display: grid;\n    width: 100%;\n    height: 100%;\n    box-sizing: border-box;\n    border: var(--sq-card-border);\n    border-radius: var(--sq-card-border-radius);\n    grid-template-areas: \"i n\";\n    grid-template-columns: auto 1fr;\n    grid-column-gap: 1rem;\n    grid-row-gap: 0.4rem;\n    padding: var(--sq-tile-padding);\n    background-color: var(--sq-card-background-color);\n    overflow: hidden;\n    -webkit-tap-highlight-color: transparent;\n    cursor: pointer;\n}\n\n.container:focus,\n.container:active {\n    background-color: var(--sq-ripple-color);\n    border-radius: var(--sq-card-border-radius);\n    outline: none;\n}\n\n.icon {\n    grid-area: i;\n    display: flex;\n    justify-content: center;\n    align-self: center;\n    height: var(--sq-icon-size);\n    width: var(--sq-icon-size);\n    padding: var(--sq-tile-padding);\n    border-radius: 50%;\n    color: rgb(var(--sq-inactive-rgb));\n    background-color: rgb(var(--sq-inactive-rgb), var(--sq-icon-opacity));\n    transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;\n}\n.name {\n    grid-area: n;\n    place-self: center start;\n    max-height: 3.6rem;\n    line-height: 1;\n    max-width: 100%;\n    text-align: left;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: normal;\n    font-weight: var(--sq-primary-font-weight);\n    font-size: var(--sq-primary-font-size);\n    color: rgb(var(--sq-primary-font-rgb));\n}\n\n@keyframes blink {\n    50% {\n        opacity: 0.25;\n    }\n}\n\n@keyframes spin {\n    from {\n        transform: rotate(0deg);\n    }\n    to {\n        transform: rotate(360deg);\n    }\n}\n";
+styleInject(css_248z$1);
 
 window.customCards.push({
     type: "smartqasa-dialog-tile",

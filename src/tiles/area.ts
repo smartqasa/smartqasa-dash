@@ -5,7 +5,7 @@ import { styleMap } from "lit/directives/style-map.js";
 import { HassArea, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 import { navigateToArea } from "../utilities/navigate-to-area";
 
-import tileBaseStyle from "../css/tile-base.css";
+import tileStyle from "../css/tile.css";
 
 interface Config extends LovelaceCardConfig {
     area: string;
@@ -30,11 +30,16 @@ export class AreaTile extends LitElement implements LovelaceCard {
     @state() protected _config?: Config;
     private _area?: string;
     private _areaObj?: HassArea;
+    private _icon: string = "hass:alert-rhombus";
+    private _iconStyles: Record<string, string> = {};
+    private _name: string = "Unknown Area";
 
-    static styles: CSSResult = unsafeCSS(tileBaseStyle);
+    static get styles(): CSSResult {
+        return unsafeCSS(tileStyle);
+    }
 
     public setConfig(config: Config): void {
-        this._config = { ...config };
+        this._config = config;
         this._area = this._config.area;
     }
 
@@ -46,41 +51,41 @@ export class AreaTile extends LitElement implements LovelaceCard {
     }
 
     protected render(): TemplateResult {
-        const { icon, iconAnimation, iconColor, name } = this.updateState();
-        const iconStyles = {
-            color: `rgb(${iconColor})`,
-            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
-            animation: iconAnimation,
-        };
         return html`
             <div class="container" @click=${this._navigateToArea}>
-                <div class="icon" style="${styleMap(iconStyles)}">
-                    <ha-icon .icon=${icon}></ha-icon>
+                <div class="icon" style="${styleMap(this._iconStyles)}">
+                    <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
-                <div class="name">${name}</div>
+                <div class="text">
+                    <div class="name">${this._name}</div>
+                </div>
             </div>
         `;
     }
 
-    private updateState(): { icon: string; iconAnimation: string; iconColor: string; name: string } {
-        let icon, iconAnimation, iconColor, name;
+    protected updated(): void {
+        this._updateState();
+    }
 
+    private _updateState(): void {
         this._areaObj = this._area ? this.hass?.areas[this._area] : undefined;
 
+        let iconColor;
         if (this._config && this._areaObj) {
-            icon = this._config.icon || this._areaObj.icon || "hass:help-rhombus";
-            iconAnimation = "none";
+            this._icon = this._config.icon || this._areaObj.icon || "hass:help-rhombus";
             iconColor = "var(--sq-inactive-rgb)";
 
-            name = this._config.name || this._areaObj.name || "Area";
+            this._name = this._config.name || this._areaObj.name || "Area";
         } else {
-            icon = "hass:alert-rhombus";
-            iconAnimation = "none";
+            this._icon = "hass:alert-rhombus";
             iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            name = "Unknown";
+            this._name = "Unknown Area";
         }
 
-        return { icon, iconAnimation, iconColor, name };
+        this._iconStyles = {
+            color: `rgb(${iconColor})`,
+            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
+        };
     }
 
     private _navigateToArea(e: Event): void {
