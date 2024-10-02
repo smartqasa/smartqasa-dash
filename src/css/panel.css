@@ -193,7 +193,7 @@
         color: white;
         padding: 0.5rem;
         font-size: 2.5rem;
-        font-weight: var(--sq-title-font-weight, 400);
+        font-weight: var(--sq-title-font-weight);
         border-radius: 0.2rem 0 0 0;
     }
     .control-container {
@@ -205,7 +205,7 @@
     .control-tiles {
         width: 100%;
         margin: 0;
-        gap: var(--sq-tile-spacing, 0.8rem);
+        gap: var(--sq-tile-spacing);
     }
     .footer-button span {
         display: none;
