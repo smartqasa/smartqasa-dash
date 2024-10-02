@@ -46,17 +46,17 @@ export class ShadeTile extends LitElement implements LovelaceCard {
         closing: {
             stateIcon: "hass:arrow-down-box",
             stateAnimation: "blink 2.0s linear infinite",
-            stateColor: "var(--sq-shade-closing-rgb)",
+            stateColor: "var(--sq-cover-shade-closing-rgb)",
         },
         opening: {
             stateIcon: "hass:arrow-up-box",
             stateAnimation: "blink 2.0s linear infinite",
-            stateColor: "var(--sq-shade-opening-rgb)",
+            stateColor: "var(--sq-cover-shade-opening-rgb)",
         },
         open: {
             stateIcon: "hass:roller-shade",
             stateAnimation: "none",
-            stateColor: "var(--sq-shade-open-rgb)",
+            stateColor: "var(--sq-cover-shade-open-rgb)",
         },
         default: {
             stateIcon: "hass:alert-rhombus",
@@ -102,10 +102,9 @@ export class ShadeTile extends LitElement implements LovelaceCard {
     }
 
     private _updateState(): void {
-        let icon, iconAnimation, iconColor, name, stateFmtd;
-
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
 
+        let icon, iconAnimation, iconColor, name, stateFmtd;
         if (this._stateObj) {
             const state = this._stateObj.state || "unknown";
             const { stateIcon, stateAnimation, stateColor } = this._stateMap[state] || this._stateMap.default;

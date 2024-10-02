@@ -45,17 +45,17 @@ export class GarageTile extends LitElement implements LovelaceCard {
         closing: {
             stateIcon: "hass:arrow-down-box",
             stateAnimation: "blink 2.0s linear infinite",
-            stateColor: "var(--sq-garage-closing-rgb)",
+            stateColor: "var(--sq-cover-garage-closing-rgb)",
         },
         opening: {
             stateIcon: "hass:arrow-up-box",
             stateAnimation: "blink 2.0s linear infinite",
-            stateColor: "var(--sq-garage-opening-rgb)",
+            stateColor: "var(--sq-cover-garage-opening-rgb)",
         },
         open: {
             stateIcon: "garage-open-variant",
             stateAnimation: "none",
-            stateColor: "var(--sq-garage-open-rgb)",
+            stateColor: "var(--sq-cover-garage-open-rgb)",
         },
         default: {
             stateIcon: "hass:garage-alert-variant",
