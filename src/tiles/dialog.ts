@@ -6,7 +6,7 @@ import { LovelaceCard, LovelaceCardConfig } from "../types";
 import { dialogTable } from "../dialogs/dialog-table";
 import { dialogPopup } from "../dialogs/dialog-popup";
 
-import tileBaseStyle from "../css/tile-base.css";
+import tileStyle from "../css/tile.css";
 
 interface Config extends LovelaceCardConfig {
     dialog: string;
@@ -23,38 +23,42 @@ window.customCards.push({
 
 @customElement("smartqasa-dialog-tile")
 export class DialogTile extends LitElement implements LovelaceCard {
-    getCardSize(): number {
+    public getCardSize(): number | Promise<number> {
         return 1;
     }
 
     @state() private _config?: Config;
     @state() private _dialogObj?: any;
 
-    static styles: CSSResult = unsafeCSS(tileBaseStyle);
+    private _icon: string = "hass:help-rhombus";
+    private _iconStyles: Record<string, string> = {};
+    private _name: string = "Unknown Dialog";
 
-    setConfig(config: Config): void {
-        this._config = { ...config };
+    static get styles(): CSSResult {
+        return unsafeCSS(tileStyle);
+    }
+
+    public setConfig(config: Config): void {
+        this._config = config;
         this._dialogObj = dialogTable[config.dialog];
     }
 
+    protected willUpdate(): void {
+        this._updateState();
+    }
+
     protected render(): TemplateResult {
-        const { icon, iconAnimation, iconColor, name } = this._updateState();
-        const iconStyles = {
-            color: `rgb(${iconColor})`,
-            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
-            animation: iconAnimation,
-        };
         return html`
             <div class="container" @click=${this._showDialog}>
-                <div class="icon" style="${styleMap(iconStyles)}">
-                    <ha-icon .icon=${icon}></ha-icon>
+                <div class="icon" style="${styleMap(this._iconStyles)}">
+                    <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
-                <div class="name">${name}</div>
+                <div class="name">${this._name}</div>
             </div>
         `;
     }
 
-    private _updateState(): { icon: string; iconAnimation?: string; iconColor: string; name: string } {
+    private _updateState(): void {
         let icon, iconAnimation, iconColor, name;
 
         if (this._config && this._dialogObj) {
@@ -68,7 +72,12 @@ export class DialogTile extends LitElement implements LovelaceCard {
             name = this._config?.name || "Unknown";
         }
 
-        return { icon, iconAnimation, iconColor, name };
+        this._iconStyles = {
+            color: `rgb(${iconColor})`,
+            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
+        };
+        this._icon = icon;
+        this._name = name;
     }
 
     private _showDialog(e: Event) {

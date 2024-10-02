@@ -21,7 +21,7 @@ window.customCards.push({
 
 @customElement("smartqasa-app-tile")
 export class AppTile extends LitElement implements LovelaceCard {
-    getCardSize(): number | Promise<number> {
+    public getCardSize(): number | Promise<number> {
         return 1;
     }
 

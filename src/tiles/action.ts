@@ -27,13 +27,14 @@ window.customCards.push({
 
 @customElement("smartqasa-action-tile")
 export class ActionTile extends LitElement implements LovelaceCard {
-    getCardSize(): number | Promise<number> {
+    public getCardSize(): number | Promise<number> {
         return 1;
     }
 
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() protected _config?: Config;
     @state() private _running: boolean = false;
+
     private _icon: string = "hass:alert-rhombus";
     private _iconStyles: Record<string, string> = {};
     private _name: string = "Unknown Action";
@@ -50,6 +51,10 @@ export class ActionTile extends LitElement implements LovelaceCard {
         return !!(changedProps.has("_config") || changedProps.has("_running"));
     }
 
+    protected willUpdate(): void {
+        this._updateState();
+    }
+
     protected render(): TemplateResult | typeof nothing {
         if (!this._config) return nothing;
         return html`
@@ -62,10 +67,6 @@ export class ActionTile extends LitElement implements LovelaceCard {
                 </div>
             </div>
         `;
-    }
-
-    protected updated(): void {
-        this._updateState();
     }
 
     private _updateState(): void {

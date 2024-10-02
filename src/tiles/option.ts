@@ -7,7 +7,7 @@ import { callService } from "../utilities/call-service";
 import { menuConfig } from "../misc/menu-config";
 import { phaseIcons, modeIcons } from "../const";
 
-import tileBaseStyle from "../css/tile-base.css";
+import tileStyle from "../css/tile.css";
 
 interface Config extends LovelaceCardConfig {
     entity: string;
@@ -32,12 +32,15 @@ export class OptionTile extends LitElement implements LovelaceCard {
     @state() protected _config?: Config;
     @state() private _stateObj?: HassEntity;
     @state() private _running: boolean = false;
+
     private _entity?: string;
     private _icon: string = "hass:form-dropdown";
     private _iconStyles: Record<string, string> = {};
     private _name: string = "Unknown Lock";
 
-    static styles: CSSResult = unsafeCSS(tileBaseStyle);
+    static get styles(): CSSResult {
+        return unsafeCSS(tileStyle);
+    }
 
     public setConfig(config: Config): void {
         this._config = { ...config };
@@ -62,7 +65,7 @@ export class OptionTile extends LitElement implements LovelaceCard {
         return html`
             <div class="container" @click=${this._selectOption}>
                 <div class="icon" style="${styleMap(this._iconStyles)}">
-                    <ha-icon .icon=${this._icon}></ha-icon>
+                    <ha-icon icon=${this._icon}></ha-icon>
                 </div>
                 <div class="name">${this._name}</div>
             </div>

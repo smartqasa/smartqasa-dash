@@ -1,4 +1,4 @@
-import { CSSResult, html, LitElement, PropertyValues, TemplateResult, unsafeCSS } from "lit";
+import { CSSResult, html, LitElement, nothing, PropertyValues, TemplateResult, unsafeCSS } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 
@@ -6,7 +6,7 @@ import { HassEntity, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../
 import { callService } from "../utilities/call-service";
 import { sequenceTable } from "../tables/pool-light-sequences";
 
-import tileBaseStyle from "../css/tile-base.css";
+import tileStyle from "../css/tile.css";
 
 interface Config extends LovelaceCardConfig {
     sequence: string;
@@ -15,18 +15,24 @@ interface Config extends LovelaceCardConfig {
 
 @customElement("smartqasa-pool-light-sequencer-tile")
 export class PoolLightSequencerTile extends LitElement implements LovelaceCard {
-    public getCardSize(): number {
+    public getCardSize(): number | Promise<number> {
         return 1;
     }
 
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() protected _config?: Config;
     @state() private _running: boolean = false;
+
     private _sequenceObj?: any;
     private _stateObj?: HassEntity;
     private _entity?: string;
+    private _icon: string = "hass:lightbulb";
+    private _iconStyles: Record<string, string> = {};
+    private _name: string = "Unknown Light";
 
-    static styles: CSSResult = unsafeCSS(tileBaseStyle);
+    static get styles(): CSSResult {
+        return unsafeCSS(tileStyle);
+    }
 
     public setConfig(config: Config): void {
         this._config = { ...config };
@@ -44,28 +50,26 @@ export class PoolLightSequencerTile extends LitElement implements LovelaceCard {
         );
     }
 
-    protected render(): TemplateResult {
-        const { icon, iconAnimation, iconColor, name } = this._updateState();
-        const iconStyles = {
-            color: `rgb(${iconColor})`,
-            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
-            animation: iconAnimation,
-        };
+    protected willUpdate(): void {
+        this._updateState();
+    }
+
+    protected render(): TemplateResult | typeof nothing {
+        if (!this._config || !this._sequenceObj) return nothing;
         return html`
             <div class="container" @click=${this._runRoutine}>
-                <div class="icon" style="${styleMap(iconStyles)}">
-                    <ha-icon .icon=${icon}></ha-icon>
+                <div class="icon" style="${styleMap(this._iconStyles)}">
+                    <ha-icon icon=${this._icon}></ha-icon>
                 </div>
-                <div class="name">${name}</div>
+                <div class="this._name">${this._name}</div>
             </div>
         `;
     }
 
-    private _updateState(): { icon: string; iconAnimation: string; iconColor: string; name: string } {
-        let icon, iconAnimation, iconColor, name;
-
+    private _updateState(): void {
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
 
+        let icon, iconAnimation, iconColor, name;
         if (this._config && this._sequenceObj && this._stateObj) {
             if (this._running) {
                 icon = "hass:rotate-right";
@@ -84,7 +88,13 @@ export class PoolLightSequencerTile extends LitElement implements LovelaceCard {
             name = "Unknown";
         }
 
-        return { icon, iconAnimation, iconColor, name };
+        this._iconStyles = {
+            color: `rgb(${iconColor})`,
+            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
+            animation: iconAnimation,
+        };
+        this._icon = icon;
+        this._name = name;
     }
 
     private async _runRoutine(e: Event): Promise<void> {

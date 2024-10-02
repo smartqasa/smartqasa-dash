@@ -6,7 +6,7 @@ import { dialogTable } from "../dialogs/dialog-table";
 import { dialogPopup } from "../dialogs/dialog-popup";
 import { launchApp } from "../utilities/launch-app";
 
-import tileBaseStyle from "../css/tile.css";
+import tileStyle from "../css/tile.css";
 import musicBarsStyle from "../css/music-bars.css";
 
 interface Config extends LovelaceCardConfig {
@@ -22,12 +22,13 @@ window.customCards.push({
 
 @customElement("smartqasa-audio-tile")
 export class AudioTile extends LitElement implements LovelaceCard {
-    public getCardSize(): number {
+    public getCardSize(): number | Promise<number> {
         return 1;
     }
 
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() protected _config?: Config;
+
     private _entity?: string;
     private _stateObj?: HassEntity;
     private _iconHtml: TemplateResult = html``;
@@ -35,7 +36,7 @@ export class AudioTile extends LitElement implements LovelaceCard {
     private _stateFmtd: string = "Unknown State";
 
     static get styles(): CSSResultGroup[] {
-        return [unsafeCSS(tileBaseStyle), unsafeCSS(musicBarsStyle)];
+        return [unsafeCSS(tileStyle), unsafeCSS(musicBarsStyle)];
     }
 
     public setConfig(config: Config): void {

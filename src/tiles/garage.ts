@@ -80,6 +80,10 @@ export class GarageTile extends LitElement implements LovelaceCard {
         );
     }
 
+    protected willUpdate(): void {
+        this._updateState();
+    }
+
     protected render(): TemplateResult {
         return html`
             <div class="container" @click=${this._toggleEntity}>
@@ -92,10 +96,6 @@ export class GarageTile extends LitElement implements LovelaceCard {
                 </div>
             </div>
         `;
-    }
-
-    protected updated(): void {
-        this._updateState();
     }
 
     private _updateState(): void {

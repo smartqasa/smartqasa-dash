@@ -1,4 +1,4 @@
-import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult, unsafeCSS } from "lit";
+import { CSSResult, html, LitElement, PropertyValues, TemplateResult, unsafeCSS } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 
@@ -6,8 +6,7 @@ import { HassEntity, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../
 import { moreInfoDialog } from "../dialogs/more-info-dialog";
 import { heaterColors } from "../const";
 
-import tileBaseStyle from "../css/tile-base.css";
-import tileStateStyle from "../css/tile-state.css";
+import tileStyle from "../css/tile.css";
 
 interface Config extends LovelaceCardConfig {
     entity: string;
@@ -36,7 +35,7 @@ export class HeaterTile extends LitElement implements LovelaceCard {
     private _name: string = "Unknown Heater";
     private _stateFmtd: string = "Unknown State";
 
-    static styles: CSSResultGroup = [unsafeCSS(tileBaseStyle), unsafeCSS(tileStateStyle)];
+    static styles: CSSResult = unsafeCSS(tileStyle);
 
     public setConfig(config: Config): void {
         this._config = { ...config };
@@ -48,6 +47,10 @@ export class HeaterTile extends LitElement implements LovelaceCard {
             (changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
             (changedProps.has("_config") && this._config)
         );
+    }
+
+    protected willUpdate(): void {
+        this._updateState();
     }
 
     protected render(): TemplateResult {
@@ -64,9 +67,6 @@ export class HeaterTile extends LitElement implements LovelaceCard {
         `;
     }
 
-    protected updated(): void {
-        this._updateState();
-    }
     private _updateState(): void {
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
 

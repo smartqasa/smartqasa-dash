@@ -30,6 +30,7 @@ export class FanTile extends LitElement implements LovelaceCard {
 
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() protected _config?: Config;
+
     private _entity?: string;
     private _stateObj?: HassEntity;
     private _icon: string = "hass:fan-alert";
@@ -53,6 +54,10 @@ export class FanTile extends LitElement implements LovelaceCard {
         );
     }
 
+    protected willUpdate(): void {
+        this._updateState();
+    }
+
     protected render(): TemplateResult | typeof nothing {
         if (!this._config || !this._entity) return nothing;
 
@@ -67,10 +72,6 @@ export class FanTile extends LitElement implements LovelaceCard {
                 </div>
             </div>
         `;
-    }
-
-    protected updated(): void {
-        this._updateState();
     }
 
     private _updateState(): void {

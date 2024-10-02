@@ -22,7 +22,7 @@ window.customCards.push({
 
 @customElement("smartqasa-all-off-tile")
 export class AllOffTile extends LitElement implements LovelaceCard {
-    getCardSize(): number | Promise<number> {
+    public getCardSize(): number | Promise<number> {
         return 1;
     }
 
@@ -52,6 +52,10 @@ export class AllOffTile extends LitElement implements LovelaceCard {
         );
     }
 
+    protected willUpdate(): void {
+        this._updateState();
+    }
+
     protected render(): TemplateResult {
         return html`
             <div class="container" @click=${this._runRoutine}>
@@ -63,10 +67,6 @@ export class AllOffTile extends LitElement implements LovelaceCard {
                 </div>
             </div>
         `;
-    }
-
-    protected updated(): void {
-        this._updateState();
     }
 
     private _updateState(): void {

@@ -87,6 +87,10 @@ export class LockTile extends LitElement implements LovelaceCard {
         );
     }
 
+    protected willUpdate(): void {
+        this._updateState();
+    }
+
     protected render(): TemplateResult | typeof nothing {
         if (!this._config || !this._entity) return nothing;
 
@@ -101,10 +105,6 @@ export class LockTile extends LitElement implements LovelaceCard {
                 </div>
             </div>
         `;
-    }
-
-    protected updated(): void {
-        this._updateState();
     }
 
     private _updateState(): void {
