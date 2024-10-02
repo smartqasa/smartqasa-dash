@@ -57,7 +57,9 @@ export class ActionTile extends LitElement implements LovelaceCard {
                 <div class="icon" style="${styleMap(this._iconStyles)}">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
-                <div class="name">${this._name}</div>
+                <div class="text">
+                    <div class="name">${this._name}</div>
+                </div>
             </div>
         `;
     }

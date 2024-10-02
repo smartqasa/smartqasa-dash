@@ -56,7 +56,9 @@ export class AllOffTile extends LitElement implements LovelaceCard {
                 <div class="icon" style="${styleMap(this._iconStyles)}">
                     <ha-icon .icon=${this._icon}></ha-icon>
                 </div>
-                <div class="name">${this._name}</div>
+                <div class="text">
+                    <div class="name">${this._name}</div>
+                </div>
             </div>
         `;
     }
@@ -99,6 +101,7 @@ export class AllOffTile extends LitElement implements LovelaceCard {
         if (!this.hass || !this._areaObj) return;
 
         this._running = true;
+
         await callService(this.hass, "light", "turn_off", {
             area_id: this._area,
             transition: 2,
