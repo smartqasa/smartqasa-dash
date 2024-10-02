@@ -25,12 +25,13 @@ window.customCards.push({
 
 @customElement("smartqasa-light-tile")
 export class LightTile extends LitElement implements LovelaceCard {
-    public getCardSize(): number {
+    public getCardSize(): number | Promise<number> {
         return 1;
     }
 
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() protected _config?: Config;
+
     private _entity?: string;
     private _stateObj?: HassEntity;
     private _icon: string = "hass:lightbulb-alert";

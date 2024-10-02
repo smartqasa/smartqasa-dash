@@ -12515,10 +12515,12 @@ let AllOffTile = class AllOffTile extends h {
         this._updateState();
     }
     render() {
+        if (!this._config || !this._area)
+            return D;
         return ke `
             <div class="container" @click=${this._runRoutine}>
                 <div class="icon" style="${se(this._iconStyles)}">
-                    <ha-icon .icon=${this._icon}></ha-icon>
+                    <ha-icon icon=${this._icon}></ha-icon>
                 </div>
                 <div class="text">
                     <div class="name">${this._name}</div>
@@ -12528,31 +12530,33 @@ let AllOffTile = class AllOffTile extends h {
     }
     _updateState() {
         this._areaObj = this._area ? this.hass?.areas[this._area] : undefined;
-        let iconAnimation, iconColor;
+        let icon, iconAnimation, iconColor, name;
         if (this._config && this._areaObj) {
             if (this._running) {
-                this._icon = "hass:rotate-right";
+                icon = "hass:rotate-right";
                 iconAnimation = "spin 1.0s linear infinite";
                 iconColor = "var(--sq-rgb-blue)";
             }
             else {
-                this._icon = this._config.icon || "hass:power";
+                icon = this._config.icon || "hass:power";
                 iconAnimation = "none";
                 iconColor = "var(--sq-inactive-rgb)";
             }
-            this._name = this._config.name || this._areaObj.name || "All Off";
+            name = this._config.name || this._areaObj.name || "All Off";
         }
         else {
-            this._icon = "hass:alert-rhombus";
+            icon = "hass:alert-rhombus";
             iconAnimation = "none";
             iconColor = "var(--sq-unavailable-rgb)";
-            this._name = "Unknown Area";
+            name = "Unknown Area";
         }
         this._iconStyles = {
             color: `rgb(${iconColor})`,
             backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
             animation: iconAnimation,
         };
+        this._icon = icon;
+        this._name = name;
     }
     async _runRoutine(e) {
         e.stopPropagation();

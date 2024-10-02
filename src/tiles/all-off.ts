@@ -1,4 +1,4 @@
-import { CSSResult, html, LitElement, PropertyValues, TemplateResult, unsafeCSS } from "lit";
+import { CSSResult, html, LitElement, nothing, PropertyValues, TemplateResult, unsafeCSS } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 
@@ -29,6 +29,7 @@ export class AllOffTile extends LitElement implements LovelaceCard {
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() protected _config?: Config;
     @state() private _running: boolean = false;
+
     private _area?: string;
     private _areaObj?: HassArea;
     private _icon: string = "hass:alert-rhombus";
@@ -56,11 +57,13 @@ export class AllOffTile extends LitElement implements LovelaceCard {
         this._updateState();
     }
 
-    protected render(): TemplateResult {
+    protected render(): TemplateResult | typeof nothing {
+        if (!this._config || !this._area) return nothing;
+
         return html`
             <div class="container" @click=${this._runRoutine}>
                 <div class="icon" style="${styleMap(this._iconStyles)}">
-                    <ha-icon .icon=${this._icon}></ha-icon>
+                    <ha-icon icon=${this._icon}></ha-icon>
                 </div>
                 <div class="text">
                     <div class="name">${this._name}</div>
@@ -72,23 +75,23 @@ export class AllOffTile extends LitElement implements LovelaceCard {
     private _updateState(): void {
         this._areaObj = this._area ? this.hass?.areas[this._area] : undefined;
 
-        let iconAnimation, iconColor;
+        let icon, iconAnimation, iconColor, name;
         if (this._config && this._areaObj) {
             if (this._running) {
-                this._icon = "hass:rotate-right";
+                icon = "hass:rotate-right";
                 iconAnimation = "spin 1.0s linear infinite";
                 iconColor = "var(--sq-rgb-blue)";
             } else {
-                this._icon = this._config.icon || "hass:power";
+                icon = this._config.icon || "hass:power";
                 iconAnimation = "none";
                 iconColor = "var(--sq-inactive-rgb)";
             }
-            this._name = this._config.name || this._areaObj.name || "All Off";
+            name = this._config.name || this._areaObj.name || "All Off";
         } else {
-            this._icon = "hass:alert-rhombus";
+            icon = "hass:alert-rhombus";
             iconAnimation = "none";
             iconColor = "var(--sq-unavailable-rgb)";
-            this._name = "Unknown Area";
+            name = "Unknown Area";
         }
 
         this._iconStyles = {
@@ -96,6 +99,8 @@ export class AllOffTile extends LitElement implements LovelaceCard {
             backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
             animation: iconAnimation,
         };
+        this._icon = icon;
+        this._name = name;
     }
 
     private async _runRoutine(e: Event): Promise<void> {
