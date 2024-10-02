@@ -10714,7 +10714,7 @@ let VerticalStack = class VerticalStack extends h {
     async _createCards() {
         if (!this._config || !this.hass)
             return;
-        if (this._cards.length > 0) {
+        if (this._config.cards.length > 0) {
             try {
                 this._cards = await createElements(this._config.cards, this.hass);
             }

@@ -69,7 +69,7 @@ class VerticalStack extends LitElement implements LovelaceCard {
     private async _createCards(): Promise<void> {
         if (!this._config || !this.hass) return;
 
-        if (this._cards.length > 0) {
+        if (this._config.cards.length > 0) {
             try {
                 this._cards = await createElements(this._config.cards, this.hass);
             } catch (error) {
