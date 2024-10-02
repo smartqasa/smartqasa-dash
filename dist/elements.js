@@ -15528,7 +15528,7 @@ var thermostat = /*#__PURE__*/Object.freeze({
   get ThermostatTile () { return ThermostatTile; }
 });
 
-var version = "2024.9.29b-1";
+var version = "2024.10.2b-1";
 
 var _package = /*#__PURE__*/Object.freeze({
   __proto__: null,
