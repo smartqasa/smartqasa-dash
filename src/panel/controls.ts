@@ -65,7 +65,7 @@ export function renderControls(
         const gridStyle = { gridTemplateColumns: "1fr 1fr" };
         return html`
             <div class="control-tiles" style=${styleMap(gridStyle)}>
-                ${controlTiles.flat().map((tile) => html`<div class="tile">${tile}</div>`)}
+                ${controlTiles.flat().map((tile) => html`${tile}`)}
             </div>
         `;
     }
