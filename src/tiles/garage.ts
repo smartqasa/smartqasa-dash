@@ -69,7 +69,7 @@ export class GarageTile extends LitElement implements LovelaceCard {
     }
 
     public setConfig(config: Config): void {
-        this._config = { ...config };
+        this._config = config;
         this._entity = this._config.entity?.startsWith("cover.") ? this._config.entity : undefined;
     }
 

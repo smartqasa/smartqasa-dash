@@ -13520,7 +13520,7 @@ let GarageTile = class GarageTile extends h {
         return r$3(css_248z$2);
     }
     setConfig(config) {
-        this._config = { ...config };
+        this._config = config;
         this._entity = this._config.entity?.startsWith("cover.") ? this._config.entity : undefined;
     }
     shouldUpdate(changedProps) {
@@ -13725,6 +13725,9 @@ let LightTile = class LightTile extends h {
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
             changedProps.has("_config"));
     }
+    willUpdate() {
+        this._updateState();
+    }
     render() {
         if (!this._config || !this._entity)
             return D;
@@ -13739,9 +13742,6 @@ let LightTile = class LightTile extends h {
                 </div>
             </div>
         `;
-    }
-    updated() {
-        this._updateState();
     }
     _updateState() {
         this._stateObj = this.hass && this._entity ? this.hass.states[this._entity] : undefined;
