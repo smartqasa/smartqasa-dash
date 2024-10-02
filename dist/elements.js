@@ -14546,26 +14546,30 @@ let RoutineTile = class RoutineTile extends h {
     }
     _updateState() {
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
-        let icon, iconColor, name;
+        let icon, iconAnimation, iconColor, name;
         if (this._stateObj) {
             if (this._running) {
                 icon = "hass:rotate-right";
+                iconAnimation = "spin 1.0s linear infinite";
                 iconColor = "var(--sq-rgb-blue)";
             }
             else {
                 icon = this._config.icon || this._stateObj.attributes.icon || "hass:play-circle";
+                iconAnimation = "none";
                 iconColor = "var(--sq-inactive-rgb)";
             }
             name = this._config.name || this._stateObj.attributes.friendly_name || "Roku";
         }
         else {
             icon = "hass:alert-rhombus";
-            iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+            iconAnimation = "none";
+            iconColor = "var(--sq-unavailable-rgb)";
             name = "Unknown";
         }
         this._iconStyles = {
             color: `rgb(${iconColor})`,
             backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
+            animation: iconAnimation,
         };
         this._icon = icon;
         this._name = name;

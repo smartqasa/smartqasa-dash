@@ -29,6 +29,7 @@ export class RoutineTile extends LitElement implements LovelaceCard {
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() protected _config?: Config;
     @state() private _running: boolean = false;
+
     private _entity?: string;
     private _stateObj?: HassEntity;
     private _icon: string = "hass:play-circle";
@@ -91,13 +92,14 @@ export class RoutineTile extends LitElement implements LovelaceCard {
         } else {
             icon = "hass:alert-rhombus";
             iconAnimation = "none";
-            iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+            iconColor = "var(--sq-unavailable-rgb)";
             name = "Unknown";
         }
 
         this._iconStyles = {
             color: `rgb(${iconColor})`,
             backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
+            animation: iconAnimation,
         };
         this._icon = icon;
         this._name = name;
