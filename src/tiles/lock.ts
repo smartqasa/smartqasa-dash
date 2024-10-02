@@ -1,4 +1,4 @@
-import { CSSResultGroup, html, LitElement, nothing, PropertyValues, TemplateResult, unsafeCSS } from "lit";
+import { CSSResult, html, LitElement, nothing, PropertyValues, TemplateResult, unsafeCSS } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 
@@ -6,8 +6,7 @@ import { HassEntity, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../
 import { callService } from "../utilities/call-service";
 import { moreInfoDialog } from "../dialogs/more-info-dialog";
 
-import tileBaseStyle from "../css/tile-base.css";
-import tileStateStyle from "../css/tile-state.css";
+import tileStyle from "../css/tile.css";
 
 interface Config extends LovelaceCardConfig {
     entity: string;
@@ -38,41 +37,41 @@ export class LockTile extends LitElement implements LovelaceCard {
     private _name: string = "Unknown Lock";
     private _stateFmtd: string = "Unknown State";
 
-    private readonly _stateMap: Record<string, { icon: string; animation: string; color: string }> = {
+    private readonly _stateMap: Record<string, { stateIcon: string; stateAnimation: string; stateColor: string }> = {
         locked: {
-            icon: "hass:lock",
-            animation: "none",
-            color: "var(--sq-inactive-rgb)",
+            stateIcon: "hass:lock",
+            stateAnimation: "none",
+            stateColor: "var(--sq-inactive-rgb)",
         },
         unlocking: {
-            icon: "hass:rotate-right",
-            animation: "spin 1.0s linear infinite",
-            color: "var(--sq-lock-unlocking-rgb)",
+            stateIcon: "hass:rotate-right",
+            stateAnimation: "spin 1.0s linear infinite",
+            stateColor: "var(--sq-lock-unlocking-rgb)",
         },
         unlocked: {
-            icon: "hass:lock-open",
-            animation: "none",
-            color: "var(--sq-lock-unlocked-rgb)",
+            stateIcon: "hass:lock-open",
+            stateAnimation: "none",
+            stateColor: "var(--sq-lock-unlocked-rgb)",
         },
         locking: {
-            icon: "hass:rotate-right",
-            animation: "spin 1.0s linear infinite",
-            color: "var(--sq-lock-locking-rgb)",
+            stateIcon: "hass:rotate-right",
+            stateAnimation: "spin 1.0s linear infinite",
+            stateColor: "var(--sq-lock-locking-rgb)",
         },
         jammed: {
-            icon: "hass:lock-open",
-            animation: "blink 1.0s linear infinite",
-            color: "var(--sq-lock-jammed-rgb, 255, 0, 0)",
+            stateIcon: "hass:lock-open",
+            stateAnimation: "blink 1.0s linear infinite",
+            stateColor: "var(--sq-lock-jammed-rgb, 255, 0, 0)",
         },
         default: {
-            icon: "hass:lock-alert",
-            animation: "none",
-            color: "var(--sq-unavailable-rgb)",
+            stateIcon: "hass:lock-alert",
+            stateAnimation: "none",
+            stateColor: "var(--sq-unavailable-rgb)",
         },
     };
 
-    static get styles(): CSSResultGroup {
-        return [unsafeCSS(tileBaseStyle), unsafeCSS(tileStateStyle)];
+    static get styles(): CSSResult {
+        return unsafeCSS(tileStyle);
     }
 
     public setConfig(config: Config): void {
@@ -88,10 +87,6 @@ export class LockTile extends LitElement implements LovelaceCard {
         );
     }
 
-    protected willUpdate(): void {
-        this._updateState();
-    }
-
     protected render(): TemplateResult | typeof nothing {
         if (!this._config || !this._entity) return nothing;
 
@@ -100,31 +95,36 @@ export class LockTile extends LitElement implements LovelaceCard {
                 <div class="icon" @click=${this._showMoreInfo} style=${styleMap(this._iconStyles)}>
                     <ha-icon icon=${this._icon}></ha-icon>
                 </div>
-                <div class="name">${this._name}</div>
-                <div class="state">${this._stateFmtd}</div>
+                <div class="text">
+                    <div class="name">${this._name}</div>
+                    <div class="state">${this._stateFmtd}</div>
+                </div>
             </div>
         `;
     }
 
-    private _updateState(): void {
-        let iconAnimation, iconColor;
+    protected updated(): void {
+        this._updateState();
+    }
 
+    private _updateState(): void {
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
 
+        let icon, iconAnimation, iconColor, name, stateFmtd;
         if (this._stateObj) {
             const state = this._stateObj.state || "unknown";
-            const { icon, animation, color } = this._stateMap[state] || this._stateMap.default;
-            this._icon = icon;
-            iconAnimation = animation;
-            iconColor = color;
-            this._name = this._config?.name || this._stateObj.attributes.friendly_name || "Lock";
-            this._stateFmtd = this.hass!.formatEntityState(this._stateObj);
+            const { stateIcon, stateAnimation, stateColor } = this._stateMap[state] || this._stateMap.default;
+            icon = this._config!.icon || stateIcon;
+            iconAnimation = stateAnimation;
+            iconColor = stateColor;
+            name = this._config?.name || this._stateObj.attributes.friendly_name || "Lock";
+            stateFmtd = this.hass!.formatEntityState(this._stateObj);
         } else {
-            this._icon = this._config!.icon || "hass:lock-alert-variant";
+            icon = this._config!.icon || "hass:lock-alert-variant";
             iconAnimation = "none";
             iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            this._name = this._config!.name || "Unknown Lock";
-            this._stateFmtd = "Unknown State";
+            name = this._config!.name || "Unknown Lock";
+            stateFmtd = "Unknown State";
         }
 
         this._iconStyles = {
@@ -132,6 +132,9 @@ export class LockTile extends LitElement implements LovelaceCard {
             backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
             animation: iconAnimation,
         };
+        this._icon = icon;
+        this._name = name;
+        this._stateFmtd = stateFmtd;
     }
 
     private _toggleEntity(e: Event): void {

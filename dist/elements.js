@@ -13345,9 +13345,6 @@ function entityListDialog(dialogTitle, filterType, filterValue, tileType) {
     dialogPopup(dialogConfig);
 }
 
-var css_248z = ".container {\n    grid-template-areas:\n        \"i n\"\n        \"i s\";\n    grid-row-gap: 0.3rem;\n}\n.name {\n    place-self: end start;\n}\n.state {\n    grid-area: s;\n    align-self: start;\n    text-align: left;\n    text-overflow: ellipsis;\n    overflow: hidden;\n    font-weight: var(--sq-secondary-font-weight);\n    font-size: var(--sq-secondary-font-size);\n    color: rgb(var(--sq-secondary-font-rgb));\n}\n";
-styleInject(css_248z);
-
 window.customCards.push({
     type: "smartqasa-fan-tile",
     name: "SmartQasa Fan Tile",
@@ -13366,18 +13363,15 @@ let FanTile = class FanTile extends h {
         return 1;
     }
     static get styles() {
-        return [r$3(css_248z$1), r$3(css_248z)];
+        return r$3(css_248z$2);
     }
     setConfig(config) {
-        this._config = { ...config };
+        this._config = config;
         this._entity = this._config.entity.startsWith("fan.") ? this._config.entity : undefined;
     }
     shouldUpdate(changedProps) {
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
             changedProps.has("_config"));
-    }
-    willUpdate() {
-        this._updateState();
     }
     render() {
         if (!this._config || !this._entity)
@@ -13387,17 +13381,22 @@ let FanTile = class FanTile extends h {
                 <div class="icon" @click=${this._showMoreInfo} style=${se(this._iconStyles)}>
                     <ha-icon icon=${this._icon}></ha-icon>
                 </div>
-                <div class="name">${this._name}</div>
-                <div class="state">${this._stateFmtd}</div>
+                <div class="text">
+                    <div class="name">${this._name}</div>
+                    <div class="state">${this._stateFmtd}</div>
+                </div>
             </div>
         `;
     }
+    updated() {
+        this._updateState();
+    }
     _updateState() {
-        let iconAnimation, iconColor;
+        let icon, iconAnimation, iconColor, name, stateFmtd;
         this._stateObj = this.hass && this._entity ? this.hass.states[this._entity] : undefined;
         if (this._stateObj) {
             const state = this._stateObj.state || "unknown";
-            this._icon = this._config.icon || this._stateObj.attributes.icon || "hass:fan";
+            icon = this._config.icon || this._stateObj.attributes.icon || "hass:fan";
             if (state == "on" && this._icon === "hass:fan") {
                 if (this._stateObj.attributes.percentage) {
                     const speed = 0.5 + (1 - this._stateObj.attributes.percentage / 100);
@@ -13412,23 +13411,26 @@ let FanTile = class FanTile extends h {
                 iconAnimation = "none";
             }
             iconColor = state === "on" ? "var(--sq-fan-on-rgb)" : "var(--sq-inactive-rgb)";
-            this._name = this._config.name || this._stateObj.attributes.friendly_name || "Fan";
-            this._stateFmtd = `${this.hass.formatEntityState(this._stateObj)}${state === "on" && this._stateObj.attributes.percentage
+            name = this._config.name || this._stateObj.attributes.friendly_name || "Fan";
+            stateFmtd = `${this.hass.formatEntityState(this._stateObj)}${state === "on" && this._stateObj.attributes.percentage
                 ? " - " + this.hass.formatEntityAttributeValue(this._stateObj, "percentage")
                 : ""}`;
         }
         else {
-            this._icon = this._config.icon || "hass:fan-alert";
+            icon = this._config.icon || "hass:fan-alert";
             iconAnimation = "none";
             iconColor = "var(--sq-unavailable-rgb)";
-            this._name = this._config?.name || "Unknown";
-            this._stateFmtd = "Unknown";
+            name = this._config?.name || "Unknown";
+            stateFmtd = "Unknown";
         }
         this._iconStyles = {
             color: `rgb(${iconColor})`,
             backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
             animation: iconAnimation,
         };
+        this._icon = icon;
+        this._name = name;
+        this._stateFmtd = stateFmtd;
     }
     _toggleEntity(e) {
         e.stopPropagation();
@@ -13477,10 +13479,19 @@ window.customCards.push({
     description: "A SmartQasa tile for controlling a garage cover entity.",
 });
 let GarageTile = class GarageTile extends h {
+    constructor() {
+        super(...arguments);
+        this._icon = "hass:garage-alert-variant";
+        this._iconStyles = {};
+        this._name = "Unknown Garage";
+        this._stateFmtd = "Unknown State";
+    }
     getCardSize() {
         return 1;
     }
-    static { this.styles = [r$3(css_248z$1), r$3(css_248z)]; }
+    static get styles() {
+        return r$3(css_248z$2);
+    }
     setConfig(config) {
         this._config = { ...config };
         this._entity = this._config.entity?.startsWith("cover.") ? this._config.entity : undefined;
@@ -13490,25 +13501,24 @@ let GarageTile = class GarageTile extends h {
             (changedProps.has("_config") && this._config));
     }
     render() {
-        const { icon, iconAnimation, iconColor, name, stateFmtd } = this._updateState();
-        const iconStyles = {
-            color: `rgb(${iconColor})`,
-            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
-            animation: iconAnimation,
-        };
         return ke `
             <div class="container" @click=${this._toggleEntity}>
-                <div class="icon" @click=${this._showMoreInfo} style="${se(iconStyles)}">
-                    <ha-icon .icon=${icon}></ha-icon>
+                <div class="icon" @click=${this._showMoreInfo} style="${se(this._iconStyles)}">
+                    <ha-icon icon=${this._icon}></ha-icon>
                 </div>
-                <div class="name">${name}</div>
-                <div class="state">${stateFmtd}</div>
+                <div class="text">
+                    <div class="name">${this._name}</div>
+                    <div class="state">${this._stateFmtd}</div>
+                </div>
             </div>
         `;
     }
+    updated() {
+        this._updateState();
+    }
     _updateState() {
-        let icon, iconAnimation, iconColor, name, stateFmtd;
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
+        let icon, iconAnimation, iconColor, name, stateFmtd;
         if (this._config && this.hass && this._stateObj) {
             const state = this._stateObj.state || "unknown";
             switch (state) {
@@ -13552,7 +13562,14 @@ let GarageTile = class GarageTile extends h {
             name = this._config?.name || "Unknown";
             stateFmtd = "Unknown";
         }
-        return { icon, iconAnimation, iconColor, name, stateFmtd };
+        this._iconStyles = {
+            color: `rgb(${iconColor})`,
+            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
+            animation: iconAnimation,
+        };
+        this._icon = icon;
+        this._name = name;
+        this._stateFmtd = stateFmtd;
     }
     _toggleEntity(e) {
         e.stopPropagation();
@@ -13581,6 +13598,9 @@ var garage = /*#__PURE__*/Object.freeze({
   get GarageTile () { return GarageTile; }
 });
 
+var css_248z = ".container {\n    grid-template-areas:\n        \"i n\"\n        \"i s\";\n    grid-row-gap: 0.3rem;\n}\n.name {\n    place-self: end start;\n}\n.state {\n    grid-area: s;\n    align-self: start;\n    text-align: left;\n    text-overflow: ellipsis;\n    overflow: hidden;\n    font-weight: var(--sq-secondary-font-weight);\n    font-size: var(--sq-secondary-font-size);\n    color: rgb(var(--sq-secondary-font-rgb));\n}\n";
+styleInject(css_248z);
+
 window.customCards.push({
     type: "smartqasa-heater-tile",
     name: "SmartQasa Heater Tile",
@@ -13607,43 +13627,48 @@ let HeaterTile = class HeaterTile extends h {
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
             (changedProps.has("_config") && this._config));
     }
-    willUpdate() {
-        this._updateState();
-    }
     render() {
         return ke `
             <div class="container" @click=${this._showMoreInfo}>
                 <div class="icon" style="${se(this._iconStyles)}">
-                    <ha-icon .icon=${this._icon}></ha-icon>
+                    <ha-icon icon=${this._icon}></ha-icon>
                 </div>
-                <div class="name">${this._name}</div>
-                <div class="state">${this._stateFmtd}</div>
+                <div class="text">
+                    <div class="name">${this._name}</div>
+                    <div class="state">${this._stateFmtd}</div>
+                </div>
             </div>
         `;
     }
+    updated() {
+        this._updateState();
+    }
     _updateState() {
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
-        let iconColor;
+        let icon, iconColor, name, stateFmtd;
         if (this._stateObj) {
             const state = this._stateObj.state || "unknown";
-            this._icon = this._config.icon || "hass:water-boiler";
+            icon = this._config.icon || "hass:water-boiler";
             iconColor = heaterColors[state] || heaterColors.idle;
-            this._name = this._config.name || this._stateObj.attributes.friendly_name || "Heater";
-            this._stateFmtd = this.hass.formatEntityState(this._stateObj);
+            name = this._config.name || this._stateObj.attributes.friendly_name || "Heater";
+            stateFmtd = this.hass.formatEntityState(this._stateObj);
             if (state !== "off" && this._stateObj.attributes.temperature) {
                 this._stateFmtd += ` - ${this._stateObj.attributes.temperature}°`;
             }
         }
         else {
-            this._icon = this._config.icon || "hass:water-boiler-alert";
+            icon = this._config.icon || "hass:water-boiler-alert";
             iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            this._name = this._config.name || "Unknown";
-            this._stateFmtd = "Unknown";
+            name = this._config.name || "Unknown";
+            stateFmtd = "Unknown";
         }
         this._iconStyles = {
             color: `rgb(${iconColor})`,
             backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
         };
+        this._icon = icon;
+        this._name = name;
+        this._stateFmtd = stateFmtd;
     }
     _showMoreInfo(e) {
         e.stopPropagation();
@@ -13696,9 +13721,6 @@ let LightTile = class LightTile extends h {
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
             changedProps.has("_config"));
     }
-    willUpdate() {
-        this._updateState();
-    }
     render() {
         if (!this._config || !this._entity)
             return D;
@@ -13714,31 +13736,37 @@ let LightTile = class LightTile extends h {
             </div>
         `;
     }
+    updated() {
+        this._updateState();
+    }
     _updateState() {
-        let iconAnimation, iconColor;
         this._stateObj = this.hass && this._entity ? this.hass.states[this._entity] : undefined;
+        let icon, iconAnimation, iconColor, name, stateFmtd;
         if (this._stateObj) {
             const state = this._stateObj.state || "unknown";
-            this._icon = this._config.icon || this._stateObj.attributes.icon || "hass:lightbulb";
+            icon = this._config.icon || this._stateObj.attributes.icon || "hass:lightbulb";
             iconAnimation = "none";
             iconColor = state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
-            this._name = this._config.name || this._stateObj.attributes.friendly_name || "Light";
-            this._stateFmtd = `${this.hass.formatEntityState(this._stateObj)}${state === "on" && this._stateObj.attributes.brightness
+            name = this._config.name || this._stateObj.attributes.friendly_name || "Light";
+            stateFmtd = `${this.hass.formatEntityState(this._stateObj)}${state === "on" && this._stateObj.attributes.brightness
                 ? " - " + this.hass.formatEntityAttributeValue(this._stateObj, "brightness")
                 : ""}`;
         }
         else {
-            this._icon = this._config.icon || "hass:lightbulb-alert";
+            icon = this._config.icon || "hass:lightbulb-alert";
             iconAnimation = "none";
             iconColor = "var(--sq-unavailable-rgb)";
-            this._name = this._config?.name || "Unknown";
-            this._stateFmtd = "Unknown";
+            name = this._config?.name || "Unknown";
+            stateFmtd = "Unknown";
         }
         this._iconStyles = {
             color: `rgb(${iconColor})`,
             backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
             animation: iconAnimation,
         };
+        this._icon = icon;
+        this._name = name;
+        this._stateFmtd = stateFmtd;
     }
     _toggleEntity(e) {
         e.stopPropagation();
@@ -13875,34 +13903,34 @@ let LockTile = class LockTile extends h {
         this._stateFmtd = "Unknown State";
         this._stateMap = {
             locked: {
-                icon: "hass:lock",
-                animation: "none",
-                color: "var(--sq-inactive-rgb)",
+                stateIcon: "hass:lock",
+                stateAnimation: "none",
+                stateColor: "var(--sq-inactive-rgb)",
             },
             unlocking: {
-                icon: "hass:rotate-right",
-                animation: "spin 1.0s linear infinite",
-                color: "var(--sq-lock-unlocking-rgb)",
+                stateIcon: "hass:rotate-right",
+                stateAnimation: "spin 1.0s linear infinite",
+                stateColor: "var(--sq-lock-unlocking-rgb)",
             },
             unlocked: {
-                icon: "hass:lock-open",
-                animation: "none",
-                color: "var(--sq-lock-unlocked-rgb)",
+                stateIcon: "hass:lock-open",
+                stateAnimation: "none",
+                stateColor: "var(--sq-lock-unlocked-rgb)",
             },
             locking: {
-                icon: "hass:rotate-right",
-                animation: "spin 1.0s linear infinite",
-                color: "var(--sq-lock-locking-rgb)",
+                stateIcon: "hass:rotate-right",
+                stateAnimation: "spin 1.0s linear infinite",
+                stateColor: "var(--sq-lock-locking-rgb)",
             },
             jammed: {
-                icon: "hass:lock-open",
-                animation: "blink 1.0s linear infinite",
-                color: "var(--sq-lock-jammed-rgb, 255, 0, 0)",
+                stateIcon: "hass:lock-open",
+                stateAnimation: "blink 1.0s linear infinite",
+                stateColor: "var(--sq-lock-jammed-rgb, 255, 0, 0)",
             },
             default: {
-                icon: "hass:lock-alert",
-                animation: "none",
-                color: "var(--sq-unavailable-rgb)",
+                stateIcon: "hass:lock-alert",
+                stateAnimation: "none",
+                stateColor: "var(--sq-unavailable-rgb)",
             },
         };
     }
@@ -13910,7 +13938,7 @@ let LockTile = class LockTile extends h {
         return 1;
     }
     static get styles() {
-        return [r$3(css_248z$1), r$3(css_248z)];
+        return r$3(css_248z$2);
     }
     setConfig(config) {
         this._config = { ...config };
@@ -13921,9 +13949,6 @@ let LockTile = class LockTile extends h {
             changedProps.has("_config") ||
             changedProps.has("_running"));
     }
-    willUpdate() {
-        this._updateState();
-    }
     render() {
         if (!this._config || !this._entity)
             return D;
@@ -13932,35 +13957,43 @@ let LockTile = class LockTile extends h {
                 <div class="icon" @click=${this._showMoreInfo} style=${se(this._iconStyles)}>
                     <ha-icon icon=${this._icon}></ha-icon>
                 </div>
-                <div class="name">${this._name}</div>
-                <div class="state">${this._stateFmtd}</div>
+                <div class="text">
+                    <div class="name">${this._name}</div>
+                    <div class="state">${this._stateFmtd}</div>
+                </div>
             </div>
         `;
     }
+    updated() {
+        this._updateState();
+    }
     _updateState() {
-        let iconAnimation, iconColor;
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
+        let icon, iconAnimation, iconColor, name, stateFmtd;
         if (this._stateObj) {
             const state = this._stateObj.state || "unknown";
-            const { icon, animation, color } = this._stateMap[state] || this._stateMap.default;
-            this._icon = icon;
-            iconAnimation = animation;
-            iconColor = color;
-            this._name = this._config?.name || this._stateObj.attributes.friendly_name || "Lock";
-            this._stateFmtd = this.hass.formatEntityState(this._stateObj);
+            const { stateIcon, stateAnimation, stateColor } = this._stateMap[state] || this._stateMap.default;
+            icon = this._config.icon || stateIcon;
+            iconAnimation = stateAnimation;
+            iconColor = stateColor;
+            name = this._config?.name || this._stateObj.attributes.friendly_name || "Lock";
+            stateFmtd = this.hass.formatEntityState(this._stateObj);
         }
         else {
-            this._icon = this._config.icon || "hass:lock-alert-variant";
+            icon = this._config.icon || "hass:lock-alert-variant";
             iconAnimation = "none";
             iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            this._name = this._config.name || "Unknown Lock";
-            this._stateFmtd = "Unknown State";
+            name = this._config.name || "Unknown Lock";
+            stateFmtd = "Unknown State";
         }
         this._iconStyles = {
             color: `rgb(${iconColor})`,
             backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
             animation: iconAnimation,
         };
+        this._icon = icon;
+        this._name = name;
+        this._stateFmtd = stateFmtd;
     }
     _toggleEntity(e) {
         e.stopPropagation();

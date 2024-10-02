@@ -54,10 +54,6 @@ export class LightTile extends LitElement implements LovelaceCard {
         );
     }
 
-    protected willUpdate(): void {
-        this._updateState();
-    }
-
     protected render(): TemplateResult | typeof nothing {
         if (!this._config || !this._entity) return nothing;
 
@@ -74,28 +70,31 @@ export class LightTile extends LitElement implements LovelaceCard {
         `;
     }
 
-    private _updateState(): void {
-        let iconAnimation, iconColor;
+    protected updated(): void {
+        this._updateState();
+    }
 
+    private _updateState(): void {
         this._stateObj = this.hass && this._entity ? this.hass.states[this._entity] : undefined;
 
+        let icon, iconAnimation, iconColor, name, stateFmtd;
         if (this._stateObj) {
             const state = this._stateObj.state || "unknown";
-            this._icon = this._config!.icon || this._stateObj.attributes.icon || "hass:lightbulb";
+            icon = this._config!.icon || this._stateObj.attributes.icon || "hass:lightbulb";
             iconAnimation = "none";
             iconColor = state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
-            this._name = this._config!.name || this._stateObj.attributes.friendly_name || "Light";
-            this._stateFmtd = `${this.hass!.formatEntityState(this._stateObj)}${
+            name = this._config!.name || this._stateObj.attributes.friendly_name || "Light";
+            stateFmtd = `${this.hass!.formatEntityState(this._stateObj)}${
                 state === "on" && this._stateObj.attributes.brightness
                     ? " - " + this.hass!.formatEntityAttributeValue(this._stateObj, "brightness")
                     : ""
             }`;
         } else {
-            this._icon = this._config!.icon || "hass:lightbulb-alert";
+            icon = this._config!.icon || "hass:lightbulb-alert";
             iconAnimation = "none";
             iconColor = "var(--sq-unavailable-rgb)";
-            this._name = this._config?.name || "Unknown";
-            this._stateFmtd = "Unknown";
+            name = this._config?.name || "Unknown";
+            stateFmtd = "Unknown";
         }
 
         this._iconStyles = {
@@ -103,6 +102,9 @@ export class LightTile extends LitElement implements LovelaceCard {
             backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
             animation: iconAnimation,
         };
+        this._icon = icon;
+        this._name = name;
+        this._stateFmtd = stateFmtd;
     }
 
     private _toggleEntity(e: Event): void {

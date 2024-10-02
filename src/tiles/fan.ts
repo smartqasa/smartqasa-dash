@@ -1,4 +1,4 @@
-import { CSSResultGroup, html, LitElement, nothing, PropertyValues, TemplateResult, unsafeCSS } from "lit";
+import { CSSResult, html, LitElement, nothing, PropertyValues, TemplateResult, unsafeCSS } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 
@@ -7,8 +7,7 @@ import { callService } from "../utilities/call-service";
 import { moreInfoDialog } from "../dialogs/more-info-dialog";
 import { entityListDialog } from "../dialogs/entity-list-dialog";
 
-import tileBaseStyle from "../css/tile-base.css";
-import tileStateStyle from "../css/tile-state.css";
+import tileStyle from "../css/tile.css";
 
 interface Config extends LovelaceCardConfig {
     entity: string;
@@ -38,12 +37,12 @@ export class FanTile extends LitElement implements LovelaceCard {
     private _name: string = "Unknown Fan";
     private _stateFmtd: string = "Unknown State";
 
-    static get styles(): CSSResultGroup {
-        return [unsafeCSS(tileBaseStyle), unsafeCSS(tileStateStyle)];
+    static get styles(): CSSResult {
+        return unsafeCSS(tileStyle);
     }
 
     public setConfig(config: Config): void {
-        this._config = { ...config };
+        this._config = config;
         this._entity = this._config.entity.startsWith("fan.") ? this._config.entity : undefined;
     }
 
@@ -54,10 +53,6 @@ export class FanTile extends LitElement implements LovelaceCard {
         );
     }
 
-    protected willUpdate(): void {
-        this._updateState();
-    }
-
     protected render(): TemplateResult | typeof nothing {
         if (!this._config || !this._entity) return nothing;
 
@@ -66,20 +61,26 @@ export class FanTile extends LitElement implements LovelaceCard {
                 <div class="icon" @click=${this._showMoreInfo} style=${styleMap(this._iconStyles)}>
                     <ha-icon icon=${this._icon}></ha-icon>
                 </div>
-                <div class="name">${this._name}</div>
-                <div class="state">${this._stateFmtd}</div>
+                <div class="text">
+                    <div class="name">${this._name}</div>
+                    <div class="state">${this._stateFmtd}</div>
+                </div>
             </div>
         `;
     }
 
+    protected updated(): void {
+        this._updateState();
+    }
+
     private _updateState(): void {
-        let iconAnimation, iconColor;
+        let icon, iconAnimation, iconColor, name, stateFmtd;
 
         this._stateObj = this.hass && this._entity ? this.hass.states[this._entity] : undefined;
 
         if (this._stateObj) {
             const state = this._stateObj.state || "unknown";
-            this._icon = this._config!.icon || this._stateObj.attributes.icon || "hass:fan";
+            icon = this._config!.icon || this._stateObj.attributes.icon || "hass:fan";
             if (state == "on" && this._icon === "hass:fan") {
                 if (this._stateObj.attributes.percentage) {
                     const speed = 0.5 + (1 - this._stateObj.attributes.percentage / 100);
@@ -92,18 +93,18 @@ export class FanTile extends LitElement implements LovelaceCard {
                 iconAnimation = "none";
             }
             iconColor = state === "on" ? "var(--sq-fan-on-rgb)" : "var(--sq-inactive-rgb)";
-            this._name = this._config!.name || this._stateObj.attributes.friendly_name || "Fan";
-            this._stateFmtd = `${this.hass!.formatEntityState(this._stateObj)}${
+            name = this._config!.name || this._stateObj.attributes.friendly_name || "Fan";
+            stateFmtd = `${this.hass!.formatEntityState(this._stateObj)}${
                 state === "on" && this._stateObj.attributes.percentage
                     ? " - " + this.hass!.formatEntityAttributeValue(this._stateObj, "percentage")
                     : ""
             }`;
         } else {
-            this._icon = this._config!.icon || "hass:fan-alert";
+            icon = this._config!.icon || "hass:fan-alert";
             iconAnimation = "none";
             iconColor = "var(--sq-unavailable-rgb)";
-            this._name = this._config?.name || "Unknown";
-            this._stateFmtd = "Unknown";
+            name = this._config?.name || "Unknown";
+            stateFmtd = "Unknown";
         }
 
         this._iconStyles = {
@@ -111,6 +112,9 @@ export class FanTile extends LitElement implements LovelaceCard {
             backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
             animation: iconAnimation,
         };
+        this._icon = icon;
+        this._name = name;
+        this._stateFmtd = stateFmtd;
     }
 
     private _toggleEntity(e: Event): void {

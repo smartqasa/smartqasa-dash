@@ -1,4 +1,4 @@
-import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult, unsafeCSS } from "lit";
+import { CSSResult, html, LitElement, PropertyValues, TemplateResult, unsafeCSS } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 
@@ -6,8 +6,7 @@ import { HassEntity, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../
 import { callService } from "../utilities/call-service";
 import { moreInfoDialog } from "../dialogs/more-info-dialog";
 
-import tileBaseStyle from "../css/tile-base.css";
-import tileStateStyle from "../css/tile-state.css";
+import tileStyle from "../css/tile.css";
 
 interface Config extends LovelaceCardConfig {
     entity: string;
@@ -31,8 +30,14 @@ export class GarageTile extends LitElement implements LovelaceCard {
     @state() protected _config?: Config;
     @state() private _stateObj?: HassEntity;
     private _entity?: string;
+    private _icon: string = "hass:garage-alert-variant";
+    private _iconStyles: Record<string, string> = {};
+    private _name: string = "Unknown Garage";
+    private _stateFmtd: string = "Unknown State";
 
-    static styles: CSSResultGroup = [unsafeCSS(tileBaseStyle), unsafeCSS(tileStateStyle)];
+    static get styles(): CSSResult {
+        return unsafeCSS(tileStyle);
+    }
 
     public setConfig(config: Config): void {
         this._config = { ...config };
@@ -47,34 +52,27 @@ export class GarageTile extends LitElement implements LovelaceCard {
     }
 
     protected render(): TemplateResult {
-        const { icon, iconAnimation, iconColor, name, stateFmtd } = this._updateState();
-        const iconStyles = {
-            color: `rgb(${iconColor})`,
-            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
-            animation: iconAnimation,
-        };
         return html`
             <div class="container" @click=${this._toggleEntity}>
-                <div class="icon" @click=${this._showMoreInfo} style="${styleMap(iconStyles)}">
-                    <ha-icon .icon=${icon}></ha-icon>
+                <div class="icon" @click=${this._showMoreInfo} style="${styleMap(this._iconStyles)}">
+                    <ha-icon icon=${this._icon}></ha-icon>
                 </div>
-                <div class="name">${name}</div>
-                <div class="state">${stateFmtd}</div>
+                <div class="text">
+                    <div class="name">${this._name}</div>
+                    <div class="state">${this._stateFmtd}</div>
+                </div>
             </div>
         `;
     }
 
-    private _updateState(): {
-        icon: string;
-        iconAnimation?: string;
-        iconColor: string;
-        name: string;
-        stateFmtd: string;
-    } {
-        let icon, iconAnimation, iconColor, name, stateFmtd;
+    protected updated(): void {
+        this._updateState();
+    }
 
+    private _updateState(): void {
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
 
+        let icon, iconAnimation, iconColor, name, stateFmtd;
         if (this._config && this.hass && this._stateObj) {
             const state = this._stateObj.state || "unknown";
             switch (state) {
@@ -118,7 +116,14 @@ export class GarageTile extends LitElement implements LovelaceCard {
             stateFmtd = "Unknown";
         }
 
-        return { icon, iconAnimation, iconColor, name, stateFmtd };
+        this._iconStyles = {
+            color: `rgb(${iconColor})`,
+            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
+            animation: iconAnimation,
+        };
+        this._icon = icon;
+        this._name = name;
+        this._stateFmtd = stateFmtd;
     }
 
     private _toggleEntity(e: Event): void {

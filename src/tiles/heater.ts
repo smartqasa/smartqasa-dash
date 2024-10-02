@@ -50,46 +50,50 @@ export class HeaterTile extends LitElement implements LovelaceCard {
         );
     }
 
-    protected willUpdate(): void {
-        this._updateState();
-    }
-
     protected render(): TemplateResult {
         return html`
             <div class="container" @click=${this._showMoreInfo}>
                 <div class="icon" style="${styleMap(this._iconStyles)}">
-                    <ha-icon .icon=${this._icon}></ha-icon>
+                    <ha-icon icon=${this._icon}></ha-icon>
                 </div>
-                <div class="name">${this._name}</div>
-                <div class="state">${this._stateFmtd}</div>
+                <div class="text">
+                    <div class="name">${this._name}</div>
+                    <div class="state">${this._stateFmtd}</div>
+                </div>
             </div>
         `;
     }
 
+    protected updated(): void {
+        this._updateState();
+    }
     private _updateState(): void {
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
 
-        let iconColor;
+        let icon, iconColor, name, stateFmtd;
         if (this._stateObj) {
             const state = this._stateObj.state || "unknown";
-            this._icon = this._config!.icon || "hass:water-boiler";
+            icon = this._config!.icon || "hass:water-boiler";
             iconColor = heaterColors[state] || heaterColors.idle;
-            this._name = this._config!.name || this._stateObj.attributes.friendly_name || "Heater";
-            this._stateFmtd = this.hass!.formatEntityState(this._stateObj);
+            name = this._config!.name || this._stateObj.attributes.friendly_name || "Heater";
+            stateFmtd = this.hass!.formatEntityState(this._stateObj);
             if (state !== "off" && this._stateObj.attributes.temperature) {
                 this._stateFmtd += ` - ${this._stateObj.attributes.temperature}°`;
             }
         } else {
-            this._icon = this._config!.icon || "hass:water-boiler-alert";
+            icon = this._config!.icon || "hass:water-boiler-alert";
             iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            this._name = this._config!.name || "Unknown";
-            this._stateFmtd = "Unknown";
+            name = this._config!.name || "Unknown";
+            stateFmtd = "Unknown";
         }
 
         this._iconStyles = {
             color: `rgb(${iconColor})`,
             backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
         };
+        this._icon = icon;
+        this._name = name;
+        this._stateFmtd = stateFmtd;
     }
 
     private _showMoreInfo(e: Event): void {
