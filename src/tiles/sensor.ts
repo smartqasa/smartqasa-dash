@@ -1,4 +1,4 @@
-import { CSSResultGroup, html, LitElement, PropertyValues, TemplateResult, unsafeCSS } from "lit";
+import { CSSResult, html, LitElement, nothing, PropertyValues, TemplateResult, unsafeCSS } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 
@@ -6,8 +6,7 @@ import { HassEntity } from "home-assistant-js-websocket";
 import { HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 import { moreInfoDialog } from "../dialogs/more-info-dialog";
 
-import tileBaseStyle from "../css/tile-base.css";
-import tileStateStyle from "../css/tile-state.css";
+import tileStyle from "../css/tile.css";
 
 interface Config extends LovelaceCardConfig {
     category?: string;
@@ -33,8 +32,14 @@ export class SensorTile extends LitElement implements LovelaceCard {
     @state() protected _config?: Config;
     private _entity?: string;
     private _stateObj?: HassEntity;
+    private _iconStyles: Record<string, string> = {};
+    private _iconTemplate?: TemplateResult;
+    private _name: string = "Unknown Sensor";
+    private _stateFmtd: string = "Unknown State";
 
-    static styles: CSSResultGroup = [unsafeCSS(tileBaseStyle), unsafeCSS(tileStateStyle)];
+    static get styles(): CSSResult {
+        return unsafeCSS(tileStyle);
+    }
 
     public setConfig(config: Config): void {
         this._config = { ...config };
@@ -48,34 +53,28 @@ export class SensorTile extends LitElement implements LovelaceCard {
         );
     }
 
-    protected render(): TemplateResult {
-        const { iconTemplate, iconAnimation, iconColor, name, stateFmtd } = this._updateState();
-        const iconStyles = {
-            color: `rgb(${iconColor})`,
-            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
-            animation: iconAnimation,
-        };
+    protected willUpdate(): void {
+        this._updateState();
+    }
+
+    protected render(): TemplateResult | typeof nothing {
+        if (!this._config || !this._entity) return nothing;
 
         return html`
             <div class="container" @click=${this._showMoreInfo}>
-                <div class="icon" style="${styleMap(iconStyles)}">${iconTemplate}</div>
-                <div class="name">${name}</div>
-                <div class="state">${stateFmtd}</div>
+                <div class="icon" style="${styleMap(this._iconStyles)}">${this._iconTemplate}</div>
+                <div class="text">
+                    <div class="name">${this._name}</div>
+                    <div class="state">${this._stateFmtd}</div>
+                </div>
             </div>
         `;
     }
 
-    private _updateState(): {
-        iconTemplate: TemplateResult;
-        iconAnimation?: string;
-        iconColor: string;
-        name: string;
-        stateFmtd: string;
-    } {
-        let iconTemplate, iconAnimation, iconColor, name, stateFmtd;
-
+    private _updateState(): void {
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
 
+        let iconTemplate, iconAnimation, iconColor, name, stateFmtd;
         if (this._stateObj) {
             if (!this._config!.icon) {
                 iconTemplate = html`<ha-state-icon .hass=${this.hass} .stateObj=${this._stateObj}></ha-state-icon>`;
@@ -88,12 +87,18 @@ export class SensorTile extends LitElement implements LovelaceCard {
         } else {
             iconTemplate = html`<ha-icon icon="hass:leak"></ha-icon>`;
             iconAnimation = "none";
-            iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+            iconColor = "var(--sq-unavailable-rgb)";
             name = this._config!.name || "Unknown";
             stateFmtd = "Unknown";
         }
 
-        return { iconTemplate, iconAnimation, iconColor, name, stateFmtd };
+        this._iconStyles = {
+            color: `rgb(${iconColor})`,
+            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
+        };
+        this._iconTemplate = iconTemplate;
+        this._name = name;
+        this._stateFmtd = stateFmtd;
     }
 
     private _showMoreInfo(e: Event): void {

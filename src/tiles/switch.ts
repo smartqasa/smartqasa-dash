@@ -1,4 +1,4 @@
-import { CSSResultGroup, html, LitElement, nothing, PropertyValues, TemplateResult, unsafeCSS } from "lit";
+import { CSSResult, html, LitElement, nothing, PropertyValues, TemplateResult, unsafeCSS } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 
@@ -6,8 +6,7 @@ import { HassEntity, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../
 import { callService } from "../utilities/call-service";
 import { moreInfoDialog } from "../dialogs/more-info-dialog";
 
-import tileBaseStyle from "../css/tile-base.css";
-import tileStateStyle from "../css/tile-state.css";
+import tileStyle from "../css/tile.css";
 
 interface Config extends LovelaceCardConfig {
     category?: string;
@@ -25,7 +24,7 @@ window.customCards.push({
 
 @customElement("smartqasa-switch-tile")
 export class SwitchTile extends LitElement implements LovelaceCard {
-    public getCardSize(): number {
+    public getCardSize(): number | Promise<number> {
         return 1;
     }
 
@@ -38,8 +37,8 @@ export class SwitchTile extends LitElement implements LovelaceCard {
     private _name: string = "Unknown Fan";
     private _stateFmtd: string = "Unknown State";
 
-    static get styles(): CSSResultGroup {
-        return [unsafeCSS(tileBaseStyle), unsafeCSS(tileStateStyle)];
+    static get styles(): CSSResult {
+        return unsafeCSS(tileStyle);
     }
 
     public setConfig(config: Config): void {
@@ -61,14 +60,17 @@ export class SwitchTile extends LitElement implements LovelaceCard {
     }
 
     protected render(): TemplateResult | typeof nothing {
-        if (!this._config || !this._entity) return html``;
+        if (!this._config || !this._entity) return nothing;
+
         return html`
             <div class="container" @click=${this._toggleEntity}>
                 <div class="icon" @click=${this._showMoreInfo} style="${styleMap(this._iconStyles)}">
                     <ha-icon icon=${this._icon}></ha-icon>
                 </div>
-                <div class="name">${this._name}</div>
-                <div class="state">${this._stateFmtd}</div>
+                <div class="text">
+                    <div class="name">${this._name}</div>
+                    <div class="state">${this._stateFmtd}</div>
+                </div>
             </div>
         `;
     }
@@ -76,27 +78,30 @@ export class SwitchTile extends LitElement implements LovelaceCard {
     private _updateState(): void {
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
 
-        let iconColor;
+        let icon, iconColor, name, stateFmtd;
         if (this._stateObj) {
+            icon = this._config!.icon || this._stateObj.attributes.icon || "hass:toggle-switch-variant";
             const state = this._stateObj.state;
-            this._icon = this._config!.icon || this._stateObj.attributes.icon || "hass:toggle-switch-variant";
             iconColor =
                 state === "on"
                     ? `var(--sq-switch${this._config!.category ? `-${this._config!.category}` : ""}-on-rgb)`
                     : "var(--sq-inactive-rgb)";
-            this._name = this._config!.name || this._stateObj.attributes.friendly_name || "Switch";
-            this._stateFmtd = this.hass!.formatEntityState(this._stateObj);
+            name = this._config!.name || this._stateObj.attributes.friendly_name || "Switch";
+            stateFmtd = this.hass!.formatEntityState(this._stateObj);
         } else {
-            this._icon = this._config!.icon || "hass:toggle-switch-variant";
+            icon = this._config!.icon || "hass:toggle-switch-variant";
             iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            this._name = this._config?.name || "Unknown Switch";
-            this._stateFmtd = "Unknown State";
+            name = this._config?.name || "Unknown Switch";
+            stateFmtd = "Unknown State";
         }
 
         this._iconStyles = {
             color: `rgb(${iconColor})`,
             backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
         };
+        this._icon = icon;
+        this._name = name;
+        this._stateFmtd = stateFmtd;
     }
 
     private _toggleEntity(e: Event): void {

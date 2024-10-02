@@ -1,10 +1,10 @@
-import { CSSResult, html, LitElement, TemplateResult, unsafeCSS } from "lit";
+import { CSSResult, html, LitElement, nothing, TemplateResult, unsafeCSS } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 
 import { LovelaceCard, LovelaceCardConfig } from "../types";
 
-import tileBaseStyle from "../css/tile-base.css";
+import tileStyle from "../css/tile.css";
 
 interface Config extends LovelaceCardConfig {
     icon: string;
@@ -27,14 +27,16 @@ export class ThemeTile extends LitElement implements LovelaceCard {
 
     @state() protected _config?: Config;
 
-    static styles: CSSResult = unsafeCSS(tileBaseStyle);
-
-    public setConfig(config: Config): void {
-        this._config = { ...config };
+    static get styles(): CSSResult {
+        return unsafeCSS(tileStyle);
     }
 
-    protected render(): TemplateResult {
-        if (!this._config) return html``;
+    public setConfig(config: Config): void {
+        this._config = config;
+    }
+
+    protected render(): TemplateResult | typeof nothing {
+        if (!this._config) return nothing;
 
         const icon = this._config.icon || "hass:compare";
         const iconColor = this._config.mode ? "var(--sq-inactive-rgb)" : "var(--sq-unavailable-rgb, 255, 0, 255)";
@@ -48,9 +50,11 @@ export class ThemeTile extends LitElement implements LovelaceCard {
         return html`
             <div class="container" @click=${this.selectMode}>
                 <div class="icon" style="${styleMap(iconStyles)}">
-                    <ha-icon .icon=${icon}></ha-icon>
+                    <ha-icon icon=${icon}></ha-icon>
                 </div>
-                <div class="name">${name}</div>
+                <div class="text">
+                    <div class="name">${name}</div>
+                </div>
             </div>
         `;
     }
