@@ -13485,6 +13485,33 @@ let GarageTile = class GarageTile extends h {
         this._iconStyles = {};
         this._name = "Unknown Garage";
         this._stateFmtd = "Unknown State";
+        this._stateMap = {
+            closed: {
+                stateIcon: "hass:garage-variant",
+                stateAnimation: "none",
+                stateColor: "var(--sq-inactive-rgb)",
+            },
+            closing: {
+                stateIcon: "hass:arrow-down-box",
+                stateAnimation: "blink 2.0s linear infinite",
+                stateColor: "var(--sq-garage-closing-rgb)",
+            },
+            opening: {
+                stateIcon: "hass:arrow-up-box",
+                stateAnimation: "blink 2.0s linear infinite",
+                stateColor: "var(--sq-garage-opening-rgb)",
+            },
+            open: {
+                stateIcon: "garage-open-variant",
+                stateAnimation: "none",
+                stateColor: "var(--sq-garage-open-rgb)",
+            },
+            default: {
+                stateIcon: "hass:garage-alert-variant",
+                stateAnimation: "none",
+                stateColor: "var(--sq-unavailable-rgb)",
+            },
+        };
     }
     getCardSize() {
         return 1;
@@ -13519,35 +13546,12 @@ let GarageTile = class GarageTile extends h {
     _updateState() {
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
         let icon, iconAnimation, iconColor, name, stateFmtd;
-        if (this._config && this.hass && this._stateObj) {
+        if (this._stateObj) {
             const state = this._stateObj.state || "unknown";
-            switch (state) {
-                case "closed":
-                    icon = "hass:garage-variant";
-                    iconAnimation = "none";
-                    iconColor = "var(--sq-inactive-rgb)";
-                    break;
-                case "opening":
-                    icon = "hass:arrow-up-box";
-                    iconAnimation = "blink 2.0s linear infinite";
-                    iconColor = "var(--sq-garage-opening-rgb, 255, 120, 0)";
-                    break;
-                case "open":
-                    icon = "hass:garage-open-variant";
-                    iconAnimation = "none";
-                    iconColor = "var(--sq-garage-open-rgb, 255, 120, 0)";
-                    break;
-                case "closing":
-                    icon = "hass:arrow-down-box";
-                    iconAnimation = "blink 2.0s linear infinite";
-                    iconColor = "var(--sq-garage-closing-rgb, 255, 120, 0)";
-                    break;
-                default:
-                    icon = "hass:garage-alert-variant";
-                    iconAnimation = "none";
-                    iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-                    break;
-            }
+            const { stateIcon, stateAnimation, stateColor } = this._stateMap[state] || this._stateMap.default;
+            icon = this._config.icon || stateIcon;
+            iconAnimation = stateAnimation;
+            iconColor = stateColor;
             name = this._config.name || this._stateObj.attributes.friendly_name || "Garage";
             stateFmtd =
                 this.hass.formatEntityState(this._stateObj) +
@@ -13556,7 +13560,7 @@ let GarageTile = class GarageTile extends h {
                         : "");
         }
         else {
-            icon = this._config?.icon || "hass:garage-alert-variant";
+            icon = this._config.icon || "hass:garage-alert-variant";
             iconAnimation = "none";
             iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
             name = this._config?.name || "Unknown";
@@ -13973,7 +13977,7 @@ let LockTile = class LockTile extends h {
         if (this._stateObj) {
             const state = this._stateObj.state || "unknown";
             const { stateIcon, stateAnimation, stateColor } = this._stateMap[state] || this._stateMap.default;
-            icon = this._config.icon || stateIcon;
+            icon = this._config.icon || stateIcon || "hass:lock-variant";
             iconAnimation = stateAnimation;
             iconColor = stateColor;
             name = this._config?.name || this._stateObj.attributes.friendly_name || "Lock";

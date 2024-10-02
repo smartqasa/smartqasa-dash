@@ -29,11 +29,40 @@ export class GarageTile extends LitElement implements LovelaceCard {
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() protected _config?: Config;
     @state() private _stateObj?: HassEntity;
+
     private _entity?: string;
     private _icon: string = "hass:garage-alert-variant";
     private _iconStyles: Record<string, string> = {};
     private _name: string = "Unknown Garage";
     private _stateFmtd: string = "Unknown State";
+
+    private readonly _stateMap: Record<string, { stateIcon: string; stateAnimation: string; stateColor: string }> = {
+        closed: {
+            stateIcon: "hass:garage-variant",
+            stateAnimation: "none",
+            stateColor: "var(--sq-inactive-rgb)",
+        },
+        closing: {
+            stateIcon: "hass:arrow-down-box",
+            stateAnimation: "blink 2.0s linear infinite",
+            stateColor: "var(--sq-garage-closing-rgb)",
+        },
+        opening: {
+            stateIcon: "hass:arrow-up-box",
+            stateAnimation: "blink 2.0s linear infinite",
+            stateColor: "var(--sq-garage-opening-rgb)",
+        },
+        open: {
+            stateIcon: "garage-open-variant",
+            stateAnimation: "none",
+            stateColor: "var(--sq-garage-open-rgb)",
+        },
+        default: {
+            stateIcon: "hass:garage-alert-variant",
+            stateAnimation: "none",
+            stateColor: "var(--sq-unavailable-rgb)",
+        },
+    };
 
     static get styles(): CSSResult {
         return unsafeCSS(tileStyle);
@@ -73,43 +102,20 @@ export class GarageTile extends LitElement implements LovelaceCard {
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
 
         let icon, iconAnimation, iconColor, name, stateFmtd;
-        if (this._config && this.hass && this._stateObj) {
+        if (this._stateObj) {
             const state = this._stateObj.state || "unknown";
-            switch (state) {
-                case "closed":
-                    icon = "hass:garage-variant";
-                    iconAnimation = "none";
-                    iconColor = "var(--sq-inactive-rgb)";
-                    break;
-                case "opening":
-                    icon = "hass:arrow-up-box";
-                    iconAnimation = "blink 2.0s linear infinite";
-                    iconColor = "var(--sq-garage-opening-rgb, 255, 120, 0)";
-                    break;
-                case "open":
-                    icon = "hass:garage-open-variant";
-                    iconAnimation = "none";
-                    iconColor = "var(--sq-garage-open-rgb, 255, 120, 0)";
-                    break;
-                case "closing":
-                    icon = "hass:arrow-down-box";
-                    iconAnimation = "blink 2.0s linear infinite";
-                    iconColor = "var(--sq-garage-closing-rgb, 255, 120, 0)";
-                    break;
-                default:
-                    icon = "hass:garage-alert-variant";
-                    iconAnimation = "none";
-                    iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-                    break;
-            }
-            name = this._config.name || this._stateObj.attributes.friendly_name || "Garage";
+            const { stateIcon, stateAnimation, stateColor } = this._stateMap[state] || this._stateMap.default;
+            icon = this._config!.icon || stateIcon;
+            iconAnimation = stateAnimation;
+            iconColor = stateColor;
+            name = this._config!.name || this._stateObj.attributes.friendly_name || "Garage";
             stateFmtd =
-                this.hass.formatEntityState(this._stateObj) +
+                this.hass!.formatEntityState(this._stateObj) +
                 (state === "open" && this._stateObj.attributes.current_position
-                    ? " - " + this.hass.formatEntityAttributeValue(this._stateObj, "current_position")
+                    ? " - " + this.hass!.formatEntityAttributeValue(this._stateObj, "current_position")
                     : "");
         } else {
-            icon = this._config?.icon || "hass:garage-alert-variant";
+            icon = this._config!.icon || "hass:garage-alert-variant";
             iconAnimation = "none";
             iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
             name = this._config?.name || "Unknown";
