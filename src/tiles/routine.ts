@@ -54,7 +54,7 @@ export class RoutineTile extends LitElement implements LovelaceCard {
         );
     }
 
-    protected willUpdated(): void {
+    protected willUpdate(): void {
         this._updateState();
     }
 
@@ -64,7 +64,7 @@ export class RoutineTile extends LitElement implements LovelaceCard {
         return html`
             <div class="container" @click=${this._runRoutine}>
                 <div class="icon" style="${styleMap(this._iconStyles)}">
-                    <ha-icon .icon=${this._icon}></ha-icon>
+                    <ha-icon icon=${this._icon}></ha-icon>
                 </div>
                 <div class="text">
                     <div class="name">${this._name}</div>

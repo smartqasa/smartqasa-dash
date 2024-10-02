@@ -14485,7 +14485,7 @@ let RoutineTile = class RoutineTile extends h {
             (changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
             changedProps.has("_config"));
     }
-    willUpdated() {
+    willUpdate() {
         this._updateState();
     }
     render() {
@@ -14494,7 +14494,7 @@ let RoutineTile = class RoutineTile extends h {
         return ke `
             <div class="container" @click=${this._runRoutine}>
                 <div class="icon" style="${se(this._iconStyles)}">
-                    <ha-icon .icon=${this._icon}></ha-icon>
+                    <ha-icon icon=${this._icon}></ha-icon>
                 </div>
                 <div class="text">
                     <div class="name">${this._name}</div>
