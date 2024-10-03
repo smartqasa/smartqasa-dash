@@ -55,6 +55,7 @@
     text-overflow: ellipsis;
     white-space: normal;
     word-break: break-word;
+    overflow-y: hidden;
     font-weight: var(--sq-primary-font-weight);
     font-size: var(--sq-primary-font-size);
     color: rgb(var(--sq-primary-font-rgb));
@@ -64,6 +65,7 @@
     text-align: left;
     text-overflow: ellipsis;
     white-space: normal;
+    overflow-y: hidden;
     font-weight: var(--sq-secondary-font-weight);
     font-size: var(--sq-secondary-font-size);
     color: rgb(var(--sq-secondary-font-rgb));
