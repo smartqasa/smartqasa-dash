@@ -62,7 +62,7 @@ export function renderControls(
     if (controlTiles.length === 0) return nothing;
 
     if (isPhone) {
-        const gridStyle = { gridTemplateColumns: "1fr 1fr" };
+        const gridStyle = { gridTemplateColumns: "repeat(2, minmax(0, 1fr)" };
         return html`
             <div class="control-tiles" style=${styleMap(gridStyle)}>
                 ${controlTiles.flat().map((tile) => html`${tile}`)}
