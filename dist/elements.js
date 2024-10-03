@@ -14177,9 +14177,7 @@ let OptionTile = class OptionTile extends h {
                 }
                 iconAnimation = "none";
                 iconColor =
-                    this._stateObj.state === this._config.option
-                        ? "var(--sq-blue-rgb-blue)"
-                        : "var(--sq-inactive-rgb)";
+                    this._stateObj.state === this._config.option ? "var(--sq-blue-rgb)" : "var(--sq-inactive-rgb)";
             }
             name = this._config.option || "Unknown";
         }
