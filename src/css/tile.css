@@ -52,7 +52,6 @@
     -webkit-line-clamp: 2;
     line-clamp: 2;
     text-align: left;
-    overflow: hidden;
     text-overflow: ellipsis;
     white-space: normal;
     word-break: break-word;
@@ -63,7 +62,6 @@
 
 .state {
     text-align: left;
-    overflow: hidden;
     text-overflow: ellipsis;
     white-space: normal;
     font-weight: var(--sq-secondary-font-weight);
