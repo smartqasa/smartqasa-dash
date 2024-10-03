@@ -1,7 +1,12 @@
+:host {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+}
 .container {
     display: flex;
     flex: 0 0 100%;
-    height: 100%;
     box-sizing: border-box;
     border: var(--sq-card-border);
     border-radius: var(--sq-tile-border-radius);
