@@ -51,7 +51,8 @@ class VerticalStack extends LitElement implements LovelaceCard {
     }
 
     protected render() {
-        if (!this._config || !this.hass || this._cards.length === 0) return nothing;
+        if (!this._config || !this.hass || !this._cards.length) return nothing;
+
         return html` <div class="container">${this._cards.map((card) => html`<div class="card">${card}</div>`)}</div> `;
     }
 
@@ -60,29 +61,30 @@ class VerticalStack extends LitElement implements LovelaceCard {
     }
 
     protected updated(changedProps: PropertyValues) {
-        if (!this.hass || this._cards.length === 0) return;
-
-        if (changedProps.has("hass") && this.hass && this._cards.length > 0) {
-            this._cards.forEach((card) => {
-                if (card.hass !== this.hass) card.hass = this.hass;
-            });
-        }
+        if (!this.hass) return;
 
         if (changedProps.has("_config")) {
             this._createCards();
+        } else if (changedProps.has("hass") && this.hass && this._cards.length > 0) {
+            this._cards.forEach((card) => {
+                if (card.hass !== this.hass) card.hass = this.hass;
+            });
         }
     }
 
     private async _createCards(): Promise<void> {
         if (!this._config || !this.hass) return;
 
-        this._cards = [];
         if (this._config.cards.length > 0) {
             try {
                 this._cards = await createElements(this._config.cards, this.hass);
             } catch (error) {
+                this._cards = [];
                 console.error("Error creating cards:", error);
             }
+        } else {
+            this._cards = [];
+            console.warn("No cards defined in configuration");
         }
     }
 }

@@ -10697,7 +10697,7 @@ let VerticalStack = class VerticalStack extends h {
         this._config = config;
     }
     render() {
-        if (!this._config || !this.hass || this._cards.length === 0)
+        if (!this._config || !this.hass || !this._cards.length)
             return D;
         return ke ` <div class="container">${this._cards.map((card) => ke `<div class="card">${card}</div>`)}</div> `;
     }
@@ -10705,29 +10705,33 @@ let VerticalStack = class VerticalStack extends h {
         this._createCards();
     }
     updated(changedProps) {
-        if (!this.hass || this._cards.length === 0)
+        if (!this.hass)
             return;
-        if (changedProps.has("hass") && this.hass && this._cards.length > 0) {
+        if (changedProps.has("_config")) {
+            this._createCards();
+        }
+        else if (changedProps.has("hass") && this.hass && this._cards.length > 0) {
             this._cards.forEach((card) => {
                 if (card.hass !== this.hass)
                     card.hass = this.hass;
             });
         }
-        if (changedProps.has("_config")) {
-            this._createCards();
-        }
     }
     async _createCards() {
         if (!this._config || !this.hass)
             return;
-        this._cards = [];
         if (this._config.cards.length > 0) {
             try {
                 this._cards = await createElements(this._config.cards, this.hass);
             }
             catch (error) {
+                this._cards = [];
                 console.error("Error creating cards:", error);
             }
+        }
+        else {
+            this._cards = [];
+            console.warn("No cards defined in configuration");
         }
     }
 };
