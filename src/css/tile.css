@@ -1,6 +1,6 @@
 .container {
     display: flex;
-    width: 100%;
+    flex: 0 0 100%;
     height: 100%;
     box-sizing: border-box;
     border: var(--sq-card-border);
@@ -22,7 +22,6 @@
 
 .icon {
     display: flex;
-    flex-grow: 0;
     width: var(--sq-icon-size);
     height: var(--sq-icon-size);
     margin: auto 0;
@@ -36,7 +35,6 @@
 .text {
     display: flex;
     flex-direction: column;
-    flex-grow: 1;
     align-items: flex-start;
     justify-content: center;
     row-gap: 0.3rem;
