@@ -15,4 +15,4 @@ export function getDeviceType(): string {
     }
 }
 
-export let deviceType: string = getDeviceType();
+export const deviceType: string = getDeviceType();
