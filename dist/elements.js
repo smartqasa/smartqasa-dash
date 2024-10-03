@@ -12060,7 +12060,7 @@ let AudioChip = class AudioChip extends h {
     }
     _launchApp(e) {
         e.stopPropagation();
-        launchApp("com.sonos.acr2");
+        launchApp("sonos");
     }
 };
 __decorate([

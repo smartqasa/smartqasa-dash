@@ -121,6 +121,6 @@ export class AudioChip extends LitElement implements LovelaceCard {
 
     private _launchApp(e: Event): void {
         e.stopPropagation();
-        launchApp("com.sonos.acr2");
+        launchApp("sonos");
     }
 }
