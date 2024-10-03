@@ -26,6 +26,7 @@ export class AppTile extends LitElement implements LovelaceCard {
     }
 
     @state() protected _config?: Config;
+    private _app?: string;
     private _appObj?: any;
 
     static get styles(): CSSResult {
@@ -34,7 +35,8 @@ export class AppTile extends LitElement implements LovelaceCard {
 
     public setConfig(config: Config): void {
         if (!config.app) throw new Error("A valid app must be specified.");
-        this._config = { ...config };
+        this._config = config;
+        this._app = config.app;
         this._appObj = appTable[config.app] || undefined;
     }
 
@@ -72,13 +74,7 @@ export class AppTile extends LitElement implements LovelaceCard {
 
     private launchApp(e: Event): void {
         e.stopPropagation();
-
-        if (this._appObj.launcher == "uri_scheme" && this._appObj.uri_scheme) {
-            window.location.href = this._appObj.uri_scheme;
-        } else if (this._appObj.launcher == "package" && this._appObj.package) {
-            launchApp(this._appObj.package);
-        } else {
-            console.error("Neither URI scheme nor package has been specified.");
-        }
+        if (!this._config?.app) return;
+        launchApp(this._config.app);
     }
 }
