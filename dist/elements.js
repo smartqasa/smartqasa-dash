@@ -12377,7 +12377,7 @@ var weather = /*#__PURE__*/Object.freeze({
   get WeatherChip () { return WeatherChip; }
 });
 
-var css_248z = ":host {\n    display: flex;\n    width: 100%;\n    height: 100%;\n    max-width: 100%;\n    max-height: 100%;\n}\n.container {\n    display: flex;\n    flex: 1 1 100%;\n    height: 100%;\n    border: var(--sq-card-border);\n    border-radius: var(--sq-tile-border-radius);\n    padding: var(--sq-tile-padding);\n    box-sizing: border-box;\n    background-color: var(--sq-tile-background-color);\n    column-gap: 1rem;\n    overflow: hidden;\n    -webkit-tap-highlight-color: transparent;\n    cursor: pointer;\n}\n\n.container:focus,\n.container:active {\n    background-color: var(--sq-ripple-color);\n    border-radius: var(--sq-card-border-radius);\n    outline: none;\n}\n\n.icon {\n    display: flex;\n    width: var(--sq-icon-size);\n    height: var(--sq-icon-size);\n    margin: auto 0;\n    padding: var(--sq-tile-padding);\n    border-radius: 50%;\n    color: rgb(var(--sq-inactive-rgb));\n    background-color: rgba(var(--sq-inactive-rgb), var(--sq-icon-opacity));\n    transition: var(--sq-icon-transition);\n}\n\n.text {\n    display: flex;\n    flex-direction: column;\n    align-items: flex-start;\n    justify-content: center;\n    row-gap: 0.3rem;\n    overflow: hidden;\n}\n\n.name {\n    line-clamp: 2;\n    text-align: left;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: normal;\n    font-weight: var(--sq-primary-font-weight);\n    font-size: var(--sq-primary-font-size);\n    color: rgb(var(--sq-primary-font-rgb));\n}\n\n.state {\n    text-align: left;\n    text-overflow: ellipsis;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: normal;\n    font-weight: var(--sq-secondary-font-weight);\n    font-size: var(--sq-secondary-font-size);\n    color: rgb(var(--sq-secondary-font-rgb));\n}\n\n@keyframes blink {\n    50% {\n        opacity: 0.25;\n    }\n}\n\n@keyframes spin {\n    from {\n        transform: rotate(0deg);\n    }\n    to {\n        transform: rotate(360deg);\n    }\n}\n";
+var css_248z = ":host {\n    display: flex;\n    width: 100%;\n    height: 100%;\n}\n.container {\n    display: flex;\n    flex: 0 0 100%;\n    height: 100%;\n    padding: var(--sq-tile-padding);\n    border: var(--sq-card-border);\n    border-radius: var(--sq-tile-border-radius);\n    box-sizing: border-box;\n    background-color: var(--sq-tile-background-color);\n    column-gap: 1rem;\n    overflow: hidden;\n    -webkit-tap-highlight-color: transparent;\n    cursor: pointer;\n}\n\n.container:focus,\n.container:active {\n    background-color: var(--sq-ripple-color);\n    border-radius: var(--sq-card-border-radius);\n    outline: none;\n}\n\n.icon {\n    display: flex;\n    width: var(--sq-icon-size);\n    height: var(--sq-icon-size);\n    margin: auto 0;\n    padding: var(--sq-tile-padding);\n    border-radius: 50%;\n    color: rgb(var(--sq-inactive-rgb));\n    background-color: rgba(var(--sq-inactive-rgb), var(--sq-icon-opacity));\n    transition: var(--sq-icon-transition);\n}\n\n.text {\n    display: flex;\n    flex-direction: column;\n    align-items: flex-start;\n    justify-content: center;\n    row-gap: 0.3rem;\n    overflow: hidden;\n}\n\n.name {\n    display: flex;\n    line-clamp: 2;\n    text-align: left;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: normal;\n    font-weight: var(--sq-primary-font-weight);\n    font-size: var(--sq-primary-font-size);\n    color: rgb(var(--sq-primary-font-rgb));\n}\n\n.state {\n    text-align: left;\n    text-overflow: ellipsis;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: normal;\n    font-weight: var(--sq-secondary-font-weight);\n    font-size: var(--sq-secondary-font-size);\n    color: rgb(var(--sq-secondary-font-rgb));\n}\n\n@keyframes blink {\n    50% {\n        opacity: 0.25;\n    }\n}\n\n@keyframes spin {\n    from {\n        transform: rotate(0deg);\n    }\n    to {\n        transform: rotate(360deg);\n    }\n}\n";
 styleInject(css_248z);
 
 window.customCards.push({
@@ -14127,7 +14127,7 @@ let OptionTile = class OptionTile extends h {
         return r$3(css_248z);
     }
     setConfig(config) {
-        this._config = { ...config };
+        this._config = config;
         this._entity = this._config.entity?.startsWith("input_select.") ? this._config.entity : undefined;
     }
     shouldUpdate(changedProps) {
@@ -14146,36 +14146,52 @@ let OptionTile = class OptionTile extends h {
                 <div class="icon" style="${se(this._iconStyles)}">
                     <ha-icon icon=${this._icon}></ha-icon>
                 </div>
-                <div class="name">${this._name}</div>
+                <div class="text">
+                    <div class="name">${this._name}</div>
+                </div>
             </div>
         `;
     }
     _updateState() {
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
+        let icon, iconAnimation, iconColor, name;
         if (this._stateObj) {
             if (this._running) {
-                this._icon = "hass:rotate-right";
+                icon = "hass:rotate-right";
+                iconAnimation = "spin 1.0s linear infinite";
+                iconColor = "var(--sq-blue-rgb)";
             }
             else {
                 if (this._entity === "input_select.location_phase") {
-                    this._icon = phaseIcons[this._config.option] || phaseIcons.default;
+                    icon = phaseIcons[this._config.option] || phaseIcons.default;
                 }
                 else if (this._entity === "input_select.location_mode") {
-                    this._icon = modeIcons[this._config.option] || modeIcons.default;
+                    icon = modeIcons[this._config.option] || modeIcons.default;
                 }
                 else {
-                    this._icon = this._config.icon || this._stateObj.attributes.icon || "hass:form-dropdown";
+                    icon = this._config.icon || this._stateObj.attributes.icon || "hass:form-dropdown";
                 }
-                this._stateObj.state === this._config.option
+                iconAnimation = "none";
+                iconColor =
+                    this._stateObj.state === this._config.option
                         ? "var(--sq-blue-rgb-blue)"
                         : "var(--sq-inactive-rgb)";
             }
-            this._name = this._config.option || "Unknown";
+            name = this._config.option || "Unknown";
         }
         else {
-            this._icon = this._config?.icon || "hass:form-dropdown";
-            this._name = this._config?.option || "Unknown";
+            icon = this._config?.icon || "hass:form-dropdown";
+            iconAnimation = "none";
+            iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+            name = this._config?.option || "Unknown";
         }
+        this._iconStyles = {
+            color: `rgb(${iconColor})`,
+            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
+            animation: iconAnimation,
+        };
+        this._icon = icon;
+        this._name = name;
     }
     async _selectOption(e) {
         e.stopPropagation();

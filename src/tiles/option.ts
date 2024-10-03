@@ -24,7 +24,7 @@ window.customCards.push({
 
 @customElement("smartqasa-option-tile")
 export class OptionTile extends LitElement implements LovelaceCard {
-    public getCardSize(): number {
+    public getCardSize(): number | Promise<number> {
         return 1;
     }
 
@@ -43,7 +43,7 @@ export class OptionTile extends LitElement implements LovelaceCard {
     }
 
     public setConfig(config: Config): void {
-        this._config = { ...config };
+        this._config = config;
         this._entity = this._config.entity?.startsWith("input_select.") ? this._config.entity : undefined;
     }
 
@@ -67,7 +67,9 @@ export class OptionTile extends LitElement implements LovelaceCard {
                 <div class="icon" style="${styleMap(this._iconStyles)}">
                     <ha-icon icon=${this._icon}></ha-icon>
                 </div>
-                <div class="name">${this._name}</div>
+                <div class="text">
+                    <div class="name">${this._name}</div>
+                </div>
             </div>
         `;
     }
@@ -75,19 +77,19 @@ export class OptionTile extends LitElement implements LovelaceCard {
     private _updateState(): void {
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
 
-        let iconAnimation, iconColor;
+        let icon, iconAnimation, iconColor, name;
         if (this._stateObj) {
             if (this._running) {
-                this._icon = "hass:rotate-right";
+                icon = "hass:rotate-right";
                 iconAnimation = "spin 1.0s linear infinite";
                 iconColor = "var(--sq-blue-rgb)";
             } else {
                 if (this._entity === "input_select.location_phase") {
-                    this._icon = phaseIcons[this._config!.option] || phaseIcons.default;
+                    icon = phaseIcons[this._config!.option] || phaseIcons.default;
                 } else if (this._entity === "input_select.location_mode") {
-                    this._icon = modeIcons[this._config!.option] || modeIcons.default;
+                    icon = modeIcons[this._config!.option] || modeIcons.default;
                 } else {
-                    this._icon = this._config!.icon || this._stateObj.attributes.icon || "hass:form-dropdown";
+                    icon = this._config!.icon || this._stateObj.attributes.icon || "hass:form-dropdown";
                 }
                 iconAnimation = "none";
                 iconColor =
@@ -95,13 +97,21 @@ export class OptionTile extends LitElement implements LovelaceCard {
                         ? "var(--sq-blue-rgb-blue)"
                         : "var(--sq-inactive-rgb)";
             }
-            this._name = this._config!.option || "Unknown";
+            name = this._config!.option || "Unknown";
         } else {
-            this._icon = this._config?.icon || "hass:form-dropdown";
+            icon = this._config?.icon || "hass:form-dropdown";
             iconAnimation = "none";
             iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            this._name = this._config?.option || "Unknown";
+            name = this._config?.option || "Unknown";
         }
+
+        this._iconStyles = {
+            color: `rgb(${iconColor})`,
+            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
+            animation: iconAnimation,
+        };
+        this._icon = icon;
+        this._name = name;
     }
 
     private async _selectOption(e: Event): Promise<void> {
