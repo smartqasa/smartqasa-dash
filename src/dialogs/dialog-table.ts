@@ -351,6 +351,8 @@ export const dialogTable: DialogTable = {
             content: {
                 type: "custom:sonos-card",
                 sections: ["player", "media browser", "groups", "grouping", "volumes"],
+                widthPercentage: "auto",
+                artworkAsBackground: true,
                 showVolumeUpAndDownButtons: true,
                 showSourceInPlayer: true,
                 mediaBrowserTitle: "Favorites",
