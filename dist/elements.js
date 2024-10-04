@@ -13836,12 +13836,16 @@ var heater = /*#__PURE__*/Object.freeze({
 
 const formatState = (stateObj, hass) => {
     const entity = stateObj.entity_id;
-    entity.split(".")[0];
+    const domain = entity.split(".")[0];
     let stateFmtd = hass.formatEntityState(stateObj);
-    stateFmtd +=
-        stateObj.state === "on" && stateObj.attributes.brightness
-            ? " - " + hass.formatEntityAttributeValue(stateObj, "brightness")
-            : "";
+    switch (domain) {
+        case "light":
+            stateFmtd +=
+                stateObj.state === "on" && stateObj.attributes.brightness
+                    ? " - " + hass.formatEntityAttributeValue(stateObj, "brightness")
+                    : "";
+            break;
+    }
     return stateFmtd;
 };
 
