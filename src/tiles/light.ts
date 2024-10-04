@@ -6,6 +6,7 @@ import { HassEntity, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../
 import { callService } from "../utilities/call-service";
 import { moreInfoDialog } from "../dialogs/more-info-dialog";
 import { entityListDialog } from "../dialogs/entity-list-dialog";
+import { formatState } from "../utilities/format-state";
 
 import tileStyle from "../css/tile.css";
 
@@ -82,21 +83,17 @@ export class LightTile extends LitElement implements LovelaceCard {
         this._stateObj = this.hass && this._entity ? this.hass.states[this._entity] : undefined;
 
         let icon, iconColor, name, stateFmtd;
-        if (this._stateObj) {
+        if (this._stateObj && this.hass) {
             const state = this._stateObj.state || "unknown";
             icon = this._config!.icon || this._stateObj.attributes.icon || "hass:lightbulb";
             iconColor = state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
             name = this._config!.name || this._stateObj.attributes.friendly_name || "Light";
-            stateFmtd = `${this.hass!.formatEntityState(this._stateObj)}${
-                state === "on" && this._stateObj.attributes.brightness
-                    ? " - " + this.hass!.formatEntityAttributeValue(this._stateObj, "brightness")
-                    : ""
-            }`;
+            stateFmtd = formatState(this._stateObj, this.hass);
         } else {
             icon = this._config!.icon || "hass:lightbulb-alert";
             iconColor = "var(--sq-unavailable-rgb)";
-            name = this._config?.name || "Unknown";
-            stateFmtd = "Unknown";
+            name = this._config?.name || "Unknown Light";
+            stateFmtd = "Unknown State";
         }
 
         this._iconStyles = {

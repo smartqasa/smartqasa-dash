@@ -110,10 +110,10 @@ export class TVRemoteCard extends LitElement implements LovelaceCard {
                 height: 25rem;
                 overflow: hidden;
                 overflow-y: auto;
-                scrollbar-width: none; /* Hide scrollbar for Firefox */
+                scrollbar-width: none;
             }
             .app-list::-webkit-scrollbar {
-                display: none; /* Hide scrollbar for Safari and Chrome  */
+                display: none;
             }
             .app-item {
                 display: flex;
@@ -130,10 +130,13 @@ export class TVRemoteCard extends LitElement implements LovelaceCard {
     }
 
     public setConfig(config: Config): void {
-        this._config = { ...config };
-        if (!this._config.entity.startsWith("media_player.")) return;
-
-        this._entity = this._config.entity;
+        if (!config.entity?.startsWith("media_player.")) {
+            console.error("Invalid light entity provided in the config.");
+            this._entity = undefined;
+        } else {
+            this._entity = config.entity;
+        }
+        this._config = config;
         this._initializeEntities();
     }
 
@@ -144,8 +147,8 @@ export class TVRemoteCard extends LitElement implements LovelaceCard {
         );
     }
 
-    protected updated(changedProps: PropertyValues): void {
-        if (changedProps.has("hass") || changedProps.has("_config")) {
+    protected willUpdate(changedProps: PropertyValues): void {
+        if (changedProps.has("_config")) {
             this._initializeEntities();
         }
     }
@@ -251,7 +254,6 @@ export class TVRemoteCard extends LitElement implements LovelaceCard {
         const activeApp = this._stateObj!.attributes.app_name;
         const activeIcon = channelTable[activeApp];
 
-        // Filter out the active app from the source list
         const availableApps = this._stateObj!.attributes.source_list.filter((app: string) => app !== activeApp);
 
         return html`

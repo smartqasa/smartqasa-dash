@@ -36,7 +36,7 @@ window.customCards.push({
 });
 @customElement("smartqasa-panel-card")
 export class PanelCard extends LitElement implements LovelaceCard {
-    public getCardSize(): number {
+    public getCardSize(): number | Promise<number> {
         return 100;
     }
 
@@ -233,8 +233,9 @@ export class PanelCard extends LitElement implements LovelaceCard {
     private _loadContent(): void {
         if (!this.hass || !this._config) return;
 
-        const headerChipsConfig = window.smartqasa.chipsConfig;
-        if (headerChipsConfig) this._headerChips = createElements(window.smartqasa.chipsConfig, this.hass);
+        const headerChipsConfig =
+            (this._config.header_chips?.length ?? 0) > 0 ? this._config.header_chips : window.smartqasa.chipsConfig;
+        this._headerChips = createElements(headerChipsConfig, this.hass);
 
         this._areaObj = this._area ? this.hass.areas[this._area] : undefined;
         this._areaChips = createElements(this._config.area_chips || [], this.hass);

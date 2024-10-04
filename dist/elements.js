@@ -9941,9 +9941,8 @@ let PanelCard = class PanelCard extends h {
     _loadContent() {
         if (!this.hass || !this._config)
             return;
-        const headerChipsConfig = window.smartqasa.chipsConfig;
-        if (headerChipsConfig)
-            this._headerChips = createElements(window.smartqasa.chipsConfig, this.hass);
+        const headerChipsConfig = (this._config.header_chips?.length ?? 0) > 0 ? this._config.header_chips : window.smartqasa.chipsConfig;
+        this._headerChips = createElements(headerChipsConfig, this.hass);
         this._areaObj = this._area ? this.hass.areas[this._area] : undefined;
         this._areaChips = createElements(this._config.area_chips || [], this.hass);
         const { controlTiles, controlColumns } = loadControlTiles(this._config.tiles || [], this.hass, this._isTablet);
@@ -11584,10 +11583,10 @@ let TVRemoteCard = class TVRemoteCard extends h {
                 height: 25rem;
                 overflow: hidden;
                 overflow-y: auto;
-                scrollbar-width: none; /* Hide scrollbar for Firefox */
+                scrollbar-width: none;
             }
             .app-list::-webkit-scrollbar {
-                display: none; /* Hide scrollbar for Safari and Chrome  */
+                display: none;
             }
             .app-item {
                 display: flex;
@@ -11603,18 +11602,22 @@ let TVRemoteCard = class TVRemoteCard extends h {
         `;
     }
     setConfig(config) {
-        this._config = { ...config };
-        if (!this._config.entity.startsWith("media_player."))
-            return;
-        this._entity = this._config.entity;
+        if (!config.entity?.startsWith("media_player.")) {
+            console.error("Invalid light entity provided in the config.");
+            this._entity = undefined;
+        }
+        else {
+            this._entity = config.entity;
+        }
+        this._config = config;
         this._initializeEntities();
     }
     shouldUpdate(changedProps) {
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
             changedProps.has("_config"));
     }
-    updated(changedProps) {
-        if (changedProps.has("hass") || changedProps.has("_config")) {
+    willUpdate(changedProps) {
+        if (changedProps.has("_config")) {
             this._initializeEntities();
         }
     }
@@ -11711,7 +11714,6 @@ let TVRemoteCard = class TVRemoteCard extends h {
     _renderAppSection() {
         const activeApp = this._stateObj.attributes.app_name;
         const activeIcon = channelTable[activeApp];
-        // Filter out the active app from the source list
         const availableApps = this._stateObj.attributes.source_list.filter((app) => app !== activeApp);
         return ke `
             <div class="app-section">
@@ -13832,6 +13834,17 @@ var heater = /*#__PURE__*/Object.freeze({
   get HeaterTile () { return HeaterTile; }
 });
 
+const formatState = (stateObj, hass) => {
+    const entity = stateObj.entity_id;
+    entity.split(".")[0];
+    let stateFmtd = hass.formatEntityState(stateObj);
+    stateFmtd +=
+        stateObj.state === "on" && stateObj.attributes.brightness
+            ? " - " + hass.formatEntityAttributeValue(stateObj, "brightness")
+            : "";
+    return stateFmtd;
+};
+
 window.customCards.push({
     type: "smartqasa-light-tile",
     name: "SmartQasa Light Tile",
@@ -13885,20 +13898,18 @@ let LightTile = class LightTile extends h {
     _updateState() {
         this._stateObj = this.hass && this._entity ? this.hass.states[this._entity] : undefined;
         let icon, iconColor, name, stateFmtd;
-        if (this._stateObj) {
+        if (this._stateObj && this.hass) {
             const state = this._stateObj.state || "unknown";
             icon = this._config.icon || this._stateObj.attributes.icon || "hass:lightbulb";
             iconColor = state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
             name = this._config.name || this._stateObj.attributes.friendly_name || "Light";
-            stateFmtd = `${this.hass.formatEntityState(this._stateObj)}${state === "on" && this._stateObj.attributes.brightness
-                ? " - " + this.hass.formatEntityAttributeValue(this._stateObj, "brightness")
-                : ""}`;
+            stateFmtd = formatState(this._stateObj, this.hass);
         }
         else {
             icon = this._config.icon || "hass:lightbulb-alert";
             iconColor = "var(--sq-unavailable-rgb)";
-            name = this._config?.name || "Unknown";
-            stateFmtd = "Unknown";
+            name = this._config?.name || "Unknown Light";
+            stateFmtd = "Unknown State";
         }
         this._iconStyles = {
             color: `rgb(${iconColor})`,
