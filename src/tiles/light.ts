@@ -65,8 +65,6 @@ export class LightTile extends LitElement implements LovelaceCard {
     }
 
     protected render(): TemplateResult | typeof nothing {
-        if (!this._config || !this._entity) return nothing;
-
         return html`
             <div class="container" @click=${this._toggleEntity} @contextmenu=${this._showEntityList}>
                 <div class="icon" @click=${this._showMoreInfo} style=${styleMap(this._iconStyles)}>

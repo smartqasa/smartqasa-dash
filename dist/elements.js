@@ -13876,8 +13876,6 @@ let LightTile = class LightTile extends h {
         this._updateState();
     }
     render() {
-        if (!this._config || !this._entity)
-            return D;
         return ke `
             <div class="container" @click=${this._toggleEntity} @contextmenu=${this._showEntityList}>
                 <div class="icon" @click=${this._showMoreInfo} style=${se(this._iconStyles)}>
