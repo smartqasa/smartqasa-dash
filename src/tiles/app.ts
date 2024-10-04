@@ -2,7 +2,7 @@ import { CSSResult, html, LitElement, TemplateResult, unsafeCSS } from "lit";
 import { customElement, state } from "lit/decorators.js";
 
 import { LovelaceCard, LovelaceCardConfig } from "../types";
-import appTable from "../tables/apps";
+import { appTable } from "../tables/apps";
 import { launchApp } from "../utilities/launch-app";
 
 import tileStyle from "../css/tile.css";

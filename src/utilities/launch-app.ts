@@ -1,4 +1,4 @@
-import appTable from "../tables/apps";
+import { appTable } from "../tables/apps";
 
 export function launchApp(app: string): void {
     const appObj = appTable[app];

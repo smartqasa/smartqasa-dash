@@ -44,8 +44,12 @@ export class LightTile extends LitElement implements LovelaceCard {
     }
 
     public setConfig(config: Config): void {
+        if (!config.entity?.startsWith("light.")) {
+            console.error("Invalid light entity provided in the config.");
+        } else {
+            this._entity = config.entity;
+        }
         this._config = config;
-        this._entity = config.entity?.startsWith("light.") ? config.entity : undefined;
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {

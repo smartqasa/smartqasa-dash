@@ -59,7 +59,7 @@ interface AppTable {
     };
 }
 
-const appTable: AppTable = {
+export const appTable: AppTable = {
     accuweather: {
         name: "AccuWeather",
         app_icon: accuweatherIcon,
@@ -411,5 +411,3 @@ const appTable: AppTable = {
         uri_scheme: "",
     },
 };
-
-export default appTable;

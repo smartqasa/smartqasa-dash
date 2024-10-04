@@ -9135,11 +9135,11 @@ function launchApp(app) {
     console.error(`App "${app}" cannot be launched: neither URI scheme nor package is available.`);
 }
 
+function launchClock(e) {
+    e.stopPropagation();
+    launchApp("clock");
+}
 function renderHeader(headerChips) {
-    function launchClock(e) {
-        e.stopPropagation();
-        launchApp("com.google.android.deskclock");
-    }
     return ke `
         <div class="header-container">
             <div class="header-time-date" @click="${launchClock}">
@@ -9799,15 +9799,13 @@ let PanelCard = class PanelCard extends h {
         this._areaChips = [];
         this._controlTiles = [];
         this._controlColumns = [];
-        this._entertainCards = [];
-        this._entertainTab = 0;
     }
     getCardSize() {
         return 100;
     }
     static { this.styles = [r$3(css_248z$5), r$3(css_248z$7), r$3(css_248z$6)]; }
     setConfig(config) {
-        this._config = { ...config };
+        this._config = config;
         this._area = this._config.area;
     }
     connectedCallback() {
@@ -9846,7 +9844,6 @@ let PanelCard = class PanelCard extends h {
                 this._controlTiles.forEach((page) => {
                     updateHassForCards(page);
                 });
-            //if (this._entertainCards.length > 0) updateHassForCards(this._entertainCards);
         }
     }
     firstUpdated() {
@@ -9948,7 +9945,7 @@ let PanelCard = class PanelCard extends h {
         if (headerChipsConfig)
             this._headerChips = createElements(window.smartqasa.chipsConfig, this.hass);
         this._areaObj = this._area ? this.hass.areas[this._area] : undefined;
-        this._areaChips = createElements(this._config.chips || [], this.hass);
+        this._areaChips = createElements(this._config.area_chips || [], this.hass);
         const { controlTiles, controlColumns } = loadControlTiles(this._config.tiles || [], this.hass, this._isTablet);
         this._controlTiles = controlTiles;
         this._controlColumns = controlColumns;
@@ -9986,9 +9983,6 @@ __decorate([
 __decorate([
     r()
 ], PanelCard.prototype, "_swiper", void 0);
-__decorate([
-    r()
-], PanelCard.prototype, "_entertainTab", void 0);
 PanelCard = __decorate([
     t$1("smartqasa-panel-card")
 ], PanelCard);
@@ -12814,8 +12808,17 @@ let WeatherChip = class WeatherChip extends h {
         return [r$3(css_248z$4), r$3(css_248z$2)];
     }
     setConfig(config) {
-        this._config = { ...config };
-        this._entity = this._config.entity?.startsWith("weather.") ? this._config.entity : undefined;
+        if (!config.entity?.startsWith("weather.")) {
+            console.error("Invalid weather entity provided in the config.");
+            return;
+        }
+        if (config.app && !appTable[config.app]) {
+            console.error("Invalid app provided in the config.");
+            return;
+        }
+        this._entity = config.entity;
+        this._app = config.app || undefined;
+        this._config = config;
     }
     shouldUpdate(changedProps) {
         if (!this._config)
@@ -12835,7 +12838,7 @@ let WeatherChip = class WeatherChip extends h {
             temperature = "??";
         }
         return ke `
-            <div class="container" @click=${this._showDialog}>
+            <div class="container" @click=${this._showDialog} @contextmenu=${this._launchApp}>
                 <div class="icon" style="color: rgb(${iconColor});">
                     <ha-state-icon .hass=${this.hass} .stateObj=${this._stateObj}></ha-state-icon>
                 </div>
@@ -12848,6 +12851,12 @@ let WeatherChip = class WeatherChip extends h {
         const dialogObj = dialogTable.weather;
         if (dialogObj?.data)
             window.browser_mod?.service("popup", dialogObj.data);
+    }
+    _launchApp(e) {
+        e.stopPropagation();
+        if (!this._app)
+            return;
+        launchApp(this._app);
     }
 };
 __decorate([
@@ -13710,10 +13719,17 @@ let HeaterTile = class HeaterTile extends h {
     }
     static { this.styles = r$3(css_248z); }
     setConfig(config) {
-        this._config = { ...config };
-        this._entity = this._config.entity?.startsWith("water_heater.") ? this._config.entity : undefined;
+        if (!config.entity?.startsWith("water_heater.")) {
+            console.error("Invalid water heater entity provided in the config.");
+        }
+        else {
+            this._entity = config.entity;
+        }
+        this._config = config;
     }
     shouldUpdate(changedProps) {
+        if (!this._config)
+            return false;
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
             (changedProps.has("_config") && this._config));
     }
@@ -13806,8 +13822,13 @@ let LightTile = class LightTile extends h {
         return r$3(css_248z);
     }
     setConfig(config) {
+        if (!config.entity?.startsWith("light.")) {
+            console.error("Invalid light entity provided in the config.");
+        }
+        else {
+            this._entity = config.entity;
+        }
         this._config = config;
-        this._entity = config.entity?.startsWith("light.") ? config.entity : undefined;
     }
     shouldUpdate(changedProps) {
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||

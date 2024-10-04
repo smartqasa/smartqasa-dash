@@ -3,7 +3,6 @@ import { customElement, property, state } from "lit/decorators.js";
 
 import { HassArea, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 import { getDeviceOrientation, getDeviceType } from "../utilities/device-info";
-import { createElement } from "../utilities/create-element";
 import { createElements } from "../utilities/create-elements";
 import Swiper from "swiper";
 import { SwiperOptions } from "swiper/types";
@@ -11,7 +10,6 @@ import { Navigation } from "swiper/modules";
 import { renderHeader } from "./header";
 import { renderArea } from "./area";
 import { loadControlTiles, renderControls } from "./controls";
-import { loadEntertainCards } from "./entertain";
 import { renderFooter } from "./footer";
 
 import panelStyles from "../css/panel.css";
@@ -25,7 +23,8 @@ interface Config extends LovelaceCardConfig {
     audio_player: string;
     video_player: string;
     video_sound: string;
-    chips?: LovelaceCardConfig[];
+    header_chips?: LovelaceCardConfig[];
+    area_chips?: LovelaceCardConfig[];
     tiles?: LovelaceCardConfig[];
 }
 
@@ -62,13 +61,11 @@ export class PanelCard extends LitElement implements LovelaceCard {
     private _areaChips: LovelaceCard[] = [];
     private _controlTiles: LovelaceCard[][] = [];
     private _controlColumns: number[] = [];
-    private _entertainCards: LovelaceCard[] = [];
-    @state() private _entertainTab: number = 0;
 
     static styles: CSSResultGroup = [unsafeCSS(swiperStyles), unsafeCSS(panelStyles), unsafeCSS(entertainStyles)];
 
     public setConfig(config: Config) {
-        this._config = { ...config };
+        this._config = config;
         this._area = this._config.area;
     }
 
@@ -116,7 +113,6 @@ export class PanelCard extends LitElement implements LovelaceCard {
                 this._controlTiles.forEach((page) => {
                     updateHassForCards(page);
                 });
-            //if (this._entertainCards.length > 0) updateHassForCards(this._entertainCards);
         }
     }
 
@@ -241,7 +237,7 @@ export class PanelCard extends LitElement implements LovelaceCard {
         if (headerChipsConfig) this._headerChips = createElements(window.smartqasa.chipsConfig, this.hass);
 
         this._areaObj = this._area ? this.hass.areas[this._area] : undefined;
-        this._areaChips = createElements(this._config.chips || [], this.hass);
+        this._areaChips = createElements(this._config.area_chips || [], this.hass);
 
         const { controlTiles, controlColumns } = loadControlTiles(this._config.tiles || [], this.hass, this._isTablet);
         this._controlTiles = controlTiles;

@@ -38,11 +38,16 @@ export class HeaterTile extends LitElement implements LovelaceCard {
     static styles: CSSResult = unsafeCSS(tileStyle);
 
     public setConfig(config: Config): void {
-        this._config = { ...config };
-        this._entity = this._config.entity?.startsWith("water_heater.") ? this._config.entity : undefined;
+        if (!config.entity?.startsWith("water_heater.")) {
+            console.error("Invalid water heater entity provided in the config.");
+        } else {
+            this._entity = config.entity;
+        }
+        this._config = config;
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
+        if (!this._config) return false;
         return !!(
             (changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
             (changedProps.has("_config") && this._config)

@@ -3,12 +3,12 @@ import { html, TemplateResult } from "lit";
 import { formattedTime, formattedDate } from "../utilities/format-date-time";
 import { launchApp } from "../utilities/launch-app";
 
-export function renderHeader(headerChips: LovelaceCard[]): TemplateResult {
-    function launchClock(e: Event): void {
-        e.stopPropagation();
-        launchApp("com.google.android.deskclock");
-    }
+function launchClock(e: Event): void {
+    e.stopPropagation();
+    launchApp("clock");
+}
 
+export function renderHeader(headerChips: LovelaceCard[]): TemplateResult {
     return html`
         <div class="header-container">
             <div class="header-time-date" @click="${launchClock}">
