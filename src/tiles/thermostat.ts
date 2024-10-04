@@ -41,8 +41,12 @@ export class ThermostatTile extends LitElement implements LovelaceCard {
     }
 
     public setConfig(config: Config): void {
-        this._config = { ...config };
-        this._entity = this._config.entity?.startsWith("climate.") ? this._config.entity : undefined;
+        if (!config.entity?.startsWith("climate.")) {
+            console.error("Invalid climate entity provided in the config.");
+        } else {
+            this._entity = config.entity;
+        }
+        this._config = config;
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
@@ -62,8 +66,10 @@ export class ThermostatTile extends LitElement implements LovelaceCard {
                 <div class="icon" style="${styleMap(this._iconStyles)}">
                     <ha-icon icon=${this._icon}></ha-icon>
                 </div>
-                <div class="name">${this._name}</div>
-                <div class="state">${this._stateFmtd}</div>
+                <div class="text">
+                    <div class="name">${this._name}</div>
+                    <div class="state">${this._stateFmtd}</div>
+                </div>
             </div>
         `;
     }

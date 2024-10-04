@@ -15514,8 +15514,13 @@ let ThermostatTile = class ThermostatTile extends h {
         return r$3(css_248z);
     }
     setConfig(config) {
-        this._config = { ...config };
-        this._entity = this._config.entity?.startsWith("climate.") ? this._config.entity : undefined;
+        if (!config.entity?.startsWith("climate.")) {
+            console.error("Invalid climate entity provided in the config.");
+        }
+        else {
+            this._entity = config.entity;
+        }
+        this._config = config;
     }
     shouldUpdate(changedProps) {
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
@@ -15530,8 +15535,10 @@ let ThermostatTile = class ThermostatTile extends h {
                 <div class="icon" style="${se(this._iconStyles)}">
                     <ha-icon icon=${this._icon}></ha-icon>
                 </div>
-                <div class="name">${this._name}</div>
-                <div class="state">${this._stateFmtd}</div>
+                <div class="text">
+                    <div class="name">${this._name}</div>
+                    <div class="state">${this._stateFmtd}</div>
+                </div>
             </div>
         `;
     }
