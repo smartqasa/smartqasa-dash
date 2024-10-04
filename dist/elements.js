@@ -15557,14 +15557,12 @@ let ThermostatTile = class ThermostatTile extends h {
             }
             name = this._config.name || this._stateObj.attributes.friendly_name || "Thermostat";
             stateFmtd = this.hass.formatEntityState(this._stateObj);
-            console.log("Temperature: ", this._stateObj.attributes.current_temperature);
-            console.log("THumidity: ", this._stateObj.attributes.current_humidity);
             if (state !== "off") {
                 if (this._stateObj.attributes.current_temperature) {
-                    this._stateFmtd += ` - ${this._stateObj.attributes.current_temperature}°`;
+                    stateFmtd += ` - ${this._stateObj.attributes.current_temperature}°`;
                 }
                 if (this._stateObj.attributes.current_humidity) {
-                    this._stateFmtd += ` / ${this._stateObj.attributes.current_humidity}%`;
+                    stateFmtd += ` / ${this._stateObj.attributes.current_humidity}%`;
                 }
             }
         }
