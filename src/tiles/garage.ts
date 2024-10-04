@@ -53,7 +53,7 @@ export class GarageTile extends LitElement implements LovelaceCard {
             stateColor: "var(--sq-cover-garage-opening-rgb)",
         },
         open: {
-            stateIcon: "garage-open-variant",
+            stateIcon: "hass:garage-open-variant",
             stateAnimation: "none",
             stateColor: "var(--sq-cover-garage-open-rgb)",
         },
