@@ -43,7 +43,7 @@ export class SonosPanelCard extends LitElement implements LovelaceCard {
     }
 
     public setConfig(config: Config): void {
-        this._config = { ...config };
+        this._config = config;
 
         if (this._config.entity) {
             this._entity = this._config.entity.startsWith("media_player.") ? this._config.entity : "undefined";

@@ -10,7 +10,7 @@ interface Config extends LovelaceCardConfig {
 
 @customElement("smartqasa-more-info-card")
 export class MoreInfoCard extends LitElement implements LovelaceCard {
-    public getCardSize(): number {
+    public getCardSize(): number | Promise<number> {
         return 4;
     }
 
@@ -45,7 +45,7 @@ export class MoreInfoCard extends LitElement implements LovelaceCard {
     `;
 
     public setConfig(config: Config): void {
-        this._config = { ...config };
+        this._config = config;
         this._entity = this._config?.entity;
     }
 

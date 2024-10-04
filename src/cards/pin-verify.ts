@@ -88,7 +88,7 @@ export class PinVerifyCard extends LitElement implements LovelaceCard {
     `;
 
     public setConfig(config: Config): void {
-        this._config = { ...config };
+        this._config = config;
         this._validateEntities();
     }
 

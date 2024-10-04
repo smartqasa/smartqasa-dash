@@ -47,29 +47,26 @@ class VerticalStack extends LitElement implements LovelaceCard {
             console.warn("No cards defined in configuration");
             return;
         }
+
         this._config = config;
     }
 
-    protected render() {
-        if (!this._config || !this.hass || !this._cards.length) return nothing;
-
-        return html` <div class="container">${this._cards.map((card) => html`<div class="card">${card}</div>`)}</div> `;
-    }
-
-    protected firstupdated(): void {
-        this._createCards();
-    }
-
-    protected updated(changedProps: PropertyValues) {
-        if (!this.hass) return;
+    protected willUpdate(changedProps: PropertyValues) {
+        if (!this._config || !this.hass) return;
 
         if (changedProps.has("_config")) {
             this._createCards();
-        } else if (changedProps.has("hass") && this.hass && this._cards.length > 0) {
+        } else if (changedProps.has("hass") && this._cards.length > 0) {
             this._cards.forEach((card) => {
                 if (card.hass !== this.hass) card.hass = this.hass;
             });
         }
+    }
+
+    protected render() {
+        if (!this._config || !this.hass || this._cards.length === 0) return nothing;
+
+        return html` <div class="container">${this._cards.map((card) => html`<div class="card">${card}</div>`)}</div> `;
     }
 
     private async _createCards(): Promise<void> {

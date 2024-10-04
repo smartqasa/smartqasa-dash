@@ -1,4 +1,4 @@
-import { css, CSSResultGroup, html, LitElement, TemplateResult } from "lit";
+import { css, CSSResultGroup, html, LitElement, nothing, TemplateResult } from "lit";
 import { customElement, state } from "lit/decorators.js";
 import { LovelaceCard, LovelaceCardConfig } from "../types";
 import { formattedDate, formattedTime } from "../utilities/format-date-time";
@@ -19,7 +19,7 @@ window.customCards.push({
 
 @customElement("smartqasa-screensaver-card")
 export class ScreenSaver extends LitElement implements LovelaceCard {
-    public getCardSize(): number {
+    public getCardSize(): number | Promise<number> {
         return 100;
     }
 
@@ -115,7 +115,9 @@ export class ScreenSaver extends LitElement implements LovelaceCard {
     }
 
     public setConfig(config: Config): void {
-        this._config = { ...config };
+        if (!config) throw new Error("Invalid configuration provided");
+
+        this._config = config;
     }
 
     protected firstUpdated(): void {
@@ -124,24 +126,16 @@ export class ScreenSaver extends LitElement implements LovelaceCard {
         this._cycleElement();
     }
 
-    public disconnectedCallback(): void {
-        super.disconnectedCallback();
-        if (this._timeIntervalId !== undefined) {
-            window.clearInterval(this._timeIntervalId);
-        }
-        if (this._moveTimerId !== undefined) {
-            window.clearTimeout(this._moveTimerId);
-        }
-    }
+    protected render(): TemplateResult | typeof nothing {
+        if (!this._config) return nothing;
 
-    protected render(): TemplateResult {
         return html`
             <div class="container">
                 <div class="element">
                     ${this._config?.display === "logo"
                         ? html`
                               <div class="logo">
-                                  <img src=${logoImage} alt="Logo" />
+                                  <img src=${logoImage} alt="Logo" @error=${() => this._handleImageError()} />
                                   ${this._config.name ? html` <div class="name">${this._config.name}</div> ` : ""}
                               </div>
                           `
@@ -154,6 +148,16 @@ export class ScreenSaver extends LitElement implements LovelaceCard {
         `;
     }
 
+    public disconnectedCallback(): void {
+        super.disconnectedCallback();
+        if (this._timeIntervalId !== undefined) {
+            window.clearInterval(this._timeIntervalId);
+        }
+        if (this._moveTimerId !== undefined) {
+            window.clearTimeout(this._moveTimerId);
+        }
+    }
+
     private _startClock(): void {
         this._timeIntervalId = window.setInterval(() => {
             this._updateElement();
@@ -162,6 +166,11 @@ export class ScreenSaver extends LitElement implements LovelaceCard {
 
     private _cycleElement(): void {
         const element = this.shadowRoot?.querySelector(".element") as HTMLElement;
+        if (!element) {
+            console.error("Element not found in shadow DOM.");
+            return;
+        }
+
         const moveTimer = (this._config?.move_timer ?? 30) * 1000;
 
         if (element) {
@@ -201,5 +210,9 @@ export class ScreenSaver extends LitElement implements LovelaceCard {
             element.style.left = `${randomX}px`;
             element.style.top = `${randomY}px`;
         }
+    }
+
+    private _handleImageError(): void {
+        console.error("Failed to load image.");
     }
 }

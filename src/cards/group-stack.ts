@@ -45,12 +45,15 @@ class GroupStack extends LitElement implements LovelaceCard {
         if (!config.filter_type || !config.filter_value || !config.tile_type) {
             throw new Error("filter_type, filter_value, and card_type must be provided in the config.");
         }
-        this._config = { ...config };
-        this._tiles = [];
+        this._config = config;
     }
 
     protected willUpdate(changedProps: PropertyValues) {
-        if (changedProps.has("hass") && this.hass) {
+        if (!this._config || !this.hass) return;
+
+        if (changedProps.has("_config")) {
+            this._createCards();
+        } else if (changedProps.has("hass") && this.hass && this._tiles.length > 0) {
             this._tiles.forEach((tile) => {
                 if (tile.hass !== this.hass) tile.hass = this.hass;
             });
@@ -67,10 +70,10 @@ class GroupStack extends LitElement implements LovelaceCard {
         `;
     }
 
-    protected firstUpdated(): void {
+    private _createCards(): void {
         if (!this._config || !this.hass) return;
-        let entityIds: string[] = [];
 
+        let entityIds: string[] = [];
         if (this._config.filter_type === "group") {
             const groupEntity = this.hass.states[this._config.filter_value];
             if (groupEntity && groupEntity.attributes.entity_id) {
@@ -85,8 +88,8 @@ class GroupStack extends LitElement implements LovelaceCard {
 
         if (entityIds.length > 0) {
             const entityNameMap = entityIds.map((entityId) => {
-                const entity = this.hass!.states[entityId];
-                const friendlyName = entity?.attributes.friendly_name?.toLowerCase() || "";
+                const entityObj = this.hass!.states[entityId];
+                const friendlyName = entityObj?.attributes.friendly_name?.toLowerCase() || "";
                 return { entityId, friendlyName };
             });
 
@@ -99,8 +102,7 @@ class GroupStack extends LitElement implements LovelaceCard {
                     entity: entityId,
                     callingDialog: this._config!.callingDialog,
                 };
-                const tile = createElement(tileConfig) as LovelaceCard;
-                tile.hass = this.hass!;
+                const tile = createElement(tileConfig, this.hass) as LovelaceCard;
                 return tile;
             });
         } else {

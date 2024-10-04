@@ -10135,22 +10135,18 @@ let GridStack = class GridStack extends h {
         if (!config.cards || config.cards.length === 0) {
             throw new Error("You need to define 'tiles'");
         }
-        this._config = { ...config };
+        this._config = config;
     }
     willUpdate(changedProps) {
-        if (!this.hass || !this._config)
+        if (!this.hass)
             return;
         if (changedProps.has("_config")) {
-            if (this.hass && this._config.tiles.length > 0) {
-                this._tiles = createElements(this._config.tiles, this.hass);
-            }
-            else {
-                this._tiles = [];
-            }
+            this._createCards();
         }
-        if (changedProps.has("hass") && this._tiles.length > 0) {
+        else if (changedProps.has("hass") && this.hass && this._tiles.length > 0) {
             this._tiles.forEach((tile) => {
-                tile.hass = this.hass;
+                if (tile.hass !== this.hass)
+                    tile.hass = this.hass;
             });
         }
     }
@@ -10167,11 +10163,21 @@ let GridStack = class GridStack extends h {
             </div>
         `;
     }
-    firstUpdated() {
-        if (!this.hass || !this._config)
+    async _createCards() {
+        if (!this._config || !this.hass)
             return;
-        if (this.hass && this._config.tiles.length > 0) {
-            this._tiles = createElements(this._config.tiles, this.hass);
+        if (this._config.cards.length > 0) {
+            try {
+                this._tiles = createElements(this._config.cards, this.hass);
+            }
+            catch (error) {
+                this._tiles = [];
+                console.error("Error creating cards:", error);
+            }
+        }
+        else {
+            this._tiles = [];
+            console.warn("No cards defined in configuration");
         }
     }
 };
@@ -10224,11 +10230,15 @@ let GroupStack = class GroupStack extends h {
         if (!config.filter_type || !config.filter_value || !config.tile_type) {
             throw new Error("filter_type, filter_value, and card_type must be provided in the config.");
         }
-        this._config = { ...config };
-        this._tiles = [];
+        this._config = config;
     }
     willUpdate(changedProps) {
-        if (changedProps.has("hass") && this.hass) {
+        if (!this._config || !this.hass)
+            return;
+        if (changedProps.has("_config")) {
+            this._createCards();
+        }
+        else if (changedProps.has("hass") && this.hass && this._tiles.length > 0) {
             this._tiles.forEach((tile) => {
                 if (tile.hass !== this.hass)
                     tile.hass = this.hass;
@@ -10244,7 +10254,7 @@ let GroupStack = class GroupStack extends h {
             </div>
         `;
     }
-    firstUpdated() {
+    _createCards() {
         if (!this._config || !this.hass)
             return;
         let entityIds = [];
@@ -10262,8 +10272,8 @@ let GroupStack = class GroupStack extends h {
         }
         if (entityIds.length > 0) {
             const entityNameMap = entityIds.map((entityId) => {
-                const entity = this.hass.states[entityId];
-                const friendlyName = entity?.attributes.friendly_name?.toLowerCase() || "";
+                const entityObj = this.hass.states[entityId];
+                const friendlyName = entityObj?.attributes.friendly_name?.toLowerCase() || "";
                 return { entityId, friendlyName };
             });
             entityNameMap.sort((a, b) => a.friendlyName.localeCompare(b.friendlyName));
@@ -10274,8 +10284,7 @@ let GroupStack = class GroupStack extends h {
                     entity: entityId,
                     callingDialog: this._config.callingDialog,
                 };
-                const tile = createElement$1(tileConfig);
-                tile.hass = this.hass;
+                const tile = createElement$1(tileConfig, this.hass);
                 return tile;
             });
         }
@@ -10311,6 +10320,7 @@ let HorizontalStack = class HorizontalStack extends h {
     constructor() {
         super(...arguments);
         this._cards = [];
+        this._justifyRight = false;
     }
     getCardSize() {
         return 1;
@@ -10336,33 +10346,31 @@ let HorizontalStack = class HorizontalStack extends h {
     setConfig(config) {
         if (!config.cards || config.cards.length === 0)
             return;
-        this._config = { ...config };
+        this._config = config;
+        this._justifyRight = config.justify_right || false;
     }
     willUpdate(changedProps) {
-        if (changedProps.has("hass") && this._cards.length > 0) {
+        if (!this._config || !this.hass)
+            return;
+        if (changedProps.has("_config")) {
+            this._createCards();
+        }
+        else if (changedProps.has("hass") && this._cards.length > 0) {
             this._cards.forEach((card) => {
                 if (card.hass !== this.hass)
                     card.hass = this.hass;
             });
         }
-        if (changedProps.has("_config") && this._config) {
-            this._createCards();
-        }
     }
     render() {
         if (!this._config || !this.hass || this._cards.length === 0)
             return D;
-        const containerClass = this._config.justify_right ? "container justify-right" : "container";
+        const containerClass = this._justifyRight ? "container justify-right" : "container";
         return ke `
             <div class="${containerClass}">
                 ${this._cards.map((card, index) => ke `<div class="element" .key=${index}>${card}</div>`)}
             </div>
         `;
-    }
-    firstupdated() {
-        if (!this._config || !this.hass)
-            return;
-        this._createCards();
     }
     _createCards() {
         if (!this._config || !this.hass)
@@ -10687,7 +10695,7 @@ let MoreInfoCard = class MoreInfoCard extends h {
         }
     `; }
     setConfig(config) {
-        this._config = { ...config };
+        this._config = config;
         this._entity = this._config?.entity;
     }
     shouldUpdate(changedProps) {
@@ -10800,7 +10808,7 @@ let PinVerifyCard = class PinVerifyCard extends h {
         }
     `; }
     setConfig(config) {
-        this._config = { ...config };
+        this._config = config;
         this._validateEntities();
     }
     _validateEntities() {
@@ -11032,30 +11040,25 @@ let ScreenSaver = class ScreenSaver extends h {
         `;
     }
     setConfig(config) {
-        this._config = { ...config };
+        if (!config)
+            throw new Error("Invalid configuration provided");
+        this._config = config;
     }
     firstUpdated() {
         this._updateElement();
         this._startClock();
         this._cycleElement();
     }
-    disconnectedCallback() {
-        super.disconnectedCallback();
-        if (this._timeIntervalId !== undefined) {
-            window.clearInterval(this._timeIntervalId);
-        }
-        if (this._moveTimerId !== undefined) {
-            window.clearTimeout(this._moveTimerId);
-        }
-    }
     render() {
+        if (!this._config)
+            return D;
         return ke `
             <div class="container">
                 <div class="element">
                     ${this._config?.display === "logo"
             ? ke `
                               <div class="logo">
-                                  <img src=${img$1i} alt="Logo" />
+                                  <img src=${img$1i} alt="Logo" @error=${() => this._handleImageError()} />
                                   ${this._config.name ? ke ` <div class="name">${this._config.name}</div> ` : ""}
                               </div>
                           `
@@ -11067,6 +11070,15 @@ let ScreenSaver = class ScreenSaver extends h {
             </div>
         `;
     }
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        if (this._timeIntervalId !== undefined) {
+            window.clearInterval(this._timeIntervalId);
+        }
+        if (this._moveTimerId !== undefined) {
+            window.clearTimeout(this._moveTimerId);
+        }
+    }
     _startClock() {
         this._timeIntervalId = window.setInterval(() => {
             this._updateElement();
@@ -11074,6 +11086,10 @@ let ScreenSaver = class ScreenSaver extends h {
     }
     _cycleElement() {
         const element = this.shadowRoot?.querySelector(".element");
+        if (!element) {
+            console.error("Element not found in shadow DOM.");
+            return;
+        }
         const moveTimer = (this._config?.move_timer ?? 30) * 1000;
         if (element) {
             element.style.animation = "fade-in 1.5s forwards";
@@ -11106,6 +11122,9 @@ let ScreenSaver = class ScreenSaver extends h {
             element.style.left = `${randomX}px`;
             element.style.top = `${randomY}px`;
         }
+    }
+    _handleImageError() {
+        console.error("Failed to load image.");
     }
 };
 __decorate([
@@ -11163,26 +11182,23 @@ let VerticalStack = class VerticalStack extends h {
         }
         this._config = config;
     }
-    render() {
-        if (!this._config || !this.hass || !this._cards.length)
-            return D;
-        return ke ` <div class="container">${this._cards.map((card) => ke `<div class="card">${card}</div>`)}</div> `;
-    }
-    firstupdated() {
-        this._createCards();
-    }
-    updated(changedProps) {
-        if (!this.hass)
+    willUpdate(changedProps) {
+        if (!this._config || !this.hass)
             return;
         if (changedProps.has("_config")) {
             this._createCards();
         }
-        else if (changedProps.has("hass") && this.hass && this._cards.length > 0) {
+        else if (changedProps.has("hass") && this._cards.length > 0) {
             this._cards.forEach((card) => {
                 if (card.hass !== this.hass)
                     card.hass = this.hass;
             });
         }
+    }
+    render() {
+        if (!this._config || !this.hass || this._cards.length === 0)
+            return D;
+        return ke ` <div class="container">${this._cards.map((card) => ke `<div class="card">${card}</div>`)}</div> `;
     }
     async _createCards() {
         if (!this._config || !this.hass)
@@ -13241,7 +13257,7 @@ let AudioTile = class AudioTile extends h {
         return [r$3(css_248z), r$3(css_248z$3)];
     }
     setConfig(config) {
-        this._config = { ...config };
+        this._config = config;
         this._entity = this._config.entity?.startsWith("media_player.") ? this._config.entity : undefined;
     }
     shouldUpdate(changedProps) {
