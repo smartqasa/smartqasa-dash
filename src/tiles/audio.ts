@@ -62,8 +62,6 @@ export class AudioTile extends LitElement implements LovelaceCard {
     }
 
     protected render(): TemplateResult | typeof nothing {
-        if (!this._config || !this._entity) return nothing;
-
         return html`
             <div class="container" @click=${this._showDialog}>
                 ${this._iconHtml}

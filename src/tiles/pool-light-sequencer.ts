@@ -53,7 +53,6 @@ export class PoolLightSequencerTile extends LitElement implements LovelaceCard {
     }
 
     protected render(): TemplateResult | typeof nothing {
-        if (!this._config || !this._sequenceObj) return nothing;
         return html`
             <div class="container" @click=${this._runRoutine}>
                 <div class="icon" style="${styleMap(this._iconStyles)}">

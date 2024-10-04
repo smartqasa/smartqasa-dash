@@ -13304,8 +13304,6 @@ let AudioTile = class AudioTile extends h {
         this._updateState();
     }
     render() {
-        if (!this._config || !this._entity)
-            return D;
         return ke `
             <div class="container" @click=${this._showDialog}>
                 ${this._iconHtml}
@@ -13505,8 +13503,6 @@ let FanTile = class FanTile extends h {
         this._updateState();
     }
     render() {
-        if (!this._config || !this._entity)
-            return D;
         return ke `
             <div class="container" @click=${this._toggleEntity} @contextmenu=${this._showEntityList}>
                 <div class="icon" @click=${this._showMoreInfo} style=${se(this._iconStyles)}>
@@ -13774,8 +13770,6 @@ let HeaterTile = class HeaterTile extends h {
         this._updateState();
     }
     render() {
-        if (!this._config || !this._entity)
-            return D;
         return ke `
             <div class="container" @click=${this._showMoreInfo}>
                 <div class="icon" style="${se(this._iconStyles)}">
@@ -14105,8 +14099,6 @@ let LockTile = class LockTile extends h {
         this._updateState();
     }
     render() {
-        if (!this._config || !this._entity)
-            return D;
         return ke `
             <div class="container" @click=${this._toggleEntity}>
                 <div class="icon" @click=${this._showMoreInfo} style=${se(this._iconStyles)}>
@@ -14238,8 +14230,6 @@ let OptionTile = class OptionTile extends h {
         this._updateState();
     }
     render() {
-        if (!this._config || !this._entity)
-            return D;
         return ke `
             <div class="container" @click=${this._selectOption}>
                 <div class="icon" style="${se(this._iconStyles)}">
@@ -14419,8 +14409,6 @@ let RobotTile = class RobotTile extends h {
         this._updateState();
     }
     render() {
-        if (!this._config || !this._entity)
-            return D;
         return ke `
             <div class="container" @click=${this._toggleEntity}>
                 <div class="icon" @click=${this._showMoreInfo} style="${se(this._iconStyles)}">
@@ -14532,8 +14520,6 @@ let RokuTile = class RokuTile extends h {
         this._updateState();
     }
     render() {
-        if (!this._config || !this._entity)
-            return D;
         return ke `
             <div class="container" @click=${this._toggleEntity}>
                 <div class="icon" @click=${this._showMoreInfo} style="${se(this._iconStyles)}">
@@ -14664,8 +14650,6 @@ let RoutineTile = class RoutineTile extends h {
         this._updateState();
     }
     render() {
-        if (!this._config || !this._entity)
-            return D;
         return ke `
             <div class="container" @click=${this._runRoutine}>
                 <div class="icon" style="${se(this._iconStyles)}">
@@ -14788,8 +14772,6 @@ let SelectTile = class SelectTile extends h {
         this._updateState();
     }
     render() {
-        if (!this._config || !this._entity)
-            return D;
         return ke `
             <div class="container" @click=${this._showOptions}>
                 <div class="icon" style="${se(this._iconStyles)}">
@@ -14883,8 +14865,6 @@ let SensorTile = class SensorTile extends h {
         this._updateState();
     }
     render() {
-        if (!this._config || !this._entity)
-            return D;
         return ke `
             <div class="container" @click=${this._showMoreInfo}>
                 <div class="icon" style="${se(this._iconStyles)}">${this._iconTemplate}</div>
@@ -15048,8 +15028,6 @@ let PoolLightTile = class PoolLightTile extends h {
         this._updateState();
     }
     render() {
-        if (!this._config || !this._entity)
-            return D;
         return ke `
             <div class="container" @click=${this._toggleEntity}>
                 <div class="icon" @click=${this._showColorList} style="${se(this._iconStyles)}">
@@ -15162,8 +15140,6 @@ let PoolLightSequencerTile = class PoolLightSequencerTile extends h {
         this._updateState();
     }
     render() {
-        if (!this._config || !this._sequenceObj)
-            return D;
         return ke `
             <div class="container" @click=${this._runRoutine}>
                 <div class="icon" style="${se(this._iconStyles)}">
@@ -15300,8 +15276,6 @@ let ShadeTile = class ShadeTile extends h {
         this._updateState();
     }
     render() {
-        if (!this._config || !this._entity)
-            return D;
         return ke `
             <div class="container" @click=${this._toggleEntity} @contextmenu=${this._showEntityList}>
                 <div class="icon" @click=${this._showMoreInfo} style="${se(this._iconStyles)}">
@@ -15447,8 +15421,6 @@ let SwitchTile = class SwitchTile extends h {
         this._updateState();
     }
     render() {
-        if (!this._config || !this._entity)
-            return D;
         return ke `
             <div class="container" @click=${this._toggleEntity}>
                 <div class="icon" @click=${this._showMoreInfo} style="${se(this._iconStyles)}">

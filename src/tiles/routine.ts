@@ -60,8 +60,6 @@ export class RoutineTile extends LitElement implements LovelaceCard {
     }
 
     protected render(): TemplateResult | typeof nothing {
-        if (!this._config || !this._entity) return nothing;
-
         return html`
             <div class="container" @click=${this._runRoutine}>
                 <div class="icon" style="${styleMap(this._iconStyles)}">
