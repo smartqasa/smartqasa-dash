@@ -7,6 +7,19 @@ export const formatState = (stateObj: HassEntity, hass: HomeAssistant): string =
     let stateFmtd: string = hass.formatEntityState(stateObj);
 
     switch (domain) {
+        case "cover":
+            stateFmtd +=
+                stateObj.state !== "closed" && stateObj.attributes.current_position
+                    ? " - " + hass.formatEntityAttributeValue(stateObj, "current_position")
+                    : "";
+            break;
+        case "fan":
+            stateFmtd +=
+                stateObj.state === "on" && stateObj.attributes.percentage
+                    ? " - " + hass.formatEntityAttributeValue(stateObj, "percentage")
+                    : "";
+            break;
+
         case "light":
             stateFmtd +=
                 stateObj.state === "on" && stateObj.attributes.brightness

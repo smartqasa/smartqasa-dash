@@ -5,6 +5,7 @@ import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 import { callService } from "../utilities/call-service";
 import { moreInfoDialog } from "../dialogs/more-info-dialog";
+import { formatState } from "../utilities/format-state";
 
 import tileStyle from "../css/tile.css";
 
@@ -107,18 +108,14 @@ export class GarageTile extends LitElement implements LovelaceCard {
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
 
         let icon, iconAnimation, iconColor, name, stateFmtd;
-        if (this._stateObj) {
+        if (this._stateObj && this.hass) {
             const state = this._stateObj.state || "unknown";
             const { stateIcon, stateAnimation, stateColor } = this._stateMap[state] || this._stateMap.default;
             icon = this._config!.icon || stateIcon;
             iconAnimation = stateAnimation;
             iconColor = stateColor;
             name = this._config!.name || this._stateObj.attributes.friendly_name || "Garage";
-            stateFmtd =
-                this.hass!.formatEntityState(this._stateObj) +
-                (state === "open" && this._stateObj.attributes.current_position
-                    ? " - " + this.hass!.formatEntityAttributeValue(this._stateObj, "current_position")
-                    : "");
+            stateFmtd = formatState(this._stateObj, this.hass);
         } else {
             icon = this._config!.icon || "hass:garage-alert-variant";
             iconAnimation = "none";

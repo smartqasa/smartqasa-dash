@@ -6,6 +6,7 @@ import { HassEntity, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../
 import { callService } from "../utilities/call-service";
 import { moreInfoDialog } from "../dialogs/more-info-dialog";
 import { entityListDialog } from "../dialogs/entity-list-dialog";
+import { formatState } from "../utilities/format-state";
 
 import tileStyle from "../css/tile.css";
 
@@ -108,18 +109,14 @@ export class ShadeTile extends LitElement implements LovelaceCard {
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
 
         let icon, iconAnimation, iconColor, name, stateFmtd;
-        if (this._stateObj) {
+        if (this._stateObj && this.hass) {
             const state = this._stateObj.state || "unknown";
             const { stateIcon, stateAnimation, stateColor } = this._stateMap[state] || this._stateMap.default;
             icon = this._config!.icon || stateIcon;
             iconAnimation = stateAnimation;
             iconColor = stateColor;
             name = this._config!.name || this._stateObj.attributes.friendly_name || "Shade";
-            stateFmtd =
-                this.hass!.formatEntityState(this._stateObj) +
-                (state === "open" && this._stateObj.attributes.current_position
-                    ? " - " + this.hass!.formatEntityAttributeValue(this._stateObj, "current_position")
-                    : "");
+            stateFmtd = formatState(this._stateObj, this.hass);
         } else {
             icon = this._config!.icon || "hass:roller-shade";
             iconAnimation = "none";

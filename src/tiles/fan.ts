@@ -6,6 +6,7 @@ import { HassEntity, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../
 import { callService } from "../utilities/call-service";
 import { moreInfoDialog } from "../dialogs/more-info-dialog";
 import { entityListDialog } from "../dialogs/entity-list-dialog";
+import { formatState } from "../utilities/format-state";
 
 import tileStyle from "../css/tile.css";
 
@@ -82,7 +83,7 @@ export class FanTile extends LitElement implements LovelaceCard {
 
         this._stateObj = this.hass && this._entity ? this.hass.states[this._entity] : undefined;
 
-        if (this._stateObj) {
+        if (this._stateObj && this.hass) {
             const state = this._stateObj.state || "unknown";
             icon = this._config!.icon || this._stateObj.attributes.icon || "hass:fan";
             if (state == "on" && this._icon === "hass:fan") {
@@ -98,11 +99,7 @@ export class FanTile extends LitElement implements LovelaceCard {
             }
             iconColor = state === "on" ? "var(--sq-fan-on-rgb)" : "var(--sq-inactive-rgb)";
             name = this._config!.name || this._stateObj.attributes.friendly_name || "Fan";
-            stateFmtd = `${this.hass!.formatEntityState(this._stateObj)}${
-                state === "on" && this._stateObj.attributes.percentage
-                    ? " - " + this.hass!.formatEntityAttributeValue(this._stateObj, "percentage")
-                    : ""
-            }`;
+            stateFmtd = formatState(this._stateObj, this.hass);
         } else {
             icon = this._config!.icon || "hass:fan-alert";
             iconAnimation = "none";
