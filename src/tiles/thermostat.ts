@@ -89,6 +89,8 @@ export class ThermostatTile extends LitElement implements LovelaceCard {
             }
             name = this._config!.name || this._stateObj.attributes.friendly_name || "Thermostat";
             stateFmtd = this.hass!.formatEntityState(this._stateObj);
+            console.log("Temperature: ", this._stateObj.attributes.current_temperature);
+            console.log("THumidity: ", this._stateObj.attributes.current_humidity);
             if (state !== "off") {
                 if (this._stateObj.attributes.current_temperature) {
                     this._stateFmtd += ` - ${this._stateObj.attributes.current_temperature}°`;
@@ -99,14 +101,14 @@ export class ThermostatTile extends LitElement implements LovelaceCard {
             }
         } else {
             icon = this._config!.icon || "hass:thermostat";
-            iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+            iconColor = "var(--sq-unavailable-rgb)";
             name = this._config?.name || "Unknown";
             stateFmtd = "Unknown";
         }
 
         this._iconStyles = {
             color: `rgb(${iconColor})`,
-            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity, 0.2))`,
+            backgroundColor: `rgba(${iconColor}, var(--sq-icon-opacity))`,
         };
         this._icon = icon;
         this._name = name;
