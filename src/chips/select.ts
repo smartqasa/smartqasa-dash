@@ -34,8 +34,12 @@ export class SelectChip extends LitElement implements LovelaceCard {
     static styles: CSSResult = unsafeCSS(chipBaseStyle);
 
     public setConfig(config: Config): void {
-        this._config = { ...config };
-        this._entity = this._config.entity?.startsWith("input_select.") ? this._config.entity : undefined;
+        if (!config.entity || !config.entity.startsWith("input_select.")) {
+            throw new Error("entity must be provided in the config and start with 'input_select.'.");
+        }
+
+        this._config = config;
+        this._entity = config.entity;
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {

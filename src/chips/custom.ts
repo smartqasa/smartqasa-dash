@@ -44,20 +44,21 @@ export class CustomChip extends LitElement implements LovelaceCard {
         return [unsafeCSS(chipBaseStyle), unsafeCSS(chipTextStyle)];
     }
 
-    public setConfig(config: Config): void {
-        this._config = { ...config };
-        this._loadDialogObj();
-    }
+    public async setConfig(config: Config): Promise<void> {
+        if (!config.dialog_file) {
+            console.error("dialog_file must be provided in the config.");
+            return;
+        }
 
-    private async _loadDialogObj(): Promise<void> {
-        if (!this._config?.dialog_file) return;
         try {
-            const path = `/local/smartqasa/dialogs/${this._config.dialog_file}`;
+            const path = `/local/smartqasa/dialogs/${config.dialog_file}`;
             this._dialogObj = (await loadYamlAsJson(path)) as DialogObj;
             this._entity = this._dialogObj.entity;
         } catch (error) {
             console.error("Failed to load YAML:", error);
         }
+
+        this._config = config;
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {

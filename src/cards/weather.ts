@@ -48,13 +48,12 @@ export class WeatherCard extends LitElement implements LovelaceCard {
     }
 
     public setConfig(config: Config): void {
-        this._config = { ...config };
-
-        if (this._config.entity && this._config.entity.startsWith("weather.")) {
-            this._entity = this._config.entity;
+        if (config.entity && config.entity.startsWith("weather.")) {
+            this._entity = config.entity;
         } else {
             this._entity = "weather.forecast_home";
         }
+        this._config = config;
     }
 
     protected willUpdate(changedProps: PropertyValues): void {

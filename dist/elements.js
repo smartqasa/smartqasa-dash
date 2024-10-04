@@ -11857,13 +11857,13 @@ let WeatherCard = class WeatherCard extends h {
         `;
     }
     setConfig(config) {
-        this._config = { ...config };
-        if (this._config.entity && this._config.entity.startsWith("weather.")) {
-            this._entity = this._config.entity;
+        if (config.entity && config.entity.startsWith("weather.")) {
+            this._entity = config.entity;
         }
         else {
             this._entity = "weather.forecast_home";
         }
+        this._config = config;
     }
     willUpdate(changedProps) {
         if (!this._entity)
@@ -12019,8 +12019,8 @@ let AudioChip = class AudioChip extends h {
         return [r$3(css_248z$4), r$3(css_248z$3)];
     }
     setConfig(config) {
-        this._config = { ...config };
-        this._entity = this._config.entity?.startsWith("media_player.") ? this._config.entity : undefined;
+        this._entity = config.entity?.startsWith("media_player.") ? config.entity : undefined;
+        this._config = config;
     }
     shouldUpdate(changedProps) {
         if (!this._config)
@@ -12034,7 +12034,6 @@ let AudioChip = class AudioChip extends h {
     render() {
         if (!this._config || !this._entity)
             return D;
-        if (this._stateObj?.state === "playing") ;
         return ke `
             <div class="container" @click=${this._showDialog} @contextmenu=${this._launchApp}>
                 ${this._iconTemplate}
@@ -12110,21 +12109,20 @@ let CustomChip = class CustomChip extends h {
     static get styles() {
         return [r$3(css_248z$4), r$3(css_248z$2)];
     }
-    setConfig(config) {
-        this._config = { ...config };
-        this._loadDialogObj();
-    }
-    async _loadDialogObj() {
-        if (!this._config?.dialog_file)
+    async setConfig(config) {
+        if (!config.dialog_file) {
+            console.error("dialog_file must be provided in the config.");
             return;
+        }
         try {
-            const path = `/local/smartqasa/dialogs/${this._config.dialog_file}`;
+            const path = `/local/smartqasa/dialogs/${config.dialog_file}`;
             this._dialogObj = (await loadYamlAsJson(path));
             this._entity = this._dialogObj.entity;
         }
         catch (error) {
             console.error("Failed to load YAML:", error);
         }
+        this._config = config;
     }
     shouldUpdate(changedProps) {
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
@@ -12646,8 +12644,11 @@ let SelectChip = class SelectChip extends h {
     }
     static { this.styles = r$3(css_248z$4); }
     setConfig(config) {
-        this._config = { ...config };
-        this._entity = this._config.entity?.startsWith("input_select.") ? this._config.entity : undefined;
+        if (!config.entity || !config.entity.startsWith("input_select.")) {
+            throw new Error("entity must be provided in the config and start with 'input_select.'.");
+        }
+        this._config = config;
+        this._entity = config.entity;
     }
     shouldUpdate(changedProps) {
         if (!this._config)
@@ -13454,8 +13455,8 @@ let FanTile = class FanTile extends h {
         return r$3(css_248z);
     }
     setConfig(config) {
+        this._entity = config.entity.startsWith("fan.") ? config.entity : undefined;
         this._config = config;
-        this._entity = this._config.entity.startsWith("fan.") ? this._config.entity : undefined;
     }
     shouldUpdate(changedProps) {
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||

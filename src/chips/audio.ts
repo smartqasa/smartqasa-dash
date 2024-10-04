@@ -38,8 +38,8 @@ export class AudioChip extends LitElement implements LovelaceCard {
     }
 
     public setConfig(config: Config): void {
-        this._config = { ...config };
-        this._entity = this._config.entity?.startsWith("media_player.") ? this._config.entity : undefined;
+        this._entity = config.entity?.startsWith("media_player.") ? config.entity : undefined;
+        this._config = config;
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
@@ -56,25 +56,6 @@ export class AudioChip extends LitElement implements LovelaceCard {
 
     protected render(): TemplateResult | typeof nothing {
         if (!this._config || !this._entity) return nothing;
-
-        let content;
-        if (this._stateObj?.state === "playing") {
-            content = html`
-                <div class="bars">
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                </div>
-            `;
-        } else {
-            content = html`
-                <div class="icon">
-                    <ha-icon icon="hass:music"></ha-icon>
-                </div>
-            `;
-        }
 
         return html`
             <div class="container" @click=${this._showDialog} @contextmenu=${this._launchApp}>
