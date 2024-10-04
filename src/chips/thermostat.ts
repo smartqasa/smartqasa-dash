@@ -40,8 +40,13 @@ export class ThermostatChip extends LitElement implements LovelaceCard {
     }
 
     public setConfig(config: Config): void {
+        if (!config.entity?.startsWith("climate.")) {
+            console.error("Invalid climate entity provided in the config.");
+            this._entity = undefined;
+        } else {
+            this._entity = config.entity;
+        }
         this._config = config;
-        this._entity = this._config.entity?.startsWith("climate.") ? this._config.entity : undefined;
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {

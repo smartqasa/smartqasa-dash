@@ -43,7 +43,12 @@ export class FanTile extends LitElement implements LovelaceCard {
     }
 
     public setConfig(config: Config): void {
-        this._entity = config.entity.startsWith("fan.") ? config.entity : undefined;
+        if (!config.entity?.startsWith("fan.")) {
+            console.error("Invalid fan entity provided in the config.");
+            this._entity = undefined;
+        } else {
+            this._entity = config.entity;
+        }
         this._config = config;
     }
 

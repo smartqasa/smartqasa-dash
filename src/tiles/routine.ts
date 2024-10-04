@@ -41,10 +41,10 @@ export class RoutineTile extends LitElement implements LovelaceCard {
     }
 
     public setConfig(config: Config): void {
-        this._config = config;
-        this._entity = ["automation", "scene", "script"].includes(this._config.entity?.split(".")[0])
-            ? this._config.entity
+        this._entity = ["automation", "scene", "script"].includes(config.entity?.split(".")[0])
+            ? config.entity
             : undefined;
+        this._config = config;
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {

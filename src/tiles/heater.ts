@@ -39,7 +39,8 @@ export class HeaterTile extends LitElement implements LovelaceCard {
 
     public setConfig(config: Config): void {
         if (!config.entity?.startsWith("water_heater.")) {
-            console.error("Invalid water heater entity provided in the config.");
+            console.error("Invalid water_heater entity provided in the config.");
+            this._entity = undefined;
         } else {
             this._entity = config.entity;
         }

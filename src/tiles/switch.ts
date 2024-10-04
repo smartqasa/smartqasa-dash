@@ -42,10 +42,10 @@ export class SwitchTile extends LitElement implements LovelaceCard {
     }
 
     public setConfig(config: Config): void {
-        this._config = { ...config };
-        this._entity = ["fan", "input_boolean", "light", "switch"].includes(this._config.entity?.split(".")[0])
-            ? this._config.entity
+        this._entity = ["fan", "input_boolean", "light", "switch"].includes(config.entity?.split(".")[0])
+            ? config.entity
             : undefined;
+        this._config = config;
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {

@@ -40,8 +40,13 @@ export class MotionChip extends LitElement implements LovelaceCard {
     }
 
     public setConfig(config: Config): void {
+        if (!config.entity?.startsWith("automation.")) {
+            console.error("Invalid automation entity provided in the config.");
+            this._entity = undefined;
+        } else {
+            this._entity = config.entity;
+        }
         this._config = config;
-        this._entity = this._config.entity?.startsWith("automation.") ? this._config.entity : undefined;
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {

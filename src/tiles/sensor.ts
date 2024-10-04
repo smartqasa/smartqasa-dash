@@ -42,8 +42,13 @@ export class SensorTile extends LitElement implements LovelaceCard {
     }
 
     public setConfig(config: Config): void {
-        this._config = { ...config };
-        this._entity = this._config.entity?.startsWith("binary_sensor.") ? this._config.entity : undefined;
+        if (!config.entity?.startsWith("binary_sensor.")) {
+            console.error("Invalid binary_sensor entity provided in the config.");
+            this._entity = undefined;
+        } else {
+            this._entity = config.entity;
+        }
+        this._config = config;
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {

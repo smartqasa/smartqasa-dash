@@ -38,7 +38,12 @@ export class AudioChip extends LitElement implements LovelaceCard {
     }
 
     public setConfig(config: Config): void {
-        this._entity = config.entity?.startsWith("media_player.") ? config.entity : undefined;
+        if (!config.entity?.startsWith("media_player.")) {
+            console.error("Invalid media_player entity provided in the config.");
+            this._entity = undefined;
+        } else {
+            this._entity = config.entity;
+        }
         this._config = config;
     }
 

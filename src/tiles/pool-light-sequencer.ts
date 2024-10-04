@@ -35,11 +35,9 @@ export class PoolLightSequencerTile extends LitElement implements LovelaceCard {
     }
 
     public setConfig(config: Config): void {
-        this._config = { ...config };
         this._sequenceObj = config.sequence ? sequenceTable[config.sequence] : undefined;
-        this._entity = ["light", "switch"].includes(this._config.entity?.split(".")[0])
-            ? this._config.entity
-            : undefined;
+        this._entity = ["light", "switch"].includes(config.entity?.split(".")[0]) ? config.entity : undefined;
+        this._config = config;
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {

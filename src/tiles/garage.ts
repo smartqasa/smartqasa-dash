@@ -69,8 +69,13 @@ export class GarageTile extends LitElement implements LovelaceCard {
     }
 
     public setConfig(config: Config): void {
+        if (!config.entity?.startsWith("cover.")) {
+            console.error("Invalid cover entity provided in the config.");
+            this._entity = undefined;
+        } else {
+            this._entity = config.entity;
+        }
         this._config = config;
-        this._entity = this._config.entity?.startsWith("cover.") ? this._config.entity : undefined;
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {

@@ -12013,7 +12013,13 @@ let AudioChip = class AudioChip extends h {
         return [r$3(css_248z$4), r$3(css_248z$3)];
     }
     setConfig(config) {
-        this._entity = config.entity?.startsWith("media_player.") ? config.entity : undefined;
+        if (!config.entity?.startsWith("media_player.")) {
+            console.error("Invalid media_player entity provided in the config.");
+            this._entity = undefined;
+        }
+        else {
+            this._entity = config.entity;
+        }
         this._config = config;
     }
     shouldUpdate(changedProps) {
@@ -12288,8 +12294,14 @@ let MotionChip = class MotionChip extends h {
         return [r$3(css_248z$4), r$3(css_248z$2)];
     }
     setConfig(config) {
+        if (!config.entity?.startsWith("automation.")) {
+            console.error("Invalid automation entity provided in the config.");
+            this._entity = undefined;
+        }
+        else {
+            this._entity = config.entity;
+        }
         this._config = config;
-        this._entity = this._config.entity?.startsWith("automation.") ? this._config.entity : undefined;
     }
     shouldUpdate(changedProps) {
         if (!this._config)
@@ -12471,10 +12483,10 @@ let RoutineChip = class RoutineChip extends h {
         return [r$3(css_248z$4), r$3(css_248z$2)];
     }
     setConfig(config) {
-        this._config = config;
-        this._entity = ["automation", "scene", "script"].includes(this._config.entity?.split(".")[0])
-            ? this._config.entity
+        this._entity = ["automation", "scene", "script"].includes(config.entity?.split(".")[0])
+            ? config.entity
             : undefined;
+        this._config = config;
     }
     shouldUpdate(changedProps) {
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
@@ -12729,8 +12741,14 @@ let ThermostatChip = class ThermostatChip extends h {
         return [r$3(css_248z$4), r$3(css_248z$2)];
     }
     setConfig(config) {
+        if (!config.entity?.startsWith("climate.")) {
+            console.error("Invalid climate entity provided in the config.");
+            this._entity = undefined;
+        }
+        else {
+            this._entity = config.entity;
+        }
         this._config = config;
-        this._entity = this._config.entity?.startsWith("climate.") ? this._config.entity : undefined;
     }
     shouldUpdate(changedProps) {
         if (!this._config)
@@ -13267,8 +13285,14 @@ let AudioTile = class AudioTile extends h {
         return [r$3(css_248z), r$3(css_248z$3)];
     }
     setConfig(config) {
+        if (!config.entity?.startsWith("media_player.")) {
+            console.error("Invalid media_player entity provided in the config.");
+            this._entity = undefined;
+        }
+        else {
+            this._entity = config.entity;
+        }
         this._config = config;
-        this._entity = this._config.entity?.startsWith("media_player.") ? this._config.entity : undefined;
     }
     shouldUpdate(changedProps) {
         if (!this._config)
@@ -13464,7 +13488,13 @@ let FanTile = class FanTile extends h {
         return r$3(css_248z);
     }
     setConfig(config) {
-        this._entity = config.entity.startsWith("fan.") ? config.entity : undefined;
+        if (!config.entity?.startsWith("fan.")) {
+            console.error("Invalid fan entity provided in the config.");
+            this._entity = undefined;
+        }
+        else {
+            this._entity = config.entity;
+        }
         this._config = config;
     }
     shouldUpdate(changedProps) {
@@ -13618,8 +13648,14 @@ let GarageTile = class GarageTile extends h {
         return r$3(css_248z);
     }
     setConfig(config) {
+        if (!config.entity?.startsWith("cover.")) {
+            console.error("Invalid cover entity provided in the config.");
+            this._entity = undefined;
+        }
+        else {
+            this._entity = config.entity;
+        }
         this._config = config;
-        this._entity = this._config.entity?.startsWith("cover.") ? this._config.entity : undefined;
     }
     shouldUpdate(changedProps) {
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
@@ -13720,7 +13756,8 @@ let HeaterTile = class HeaterTile extends h {
     static { this.styles = r$3(css_248z); }
     setConfig(config) {
         if (!config.entity?.startsWith("water_heater.")) {
-            console.error("Invalid water heater entity provided in the config.");
+            console.error("Invalid water_heater entity provided in the config.");
+            this._entity = undefined;
         }
         else {
             this._entity = config.entity;
@@ -13824,6 +13861,7 @@ let LightTile = class LightTile extends h {
     setConfig(config) {
         if (!config.entity?.startsWith("light.")) {
             console.error("Invalid light entity provided in the config.");
+            this._entity = undefined;
         }
         else {
             this._entity = config.entity;
@@ -14051,8 +14089,14 @@ let LockTile = class LockTile extends h {
         return r$3(css_248z);
     }
     setConfig(config) {
-        this._config = { ...config };
-        this._entity = this._config.entity?.startsWith("lock.") ? this._config.entity : undefined;
+        if (!config.entity?.startsWith("lock.")) {
+            console.error("Invalid lock entity provided in the config.");
+            this._entity = undefined;
+        }
+        else {
+            this._entity = config.entity;
+        }
+        this._config = config;
     }
     shouldUpdate(changedProps) {
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
@@ -14178,8 +14222,14 @@ let OptionTile = class OptionTile extends h {
         return r$3(css_248z);
     }
     setConfig(config) {
+        if (!config.entity?.startsWith("input_select.")) {
+            console.error("Invalid input_select entity provided in the config.");
+            this._entity = undefined;
+        }
+        else {
+            this._entity = config.entity;
+        }
         this._config = config;
-        this._entity = this._config.entity?.startsWith("input_select.") ? this._config.entity : undefined;
     }
     shouldUpdate(changedProps) {
         return !!(changedProps.has("_running") ||
@@ -14354,8 +14404,14 @@ let RobotTile = class RobotTile extends h {
         return r$3(css_248z);
     }
     setConfig(config) {
-        this._config = { ...config };
-        this._entity = this._config.entity?.startsWith("vacuum.") ? this._config.entity : undefined;
+        if (!config.entity?.startsWith("vacuum.")) {
+            console.error("Invalid vacuum entity provided in the config.");
+            this._entity = undefined;
+        }
+        else {
+            this._entity = config.entity;
+        }
+        this._config = config;
     }
     shouldUpdate(changedProps) {
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
@@ -14461,8 +14517,14 @@ let RokuTile = class RokuTile extends h {
         return r$3(css_248z);
     }
     setConfig(config) {
-        this._config = { ...config };
-        this._entity = this._config.entity.startsWith("media_player.") ? this._config.entity : undefined;
+        if (!config.entity?.startsWith("media_player.")) {
+            console.error("Invalid media_player entity provided in the config.");
+            this._entity = undefined;
+        }
+        else {
+            this._entity = config.entity;
+        }
+        this._config = config;
     }
     shouldUpdate(changedProps) {
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
@@ -14590,10 +14652,10 @@ let RoutineTile = class RoutineTile extends h {
         return r$3(css_248z);
     }
     setConfig(config) {
-        this._config = config;
-        this._entity = ["automation", "scene", "script"].includes(this._config.entity?.split(".")[0])
-            ? this._config.entity
+        this._entity = ["automation", "scene", "script"].includes(config.entity?.split(".")[0])
+            ? config.entity
             : undefined;
+        this._config = config;
     }
     shouldUpdate(changedProps) {
         return !!(changedProps.has("_running") ||
@@ -14711,8 +14773,14 @@ let SelectTile = class SelectTile extends h {
         return r$3(css_248z);
     }
     setConfig(config) {
-        this._config = { ...config };
-        this._entity = this._config.entity?.startsWith("input_select.") ? this._config.entity : undefined;
+        if (!config.entity?.startsWith("input_select.")) {
+            console.error("Invalid input_select entity provided in the config.");
+            this._entity = undefined;
+        }
+        else {
+            this._entity = config.entity;
+        }
+        this._config = config;
     }
     shouldUpdate(changedProps) {
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
@@ -14800,8 +14868,14 @@ let SensorTile = class SensorTile extends h {
         return r$3(css_248z);
     }
     setConfig(config) {
-        this._config = { ...config };
-        this._entity = this._config.entity?.startsWith("binary_sensor.") ? this._config.entity : undefined;
+        if (!config.entity?.startsWith("binary_sensor.")) {
+            console.error("Invalid binary_sensor entity provided in the config.");
+            this._entity = undefined;
+        }
+        else {
+            this._entity = config.entity;
+        }
+        this._config = config;
     }
     shouldUpdate(changedProps) {
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
@@ -14965,10 +15039,8 @@ let PoolLightTile = class PoolLightTile extends h {
         return r$3(css_248z);
     }
     setConfig(config) {
-        this._config = { ...config };
-        this._entity = ["light", "switch"].includes(this._config.entity?.split(".")[0])
-            ? this._config.entity
-            : undefined;
+        this._entity = ["light", "switch"].includes(config.entity?.split(".")[0]) ? config.entity : undefined;
+        this._config = config;
     }
     shouldUpdate(changedProps) {
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
@@ -15078,11 +15150,9 @@ let PoolLightSequencerTile = class PoolLightSequencerTile extends h {
         return r$3(css_248z);
     }
     setConfig(config) {
-        this._config = { ...config };
         this._sequenceObj = config.sequence ? sequenceTable[config.sequence] : undefined;
-        this._entity = ["light", "switch"].includes(this._config.entity?.split(".")[0])
-            ? this._config.entity
-            : undefined;
+        this._entity = ["light", "switch"].includes(config.entity?.split(".")[0]) ? config.entity : undefined;
+        this._config = config;
     }
     shouldUpdate(changedProps) {
         if (!this._config)
@@ -15215,8 +15285,14 @@ let ShadeTile = class ShadeTile extends h {
         return r$3(css_248z);
     }
     setConfig(config) {
+        if (!config.entity?.startsWith("cover.")) {
+            console.error("Invalid cover entity provided in the config.");
+            this._entity = undefined;
+        }
+        else {
+            this._entity = config.entity;
+        }
         this._config = config;
-        this._entity = this._config.entity?.startsWith("cover.") ? this._config.entity : undefined;
     }
     shouldUpdate(changedProps) {
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
@@ -15360,10 +15436,10 @@ let SwitchTile = class SwitchTile extends h {
         return r$3(css_248z);
     }
     setConfig(config) {
-        this._config = { ...config };
-        this._entity = ["fan", "input_boolean", "light", "switch"].includes(this._config.entity?.split(".")[0])
-            ? this._config.entity
+        this._entity = ["fan", "input_boolean", "light", "switch"].includes(config.entity?.split(".")[0])
+            ? config.entity
             : undefined;
+        this._config = config;
     }
     shouldUpdate(changedProps) {
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||

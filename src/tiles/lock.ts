@@ -75,8 +75,13 @@ export class LockTile extends LitElement implements LovelaceCard {
     }
 
     public setConfig(config: Config): void {
-        this._config = { ...config };
-        this._entity = this._config.entity?.startsWith("lock.") ? this._config.entity : undefined;
+        if (!config.entity?.startsWith("lock.")) {
+            console.error("Invalid lock entity provided in the config.");
+            this._entity = undefined;
+        } else {
+            this._entity = config.entity;
+        }
+        this._config = config;
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {

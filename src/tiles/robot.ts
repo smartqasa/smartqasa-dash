@@ -74,8 +74,13 @@ export class RobotTile extends LitElement implements LovelaceCard {
     }
 
     public setConfig(config: Config): void {
-        this._config = { ...config };
-        this._entity = this._config.entity?.startsWith("vacuum.") ? this._config.entity : undefined;
+        if (!config.entity?.startsWith("vacuum.")) {
+            console.error("Invalid vacuum entity provided in the config.");
+            this._entity = undefined;
+        } else {
+            this._entity = config.entity;
+        }
+        this._config = config;
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
