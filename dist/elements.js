@@ -13468,14 +13468,12 @@ function entityListDialog(dialogTitle, filterType, filterValue, tileType) {
 }
 
 const formatState = (stateObj, hass) => {
-    if (typeof hass.formatEntityState !== "function") {
-        return "N/A";
-    }
-    const domain = stateObj.entity_id.split(".")[0];
     let stateFmtd = hass.formatEntityState(stateObj);
+    const domain = stateObj.entity_id.split(".")[0];
+    const state = stateObj.state;
     switch (domain) {
         case "climate":
-            if (stateObj.state !== "off") {
+            if (state !== "off") {
                 if (stateObj.attributes.current_temperature) {
                     stateFmtd += ` - ${stateObj.attributes.current_temperature}°`;
                 }
@@ -13486,19 +13484,19 @@ const formatState = (stateObj, hass) => {
             break;
         case "cover":
             stateFmtd +=
-                stateObj.state === "open" && stateObj.attributes.current_position
+                state === "open" && stateObj.attributes.current_position
                     ? " - " + hass.formatEntityAttributeValue(stateObj, "current_position")
                     : "";
             break;
         case "fan":
             stateFmtd +=
-                stateObj.state === "on" && stateObj.attributes.percentage
+                state === "on" && stateObj.attributes.percentage
                     ? " - " + hass.formatEntityAttributeValue(stateObj, "percentage")
                     : "";
             break;
         case "light":
             stateFmtd +=
-                stateObj.state === "on" && stateObj.attributes.brightness
+                state === "on" && stateObj.attributes.brightness
                     ? " - " + hass.formatEntityAttributeValue(stateObj, "brightness")
                     : "";
             break;
@@ -15620,7 +15618,7 @@ let ThermostatTile = class ThermostatTile extends h {
     _updateState() {
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
         let icon, iconColor, name, stateFmtd;
-        if (this._stateObj) {
+        if (this._stateObj && this.hass) {
             const state = this._stateObj.state || "unknown";
             icon = thermostatIcons[state] || thermostatIcons.default;
             const hvacAction = this._stateObj.attributes.hvac_action || "idle";
@@ -15631,15 +15629,7 @@ let ThermostatTile = class ThermostatTile extends h {
                 iconColor = thermostatColors[hvacAction] || thermostatColors.idle;
             }
             name = this._config.name || this._stateObj.attributes.friendly_name || "Thermostat";
-            stateFmtd = this.hass.formatEntityState(this._stateObj);
-            if (state !== "off") {
-                if (this._stateObj.attributes.current_temperature) {
-                    stateFmtd += ` - ${this._stateObj.attributes.current_temperature}°`;
-                }
-                if (this._stateObj.attributes.current_humidity) {
-                    stateFmtd += ` / ${this._stateObj.attributes.current_humidity}%`;
-                }
-            }
+            stateFmtd = formatState(this._stateObj, this.hass);
         }
         else {
             icon = this._config.icon || "hass:thermostat";

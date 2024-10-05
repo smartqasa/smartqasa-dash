@@ -5,6 +5,7 @@ import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 import { moreInfoDialog } from "../dialogs/more-info-dialog";
 import { thermostatIcons, thermostatColors } from "../const";
+import { formatState } from "../utilities/format-state";
 
 import tileStyle from "../css/tile.css";
 
@@ -78,7 +79,7 @@ export class ThermostatTile extends LitElement implements LovelaceCard {
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
 
         let icon, iconColor, name, stateFmtd;
-        if (this._stateObj) {
+        if (this._stateObj && this.hass) {
             const state = this._stateObj.state || "unknown";
 
             icon = thermostatIcons[state] || thermostatIcons.default;
@@ -89,15 +90,7 @@ export class ThermostatTile extends LitElement implements LovelaceCard {
                 iconColor = thermostatColors[hvacAction] || thermostatColors.idle;
             }
             name = this._config!.name || this._stateObj.attributes.friendly_name || "Thermostat";
-            stateFmtd = this.hass!.formatEntityState(this._stateObj);
-            if (state !== "off") {
-                if (this._stateObj.attributes.current_temperature) {
-                    stateFmtd += ` - ${this._stateObj.attributes.current_temperature}°`;
-                }
-                if (this._stateObj.attributes.current_humidity) {
-                    stateFmtd += ` / ${this._stateObj.attributes.current_humidity}%`;
-                }
-            }
+            stateFmtd = formatState(this._stateObj, this.hass);
         } else {
             icon = this._config!.icon || "hass:thermostat";
             iconColor = "var(--sq-unavailable-rgb)";

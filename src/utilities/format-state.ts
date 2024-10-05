@@ -1,17 +1,14 @@
 import { HassEntity, HomeAssistant } from "../types";
 
 export const formatState = (stateObj: HassEntity, hass: HomeAssistant): string => {
-    if (typeof hass.formatEntityState !== "function") {
-        return "N/A";
-    }
+    let stateFmtd: string = hass.formatEntityState(stateObj);
 
     const domain = stateObj.entity_id.split(".")[0];
-
-    let stateFmtd: string = hass.formatEntityState(stateObj);
+    const state = stateObj.state;
 
     switch (domain) {
         case "climate":
-            if (stateObj.state !== "off") {
+            if (state !== "off") {
                 if (stateObj.attributes.current_temperature) {
                     stateFmtd += ` - ${stateObj.attributes.current_temperature}°`;
                 }
@@ -23,21 +20,21 @@ export const formatState = (stateObj: HassEntity, hass: HomeAssistant): string =
 
         case "cover":
             stateFmtd +=
-                stateObj.state === "open" && stateObj.attributes.current_position
+                state === "open" && stateObj.attributes.current_position
                     ? " - " + hass.formatEntityAttributeValue(stateObj, "current_position")
                     : "";
             break;
 
         case "fan":
             stateFmtd +=
-                stateObj.state === "on" && stateObj.attributes.percentage
+                state === "on" && stateObj.attributes.percentage
                     ? " - " + hass.formatEntityAttributeValue(stateObj, "percentage")
                     : "";
             break;
 
         case "light":
             stateFmtd +=
-                stateObj.state === "on" && stateObj.attributes.brightness
+                state === "on" && stateObj.attributes.brightness
                     ? " - " + hass.formatEntityAttributeValue(stateObj, "brightness")
                     : "";
             break;
