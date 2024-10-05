@@ -9862,6 +9862,7 @@ let PanelCard = class PanelCard extends h {
         }
     }
     firstUpdated() {
+        console.log("Theme: ", this.hass?.themes.darkMode);
         this._loadContent();
     }
     updated() {

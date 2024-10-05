@@ -42,7 +42,7 @@ export class PanelCard extends LitElement implements LovelaceCard {
         return 100;
     }
 
-    @property({ attribute: false }) public hass?: HomeAssistant;
+    @property({ attribute: false }) public hass?: any;
     @state() protected _config?: Config;
     @state() private _isAdminMode = false;
     @state() private _isPhone: boolean = getDeviceType() === "phone";
@@ -133,6 +133,7 @@ export class PanelCard extends LitElement implements LovelaceCard {
     }
 
     protected firstUpdated(): void {
+        console.log("Theme: ", this.hass?.themes.darkMode);
         this._loadContent();
     }
 
