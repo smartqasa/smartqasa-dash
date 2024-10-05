@@ -20,12 +20,6 @@ export function renderFooter(): TemplateResult {
     }
 
     function handleHome(): void {
-        if (window.smartqasa.viewMode !== "control") {
-            window.smartqasa.viewMode = "control";
-            window.dispatchEvent(new Event("viewModeChanged"));
-            return;
-        }
-
         const startArea = window.smartqasa.startArea;
         if (!startArea) return;
 

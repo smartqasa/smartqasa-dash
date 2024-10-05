@@ -13,6 +13,6 @@
         "types": ["node"],
         "useDefineForClassFields": false
     },
-    "include": ["src/**/*.ts", "global.d.ts"],
+    "include": ["src/**/*.ts", "global.d.ts", "archive/entertain-dialog.ts"],
     "exclude": ["node_modules", "archive/**", "dist/**"]
 }
