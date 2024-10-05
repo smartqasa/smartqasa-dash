@@ -1,4 +1,4 @@
-import { css, CSSResultGroup, html, LitElement, nothing, PropertyValues, TemplateResult, unsafeCSS } from "lit";
+import { CSSResultGroup, html, LitElement, nothing, PropertyValues, TemplateResult, unsafeCSS } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 
 import { HassArea, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
@@ -49,11 +49,11 @@ export class PanelCard extends LitElement implements LovelaceCard {
     @state() private _isTablet: boolean = getDeviceType() === "tablet";
     @state() private _isPortrait: boolean = getDeviceOrientation() === "portrait";
     @state() private _isLandscape: boolean = getDeviceOrientation() === "landscape";
+    @state() private _isDarkMode: boolean = false;
     @state() private _swiper: Swiper | undefined;
 
     private _boundHandleDeviceChanges = () => this._handleDeviceChanges();
     private _boundStartResetTimer = () => this._startResetTimer();
-    private _viewModeChangedHandler = () => this.requestUpdate();
 
     private _timeIntervalId: number | undefined;
     private _resetTimer?: ReturnType<typeof setTimeout>;
@@ -64,21 +64,7 @@ export class PanelCard extends LitElement implements LovelaceCard {
     private _controlTiles: LovelaceCard[][] = [];
     private _controlColumns: number[] = [];
 
-    static styles: CSSResultGroup = [
-        unsafeCSS(swiperStyles),
-        unsafeCSS(panelStyles),
-        css`
-            :host {
-                background-image: ${unsafeCSS(`url(${lightModeImage})`)};
-            }
-
-            @media (prefers-color-scheme: dark) {
-                :host {
-                    background-image: ${unsafeCSS(`url(${darkModeImage})`)};
-                }
-            }
-        `,
-    ];
+    static styles: CSSResultGroup = [unsafeCSS(swiperStyles), unsafeCSS(panelStyles)];
 
     public setConfig(config: Config) {
         this._config = config;
@@ -90,29 +76,26 @@ export class PanelCard extends LitElement implements LovelaceCard {
 
         this._syncTime();
 
-        window.smartqasa.viewMode = "control";
-
         window.addEventListener("resize", this._boundHandleDeviceChanges);
         window.addEventListener("orientationchange", this._boundHandleDeviceChanges);
         window.addEventListener("touchstart", this._boundStartResetTimer, { passive: true });
-        window.addEventListener("viewModeChanged", this._viewModeChangedHandler);
 
         this._startResetTimer();
     }
 
     protected willUpdate(changedProps: PropertyValues): void {
-        if (this.hass) {
-            const isAdminMode = this.hass.states["input_boolean.admin_mode"]?.state === "on";
-            this._isAdminMode = (this.hass.user?.is_admin ?? false) || isAdminMode;
-        }
-
-        if (this.hass && this._headerChips.length === 0 && window.smartqasa.chipsConfig.length > 0) {
-            this._headerChips = createElements(window.smartqasa.chipsConfig, this.hass);
-        }
-
         if (changedProps.has("_config") && this._config) this._loadContent();
 
         if (changedProps.has("hass") && this.hass) {
+            const isAdminMode = this.hass.states["input_boolean.admin_mode"]?.state === "on";
+            this._isAdminMode = (this.hass.user?.is_admin ?? false) || isAdminMode;
+
+            console.log("Dark Mode: ", this.hass.themes.darkMode);
+
+            if (this._headerChips.length === 0 && window.smartqasa.chipsConfig.length > 0) {
+                this._headerChips = createElements(window.smartqasa.chipsConfig, this.hass);
+            }
+
             this._areaObj = this._area ? this.hass?.areas[this._area] : undefined;
 
             const updateHassForCards = (cards: LovelaceCard[]) => {
@@ -133,7 +116,7 @@ export class PanelCard extends LitElement implements LovelaceCard {
     }
 
     protected firstUpdated(): void {
-        console.log("Theme: ", this.hass?.themes.darkMode);
+        this._handleThemeChanges();
         this._loadContent();
     }
 
@@ -141,6 +124,7 @@ export class PanelCard extends LitElement implements LovelaceCard {
         if (this._isTablet && this._controlTiles.length > 1 && !this._swiper) {
             this._initializeSwiper();
         }
+        this._handleThemeChanges();
     }
 
     public disconnectedCallback(): void {
@@ -149,7 +133,6 @@ export class PanelCard extends LitElement implements LovelaceCard {
         window.removeEventListener("resize", this._boundHandleDeviceChanges);
         window.removeEventListener("orientationchange", this._boundHandleDeviceChanges);
         window.removeEventListener("touchstart", this._boundStartResetTimer);
-        window.removeEventListener("viewModeChanged", this._viewModeChangedHandler);
 
         if (this._timeIntervalId !== undefined) {
             clearInterval(this._timeIntervalId);
@@ -164,7 +147,6 @@ export class PanelCard extends LitElement implements LovelaceCard {
         if (!this.hass || !this._config || !this._area) return nothing;
 
         const name = this._config?.name ?? this._areaObj?.name ?? "Area";
-
         const picture = this._config.picture ?? `${this._area}.png`;
 
         // prettier-ignore
@@ -192,6 +174,14 @@ export class PanelCard extends LitElement implements LovelaceCard {
 
         if (this._isTablet && this._controlTiles.length > 1) {
             this._initializeSwiper();
+        }
+    }
+
+    private _handleThemeChanges(): void {
+        if (this.hass?.themes?.darkMode) {
+            this.style.backgroundImage = `url(${darkModeImage})`;
+        } else {
+            this.style.backgroundImage = `url(${lightModeImage})`;
         }
     }
 
@@ -239,7 +229,6 @@ export class PanelCard extends LitElement implements LovelaceCard {
     }
 
     private _resetToFirstPage(): void {
-        window.smartqasa.viewMode = "control";
         if (this._swiper && this._swiper.activeIndex !== 0) {
             this._swiper.slideTo(0);
         }

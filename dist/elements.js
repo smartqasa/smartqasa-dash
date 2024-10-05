@@ -9793,9 +9793,9 @@ let PanelCard = class PanelCard extends h {
         this._isTablet = getDeviceType() === "tablet";
         this._isPortrait = getDeviceOrientation() === "portrait";
         this._isLandscape = getDeviceOrientation() === "landscape";
+        this._isDarkMode = false;
         this._boundHandleDeviceChanges = () => this._handleDeviceChanges();
         this._boundStartResetTimer = () => this._startResetTimer();
-        this._viewModeChangedHandler = () => this.requestUpdate();
         this._headerChips = [];
         this._areaChips = [];
         this._controlTiles = [];
@@ -9804,21 +9804,7 @@ let PanelCard = class PanelCard extends h {
     getCardSize() {
         return 100;
     }
-    static { this.styles = [
-        r$3(css_248z$5),
-        r$3(css_248z$6),
-        i$2 `
-            :host {
-                background-image: ${r$3(`url(${img$1k})`)};
-            }
-
-            @media (prefers-color-scheme: dark) {
-                :host {
-                    background-image: ${r$3(`url(${img$1j})`)};
-                }
-            }
-        `,
-    ]; }
+    static { this.styles = [r$3(css_248z$5), r$3(css_248z$6)]; }
     setConfig(config) {
         this._config = config;
         this._area = this._config.area;
@@ -9826,24 +9812,21 @@ let PanelCard = class PanelCard extends h {
     connectedCallback() {
         super.connectedCallback();
         this._syncTime();
-        window.smartqasa.viewMode = "control";
         window.addEventListener("resize", this._boundHandleDeviceChanges);
         window.addEventListener("orientationchange", this._boundHandleDeviceChanges);
         window.addEventListener("touchstart", this._boundStartResetTimer, { passive: true });
-        window.addEventListener("viewModeChanged", this._viewModeChangedHandler);
         this._startResetTimer();
     }
     willUpdate(changedProps) {
-        if (this.hass) {
-            const isAdminMode = this.hass.states["input_boolean.admin_mode"]?.state === "on";
-            this._isAdminMode = (this.hass.user?.is_admin ?? false) || isAdminMode;
-        }
-        if (this.hass && this._headerChips.length === 0 && window.smartqasa.chipsConfig.length > 0) {
-            this._headerChips = createElements(window.smartqasa.chipsConfig, this.hass);
-        }
         if (changedProps.has("_config") && this._config)
             this._loadContent();
         if (changedProps.has("hass") && this.hass) {
+            const isAdminMode = this.hass.states["input_boolean.admin_mode"]?.state === "on";
+            this._isAdminMode = (this.hass.user?.is_admin ?? false) || isAdminMode;
+            console.log("Dark Mode: ", this.hass.themes.darkMode);
+            if (this._headerChips.length === 0 && window.smartqasa.chipsConfig.length > 0) {
+                this._headerChips = createElements(window.smartqasa.chipsConfig, this.hass);
+            }
             this._areaObj = this._area ? this.hass?.areas[this._area] : undefined;
             const updateHassForCards = (cards) => {
                 cards.forEach((card) => {
@@ -9862,20 +9845,20 @@ let PanelCard = class PanelCard extends h {
         }
     }
     firstUpdated() {
-        console.log("Theme: ", this.hass?.themes.darkMode);
+        this._handleThemeChanges();
         this._loadContent();
     }
     updated() {
         if (this._isTablet && this._controlTiles.length > 1 && !this._swiper) {
             this._initializeSwiper();
         }
+        this._handleThemeChanges();
     }
     disconnectedCallback() {
         super.disconnectedCallback();
         window.removeEventListener("resize", this._boundHandleDeviceChanges);
         window.removeEventListener("orientationchange", this._boundHandleDeviceChanges);
         window.removeEventListener("touchstart", this._boundStartResetTimer);
-        window.removeEventListener("viewModeChanged", this._viewModeChangedHandler);
         if (this._timeIntervalId !== undefined) {
             clearInterval(this._timeIntervalId);
         }
@@ -9910,6 +9893,14 @@ let PanelCard = class PanelCard extends h {
         this._isLandscape = orientation === "landscape";
         if (this._isTablet && this._controlTiles.length > 1) {
             this._initializeSwiper();
+        }
+    }
+    _handleThemeChanges() {
+        if (this.hass?.themes?.darkMode) {
+            this.style.backgroundImage = `url(${img$1j})`;
+        }
+        else {
+            this.style.backgroundImage = `url(${img$1k})`;
         }
     }
     _syncTime() {
@@ -9948,7 +9939,6 @@ let PanelCard = class PanelCard extends h {
         }, 5 * 60 * 1000); // 5 minutes
     }
     _resetToFirstPage() {
-        window.smartqasa.viewMode = "control";
         if (this._swiper && this._swiper.activeIndex !== 0) {
             this._swiper.slideTo(0);
         }
@@ -9995,6 +9985,9 @@ __decorate([
 __decorate([
     r()
 ], PanelCard.prototype, "_isLandscape", void 0);
+__decorate([
+    r()
+], PanelCard.prototype, "_isDarkMode", void 0);
 __decorate([
     r()
 ], PanelCard.prototype, "_swiper", void 0);
