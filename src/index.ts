@@ -8,18 +8,6 @@ window.customCards = window.customCards ?? [];
 import { loadYamlAsJson } from "./utilities/load-yaml-as-json";
 import { LovelaceCardConfig } from "./types";
 
-// Utility function to introduce a delay
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
-// Function to ensure formatting methods are available, or wait 100ms
-async function ensureFormattingFunctions(hass: any): Promise<void> {
-    // Check if formatEntityState and formatEntityAttributeValue exist
-    if (typeof hass.formatEntityState !== "function" || typeof hass.formatEntityAttributeValue !== "function") {
-        console.warn("Formatting methods not available, delaying for 100ms...");
-        await delay(100); // Delay for 100ms before proceeding
-    }
-}
-
 // Function to display a 'blue screen of death' style error
 function displayBSoD(errorMessage: string) {
     const bsodStyle = `

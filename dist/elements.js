@@ -13468,10 +13468,22 @@ function entityListDialog(dialogTitle, filterType, filterValue, tileType) {
 }
 
 const formatState = (stateObj, hass) => {
-    const entity = stateObj.entity_id;
-    const domain = entity.split(".")[0];
+    if (typeof hass.formatEntityState !== "function") {
+        return "N/A";
+    }
+    const domain = stateObj.entity_id.split(".")[0];
     let stateFmtd = hass.formatEntityState(stateObj);
     switch (domain) {
+        case "climate":
+            if (stateObj.state !== "off") {
+                if (stateObj.attributes.current_temperature) {
+                    stateFmtd += ` - ${stateObj.attributes.current_temperature}°`;
+                }
+                if (stateObj.attributes.current_humidity) {
+                    stateFmtd += ` / ${stateObj.attributes.current_humidity}%`;
+                }
+            }
+            break;
         case "cover":
             stateFmtd +=
                 stateObj.state === "open" && stateObj.attributes.current_position
