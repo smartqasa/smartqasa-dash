@@ -9818,12 +9818,19 @@ let PanelCard = class PanelCard extends h {
         this._startResetTimer();
     }
     willUpdate(changedProps) {
-        if (changedProps.has("_config") && this._config)
+        if (changedProps.has("_config") || changedProps.has("hass")) {
+            if (this._isTablet && this._controlTiles.length > 1 && !this._swiper) {
+                this._initializeSwiper();
+            }
+            this._handleThemeChanges();
+        }
+        if (changedProps.has("_config") && this._config) {
             this._loadContent();
+        }
         if (changedProps.has("hass") && this.hass) {
             const isAdminMode = this.hass.states["input_boolean.admin_mode"]?.state === "on";
             this._isAdminMode = (this.hass.user?.is_admin ?? false) || isAdminMode;
-            console.log("Dark Mode: ", this.hass.themes.darkMode);
+            this._isDarkMode = this.hass.themes.darkMode ?? false;
             if (this._headerChips.length === 0 && window.smartqasa.chipsConfig.length > 0) {
                 this._headerChips = createElements(window.smartqasa.chipsConfig, this.hass);
             }
@@ -9852,7 +9859,6 @@ let PanelCard = class PanelCard extends h {
         if (this._isTablet && this._controlTiles.length > 1 && !this._swiper) {
             this._initializeSwiper();
         }
-        this._handleThemeChanges();
     }
     disconnectedCallback() {
         super.disconnectedCallback();

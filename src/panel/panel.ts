@@ -84,13 +84,22 @@ export class PanelCard extends LitElement implements LovelaceCard {
     }
 
     protected willUpdate(changedProps: PropertyValues): void {
-        if (changedProps.has("_config") && this._config) this._loadContent();
+        if (changedProps.has("_config") || changedProps.has("hass")) {
+            if (this._isTablet && this._controlTiles.length > 1 && !this._swiper) {
+                this._initializeSwiper();
+            }
+            this._handleThemeChanges();
+        }
+
+        if (changedProps.has("_config") && this._config) {
+            this._loadContent();
+        }
 
         if (changedProps.has("hass") && this.hass) {
             const isAdminMode = this.hass.states["input_boolean.admin_mode"]?.state === "on";
             this._isAdminMode = (this.hass.user?.is_admin ?? false) || isAdminMode;
 
-            console.log("Dark Mode: ", this.hass.themes.darkMode);
+            this._isDarkMode = this.hass.themes.darkMode ?? false;
 
             if (this._headerChips.length === 0 && window.smartqasa.chipsConfig.length > 0) {
                 this._headerChips = createElements(window.smartqasa.chipsConfig, this.hass);
@@ -124,7 +133,6 @@ export class PanelCard extends LitElement implements LovelaceCard {
         if (this._isTablet && this._controlTiles.length > 1 && !this._swiper) {
             this._initializeSwiper();
         }
-        this._handleThemeChanges();
     }
 
     public disconnectedCallback(): void {
