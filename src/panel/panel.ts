@@ -1,4 +1,4 @@
-import { CSSResultGroup, html, LitElement, nothing, PropertyValues, TemplateResult, unsafeCSS } from "lit";
+import { css, CSSResultGroup, html, LitElement, nothing, PropertyValues, TemplateResult, unsafeCSS } from "lit";
 import { customElement, property, state } from "lit/decorators.js";
 
 import { HassArea, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
@@ -12,8 +12,10 @@ import { renderArea } from "./area";
 import { loadControlTiles, renderControls } from "./controls";
 import { renderFooter } from "./footer";
 
+import lightModeImage from "../assets/backgrounds/background_light.jpg";
+import darkModeImage from "../assets/backgrounds/background_dark.jpg";
+
 import panelStyles from "../css/panel.css";
-import entertainStyles from "../css/entertain.css";
 import swiperStyles from "swiper/swiper-bundle.css";
 
 interface Config extends LovelaceCardConfig {
@@ -62,7 +64,21 @@ export class PanelCard extends LitElement implements LovelaceCard {
     private _controlTiles: LovelaceCard[][] = [];
     private _controlColumns: number[] = [];
 
-    static styles: CSSResultGroup = [unsafeCSS(swiperStyles), unsafeCSS(panelStyles), unsafeCSS(entertainStyles)];
+    static styles: CSSResultGroup = [
+        unsafeCSS(swiperStyles),
+        unsafeCSS(panelStyles),
+        css`
+            :host {
+                background-image: ${unsafeCSS(`url(${lightModeImage})`)};
+            }
+
+            @media (prefers-color-scheme: dark) {
+                :host {
+                    background-image: ${unsafeCSS(`url(${darkModeImage})`)};
+                }
+            }
+        `,
+    ];
 
     public setConfig(config: Config) {
         this._config = config;
