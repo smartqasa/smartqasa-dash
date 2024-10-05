@@ -1,5 +1,6 @@
 :host {
     max-width: 100vw;
+    background-color: var(--sq-background-color);
     background-attachment: fixed;
     background-size: cover;
     background-image: var(--sq-panel-image);

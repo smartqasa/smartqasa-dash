@@ -84,7 +84,7 @@ export class ScreenSaver extends LitElement implements LovelaceCard {
                 opacity: 0.5;
             }
             .name {
-                margin-top: 10px; /* 10px gap between logo and name */
+                margin-top: 10px;
                 padding: 0.5rem 1rem;
                 background-color: rgba(200, 200, 200, 0.5);
                 color: rgba(0, 0, 0, 1);
@@ -116,7 +116,6 @@ export class ScreenSaver extends LitElement implements LovelaceCard {
 
     public setConfig(config: Config): void {
         if (!config) throw new Error("Invalid configuration provided");
-
         this._config = config;
     }
 
