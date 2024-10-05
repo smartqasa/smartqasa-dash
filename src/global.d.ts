@@ -42,7 +42,6 @@ declare interface Window {
         menuConfig?: any;
         menuTab: number;
         startArea?: string;
-        viewMode: string;
         service: (service: string, data?: object) => void;
     };
 }

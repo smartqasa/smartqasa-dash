@@ -1,5 +1,4 @@
 window.smartqasa = window.smartqasa || {};
-window.smartqasa.viewMode = "control";
 window.smartqasa.startArea = window.smartqasa.startArea || location.pathname.split("/").pop();
 
 window.customCards = window.customCards ?? [];
