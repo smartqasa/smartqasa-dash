@@ -9,7 +9,6 @@
     border-radius: var(--sq-tile-border-radius);
     box-sizing: border-box;
     background-color: var(--sq-tile-background-color);
-
     overflow: hidden;
     -webkit-tap-highlight-color: transparent;
     cursor: pointer;

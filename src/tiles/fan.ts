@@ -86,7 +86,7 @@ export class FanTile extends LitElement implements LovelaceCard {
         if (this._stateObj && this.hass) {
             const state = this._stateObj.state || "unknown";
             icon = this._config!.icon || this._stateObj.attributes.icon || "hass:fan";
-            if (state == "on" && this._icon === "hass:fan") {
+            if (state == "on" && icon === "hass:fan") {
                 if (this._stateObj.attributes.percentage) {
                     const speed = 0.5 + (1 - this._stateObj.attributes.percentage / 100);
                     const direction = this._stateObj.attributes.direction == "reverse" ? "reverse" : "normal";
