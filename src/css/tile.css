@@ -8,11 +8,13 @@
     display: flex;
     flex: 0 0 100%;
     height: 100%;
+    padding: auto var(--sq-tile-padding);
+    column-gap: var(--sq-tile-padding);
     border: var(--sq-card-border);
     border-radius: var(--sq-tile-border-radius);
     box-sizing: border-box;
     background-color: var(--sq-tile-background-color);
-    column-gap: 0.9rem;
+
     overflow: hidden;
     -webkit-tap-highlight-color: transparent;
     cursor: pointer;
