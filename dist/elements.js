@@ -13474,7 +13474,7 @@ const formatState = (stateObj, hass) => {
     switch (domain) {
         case "cover":
             stateFmtd +=
-                stateObj.state !== "closed" && stateObj.attributes.current_position
+                stateObj.state === "open" && stateObj.attributes.current_position
                     ? " - " + hass.formatEntityAttributeValue(stateObj, "current_position")
                     : "";
             break;
