@@ -13462,9 +13462,10 @@ function entityListDialog(dialogTitle, filterType, filterValue, tileType) {
 
 const formatAvailable = (hass) => {
     console.log("formatEntityState: ", typeof hass.formatEntityState);
-    return !!(!hass ||
-        typeof hass.formatEntityState !== "function" ||
-        typeof hass.formatEntityAttributeValue !== "function");
+    console.log("formatEntityAttributeValue: ", typeof hass.formatEntityAttributeValue);
+    return !!(hass &&
+        typeof hass.formatEntityState === "function" &&
+        typeof hass.formatEntityAttributeValue === "function");
 };
 const formatState = (stateObj, hass) => {
     let stateFmtd = hass.formatEntityState(stateObj);
