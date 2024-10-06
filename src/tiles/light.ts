@@ -9,7 +9,6 @@ import { entityListDialog } from "../dialogs/entity-list-dialog";
 import { formatState, formatAvailable } from "../utilities/format-state";
 
 import tileStyle from "../css/tile.css";
-import { format } from "path";
 
 interface Config extends LovelaceCardConfig {
     entity: string;
@@ -33,7 +32,7 @@ export class LightTile extends LitElement implements LovelaceCard {
 
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() protected _config?: Config;
-    @state() private _isLoaded: boolean = false;
+    @state() private _formatAvail: boolean = formatAvailable(this.hass!);
 
     private _entity?: string;
     private _stateObj?: HassEntity;
@@ -66,7 +65,7 @@ export class LightTile extends LitElement implements LovelaceCard {
 
     protected willUpdate(): void {
         console.log("Format Available: ", formatAvailable(this.hass!));
-        if (!this._isLoaded && this.hass) this._isLoaded = formatAvailable(this.hass);
+        if (!this._formatAvail && this.hass) this._formatAvail = formatAvailable(this.hass);
 
         this._updateState();
     }
@@ -94,7 +93,7 @@ export class LightTile extends LitElement implements LovelaceCard {
             icon = this._config!.icon || this._stateObj.attributes.icon || "hass:lightbulb";
             iconColor = state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
             name = this._config!.name || this._stateObj.attributes.friendly_name || "Light";
-            stateFmtd = formatState(this._stateObj, this.hass);
+            stateFmtd = this._formatAvail ? formatState(this._stateObj, this.hass) : "Loading...";
         } else {
             icon = this._config!.icon || "hass:lightbulb-alert";
             iconColor = "var(--sq-unavailable-rgb)";

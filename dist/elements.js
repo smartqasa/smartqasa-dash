@@ -13874,7 +13874,7 @@ window.customCards.push({
 let LightTile = class LightTile extends h {
     constructor() {
         super(...arguments);
-        this._isLoaded = false;
+        this._formatAvail = formatAvailable(this.hass);
         this._icon = "hass:lightbulb-alert";
         this._iconStyles = {};
         this._name = "Unknown Light";
@@ -13903,8 +13903,8 @@ let LightTile = class LightTile extends h {
     }
     willUpdate() {
         console.log("Format Available: ", formatAvailable(this.hass));
-        if (!this._isLoaded && this.hass)
-            this._isLoaded = formatAvailable(this.hass);
+        if (!this._formatAvail && this.hass)
+            this._formatAvail = formatAvailable(this.hass);
         this._updateState();
     }
     render() {
@@ -13928,7 +13928,7 @@ let LightTile = class LightTile extends h {
             icon = this._config.icon || this._stateObj.attributes.icon || "hass:lightbulb";
             iconColor = state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
             name = this._config.name || this._stateObj.attributes.friendly_name || "Light";
-            stateFmtd = formatState(this._stateObj, this.hass);
+            stateFmtd = this._formatAvail ? formatState(this._stateObj, this.hass) : "Loading...";
         }
         else {
             icon = this._config.icon || "hass:lightbulb-alert";
@@ -13989,7 +13989,7 @@ __decorate([
 ], LightTile.prototype, "_config", void 0);
 __decorate([
     r()
-], LightTile.prototype, "_isLoaded", void 0);
+], LightTile.prototype, "_formatAvail", void 0);
 LightTile = __decorate([
     t$1("smartqasa-light-tile")
 ], LightTile);
