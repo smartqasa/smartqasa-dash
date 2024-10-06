@@ -13112,7 +13112,7 @@ window.customCards.push({
     preview: true,
     description: "A SmartQasa tile for launching applications from the dashboard",
 });
-let AppTile$1 = class AppTile extends h {
+let AppTile = class AppTile extends h {
     getCardSize() {
         return 1;
     }
@@ -13168,14 +13168,14 @@ let AppTile$1 = class AppTile extends h {
 };
 __decorate([
     r()
-], AppTile$1.prototype, "_config", void 0);
-AppTile$1 = __decorate([
+], AppTile.prototype, "_config", void 0);
+AppTile = __decorate([
     t$1("smartqasa-app-tile")
-], AppTile$1);
+], AppTile);
 
 var app = /*#__PURE__*/Object.freeze({
   __proto__: null,
-  get AppTile () { return AppTile$1; }
+  get AppTile () { return AppTile; }
 });
 
 window.customCards.push({
@@ -15686,7 +15686,7 @@ window.customCards.push({
     preview: true,
     description: "A SmartQasa tile for displaying a web page from the dashboard",
 });
-let AppTile = class AppTile extends h {
+let WebpageTile = class WebpageTile extends h {
     constructor() {
         super(...arguments);
         this._url = "http://www.smartqasa.com";
@@ -15700,9 +15700,16 @@ let AppTile = class AppTile extends h {
         return r$3(css_248z);
     }
     setConfig(config) {
-        if (!config.app)
-            throw new Error("A valid url must be specified.");
-        this._url = config.app;
+        if (!config.url)
+            throw new Error("A valid URL must be specified.");
+        try {
+            const testUrl = new URL(config.url);
+            this._url = testUrl.href;
+        }
+        catch (error) {
+            console.error("Invalid URL provided:", config.url);
+            throw new Error("Invalid URL. Please specify a valid URL.");
+        }
         if (config.icon)
             this._icon = config.icon;
         if (config.name)
@@ -15725,28 +15732,35 @@ let AppTile = class AppTile extends h {
         e.stopPropagation();
         if (!this._url)
             return;
-        const dialogConfig = {
-            title: this._name,
-            timeout: 120000,
-            size: "fullscreen",
-            content: {
-                type: "iframe",
-                url: this._url,
-            },
-        };
-        dialogPopup(dialogConfig);
+        try {
+            const validatedUrl = new URL(this._url);
+            const dialogConfig = {
+                title: this._name,
+                timeout: 120000,
+                size: "fullscreen",
+                content: {
+                    type: "iframe",
+                    url: validatedUrl.href,
+                },
+            };
+            dialogPopup(dialogConfig);
+        }
+        catch (error) {
+            console.error("Failed to launch URL:", this._url);
+            alert("Unable to launch the web page. The URL is invalid.");
+        }
     }
 };
 __decorate([
     r()
-], AppTile.prototype, "_config", void 0);
-AppTile = __decorate([
+], WebpageTile.prototype, "_config", void 0);
+WebpageTile = __decorate([
     t$1("smartqasa-webpage-tile")
-], AppTile);
+], WebpageTile);
 
 var webpage = /*#__PURE__*/Object.freeze({
   __proto__: null,
-  get AppTile () { return AppTile; }
+  get WebpageTile () { return WebpageTile; }
 });
 
 var version = "2024.10.2b-1";

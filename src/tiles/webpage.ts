@@ -20,7 +20,7 @@ window.customCards.push({
 });
 
 @customElement("smartqasa-webpage-tile")
-export class AppTile extends LitElement implements LovelaceCard {
+export class WebpageTile extends LitElement implements LovelaceCard {
     public getCardSize(): number | Promise<number> {
         return 1;
     }
@@ -35,8 +35,16 @@ export class AppTile extends LitElement implements LovelaceCard {
     }
 
     public setConfig(config: Config): void {
-        if (!config.app) throw new Error("A valid url must be specified.");
-        this._url = config.app;
+        if (!config.url) throw new Error("A valid URL must be specified.");
+
+        try {
+            const testUrl = new URL(config.url);
+            this._url = testUrl.href;
+        } catch (error) {
+            console.error("Invalid URL provided:", config.url);
+            throw new Error("Invalid URL. Please specify a valid URL.");
+        }
+
         if (config.icon) this._icon = config.icon;
         if (config.name) this._name = config.name;
         this._config = config;
@@ -59,16 +67,22 @@ export class AppTile extends LitElement implements LovelaceCard {
         e.stopPropagation();
         if (!this._url) return;
 
-        const dialogConfig: any = {
-            title: this._name,
-            timeout: 120000,
-            size: "fullscreen",
-            content: {
-                type: "iframe",
-                url: this._url,
-            },
-        };
+        try {
+            const validatedUrl = new URL(this._url);
+            const dialogConfig: any = {
+                title: this._name,
+                timeout: 120000,
+                size: "fullscreen",
+                content: {
+                    type: "iframe",
+                    url: validatedUrl.href,
+                },
+            };
 
-        dialogPopup(dialogConfig);
+            dialogPopup(dialogConfig);
+        } catch (error) {
+            console.error("Failed to launch URL:", this._url);
+            alert("Unable to launch the web page. The URL is invalid.");
+        }
     }
 }
