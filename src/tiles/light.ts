@@ -32,7 +32,7 @@ export class LightTile extends LitElement implements LovelaceCard {
 
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() protected _config?: Config;
-    @state() private _formatAvail: boolean = false;
+    @state() private _formatAvailable: boolean = false;
 
     private _entity?: string;
     private _stateObj?: HassEntity;
@@ -59,13 +59,12 @@ export class LightTile extends LitElement implements LovelaceCard {
         return !!(
             (changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
             changedProps.has("_config") ||
-            changedProps.has("_isLoaded")
+            changedProps.has("_formatAvailable")
         );
     }
 
     protected willUpdate(): void {
-        console.log("Format Available: ", formatAvailable(this.hass!));
-        if (!this._formatAvail && this.hass) this._formatAvail = formatAvailable(this.hass);
+        if (!this._formatAvailable && this.hass) this._formatAvailable = formatAvailable(this.hass);
 
         this._updateState();
     }
@@ -93,7 +92,7 @@ export class LightTile extends LitElement implements LovelaceCard {
             icon = this._config!.icon || this._stateObj.attributes.icon || "hass:lightbulb";
             iconColor = state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
             name = this._config!.name || this._stateObj.attributes.friendly_name || "Light";
-            stateFmtd = this._formatAvail ? formatState(this._stateObj, this.hass) : "Loading...";
+            stateFmtd = this._formatAvailable ? formatState(this._stateObj, this.hass) : "Loading...";
         } else {
             icon = this._config!.icon || "hass:lightbulb-alert";
             iconColor = "var(--sq-unavailable-rgb)";
