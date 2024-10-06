@@ -81,6 +81,7 @@ export class LightTile extends LitElement implements LovelaceCard {
 
     protected firstUpdated(_changedProperties: PropertyValues): void {
         this._updateState();
+        this.requestUpdate();
     }
 
     private _updateState(): void {

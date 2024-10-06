@@ -13910,6 +13910,7 @@ let LightTile = class LightTile extends h {
     }
     firstUpdated(_changedProperties) {
         this._updateState();
+        this.requestUpdate();
     }
     _updateState() {
         this._stateObj = this.hass && this._entity ? this.hass.states[this._entity] : undefined;
