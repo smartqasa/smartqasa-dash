@@ -13268,6 +13268,11 @@ const formatState = (hass, entity) => {
     const domain = stateObj.entity_id.split(".")[0];
     const state = stateObj.state;
     switch (domain) {
+        case "binary_sensor":
+            stateFmtd += stateObj.attributes.battery_level
+                ? " - " + hass.formatEntityAttributeValue(stateObj, "battery_level")
+                : "";
+            break;
         case "climate":
             if (state !== "off") {
                 if (stateObj.attributes.current_temperature) {
