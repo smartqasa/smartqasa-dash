@@ -32,7 +32,7 @@ export class LightTile extends LitElement implements LovelaceCard {
 
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() protected _config?: Config;
-    @state() private _formatAvail: boolean = formatAvailable(this.hass!);
+    @state() private _formatAvail: boolean = false;
 
     private _entity?: string;
     private _stateObj?: HassEntity;

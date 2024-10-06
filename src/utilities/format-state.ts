@@ -1,8 +1,8 @@
 import { HassEntity, HomeAssistant } from "../types";
 
 export const formatAvailable = (hass: HomeAssistant): boolean => {
-    console.log("formatEntityState: ", typeof hass.formatEntityState);
-    console.log("formatEntityAttributeValue: ", typeof hass.formatEntityAttributeValue);
+    console.log("formatEntityState: ", typeof hass?.formatEntityState);
+    console.log("formatEntityAttributeValue: ", typeof hass?.formatEntityAttributeValue);
     return !!(
         hass &&
         typeof hass.formatEntityState === "function" &&

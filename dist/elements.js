@@ -13461,8 +13461,8 @@ function entityListDialog(dialogTitle, filterType, filterValue, tileType) {
 }
 
 const formatAvailable = (hass) => {
-    console.log("formatEntityState: ", typeof hass.formatEntityState);
-    console.log("formatEntityAttributeValue: ", typeof hass.formatEntityAttributeValue);
+    console.log("formatEntityState: ", typeof hass?.formatEntityState);
+    console.log("formatEntityAttributeValue: ", typeof hass?.formatEntityAttributeValue);
     return !!(hass &&
         typeof hass.formatEntityState === "function" &&
         typeof hass.formatEntityAttributeValue === "function");
@@ -13874,7 +13874,7 @@ window.customCards.push({
 let LightTile = class LightTile extends h {
     constructor() {
         super(...arguments);
-        this._formatAvail = formatAvailable(this.hass);
+        this._formatAvail = false;
         this._icon = "hass:lightbulb-alert";
         this._iconStyles = {};
         this._name = "Unknown Light";
