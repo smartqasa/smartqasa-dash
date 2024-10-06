@@ -1,10 +1,10 @@
-import { CSSResult, html, LitElement, TemplateResult, unsafeCSS } from "lit";
+import { CSSResult, html, LitElement, nothing, TemplateResult, unsafeCSS } from "lit";
 import { customElement, state } from "lit/decorators.js";
 
 import { LovelaceCard, LovelaceCardConfig } from "../types";
 import { dialogPopup } from "../dialogs/dialog-popup";
 
-import tileStyle from "../css/tile.css";
+import chipBaseStyle from "../css/chip-base.css";
 
 interface Config extends LovelaceCardConfig {
     url: string;
@@ -13,14 +13,14 @@ interface Config extends LovelaceCardConfig {
 }
 
 window.customCards.push({
-    type: "smartqasa-webpage-tile",
-    name: "SmartQasa Webpage Tile",
+    type: "smartqasa-webpage-chip",
+    name: "SmartQasa Webpage Chip",
     preview: true,
-    description: "A SmartQasa tile for displaying a web page",
+    description: "A SmartQasa chip for displaying a web page.",
 });
 
-@customElement("smartqasa-webpage-tile")
-export class WebpageTile extends LitElement implements LovelaceCard {
+@customElement("smartqasa-webpage-chip")
+export class WebpageChip extends LitElement implements LovelaceCard {
     public getCardSize(): number | Promise<number> {
         return 1;
     }
@@ -31,7 +31,7 @@ export class WebpageTile extends LitElement implements LovelaceCard {
     private _name: string = "Web Page";
 
     static get styles(): CSSResult {
-        return unsafeCSS(tileStyle);
+        return unsafeCSS(chipBaseStyle);
     }
 
     public setConfig(config: Config): void {
@@ -50,14 +50,13 @@ export class WebpageTile extends LitElement implements LovelaceCard {
         this._config = config;
     }
 
-    protected render(): TemplateResult {
+    protected render(): TemplateResult | typeof nothing {
+        if (!this._config) return nothing;
+
         return html`
             <div class="container" @click=${this._showDialog}>
                 <div class="icon">
                     <ha-icon icon=${this._icon}></ha-icon>
-                </div>
-                <div class="text">
-                    <div class="name">${this._name}</div>
                 </div>
             </div>
         `;

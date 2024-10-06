@@ -18,7 +18,7 @@ window.customCards.push({
     type: "smartqasa-dialog-chip",
     name: "SmartQasa Dialog Chip",
     preview: true,
-    description: "A SmartQasa chip for dialog.",
+    description: "A SmartQasa chip for displaying a dialog.",
 });
 
 @customElement("smartqasa-dialog-chip")

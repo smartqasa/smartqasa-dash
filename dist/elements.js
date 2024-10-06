@@ -12194,7 +12194,7 @@ window.customCards.push({
     type: "smartqasa-dialog-chip",
     name: "SmartQasa Dialog Chip",
     preview: true,
-    description: "A SmartQasa chip for dialog.",
+    description: "A SmartQasa chip for displaying a dialog.",
 });
 let DialogChip = class DialogChip extends h {
     constructor() {
@@ -15684,7 +15684,7 @@ window.customCards.push({
     type: "smartqasa-webpage-tile",
     name: "SmartQasa Webpage Tile",
     preview: true,
-    description: "A SmartQasa tile for displaying a web page from the dashboard",
+    description: "A SmartQasa tile for displaying a web page",
 });
 let WebpageTile = class WebpageTile extends h {
     constructor() {
@@ -15718,7 +15718,7 @@ let WebpageTile = class WebpageTile extends h {
     }
     render() {
         return ke `
-            <div class="container" @click=${this.launchApp}>
+            <div class="container" @click=${this._showDialog}>
                 <div class="icon">
                     <ha-icon icon=${this._icon}></ha-icon>
                 </div>
@@ -15728,7 +15728,7 @@ let WebpageTile = class WebpageTile extends h {
             </div>
         `;
     }
-    launchApp(e) {
+    _showDialog(e) {
         e.stopPropagation();
         if (!this._url)
             return;

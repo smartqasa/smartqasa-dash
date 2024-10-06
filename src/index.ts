@@ -82,6 +82,7 @@ function displayBSoD(errorMessage: string) {
             import("./chips/select"),
             import("./chips/thermostat"),
             import("./chips/weather"),
+            import("./chips/webpage"),
         ]);
 
         // Tiles
