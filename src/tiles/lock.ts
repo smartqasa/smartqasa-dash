@@ -5,6 +5,7 @@ import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 import { callService } from "../utilities/call-service";
 import { moreInfoDialog } from "../dialogs/more-info-dialog";
+import { formatState } from "../utilities/format-state";
 
 import tileStyle from "../css/tile.css";
 
@@ -121,7 +122,7 @@ export class LockTile extends LitElement implements LovelaceCard {
             iconAnimation = stateAnimation;
             iconColor = stateColor;
             name = this._config?.name || this._stateObj.attributes.friendly_name || "Lock";
-            stateFmtd = this.hass!.formatEntityState(this._stateObj);
+            stateFmtd = formatState(this._entity!, this.hass!);
         } else {
             icon = this._config!.icon || "hass:lock-alert-variant";
             iconAnimation = "none";

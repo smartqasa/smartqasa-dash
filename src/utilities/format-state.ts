@@ -9,8 +9,9 @@ export const formatAvailable = (hass: HomeAssistant): boolean => {
     );
 };
 
-export const formatState = (stateObj: HassEntity, hass: HomeAssistant): string => {
-    if (!formatAvailable(hass)) return "Loading...";
+export const formatState = (entity: string, hass: HomeAssistant): string => {
+    const stateObj: HassEntity = hass?.states[entity];
+    if (!stateObj) return "Unknown State";
 
     let stateFmtd: string = hass.formatEntityState(stateObj);
 
@@ -47,6 +48,13 @@ export const formatState = (stateObj: HassEntity, hass: HomeAssistant): string =
             stateFmtd +=
                 state === "on" && stateObj.attributes.brightness
                     ? " - " + hass.formatEntityAttributeValue(stateObj, "brightness")
+                    : "";
+            break;
+
+        case "water_heater":
+            stateFmtd +=
+                state !== "off" && stateObj.attributes.brightness
+                    ? " - " + hass.formatEntityAttributeValue(stateObj, "temperature")
                     : "";
             break;
     }

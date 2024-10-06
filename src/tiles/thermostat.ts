@@ -90,7 +90,7 @@ export class ThermostatTile extends LitElement implements LovelaceCard {
                 iconColor = thermostatColors[hvacAction] || thermostatColors.idle;
             }
             name = this._config!.name || this._stateObj.attributes.friendly_name || "Thermostat";
-            stateFmtd = formatState(this._stateObj, this.hass);
+            stateFmtd = formatState(this._entity!, this.hass!);
         } else {
             icon = this._config!.icon || "hass:thermostat";
             iconColor = "var(--sq-unavailable-rgb)";

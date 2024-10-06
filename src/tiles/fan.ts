@@ -83,7 +83,7 @@ export class FanTile extends LitElement implements LovelaceCard {
 
         this._stateObj = this.hass && this._entity ? this.hass.states[this._entity] : undefined;
 
-        if (this._stateObj && this.hass) {
+        if (this._stateObj) {
             const state = this._stateObj.state || "unknown";
             icon = this._config!.icon || this._stateObj.attributes.icon || "hass:fan";
             if (state == "on" && icon === "hass:fan") {
@@ -99,7 +99,7 @@ export class FanTile extends LitElement implements LovelaceCard {
             }
             iconColor = state === "on" ? "var(--sq-fan-on-rgb)" : "var(--sq-inactive-rgb)";
             name = this._config!.name || this._stateObj.attributes.friendly_name || "Fan";
-            stateFmtd = formatState(this._stateObj, this.hass);
+            stateFmtd = formatState(this._entity!, this.hass!);
         } else {
             icon = this._config!.icon || "hass:fan-alert";
             iconAnimation = "none";

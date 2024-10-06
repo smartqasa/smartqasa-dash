@@ -109,14 +109,14 @@ export class ShadeTile extends LitElement implements LovelaceCard {
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
 
         let icon, iconAnimation, iconColor, name, stateFmtd;
-        if (this._stateObj && this.hass) {
+        if (this._stateObj) {
             const state = this._stateObj.state || "unknown";
             const { stateIcon, stateAnimation, stateColor } = this._stateMap[state] || this._stateMap.default;
             icon = this._config!.icon || stateIcon;
             iconAnimation = stateAnimation;
             iconColor = stateColor;
             name = this._config!.name || this._stateObj.attributes.friendly_name || "Shade";
-            stateFmtd = formatState(this._stateObj, this.hass);
+            stateFmtd = formatState(this._entity!, this.hass!);
         } else {
             icon = this._config!.icon || "hass:roller-shade";
             iconAnimation = "none";

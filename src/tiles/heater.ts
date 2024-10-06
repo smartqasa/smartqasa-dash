@@ -5,6 +5,7 @@ import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 import { moreInfoDialog } from "../dialogs/more-info-dialog";
 import { heaterColors } from "../const";
+import { formatState } from "../utilities/format-state";
 
 import tileStyle from "../css/tile.css";
 
@@ -81,16 +82,13 @@ export class HeaterTile extends LitElement implements LovelaceCard {
             const state = this._stateObj.state || "unknown";
             icon = this._config!.icon || "hass:water-boiler";
             iconColor = heaterColors[state] || heaterColors.idle;
-            name = this._config!.name || this._stateObj.attributes.friendly_name || "Heater";
-            stateFmtd = this.hass!.formatEntityState(this._stateObj);
-            if (state !== "off" && this._stateObj.attributes.temperature) {
-                this._stateFmtd += ` - ${this._stateObj.attributes.temperature}°`;
-            }
+            name = this._config!.name || this._stateObj.attributes.friendly_name || "Water Heater";
+            stateFmtd = formatState(this._entity!, this.hass!);
         } else {
             icon = this._config!.icon || "hass:water-boiler-alert";
             iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            name = this._config!.name || "Unknown";
-            stateFmtd = "Unknown";
+            name = this._config!.name || "Unknown Heater";
+            stateFmtd = "Unknown State";
         }
 
         this._iconStyles = {
