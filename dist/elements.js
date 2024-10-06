@@ -13908,6 +13908,9 @@ let LightTile = class LightTile extends h {
             </div>
         `;
     }
+    firstUpdated(_changedProperties) {
+        this._updateState();
+    }
     _updateState() {
         this._stateObj = this.hass && this._entity ? this.hass.states[this._entity] : undefined;
         let icon, iconColor, name, stateFmtd;

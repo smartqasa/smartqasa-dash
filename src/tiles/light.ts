@@ -79,6 +79,10 @@ export class LightTile extends LitElement implements LovelaceCard {
         `;
     }
 
+    protected firstUpdated(_changedProperties: PropertyValues): void {
+        this._updateState();
+    }
+
     private _updateState(): void {
         this._stateObj = this.hass && this._entity ? this.hass.states[this._entity] : undefined;
 
