@@ -1,5 +1,7 @@
 window.smartqasa = window.smartqasa || {};
 window.smartqasa.startArea = window.smartqasa.startArea || location.pathname.split("/").pop();
+window.smartqasa.version = __BUILD_VERSION__; // Injected version
+window.smartqasa.timestamp = __BUILD_TIMESTAMP__; // Injected timestamp
 
 window.customCards = window.customCards ?? [];
 

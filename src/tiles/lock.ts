@@ -23,7 +23,7 @@ window.customCards.push({
 
 @customElement("smartqasa-lock-tile")
 export class LockTile extends LitElement implements LovelaceCard {
-    public getCardSize(): number {
+    public getCardSize(): number | Promise<number> {
         return 1;
     }
 

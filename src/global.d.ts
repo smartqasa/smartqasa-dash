@@ -29,6 +29,9 @@ declare interface DialogConfig {
     content: object;
 }
 
+declare const __BUILD_VERSION__: string;
+declare const __BUILD_TIMESTAMP__: string;
+
 declare interface Window {
     browser_mod?: {
         service: (service: string, data?: object) => void;
@@ -43,5 +46,7 @@ declare interface Window {
         menuTab: number;
         startArea?: string;
         service: (service: string, data?: object) => void;
+        timestamp: string;
+        version: string;
     };
 }

@@ -3866,6 +3866,8 @@ const loadYamlAsJson = async (yamlFilePath) => {
 
 window.smartqasa = window.smartqasa || {};
 window.smartqasa.startArea = window.smartqasa.startArea || location.pathname.split("/").pop();
+window.smartqasa.version = "2024.10.2b-1"; // Injected version
+window.smartqasa.timestamp = "2024-10-06T22:11:41.623Z"; // Injected timestamp
 window.customCards = window.customCards ?? [];
 // Function to display a 'blue screen of death' style error
 function displayBSoD(errorMessage) {
