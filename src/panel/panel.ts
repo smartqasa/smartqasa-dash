@@ -85,10 +85,6 @@ export class PanelCard extends LitElement implements LovelaceCard {
     protected willUpdate(changedProps: PropertyValues): void {
         if (changedProps.has("_config")) {
             this._loadContent();
-
-            if (this._isTablet && this._controlTiles.length > 1 && !this._swiper) {
-                this._initializeSwiper();
-            }
         }
 
         if (changedProps.has("hass") && this.hass) {
@@ -127,6 +123,10 @@ export class PanelCard extends LitElement implements LovelaceCard {
 
     protected updated(changedProps: PropertyValues): void {
         if (changedProps.has("hass") && this.hass) {
+            if (this._isTablet && this._controlTiles.length > 1 && !this._swiper) {
+                this._initializeSwiper();
+            }
+
             this._updateContent();
         }
     }

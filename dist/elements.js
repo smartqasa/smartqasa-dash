@@ -9813,9 +9813,6 @@ let PanelCard = class PanelCard extends h {
     willUpdate(changedProps) {
         if (changedProps.has("_config")) {
             this._loadContent();
-            if (this._isTablet && this._controlTiles.length > 1 && !this._swiper) {
-                this._initializeSwiper();
-            }
         }
         if (changedProps.has("hass") && this.hass) {
             this._handleThemeChanges();
@@ -9847,6 +9844,9 @@ let PanelCard = class PanelCard extends h {
     }
     updated(changedProps) {
         if (changedProps.has("hass") && this.hass) {
+            if (this._isTablet && this._controlTiles.length > 1 && !this._swiper) {
+                this._initializeSwiper();
+            }
             this._updateContent();
         }
     }
