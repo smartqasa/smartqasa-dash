@@ -13260,6 +13260,63 @@ var area = /*#__PURE__*/Object.freeze({
   get AreaTile () { return AreaTile; }
 });
 
+const formatState = (hass, entity) => {
+    const stateObj = hass?.states[entity];
+    if (!stateObj)
+        return "Unknown State";
+    let stateFmtd = hass.formatEntityState(stateObj);
+    const domain = stateObj.entity_id.split(".")[0];
+    const state = stateObj.state;
+    switch (domain) {
+        case "climate":
+            if (state !== "off") {
+                if (stateObj.attributes.current_temperature) {
+                    stateFmtd += ` - ${stateObj.attributes.current_temperature}°`;
+                }
+                if (stateObj.attributes.current_humidity) {
+                    stateFmtd += ` / ${stateObj.attributes.current_humidity}%`;
+                }
+            }
+            break;
+        case "cover":
+            stateFmtd +=
+                state === "open" && stateObj.attributes.current_position
+                    ? " - " + hass.formatEntityAttributeValue(stateObj, "current_position")
+                    : "";
+            break;
+        case "fan":
+            stateFmtd +=
+                state === "on" && stateObj.attributes.percentage
+                    ? " - " + hass.formatEntityAttributeValue(stateObj, "percentage")
+                    : "";
+            break;
+        case "light":
+            stateFmtd +=
+                state === "on" && stateObj.attributes.brightness
+                    ? " - " + hass.formatEntityAttributeValue(stateObj, "brightness")
+                    : "";
+            break;
+        case "media_player":
+            stateFmtd +=
+                state === stateObj.attributes.volume_level
+                    ? " - " + hass.formatEntityAttributeValue(stateObj, "volume_level")
+                    : "";
+            break;
+        case "vacuum":
+            stateFmtd += stateObj.attributes.battery_level
+                ? " - " + hass.formatEntityAttributeValue(stateObj, "battery_level")
+                : "";
+            break;
+        case "water_heater":
+            stateFmtd +=
+                state !== "off" && stateObj.attributes.brightness
+                    ? " - " + hass.formatEntityAttributeValue(stateObj, "temperature")
+                    : "";
+            break;
+    }
+    return stateFmtd;
+};
+
 window.customCards.push({
     type: "smartqasa-audio-tile",
     name: "SmartQasa Audio Tile",
@@ -13311,9 +13368,10 @@ let AudioTile = class AudioTile extends h {
     }
     _updateState() {
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
+        let iconHtml, name, stateFmtd;
         if (this._stateObj) {
             if (this._stateObj.state === "playing") {
-                this._iconHtml = ke `
+                iconHtml = ke `
                     <div class="bars tile" @click=${this._launchApp}>
                         <div></div>
                         <div></div>
@@ -13324,27 +13382,28 @@ let AudioTile = class AudioTile extends h {
                 `;
             }
             else {
-                this._iconHtml = ke `
+                iconHtml = ke `
                     <div class="icon" @click=${this._launchApp}>
                         <ha-icon icon="hass:music"></ha-icon>
                     </div>
                 `;
             }
             this._stateObj.state || "unknown";
-            this._name = this._config.name || this._stateObj.attributes.friendly_name || "Speaker";
-            this._stateFmtd = `${this.hass.formatEntityState(this._stateObj)}${this._stateObj.attributes.volume_level
-                ? " - " + this.hass.formatEntityAttributeValue(this._stateObj, "volume_level")
-                : ""}`;
+            name = this._config.name || this._stateObj.attributes.friendly_name || "Speaker";
+            stateFmtd = formatState(this.hass, this._entity);
         }
         else {
-            this._iconHtml = ke `
+            iconHtml = ke `
                 <div class="icon">
                     <ha-icon icon="hass:music"></ha-icon>
                 </div>
             `;
-            this._name = this._config?.name || "Unknown Speaker";
-            this._stateFmtd = "Unknown State";
+            name = this._config?.name || "Unknown Speaker";
+            stateFmtd = "Unknown State";
         }
+        this._iconHtml = iconHtml;
+        this._name = name;
+        this._stateFmtd = stateFmtd;
     }
     _showDialog(e) {
         e.stopPropagation();
@@ -13460,52 +13519,6 @@ function entityListDialog(dialogTitle, filterType, filterValue, tileType) {
     dialogPopup(dialogConfig);
 }
 
-const formatState = (entity, hass) => {
-    const stateObj = hass?.states[entity];
-    if (!stateObj)
-        return "Unknown State";
-    let stateFmtd = hass.formatEntityState(stateObj);
-    const domain = stateObj.entity_id.split(".")[0];
-    const state = stateObj.state;
-    switch (domain) {
-        case "climate":
-            if (state !== "off") {
-                if (stateObj.attributes.current_temperature) {
-                    stateFmtd += ` - ${stateObj.attributes.current_temperature}°`;
-                }
-                if (stateObj.attributes.current_humidity) {
-                    stateFmtd += ` / ${stateObj.attributes.current_humidity}%`;
-                }
-            }
-            break;
-        case "cover":
-            stateFmtd +=
-                state === "open" && stateObj.attributes.current_position
-                    ? " - " + hass.formatEntityAttributeValue(stateObj, "current_position")
-                    : "";
-            break;
-        case "fan":
-            stateFmtd +=
-                state === "on" && stateObj.attributes.percentage
-                    ? " - " + hass.formatEntityAttributeValue(stateObj, "percentage")
-                    : "";
-            break;
-        case "light":
-            stateFmtd +=
-                state === "on" && stateObj.attributes.brightness
-                    ? " - " + hass.formatEntityAttributeValue(stateObj, "brightness")
-                    : "";
-            break;
-        case "water_heater":
-            stateFmtd +=
-                state !== "off" && stateObj.attributes.brightness
-                    ? " - " + hass.formatEntityAttributeValue(stateObj, "temperature")
-                    : "";
-            break;
-    }
-    return stateFmtd;
-};
-
 window.customCards.push({
     type: "smartqasa-fan-tile",
     name: "SmartQasa Fan Tile",
@@ -13577,7 +13590,7 @@ let FanTile = class FanTile extends h {
             }
             iconColor = state === "on" ? "var(--sq-fan-on-rgb)" : "var(--sq-inactive-rgb)";
             name = this._config.name || this._stateObj.attributes.friendly_name || "Fan";
-            stateFmtd = formatState(this._entity, this.hass);
+            stateFmtd = formatState(this.hass, this._entity);
         }
         else {
             icon = this._config.icon || "hass:fan-alert";
@@ -13722,7 +13735,7 @@ let GarageTile = class GarageTile extends h {
             iconAnimation = stateAnimation;
             iconColor = stateColor;
             name = this._config.name || this._stateObj.attributes.friendly_name || "Garage";
-            stateFmtd = formatState(this._entity, this.hass);
+            stateFmtd = formatState(this.hass, this._entity);
         }
         else {
             icon = this._config.icon || "hass:garage-alert-variant";
@@ -13825,7 +13838,7 @@ let HeaterTile = class HeaterTile extends h {
             icon = this._config.icon || "hass:water-boiler";
             iconColor = heaterColors[state] || heaterColors.idle;
             name = this._config.name || this._stateObj.attributes.friendly_name || "Water Heater";
-            stateFmtd = formatState(this._entity, this.hass);
+            stateFmtd = formatState(this.hass, this._entity);
         }
         else {
             icon = this._config.icon || "hass:water-boiler-alert";
@@ -13923,7 +13936,7 @@ let LightTile = class LightTile extends h {
             icon = this._config.icon || this._stateObj.attributes.icon || "hass:lightbulb";
             iconColor = state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
             name = this._config.name || this._stateObj.attributes.friendly_name || "Light";
-            stateFmtd = formatState(this._entity, this.hass);
+            stateFmtd = formatState(this.hass, this._entity);
         }
         else {
             icon = this._config.icon || "hass:lightbulb-alert";
@@ -14152,7 +14165,7 @@ let LockTile = class LockTile extends h {
             iconAnimation = stateAnimation;
             iconColor = stateColor;
             name = this._config?.name || this._stateObj.attributes.friendly_name || "Lock";
-            stateFmtd = formatState(this._entity, this.hass);
+            stateFmtd = formatState(this.hass, this._entity);
         }
         else {
             icon = this._config.icon || "hass:lock-alert-variant";
@@ -14460,11 +14473,7 @@ let RobotTile = class RobotTile extends h {
             iconAnimation = stateAnimation;
             iconColor = stateColor;
             name = this._config.name || this._stateObj.attributes.friendly_name || "Robot";
-            stateFmtd =
-                this.hass?.formatEntityState(this._stateObj) +
-                    (this._stateObj.attributes.battery_level
-                        ? " - " + this.hass?.formatEntityAttributeValue(this._stateObj, "battery_level")
-                        : "");
+            stateFmtd = formatState(this.hass, this._entity);
         }
         else {
             icon = this._config?.icon || "hass:robot-vacuum-variant-alert";
@@ -15329,7 +15338,7 @@ let ShadeTile = class ShadeTile extends h {
             iconAnimation = stateAnimation;
             iconColor = stateColor;
             name = this._config.name || this._stateObj.attributes.friendly_name || "Shade";
-            stateFmtd = formatState(this._entity, this.hass);
+            stateFmtd = formatState(this.hass, this._entity);
         }
         else {
             icon = this._config.icon || "hass:roller-shade";
@@ -15629,7 +15638,7 @@ let ThermostatTile = class ThermostatTile extends h {
                 iconColor = thermostatColors[hvacAction] || thermostatColors.idle;
             }
             name = this._config.name || this._stateObj.attributes.friendly_name || "Thermostat";
-            stateFmtd = formatState(this._entity, this.hass);
+            stateFmtd = formatState(this.hass, this._entity);
         }
         else {
             icon = this._config.icon || "hass:thermostat";

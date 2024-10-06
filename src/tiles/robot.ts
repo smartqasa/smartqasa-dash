@@ -5,6 +5,7 @@ import { styleMap } from "lit/directives/style-map.js";
 import { HassEntity, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 import { callService } from "../utilities/call-service";
 import { moreInfoDialog } from "../dialogs/more-info-dialog";
+import { formatState } from "../utilities/format-state";
 
 import tileStyle from "../css/tile.css";
 
@@ -117,11 +118,7 @@ export class RobotTile extends LitElement implements LovelaceCard {
             iconAnimation = stateAnimation;
             iconColor = stateColor;
             name = this._config!.name || this._stateObj.attributes.friendly_name || "Robot";
-            stateFmtd =
-                this.hass?.formatEntityState(this._stateObj) +
-                (this._stateObj.attributes.battery_level
-                    ? " - " + this.hass?.formatEntityAttributeValue(this._stateObj, "battery_level")
-                    : "");
+            stateFmtd = formatState(this.hass!, this._entity!);
         } else {
             icon = this._config?.icon || "hass:robot-vacuum-variant-alert";
             iconAnimation = "none";

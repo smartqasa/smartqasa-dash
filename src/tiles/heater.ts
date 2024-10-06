@@ -83,7 +83,7 @@ export class HeaterTile extends LitElement implements LovelaceCard {
             icon = this._config!.icon || "hass:water-boiler";
             iconColor = heaterColors[state] || heaterColors.idle;
             name = this._config!.name || this._stateObj.attributes.friendly_name || "Water Heater";
-            stateFmtd = formatState(this._entity!, this.hass!);
+            stateFmtd = formatState(this.hass!, this._entity!);
         } else {
             icon = this._config!.icon || "hass:water-boiler-alert";
             iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";

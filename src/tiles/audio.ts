@@ -5,6 +5,7 @@ import { HassEntity, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../
 import { dialogTable } from "../dialogs/dialog-table";
 import { dialogPopup } from "../dialogs/dialog-popup";
 import { launchApp } from "../utilities/launch-app";
+import { formatState } from "../utilities/format-state";
 
 import tileStyle from "../css/tile.css";
 import musicBarsStyle from "../css/music-bars.css";
@@ -76,9 +77,10 @@ export class AudioTile extends LitElement implements LovelaceCard {
     private _updateState(): void {
         this._stateObj = this._entity ? this.hass?.states[this._entity] : undefined;
 
+        let iconHtml, name, stateFmtd;
         if (this._stateObj) {
             if (this._stateObj.state === "playing") {
-                this._iconHtml = html`
+                iconHtml = html`
                     <div class="bars tile" @click=${this._launchApp}>
                         <div></div>
                         <div></div>
@@ -88,7 +90,7 @@ export class AudioTile extends LitElement implements LovelaceCard {
                     </div>
                 `;
             } else {
-                this._iconHtml = html`
+                iconHtml = html`
                     <div class="icon" @click=${this._launchApp}>
                         <ha-icon icon="hass:music"></ha-icon>
                     </div>
@@ -96,21 +98,21 @@ export class AudioTile extends LitElement implements LovelaceCard {
             }
 
             const state = this._stateObj.state || "unknown";
-            this._name = this._config!.name || this._stateObj.attributes.friendly_name || "Speaker";
-            this._stateFmtd = `${this.hass!.formatEntityState(this._stateObj)}${
-                this._stateObj.attributes.volume_level
-                    ? " - " + this.hass!.formatEntityAttributeValue(this._stateObj, "volume_level")
-                    : ""
-            }`;
+            name = this._config!.name || this._stateObj.attributes.friendly_name || "Speaker";
+            stateFmtd = formatState(this.hass!, this._entity!);
         } else {
-            this._iconHtml = html`
+            iconHtml = html`
                 <div class="icon">
                     <ha-icon icon="hass:music"></ha-icon>
                 </div>
             `;
-            this._name = this._config?.name || "Unknown Speaker";
-            this._stateFmtd = "Unknown State";
+            name = this._config?.name || "Unknown Speaker";
+            stateFmtd = "Unknown State";
         }
+
+        this._iconHtml = iconHtml;
+        this._name = name;
+        this._stateFmtd = stateFmtd;
     }
 
     private _showDialog(e: Event): void {

@@ -89,7 +89,7 @@ export class LightTile extends LitElement implements LovelaceCard {
             icon = this._config!.icon || this._stateObj.attributes.icon || "hass:lightbulb";
             iconColor = state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
             name = this._config!.name || this._stateObj.attributes.friendly_name || "Light";
-            stateFmtd = formatState(this._entity!, this.hass!);
+            stateFmtd = formatState(this.hass!, this._entity!);
         } else {
             icon = this._config!.icon || "hass:lightbulb-alert";
             iconColor = "var(--sq-unavailable-rgb)";

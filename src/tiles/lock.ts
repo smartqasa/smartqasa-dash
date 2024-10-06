@@ -122,7 +122,7 @@ export class LockTile extends LitElement implements LovelaceCard {
             iconAnimation = stateAnimation;
             iconColor = stateColor;
             name = this._config?.name || this._stateObj.attributes.friendly_name || "Lock";
-            stateFmtd = formatState(this._entity!, this.hass!);
+            stateFmtd = formatState(this.hass!, this._entity!);
         } else {
             icon = this._config!.icon || "hass:lock-alert-variant";
             iconAnimation = "none";

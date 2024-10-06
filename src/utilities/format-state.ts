@@ -1,15 +1,7 @@
 import { format } from "path";
 import { HassEntity, HomeAssistant } from "../types";
 
-export const formatAvailable = (hass: HomeAssistant): boolean => {
-    return !!(
-        hass &&
-        typeof hass.formatEntityState === "function" &&
-        typeof hass.formatEntityAttributeValue === "function"
-    );
-};
-
-export const formatState = (entity: string, hass: HomeAssistant): string => {
+export const formatState = (hass: HomeAssistant, entity: string): string => {
     const stateObj: HassEntity = hass?.states[entity];
     if (!stateObj) return "Unknown State";
 
@@ -49,6 +41,19 @@ export const formatState = (entity: string, hass: HomeAssistant): string => {
                 state === "on" && stateObj.attributes.brightness
                     ? " - " + hass.formatEntityAttributeValue(stateObj, "brightness")
                     : "";
+            break;
+
+        case "media_player":
+            stateFmtd +=
+                state === stateObj.attributes.volume_level
+                    ? " - " + hass.formatEntityAttributeValue(stateObj, "volume_level")
+                    : "";
+            break;
+
+        case "vacuum":
+            stateFmtd += stateObj.attributes.battery_level
+                ? " - " + hass.formatEntityAttributeValue(stateObj, "battery_level")
+                : "";
             break;
 
         case "water_heater":

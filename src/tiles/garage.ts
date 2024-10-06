@@ -115,7 +115,7 @@ export class GarageTile extends LitElement implements LovelaceCard {
             iconAnimation = stateAnimation;
             iconColor = stateColor;
             name = this._config!.name || this._stateObj.attributes.friendly_name || "Garage";
-            stateFmtd = formatState(this._entity!, this.hass!);
+            stateFmtd = formatState(this.hass!, this._entity!);
         } else {
             icon = this._config!.icon || "hass:garage-alert-variant";
             iconAnimation = "none";
