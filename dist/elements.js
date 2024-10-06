@@ -3963,6 +3963,7 @@ function displayBSoD(errorMessage) {
             Promise.resolve().then(function () { return _switch; }),
             Promise.resolve().then(function () { return theme; }),
             Promise.resolve().then(function () { return thermostat; }),
+            Promise.resolve().then(function () { return webpage; }),
         ]);
         // Log version info
         const { version } = await Promise.resolve().then(function () { return _package; });
@@ -13111,7 +13112,7 @@ window.customCards.push({
     preview: true,
     description: "A SmartQasa tile for launching applications from the dashboard",
 });
-let AppTile = class AppTile extends h {
+let AppTile$1 = class AppTile extends h {
     getCardSize() {
         return 1;
     }
@@ -13150,7 +13151,7 @@ let AppTile = class AppTile extends h {
         }
         name = this._config?.name || this._appObj?.name || this._config?.app;
         return ke `
-            <div class="container" @click=${this.launchApp}>
+            <div class="container" @click=${this._launchApp}>
                 <div class="icon" style=${iconStyle}>${iconTemplate}</div>
                 <div class="text">
                     <div class="name">${name}</div>
@@ -13158,7 +13159,7 @@ let AppTile = class AppTile extends h {
             </div>
         `;
     }
-    launchApp(e) {
+    _launchApp(e) {
         e.stopPropagation();
         if (!this._config?.app)
             return;
@@ -13167,14 +13168,14 @@ let AppTile = class AppTile extends h {
 };
 __decorate([
     r()
-], AppTile.prototype, "_config", void 0);
-AppTile = __decorate([
+], AppTile$1.prototype, "_config", void 0);
+AppTile$1 = __decorate([
     t$1("smartqasa-app-tile")
-], AppTile);
+], AppTile$1);
 
 var app = /*#__PURE__*/Object.freeze({
   __proto__: null,
-  get AppTile () { return AppTile; }
+  get AppTile () { return AppTile$1; }
 });
 
 window.customCards.push({
@@ -15677,6 +15678,75 @@ ThermostatTile = __decorate([
 var thermostat = /*#__PURE__*/Object.freeze({
   __proto__: null,
   get ThermostatTile () { return ThermostatTile; }
+});
+
+window.customCards.push({
+    type: "smartqasa-webpage-tile",
+    name: "SmartQasa Webpage Tile",
+    preview: true,
+    description: "A SmartQasa tile for displaying a web page from the dashboard",
+});
+let AppTile = class AppTile extends h {
+    constructor() {
+        super(...arguments);
+        this._url = "http://www.smartqasa.com";
+        this._icon = "hass:web";
+        this._name = "Web Page";
+    }
+    getCardSize() {
+        return 1;
+    }
+    static get styles() {
+        return r$3(css_248z);
+    }
+    setConfig(config) {
+        if (!config.app)
+            throw new Error("A valid url must be specified.");
+        this._url = config.app;
+        if (config.icon)
+            this._icon = config.icon;
+        if (config.name)
+            this._name = config.name;
+        this._config = config;
+    }
+    render() {
+        return ke `
+            <div class="container" @click=${this.launchApp}>
+                <div class="icon">
+                    <ha-icon icon=${this._icon}></ha-icon>
+                </div>
+                <div class="text">
+                    <div class="name">${this._name}</div>
+                </div>
+            </div>
+        `;
+    }
+    launchApp(e) {
+        e.stopPropagation();
+        if (!this._url)
+            return;
+        const dialogConfig = {
+            title: this._name,
+            timeout: 120000,
+            size: "fullscreen",
+            content: {
+                type: "iframe",
+                url: this._url,
+            },
+        };
+        dialogPopup(dialogConfig);
+    }
+};
+__decorate([
+    r()
+], AppTile.prototype, "_config", void 0);
+AppTile = __decorate([
+    t$1("smartqasa-webpage-tile")
+], AppTile);
+
+var webpage = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  get AppTile () { return AppTile; }
 });
 
 var version = "2024.10.2b-1";

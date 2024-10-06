@@ -63,7 +63,7 @@ export class AppTile extends LitElement implements LovelaceCard {
         name = this._config?.name || this._appObj?.name || this._config?.app;
 
         return html`
-            <div class="container" @click=${this.launchApp}>
+            <div class="container" @click=${this._launchApp}>
                 <div class="icon" style=${iconStyle}>${iconTemplate}</div>
                 <div class="text">
                     <div class="name">${name}</div>
@@ -72,7 +72,7 @@ export class AppTile extends LitElement implements LovelaceCard {
         `;
     }
 
-    private launchApp(e: Event): void {
+    private _launchApp(e: Event): void {
         e.stopPropagation();
         if (!this._config?.app) return;
         launchApp(this._config.app);

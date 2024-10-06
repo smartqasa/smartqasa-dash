@@ -110,6 +110,7 @@ function displayBSoD(errorMessage: string) {
             import("./tiles/switch"),
             import("./tiles/theme"),
             import("./tiles/thermostat"),
+            import("./tiles/webpage"),
         ]);
 
         // Log version info
