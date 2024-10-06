@@ -13900,6 +13900,7 @@ let LightTile = class LightTile extends h {
             changedProps.has("_isLoaded"));
     }
     willUpdate() {
+        console.log("Format Available: ", formatAvailable(this.hass));
         if (!this._isLoaded && this.hass)
             this._isLoaded = formatAvailable(this.hass);
         this._updateState();
