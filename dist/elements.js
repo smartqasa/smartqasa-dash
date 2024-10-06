@@ -3936,6 +3936,7 @@ function displayBSoD(errorMessage) {
             Promise.resolve().then(function () { return select$1; }),
             Promise.resolve().then(function () { return thermostat$1; }),
             Promise.resolve().then(function () { return weather; }),
+            Promise.resolve().then(function () { return webpage$1; }),
         ]);
         // Tiles
         await Promise.all([
@@ -12886,6 +12887,88 @@ WeatherChip = __decorate([
 var weather = /*#__PURE__*/Object.freeze({
   __proto__: null,
   get WeatherChip () { return WeatherChip; }
+});
+
+window.customCards.push({
+    type: "smartqasa-webpage-chip",
+    name: "SmartQasa Webpage Chip",
+    preview: true,
+    description: "A SmartQasa chip for displaying a web page.",
+});
+let WebpageChip = class WebpageChip extends h {
+    constructor() {
+        super(...arguments);
+        this._url = "http://www.smartqasa.com";
+        this._icon = "hass:web";
+        this._name = "Web Page";
+    }
+    getCardSize() {
+        return 1;
+    }
+    static get styles() {
+        return r$3(css_248z$4);
+    }
+    setConfig(config) {
+        if (!config.url)
+            throw new Error("A valid URL must be specified.");
+        try {
+            const testUrl = new URL(config.url);
+            this._url = testUrl.href;
+        }
+        catch (error) {
+            console.error("Invalid URL provided:", config.url);
+            throw new Error("Invalid URL. Please specify a valid URL.");
+        }
+        if (config.icon)
+            this._icon = config.icon;
+        if (config.name)
+            this._name = config.name;
+        this._config = config;
+    }
+    render() {
+        if (!this._config)
+            return D;
+        return ke `
+            <div class="container" @click=${this._showDialog}>
+                <div class="icon">
+                    <ha-icon icon=${this._icon}></ha-icon>
+                </div>
+            </div>
+        `;
+    }
+    _showDialog(e) {
+        e.stopPropagation();
+        if (!this._url)
+            return;
+        try {
+            const validatedUrl = new URL(this._url);
+            const dialogConfig = {
+                title: this._name,
+                timeout: 120000,
+                size: "fullscreen",
+                content: {
+                    type: "iframe",
+                    url: validatedUrl.href,
+                },
+            };
+            dialogPopup(dialogConfig);
+        }
+        catch (error) {
+            console.error("Failed to launch URL:", this._url);
+            alert("Unable to launch the web page. The URL is invalid.");
+        }
+    }
+};
+__decorate([
+    r()
+], WebpageChip.prototype, "_config", void 0);
+WebpageChip = __decorate([
+    t$1("smartqasa-webpage-chip")
+], WebpageChip);
+
+var webpage$1 = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  get WebpageChip () { return WebpageChip; }
 });
 
 var css_248z = ".container {\n    display: flex;\n    width: 100%;\n    height: 100%;\n    min-height: var(--sq-tile-height);\n    padding: 0 var(--sq-tile-padding);\n    column-gap: var(--sq-tile-padding);\n    border: var(--sq-card-border);\n    border-radius: var(--sq-tile-border-radius);\n    box-sizing: border-box;\n    background-color: var(--sq-tile-background-color);\n    overflow: hidden;\n    -webkit-tap-highlight-color: transparent;\n    cursor: pointer;\n}\n\n.container:focus,\n.container:active {\n    background-color: var(--sq-ripple-color);\n    border-radius: var(--sq-card-border-radius);\n    outline: none;\n}\n\n.icon {\n    display: flex;\n    width: var(--sq-icon-size);\n    height: var(--sq-icon-size);\n    margin: auto 0;\n    padding: var(--sq-tile-padding);\n    border-radius: 50%;\n    color: rgb(var(--sq-inactive-rgb));\n    background-color: rgba(var(--sq-inactive-rgb), var(--sq-icon-opacity));\n    transition: var(--sq-icon-transition);\n}\n\n.text {\n    display: flex;\n    flex-direction: column;\n    align-items: flex-start;\n    justify-content: center;\n    row-gap: 0.3rem;\n    overflow: hidden;\n}\n\n.name {\n    display: -webkit-box;\n    -webkit-box-orient: vertical;\n    -webkit-line-clamp: 2;\n    line-height: 1.1;\n    line-clamp: 2;\n    text-align: left;\n    text-overflow: ellipsis;\n    white-space: normal;\n    word-break: break-word;\n    overflow: hidden;\n    font-weight: var(--sq-primary-font-weight);\n    font-size: var(--sq-primary-font-size);\n    color: rgb(var(--sq-primary-font-rgb));\n}\n\n.state {\n    text-align: left;\n    text-overflow: ellipsis;\n    white-space: normal;\n    line-height: 1.1;\n    overflow: hidden;\n    font-weight: var(--sq-secondary-font-weight);\n    font-size: var(--sq-secondary-font-size);\n    color: rgb(var(--sq-secondary-font-rgb));\n}\n\n@keyframes blink {\n    50% {\n        opacity: 0.25;\n    }\n}\n\n@keyframes spin {\n    from {\n        transform: rotate(0deg);\n    }\n    to {\n        transform: rotate(360deg);\n    }\n}\n";
