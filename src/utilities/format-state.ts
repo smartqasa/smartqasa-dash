@@ -1,5 +1,13 @@
 import { HassEntity, HomeAssistant } from "../types";
 
+export const formatAvailable = (hass: HomeAssistant): boolean => {
+    return !!(
+        !hass ||
+        typeof hass.formatEntityState !== "function" ||
+        typeof hass.formatEntityAttributeValue !== "function"
+    );
+};
+
 export const formatState = (stateObj: HassEntity, hass: HomeAssistant): string => {
     let stateFmtd: string = hass.formatEntityState(stateObj);
 

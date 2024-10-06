@@ -6,9 +6,10 @@ import { HassEntity, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../
 import { callService } from "../utilities/call-service";
 import { moreInfoDialog } from "../dialogs/more-info-dialog";
 import { entityListDialog } from "../dialogs/entity-list-dialog";
-import { formatState } from "../utilities/format-state";
+import { formatState, formatAvailable } from "../utilities/format-state";
 
 import tileStyle from "../css/tile.css";
+import { format } from "path";
 
 interface Config extends LovelaceCardConfig {
     entity: string;
@@ -32,6 +33,7 @@ export class LightTile extends LitElement implements LovelaceCard {
 
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() protected _config?: Config;
+    @state() private _isLoaded: boolean = false;
 
     private _entity?: string;
     private _stateObj?: HassEntity;
@@ -57,11 +59,14 @@ export class LightTile extends LitElement implements LovelaceCard {
     protected shouldUpdate(changedProps: PropertyValues): boolean {
         return !!(
             (changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
-            changedProps.has("_config")
+            changedProps.has("_config") ||
+            changedProps.has("_isLoaded")
         );
     }
 
     protected willUpdate(): void {
+        if (!this._isLoaded && this.hass) this._isLoaded = formatAvailable(this.hass);
+
         this._updateState();
     }
 
@@ -77,11 +82,6 @@ export class LightTile extends LitElement implements LovelaceCard {
                 </div>
             </div>
         `;
-    }
-
-    protected firstUpdated(_changedProperties: PropertyValues): void {
-        this._updateState();
-        this.requestUpdate();
     }
 
     private _updateState(): void {

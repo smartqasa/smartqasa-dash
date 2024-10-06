@@ -13460,6 +13460,11 @@ function entityListDialog(dialogTitle, filterType, filterValue, tileType) {
     dialogPopup(dialogConfig);
 }
 
+const formatAvailable = (hass) => {
+    return !!(!hass ||
+        typeof hass.formatEntityState !== "function" ||
+        typeof hass.formatEntityAttributeValue !== "function");
+};
 const formatState = (stateObj, hass) => {
     let stateFmtd = hass.formatEntityState(stateObj);
     const domain = stateObj.entity_id.split(".")[0];
@@ -13867,6 +13872,7 @@ window.customCards.push({
 let LightTile = class LightTile extends h {
     constructor() {
         super(...arguments);
+        this._isLoaded = false;
         this._icon = "hass:lightbulb-alert";
         this._iconStyles = {};
         this._name = "Unknown Light";
@@ -13890,9 +13896,12 @@ let LightTile = class LightTile extends h {
     }
     shouldUpdate(changedProps) {
         return !!((changedProps.has("hass") && this._entity && this.hass?.states[this._entity] !== this._stateObj) ||
-            changedProps.has("_config"));
+            changedProps.has("_config") ||
+            changedProps.has("_isLoaded"));
     }
     willUpdate() {
+        if (!this._isLoaded && this.hass)
+            this._isLoaded = formatAvailable(this.hass);
         this._updateState();
     }
     render() {
@@ -13907,10 +13916,6 @@ let LightTile = class LightTile extends h {
                 </div>
             </div>
         `;
-    }
-    firstUpdated(_changedProperties) {
-        this._updateState();
-        this.requestUpdate();
     }
     _updateState() {
         this._stateObj = this.hass && this._entity ? this.hass.states[this._entity] : undefined;
@@ -13979,6 +13984,9 @@ __decorate([
 __decorate([
     r()
 ], LightTile.prototype, "_config", void 0);
+__decorate([
+    r()
+], LightTile.prototype, "_isLoaded", void 0);
 LightTile = __decorate([
     t$1("smartqasa-light-tile")
 ], LightTile);
