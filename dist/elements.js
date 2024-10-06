@@ -13461,6 +13461,7 @@ function entityListDialog(dialogTitle, filterType, filterValue, tileType) {
 }
 
 const formatAvailable = (hass) => {
+    console.log("formatEntityState: ", typeof hass.formatEntityState);
     return !!(!hass ||
         typeof hass.formatEntityState !== "function" ||
         typeof hass.formatEntityAttributeValue !== "function");
