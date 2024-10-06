@@ -117,8 +117,10 @@ function displayBSoD(errorMessage: string) {
         ]);
 
         // Log version info
-        const { version } = await import("../package.json");
-        console.info(`%c SmartQasa ⏏ ${version} `, "background-color: #0000ff; color: #ffffff; font-weight: 700;");
+        console.info(
+            `%c SmartQasa ⏏ ${window.smartqasa.version} (Built: ${window.smartqasa.timestamp}) `,
+            "background-color: #0000ff; color: #ffffff; font-weight: 700;"
+        );
     } catch (error) {
         // On error, display a 'blue screen of death' with error details
         if (error instanceof Error) {

@@ -3866,8 +3866,8 @@ const loadYamlAsJson = async (yamlFilePath) => {
 
 window.smartqasa = window.smartqasa || {};
 window.smartqasa.startArea = window.smartqasa.startArea || location.pathname.split("/").pop();
-window.smartqasa.version = "2024.10.2b-1"; // Injected version
-window.smartqasa.timestamp = "2024-10-06T22:11:41.623Z"; // Injected timestamp
+window.smartqasa.version = "2024.10.6b-1"; // Injected version
+window.smartqasa.timestamp = "2024-10-06T22:51:40.701Z"; // Injected timestamp
 window.customCards = window.customCards ?? [];
 // Function to display a 'blue screen of death' style error
 function displayBSoD(errorMessage) {
@@ -3969,8 +3969,7 @@ function displayBSoD(errorMessage) {
             Promise.resolve().then(function () { return webpage; }),
         ]);
         // Log version info
-        const { version } = await Promise.resolve().then(function () { return _package; });
-        console.info(`%c SmartQasa ⏏ ${version} `, "background-color: #0000ff; color: #ffffff; font-weight: 700;");
+        console.info(`%c SmartQasa ⏏ ${window.smartqasa.version} (Built: ${window.smartqasa.timestamp}) `, "background-color: #0000ff; color: #ffffff; font-weight: 700;");
     }
     catch (error) {
         // On error, display a 'blue screen of death' with error details
@@ -15846,11 +15845,4 @@ WebpageTile = __decorate([
 var webpage = /*#__PURE__*/Object.freeze({
   __proto__: null,
   get WebpageTile () { return WebpageTile; }
-});
-
-var version = "2024.10.2b-1";
-
-var _package = /*#__PURE__*/Object.freeze({
-  __proto__: null,
-  version: version
 });
