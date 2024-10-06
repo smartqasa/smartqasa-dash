@@ -1,8 +1,7 @@
+import { format } from "path";
 import { HassEntity, HomeAssistant } from "../types";
 
 export const formatAvailable = (hass: HomeAssistant): boolean => {
-    console.log("formatEntityState: ", typeof hass?.formatEntityState);
-    console.log("formatEntityAttributeValue: ", typeof hass?.formatEntityAttributeValue);
     return !!(
         hass &&
         typeof hass.formatEntityState === "function" &&
@@ -11,6 +10,8 @@ export const formatAvailable = (hass: HomeAssistant): boolean => {
 };
 
 export const formatState = (stateObj: HassEntity, hass: HomeAssistant): string => {
+    if (!formatAvailable(hass)) return "Loading...";
+
     let stateFmtd: string = hass.formatEntityState(stateObj);
 
     const domain = stateObj.entity_id.split(".")[0];

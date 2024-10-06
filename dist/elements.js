@@ -13461,13 +13461,13 @@ function entityListDialog(dialogTitle, filterType, filterValue, tileType) {
 }
 
 const formatAvailable = (hass) => {
-    console.log("formatEntityState: ", typeof hass?.formatEntityState);
-    console.log("formatEntityAttributeValue: ", typeof hass?.formatEntityAttributeValue);
     return !!(hass &&
         typeof hass.formatEntityState === "function" &&
         typeof hass.formatEntityAttributeValue === "function");
 };
 const formatState = (stateObj, hass) => {
+    if (!formatAvailable(hass))
+        return "Loading...";
     let stateFmtd = hass.formatEntityState(stateObj);
     const domain = stateObj.entity_id.split(".")[0];
     const state = stateObj.state;
@@ -13927,7 +13927,7 @@ let LightTile = class LightTile extends h {
             icon = this._config.icon || this._stateObj.attributes.icon || "hass:lightbulb";
             iconColor = state === "on" ? "var(--sq-light-on-rgb)" : "var(--sq-inactive-rgb)";
             name = this._config.name || this._stateObj.attributes.friendly_name || "Light";
-            stateFmtd = this._formatAvailable ? formatState(this._stateObj, this.hass) : "Loading...";
+            stateFmtd = formatState(this._stateObj, this.hass);
         }
         else {
             icon = this._config.icon || "hass:lightbulb-alert";
