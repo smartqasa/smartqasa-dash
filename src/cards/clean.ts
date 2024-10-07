@@ -11,18 +11,18 @@ export class CleanCard extends LitElement {
     static styles = css`
         .container {
             border-radius: var(--sq-card-border-radius);
+            background-size: cover;
+            background-position: center;
+            width: 100%;
+            height: 100%;
         }
     `;
 
     public setConfig(): void {}
 
     protected render(): TemplateResult {
-        return html`
-            <div>
-                <div class="container">
-                    <img src=${image} />
-                </div>
-            </div>
-        `;
+        const backgroundImage = `url(${image})`;
+
+        return html` <div class="container" style="background-image: ${backgroundImage}"></div> `;
     }
 }
