@@ -8,6 +8,7 @@ window.customCards.push({
     preview: true,
     description: "A SmartQasa card for displaying a clean screen image.",
 });
+
 @customElement("smartqasa-clean-card")
 export class CleanCard extends LitElement {
     public getCardSize(): number | Promise<number> {
@@ -15,7 +16,15 @@ export class CleanCard extends LitElement {
     }
 
     static styles = css`
+        :host {
+            display: block;
+            width: 100vw; /* Full viewport width */
+            height: 100vh; /* Full viewport height */
+            overflow: hidden;
+        }
+
         .container {
+            width: 100%;
             height: 100%;
             background-attachment: fixed;
             background-size: cover;
