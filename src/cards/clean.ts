@@ -18,8 +18,8 @@ export class CleanCard extends LitElement {
     static styles = css`
         :host {
             display: block;
-            width: 100vw; /* Full viewport width */
-            height: 100vh; /* Full viewport height */
+            width: 100%; /* Fill the size of the popup window */
+            height: 100%; /* Fill the size of the popup window */
             overflow: hidden;
         }
 
