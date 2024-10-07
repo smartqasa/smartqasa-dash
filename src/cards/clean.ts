@@ -18,14 +18,12 @@ export class CleanCard extends LitElement {
     static styles = css`
         :host {
             display: block;
-            height: 95%;
+            height: 90%;
             overflow: hidden;
             border-radius: var(--sq-card-border-radius);
         }
 
         img {
-            width: 100%;
-            height: 100%;
             object-fit: cover;
             border-radius: var(--sq-card-border-radius);
         }
