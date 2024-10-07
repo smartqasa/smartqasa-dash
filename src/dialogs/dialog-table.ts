@@ -212,8 +212,7 @@ export const dialogTable: DialogTable = {
         data: {
             title: "Clean Screen",
             size: "fullscreen",
-            timeout: 30000,
-            dismissable: false,
+            dismissable: true,
             content: {
                 type: "custom:smartqasa-clean-card",
             },
