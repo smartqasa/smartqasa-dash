@@ -1,6 +1,6 @@
 import { css, html, LitElement, TemplateResult } from "lit";
 import { customElement } from "lit/decorators.js";
-import image from "../images/clean.png";
+import image from "../assets/images/clean.png";
 
 @customElement("smartqasa-clean-card")
 export class CleanCard extends LitElement {

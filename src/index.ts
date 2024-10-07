@@ -60,6 +60,7 @@ function displayBSoD(errorMessage: string) {
         // Cards
         await Promise.all([
             import("./cards/areas"),
+            import("./cards/clean"),
             import("./cards/grid-stack"),
             import("./cards/group-stack"),
             import("./cards/horizontal-stack"),

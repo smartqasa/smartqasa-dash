@@ -215,7 +215,7 @@ export const dialogTable: DialogTable = {
             timeout: 30000,
             dismissable: false,
             content: {
-                type: "clean-card",
+                type: "custom:smartqasa-clean-card",
             },
         },
     },
