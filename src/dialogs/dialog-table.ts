@@ -215,8 +215,7 @@ export const dialogTable: DialogTable = {
             timeout: 30000,
             dismissable: false,
             content: {
-                type: "picture",
-                image: "/local/sq-storage/images/clean_screen.png",
+                type: "clean-card",
             },
         },
     },

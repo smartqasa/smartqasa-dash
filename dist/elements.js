@@ -3867,7 +3867,7 @@ const loadYamlAsJson = async (yamlFilePath) => {
 window.smartqasa = window.smartqasa || {};
 window.smartqasa.startArea = window.smartqasa.startArea || location.pathname.split("/").pop();
 window.smartqasa.version = "2024.10.6b-1"; // Injected version
-window.smartqasa.timestamp = "2024-10-06T22:51:40.701Z"; // Injected timestamp
+window.smartqasa.timestamp = "2024-10-07T14:16:44.081Z"; // Injected timestamp
 window.customCards = window.customCards ?? [];
 // Function to display a 'blue screen of death' style error
 function displayBSoD(errorMessage) {
@@ -9394,8 +9394,7 @@ const dialogTable = {
             timeout: 30000,
             dismissable: false,
             content: {
-                type: "picture",
-                image: "/local/sq-storage/images/clean_screen.png",
+                type: "clean-card",
             },
         },
     },
@@ -10661,15 +10660,15 @@ let MoreInfoCard = class MoreInfoCard extends h {
     }
     static { this.styles = i$2 `
         .container {
-            padding: var(--sq-card-padding, 1rem);
-            border: var(--sq-card-border, none);
-            border-radius: var(--sq-card-border-radius, 1.5rem);
-            background-color: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
+            padding: var(--sq-card-padding);
+            border: var(--sq-card-border);
+            border-radius: var(--sq-card-border-radius);
+            background-color: var(--sq-card-background-color);
         }
 
         .container-transparent {
             padding: 0;
-            border-radius: var(--sq-card-border-radius, 1.5rem);
+            border-radius: var(--sq-card-border-radius);
             background-color: transparent;
         }
 
@@ -10679,8 +10678,8 @@ let MoreInfoCard = class MoreInfoCard extends h {
             text-overflow: ellipsis;
             white-space: normal;
             font-weight: 400;
-            font-size: var(--sq-primary-font-size, 1.5rem);
-            color: rgb(var(--sq-primary-font-rgb, 128, 128, 128));
+            font-size: var(--sq-primary-font-size);
+            color: rgb(var(--sq-primary-font-rgb));
         }
     `; }
     setConfig(config) {

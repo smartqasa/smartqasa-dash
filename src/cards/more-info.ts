@@ -21,15 +21,15 @@ export class MoreInfoCard extends LitElement implements LovelaceCard {
 
     static styles = css`
         .container {
-            padding: var(--sq-card-padding, 1rem);
-            border: var(--sq-card-border, none);
-            border-radius: var(--sq-card-border-radius, 1.5rem);
-            background-color: var(--sq-card-background-color, rgba(192, 192, 192, 0.5));
+            padding: var(--sq-card-padding);
+            border: var(--sq-card-border);
+            border-radius: var(--sq-card-border-radius);
+            background-color: var(--sq-card-background-color);
         }
 
         .container-transparent {
             padding: 0;
-            border-radius: var(--sq-card-border-radius, 1.5rem);
+            border-radius: var(--sq-card-border-radius);
             background-color: transparent;
         }
 
@@ -39,8 +39,8 @@ export class MoreInfoCard extends LitElement implements LovelaceCard {
             text-overflow: ellipsis;
             white-space: normal;
             font-weight: 400;
-            font-size: var(--sq-primary-font-size, 1.5rem);
-            color: rgb(var(--sq-primary-font-rgb, 128, 128, 128));
+            font-size: var(--sq-primary-font-size);
+            color: rgb(var(--sq-primary-font-rgb));
         }
     `;
 
