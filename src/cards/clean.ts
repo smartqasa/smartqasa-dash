@@ -17,29 +17,23 @@ export class CleanCard extends LitElement {
 
     static styles = css`
         :host {
-            display: block;
-            width: 100%; /* Fill the size of the popup window */
-            height: 100%; /* Fill the size of the popup window */
-            overflow: hidden;
-        }
-
-        .container {
             width: 100%;
             height: 100%;
-            background-attachment: fixed;
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            border-radius: var(--sq-card-border-radius);
             overflow: hidden;
+            border-radius: var(--sq-card-border-radius);
+        }
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: var(--sq-card-border-radius);
         }
     `;
 
     public setConfig(): void {}
 
     protected render(): TemplateResult {
-        const backgroundImage = `url(${image})`;
-
-        return html` <div class="container" style="background-image: ${backgroundImage}"></div> `;
+        return html` <img src="${image}" alt="Clean Screen" /> `;
     }
 }
