@@ -17,8 +17,9 @@ export class CleanCard extends LitElement {
 
     static styles = css`
         :host {
+            display: block;
             width: 100%;
-            height: 100%;
+            height: 95%;
             overflow: hidden;
             border-radius: var(--sq-card-border-radius);
         }
