@@ -153,7 +153,7 @@ class LightGrid extends LitElement implements LovelaceCard {
         e.preventDefault();
         const stateObj = this.hass?.states[entity];
         if (stateObj) {
-            moreInfoDialog(stateObj.entity_id);
+            moreInfoDialog(stateObj);
         }
     }
 
