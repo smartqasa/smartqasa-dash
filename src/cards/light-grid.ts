@@ -53,6 +53,11 @@ class LightGrid extends LitElement implements LovelaceCard {
             .square {
                 border-radius: 1rem;
             }
+            .blank {
+                width: 100%;
+                height: 100%;
+                background: transparent;
+            }
         `;
     }
 
@@ -93,6 +98,13 @@ class LightGrid extends LitElement implements LovelaceCard {
     }
 
     private _renderButton(entity: string): TemplateResult | typeof nothing {
+        if (entity.startsWith("blank")) {
+            const blankCount = this._getBlankCount(entity);
+            return html`${Array(blankCount)
+                .fill(0)
+                .map(() => html`<div class="blank"></div>`)}`;
+        }
+
         const stateObj = this.hass?.states[entity];
         if (!stateObj) return nothing;
 
@@ -119,6 +131,11 @@ class LightGrid extends LitElement implements LovelaceCard {
                 ></ha-icon>
             </div>
         `;
+    }
+
+    private _getBlankCount(entity: string): number {
+        const match = entity.match(/blank\.(\d+)/);
+        return match ? parseInt(match[1], 10) : 1;
     }
 
     private _getLightColor(stateObj: any): { r: number; g: number; b: number } {
