@@ -4,6 +4,8 @@ import { styleMap } from "lit/directives/style-map.js";
 
 import { HomeAssistant, LovelaceCardConfig, LovelaceCard } from "../types";
 import { deviceType } from "../utilities/device-info";
+import { callService } from "../utilities/call-service";
+import { moreInfoDialog } from "../dialogs/more-info-dialog";
 
 interface Config extends LovelaceCardConfig {
     entities: string[];
@@ -122,7 +124,8 @@ class LightGrid extends LitElement implements LovelaceCard {
             <div
                 class="button ${this._style}"
                 style=${styleMap(buttonStyle)}
-                @click=${() => this._toggleEntity(entity)}
+                @click=${(e: Event) => this._showMoreInfo(e, entity)}
+                @contextmenu=${(e: Event) => this._toggleEntity(e, entity)}
             >
                 <ha-icon
                     class="icon"
@@ -146,12 +149,23 @@ class LightGrid extends LitElement implements LovelaceCard {
         return { r: 255, g: 255, b: 255 };
     }
 
-    private _toggleEntity(entity: string): void {
+    private _showMoreInfo(e: Event, entity: string): void {
+        e.preventDefault();
+        const stateObj = this.hass?.states[entity];
+        if (stateObj) {
+            moreInfoDialog(stateObj.entity_id);
+        }
+    }
+
+    private _toggleEntity(e: Event, entity: string): void {
+        e.preventDefault();
         const stateObj = this.hass?.states[entity];
         if (!stateObj) return;
 
-        this.hass?.callService("homeassistant", "toggle", {
-            entity_id: entity,
-        });
+        if (stateObj?.state === "on") {
+            callService(this.hass, "light", "turn_off", { entity_id: entity, transition: 2 });
+        } else {
+            callService(this.hass, "light", "turn_on", { entity_id: entity });
+        }
     }
 }
