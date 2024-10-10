@@ -21,21 +21,21 @@ window.customCards.push({
 @customElement("smartqasa-grid-stack")
 class GridStack extends LitElement implements LovelaceCard {
     public getCardSize(): number {
-        return 4;
+        return 10;
     }
 
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() protected _config?: Config;
-    @state() private _tiles: LovelaceCard[] = [];
+    @state() private _cards: LovelaceCard[] = [];
 
     static get styles() {
         return css`
             .container {
                 display: grid;
-                grid-template-rows: var(--sq-tile-height, 7rem);
-                gap: var(--sq-tile-spacing, 0.8rem);
+                grid-auto-rows: var(--sq-tile-height);
+                gap: var(--sq-card-spacing);
             }
-            .tile {
+            .card {
                 min-height: var(--sq-tile-height);
             }
         `;
@@ -43,7 +43,7 @@ class GridStack extends LitElement implements LovelaceCard {
 
     public setConfig(config: Config): void {
         if (!config.cards || config.cards.length === 0) {
-            throw new Error("You need to define 'tiles'");
+            throw new Error("No card configurations provided.");
         }
         this._config = config;
     }
@@ -53,15 +53,15 @@ class GridStack extends LitElement implements LovelaceCard {
 
         if (changedProps.has("_config")) {
             this._createCards();
-        } else if (changedProps.has("hass") && this.hass && this._tiles.length > 0) {
-            this._tiles.forEach((tile) => {
-                if (tile.hass !== this.hass) tile.hass = this.hass;
+        } else if (changedProps.has("hass") && this.hass && this._cards.length > 0) {
+            this._cards.forEach((card) => {
+                if (card.hass !== this.hass) card.hass = this.hass;
             });
         }
     }
 
     protected render(): TemplateResult | typeof nothing {
-        if (!this._config || !this.hass || this._tiles.length === 0) return nothing;
+        if (!this._config || !this.hass || this._cards.length === 0) return nothing;
         const columns = this._config.columns || 3;
         const gridStyle = {
             gridTemplateColumns:
@@ -70,7 +70,7 @@ class GridStack extends LitElement implements LovelaceCard {
 
         return html`
             <div class="container" style=${styleMap(gridStyle)}>
-                ${this._tiles.map((tile) => html`<div class="element">${tile}</div>`)}
+                ${this._cards.map((card) => html`<div class="element">${card}</div>`)}
             </div>
         `;
     }
@@ -80,13 +80,13 @@ class GridStack extends LitElement implements LovelaceCard {
 
         if (this._config.cards.length > 0) {
             try {
-                this._tiles = createElements(this._config.cards, this.hass);
+                this._cards = createElements(this._config.cards, this.hass);
             } catch (error) {
-                this._tiles = [];
+                this._cards = [];
                 console.error("Error creating cards:", error);
             }
         } else {
-            this._tiles = [];
+            this._cards = [];
             console.warn("No cards defined in configuration");
         }
     }

@@ -64,6 +64,7 @@ function displayBSoD(errorMessage: string) {
             import("./cards/grid-stack"),
             import("./cards/group-stack"),
             import("./cards/horizontal-stack"),
+            import("./cards/light-grid"),
             import("./cards/menu"),
             import("./cards/more-info"),
             import("./cards/pin-verify"),
