@@ -41,6 +41,11 @@ class LightGrid extends LitElement implements LovelaceCard {
                 justify-content: center;
                 align-items: center;
                 cursor: pointer;
+                position: relative;
+            }
+            .icon {
+                font-size: 3rem;
+                position: absolute;
             }
             .circle {
                 border-radius: 50%;
@@ -91,8 +96,14 @@ class LightGrid extends LitElement implements LovelaceCard {
         const stateObj = this.hass?.states[entity];
         if (!stateObj) return nothing;
 
+        const color = this._getLightColor(stateObj);
         const buttonStyle = {
+            "background-color": `rgba(${color.r}, ${color.g}, ${color.b}, 0.2)`,
             "border-radius": this._style === "square" ? "1rem" : "50%",
+        };
+
+        const iconStyle = {
+            color: `rgb(${color.r}, ${color.g}, ${color.b})`,
         };
 
         return html`
@@ -101,9 +112,21 @@ class LightGrid extends LitElement implements LovelaceCard {
                 style=${styleMap(buttonStyle)}
                 @click=${() => this._toggleEntity(entity)}
             >
-                ${stateObj.state === "on" ? "💡" : "🔌"}
+                <ha-icon
+                    class="icon"
+                    style=${styleMap(iconStyle)}
+                    .icon=${stateObj.attributes.icon || "mdi:lightbulb"}
+                ></ha-icon>
             </div>
         `;
+    }
+
+    private _getLightColor(stateObj: any): { r: number; g: number; b: number } {
+        if (stateObj.attributes.rgb_color) {
+            const [r, g, b] = stateObj.attributes.rgb_color;
+            return { r, g, b };
+        }
+        return { r: 255, g: 255, b: 255 };
     }
 
     private _toggleEntity(entity: string): void {
