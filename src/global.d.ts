@@ -20,12 +20,12 @@ declare module "*.webp" {
 
 declare interface DialogConfig {
     title: string;
-    size: "normal" | "wide" | "fullscreen";
-    timeout: number;
-    timeout_action: object;
-    dismissable: boolean;
-    dismiss_action: object;
-    autoclose: boolean;
+    size?: "normal" | "wide" | "fullscreen";
+    timeout?: number;
+    timeout_action?: object;
+    dismissable?: boolean;
+    dismiss_action?: object;
+    autoclose?: boolean;
     content: object;
 }
 

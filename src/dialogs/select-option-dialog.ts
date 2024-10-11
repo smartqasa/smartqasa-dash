@@ -1,3 +1,5 @@
+import { dialogPopup } from "./dialog-popup";
+
 export function selectOptionDialog(config: any, stateObj: any) {
     if (!stateObj) return;
 
@@ -17,5 +19,5 @@ export function selectOptionDialog(config: any, stateObj: any) {
         },
     };
 
-    window.browser_mod?.service("popup", dialogConfig);
+    dialogPopup(dialogConfig);
 }

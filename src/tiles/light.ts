@@ -3,10 +3,11 @@ import { customElement, property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 
 import { HassEntity, HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
+import { formatState } from "../utilities/format-state";
 import { callService } from "../utilities/call-service";
 import { moreInfoDialog } from "../dialogs/more-info-dialog";
 import { entityListDialog } from "../dialogs/entity-list-dialog";
-import { formatState } from "../utilities/format-state";
+import { dialogPopup } from "../dialogs/dialog-popup";
 
 import tileStyle from "../css/tile.css";
 
@@ -15,6 +16,10 @@ interface Config extends LovelaceCardConfig {
     group?: string;
     icon?: string;
     name?: string;
+    grid?: boolean;
+    grid_columns?: number;
+    grid_style?: "circle" | "square";
+    grid_entities?: string[];
 }
 
 window.customCards.push({
@@ -123,23 +128,43 @@ export class LightTile extends LitElement implements LovelaceCard {
 
     private _showEntityList(e: Event): void {
         e.stopPropagation();
-
         if (!this.hass || !this._config || !this._stateObj) return;
 
-        let group;
-        if (this._config.group) {
-            group = this._config.group;
-            const groupObj = this.hass.states[group];
-            if (!groupObj || groupObj.attributes?.entity_id?.length === 0) return;
-        } else if (this._stateObj.attributes?.entity_id?.length > 0) {
-            group = this._entity;
-        } else {
-            group = `${this._entity}_group`;
-            const groupObj = this.hass.states[group];
-            if (!groupObj || groupObj.attributes?.entity_id?.length === 0) return;
+        if (!this._config.grid) {
+            let group;
+            if (this._config.group) {
+                group = this._config.group;
+                const groupObj = this.hass.states[group];
+                if (!groupObj || groupObj.attributes?.entity_id?.length === 0) return;
+            } else if (this._stateObj.attributes?.entity_id?.length > 0) {
+                group = this._entity;
+            } else {
+                group = `${this._entity}_group`;
+                const groupObj = this.hass.states[group];
+                if (!groupObj || groupObj.attributes?.entity_id?.length === 0) return;
+            }
+
+            const friendlyName = this._stateObj.attributes?.friendly_name ?? "Unknown";
+            entityListDialog(friendlyName, "group", group, "light");
         }
 
-        const friendlyName = this._stateObj.attributes?.friendly_name ?? "Unknown";
-        entityListDialog(friendlyName, "group", group, "light");
+        const entities = Array.isArray(this._config.grid_entities) ? this._config.grid_entities : [];
+        if (entities.length === 0) return;
+
+        const columns = this._config.grid_columns ?? 3;
+        const style = this._config.grid_style ?? "circle";
+
+        const dialogConfig = {
+            title: this._name,
+            timeout: 120000,
+            content: {
+                type: "custom:smartqasa-light-grid",
+                columns: columns,
+                style: style,
+                entities: entities,
+            },
+        };
+
+        dialogPopup(dialogConfig);
     }
 }
