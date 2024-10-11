@@ -14,14 +14,14 @@ interface Config extends LovelaceCardConfig {
 }
 
 window.customCards.push({
-    type: "smartqasa-light-grid",
-    name: "SmartQasa Light Grid",
+    type: "smartqasa-light-grid-card",
+    name: "SmartQasa Light Grid Card",
     preview: false,
     description: "A SmartQasa card that displays a series of light entities in a configurable grid.",
 });
 
-@customElement("smartqasa-light-grid")
-class LightGrid extends LitElement implements LovelaceCard {
+@customElement("smartqasa-light-grid-card")
+class LightGridCard extends LitElement implements LovelaceCard {
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() protected _config?: Config;
 
@@ -150,7 +150,17 @@ class LightGrid extends LitElement implements LovelaceCard {
         e.preventDefault();
         const stateObj = this.hass?.states[entity];
         if (stateObj) {
-            moreInfoDialog(stateObj);
+            const callingDialogConfig = {
+                title: stateObj?.attributes.friendly_name || "Light",
+                timeout: 120000,
+                content: {
+                    type: "custom:smartqasa-light-grid-card",
+                    entities: this._entities,
+                    columns: this._columns,
+                    style: this._style,
+                },
+            };
+            moreInfoDialog(stateObj, callingDialogConfig);
         }
     }
 
