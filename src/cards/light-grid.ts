@@ -89,7 +89,7 @@ class LightGrid extends LitElement implements LovelaceCard {
         if (!this._config || !this.hass) return nothing;
 
         const gridStyle = {
-            "grid-template-columns": deviceType === "phone" ? "1fr 1fr" : `repeat(${this._columns}, 8rem)`,
+            "grid-template-columns": deviceType === "phone" ? "1fr 1fr" : `repeat(${this._columns}, 7rem)`,
         };
 
         return html`
