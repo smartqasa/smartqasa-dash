@@ -53,8 +53,8 @@ class LightGridCard extends LitElement implements LovelaceCard {
                 border-radius: 1rem;
             }
             .blank {
-                width: 100%;
-                height: 100%;
+                width: calc(var(--sq-icon-size) + (2rem * 2) + 1rem);
+                height: calc(var(--sq-icon-size) + (2rem * 2) + 1rem);
                 background: transparent;
             }
         `;
