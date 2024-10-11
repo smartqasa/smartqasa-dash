@@ -151,10 +151,11 @@ class LightGridCard extends LitElement implements LovelaceCard {
         const stateObj = this.hass?.states[entity];
         if (stateObj) {
             const callingDialogConfig = {
-                title: stateObj?.attributes.friendly_name || "Light",
+                title: this._config!._title,
                 timeout: 120000,
                 content: {
                     type: "custom:smartqasa-light-grid-card",
+                    title: this._config!._title,
                     entities: this._entities,
                     columns: this._columns,
                     style: this._style,

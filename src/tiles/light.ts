@@ -155,10 +155,11 @@ export class LightTile extends LitElement implements LovelaceCard {
         const style = this._config.grid_style ?? "circle";
 
         const dialogConfig = {
-            title: this._name,
+            title: this._stateObj.attributes.friendly_name || "Light Group",
             timeout: 120000,
             content: {
                 type: "custom:smartqasa-light-grid-card",
+                title: this._stateObj.attributes.friendly_name || "Light Group",
                 columns: columns,
                 style: style,
                 entities: entities,
