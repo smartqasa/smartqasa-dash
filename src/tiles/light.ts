@@ -158,7 +158,7 @@ export class LightTile extends LitElement implements LovelaceCard {
             title: this._name,
             timeout: 120000,
             content: {
-                type: "custom:smartqasa-light-grid",
+                type: "custom:smartqasa-light-grid-card",
                 columns: columns,
                 style: style,
                 entities: entities,
