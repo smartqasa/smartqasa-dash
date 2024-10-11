@@ -68,8 +68,10 @@ export class RokuTile extends LitElement implements LovelaceCard {
                 <div class="icon" @click=${this._showMoreInfo} style="${styleMap(this._iconStyles)}">
                     <ha-icon icon=${this._icon}></ha-icon>
                 </div>
-                <div class="name">${this._name}</div>
-                <div class="state">${this._stateFmtd}</div>
+                <div class="text">
+                    <div class="name">${this._name}</div>
+                    <div class="state">${this._stateFmtd}</div>
+                </div>
             </div>
         `;
     }
