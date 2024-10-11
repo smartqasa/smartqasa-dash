@@ -37,11 +37,9 @@ class LightGrid extends LitElement implements LovelaceCard {
             }
             .button {
                 display: flex;
-                width: 100%;
-                height: 100%;
                 justify-content: center;
                 align-items: center;
-                padding: 4rem;
+                padding: 2rem;
                 cursor: pointer;
             }
             .icon {
@@ -88,7 +86,7 @@ class LightGrid extends LitElement implements LovelaceCard {
         if (!this._config || !this.hass) return nothing;
 
         const gridStyle = {
-            "grid-template-columns": deviceType === "phone" ? "1fr 1fr" : `repeat(${this._columns}, auto)`,
+            "grid-template-columns": deviceType === "phone" ? "1fr 1fr" : `repeat(${this._columns}, min-content)`,
         };
 
         return html`
