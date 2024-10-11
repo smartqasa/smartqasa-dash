@@ -33,21 +33,20 @@ class LightGrid extends LitElement implements LovelaceCard {
         return css`
             .container {
                 display: grid;
-                grid-auto-rows: 7rem;
                 gap: 2rem;
             }
             .button {
+                display: flex;
                 width: 100%;
                 height: 100%;
-                display: flex;
                 justify-content: center;
                 align-items: center;
+                padding: 4rem;
                 cursor: pointer;
-                position: relative;
             }
             .icon {
-                font-size: 3rem;
-                position: absolute;
+                width: var(--sq-icon-size);
+                height: var(--sq-icon-size);
             }
             .circle {
                 border-radius: 50%;
@@ -89,7 +88,7 @@ class LightGrid extends LitElement implements LovelaceCard {
         if (!this._config || !this.hass) return nothing;
 
         const gridStyle = {
-            "grid-template-columns": deviceType === "phone" ? "1fr 1fr" : `repeat(${this._columns}, 7rem)`,
+            "grid-template-columns": deviceType === "phone" ? "1fr 1fr" : `repeat(${this._columns}, auto)`,
         };
 
         return html`
@@ -130,7 +129,7 @@ class LightGrid extends LitElement implements LovelaceCard {
                 <ha-icon
                     class="icon"
                     style=${styleMap(iconStyle)}
-                    .icon=${stateObj.attributes.icon || "mdi:lightbulb"}
+                    icon=${stateObj.attributes.icon || "hass:lightbulb"}
                 ></ha-icon>
             </div>
         `;
