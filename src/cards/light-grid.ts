@@ -33,7 +33,7 @@ class LightGrid extends LitElement implements LovelaceCard {
         return css`
             .container {
                 display: grid;
-                grid-auto-rows: 8rem;
+                grid-auto-rows: 7rem;
                 gap: 2rem;
             }
             .button {
