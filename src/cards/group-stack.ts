@@ -42,7 +42,7 @@ class GroupStack extends LitElement implements LovelaceCard {
     }
 
     public setConfig(config: Config): void {
-        if (!config.filter_type || !config.filter_value || !config.card_type) {
+        if (!config.filter_type || !config.filter_value || !config.tile_type) {
             throw new Error("filter_type, filter_value, and tile_type must be provided in the config.");
         }
         this._config = config;
