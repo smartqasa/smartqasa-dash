@@ -1,8 +1,8 @@
 import babel from "@rollup/plugin-babel";
 import commonjs from "@rollup/plugin-commonjs";
+import litcss from 'rollup-plugin-lit-css';
 import image from "@rollup/plugin-image";
 import json from "@rollup/plugin-json";
-import postcss from "rollup-plugin-postcss";
 import replace from "@rollup/plugin-replace";
 import resolve from "@rollup/plugin-node-resolve";
 import typescript from "@rollup/plugin-typescript";
@@ -29,11 +29,9 @@ export default {
         commonjs({
             include: "node_modules/**",
         }),
+        litcss(),
         image(),
         json(),
-        postcss({
-            extract: false,
-        }),
         resolve({
             browser: true,
             preferBuiltins: false,
