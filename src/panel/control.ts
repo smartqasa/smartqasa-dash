@@ -105,6 +105,7 @@ export function renderControls(
         <swiper-container
             .initialSlide=${0}
             .loop=${true}
+            .mousewheel=${true}
             .navigation=${true}
             class="control-container"
         >
