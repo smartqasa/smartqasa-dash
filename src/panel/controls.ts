@@ -89,7 +89,6 @@ export function renderControls(
             .initialSlide=${0}
             .loop=${true}
             .navigation=${true}
-            class="swiper-container"
         >
             ${controlTiles.map((page, index) => {
                 const gridStyle = {
@@ -97,7 +96,7 @@ export function renderControls(
                 };
 
                 return html`
-                    <swiper-slide>
+                    <swiper-slide class="swiper-slide">
                         <div class="control-tiles" style=${styleMap(gridStyle)}>
                             ${page.map(
                                 (tile) => html`<div class="tile">${tile}</div>`
