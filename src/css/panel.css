@@ -101,7 +101,7 @@
 
 .control-container {
   grid-area: swiper;
-  width: 100vw;
+  width: 100%;
 }
 .control-slide {
   height: 100%;
