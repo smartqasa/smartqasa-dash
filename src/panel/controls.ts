@@ -4,6 +4,12 @@ import { html, nothing, TemplateResult } from 'lit';
 import { styleMap } from 'lit/directives/style-map.js';
 import { register } from 'swiper/element/bundle';
 
+let isSwiperRegistered = false;
+if (!isSwiperRegistered) {
+    register();
+    isSwiperRegistered = true;
+}
+
 export function loadControlTiles(
     tilesConfig: LovelaceCardConfig[],
     hass: HomeAssistant,
@@ -69,20 +75,13 @@ export function renderControls(
 ): TemplateResult | typeof nothing {
     if (controlTiles.length === 0) return nothing;
 
-
     if (isPhone) {
-        const gridStyle = { gridTemplateColumns: 'repeat(2, minmax(0, 1fr)' };
+        const gridStyle = { gridTemplateColumns: 'repeat(2, minmax(0, 1fr))' };
         return html`
             <div class="control-tiles" style=${styleMap(gridStyle)}>
                 ${controlTiles.flat().map((tile) => html`${tile}`)}
             </div>
         `;
-    }
-
-    let isSwiperRegistered = false;
-    if (!isSwiperRegistered) {
-        register();
-        isSwiperRegistered = true;
     }
 
     const swiperOptions = {
