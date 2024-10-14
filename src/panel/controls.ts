@@ -2,7 +2,7 @@ import { HomeAssistant, LovelaceCard, LovelaceCardConfig } from '../types';
 import { createElement } from '../utilities/create-element';
 import { html, nothing, TemplateResult } from 'lit';
 import { styleMap } from 'lit/directives/style-map.js';
-import { register } from 'swiper/element';
+import { register } from 'swiper/element/bundle';
 
 export function loadControlTiles(
     tilesConfig: LovelaceCardConfig[],

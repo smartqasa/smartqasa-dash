@@ -99,7 +99,7 @@
   background-color: transparent;
 }
 
-.swiper {
+.swiper-container {
   grid-area: swiper;
   width: 100%;
 }

@@ -36,7 +36,6 @@ export default {
     litcss(),
     resolve({
       browser: true,
-      exportConditions: ["browser"],
       extensions: [".js", ".ts"],
       preferBuiltins: false,
     }),
