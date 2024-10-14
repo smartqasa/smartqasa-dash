@@ -109,6 +109,7 @@
 }
 .control-tiles {
   display: grid;
+  width: 100vw;
   margin: auto;
   grid-auto-rows: var(--sq-tile-height);
   gap: var(--sq-tile-spacing);
