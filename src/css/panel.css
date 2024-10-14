@@ -3,11 +3,10 @@
   background-color: var(--sq-panel-color);
   background-attachment: fixed;
   background-size: cover;
-  background-image: var(--sq-panel-image);
   background-position: center;
   background-repeat: no-repeat;
 }
-.container {
+.panel-container {
   display: grid;
   height: 100vh;
   grid-template-columns: 100%;
@@ -21,7 +20,7 @@
   padding: 1rem 1rem 0.5rem 1rem;
   box-sizing: border-box;
 }
-.container[admin] {
+.panel-container[admin] {
   height: calc(100vh - 56px);
 }
 
@@ -110,6 +109,7 @@
 .control-tiles {
   display: grid;
   width: min-content;
+  margin: auto;
   grid-auto-rows: var(--sq-tile-height);
   gap: var(--sq-tile-spacing);
   overflow-y: auto;
@@ -152,7 +152,7 @@
 /* Phone Portrait */
 @media (orientation: portrait) and (max-width: 534px),
   (orientation: portrait) and (min-width: 535px) and (max-width: 600px) {
-  .container {
+  .panel-container {
     grid-template-rows:
       auto
       minmax(0, 1fr)
@@ -207,7 +207,7 @@
 /* Phone Landscape */
 @media (orientation: landscape) and (max-height: 534px),
   (orientation: landscape) and (min-height: 535px) and (max-height: 600px) {
-  .container {
+  .panel-container {
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 100%;
     grid-template-areas: "area body";

@@ -182,10 +182,14 @@ export class PanelCard extends LitElement implements LovelaceCard {
     }
 
     private _handleThemeChanges(): void {
-        if (this.hass?.themes?.darkMode) {
-            this.style.backgroundImage = `url(${darkModeImage})`;
-        } else {
-            this.style.backgroundImage = `url(${lightModeImage})`;
+        const container = this.shadowRoot?.querySelector('.container') as HTMLElement;
+    
+        if (container) {
+            if (this.hass?.themes?.darkMode) {
+                container.style.backgroundImage = `url(${darkModeImage})`;
+            } else {
+                container.style.backgroundImage = `url(${lightModeImage})`;
+            }
         }
     }
 

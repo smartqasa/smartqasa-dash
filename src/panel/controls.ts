@@ -84,6 +84,23 @@ export function renderControls(
         `;
     }
 
+    if (controlTiles.length === 1) {
+        const gridStyle = {
+            gridTemplateColumns: `repeat(${controlColumns[0]}, var(--sq-tile-width, 19.5rem))`,
+        };
+
+        return html`
+            <div class="control-slide">
+                <div class="control-tiles" style=${styleMap(gridStyle)}>
+                    ${controlTiles[0].map((tile) => html`
+                        <div class="tile">${tile}</div>
+                    `)}
+                </div>
+            </div>
+        `;
+    }
+
+
     return html`
         <swiper-container
             .initialSlide=${0}
