@@ -1,40 +1,41 @@
 {
-    "name": "smartqasa-elements",
-    "version": "2024.10.7b-2",
-    "description": "SmartQasa Dashboard Elements",
-    "type": "module",
-    "author": "Tom Bruno",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/smartqasa/smartqasa-dash"
-    },
-    "scripts": {
-        "clean": "rm -f dist/elements.js",
-        "build": "npm run clean && rollup -c",
-        "watch": "npm run clean && rollup -c --watch"
-    },
-    "devDependencies": {
-        "@babel/core": "^7.25.8",
-        "@rollup/plugin-babel": "^6.0.4",
-        "@rollup/plugin-commonjs": "^28.0.0",
-        "@rollup/plugin-image": "^3.0.3",
-        "@rollup/plugin-json": "^6.1.0",
-        "@rollup/plugin-node-resolve": "^15.2.3",
-        "@rollup/plugin-replace": "^6.0.1",
-        "@rollup/plugin-typescript": "^12.1.0",
-        "@rollup/plugin-url": "^8.0.2",
-        "@types/http-cache-semantics": "^4.0.4",
-        "@types/js-yaml": "^4.0.9",
-        "@types/node": "^22.7.5",
-        "rollup": "^4.24.0",
-        "rollup-plugin-lit-css": "^5.0.1",
-        "typescript": "^5.6.3"
-    },
-    "dependencies": {
-        "home-assistant-js-websocket": "^9.2.1",
-        "js-yaml": "^4.1.0",
-        "lit": "^3.2.1",
-        "swiper": "^11.1.10",
-        "tslib": "^2.7.0"
-    }
+  "name": "smartqasa-elements",
+  "version": "2024.10.7b-2",
+  "description": "SmartQasa Dashboard Elements",
+  "type": "module",
+  "author": "Tom Bruno",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/smartqasa/smartqasa-dash"
+  },
+  "scripts": {
+    "clean": "rm -f dist/elements.js",
+    "build": "npm run clean && rollup -c",
+    "watch": "npm run clean && rollup -c --watch"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.25.8",
+    "@rollup/plugin-babel": "^6.0.4",
+    "@rollup/plugin-commonjs": "^28.0.0",
+    "@rollup/plugin-image": "^3.0.3",
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-replace": "^6.0.1",
+    "@rollup/plugin-typescript": "^12.1.0",
+    "@rollup/plugin-url": "^8.0.2",
+    "@types/http-cache-semantics": "^4.0.4",
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^22.7.5",
+    "prettier": "^3.3.3",
+    "rollup": "^4.24.0",
+    "rollup-plugin-lit-css": "^5.0.1",
+    "typescript": "^5.6.3"
+  },
+  "dependencies": {
+    "home-assistant-js-websocket": "^9.2.1",
+    "js-yaml": "^4.1.0",
+    "lit": "^3.2.1",
+    "swiper": "^11.1.14",
+    "tslib": "^2.7.0"
+  }
 }

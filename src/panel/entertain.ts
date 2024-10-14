@@ -1,6 +1,6 @@
-import { html, nothing, TemplateResult } from "lit";
-import { HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
-import { createElement } from "../utilities/create-element";
+import { html, nothing, TemplateResult } from 'lit';
+import { HomeAssistant, LovelaceCard, LovelaceCardConfig } from '../types';
+import { createElement } from '../utilities/create-element';
 
 export const loadEntertainCards = (
     audioPlayer: string,
@@ -10,18 +10,18 @@ export const loadEntertainCards = (
 ): LovelaceCard[] => {
     const createCard = (cardConfig: LovelaceCardConfig): LovelaceCard => {
         const card = createElement(cardConfig, hass) as LovelaceCard;
-        card.className = "ha-card";
+        card.className = 'ha-card';
         return card;
     };
 
     const audioCard = createCard({
-        type: "custom:sonos-card",
-        title: "Player",
+        type: 'custom:sonos-card',
+        title: 'Player',
         entityId: audioPlayer,
-        widthPercentage: "100",
-        heightPercentage: "85",
+        widthPercentage: '100',
+        heightPercentage: '85',
         showSourceInPlayer: true,
-        labelForTheAllVolumesSlider: "All",
+        labelForTheAllVolumesSlider: 'All',
         showVolumeUpAndDownButtons: false,
         mediaBrowserItemsPerRow: 3,
         mediaBrowserHideTitleForThumbnailIcons: true,
@@ -29,7 +29,7 @@ export const loadEntertainCards = (
     }) as LovelaceCard;
 
     const videoCard = createCard({
-        type: "custom:smartqasa-tv-remote-card",
+        type: 'custom:smartqasa-tv-remote-card',
         entity: videoPlayer,
         soundEntity: videoSound,
     });

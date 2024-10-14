@@ -1,70 +1,70 @@
 .entertain-container {
-    display: grid;
-    width: 100%;
-    height: 100%;
-    grid-template-columns: 25% 1fr;
-    gap: 2rem;
+  display: grid;
+  width: 100%;
+  height: 100%;
+  grid-template-columns: 25% 1fr;
+  gap: 2rem;
 }
 
 .entertain-sidebar {
-    display: flex;
-    flex-direction: column;
-    gap: var(--sq-card-spacing);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sq-card-spacing);
 }
 
 .entertain-button {
-    width: 9rem;
-    height: 9rem;
-    margin-left: 1rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background-color: var(--sq-card-background-color);
-    border: var(--sq-card-border);
-    border-radius: var(--sq-card-border-radius);
-    text-align: center;
-    -webkit-tap-highlight-color: transparent;
-    cursor: pointer;
+  width: 9rem;
+  height: 9rem;
+  margin-left: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--sq-card-background-color);
+  border: var(--sq-card-border);
+  border-radius: var(--sq-card-border-radius);
+  text-align: center;
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
 }
 
 .entertain-button ha-icon {
-    display: flex;
-    justify-content: center;
-    align-self: center;
-    width: var(--sq-icon-size);
-    height: var(--sq-icon-size);
-    padding: var(--sq-tile-padding);
-    border-radius: 50%;
-    color: rgb(var(--sq-inactive-rgb));
-    background: rgba(var(--sq-inactive-rgb), var(--sq-icon-opacity));
+  display: flex;
+  justify-content: center;
+  align-self: center;
+  width: var(--sq-icon-size);
+  height: var(--sq-icon-size);
+  padding: var(--sq-tile-padding);
+  border-radius: 50%;
+  color: rgb(var(--sq-inactive-rgb));
+  background: rgba(var(--sq-inactive-rgb), var(--sq-icon-opacity));
 }
 
 .entertain-button span {
-    margin-top: 0.7rem;
-    font-weight: var(--sq-primary-font-weight);
-    font-size: var(--sq-primary-font-size);
-    color: rgb(var(--sq-primary-text-rgb));
+  margin-top: 0.7rem;
+  font-weight: var(--sq-primary-font-weight);
+  font-size: var(--sq-primary-font-size);
+  color: rgb(var(--sq-primary-text-rgb));
 }
 
 .entertain-button:focus,
 .entertain-button:active {
-    background-color: var(--sq-ripple-color);
-    border-radius: var(--sq-card-border-radius);
-    outline: none;
+  background-color: var(--sq-ripple-color);
+  border-radius: var(--sq-card-border-radius);
+  outline: none;
 }
 
 .entertain-cards {
-    display: flex;
-    height: 100%;
-    overflow-y: auto;
-    align-items: center;
-    gap: var(--sq-card-spacing);
-    --ha-card-border-radius: var(--sq-card-border-radius);
-    --ha-card-box-shadow: var(--sq-card-box-shadow);
-    --ha-card-background: var(--sq-card-background-color);
-    --ha-card-border-color: rgb(var(--sq-card-border-rgb));
-    --ha-card-border-style: var(--sq-card-border-style);
-    --ha-card-border-width: var(--sq-card-border-width);
-    --ha-card-header-font-size: var(--sq-primary-font-size);
+  display: flex;
+  height: 100%;
+  overflow-y: auto;
+  align-items: center;
+  gap: var(--sq-card-spacing);
+  --ha-card-border-radius: var(--sq-card-border-radius);
+  --ha-card-box-shadow: var(--sq-card-box-shadow);
+  --ha-card-background: var(--sq-card-background-color);
+  --ha-card-border-color: rgb(var(--sq-card-border-rgb));
+  --ha-card-border-style: var(--sq-card-border-style);
+  --ha-card-border-width: var(--sq-card-border-width);
+  --ha-card-header-font-size: var(--sq-primary-font-size);
 }

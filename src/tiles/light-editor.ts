@@ -3,27 +3,27 @@ import { customElement, state } from "lit/decorators.js";
 
 @customElement("smartqasa-light-tile-editor")
 export class LightTileEditor extends LitElement {
-    @state() protected _config: any;
+  @state() protected _config: any;
 
-    setConfig(config: any) {
-        this._config = { ...config }; // Ensure updates trigger reactivity
+  setConfig(config: any) {
+    this._config = { ...config }; // Ensure updates trigger reactivity
+  }
+
+  static styles = css`
+    .table {
+      display: table;
     }
+    .row {
+      display: table-row;
+    }
+    .cell {
+      display: table-cell;
+      padding: 0.5em;
+    }
+  `;
 
-    static styles = css`
-        .table {
-            display: table;
-        }
-        .row {
-            display: table-row;
-        }
-        .cell {
-            display: table-cell;
-            padding: 0.5em;
-        }
-    `;
-
-    render() {
-        return html`
+  render() {
+    return html`
       <form class="table">
         <div class="row">
           <label class="cell" for="entity">Entity:</label>
@@ -39,27 +39,27 @@ export class LightTileEditor extends LitElement {
         </div>
       </form>
     `;
-    }
+  }
 
-    handleInputEvent(e: Event) {
-        const input = e.target as HTMLInputElement;
-        switch (input.id) {
-            case "entity":
-                this._config.entity = input.value;
-                break;
-            case "name":
-                this._config.name = input.value;
-                break;
-        }
-        this.dispatchConfigChanged();
+  handleInputEvent(e: Event) {
+    const input = e.target as HTMLInputElement;
+    switch (input.id) {
+      case "entity":
+        this._config.entity = input.value;
+        break;
+      case "name":
+        this._config.name = input.value;
+        break;
     }
+    this.dispatchConfigChanged();
+  }
 
-    dispatchConfigChanged() {
-        const messageEvent = new CustomEvent("config-changed", {
-            detail: { config: this._config },
-            bubbles: true,
-            composed: true,
-        });
-        this.dispatchEvent(messageEvent);
-    }
+  dispatchConfigChanged() {
+    const messageEvent = new CustomEvent("config-changed", {
+      detail: { config: this._config },
+      bubbles: true,
+      composed: true,
+    });
+    this.dispatchEvent(messageEvent);
+  }
 }

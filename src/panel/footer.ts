@@ -1,10 +1,14 @@
-import { html, TemplateResult } from "lit";
-import { navigateToArea } from "../utilities/navigate-to-area";
-import { dialogTable } from "../dialogs/dialog-table";
-import { dialogPopup } from "../dialogs/dialog-popup";
+import { html, TemplateResult } from 'lit';
+import { navigateToArea } from '../utilities/navigate-to-area';
+import { dialogTable } from '../dialogs/dialog-table';
+import { dialogPopup } from '../dialogs/dialog-popup';
 
 export function renderFooter(): TemplateResult {
-    function renderFooterButton(icon: string, name: string, action: () => void): TemplateResult {
+    function renderFooterButton(
+        icon: string,
+        name: string,
+        action: () => void
+    ): TemplateResult {
         return html`
             <div
                 class="footer-button"
@@ -23,28 +27,28 @@ export function renderFooter(): TemplateResult {
         const startArea = window.smartqasa.startArea;
         if (!startArea) return;
 
-        const currentArea = new URL(location.href).pathname.split("/").pop();
+        const currentArea = new URL(location.href).pathname.split('/').pop();
         if (currentArea !== startArea) {
             navigateToArea(startArea);
         } else {
-            navigateToArea("home");
+            navigateToArea('home');
         }
     }
 
     function handleAreas(): void {
-        dialogPopup(dialogTable["areas"].data);
+        dialogPopup(dialogTable['areas'].data);
     }
 
     function handleMenu(): void {
         window.smartqasa.menuTab = 0;
-        dialogPopup(dialogTable["menu"].data);
+        dialogPopup(dialogTable['menu'].data);
     }
 
     return html`
         <div class="footer-container">
-            ${renderFooterButton("hass:home", "Home", handleHome)}
-            ${renderFooterButton("hass:view-dashboard", "Areas", handleAreas)}
-            ${renderFooterButton("hass:menu", "Menu", handleMenu)}
+            ${renderFooterButton('hass:home', 'Home', handleHome)}
+            ${renderFooterButton('hass:view-dashboard', 'Areas', handleAreas)}
+            ${renderFooterButton('hass:menu', 'Menu', handleMenu)}
         </div>
     `;
 }

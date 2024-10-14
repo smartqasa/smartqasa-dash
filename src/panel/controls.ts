@@ -1,8 +1,8 @@
-import { HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
-import { createElement } from "../utilities/create-element";
-import { html, nothing, TemplateResult } from "lit";
-import { styleMap } from "lit/directives/style-map.js";
-import Swiper from "swiper/types/swiper-class";
+import { HomeAssistant, LovelaceCard, LovelaceCardConfig } from '../types';
+import { createElement } from '../utilities/create-element';
+import { html, nothing, TemplateResult } from 'lit';
+import { styleMap } from 'lit/directives/style-map.js';
+import { register } from 'swiper/element';
 
 export function loadControlTiles(
     tilesConfig: LovelaceCardConfig[],
@@ -16,23 +16,32 @@ export function loadControlTiles(
 
     for (const config of tilesConfig) {
         if (firstTile) {
-            const columns = config.type === "page" && config.columns >= 2 && config.columns <= 4 ? config.columns : 3;
+            const columns =
+                config.type === 'page' &&
+                config.columns >= 2 &&
+                config.columns <= 4
+                    ? config.columns
+                    : 3;
             controlColumns.push(columns);
         }
 
-        if (config.type === "page") {
+        if (config.type === 'page') {
             if (!firstTile && currentPage.length) {
                 controlTiles.push(currentPage);
                 currentPage = [];
 
                 const columns =
-                    config.type === "page" && config.columns >= 2 && config.columns <= 4 ? config.columns : 3;
+                    config.type === 'page' &&
+                    config.columns >= 2 &&
+                    config.columns <= 4
+                        ? config.columns
+                        : 3;
                 controlColumns.push(columns);
             }
-        } else if (config.type === "blank") {
+        } else if (config.type === 'blank') {
             if (isTablet) {
-                const blankTile = document.createElement("div");
-                blankTile.classList.add("blank-tile");
+                const blankTile = document.createElement('div');
+                blankTile.classList.add('blank-tile');
                 currentPage.push(blankTile as unknown as LovelaceCard);
             }
         } else {
@@ -40,7 +49,7 @@ export function loadControlTiles(
             if (tile) {
                 currentPage.push(tile);
             } else {
-                console.error("Failed to create tile for config:", config);
+                console.error('Failed to create tile for config:', config);
             }
         }
 
@@ -56,13 +65,19 @@ export function loadControlTiles(
 export function renderControls(
     controlTiles: LovelaceCard[][],
     controlColumns: number[],
-    isPhone: boolean,
-    swiper: Swiper | undefined
+    isPhone: boolean
 ): TemplateResult | typeof nothing {
     if (controlTiles.length === 0) return nothing;
 
+    let isSwiperRegistered = false;
+
+    if (!isSwiperRegistered) {
+        register();
+        isSwiperRegistered = true;
+    }
+
     if (isPhone) {
-        const gridStyle = { gridTemplateColumns: "repeat(2, minmax(0, 1fr)" };
+        const gridStyle = { gridTemplateColumns: 'repeat(2, minmax(0, 1fr)' };
         return html`
             <div class="control-tiles" style=${styleMap(gridStyle)}>
                 ${controlTiles.flat().map((tile) => html`${tile}`)}
@@ -71,28 +86,22 @@ export function renderControls(
     }
 
     return html`
-        <div class="swiper">
-            <div class="swiper-wrapper">
-                ${controlTiles.map((page, index) => {
-                    const gridStyle = {
-                        gridTemplateColumns: `repeat(${controlColumns[index]}, var(--sq-tile-width, 19.5rem))`,
-                    };
+        <div class="swiper-container" navigation="true">
+            ${controlTiles.map((page, index) => {
+                const gridStyle = {
+                    gridTemplateColumns: `repeat(${controlColumns[index]}, var(--sq-tile-width, 19.5rem))`,
+                };
 
-                    return html`
-                        <div class="swiper-slide">
-                            <div class="control-tiles" style=${styleMap(gridStyle)}>
-                                ${page.map((tile) => html`<div class="tile">${tile}</div>`)}
-                            </div>
+                return html`
+                    <div class="swiper-slide">
+                        <div class="control-tiles" style=${styleMap(gridStyle)}>
+                            ${page.map(
+                                (tile) => html`<div class="tile">${tile}</div>`
+                            )}
                         </div>
-                    `;
-                })}
-            </div>
-            ${controlTiles.length > 1 && swiper
-                ? html`
-                      <div class="swiper-button-prev" @click=${(e: Event) => swiper.slidePrev()}></div>
-                      <div class="swiper-button-next" @click=${(e: Event) => swiper.slideNext()}></div>
-                  `
-                : nothing}
+                    </div>
+                `;
+            })}
         </div>
     `;
 }

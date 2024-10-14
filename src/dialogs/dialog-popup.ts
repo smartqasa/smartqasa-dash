@@ -1,10 +1,13 @@
-export async function dialogPopup(dialogConfig: DialogConfig, callingDialogConfig?: DialogConfig): Promise<void> {
-    if (callingDialogConfig && Object.keys(callingDialogConfig).length > 0) {
-        dialogConfig.dismiss_action = {
-            service: "browser_mod.popup",
-            data: callingDialogConfig,
-        };
-    }
+export async function dialogPopup(
+  dialogConfig: DialogConfig,
+  callingDialogConfig?: DialogConfig,
+): Promise<void> {
+  if (callingDialogConfig && Object.keys(callingDialogConfig).length > 0) {
+    dialogConfig.dismiss_action = {
+      service: "browser_mod.popup",
+      data: callingDialogConfig,
+    };
+  }
 
-    await window.browser_mod?.service("popup", dialogConfig);
+  await window.browser_mod?.service("popup", dialogConfig);
 }

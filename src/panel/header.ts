@@ -1,11 +1,11 @@
-import { LovelaceCard } from "../types";
-import { html, TemplateResult } from "lit";
-import { formattedTime, formattedDate } from "../utilities/format-date-time";
-import { launchApp } from "../utilities/launch-app";
+import { LovelaceCard } from '../types';
+import { html, TemplateResult } from 'lit';
+import { formattedTime, formattedDate } from '../utilities/format-date-time';
+import { launchApp } from '../utilities/launch-app';
 
 function launchClock(e: Event): void {
     e.stopPropagation();
-    launchApp("clock");
+    launchApp('clock');
 }
 
 export function renderHeader(headerChips: LovelaceCard[]): TemplateResult {
@@ -15,7 +15,11 @@ export function renderHeader(headerChips: LovelaceCard[]): TemplateResult {
                 <div class="time">${formattedTime()}</div>
                 <div class="date">${formattedDate()}</div>
             </div>
-            <div class="header-chips">${headerChips.map((chip) => html`<div class="chip">${chip}</div>`)}</div>
+            <div class="header-chips">
+                ${headerChips.map(
+                    (chip) => html`<div class="chip">${chip}</div>`
+                )}
+            </div>
         </div>
     `;
 }
