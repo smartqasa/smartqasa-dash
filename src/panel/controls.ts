@@ -69,12 +69,6 @@ export function renderControls(
 ): TemplateResult | typeof nothing {
     if (controlTiles.length === 0) return nothing;
 
-    let isSwiperRegistered = false;
-
-    if (!isSwiperRegistered) {
-        register();
-        isSwiperRegistered = true;
-    }
 
     if (isPhone) {
         const gridStyle = { gridTemplateColumns: 'repeat(2, minmax(0, 1fr)' };
@@ -85,8 +79,24 @@ export function renderControls(
         `;
     }
 
+    let isSwiperRegistered = false;
+    if (!isSwiperRegistered) {
+        register();
+        isSwiperRegistered = true;
+    }
+
+    const swiperOptions = {
+        initialSlide: 0,
+        loop: true,
+        navigation: {
+          nextEl: ".swiper-button-next",
+          prevEl: ".swiper-button-prev",
+        },
+
+    };
+
     return html`
-        <div class="swiper-container" navigation="true">
+        <swiper-container .swiper-options=${swiperOptions}>
             ${controlTiles.map((page, index) => {
                 const gridStyle = {
                     gridTemplateColumns: `repeat(${controlColumns[index]}, var(--sq-tile-width, 19.5rem))`,
@@ -102,6 +112,8 @@ export function renderControls(
                     </div>
                 `;
             })}
-        </div>
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+        </swiper-container>
     `;
 }
