@@ -99,14 +99,13 @@
   background-color: transparent;
 }
 
-.swiper-container {
+.control-container {
   grid-area: swiper;
+  width: 100vw;
 }
-.swiper-slide {
-  max-width: 100vw;
+.control-slide {
   height: 100%;
   align-content: center;
-  overflow-y: auto;
 }
 .control-tiles {
   display: grid;
