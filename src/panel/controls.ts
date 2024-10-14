@@ -84,31 +84,26 @@ export function renderControls(
         `;
     }
 
-    const swiperOptions = {
-        initialSlide: 0,
-        loop: true,
-        navigation: {
-          nextEl: ".swiper-button-next",
-          prevEl: ".swiper-button-prev",
-        },
-
-    };
-
     return html`
-        <swiper-container .swiper-options=${swiperOptions}>
+        <swiper-container
+            .initialSlide=${0}
+            .loop=${true}
+            .navigation=${true}
+            class="swiper-container"
+        >
             ${controlTiles.map((page, index) => {
                 const gridStyle = {
                     gridTemplateColumns: `repeat(${controlColumns[index]}, var(--sq-tile-width, 19.5rem))`,
                 };
 
                 return html`
-                    <div class="swiper-slide">
+                    <swiper-slide>
                         <div class="control-tiles" style=${styleMap(gridStyle)}>
                             ${page.map(
                                 (tile) => html`<div class="tile">${tile}</div>`
                             )}
                         </div>
-                    </div>
+                    </swiper-slide>
                 `;
             })}
             <div class="swiper-button-prev"></div>
