@@ -101,7 +101,6 @@
 
 .swiper-container {
   grid-area: swiper;
-  width: 100%;
 }
 .swiper-slide {
   align-content: center;
@@ -110,7 +109,6 @@
 }
 .control-tiles {
   display: grid;
-  width: min-content;
   margin: auto;
   grid-auto-rows: var(--sq-tile-height);
   gap: var(--sq-tile-spacing);
