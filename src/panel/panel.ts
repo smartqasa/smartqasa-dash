@@ -19,7 +19,7 @@ import { getDeviceOrientation, getDeviceType } from '../utilities/device-info';
 import { createElements } from '../utilities/create-elements';
 import { renderHeader } from './header';
 import { renderArea } from './area';
-import { loadControlTiles, renderControls } from './controls';
+import { loadControlTiles, renderControls } from './control';
 import { renderFooter } from './footer';
 
 import lightModeImage from '../assets/backgrounds/background_light.jpg';
@@ -73,7 +73,10 @@ export class PanelCard extends LitElement implements LovelaceCard {
     private _controlTiles: LovelaceCard[][] = [];
     private _controlColumns: number[] = [];
 
-    static styles: CSSResult = unsafeCSS(panelStyles);
+
+    static get styles(): CSSResult {
+        return unsafeCSS(panelStyles);
+      }
 
     public setConfig(config: Config) {
         this._config = config;
@@ -135,7 +138,7 @@ export class PanelCard extends LitElement implements LovelaceCard {
         // prettier-ignore
         return html`
             <div
-                class="container"
+                class="panel"
                 ?admin=${this._isAdminMode}
             >
                 ${this._isTablet ? renderHeader(this._headerChips) : nothing}
@@ -182,13 +185,13 @@ export class PanelCard extends LitElement implements LovelaceCard {
     }
 
     private _handleThemeChanges(): void {
-        const container = this.shadowRoot?.querySelector('.container') as HTMLElement;
+        const panel = this.shadowRoot?.querySelector('.panel') as HTMLElement;
     
-        if (container) {
+        if (panel) {
             if (this.hass?.themes?.darkMode) {
-                container.style.backgroundImage = `url(${darkModeImage})`;
+                panel.style.backgroundImage = `url(${darkModeImage})`;
             } else {
-                container.style.backgroundImage = `url(${lightModeImage})`;
+                panel.style.backgroundImage = `url(${lightModeImage})`;
             }
         }
     }
