@@ -29,9 +29,9 @@ export default {
         commonjs({
             include: "node_modules/**",
         }),
-        litcss(),
         image(),
         json(),
+        litcss(),
         resolve({
             browser: true,
             preferBuiltins: false,
