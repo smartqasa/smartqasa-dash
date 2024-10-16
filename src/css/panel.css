@@ -105,6 +105,7 @@
 .control-slide {
   height: 100%;
   align-content: center;
+  overflow-y: auto;
 }
 .control-tiles {
   display: grid;
