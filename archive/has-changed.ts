@@ -1,5 +1,5 @@
-import { PropertyValues } from "lit";
-import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../src/types";
+import { PropertyValues } from 'lit';
+import { HassEntity, HomeAssistant, LovelaceCardConfig } from '../src/types';
 
 /**
  * Utility function to determine if a component should update.
@@ -12,17 +12,17 @@ import { HassEntity, HomeAssistant, LovelaceCardConfig } from "../src/types";
  * @returns boolean - Returns true if the component should update.
  */
 export function shouldComponentUpdate(
-  changedProps: PropertyValues,
-  config: LovelaceCardConfig | undefined,
-  entity: string | undefined,
-  hass: HomeAssistant | undefined,
-  stateObj: HassEntity | undefined,
+    changedProps: PropertyValues,
+    config: LovelaceCardConfig | undefined,
+    entity: string | undefined,
+    hass: HomeAssistant | undefined,
+    stateObj: HassEntity | undefined
 ): boolean {
-  if (!config) return false;
+    if (!config) return false;
 
-  const hasHassChanged =
-    changedProps.has("hass") && entity && hass?.states[entity] !== stateObj;
-  const hasConfigChanged = changedProps.has("_config");
+    const hasHassChanged =
+        changedProps.has('hass') && entity && hass?.states[entity] !== stateObj;
+    const hasConfigChanged = changedProps.has('_config');
 
-  return !!(hasHassChanged || hasConfigChanged);
+    return !!(hasHassChanged || hasConfigChanged);
 }

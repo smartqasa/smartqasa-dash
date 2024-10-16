@@ -73,10 +73,9 @@ export class PanelCard extends LitElement implements LovelaceCard {
     private _controlTiles: LovelaceCard[][] = [];
     private _controlColumns: number[] = [];
 
-
     static get styles(): CSSResult {
         return unsafeCSS(panelStyles);
-      }
+    }
 
     public setConfig(config: Config) {
         this._config = config;
@@ -186,7 +185,7 @@ export class PanelCard extends LitElement implements LovelaceCard {
 
     private _handleThemeChanges(): void {
         const panel = this.shadowRoot?.querySelector('.panel') as HTMLElement;
-    
+
         if (panel) {
             if (this.hass?.themes?.darkMode) {
                 panel.style.backgroundImage = `url(${darkModeImage})`;
@@ -267,7 +266,4 @@ export class PanelCard extends LitElement implements LovelaceCard {
             });
         }
     }
-
-
-    
 }

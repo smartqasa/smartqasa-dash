@@ -92,14 +92,13 @@ export function renderControls(
         return html`
             <div class="control-slide">
                 <div class="control-tiles" style=${styleMap(gridStyle)}>
-                    ${controlTiles[0].map((tile) => html`
-                        <div class="tile">${tile}</div>
-                    `)}
+                    ${controlTiles[0].map(
+                        (tile) => html` <div class="tile">${tile}</div> `
+                    )}
                 </div>
             </div>
         `;
     }
-
 
     return html`
         <swiper-container

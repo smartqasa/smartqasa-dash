@@ -1,47 +1,47 @@
-import { LitElement, html, css } from "lit";
-import { customElement, property } from "lit/decorators.js";
+import { LitElement, html, css } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
 
-@customElement("popup-dialog")
+@customElement('popup-dialog')
 class PopupDialog extends LitElement {
-  @property({ type: Array }) cardConfigs = [];
+    @property({ type: Array }) cardConfigs = [];
 
-  static styles = css`
-    :host([is-open]) .overlay {
-      display: flex;
-    }
-    .overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.5);
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-    }
-    .popup {
-      background: white;
-      padding: 20px;
-      border-radius: 5px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      width: auto; /* Or a specific width */
-      display: flex;
-      flex-direction: column;
-    }
-  `;
-
-  protected render() {
-    return html`
-      <div class="overlay" @click="${this._close}">
-        <div class="popup" @click="${this._handleClick}"></div>
-      </div>
+    static styles = css`
+        :host([is-open]) .overlay {
+            display: flex;
+        }
+        .overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .popup {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: auto; /* Or a specific width */
+            display: flex;
+            flex-direction: column;
+        }
     `;
-  }
 
-  private _handleClick(e: Event): void {
-    e.stopPropagation();
-  }
+    protected render() {
+        return html`
+            <div class="overlay" @click="${this._close}">
+                <div class="popup" @click="${this._handleClick}"></div>
+            </div>
+        `;
+    }
 
-  private _close() {
-    this.dispatchEvent(new CustomEvent("close"));
-  }
+    private _handleClick(e: Event): void {
+        e.stopPropagation();
+    }
+
+    private _close() {
+        this.dispatchEvent(new CustomEvent('close'));
+    }
 }

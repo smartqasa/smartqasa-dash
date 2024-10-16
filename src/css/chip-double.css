@@ -1,37 +1,37 @@
 .container {
-  display: flex;
-  margin: 0 var(--sq-chip-spacing);
-  align-items: center;
-  justify-content: center;
-  border: var(--sq-card-border);
-  border-radius: var(--sq-chip-border-radius);
-  background-color: var(--sq-card-background-color);
-  overflow: hidden;
-  -webkit-tap-highlight-color: transparent;
-  cursor: pointer;
+    display: flex;
+    margin: 0 var(--sq-chip-spacing);
+    align-items: center;
+    justify-content: center;
+    border: var(--sq-card-border);
+    border-radius: var(--sq-chip-border-radius);
+    background-color: var(--sq-card-background-color);
+    overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
+    cursor: pointer;
 }
 
 .container:focus,
 .container:active {
-  background-color: var(--sq-ripple-color);
-  border-radius: var(--sq-chip-border-radius);
-  outline: none;
+    background-color: var(--sq-ripple-color);
+    border-radius: var(--sq-chip-border-radius);
+    outline: none;
 }
 
 .icon1,
 .icon2 {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  --mdc-icon-size: 3.6rem;
-  padding: 0.1rem;
-  color: rgb(var(--sq-primary-text-rgb));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    --mdc-icon-size: 3.6rem;
+    padding: 0.1rem;
+    color: rgb(var(--sq-primary-text-rgb));
 }
 
 .icon1::after {
-  content: "";
-  width: 1px;
-  height: var(--sq-icon-size);
-  background-color: rgb(128, 128, 128);
-  margin-left: 0.3rem;
+    content: '';
+    width: 1px;
+    height: var(--sq-icon-size);
+    background-color: rgb(128, 128, 128);
+    margin-left: 0.3rem;
 }
