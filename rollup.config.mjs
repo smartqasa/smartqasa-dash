@@ -15,6 +15,8 @@ const { version } = JSON.parse(
 
 const timestamp = new Date().toISOString();
 
+let cache;
+
 export default {
   input: "src/index.ts",
   output: {
@@ -59,4 +61,5 @@ export default {
       fileName: "[dirname][hash][extname]",
     }),
   ],
+  cache,
 };
