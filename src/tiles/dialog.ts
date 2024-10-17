@@ -1,12 +1,5 @@
-import {
-    CSSResult,
-    html,
-    LitElement,
-    PropertyValues,
-    TemplateResult,
-    unsafeCSS,
-} from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { CSSResult, html, LitElement, TemplateResult, unsafeCSS } from 'lit';
+import { customElement, state } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
 import { LovelaceCard, LovelaceCardConfig } from '../types';
@@ -68,7 +61,7 @@ export class DialogTile extends LitElement implements LovelaceCard {
     }
 
     private _updateState(): void {
-        let icon, iconAnimation, iconColor, name;
+        let icon, iconColor, name;
 
         if (this._config && this._dialogObj) {
             icon = this._config.icon || this._dialogObj.icon;
@@ -76,7 +69,6 @@ export class DialogTile extends LitElement implements LovelaceCard {
             name = this._config.name || this._dialogObj.name;
         } else {
             icon = this._config?.icon || 'hass:help-rhombus';
-            iconAnimation = 'none';
             iconColor = 'var(--sq-unavailable-rgb, 255, 0, 255)';
             name = this._config?.name || 'Unknown';
         }

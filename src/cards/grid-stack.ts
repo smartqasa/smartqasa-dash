@@ -27,7 +27,7 @@ window.customCards.push({
 });
 
 @customElement('smartqasa-grid-stack')
-class GridStack extends LitElement implements LovelaceCard {
+export class GridStack extends LitElement implements LovelaceCard {
     public getCardSize(): number {
         return 10;
     }

@@ -29,7 +29,7 @@ window.customCards.push({
 });
 
 @customElement('smartqasa-light-grid-card')
-class LightGridCard extends LitElement implements LovelaceCard {
+export class LightGridCard extends LitElement implements LovelaceCard {
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() protected _config?: Config;
 

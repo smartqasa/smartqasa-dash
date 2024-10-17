@@ -17,7 +17,7 @@ window.customCards.push({
 });
 
 @customElement('smartqasa-vertical-stack')
-class VerticalStack extends LitElement implements LovelaceCard {
+export class VerticalStack extends LitElement implements LovelaceCard {
     public getCardSize(): number | Promise<number> {
         return 1;
     }

@@ -99,7 +99,6 @@ export class SelectTile extends LitElement implements LovelaceCard {
 
         let icon, iconColor, name, stateFmtd;
         if (this._config && this.hass && this._stateObj) {
-            const state = this._stateObj.state || 'unknown';
             icon =
                 this._config.icon ||
                 this._stateObj.attributes?.icon ||

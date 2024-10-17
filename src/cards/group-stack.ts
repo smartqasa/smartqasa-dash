@@ -25,7 +25,7 @@ window.customCards.push({
 });
 
 @customElement('smartqasa-group-stack')
-class GroupStack extends LitElement implements LovelaceCard {
+export class GroupStack extends LitElement implements LovelaceCard {
     public getCardSize(): number {
         return 4;
     }

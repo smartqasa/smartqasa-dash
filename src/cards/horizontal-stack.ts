@@ -24,7 +24,7 @@ window.customCards.push({
 });
 
 @customElement('smartqasa-horizontal-stack')
-class HorizontalStack extends LitElement implements LovelaceCard {
+export class HorizontalStack extends LitElement implements LovelaceCard {
     public getCardSize(): number | Promise<number> {
         return 1;
     }

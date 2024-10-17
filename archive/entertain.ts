@@ -1,6 +1,6 @@
 import { html, nothing, TemplateResult } from 'lit';
-import { HomeAssistant, LovelaceCard, LovelaceCardConfig } from '../types';
-import { createElement } from '../utilities/create-element';
+import { HomeAssistant, LovelaceCard, LovelaceCardConfig } from '../src/types';
+import { createElement } from '../src/utilities/create-element';
 
 export const loadEntertainCards = (
     audioPlayer: string,

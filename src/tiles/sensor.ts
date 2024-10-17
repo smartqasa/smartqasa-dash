@@ -93,7 +93,7 @@ export class SensorTile extends LitElement implements LovelaceCard {
             ? this.hass?.states[this._entity]
             : undefined;
 
-        let iconTemplate, iconAnimation, iconColor, name, stateFmtd;
+        let iconTemplate, iconColor, name, stateFmtd;
         if (this._stateObj) {
             if (!this._config!.icon) {
                 iconTemplate = html`<ha-state-icon
@@ -116,7 +116,6 @@ export class SensorTile extends LitElement implements LovelaceCard {
             stateFmtd = this.hass!.formatEntityState(this._stateObj);
         } else {
             iconTemplate = html`<ha-icon icon="hass:leak"></ha-icon>`;
-            iconAnimation = 'none';
             iconColor = 'var(--sq-unavailable-rgb)';
             name = this._config!.name || 'Unknown';
             stateFmtd = 'Unknown';

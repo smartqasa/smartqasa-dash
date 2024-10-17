@@ -47,7 +47,7 @@ export class WebpageChip extends LitElement implements LovelaceCard {
         try {
             const testUrl = new URL(config.url);
             this._url = testUrl.href;
-        } catch (error) {
+        } catch {
             console.error('Invalid URL provided:', config.url);
             throw new Error('Invalid URL. Please specify a valid URL.');
         }
@@ -86,7 +86,7 @@ export class WebpageChip extends LitElement implements LovelaceCard {
             };
 
             dialogPopup(dialogConfig);
-        } catch (error) {
+        } catch {
             console.error('Failed to launch URL:', this._url);
             alert('Unable to launch the web page. The URL is invalid.');
         }
