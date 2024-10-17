@@ -5,7 +5,7 @@ import parserTypescript from '@typescript-eslint/parser';
 export default [
     {
         files: ['**/*.ts'],
-        ignores: ['dist/**', 'archive/**'],
+        ignores: ['archive/**', 'dist/**'],
         languageOptions: {
             parser: parserTypescript,
         },
