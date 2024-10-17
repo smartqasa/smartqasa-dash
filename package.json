@@ -11,7 +11,11 @@
     "scripts": {
         "clean": "rm -f dist/elements.js",
         "build": "npm run clean && rollup -c",
-        "watch": "npm run clean && rollup -c --watch"
+        "watch": "npm run clean && rollup -c --watch",
+        "lint": "eslint .",
+        "lint:fix": "eslint . --fix",
+        "prettier": "prettier --check .",
+        "prettier:fix": "prettier --write ."
     },
     "devDependencies": {
         "@babel/core": "^7.25.8",
@@ -26,7 +30,11 @@
         "@types/http-cache-semantics": "^4.0.4",
         "@types/js-yaml": "^4.0.9",
         "@types/node": "^22.7.5",
+        "@typescript-eslint/eslint-plugin": "^8.10.0",
+        "@typescript-eslint/parser": "^8.10.0",
         "eslint": "^9.12.0",
+        "eslint-config-prettier": "^9.1.0",
+        "eslint-plugin-prettier": "^5.2.1",
         "prettier": "^3.3.3",
         "rollup": "^4.24.0",
         "rollup-plugin-lit-css": "^5.0.1",

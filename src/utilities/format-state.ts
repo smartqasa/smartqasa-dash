@@ -1,4 +1,3 @@
-import { format } from 'path';
 import { HassEntity, HomeAssistant } from '../types';
 
 export const formatState = (hass: HomeAssistant, entity: string): string => {

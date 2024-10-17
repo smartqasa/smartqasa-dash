@@ -98,7 +98,8 @@ export class AudioTile extends LitElement implements LovelaceCard {
 
         let iconHtml, name, stateFmtd;
         if (this._stateObj) {
-            if (this._stateObj.state === 'playing') {
+            const state = this._stateObj.state || 'unknown';
+            if (state === 'playing') {
                 iconHtml = html`
                     <div class="bars tile" @click=${this._launchApp}>
                         <div></div>
@@ -115,8 +116,6 @@ export class AudioTile extends LitElement implements LovelaceCard {
                     </div>
                 `;
             }
-
-            const state = this._stateObj.state || 'unknown';
             name =
                 this._config!.name ||
                 this._stateObj.attributes.friendly_name ||
