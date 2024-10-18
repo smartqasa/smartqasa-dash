@@ -1,19 +1,19 @@
-import { css, CSSResultGroup, html, LitElement, TemplateResult } from "lit";
-import { customElement, state } from "lit/decorators.js";
-import { LovelaceCardConfig } from "../src/types";
+import { css, CSSResultGroup, html, LitElement, TemplateResult } from 'lit';
+import { customElement, state } from 'lit/decorators.js';
+import { LovelaceCardConfig } from '../src/types';
 
 interface Config extends LovelaceCardConfig {
     title: string;
 }
 
 window.customCards.push({
-    type: "smartqasa-title-card",
-    name: "SmartQasa Title Card",
+    type: 'smartqasa-title-card',
+    name: 'SmartQasa Title Card',
     preview: true,
-    description: "A SmartQasa card for rendering text in a title.",
+    description: 'A SmartQasa card for rendering text in a title.',
 });
 
-@customElement("smartqasa-title-card")
+@customElement('smartqasa-title-card')
 export class TitleCard extends LitElement {
     getCardSize(): number {
         return 1;
@@ -49,7 +49,7 @@ export class TitleCard extends LitElement {
 
     public setConfig(config: Config): void {
         this._config = { ...config };
-        this._config.title = this._config.title || "Title";
+        this._config.title = this._config.title || 'Title';
     }
 
     protected render(): TemplateResult {

@@ -5,21 +5,21 @@ import {
     PropertyValues,
     TemplateResult,
     unsafeCSS,
-} from "lit";
-import { customElement, property, state } from "lit/decorators.js";
-import { styleMap } from "lit/directives/style-map.js";
+} from 'lit';
+import { customElement, property, state } from 'lit/decorators.js';
+import { styleMap } from 'lit/directives/style-map.js';
 
 import {
     HassEntity,
     HomeAssistant,
     LovelaceCard,
     LovelaceCardConfig,
-} from "../types";
-import { moreInfoDialog } from "../dialogs/more-info-dialog";
-import { thermostatIcons, thermostatColors } from "../const";
-import { formatState } from "../utilities/format-state";
+} from '../types';
+import { moreInfoDialog } from '../dialogs/more-info-dialog';
+import { thermostatIcons, thermostatColors } from '../const';
+import { formatState } from '../utilities/format-state';
 
-import tileStyle from "../css/tile.css";
+import tileStyle from '../css/tile.css';
 
 interface Config extends LovelaceCardConfig {
     entity: string;
@@ -27,14 +27,14 @@ interface Config extends LovelaceCardConfig {
 }
 
 window.customCards.push({
-    type: "smartqasa-thermostat-tile",
-    name: "SmartQasa Thermostat Tile",
+    type: 'smartqasa-thermostat-tile',
+    name: 'SmartQasa Thermostat Tile',
     preview: true,
     description:
-        "A SmartQasa tile for controlling a thermostat climate entity.",
+        'A SmartQasa tile for controlling a thermostat climate entity.',
 });
 
-@customElement("smartqasa-thermostat-tile")
+@customElement('smartqasa-thermostat-tile')
 export class ThermostatTile extends LitElement implements LovelaceCard {
     public getCardSize(): number | Promise<number> {
         return 1;
@@ -45,18 +45,18 @@ export class ThermostatTile extends LitElement implements LovelaceCard {
 
     private _entity?: string;
     private _stateObj?: HassEntity;
-    private _icon: string = "hass:thermostat";
+    private _icon: string = 'hass:thermostat';
     private _iconStyles: Record<string, string> = {};
-    private _name: string = "Unknown Thermostat";
-    private _stateFmtd: string = "Unknown State";
+    private _name: string = 'Unknown Thermostat';
+    private _stateFmtd: string = 'Unknown State';
 
     static get styles(): CSSResult {
         return unsafeCSS(tileStyle);
     }
 
     public setConfig(config: Config): void {
-        if (!config.entity?.startsWith("climate.")) {
-            console.error("Invalid climate entity provided in the config.");
+        if (!config.entity?.startsWith('climate.')) {
+            console.error('Invalid climate entity provided in the config.');
         } else {
             this._entity = config.entity;
         }
@@ -65,10 +65,10 @@ export class ThermostatTile extends LitElement implements LovelaceCard {
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
         return !!(
-            (changedProps.has("hass") &&
+            (changedProps.has('hass') &&
                 this._entity &&
                 this.hass?.states[this._entity] !== this._stateObj) ||
-            changedProps.has("_config")
+            changedProps.has('_config')
         );
     }
 
@@ -97,11 +97,11 @@ export class ThermostatTile extends LitElement implements LovelaceCard {
 
         let icon, iconColor, name, stateFmtd;
         if (this._stateObj && this.hass) {
-            const state = this._stateObj.state || "unknown";
+            const state = this._stateObj.state || 'unknown';
 
             icon = thermostatIcons[state] || thermostatIcons.default;
-            const hvacAction = this._stateObj.attributes.hvac_action || "idle";
-            if (state === "off") {
+            const hvacAction = this._stateObj.attributes.hvac_action || 'idle';
+            if (state === 'off') {
                 iconColor = thermostatColors.off;
             } else {
                 iconColor =
@@ -110,13 +110,13 @@ export class ThermostatTile extends LitElement implements LovelaceCard {
             name =
                 this._config!.name ||
                 this._stateObj.attributes.friendly_name ||
-                "Thermostat";
+                'Thermostat';
             stateFmtd = formatState(this.hass!, this._entity!);
         } else {
-            icon = this._config!.icon || "hass:thermostat";
-            iconColor = "var(--sq-unavailable-rgb)";
-            name = this._config?.name || "Unknown";
-            stateFmtd = "Unknown";
+            icon = this._config!.icon || 'hass:thermostat';
+            iconColor = 'var(--sq-unavailable-rgb)';
+            name = this._config?.name || 'Unknown';
+            stateFmtd = 'Unknown';
         }
 
         this._iconStyles = {

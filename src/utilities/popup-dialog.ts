@@ -1,27 +1,27 @@
-import { css, html, LitElement, PropertyValues } from "lit";
-import { customElement, property, state, query } from "lit/decorators.js";
-import { createElement } from "./create-element";
-import { HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
+import { css, html, LitElement, PropertyValues } from 'lit';
+import { customElement, property, state, query } from 'lit/decorators.js';
+import { createElement } from './create-element';
+import { HomeAssistant, LovelaceCard, LovelaceCardConfig } from '../types';
 
 export interface PopupData {
     title?: string;
-    size?: "normal" | "fullscreen";
+    size?: 'normal' | 'fullscreen';
     timeout?: number;
     card?: LovelaceCardConfig;
 }
 
-@customElement("smartqasa-popup-dialog")
+@customElement('smartqasa-popup-dialog')
 export class PopupDialog extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
-    @property({ type: String }) public title = "";
-    @property({ type: String }) public size: "normal" | "fullscreen" = "normal";
+    @property({ type: String }) public title = '';
+    @property({ type: String }) public size: 'normal' | 'fullscreen' = 'normal';
     @property({ type: Number }) public timeout = 0;
     @property({ type: Object }) public card?: LovelaceCardConfig;
 
     @state() private _cardElement: LovelaceCard | undefined;
-    @state() private _progressBarAnimation: string = "";
+    @state() private _progressBarAnimation: string = '';
 
-    @query(".progress-bar > div") private _progressBar!: HTMLElement;
+    @query('.progress-bar > div') private _progressBar!: HTMLElement;
 
     private _timeoutId: number | undefined;
 
@@ -89,16 +89,16 @@ export class PopupDialog extends LitElement {
 
     protected firstUpdated() {
         this._cardElement = this.card ? createElement(this.card) : undefined;
-        console.log("First", this.card, this._cardElement);
+        console.log('First', this.card, this._cardElement);
         if (this._cardElement) this._cardElement.hass = this.hass;
     }
 
     protected updated(changedProps: PropertyValues) {
-        if (changedProps.has("timeout")) {
+        if (changedProps.has('timeout')) {
             this._handleTimeout();
         }
 
-        if (changedProps.has("hass") && this._cardElement) {
+        if (changedProps.has('hass') && this._cardElement) {
             this._cardElement.hass = this.hass;
         }
     }
@@ -120,7 +120,7 @@ export class PopupDialog extends LitElement {
                                   ._progressBarAnimation}"
                           ></div>
                       </div>`
-                    : ""}
+                    : ''}
                 <button class="close-btn" @click=${this.closePopup}>X</button>
                 <div class="title">${this.title}</div>
                 <div class="content">
@@ -148,7 +148,7 @@ export class PopupDialog extends LitElement {
 
     public closePopup() {
         this.dispatchEvent(
-            new CustomEvent("smartqasa-popup-close", {
+            new CustomEvent('smartqasa-popup-close', {
                 bubbles: true,
                 composed: true,
             })

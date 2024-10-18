@@ -5,36 +5,36 @@ import {
     nothing,
     PropertyValues,
     TemplateResult,
-} from "lit";
-import { customElement, property, state } from "lit/decorators.js";
-import { styleMap } from "lit/directives/style-map.js";
+} from 'lit';
+import { customElement, property, state } from 'lit/decorators.js';
+import { styleMap } from 'lit/directives/style-map.js';
 
-import { HomeAssistant, LovelaceCardConfig, LovelaceCard } from "../types";
-import { deviceType } from "../utilities/device-info";
-import { callService } from "../utilities/call-service";
-import { moreInfoDialog } from "../dialogs/more-info-dialog";
+import { HomeAssistant, LovelaceCardConfig, LovelaceCard } from '../types';
+import { deviceType } from '../utilities/device-info';
+import { callService } from '../utilities/call-service';
+import { moreInfoDialog } from '../dialogs/more-info-dialog';
 
 interface Config extends LovelaceCardConfig {
     entities: string[];
     columns?: number;
-    style?: "circle" | "square";
+    style?: 'circle' | 'square';
 }
 
 window.customCards.push({
-    type: "smartqasa-light-grid-card",
-    name: "SmartQasa Light Grid Card",
+    type: 'smartqasa-light-grid-card',
+    name: 'SmartQasa Light Grid Card',
     preview: false,
     description:
-        "A SmartQasa card that displays a series of light entities in a configurable grid.",
+        'A SmartQasa card that displays a series of light entities in a configurable grid.',
 });
 
-@customElement("smartqasa-light-grid-card")
+@customElement('smartqasa-light-grid-card')
 export class LightGridCard extends LitElement implements LovelaceCard {
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() protected _config?: Config;
 
     private _columns = 2;
-    private _style: "circle" | "square" = "circle";
+    private _style: 'circle' | 'square' = 'circle';
     private _entities: string[] = [];
 
     static get styles() {
@@ -74,18 +74,18 @@ export class LightGridCard extends LitElement implements LovelaceCard {
 
     public setConfig(config: Config): void {
         if (!config.entities || config.entities.length === 0) {
-            throw new Error("No entities listed.");
+            throw new Error('No entities listed.');
         }
         this._entities = config.entities;
         this._columns = config.columns ?? 2;
-        this._style = config.style ?? "circle";
+        this._style = config.style ?? 'circle';
         this._config = config;
     }
 
     protected willUpdate(changedProps: PropertyValues) {
         if (!this.hass) return;
 
-        if (changedProps.has("_config")) {
+        if (changedProps.has('_config')) {
             this.requestUpdate();
         }
     }
@@ -94,9 +94,9 @@ export class LightGridCard extends LitElement implements LovelaceCard {
         if (!this._config || !this.hass) return nothing;
 
         const gridStyle = {
-            "grid-template-columns":
-                deviceType === "phone"
-                    ? "1fr 1fr"
+            'grid-template-columns':
+                deviceType === 'phone'
+                    ? '1fr 1fr'
                     : `repeat(${this._columns}, min-content)`,
         };
 
@@ -108,7 +108,7 @@ export class LightGridCard extends LitElement implements LovelaceCard {
     }
 
     private _renderButton(entity: string): TemplateResult | typeof nothing {
-        if (entity.startsWith("blank")) {
+        if (entity.startsWith('blank')) {
             const blankCount = this._getBlankCount(entity);
             return html`${Array(blankCount)
                 .fill(0)
@@ -120,8 +120,8 @@ export class LightGridCard extends LitElement implements LovelaceCard {
 
         const color = this._getLightColor(stateObj);
         const buttonStyle = {
-            "background-color": `rgba(${color.r}, ${color.g}, ${color.b}, 0.2)`,
-            "border-radius": this._style === "square" ? "1rem" : "50%",
+            'background-color': `rgba(${color.r}, ${color.g}, ${color.b}, 0.2)`,
+            'border-radius': this._style === 'square' ? '1rem' : '50%',
         };
 
         const iconStyle = {
@@ -138,7 +138,7 @@ export class LightGridCard extends LitElement implements LovelaceCard {
                 <ha-icon
                     class="icon"
                     style=${styleMap(iconStyle)}
-                    icon=${stateObj.attributes.icon || "hass:lightbulb"}
+                    icon=${stateObj.attributes.icon || 'hass:lightbulb'}
                 ></ha-icon>
             </div>
         `;
@@ -165,7 +165,7 @@ export class LightGridCard extends LitElement implements LovelaceCard {
                 title: this._config!.title,
                 timeout: 120000,
                 content: {
-                    type: "custom:smartqasa-light-grid-card",
+                    type: 'custom:smartqasa-light-grid-card',
                     title: this._config!.title,
                     entities: this._entities,
                     columns: this._columns,
@@ -181,13 +181,13 @@ export class LightGridCard extends LitElement implements LovelaceCard {
         const stateObj = this.hass?.states[entity];
         if (!stateObj) return;
 
-        if (stateObj?.state === "on") {
-            callService(this.hass, "light", "turn_off", {
+        if (stateObj?.state === 'on') {
+            callService(this.hass, 'light', 'turn_off', {
                 entity_id: entity,
                 transition: 2,
             });
         } else {
-            callService(this.hass, "light", "turn_on", { entity_id: entity });
+            callService(this.hass, 'light', 'turn_on', { entity_id: entity });
         }
     }
 }

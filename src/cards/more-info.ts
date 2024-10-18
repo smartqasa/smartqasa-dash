@@ -5,14 +5,14 @@ import {
     nothing,
     PropertyValues,
     TemplateResult,
-} from "lit";
-import { customElement, property, state } from "lit/decorators.js";
+} from 'lit';
+import { customElement, property, state } from 'lit/decorators.js';
 import {
     HassEntity,
     HomeAssistant,
     LovelaceCard,
     LovelaceCardConfig,
-} from "../types";
+} from '../types';
 
 interface Config extends LovelaceCardConfig {
     entity: string;
@@ -20,7 +20,7 @@ interface Config extends LovelaceCardConfig {
     background?: boolean;
 }
 
-@customElement("smartqasa-more-info-card")
+@customElement('smartqasa-more-info-card')
 export class MoreInfoCard extends LitElement implements LovelaceCard {
     public getCardSize(): number | Promise<number> {
         return 4;
@@ -63,15 +63,15 @@ export class MoreInfoCard extends LitElement implements LovelaceCard {
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
         return !!(
-            (changedProps.has("hass") &&
+            (changedProps.has('hass') &&
                 this._entity &&
                 this.hass?.states[this._entity] !== this._stateObj) ||
-            changedProps.has("_config")
+            changedProps.has('_config')
         );
     }
 
     protected willUpdate(changedProps: PropertyValues): void {
-        if (changedProps.has("hass") && this.hass && this._entity) {
+        if (changedProps.has('hass') && this.hass && this._entity) {
             this._stateObj = this.hass.states[this._entity];
         }
     }
@@ -80,8 +80,8 @@ export class MoreInfoCard extends LitElement implements LovelaceCard {
         if (!this._config || !this.hass || !this._stateObj) return nothing;
 
         const containerClass = this._config.background
-            ? "container"
-            : "container-transparent";
+            ? 'container'
+            : 'container-transparent';
 
         return html`
             <div>

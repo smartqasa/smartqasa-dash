@@ -1,11 +1,11 @@
-import { css } from "lit";
+import { css } from 'lit';
 
 export default css`
     .container {
         width: fit-content;
         place-self: center;
         display: grid;
-        grid-template-areas: "i t";
+        grid-template-areas: 'i t';
         grid-column-gap: 0.8rem;
         padding: 1rem;
         border: var(--sq-card-border);

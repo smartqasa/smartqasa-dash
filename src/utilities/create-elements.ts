@@ -1,5 +1,5 @@
-import { HomeAssistant, LovelaceCardConfig, LovelaceCard } from "../types";
-import { createElement } from "./create-element";
+import { HomeAssistant, LovelaceCardConfig, LovelaceCard } from '../types';
+import { createElement } from './create-element';
 
 export const createElements = (
     config: LovelaceCardConfig[],

@@ -1,4 +1,4 @@
-import { css } from "lit";
+import { css } from 'lit';
 
 export const panelStyles = css`
     :host {
@@ -15,10 +15,10 @@ export const panelStyles = css`
         grid-template-columns: 100%;
         grid-template-rows: auto auto minmax(0, 1fr) auto;
         grid-template-areas:
-            "header"
-            "area"
-            "body"
-            "footer";
+            'header'
+            'area'
+            'body'
+            'footer';
         gap: 2rem;
         padding: 1rem 1rem 0.5rem 1rem;
         box-sizing: border-box;
@@ -72,8 +72,8 @@ export const panelStyles = css`
         grid-template-columns: 1fr 1fr;
         grid-template-rows: min-content 1fr;
         grid-template-areas:
-            "name image"
-            "chips image";
+            'name image'
+            'chips image';
     }
 
     .area-name {
@@ -173,9 +173,9 @@ export const panelStyles = css`
             grid-template-columns: 100%;
             grid-template-rows: auto minmax(0, 1fr) auto;
             grid-template-areas:
-                "area"
-                "body"
-                "footer";
+                'area'
+                'body'
+                'footer';
             gap: 1rem;
             padding: 0.6rem 0.6rem 0.3rem 0.6rem;
         }
@@ -184,8 +184,8 @@ export const panelStyles = css`
             grid-template-columns: 1fr;
             grid-template-rows: auto auto;
             grid-template-areas:
-                "image"
-                "chips";
+                'image'
+                'chips';
             gap: 1rem;
             position: relative;
         }
@@ -231,7 +231,7 @@ export const panelStyles = css`
         .container {
             grid-template-columns: 1fr 1fr;
             grid-template-rows: 100%;
-            grid-template-areas: "area body";
+            grid-template-areas: 'area body';
             gap: 1rem;
             padding: 0.6rem 0.6rem 0.3rem 0.6rem;
         }
@@ -240,9 +240,9 @@ export const panelStyles = css`
             grid-template-columns: 1fr;
             grid-template-rows: auto 1fr auto;
             grid-template-areas:
-                "image"
-                "chips"
-                "footer-p-l";
+                'image'
+                'chips'
+                'footer-p-l';
             gap: 1rem;
             position: relative;
         }

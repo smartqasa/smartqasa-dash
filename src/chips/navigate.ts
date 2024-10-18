@@ -6,31 +6,31 @@ import {
     PropertyValues,
     TemplateResult,
     unsafeCSS,
-} from "lit";
-import { customElement, property, state } from "lit/decorators.js";
+} from 'lit';
+import { customElement, property, state } from 'lit/decorators.js';
 
-import { navigateToArea } from "../utilities/navigate-to-area";
+import { navigateToArea } from '../utilities/navigate-to-area';
 import {
     HassArea,
     HomeAssistant,
     LovelaceCard,
     LovelaceCardConfig,
-} from "../types";
+} from '../types';
 
-import chipDoubleStyle from "../css/chip-double.css";
+import chipDoubleStyle from '../css/chip-double.css';
 
 interface Config extends LovelaceCardConfig {
     area_prev?: string;
     area_next?: string;
 }
 window.customCards.push({
-    type: "smartqasa-navigate-chip",
-    name: "SmartQasa Navigate Chip",
+    type: 'smartqasa-navigate-chip',
+    name: 'SmartQasa Navigate Chip',
     preview: true,
-    description: "A SmartQasa chip for navigating to a previous/next area.",
+    description: 'A SmartQasa chip for navigating to a previous/next area.',
 });
 
-@customElement("smartqasa-navigate-chip")
+@customElement('smartqasa-navigate-chip')
 export class NavigateChip extends LitElement implements LovelaceCard {
     public getCardSize(): number | Promise<number> {
         return 1;
@@ -51,7 +51,7 @@ export class NavigateChip extends LitElement implements LovelaceCard {
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
         return !!(
-            changedProps.has("hass") &&
+            changedProps.has('hass') &&
             this._areaPrev &&
             this._areaNext &&
             (this.hass?.areas[this._areaPrev] !== this._areaObjPrev ||
@@ -69,8 +69,8 @@ export class NavigateChip extends LitElement implements LovelaceCard {
             ? this.hass?.areas[this._areaNext]
             : undefined;
 
-        const iconPrev = "hass:menu-left";
-        const iconNext = "hass:menu-right";
+        const iconPrev = 'hass:menu-left';
+        const iconNext = 'hass:menu-right';
 
         return html`
             <div class="container">
@@ -89,7 +89,7 @@ export class NavigateChip extends LitElement implements LovelaceCard {
         if (this._areaPrev && this._areaObjPrev) {
             navigateToArea(this._areaPrev);
         } else {
-            console.error("Previous area is not found.");
+            console.error('Previous area is not found.');
         }
     }
 
@@ -98,7 +98,7 @@ export class NavigateChip extends LitElement implements LovelaceCard {
         if (this._areaNext && this._areaObjNext) {
             navigateToArea(this._areaNext);
         } else {
-            console.error("Next area is not found.");
+            console.error('Next area is not found.');
         }
     }
 }

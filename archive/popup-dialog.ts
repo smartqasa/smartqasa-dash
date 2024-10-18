@@ -1,7 +1,7 @@
-import { LitElement, html, css } from "lit";
-import { customElement, property } from "lit/decorators.js";
+import { LitElement, html, css } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
 
-@customElement("popup-dialog")
+@customElement('popup-dialog')
 class PopupDialog extends LitElement {
     @property({ type: Array }) cardConfigs = [];
 
@@ -42,6 +42,6 @@ class PopupDialog extends LitElement {
     }
 
     private _close() {
-        this.dispatchEvent(new CustomEvent("close"));
+        this.dispatchEvent(new CustomEvent('close'));
     }
 }

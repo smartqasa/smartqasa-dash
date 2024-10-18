@@ -6,21 +6,21 @@ import {
     PropertyValues,
     TemplateResult,
     unsafeCSS,
-} from "lit";
-import { customElement, property, state } from "lit/decorators.js";
-import { styleMap } from "lit/directives/style-map.js";
+} from 'lit';
+import { customElement, property, state } from 'lit/decorators.js';
+import { styleMap } from 'lit/directives/style-map.js';
 
 import {
     HassEntity,
     HomeAssistant,
     LovelaceCard,
     LovelaceCardConfig,
-} from "../types";
-import { moreInfoDialog } from "../dialogs/more-info-dialog";
-import { heaterColors } from "../const";
-import { formatState } from "../utilities/format-state";
+} from '../types';
+import { moreInfoDialog } from '../dialogs/more-info-dialog';
+import { heaterColors } from '../const';
+import { formatState } from '../utilities/format-state';
 
-import tileStyle from "../css/tile.css";
+import tileStyle from '../css/tile.css';
 
 interface Config extends LovelaceCardConfig {
     entity: string;
@@ -28,13 +28,13 @@ interface Config extends LovelaceCardConfig {
 }
 
 window.customCards.push({
-    type: "smartqasa-heater-tile",
-    name: "SmartQasa Heater Tile",
+    type: 'smartqasa-heater-tile',
+    name: 'SmartQasa Heater Tile',
     preview: true,
-    description: "A SmartQasa tile for controlling a water heater entity.",
+    description: 'A SmartQasa tile for controlling a water heater entity.',
 });
 
-@customElement("smartqasa-heater-tile")
+@customElement('smartqasa-heater-tile')
 export class HeaterTile extends LitElement implements LovelaceCard {
     getCardSize(): number | Promise<number> {
         return 1;
@@ -44,19 +44,19 @@ export class HeaterTile extends LitElement implements LovelaceCard {
     @state() protected _config?: Config;
     @state() private _stateObj?: HassEntity;
     private _entity?: string;
-    private _icon: string = "hass:water-boiler-alert";
+    private _icon: string = 'hass:water-boiler-alert';
     private _iconStyles: Record<string, string> = {};
-    private _name: string = "Unknown Heater";
-    private _stateFmtd: string = "Unknown State";
+    private _name: string = 'Unknown Heater';
+    private _stateFmtd: string = 'Unknown State';
 
     static get styles(): CSSResult {
         return unsafeCSS(tileStyle);
     }
 
     public setConfig(config: Config): void {
-        if (!config.entity?.startsWith("water_heater.")) {
+        if (!config.entity?.startsWith('water_heater.')) {
             console.error(
-                "Invalid water_heater entity provided in the config."
+                'Invalid water_heater entity provided in the config.'
             );
             this._entity = undefined;
         } else {
@@ -68,10 +68,10 @@ export class HeaterTile extends LitElement implements LovelaceCard {
     protected shouldUpdate(changedProps: PropertyValues): boolean {
         if (!this._config) return false;
         return !!(
-            (changedProps.has("hass") &&
+            (changedProps.has('hass') &&
                 this._entity &&
                 this.hass?.states[this._entity] !== this._stateObj) ||
-            (changedProps.has("_config") && this._config)
+            (changedProps.has('_config') && this._config)
         );
     }
 
@@ -100,19 +100,19 @@ export class HeaterTile extends LitElement implements LovelaceCard {
 
         let icon, iconColor, name, stateFmtd;
         if (this._stateObj) {
-            const state = this._stateObj.state || "unknown";
-            icon = this._config!.icon || "hass:water-boiler";
+            const state = this._stateObj.state || 'unknown';
+            icon = this._config!.icon || 'hass:water-boiler';
             iconColor = heaterColors[state] || heaterColors.idle;
             name =
                 this._config!.name ||
                 this._stateObj.attributes.friendly_name ||
-                "Water Heater";
+                'Water Heater';
             stateFmtd = formatState(this.hass!, this._entity!);
         } else {
-            icon = this._config!.icon || "hass:water-boiler-alert";
-            iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            name = this._config!.name || "Unknown Heater";
-            stateFmtd = "Unknown State";
+            icon = this._config!.icon || 'hass:water-boiler-alert';
+            iconColor = 'var(--sq-unavailable-rgb, 255, 0, 255)';
+            name = this._config!.name || 'Unknown Heater';
+            stateFmtd = 'Unknown State';
         }
 
         this._iconStyles = {

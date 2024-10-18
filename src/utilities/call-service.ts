@@ -1,4 +1,4 @@
-import { HomeAssistant } from "../types";
+import { HomeAssistant } from '../types';
 
 export const callService = async (
     hass: HomeAssistant | undefined,
@@ -9,7 +9,7 @@ export const callService = async (
     if (!hass) {
         console.error(
             `Error calling ${domain}.${service}:`,
-            "Connection to Home Assistant is not available."
+            'Connection to Home Assistant is not available.'
         );
         return;
     }

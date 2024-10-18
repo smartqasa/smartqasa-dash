@@ -5,14 +5,14 @@ import {
     CSSResultGroup,
     PropertyValues,
     TemplateResult,
-} from "lit";
-import { customElement, property, state } from "lit/decorators.js";
+} from 'lit';
+import { customElement, property, state } from 'lit/decorators.js';
 
-import { HomeAssistant, LovelaceCardConfig } from "../src/types";
-import { areasDialog } from "../src/misc/areas-dialog";
-import { entertainDialog } from "../src/misc/entertain-dialog";
-import { menuConfig } from "../src/misc/menu-config";
-import { deviceType } from "../src/utils/device-info";
+import { HomeAssistant, LovelaceCardConfig } from '../src/types';
+import { areasDialog } from '../src/misc/areas-dialog';
+import { entertainDialog } from '../src/misc/entertain-dialog';
+import { menuConfig } from '../src/misc/menu-config';
+import { deviceType } from '../src/utils/device-info';
 
 interface Config extends LovelaceCardConfig {
     audio_player: string;
@@ -28,13 +28,13 @@ interface ActionHandlers {
 }
 
 window.customCards.push({
-    type: "smartqasa-panel-footer",
-    name: "SmartQasa Panel Footer",
+    type: 'smartqasa-panel-footer',
+    name: 'SmartQasa Panel Footer',
     preview: true,
-    description: "A SmartQasa tile for displaying the panel footer strip.",
+    description: 'A SmartQasa tile for displaying the panel footer strip.',
 });
 
-@customElement("smartqasa-panel-footer")
+@customElement('smartqasa-panel-footer')
 class PanelFooter extends LitElement implements ActionHandlers {
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() private _config?: Config;
@@ -81,18 +81,18 @@ class PanelFooter extends LitElement implements ActionHandlers {
     protected render(): TemplateResult {
         return html`
             <div class="grid">
-                ${this.renderButton("hass:home", "Home", "handleHome")}
+                ${this.renderButton('hass:home', 'Home', 'handleHome')}
                 ${this.renderButton(
-                    "hass:view-dashboard",
-                    "Areas",
-                    "handleAreas"
+                    'hass:view-dashboard',
+                    'Areas',
+                    'handleAreas'
                 )}
                 ${this.renderButton(
-                    "hass:music",
-                    "Entertainment",
-                    "handleEntertain"
+                    'hass:music',
+                    'Entertainment',
+                    'handleEntertain'
                 )}
-                ${this.renderButton("hass:menu", "Menu", "handleMenu")}
+                ${this.renderButton('hass:menu', 'Menu', 'handleMenu')}
             </div>
         `;
     }
@@ -108,14 +108,14 @@ class PanelFooter extends LitElement implements ActionHandlers {
                 @click="${(e: Event) => this.handleAction(e, methodName)}"
             >
                 <ha-icon .icon=${icon}></ha-icon>
-                ${deviceType !== "phone" ? html`<span>${name}</span>` : ""}
+                ${deviceType !== 'phone' ? html`<span>${name}</span>` : ''}
             </div>
         `;
     }
 
     private handleAction(e: Event, methodName: keyof ActionHandlers): void {
         e.stopPropagation();
-        if (typeof this[methodName] === "function") {
+        if (typeof this[methodName] === 'function') {
             this[methodName]();
         } else {
             console.error(`Method not found: ${methodName}`);
@@ -124,10 +124,10 @@ class PanelFooter extends LitElement implements ActionHandlers {
 
     handleHome(): void {
         const basePath = window.smartqasa.homePath;
-        window.smartqasa.viewMode = "area";
-        const path = location.href.endsWith("/" + basePath) ? "home" : basePath;
-        window.history.pushState(null, "", `/home-dash/${path}`);
-        window.dispatchEvent(new CustomEvent("location-changed"));
+        window.smartqasa.viewMode = 'area';
+        const path = location.href.endsWith('/' + basePath) ? 'home' : basePath;
+        window.history.pushState(null, '', `/home-dash/${path}`);
+        window.dispatchEvent(new CustomEvent('location-changed'));
     }
 
     handleAreas(): void {
@@ -142,9 +142,9 @@ class PanelFooter extends LitElement implements ActionHandlers {
         window.smartqasa.menuTab = 0;
         try {
             const dialogConfig = await menuConfig();
-            window.browser_mod?.service("popup", dialogConfig);
+            window.browser_mod?.service('popup', dialogConfig);
         } catch (error) {
-            console.error("Error loading menu configuration", error);
+            console.error('Error loading menu configuration', error);
         }
     }
 }

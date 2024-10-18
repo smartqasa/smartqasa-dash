@@ -1,4 +1,4 @@
-import { listDialogConfig } from "../src/dialogs/list-dialog-config";
+import { listDialogConfig } from '../src/dialogs/list-dialog-config';
 
 export function moreInfoDialog(config: any, stateObj: any) {
     if (!config || !stateObj) return;
@@ -10,13 +10,13 @@ export function moreInfoDialog(config: any, stateObj: any) {
         dismissable: true,
         timeout: 60000,
         content: {
-            type: "custom:smartqasa-more-info-card",
+            type: 'custom:smartqasa-more-info-card',
             entity: stateObj.entity_id,
             background: false,
         },
         ...(config.dialog_title && {
             dismiss_action: {
-                service: "browser_mod.popup",
+                service: 'browser_mod.popup',
                 data: {
                     ...listDialogConfig(
                         config.dialog_title,
@@ -30,7 +30,7 @@ export function moreInfoDialog(config: any, stateObj: any) {
     };
 
     if (!window.browser_mod) {
-        console.error("browser_mod is not available");
+        console.error('browser_mod is not available');
     }
-    window.browser_mod?.service("popup", dialogConfig);
+    window.browser_mod?.service('popup', dialogConfig);
 }

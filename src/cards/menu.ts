@@ -5,14 +5,14 @@ import {
     nothing,
     PropertyValues,
     TemplateResult,
-} from "lit";
-import { customElement, property, state } from "lit/decorators.js";
-import { styleMap } from "lit/directives/style-map.js";
+} from 'lit';
+import { customElement, property, state } from 'lit/decorators.js';
+import { styleMap } from 'lit/directives/style-map.js';
 
-import { HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
-import { loadYamlAsJson } from "../utilities/load-yaml-as-json";
-import { getDeviceType, getDeviceOrientation } from "../utilities/device-info";
-import { createElement } from "../utilities/create-element";
+import { HomeAssistant, LovelaceCard, LovelaceCardConfig } from '../types';
+import { loadYamlAsJson } from '../utilities/load-yaml-as-json';
+import { getDeviceType, getDeviceOrientation } from '../utilities/device-info';
+import { createElement } from '../utilities/create-element';
 
 interface Tab {
     tab: string;
@@ -20,7 +20,7 @@ interface Tab {
     tiles: LovelaceCardConfig[];
 }
 
-@customElement("smartqasa-menu-card")
+@customElement('smartqasa-menu-card')
 export class MenuCard extends LitElement implements LovelaceCard {
     public getCardSize(): number {
         return 4;
@@ -103,27 +103,27 @@ export class MenuCard extends LitElement implements LovelaceCard {
         super.connectedCallback();
 
         this._loadMenuTabs().catch((error) => {
-            console.error("Error loading menu tabs and tiles:", error);
+            console.error('Error loading menu tabs and tiles:', error);
         });
 
         this._handleDeviceChanges();
 
-        window.addEventListener("resize", this._boundHandleDeviceChanges);
+        window.addEventListener('resize', this._boundHandleDeviceChanges);
         window.addEventListener(
-            "orientationchange",
+            'orientationchange',
             this._boundHandleDeviceChanges
         );
     }
 
     protected willUpdate(changedProps: PropertyValues): void {
-        if (changedProps.has("hass") && this.hass) {
+        if (changedProps.has('hass') && this.hass) {
             const currentTiles = this._bodyTiles[this._menuTab] || [];
             currentTiles.forEach((tile) => {
                 if (tile.hass !== this.hass) tile.hass = this.hass;
             });
 
             const isAdminMode =
-                this.hass.states["input_boolean.admin_mode"]?.state === "on";
+                this.hass.states['input_boolean.admin_mode']?.state === 'on';
             this._isAdminMode =
                 (this.hass.user?.is_admin ?? false) || isAdminMode;
         }
@@ -132,9 +132,9 @@ export class MenuCard extends LitElement implements LovelaceCard {
     public disconnectedCallback(): void {
         super.disconnectedCallback();
 
-        window.removeEventListener("resize", this._boundHandleDeviceChanges);
+        window.removeEventListener('resize', this._boundHandleDeviceChanges);
         window.removeEventListener(
-            "orientationchange",
+            'orientationchange',
             this._boundHandleDeviceChanges
         );
     }
@@ -146,7 +146,7 @@ export class MenuCard extends LitElement implements LovelaceCard {
             <div class="container">
                 <div class="tab-bar">
                     ${this._tabs.map((tab, index) => {
-                        if (tab.tab === "Utilities" && !this._isAdminMode) {
+                        if (tab.tab === 'Utilities' && !this._isAdminMode) {
                             return nothing;
                         }
                         return html`
@@ -154,7 +154,7 @@ export class MenuCard extends LitElement implements LovelaceCard {
                                 class="tab"
                                 ?selected=${this._menuTab === index}
                                 @click="${() => this._setMenuTab(index)}"
-                                ?icon-only=${this._deviceType === "phone"}
+                                ?icon-only=${this._deviceType === 'phone'}
                             >
                                 <ha-icon icon="${tab.icon}"></ha-icon>
                                 <span>${tab.tab}</span>
@@ -173,14 +173,14 @@ export class MenuCard extends LitElement implements LovelaceCard {
         const type = getDeviceType();
         const orientation = getDeviceOrientation();
 
-        if (type === "phone") {
+        if (type === 'phone') {
             this._gridStyle = {
                 gridTemplateColumns:
-                    orientation === "landscape" ? "1fr 1fr" : "1fr",
+                    orientation === 'landscape' ? '1fr 1fr' : '1fr',
             };
         } else {
             this._gridStyle = {
-                gridTemplateColumns: "repeat(3, var(--sq-tile-width, 19.5rem))",
+                gridTemplateColumns: 'repeat(3, var(--sq-tile-width, 19.5rem))',
             };
         }
     }
@@ -188,74 +188,74 @@ export class MenuCard extends LitElement implements LovelaceCard {
     private async _loadMenuTabs(): Promise<void> {
         try {
             const tabsData = (await loadYamlAsJson(
-                "/local/smartqasa/config/menu.yaml"
+                '/local/smartqasa/config/menu.yaml'
             )) as Tab[];
             if (!Array.isArray(tabsData)) {
-                throw new Error("Invalid tabs configuration");
+                throw new Error('Invalid tabs configuration');
             }
             this._tabs = tabsData;
         } catch (error) {
-            console.error("Error loading menu tabs and tiles:", error);
+            console.error('Error loading menu tabs and tiles:', error);
         }
 
         const utilMenuTab = {
-            tab: "Utilities",
-            icon: "mdi:toolbox",
+            tab: 'Utilities',
+            icon: 'mdi:toolbox',
             tiles: [
                 {
-                    type: "custom:smartqasa-dialog-tile",
-                    dialog: "clean_screen",
+                    type: 'custom:smartqasa-dialog-tile',
+                    dialog: 'clean_screen',
                 },
                 {
-                    type: "custom:smartqasa-dialog-tile",
-                    dialog: "display_themes",
+                    type: 'custom:smartqasa-dialog-tile',
+                    dialog: 'display_themes',
                 },
                 {
-                    type: "custom:smartqasa-routine-tile",
-                    entity: "script.system_tablet_reload",
-                    name: "Refresh Displays",
+                    type: 'custom:smartqasa-routine-tile',
+                    entity: 'script.system_tablet_reload',
+                    name: 'Refresh Displays',
                 },
                 {
-                    type: "custom:smartqasa-action-tile",
-                    icon: "mdi:wiper",
-                    name: "Clear Cache",
+                    type: 'custom:smartqasa-action-tile',
+                    icon: 'mdi:wiper',
+                    name: 'Clear Cache',
                     actions: [
                         {
-                            action: "browser_mod.javascript",
+                            action: 'browser_mod.javascript',
                             data: {
-                                code: "fully.clearCache()",
+                                code: 'fully.clearCache()',
                             },
                         },
                     ],
                 },
                 {
-                    type: "custom:smartqasa-dialog-tile",
-                    dialog: "speed_test",
+                    type: 'custom:smartqasa-dialog-tile',
+                    dialog: 'speed_test',
                 },
                 {
-                    type: "custom:smartqasa-action-tile",
-                    icon: "mdi:restart",
-                    name: "Reboot System",
+                    type: 'custom:smartqasa-action-tile',
+                    icon: 'mdi:restart',
+                    name: 'Reboot System',
                     actions: [
                         {
-                            action: "hassio.host_reboot",
+                            action: 'hassio.host_reboot',
                         },
                     ],
                 },
                 {
-                    type: "custom:smartqasa-action-tile",
-                    icon: "mdi:power",
-                    name: "Shutdown System",
+                    type: 'custom:smartqasa-action-tile',
+                    icon: 'mdi:power',
+                    name: 'Shutdown System',
                     actions: [
                         {
-                            action: "hassio.host_shutdown",
+                            action: 'hassio.host_shutdown',
                         },
                     ],
                 },
                 {
-                    type: "custom:smartqasa-app-tile",
-                    app: "play_store",
-                    icon: "mdi:store",
+                    type: 'custom:smartqasa-app-tile',
+                    app: 'play_store',
+                    icon: 'mdi:store',
                 },
             ],
         };
@@ -284,7 +284,7 @@ export class MenuCard extends LitElement implements LovelaceCard {
                 tile.hass = this.hass;
                 tiles.push(tile);
             } else {
-                console.error("Failed to create tile for config:", config);
+                console.error('Failed to create tile for config:', config);
             }
         }
         return tiles;
