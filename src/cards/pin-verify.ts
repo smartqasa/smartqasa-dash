@@ -1,8 +1,8 @@
-import { css, html, LitElement, nothing, TemplateResult } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
-import { styleMap } from 'lit/directives/style-map.js';
+import { css, html, LitElement, nothing, TemplateResult } from "lit";
+import { customElement, property, state } from "lit/decorators.js";
+import { styleMap } from "lit/directives/style-map.js";
 
-import { HomeAssistant, LovelaceCard, LovelaceCardConfig } from '../types';
+import { HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 
 interface Config extends LovelaceCardConfig {
     title?: string;
@@ -11,13 +11,13 @@ interface Config extends LovelaceCardConfig {
 }
 
 window.customCards.push({
-    type: 'smartqasa-pin-verify-card',
-    name: 'SmartQasa PIN Verify card',
+    type: "smartqasa-pin-verify-card",
+    name: "SmartQasa PIN Verify card",
     preview: true,
-    description: 'A SmartQasa card for accepting and verifying a PIN.',
+    description: "A SmartQasa card for accepting and verifying a PIN.",
 });
 
-@customElement('smartqasa-pin-verify-card')
+@customElement("smartqasa-pin-verify-card")
 export class PinVerifyCard extends LitElement implements LovelaceCard {
     public getCardSize(): number {
         return 4;
@@ -25,9 +25,9 @@ export class PinVerifyCard extends LitElement implements LovelaceCard {
 
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() protected _config?: Config;
-    @state() private _inputPin: string = '';
-    @state() private _maskedPin: string = '';
-    @state() private _pinState: string = '';
+    @state() private _inputPin: string = "";
+    @state() private _maskedPin: string = "";
+    @state() private _pinState: string = "";
     private _pinEntity?: string;
     private _outcomeEntity?: string;
 
@@ -99,18 +99,18 @@ export class PinVerifyCard extends LitElement implements LovelaceCard {
         if (!this._config) return;
 
         this._pinEntity =
-            this._config.pin_entity || 'input_text.admin_pin_code';
+            this._config.pin_entity || "input_text.admin_pin_code";
         this._outcomeEntity =
-            this._config.outcome_entity || 'input_boolean.admin_mode';
+            this._config.outcome_entity || "input_boolean.admin_mode";
 
-        const pinDomain = this._pinEntity.split('.')[0];
-        const outcomeDomain = this._outcomeEntity.split('.')[0];
-        if (pinDomain !== 'input_text') {
+        const pinDomain = this._pinEntity.split(".")[0];
+        const outcomeDomain = this._outcomeEntity.split(".")[0];
+        if (pinDomain !== "input_text") {
             throw new Error(
                 `Invalid entity domain: PIN entity should be of domain "input_text", got "${pinDomain}" instead.`
             );
         }
-        if (outcomeDomain !== 'input_boolean') {
+        if (outcomeDomain !== "input_boolean") {
             throw new Error(
                 `Invalid entity domain: Outcome entity should be of domain "input_boolean", got "${outcomeDomain}" instead.`
             );
@@ -120,23 +120,23 @@ export class PinVerifyCard extends LitElement implements LovelaceCard {
     protected render(): TemplateResult | typeof nothing {
         if (!this._config) return nothing;
 
-        const title = this._config.title || 'Enter PIN';
+        const title = this._config.title || "Enter PIN";
 
         let maskedPin, pinStyles;
         if (!this._pinState) {
             maskedPin = this._maskedPin;
             pinStyles = {
-                color: 'var(--sq-primary-font-rgb)',
+                color: "var(--sq-primary-font-rgb)",
             };
-        } else if (this._pinState === 'valid') {
-            maskedPin = 'PIN Accepted';
+        } else if (this._pinState === "valid") {
+            maskedPin = "PIN Accepted";
             pinStyles = {
-                color: 'rgb(var(--sq-green-rgb))',
+                color: "rgb(var(--sq-green-rgb))",
             };
         } else {
-            maskedPin = 'Invalid PIN';
+            maskedPin = "Invalid PIN";
             pinStyles = {
-                color: 'rgb(var(--sq-red-rgb))',
+                color: "rgb(var(--sq-red-rgb))",
             };
         }
         return html`
@@ -149,7 +149,7 @@ export class PinVerifyCard extends LitElement implements LovelaceCard {
                     ${maskedPin}
                 </div>
                 <div class="grid">
-                    ${[1, 2, 3, 4, 5, 6, 7, 8, 9, '☓', 0, '✓'].map((digit) =>
+                    ${[1, 2, 3, 4, 5, 6, 7, 8, 9, "☓", 0, "✓"].map((digit) =>
                         this._renderButton(digit)
                     )}
                 </div>
@@ -169,14 +169,14 @@ export class PinVerifyCard extends LitElement implements LovelaceCard {
     private _handleInput(digit: number | string): void {
         if (this._pinState) return;
 
-        if (digit === '✓') {
+        if (digit === "✓") {
             this._verifyPin();
-        } else if (digit === '☓') {
-            this._inputPin = '';
-            this._maskedPin = '';
+        } else if (digit === "☓") {
+            this._inputPin = "";
+            this._maskedPin = "";
         } else {
             this._inputPin += digit;
-            this._maskedPin += '*';
+            this._maskedPin += "*";
         }
     }
 
@@ -191,29 +191,29 @@ export class PinVerifyCard extends LitElement implements LovelaceCard {
 
         const adminPin = pinStateObj.state;
         if (this._inputPin === adminPin) {
-            this._pinState = 'valid';
+            this._pinState = "valid";
             try {
-                this.hass.callService('input_boolean', 'turn_on', {
+                this.hass.callService("input_boolean", "turn_on", {
                     entity_id: this._outcomeEntity,
                 });
             } catch (error) {
                 console.error(
-                    'Failed to turn on the admin mode entity:',
+                    "Failed to turn on the admin mode entity:",
                     error
                 );
             }
             setTimeout(() => {
-                this._inputPin = '';
-                this._maskedPin = '';
-                this._pinState = '';
-                window.browser_mod?.service('close_popup', {});
+                this._inputPin = "";
+                this._maskedPin = "";
+                this._pinState = "";
+                window.browser_mod?.service("close_popup", {});
             }, 5000);
         } else {
-            this._pinState = 'invalid';
+            this._pinState = "invalid";
             setTimeout(() => {
-                this._inputPin = '';
-                this._maskedPin = '';
-                this._pinState = '';
+                this._inputPin = "";
+                this._maskedPin = "";
+                this._pinState = "";
             }, 2000);
         }
     }

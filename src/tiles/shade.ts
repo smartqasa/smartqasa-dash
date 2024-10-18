@@ -6,22 +6,22 @@ import {
     PropertyValues,
     TemplateResult,
     unsafeCSS,
-} from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
-import { styleMap } from 'lit/directives/style-map.js';
+} from "lit";
+import { customElement, property, state } from "lit/decorators.js";
+import { styleMap } from "lit/directives/style-map.js";
 
 import {
     HassEntity,
     HomeAssistant,
     LovelaceCard,
     LovelaceCardConfig,
-} from '../types';
-import { callService } from '../utilities/call-service';
-import { moreInfoDialog } from '../dialogs/more-info-dialog';
-import { entityListDialog } from '../dialogs/entity-list-dialog';
-import { formatState } from '../utilities/format-state';
+} from "../types";
+import { callService } from "../utilities/call-service";
+import { moreInfoDialog } from "../dialogs/more-info-dialog";
+import { entityListDialog } from "../dialogs/entity-list-dialog";
+import { formatState } from "../utilities/format-state";
 
-import tileStyle from '../css/tile.css';
+import tileStyle from "../css/tile.css";
 
 interface Config extends LovelaceCardConfig {
     entity: string;
@@ -30,13 +30,13 @@ interface Config extends LovelaceCardConfig {
 }
 
 window.customCards.push({
-    type: 'smartqasa-shade-tile',
-    name: 'SmartQasa Shade Tile',
+    type: "smartqasa-shade-tile",
+    name: "SmartQasa Shade Tile",
     preview: true,
-    description: 'A SmartQasa tile for controlling a window shade entity.',
+    description: "A SmartQasa tile for controlling a window shade entity.",
 });
 
-@customElement('smartqasa-shade-tile')
+@customElement("smartqasa-shade-tile")
 export class ShadeTile extends LitElement implements LovelaceCard {
     public getCardSize(): number | Promise<number> {
         return 1;
@@ -46,39 +46,39 @@ export class ShadeTile extends LitElement implements LovelaceCard {
     @state() protected _config?: Config;
     private _entity?: string;
     private _stateObj?: HassEntity;
-    private _icon: string = 'hass:roller-shade';
+    private _icon: string = "hass:roller-shade";
     private _iconStyles: Record<string, string> = {};
-    private _name: string = 'Unknown Shade';
-    private _stateFmtd: string = 'Unknown State';
+    private _name: string = "Unknown Shade";
+    private _stateFmtd: string = "Unknown State";
 
     private readonly _stateMap: Record<
         string,
         { stateIcon: string; stateAnimation: string; stateColor: string }
     > = {
         closed: {
-            stateIcon: 'hass:roller-shade-closed',
-            stateAnimation: 'none',
-            stateColor: 'var(--sq-inactive-rgb)',
+            stateIcon: "hass:roller-shade-closed",
+            stateAnimation: "none",
+            stateColor: "var(--sq-inactive-rgb)",
         },
         closing: {
-            stateIcon: 'hass:arrow-down-box',
-            stateAnimation: 'blink 2.0s linear infinite',
-            stateColor: 'var(--sq-cover-shade-closing-rgb)',
+            stateIcon: "hass:arrow-down-box",
+            stateAnimation: "blink 2.0s linear infinite",
+            stateColor: "var(--sq-cover-shade-closing-rgb)",
         },
         opening: {
-            stateIcon: 'hass:arrow-up-box',
-            stateAnimation: 'blink 2.0s linear infinite',
-            stateColor: 'var(--sq-cover-shade-opening-rgb)',
+            stateIcon: "hass:arrow-up-box",
+            stateAnimation: "blink 2.0s linear infinite",
+            stateColor: "var(--sq-cover-shade-opening-rgb)",
         },
         open: {
-            stateIcon: 'hass:roller-shade',
-            stateAnimation: 'none',
-            stateColor: 'var(--sq-cover-shade-open-rgb)',
+            stateIcon: "hass:roller-shade",
+            stateAnimation: "none",
+            stateColor: "var(--sq-cover-shade-open-rgb)",
         },
         default: {
-            stateIcon: 'hass:alert-rhombus',
-            stateAnimation: 'none',
-            stateColor: 'var(--sq-unavailable-rgb)',
+            stateIcon: "hass:alert-rhombus",
+            stateAnimation: "none",
+            stateColor: "var(--sq-unavailable-rgb)",
         },
     };
 
@@ -87,8 +87,8 @@ export class ShadeTile extends LitElement implements LovelaceCard {
     }
 
     public setConfig(config: Config): void {
-        if (!config.entity?.startsWith('cover.')) {
-            console.error('Invalid cover entity provided in the config.');
+        if (!config.entity?.startsWith("cover.")) {
+            console.error("Invalid cover entity provided in the config.");
             this._entity = undefined;
         } else {
             this._entity = config.entity;
@@ -98,10 +98,10 @@ export class ShadeTile extends LitElement implements LovelaceCard {
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
         return !!(
-            (changedProps.has('hass') &&
+            (changedProps.has("hass") &&
                 this._entity &&
                 this.hass?.states[this._entity] !== this._stateObj) ||
-            changedProps.has('_config')
+            changedProps.has("_config")
         );
     }
 
@@ -138,7 +138,7 @@ export class ShadeTile extends LitElement implements LovelaceCard {
 
         let icon, iconAnimation, iconColor, name, stateFmtd;
         if (this._stateObj) {
-            const state = this._stateObj.state || 'unknown';
+            const state = this._stateObj.state || "unknown";
             const { stateIcon, stateAnimation, stateColor } =
                 this._stateMap[state] || this._stateMap.default;
             icon = this._config!.icon || stateIcon;
@@ -147,14 +147,14 @@ export class ShadeTile extends LitElement implements LovelaceCard {
             name =
                 this._config!.name ||
                 this._stateObj.attributes.friendly_name ||
-                'Shade';
+                "Shade";
             stateFmtd = formatState(this.hass!, this._entity!);
         } else {
-            icon = this._config!.icon || 'hass:roller-shade';
-            iconAnimation = 'none';
-            iconColor = 'var(--sq-unavailable-rgb)';
-            name = this._config?.name || 'Unknown';
-            stateFmtd = 'Unknown';
+            icon = this._config!.icon || "hass:roller-shade";
+            iconAnimation = "none";
+            iconColor = "var(--sq-unavailable-rgb)";
+            name = this._config?.name || "Unknown";
+            stateFmtd = "Unknown";
         }
 
         this._iconStyles = {
@@ -172,26 +172,26 @@ export class ShadeTile extends LitElement implements LovelaceCard {
         if (!this.hass || !this._config || !this._stateObj) return;
         const state = this._stateObj.state;
         const tilt = this._config.tilt || 100;
-        if (['closing', 'opening'].includes(state)) {
-            callService(this.hass, 'cover', 'stop_cover', {
+        if (["closing", "opening"].includes(state)) {
+            callService(this.hass, "cover", "stop_cover", {
                 entity_id: this._entity,
             });
             return;
         }
         if (tilt >= 1 && tilt <= 100) {
             if (this._stateObj.attributes.current_position !== tilt) {
-                callService(this.hass, 'cover', 'set_cover_position', {
+                callService(this.hass, "cover", "set_cover_position", {
                     entity_id: this._entity,
                     position: tilt,
                 });
             } else {
-                callService(this.hass, 'cover', 'set_cover_position', {
+                callService(this.hass, "cover", "set_cover_position", {
                     entity_id: this._entity,
                     position: 0,
                 });
             }
         } else {
-            callService(this.hass, 'cover', 'toggle', {
+            callService(this.hass, "cover", "toggle", {
                 entity_id: this._entity,
                 position: 0,
             });
@@ -215,7 +215,7 @@ export class ShadeTile extends LitElement implements LovelaceCard {
         if (entityIds.length === 0) return;
 
         const friendlyName =
-            this._stateObj.attributes?.friendly_name || 'Unknown';
-        entityListDialog(friendlyName, 'group', group, 'shade');
+            this._stateObj.attributes?.friendly_name || "Unknown";
+        entityListDialog(friendlyName, "group", group, "shade");
     }
 }

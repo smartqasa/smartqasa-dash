@@ -1,16 +1,16 @@
-import { HomeAssistant, LovelaceCard, LovelaceCardConfig } from '../types';
+import { HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
 
 export const createElement = (
     config: LovelaceCardConfig,
     hass?: HomeAssistant
 ): LovelaceCard | undefined => {
-    if (!config || typeof config !== 'object' || !config.type) {
+    if (!config || typeof config !== "object" || !config.type) {
         console.error("Error: Invalid or missing 'type' in config:", config);
         return undefined;
     }
 
-    const tag = config.type.startsWith('custom:')
-        ? config.type.replace('custom:', '')
+    const tag = config.type.startsWith("custom:")
+        ? config.type.replace("custom:", "")
         : `hui-${config.type}-card`;
     if (!customElements.get(tag)) {
         console.error(`Error: Custom element '${tag}' is not registered.`);
@@ -18,7 +18,7 @@ export const createElement = (
     }
 
     const element = document.createElement(tag) as LovelaceCard;
-    if (typeof element.setConfig !== 'function') {
+    if (typeof element.setConfig !== "function") {
         console.error(
             `Error: The element '${tag}' does not implement 'setConfig'.`,
             element

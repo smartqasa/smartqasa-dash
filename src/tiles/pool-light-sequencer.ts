@@ -6,27 +6,27 @@ import {
     PropertyValues,
     TemplateResult,
     unsafeCSS,
-} from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
-import { styleMap } from 'lit/directives/style-map.js';
+} from "lit";
+import { customElement, property, state } from "lit/decorators.js";
+import { styleMap } from "lit/directives/style-map.js";
 
 import {
     HassEntity,
     HomeAssistant,
     LovelaceCard,
     LovelaceCardConfig,
-} from '../types';
-import { callService } from '../utilities/call-service';
-import { sequenceTable } from '../tables/pool-light-sequences';
+} from "../types";
+import { callService } from "../utilities/call-service";
+import { sequenceTable } from "../tables/pool-light-sequences";
 
-import tileStyle from '../css/tile.css';
+import tileStyle from "../css/tile.css";
 
 interface Config extends LovelaceCardConfig {
     sequence: string;
     entity: string;
 }
 
-@customElement('smartqasa-pool-light-sequencer-tile')
+@customElement("smartqasa-pool-light-sequencer-tile")
 export class PoolLightSequencerTile extends LitElement implements LovelaceCard {
     public getCardSize(): number | Promise<number> {
         return 1;
@@ -39,9 +39,9 @@ export class PoolLightSequencerTile extends LitElement implements LovelaceCard {
     private _sequenceObj?: any;
     private _stateObj?: HassEntity;
     private _entity?: string;
-    private _icon: string = 'hass:lightbulb';
+    private _icon: string = "hass:lightbulb";
     private _iconStyles: Record<string, string> = {};
-    private _name: string = 'Unknown Light';
+    private _name: string = "Unknown Light";
 
     static get styles(): CSSResult {
         return unsafeCSS(tileStyle);
@@ -51,8 +51,8 @@ export class PoolLightSequencerTile extends LitElement implements LovelaceCard {
         this._sequenceObj = config.sequence
             ? sequenceTable[config.sequence]
             : undefined;
-        this._entity = ['light', 'switch'].includes(
-            config.entity?.split('.')[0]
+        this._entity = ["light", "switch"].includes(
+            config.entity?.split(".")[0]
         )
             ? config.entity
             : undefined;
@@ -62,10 +62,10 @@ export class PoolLightSequencerTile extends LitElement implements LovelaceCard {
     protected shouldUpdate(changedProps: PropertyValues): boolean {
         if (!this._config) return false;
         return !!(
-            (changedProps.has('hass') &&
+            (changedProps.has("hass") &&
                 this._entity &&
                 this.hass?.states[this._entity] !== this._stateObj) ||
-            changedProps.has('_config')
+            changedProps.has("_config")
         );
     }
 
@@ -92,24 +92,24 @@ export class PoolLightSequencerTile extends LitElement implements LovelaceCard {
         let icon, iconAnimation, iconColor, name;
         if (this._config && this._sequenceObj && this._stateObj) {
             if (this._running) {
-                icon = 'hass:rotate-right';
-                iconAnimation = 'spin 1.0s linear infinite';
-                iconColor = 'var(--sq-blue-rgb-blue)';
+                icon = "hass:rotate-right";
+                iconAnimation = "spin 1.0s linear infinite";
+                iconColor = "var(--sq-blue-rgb-blue)";
             } else {
                 icon =
                     this._config.icon ||
                     this._stateObj.attributes.icon ||
-                    'hass:lightbulb';
-                iconAnimation = 'none';
+                    "hass:lightbulb";
+                iconAnimation = "none";
                 iconColor =
-                    this._sequenceObj.iconRGB || 'var(--sq-inactive-rgb)';
+                    this._sequenceObj.iconRGB || "var(--sq-inactive-rgb)";
             }
-            name = this._sequenceObj.name || 'Light';
+            name = this._sequenceObj.name || "Light";
         } else {
-            icon = 'hass:alert-rhombus';
-            iconAnimation = 'none';
-            iconColor = 'var(--sq-unavailable-rgb)';
-            name = 'Unknown';
+            icon = "hass:alert-rhombus";
+            iconAnimation = "none";
+            iconColor = "var(--sq-unavailable-rgb)";
+            name = "Unknown";
         }
 
         this._iconStyles = {
@@ -129,8 +129,8 @@ export class PoolLightSequencerTile extends LitElement implements LovelaceCard {
 
         await callService(
             this.hass,
-            'script',
-            'system_color_light_sequence_selector',
+            "script",
+            "system_color_light_sequence_selector",
             {
                 entity: this._entity,
                 count: this._sequenceObj.count,

@@ -6,20 +6,20 @@ import {
     PropertyValues,
     TemplateResult,
     unsafeCSS,
-} from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
-import { styleMap } from 'lit/directives/style-map.js';
+} from "lit";
+import { customElement, property, state } from "lit/decorators.js";
+import { styleMap } from "lit/directives/style-map.js";
 
 import {
     HassEntity,
     HomeAssistant,
     LovelaceCard,
     LovelaceCardConfig,
-} from '../types';
-import { loadYamlAsJson } from '../utilities/load-yaml-as-json';
+} from "../types";
+import { loadYamlAsJson } from "../utilities/load-yaml-as-json";
 
-import chipBaseStyle from '../css/chip-base.css';
-import chipTextStyle from '../css/chip-text.css';
+import chipBaseStyle from "../css/chip-base.css";
+import chipTextStyle from "../css/chip-text.css";
 
 interface Config extends LovelaceCardConfig {
     dialog_file: string;
@@ -34,13 +34,13 @@ interface DialogObj {
 }
 
 window.customCards.push({
-    type: 'smartqasa-custom-chip',
-    name: 'SmartQasa Custom Chip',
+    type: "smartqasa-custom-chip",
+    name: "SmartQasa Custom Chip",
     preview: true,
-    description: 'A SmartQasa chip for custom configurations.',
+    description: "A SmartQasa chip for custom configurations.",
 });
 
-@customElement('smartqasa-custom-chip')
+@customElement("smartqasa-custom-chip")
 export class CustomChip extends LitElement implements LovelaceCard {
     public getCardSize(): number {
         return 1;
@@ -59,7 +59,7 @@ export class CustomChip extends LitElement implements LovelaceCard {
 
     public async setConfig(config: Config): Promise<void> {
         if (!config.dialog_file) {
-            console.error('dialog_file must be provided in the config.');
+            console.error("dialog_file must be provided in the config.");
             return;
         }
 
@@ -68,7 +68,7 @@ export class CustomChip extends LitElement implements LovelaceCard {
             this._dialogObj = (await loadYamlAsJson(path)) as DialogObj;
             this._entity = this._dialogObj.entity;
         } catch (error) {
-            console.error('Failed to load YAML:', error);
+            console.error("Failed to load YAML:", error);
         }
 
         this._config = config;
@@ -76,10 +76,10 @@ export class CustomChip extends LitElement implements LovelaceCard {
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
         return !!(
-            (changedProps.has('hass') &&
+            (changedProps.has("hass") &&
                 this._entity &&
                 this.hass?.states[this._entity] !== this._stateObj) ||
-            changedProps.has('_config')
+            changedProps.has("_config")
         );
     }
 
@@ -90,33 +90,33 @@ export class CustomChip extends LitElement implements LovelaceCard {
             ? this.hass?.states[this._entity]
             : undefined;
 
-        const icon = this._dialogObj.icon || 'mdi:help-circle';
-        let iconColor = 'var(--sq-inactive-rgb)';
+        const icon = this._dialogObj.icon || "mdi:help-circle";
+        let iconColor = "var(--sq-inactive-rgb)";
 
         if (this.hass && this._dialogObj.icon_rgb) {
             try {
-                const func = new Function('states', this._dialogObj.icon_rgb);
+                const func = new Function("states", this._dialogObj.icon_rgb);
                 iconColor = func(this.hass.states);
             } catch (error) {
-                console.error('Error evaluating icon color expression:', error);
+                console.error("Error evaluating icon color expression:", error);
             }
         }
-        let text = this._stateObj?.state || '';
+        let text = this._stateObj?.state || "";
         switch (this._dialogObj.entity_type) {
-            case 'temperature':
-                text += '°';
+            case "temperature":
+                text += "°";
                 break;
-            case 'percentage':
-                text += '%';
+            case "percentage":
+                text += "%";
                 break;
         }
 
         const iconStyles = {
             color: `rgb(${iconColor})`,
-            backgroundColor: 'transparent',
+            backgroundColor: "transparent",
             paddingRight: text
-                ? 'calc(var(--sq-chip-padding) / 2)'
-                : 'var(--sq-chip-padding)',
+                ? "calc(var(--sq-chip-padding) / 2)"
+                : "var(--sq-chip-padding)",
         };
 
         return html`
@@ -133,6 +133,6 @@ export class CustomChip extends LitElement implements LovelaceCard {
         e.stopPropagation();
         const dialogObj = this._dialogObj;
         if (dialogObj?.data)
-            window.browser_mod?.service('popup', dialogObj.data);
+            window.browser_mod?.service("popup", dialogObj.data);
     }
 }

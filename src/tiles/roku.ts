@@ -6,20 +6,20 @@ import {
     PropertyValues,
     TemplateResult,
     unsafeCSS,
-} from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
-import { styleMap } from 'lit/directives/style-map.js';
+} from "lit";
+import { customElement, property, state } from "lit/decorators.js";
+import { styleMap } from "lit/directives/style-map.js";
 
 import {
     HassEntity,
     HomeAssistant,
     LovelaceCard,
     LovelaceCardConfig,
-} from '../types';
-import { callService } from '../utilities/call-service';
-import { listDialogConfig } from '../dialogs/list-dialog-config';
+} from "../types";
+import { callService } from "../utilities/call-service";
+import { listDialogConfig } from "../dialogs/list-dialog-config";
 
-import tileStyle from '../css/tile.css';
+import tileStyle from "../css/tile.css";
 
 interface Config extends LovelaceCardConfig {
     entity: string;
@@ -28,13 +28,13 @@ interface Config extends LovelaceCardConfig {
 }
 
 window.customCards.push({
-    type: 'smartqasa-roku-tile',
-    name: 'SmartQasa Roku Tile',
+    type: "smartqasa-roku-tile",
+    name: "SmartQasa Roku Tile",
     preview: true,
-    description: 'A SmartQasa tile for controlling a Roku media_player entity.',
+    description: "A SmartQasa tile for controlling a Roku media_player entity.",
 });
 
-@customElement('smartqasa-roku-tile')
+@customElement("smartqasa-roku-tile")
 export class RokuTile extends LitElement implements LovelaceCard {
     public getCardSize(): number | Promise<number> {
         return 1;
@@ -45,19 +45,19 @@ export class RokuTile extends LitElement implements LovelaceCard {
 
     private _entity?: string;
     private _stateObj?: HassEntity;
-    private _icon: string = 'hass:audio-video';
+    private _icon: string = "hass:audio-video";
     private _iconStyles: Record<string, string> = {};
-    private _name: string = 'Unknown Roku';
-    private _stateFmtd: string = 'Unknown State';
+    private _name: string = "Unknown Roku";
+    private _stateFmtd: string = "Unknown State";
 
     static get styles(): CSSResult {
         return unsafeCSS(tileStyle);
     }
 
     public setConfig(config: Config): void {
-        if (!config.entity?.startsWith('media_player.')) {
+        if (!config.entity?.startsWith("media_player.")) {
             console.error(
-                'Invalid media_player entity provided in the config.'
+                "Invalid media_player entity provided in the config."
             );
             this._entity = undefined;
         } else {
@@ -68,10 +68,10 @@ export class RokuTile extends LitElement implements LovelaceCard {
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
         return !!(
-            (changedProps.has('hass') &&
+            (changedProps.has("hass") &&
                 this._entity &&
                 this.hass?.states[this._entity] !== this._stateObj) ||
-            changedProps.has('_config')
+            changedProps.has("_config")
         );
     }
 
@@ -107,43 +107,43 @@ export class RokuTile extends LitElement implements LovelaceCard {
             icon =
                 this._config?.icon ||
                 this._stateObj.attributes.icon ||
-                'hass:audio-video';
-            const state = this._stateObj.state || 'unknown';
+                "hass:audio-video";
+            const state = this._stateObj.state || "unknown";
             switch (state) {
-                case 'idle':
-                    iconColor = 'var(--sq-media_player-idle-rgb)';
+                case "idle":
+                    iconColor = "var(--sq-media_player-idle-rgb)";
                     break;
-                case 'standby':
-                    iconColor = 'var(--sq-media_player-standby-rgb)';
+                case "standby":
+                    iconColor = "var(--sq-media_player-standby-rgb)";
                     break;
-                case 'on':
-                    iconColor = 'var(--sq-media_player-on-rgb)';
+                case "on":
+                    iconColor = "var(--sq-media_player-on-rgb)";
                     break;
-                case 'paused':
-                    iconColor = 'var(--sq-media_player-paused-rgb)';
+                case "paused":
+                    iconColor = "var(--sq-media_player-paused-rgb)";
                     break;
-                case 'playing':
+                case "playing":
                     iconColor =
-                        'var(--sq-media_player-playing-rgb, 3, 169, 244)';
+                        "var(--sq-media_player-playing-rgb, 3, 169, 244)";
                     break;
                 default:
-                    iconColor = 'var(--sq-unavailable-rgb, 255, 0, 255)';
+                    iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
                     break;
             }
             name =
                 this._config!.name ||
                 this._stateObj.attributes.friendly_name ||
-                'Roku';
+                "Roku";
             stateFmtd = `${this.hass!.formatEntityState(this._stateObj)}${
                 this._stateObj.attributes?.source
                     ? ` - ${this._stateObj.attributes.source}`
-                    : ''
+                    : ""
             }`;
         } else {
-            icon = this._config!.icon || 'hass:audio-video-off';
-            iconColor = 'var(--sq-unavailable-rgb, 255, 0, 255)';
-            name = this._config!.name || 'Unknown';
-            stateFmtd = 'Unknown';
+            icon = this._config!.icon || "hass:audio-video-off";
+            iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+            name = this._config!.name || "Unknown";
+            stateFmtd = "Unknown";
         }
 
         this._iconStyles = {
@@ -157,7 +157,7 @@ export class RokuTile extends LitElement implements LovelaceCard {
 
     private _toggleEntity(e: Event): void {
         e.stopPropagation();
-        callService(this.hass, 'media_player', 'toggle', {
+        callService(this.hass, "media_player", "toggle", {
             entity_id: this._entity,
         });
     }
@@ -170,15 +170,15 @@ export class RokuTile extends LitElement implements LovelaceCard {
             title:
                 this._stateObj.attributes?.friendly_name ||
                 this._entity ||
-                'Unknown',
+                "Unknown",
             timeout: 60000,
             content: {
-                type: 'custom:smartqasa-tv-remote-card',
+                type: "custom:smartqasa-tv-remote-card",
                 entity: this._entity,
             },
             ...(this._config.dialog_title && {
                 dismiss_action: {
-                    service: 'browser_mod.popup',
+                    service: "browser_mod.popup",
                     data: {
                         ...listDialogConfig(
                             this._config.dialog_title,
@@ -191,6 +191,6 @@ export class RokuTile extends LitElement implements LovelaceCard {
             }),
         };
 
-        window.browser_mod?.service('popup', dialogConfig);
+        window.browser_mod?.service("popup", dialogConfig);
     }
 }

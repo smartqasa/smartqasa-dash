@@ -1,10 +1,10 @@
-import { LitElement, html, css } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { LitElement, html, css } from "lit";
+import { customElement, property } from "lit/decorators.js";
 
-@customElement('popup-confirmation')
+@customElement("popup-confirmation")
 class PopupConfirmation extends LitElement {
     @property({ type: Boolean, reflect: true }) isOpen: boolean = false;
-    @property({ type: String }) message: string = 'Proceed?';
+    @property({ type: String }) message: string = "Proceed?";
 
     static styles = css`
         :host {
@@ -51,7 +51,7 @@ class PopupConfirmation extends LitElement {
     }
 
     public confirm() {
-        this.dispatchEvent(new CustomEvent('confirm'));
+        this.dispatchEvent(new CustomEvent("confirm"));
         this.close();
     }
 
@@ -60,7 +60,7 @@ class PopupConfirmation extends LitElement {
         this.isOpen = false;
     }
 
-    public open(message = 'Are you sure?') {
+    public open(message = "Are you sure?") {
         this.message = message;
         this.isOpen = true;
     }
@@ -71,16 +71,16 @@ class PopupConfirmation extends LitElement {
 
     connectedCallback() {
         super.connectedCallback();
-        window.addEventListener('open-confirmation-popup', this.handleOpen);
+        window.addEventListener("open-confirmation-popup", this.handleOpen);
     }
 
     disconnectedCallback() {
         super.disconnectedCallback();
-        window.removeEventListener('open-confirmation-popup', this.handleOpen);
+        window.removeEventListener("open-confirmation-popup", this.handleOpen);
     }
 
     handleOpen = (event: CustomEvent): void => {
-        console.log('Received open-confirmation-popup', event.detail.message);
+        console.log("Received open-confirmation-popup", event.detail.message);
         this.open(event.detail.message);
     };
 }

@@ -1,4 +1,4 @@
-import { appTable } from '../tables/apps';
+import { appTable } from "../tables/apps";
 
 export function launchApp(app: string): void {
     const appObj = appTable[app];
@@ -7,14 +7,14 @@ export function launchApp(app: string): void {
         return;
     }
 
-    if (appObj.launcher === 'uri_scheme' && appObj.uri_scheme) {
+    if (appObj.launcher === "uri_scheme" && appObj.uri_scheme) {
         window.location.href = appObj.uri_scheme;
         return;
     }
 
-    if (appObj.launcher === 'package' && appObj.package) {
+    if (appObj.launcher === "package" && appObj.package) {
         if (
-            typeof window.fully !== 'undefined' &&
+            typeof window.fully !== "undefined" &&
             window.fully.startApplication
         ) {
             window.fully.startApplication(appObj.package);

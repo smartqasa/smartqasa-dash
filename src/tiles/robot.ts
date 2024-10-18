@@ -6,21 +6,21 @@ import {
     PropertyValues,
     TemplateResult,
     unsafeCSS,
-} from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
-import { styleMap } from 'lit/directives/style-map.js';
+} from "lit";
+import { customElement, property, state } from "lit/decorators.js";
+import { styleMap } from "lit/directives/style-map.js";
 
 import {
     HassEntity,
     HomeAssistant,
     LovelaceCard,
     LovelaceCardConfig,
-} from '../types';
-import { callService } from '../utilities/call-service';
-import { moreInfoDialog } from '../dialogs/more-info-dialog';
-import { formatState } from '../utilities/format-state';
+} from "../types";
+import { callService } from "../utilities/call-service";
+import { moreInfoDialog } from "../dialogs/more-info-dialog";
+import { formatState } from "../utilities/format-state";
 
-import tileStyle from '../css/tile.css';
+import tileStyle from "../css/tile.css";
 
 interface Config extends LovelaceCardConfig {
     entity: string;
@@ -28,13 +28,13 @@ interface Config extends LovelaceCardConfig {
 }
 
 window.customCards.push({
-    type: 'smartqasa-robot-tile',
-    name: 'SmartQasa Robot Tile',
+    type: "smartqasa-robot-tile",
+    name: "SmartQasa Robot Tile",
     preview: true,
-    description: 'A SmartQasa tile for controlling a robot vacuum entity.',
+    description: "A SmartQasa tile for controlling a robot vacuum entity.",
 });
 
-@customElement('smartqasa-robot-tile')
+@customElement("smartqasa-robot-tile")
 export class RobotTile extends LitElement implements LovelaceCard {
     public getCardSize(): number | Promise<number> {
         return 1;
@@ -45,44 +45,44 @@ export class RobotTile extends LitElement implements LovelaceCard {
     @state() private _stateObj?: HassEntity;
 
     private _entity?: string;
-    private _icon: string = 'hass:robot-vacuum-variant';
+    private _icon: string = "hass:robot-vacuum-variant";
     private _iconStyles: Record<string, string> = {};
-    private _name: string = 'Unknown Robot';
-    private _stateFmtd: string = 'Unknown State';
+    private _name: string = "Unknown Robot";
+    private _stateFmtd: string = "Unknown State";
 
     private readonly _stateMap: Record<
         string,
         { stateIcon: string; stateAnimation: string; stateColor: string }
     > = {
         cleaning: {
-            stateIcon: 'hass:robot-vacuum-variant',
-            stateAnimation: 'none',
-            stateColor: 'var(--sq-vacuum-cleaning-rgb, 0, 150, 136)',
+            stateIcon: "hass:robot-vacuum-variant",
+            stateAnimation: "none",
+            stateColor: "var(--sq-vacuum-cleaning-rgb, 0, 150, 136)",
         },
         docked: {
-            stateIcon: 'hass:robot-vacuum-variant',
-            stateAnimation: 'none',
-            stateColor: 'var(--sq-inactive-rgb)',
+            stateIcon: "hass:robot-vacuum-variant",
+            stateAnimation: "none",
+            stateColor: "var(--sq-inactive-rgb)",
         },
         idle: {
-            stateIcon: 'hass:robot-vacuum-variant',
-            stateAnimation: 'blink 2.0s linear infinite',
-            stateColor: 'var(--sq-vacuum-idle-rgb, 190, 75, 85)',
+            stateIcon: "hass:robot-vacuum-variant",
+            stateAnimation: "blink 2.0s linear infinite",
+            stateColor: "var(--sq-vacuum-idle-rgb, 190, 75, 85)",
         },
         paused: {
-            stateIcon: 'hass:robot-vacuum-variant',
-            stateAnimation: 'blink 2.0s linear infinite',
-            stateColor: 'var(--sq-vacuum-paused-rgb, 190, 75, 85)',
+            stateIcon: "hass:robot-vacuum-variant",
+            stateAnimation: "blink 2.0s linear infinite",
+            stateColor: "var(--sq-vacuum-paused-rgb, 190, 75, 85)",
         },
         returning: {
-            stateIcon: 'hass:robot-vacuum-variant',
-            stateAnimation: 'blink 2.0s linear infinite',
-            stateColor: 'var(--sq-vacuum-returning-rgb, 0, 150, 136)',
+            stateIcon: "hass:robot-vacuum-variant",
+            stateAnimation: "blink 2.0s linear infinite",
+            stateColor: "var(--sq-vacuum-returning-rgb, 0, 150, 136)",
         },
         default: {
-            stateIcon: 'hass:robot-vacuum-variant-alert',
-            stateAnimation: 'none',
-            stateColor: 'var(--sq-unavailable-rgb, 255, 0, 255)',
+            stateIcon: "hass:robot-vacuum-variant-alert",
+            stateAnimation: "none",
+            stateColor: "var(--sq-unavailable-rgb, 255, 0, 255)",
         },
     };
 
@@ -91,8 +91,8 @@ export class RobotTile extends LitElement implements LovelaceCard {
     }
 
     public setConfig(config: Config): void {
-        if (!config.entity?.startsWith('vacuum.')) {
-            console.error('Invalid vacuum entity provided in the config.');
+        if (!config.entity?.startsWith("vacuum.")) {
+            console.error("Invalid vacuum entity provided in the config.");
             this._entity = undefined;
         } else {
             this._entity = config.entity;
@@ -102,10 +102,10 @@ export class RobotTile extends LitElement implements LovelaceCard {
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
         return !!(
-            (changedProps.has('hass') &&
+            (changedProps.has("hass") &&
                 this._entity &&
                 this.hass?.states[this._entity] !== this._stateObj) ||
-            changedProps.has('_config')
+            changedProps.has("_config")
         );
     }
 
@@ -136,23 +136,23 @@ export class RobotTile extends LitElement implements LovelaceCard {
 
         let icon, iconAnimation, iconColor, name, stateFmtd;
         if (this._stateObj) {
-            const state = this._stateObj.state || 'unknown';
+            const state = this._stateObj.state || "unknown";
             const { stateIcon, stateAnimation, stateColor } =
                 this._stateMap[state] || this._stateMap.default;
-            icon = this._config!.icon || stateIcon || 'hass:vacuum-variant';
+            icon = this._config!.icon || stateIcon || "hass:vacuum-variant";
             iconAnimation = stateAnimation;
             iconColor = stateColor;
             name =
                 this._config!.name ||
                 this._stateObj.attributes.friendly_name ||
-                'Robot';
+                "Robot";
             stateFmtd = formatState(this.hass!, this._entity!);
         } else {
-            icon = this._config?.icon || 'hass:robot-vacuum-variant-alert';
-            iconAnimation = 'none';
-            iconColor = 'var(--sq-unavailable-rgb)';
-            name = this._config?.name || 'Unknown';
-            stateFmtd = 'Unknown';
+            icon = this._config?.icon || "hass:robot-vacuum-variant-alert";
+            iconAnimation = "none";
+            iconColor = "var(--sq-unavailable-rgb)";
+            name = this._config?.name || "Unknown";
+            stateFmtd = "Unknown";
         }
 
         this._iconStyles = {
@@ -167,11 +167,11 @@ export class RobotTile extends LitElement implements LovelaceCard {
 
     private _toggleEntity(e: Event): void {
         e.stopPropagation();
-        const state = this._stateObj?.state || 'unknown';
-        const service = ['docked', 'idle', 'paused'].includes(state)
-            ? 'start'
-            : 'pause';
-        callService(this.hass, 'vacuum', service, {
+        const state = this._stateObj?.state || "unknown";
+        const service = ["docked", "idle", "paused"].includes(state)
+            ? "start"
+            : "pause";
+        callService(this.hass, "vacuum", service, {
             entity_id: this._entity,
         });
     }

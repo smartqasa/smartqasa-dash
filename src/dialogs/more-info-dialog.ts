@@ -1,4 +1,4 @@
-import { dialogPopup } from './dialog-popup';
+import { dialogPopup } from "./dialog-popup";
 
 export function moreInfoDialog(
     stateObj: any,
@@ -12,7 +12,7 @@ export function moreInfoDialog(
         title: title,
         timeout: 60000,
         content: {
-            type: 'custom:smartqasa-more-info-card',
+            type: "custom:smartqasa-more-info-card",
             entity: stateObj.entity_id,
             background: false,
         },

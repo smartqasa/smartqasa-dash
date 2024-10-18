@@ -5,24 +5,24 @@ import {
     PropertyValues,
     TemplateResult,
     nothing,
-} from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+} from "lit";
+import { customElement, property, state } from "lit/decorators.js";
 
-import { HomeAssistant, LovelaceCard, LovelaceCardConfig } from '../types';
-import { createElement } from '../utilities/create-element';
+import { HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
+import { createElement } from "../utilities/create-element";
 
 interface Config extends LovelaceCardConfig {
     entity?: string;
 }
 
 window.customCards.push({
-    type: 'smartqasa-weather-card',
-    name: 'SmartQasa Weather Card',
+    type: "smartqasa-weather-card",
+    name: "SmartQasa Weather Card",
     preview: false,
-    description: 'A SmartQasa element that displays a grid of weather info.',
+    description: "A SmartQasa element that displays a grid of weather info.",
 });
 
-@customElement('smartqasa-weather-card')
+@customElement("smartqasa-weather-card")
 export class WeatherCard extends LitElement implements LovelaceCard {
     public getCardSize(): number {
         return 10;
@@ -55,10 +55,10 @@ export class WeatherCard extends LitElement implements LovelaceCard {
     }
 
     public setConfig(config: Config): void {
-        if (config.entity && config.entity.startsWith('weather.')) {
+        if (config.entity && config.entity.startsWith("weather.")) {
             this._entity = config.entity;
         } else {
-            this._entity = 'weather.forecast_home';
+            this._entity = "weather.forecast_home";
         }
         this._config = config;
     }
@@ -66,7 +66,7 @@ export class WeatherCard extends LitElement implements LovelaceCard {
     protected willUpdate(changedProps: PropertyValues): void {
         if (!this._entity) return;
 
-        if (changedProps.has('hass') && this.hass) {
+        if (changedProps.has("hass") && this.hass) {
             [
                 this._hourlyForecastCard,
                 this._dailyForecastCard,
@@ -100,22 +100,22 @@ export class WeatherCard extends LitElement implements LovelaceCard {
     protected firstUpdated(): void {
         this._hourlyForecastCard = createElement(
             {
-                type: 'weather-forecast',
+                type: "weather-forecast",
                 entity: this._entity,
-                forecast_type: 'hourly',
-                name: 'Forecast',
+                forecast_type: "hourly",
+                name: "Forecast",
                 show_current: true,
                 show_forecast: true,
-                secondary_info_attribute: 'wind_speed',
+                secondary_info_attribute: "wind_speed",
             },
             this.hass
         );
 
         this._dailyForecastCard = createElement(
             {
-                type: 'weather-forecast',
+                type: "weather-forecast",
                 entity: this._entity,
-                forecast_type: 'daily',
+                forecast_type: "daily",
                 show_current: false,
                 show_forecast: true,
             },
@@ -124,7 +124,7 @@ export class WeatherCard extends LitElement implements LovelaceCard {
 
         this._radarMapCard = createElement(
             {
-                type: 'custom:weather-radar-card',
+                type: "custom:weather-radar-card",
                 frame_count: 10,
                 show_marker: true,
                 show_range: true,
@@ -135,7 +135,7 @@ export class WeatherCard extends LitElement implements LovelaceCard {
                 square_map: true,
                 show_scale: true,
                 extra_labels: true,
-                map_style: 'Voyager',
+                map_style: "Voyager",
             },
             this.hass
         );

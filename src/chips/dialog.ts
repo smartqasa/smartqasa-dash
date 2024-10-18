@@ -6,9 +6,9 @@ import {
     PropertyValues,
     TemplateResult,
     unsafeCSS,
-} from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
-import { styleMap } from 'lit/directives/style-map.js';
+} from "lit";
+import { customElement, property, state } from "lit/decorators.js";
+import { styleMap } from "lit/directives/style-map.js";
 
 import {
     DialogEntry,
@@ -16,12 +16,12 @@ import {
     HomeAssistant,
     LovelaceCard,
     LovelaceCardConfig,
-} from '../types';
-import { dialogTable } from '../dialogs/dialog-table';
-import { dialogPopup } from '../dialogs/dialog-popup';
+} from "../types";
+import { dialogTable } from "../dialogs/dialog-table";
+import { dialogPopup } from "../dialogs/dialog-popup";
 
-import chipBaseStyle from '../css/chip-base.css';
-import chipTextStyle from '../css/chip-text.css';
+import chipBaseStyle from "../css/chip-base.css";
+import chipTextStyle from "../css/chip-text.css";
 
 interface Config extends LovelaceCardConfig {
     dialog: keyof typeof dialogTable;
@@ -29,13 +29,13 @@ interface Config extends LovelaceCardConfig {
 }
 
 window.customCards.push({
-    type: 'smartqasa-dialog-chip',
-    name: 'SmartQasa Dialog Chip',
+    type: "smartqasa-dialog-chip",
+    name: "SmartQasa Dialog Chip",
     preview: true,
-    description: 'A SmartQasa chip for displaying a dialog.',
+    description: "A SmartQasa chip for displaying a dialog.",
 });
 
-@customElement('smartqasa-dialog-chip')
+@customElement("smartqasa-dialog-chip")
 export class DialogChip extends LitElement implements LovelaceCard {
     public getCardSize(): number | Promise<number> {
         return 1;
@@ -47,7 +47,7 @@ export class DialogChip extends LitElement implements LovelaceCard {
     private _dialog?: keyof typeof dialogTable;
     private _dialogObj?: DialogEntry;
     private _entity?: string;
-    private _icon: string = 'hass:message-outline';
+    private _icon: string = "hass:message-outline";
     private _label?: string;
     private _stateObj?: HassEntity;
 
@@ -63,16 +63,16 @@ export class DialogChip extends LitElement implements LovelaceCard {
         this._dialogObj = dialogTable[this._dialog];
 
         this._entity = this._dialogObj?.entity;
-        this._icon = this._dialogObj?.icon || 'hass:help-alert';
-        this._label = this._config.label || '';
+        this._icon = this._dialogObj?.icon || "hass:help-alert";
+        this._label = this._config.label || "";
     }
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
         return !!(
-            (changedProps.has('hass') &&
+            (changedProps.has("hass") &&
                 this._entity &&
                 this.hass?.states[this._entity] !== this._stateObj) ||
-            changedProps.has('_config')
+            changedProps.has("_config")
         );
     }
 
@@ -83,23 +83,23 @@ export class DialogChip extends LitElement implements LovelaceCard {
             ? this.hass?.states[this._entity]
             : undefined;
 
-        const state = this._stateObj?.state || 'unknown';
+        const state = this._stateObj?.state || "unknown";
         const display =
-            (this._dialog === 'garages' && state === 'closed') ||
-            (this._dialog === 'locks' && state === 'locked') ||
-            (this._dialog === 'sensors_doors' && state === 'off') ||
-            (this._dialog === 'sensors_windows' && state === 'off')
-                ? 'none'
-                : 'flex';
+            (this._dialog === "garages" && state === "closed") ||
+            (this._dialog === "locks" && state === "locked") ||
+            (this._dialog === "sensors_doors" && state === "off") ||
+            (this._dialog === "sensors_windows" && state === "off")
+                ? "none"
+                : "flex";
         const containerStyles = {
             display: `${display}`,
         };
 
         const iconStyles = {
-            color: this._dialogObj.color || 'rgb(var(--sq-orange-rgb))',
+            color: this._dialogObj.color || "rgb(var(--sq-orange-rgb))",
             paddingRight: this._label
-                ? 'calc(var(--sq-chip-padding) / 2)'
-                : 'var(--sq-chip-padding)',
+                ? "calc(var(--sq-chip-padding) / 2)"
+                : "var(--sq-chip-padding)",
         };
 
         return html`

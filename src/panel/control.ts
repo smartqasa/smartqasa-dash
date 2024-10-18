@@ -1,8 +1,8 @@
-import { HomeAssistant, LovelaceCard, LovelaceCardConfig } from '../types';
-import { createElement } from '../utilities/create-element';
-import { html, nothing, TemplateResult } from 'lit';
-import { styleMap } from 'lit/directives/style-map.js';
-import { register } from 'swiper/element/bundle';
+import { HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
+import { createElement } from "../utilities/create-element";
+import { html, nothing, TemplateResult } from "lit";
+import { styleMap } from "lit/directives/style-map.js";
+import { register } from "swiper/element/bundle";
 
 let isSwiperRegistered = false;
 if (!isSwiperRegistered) {
@@ -23,7 +23,7 @@ export function loadControlTiles(
     for (const config of tilesConfig) {
         if (firstTile) {
             const columns =
-                config.type === 'page' &&
+                config.type === "page" &&
                 config.columns >= 2 &&
                 config.columns <= 4
                     ? config.columns
@@ -31,23 +31,23 @@ export function loadControlTiles(
             controlColumns.push(columns);
         }
 
-        if (config.type === 'page') {
+        if (config.type === "page") {
             if (!firstTile && currentPage.length) {
                 controlTiles.push(currentPage);
                 currentPage = [];
 
                 const columns =
-                    config.type === 'page' &&
+                    config.type === "page" &&
                     config.columns >= 2 &&
                     config.columns <= 4
                         ? config.columns
                         : 3;
                 controlColumns.push(columns);
             }
-        } else if (config.type === 'blank') {
+        } else if (config.type === "blank") {
             if (isTablet) {
-                const blankTile = document.createElement('div');
-                blankTile.classList.add('blank-tile');
+                const blankTile = document.createElement("div");
+                blankTile.classList.add("blank-tile");
                 currentPage.push(blankTile as unknown as LovelaceCard);
             }
         } else {
@@ -55,7 +55,7 @@ export function loadControlTiles(
             if (tile) {
                 currentPage.push(tile);
             } else {
-                console.error('Failed to create tile for config:', config);
+                console.error("Failed to create tile for config:", config);
             }
         }
 
@@ -76,7 +76,7 @@ export function renderControls(
     if (controlTiles.length === 0) return nothing;
 
     if (isPhone) {
-        const gridStyle = { gridTemplateColumns: 'repeat(2, minmax(0, 1fr))' };
+        const gridStyle = { gridTemplateColumns: "repeat(2, minmax(0, 1fr))" };
         return html`
             <div class="control-tiles" style=${styleMap(gridStyle)}>
                 ${controlTiles.flat().map((tile) => html`${tile}`)}

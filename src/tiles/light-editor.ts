@@ -1,7 +1,7 @@
-import { css, html, LitElement } from 'lit';
-import { customElement, state } from 'lit/decorators.js';
+import { css, html, LitElement } from "lit";
+import { customElement, state } from "lit/decorators.js";
 
-@customElement('smartqasa-light-tile-editor')
+@customElement("smartqasa-light-tile-editor")
 export class LightTileEditor extends LitElement {
     @state() protected _config: any;
 
@@ -29,13 +29,13 @@ export class LightTileEditor extends LitElement {
           <label class="cell" for="entity">Entity:</label>
           <input
               @input="${this.handleInputEvent}"
-              class="cell" id="entity" .value="${this._config.entity ?? ''}"></input>
+              class="cell" id="entity" .value="${this._config.entity ?? ""}"></input>
         </div>
         <div class="row">
           <label class="cell" for="name">Name:</label>
           <input
               @input="${this.handleInputEvent}"
-              class="cell" id="name" .value="${this._config.name ?? ''}"></input>
+              class="cell" id="name" .value="${this._config.name ?? ""}"></input>
         </div>
       </form>
     `;
@@ -44,10 +44,10 @@ export class LightTileEditor extends LitElement {
     handleInputEvent(e: Event) {
         const input = e.target as HTMLInputElement;
         switch (input.id) {
-            case 'entity':
+            case "entity":
                 this._config.entity = input.value;
                 break;
-            case 'name':
+            case "name":
                 this._config.name = input.value;
                 break;
         }
@@ -55,7 +55,7 @@ export class LightTileEditor extends LitElement {
     }
 
     dispatchConfigChanged() {
-        const messageEvent = new CustomEvent('config-changed', {
+        const messageEvent = new CustomEvent("config-changed", {
             detail: { config: this._config },
             bubbles: true,
             composed: true,

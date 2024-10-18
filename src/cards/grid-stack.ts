@@ -5,13 +5,13 @@ import {
     nothing,
     PropertyValues,
     TemplateResult,
-} from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
-import { styleMap } from 'lit/directives/style-map.js';
+} from "lit";
+import { customElement, property, state } from "lit/decorators.js";
+import { styleMap } from "lit/directives/style-map.js";
 
-import { HomeAssistant, LovelaceCardConfig, LovelaceCard } from '../types';
-import { deviceType } from '../utilities/device-info';
-import { createElements } from '../utilities/create-elements';
+import { HomeAssistant, LovelaceCardConfig, LovelaceCard } from "../types";
+import { deviceType } from "../utilities/device-info";
+import { createElements } from "../utilities/create-elements";
 
 interface Config extends LovelaceCardConfig {
     columns?: number;
@@ -19,14 +19,14 @@ interface Config extends LovelaceCardConfig {
 }
 
 window.customCards.push({
-    type: 'smartqasa-grid-stack',
-    name: 'SmartQasa Grid Stack',
+    type: "smartqasa-grid-stack",
+    name: "SmartQasa Grid Stack",
     preview: false,
     description:
-        'A SmartQasa element that displays other cards in a grid layout.',
+        "A SmartQasa element that displays other cards in a grid layout.",
 });
 
-@customElement('smartqasa-grid-stack')
+@customElement("smartqasa-grid-stack")
 export class GridStack extends LitElement implements LovelaceCard {
     public getCardSize(): number {
         return 10;
@@ -51,7 +51,7 @@ export class GridStack extends LitElement implements LovelaceCard {
 
     public setConfig(config: Config): void {
         if (!config.cards || config.cards.length === 0) {
-            throw new Error('No card configurations provided.');
+            throw new Error("No card configurations provided.");
         }
         this._config = config;
     }
@@ -59,10 +59,10 @@ export class GridStack extends LitElement implements LovelaceCard {
     protected willUpdate(changedProps: PropertyValues) {
         if (!this.hass) return;
 
-        if (changedProps.has('_config')) {
+        if (changedProps.has("_config")) {
             this._createCards();
         } else if (
-            changedProps.has('hass') &&
+            changedProps.has("hass") &&
             this.hass &&
             this._cards.length > 0
         ) {
@@ -78,7 +78,7 @@ export class GridStack extends LitElement implements LovelaceCard {
         const columns = this._config.columns || 3;
         const gridStyle = {
             gridTemplateColumns:
-                deviceType === 'phone'
+                deviceType === "phone"
                     ? `1fr 1fr`
                     : `repeat(${columns}, var(--sq-tile-width, 19.5rem))`,
         };
@@ -100,11 +100,11 @@ export class GridStack extends LitElement implements LovelaceCard {
                 this._cards = createElements(this._config.cards, this.hass);
             } catch (error) {
                 this._cards = [];
-                console.error('Error creating cards:', error);
+                console.error("Error creating cards:", error);
             }
         } else {
             this._cards = [];
-            console.warn('No cards defined in configuration');
+            console.warn("No cards defined in configuration");
         }
     }
 }

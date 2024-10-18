@@ -1,4 +1,4 @@
-import { css } from 'lit';
+import { css } from "lit";
 
 export const chipBaseStyle = css`
     .container {
@@ -93,7 +93,7 @@ export const chipDoubleStyle = css`
     }
 
     .icon1::after {
-        content: '';
+        content: "";
         width: 1px;
         height: var(--sq-icon-size, 1.8rem);
         background-color: rgb(128, 128, 128);

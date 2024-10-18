@@ -6,20 +6,20 @@ import {
     PropertyValues,
     TemplateResult,
     unsafeCSS,
-} from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
-import { styleMap } from 'lit/directives/style-map.js';
+} from "lit";
+import { customElement, property, state } from "lit/decorators.js";
+import { styleMap } from "lit/directives/style-map.js";
 
 import {
     HassEntity,
     HomeAssistant,
     LovelaceCard,
     LovelaceCardConfig,
-} from '../types';
-import { callService } from '../utilities/call-service';
-import { moreInfoDialog } from '../dialogs/more-info-dialog';
+} from "../types";
+import { callService } from "../utilities/call-service";
+import { moreInfoDialog } from "../dialogs/more-info-dialog";
 
-import tileStyle from '../css/tile.css';
+import tileStyle from "../css/tile.css";
 
 interface Config extends LovelaceCardConfig {
     category?: string;
@@ -29,13 +29,13 @@ interface Config extends LovelaceCardConfig {
 }
 
 window.customCards.push({
-    type: 'smartqasa-switch-tile',
-    name: 'SmartQasa Switch Tile',
+    type: "smartqasa-switch-tile",
+    name: "SmartQasa Switch Tile",
     preview: true,
-    description: 'A SmartQasa tile for toggling an entity.',
+    description: "A SmartQasa tile for toggling an entity.",
 });
 
-@customElement('smartqasa-switch-tile')
+@customElement("smartqasa-switch-tile")
 export class SwitchTile extends LitElement implements LovelaceCard {
     public getCardSize(): number | Promise<number> {
         return 1;
@@ -45,18 +45,18 @@ export class SwitchTile extends LitElement implements LovelaceCard {
     @state() protected _config?: Config;
     private _entity?: string;
     private _stateObj?: HassEntity;
-    private _icon: string = 'hass:toggle-switch-variant';
+    private _icon: string = "hass:toggle-switch-variant";
     private _iconStyles: Record<string, string> = {};
-    private _name: string = 'Unknown Fan';
-    private _stateFmtd: string = 'Unknown State';
+    private _name: string = "Unknown Fan";
+    private _stateFmtd: string = "Unknown State";
 
     static get styles(): CSSResult {
         return unsafeCSS(tileStyle);
     }
 
     public setConfig(config: Config): void {
-        this._entity = ['fan', 'input_boolean', 'light', 'switch'].includes(
-            config.entity?.split('.')[0]
+        this._entity = ["fan", "input_boolean", "light", "switch"].includes(
+            config.entity?.split(".")[0]
         )
             ? config.entity
             : undefined;
@@ -65,10 +65,10 @@ export class SwitchTile extends LitElement implements LovelaceCard {
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
         return !!(
-            (changedProps.has('hass') &&
+            (changedProps.has("hass") &&
                 this._entity &&
                 this.hass?.states[this._entity] !== this._stateObj) ||
-            changedProps.has('_config')
+            changedProps.has("_config")
         );
     }
 
@@ -104,22 +104,22 @@ export class SwitchTile extends LitElement implements LovelaceCard {
             icon =
                 this._config!.icon ||
                 this._stateObj.attributes.icon ||
-                'hass:toggle-switch-variant';
+                "hass:toggle-switch-variant";
             const state = this._stateObj.state;
             iconColor =
-                state === 'on'
-                    ? `var(--sq-switch${this._config!.category ? `-${this._config!.category}` : ''}-on-rgb)`
-                    : 'var(--sq-inactive-rgb)';
+                state === "on"
+                    ? `var(--sq-switch${this._config!.category ? `-${this._config!.category}` : ""}-on-rgb)`
+                    : "var(--sq-inactive-rgb)";
             name =
                 this._config!.name ||
                 this._stateObj.attributes.friendly_name ||
-                'Switch';
+                "Switch";
             stateFmtd = this.hass!.formatEntityState(this._stateObj);
         } else {
-            icon = this._config!.icon || 'hass:toggle-switch-variant';
-            iconColor = 'var(--sq-unavailable-rgb, 255, 0, 255)';
-            name = this._config?.name || 'Unknown Switch';
-            stateFmtd = 'Unknown State';
+            icon = this._config!.icon || "hass:toggle-switch-variant";
+            iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+            name = this._config?.name || "Unknown Switch";
+            stateFmtd = "Unknown State";
         }
 
         this._iconStyles = {
@@ -133,7 +133,7 @@ export class SwitchTile extends LitElement implements LovelaceCard {
 
     private _toggleEntity(e: Event): void {
         e.stopPropagation();
-        callService(this.hass, 'homeassistant', 'toggle', {
+        callService(this.hass, "homeassistant", "toggle", {
             entity_id: this._entity,
         });
     }

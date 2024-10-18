@@ -1,12 +1,12 @@
-import { css, html, LitElement, PropertyValues, TemplateResult } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
-import { styleMap } from 'lit/directives/style-map.js';
+import { css, html, LitElement, PropertyValues, TemplateResult } from "lit";
+import { customElement, property, state } from "lit/decorators.js";
+import { styleMap } from "lit/directives/style-map.js";
 
-import { HassArea, HomeAssistant, LovelaceCard } from '../types';
-import { getDeviceType, getDeviceOrientation } from '../utilities/device-info';
-import { createElement } from '../utilities/create-element';
+import { HassArea, HomeAssistant, LovelaceCard } from "../types";
+import { getDeviceType, getDeviceOrientation } from "../utilities/device-info";
+import { createElement } from "../utilities/create-element";
 
-@customElement('smartqasa-areas-card')
+@customElement("smartqasa-areas-card")
 export class AreasCard extends LitElement implements LovelaceCard {
     public getCardSize(): number {
         return 4;
@@ -49,9 +49,9 @@ export class AreasCard extends LitElement implements LovelaceCard {
 
         this._handleDeviceChanges();
 
-        window.addEventListener('resize', this._boundHandleDeviceChanges);
+        window.addEventListener("resize", this._boundHandleDeviceChanges);
         window.addEventListener(
-            'orientationchange',
+            "orientationchange",
             this._boundHandleDeviceChanges
         );
 
@@ -61,15 +61,15 @@ export class AreasCard extends LitElement implements LovelaceCard {
     public disconnectedCallback(): void {
         super.disconnectedCallback();
 
-        window.removeEventListener('resize', this._boundHandleDeviceChanges);
+        window.removeEventListener("resize", this._boundHandleDeviceChanges);
         window.removeEventListener(
-            'orientationchange',
+            "orientationchange",
             this._boundHandleDeviceChanges
         );
     }
 
     protected willUpdate(changedProps: PropertyValues): void {
-        if (changedProps.has('hass') && this.hass) {
+        if (changedProps.has("hass") && this.hass) {
             this._areaTiles.forEach((tile) => {
                 tile.hass = this.hass;
             });
@@ -90,14 +90,14 @@ export class AreasCard extends LitElement implements LovelaceCard {
         const type = getDeviceType();
         const orientation = getDeviceOrientation();
 
-        if (type === 'phone') {
+        if (type === "phone") {
             this._gridStyle = {
                 gridTemplateColumns:
-                    orientation === 'landscape' ? '1fr 1fr' : '1fr',
+                    orientation === "landscape" ? "1fr 1fr" : "1fr",
             };
         } else {
             this._gridStyle = {
-                gridTemplateColumns: 'repeat(3, var(--sq-tile-width, 19.5rem))',
+                gridTemplateColumns: "repeat(3, var(--sq-tile-width, 19.5rem))",
             };
         }
     }
@@ -109,7 +109,7 @@ export class AreasCard extends LitElement implements LovelaceCard {
         }
 
         const visibleAreas = Object.values<HassArea>(this.hass.areas).filter(
-            (area) => area?.labels?.includes('visible')
+            (area) => area?.labels?.includes("visible")
         );
 
         if (visibleAreas.length === 0) {
@@ -119,7 +119,7 @@ export class AreasCard extends LitElement implements LovelaceCard {
 
         this._areaTiles = visibleAreas.map((area) => {
             const tile = createElement({
-                type: 'custom:smartqasa-area-tile',
+                type: "custom:smartqasa-area-tile",
                 area: area.area_id,
             }) as LovelaceCard;
 

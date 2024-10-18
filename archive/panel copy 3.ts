@@ -6,30 +6,30 @@ import {
     PropertyValues,
     TemplateResult,
     unsafeCSS,
-} from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+} from "lit";
+import { customElement, property, state } from "lit/decorators.js";
 
 import {
     HassArea,
     HomeAssistant,
     LovelaceCard,
     LovelaceCardConfig,
-} from '../types';
-import { getDeviceOrientation, getDeviceType } from '../utils/device-info';
-import { createElement } from '../utils/create-element';
-import { createElements } from '../utils/create-elements';
-import Swiper from 'swiper';
-import { SwiperOptions } from 'swiper/types';
-import { Navigation } from 'swiper/modules';
-import { renderHeader } from './header';
-import { renderArea } from './area';
-import { loadControlTiles, renderControls } from './controls';
-import { loadEntertainCards } from './entertain';
-import { renderFooter } from './footer';
+} from "../types";
+import { getDeviceOrientation, getDeviceType } from "../utils/device-info";
+import { createElement } from "../utils/create-element";
+import { createElements } from "../utils/create-elements";
+import Swiper from "swiper";
+import { SwiperOptions } from "swiper/types";
+import { Navigation } from "swiper/modules";
+import { renderHeader } from "./header";
+import { renderArea } from "./area";
+import { loadControlTiles, renderControls } from "./controls";
+import { loadEntertainCards } from "./entertain";
+import { renderFooter } from "./footer";
 
-import panelStyles from '../css/panel.css';
-import entertainStyles from '../css/entertain.css';
-import swiperStyles from 'swiper/swiper-bundle.css';
+import panelStyles from "../css/panel.css";
+import entertainStyles from "../css/entertain.css";
+import swiperStyles from "swiper/swiper-bundle.css";
 
 interface Config extends LovelaceCardConfig {
     area: string;
@@ -43,12 +43,12 @@ interface Config extends LovelaceCardConfig {
 }
 
 window.customCards.push({
-    type: 'smartqasa-panel-card',
-    name: 'SmartQasa Panel Card',
+    type: "smartqasa-panel-card",
+    name: "SmartQasa Panel Card",
     preview: true,
-    description: 'A SmartQasa card for rendering an panel.',
+    description: "A SmartQasa card for rendering an panel.",
 });
-@customElement('smartqasa-panel-card')
+@customElement("smartqasa-panel-card")
 export class PanelCard extends LitElement implements LovelaceCard {
     public getCardSize(): number {
         return 100;
@@ -57,12 +57,12 @@ export class PanelCard extends LitElement implements LovelaceCard {
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() protected _config?: Config;
     @state() private _isAdminMode = false;
-    @state() private _isPhone: boolean = getDeviceType() === 'phone';
-    @state() private _isTablet: boolean = getDeviceType() === 'tablet';
+    @state() private _isPhone: boolean = getDeviceType() === "phone";
+    @state() private _isTablet: boolean = getDeviceType() === "tablet";
     @state() private _isPortrait: boolean =
-        getDeviceOrientation() === 'portrait';
+        getDeviceOrientation() === "portrait";
     @state() private _isLandscape: boolean =
-        getDeviceOrientation() === 'landscape';
+        getDeviceOrientation() === "landscape";
     @state() private _swiper: Swiper | undefined;
 
     private _boundHandleDeviceChanges = () => this._handleDeviceChanges();
@@ -96,18 +96,18 @@ export class PanelCard extends LitElement implements LovelaceCard {
 
         this._syncTime();
 
-        window.smartqasa.viewMode = 'control';
+        window.smartqasa.viewMode = "control";
 
-        window.addEventListener('resize', this._boundHandleDeviceChanges);
+        window.addEventListener("resize", this._boundHandleDeviceChanges);
         window.addEventListener(
-            'orientationchange',
+            "orientationchange",
             this._boundHandleDeviceChanges
         );
-        window.addEventListener('touchstart', this._boundStartResetTimer, {
+        window.addEventListener("touchstart", this._boundStartResetTimer, {
             passive: true,
         });
         window.addEventListener(
-            'viewModeChanged',
+            "viewModeChanged",
             this._viewModeChangedHandler
         );
 
@@ -117,7 +117,7 @@ export class PanelCard extends LitElement implements LovelaceCard {
     protected willUpdate(changedProps: PropertyValues): void {
         if (this.hass) {
             const isAdminMode =
-                this.hass.states['input_boolean.admin_mode']?.state === 'on';
+                this.hass.states["input_boolean.admin_mode"]?.state === "on";
             this._isAdminMode =
                 (this.hass.user?.is_admin ?? false) || isAdminMode;
         }
@@ -133,9 +133,9 @@ export class PanelCard extends LitElement implements LovelaceCard {
             );
         }
 
-        if (changedProps.has('_config') && this._config) this._loadContent();
+        if (changedProps.has("_config") && this._config) this._loadContent();
 
-        if (changedProps.has('hass') && this.hass) {
+        if (changedProps.has("hass") && this.hass) {
             this._areaObj = this._area
                 ? this.hass?.areas[this._area]
                 : undefined;
@@ -172,14 +172,14 @@ export class PanelCard extends LitElement implements LovelaceCard {
     public disconnectedCallback(): void {
         super.disconnectedCallback();
 
-        window.removeEventListener('resize', this._boundHandleDeviceChanges);
+        window.removeEventListener("resize", this._boundHandleDeviceChanges);
         window.removeEventListener(
-            'orientationchange',
+            "orientationchange",
             this._boundHandleDeviceChanges
         );
-        window.removeEventListener('touchstart', this._boundStartResetTimer);
+        window.removeEventListener("touchstart", this._boundStartResetTimer);
         window.removeEventListener(
-            'viewModeChanged',
+            "viewModeChanged",
             this._viewModeChangedHandler
         );
 
@@ -196,10 +196,10 @@ export class PanelCard extends LitElement implements LovelaceCard {
         if (!this.hass || !this._config || !this._area) return nothing;
 
         const viewMode = window.smartqasa.viewMode;
-        const name = this._config?.name ?? this._areaObj?.name ?? 'Area';
+        const name = this._config?.name ?? this._areaObj?.name ?? "Area";
         let content;
         switch (viewMode) {
-            case 'control':
+            case "control":
                 const picture = this._config.picture ?? `${this._area}.png`;
                 content = html`
                     ${renderArea(
@@ -217,7 +217,7 @@ export class PanelCard extends LitElement implements LovelaceCard {
                     )}
                 `;
                 break;
-            case 'entertain':
+            case "entertain":
                 content = html`
                     <div class="entertain-container">
                         <div class="entertain-sidebar">
@@ -280,12 +280,12 @@ export class PanelCard extends LitElement implements LovelaceCard {
 
     private _handleDeviceChanges(): void {
         const type = getDeviceType();
-        this._isPhone = type === 'phone';
-        this._isTablet = type === 'tablet';
+        this._isPhone = type === "phone";
+        this._isTablet = type === "tablet";
 
         const orientation = getDeviceOrientation();
-        this._isPortrait = orientation === 'portrait';
-        this._isLandscape = orientation === 'landscape';
+        this._isPortrait = orientation === "portrait";
+        this._isLandscape = orientation === "landscape";
 
         if (this._isTablet && this._controlTiles.length > 1) {
             this._initializeSwiper();
@@ -306,9 +306,9 @@ export class PanelCard extends LitElement implements LovelaceCard {
     }
 
     private _initializeSwiper() {
-        const swiperContainer = this.shadowRoot?.querySelector('.swiper');
+        const swiperContainer = this.shadowRoot?.querySelector(".swiper");
         if (!swiperContainer) {
-            console.error('Swiper container not found');
+            console.error("Swiper container not found");
             return;
         }
 
@@ -317,8 +317,8 @@ export class PanelCard extends LitElement implements LovelaceCard {
             loop: true,
             modules: [Navigation],
             navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
             },
         };
 
@@ -339,7 +339,7 @@ export class PanelCard extends LitElement implements LovelaceCard {
     }
 
     private _resetToFirstPage(): void {
-        window.smartqasa.viewMode = 'control';
+        window.smartqasa.viewMode = "control";
         if (this._swiper && this._swiper.activeIndex !== 0) {
             this._swiper.slideTo(0);
         }

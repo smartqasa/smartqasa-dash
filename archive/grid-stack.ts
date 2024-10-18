@@ -1,8 +1,8 @@
-import { css, html, LitElement, nothing, PropertyValues } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { css, html, LitElement, nothing, PropertyValues } from "lit";
+import { customElement, property, state } from "lit/decorators.js";
 
-import { HomeAssistant, LovelaceCardConfig, LovelaceCard } from '../src/types';
-import { createElement } from '../src/utils/create-element';
+import { HomeAssistant, LovelaceCardConfig, LovelaceCard } from "../src/types";
+import { createElement } from "../src/utils/create-element";
 
 interface Config extends LovelaceCardConfig {
     columns?: number;
@@ -10,14 +10,14 @@ interface Config extends LovelaceCardConfig {
 }
 
 window.customCards.push({
-    type: 'smartqasa-grid-stack',
-    name: 'SmartQasa Grid Stack',
+    type: "smartqasa-grid-stack",
+    name: "SmartQasa Grid Stack",
     preview: false,
     description:
-        'A SmartQasa element that displays other cards in a grid layout.',
+        "A SmartQasa element that displays other cards in a grid layout.",
 });
 
-@customElement('smartqasa-grid-stack')
+@customElement("smartqasa-grid-stack")
 class VerticalStack extends LitElement {
     @property({ attribute: false }) private hass?: HomeAssistant;
     @state() private _config?: Config;
@@ -44,11 +44,11 @@ class VerticalStack extends LitElement {
     }
 
     protected update(changedProps: PropertyValues) {
-        if (changedProps.has('_config') && this._config) {
+        if (changedProps.has("_config") && this._config) {
             this._createCards();
         }
 
-        if (changedProps.has('hass') && this.hass) {
+        if (changedProps.has("hass") && this.hass) {
             this._cards.forEach((card) => {
                 card.hass = this.hass;
             });

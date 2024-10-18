@@ -21,26 +21,26 @@
 .container[phone-portrait] {
     grid-template-rows: auto minmax(0, 1fr) auto;
     grid-template-areas:
-        'area'
-        'body'
-        'footer';
+        "area"
+        "body"
+        "footer";
     gap: 1rem;
     padding: 0.6rem 0.6rem 0.3rem 0.6rem;
 }
 .container[control] {
     grid-template-rows: auto auto 1fr auto;
     grid-template-areas:
-        'header'
-        'area'
-        'body'
-        'footer';
+        "header"
+        "area"
+        "body"
+        "footer";
 }
 .container[entertain] {
     grid-template-rows: auto 1fr auto;
     grid-template-areas:
-        'header'
-        'entertain'
-        'footer';
+        "header"
+        "entertain"
+        "footer";
 }
 
 .header-container {
@@ -84,15 +84,15 @@
     grid-template-columns: 1fr 1fr;
     grid-template-rows: min-content 1fr;
     grid-template-areas:
-        'name image'
-        'chips image';
+        "name image"
+        "chips image";
 }
 .area-container[phone-portrait] {
     grid-template-columns: 1fr;
     grid-template-rows: auto auto;
     grid-template-areas:
-        'image'
-        'chips';
+        "image"
+        "chips";
     gap: 1rem;
     position: relative;
 }
@@ -206,9 +206,9 @@
         grid-template-columns: 100%;
         grid-template-rows: auto minmax(0, 1fr) auto;
         grid-template-areas:
-            'area'
-            'body'
-            'footer';
+            "area"
+            "body"
+            "footer";
         gap: 1rem;
         padding: 0.6rem 0.6rem 0.3rem 0.6rem;
     }
@@ -216,8 +216,8 @@
         grid-template-columns: 1fr;
         grid-template-rows: auto auto;
         grid-template-areas:
-            'image'
-            'chips';
+            "image"
+            "chips";
         gap: 1rem;
         position: relative;
     }
@@ -257,7 +257,7 @@
     .container {
         grid-template-columns: 1fr 1fr;
         grid-template-rows: 100%;
-        grid-template-areas: 'area body';
+        grid-template-areas: "area body";
         gap: 1rem;
         padding: 0.6rem 0.6rem 0.3rem 0.6rem;
     }
@@ -265,9 +265,9 @@
         grid-template-columns: 1fr;
         grid-template-rows: auto 1fr auto;
         grid-template-areas:
-            'image'
-            'chips'
-            'footer-p-l';
+            "image"
+            "chips"
+            "footer-p-l";
         gap: 1rem;
         position: relative;
     }
