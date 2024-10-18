@@ -1,14 +1,14 @@
-import { css, LitElement, html } from "lit";
-import { customElement, property } from "lit/decorators.js";
+import { css, LitElement, html } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
 
 window.customCards.push({
-    type: "smartqasa-progress-indicator",
-    name: "SmartQasa Progress Indicator",
+    type: 'smartqasa-progress-indicator',
+    name: 'SmartQasa Progress Indicator',
     preview: true,
-    description: "A SmartQasa card for rendering a Progress Indicator.",
+    description: 'A SmartQasa card for rendering a Progress Indicator.',
 });
 
-@customElement("smartqasa-progress-indicator")
+@customElement('smartqasa-progress-indicator')
 class ProgressIndicator extends LitElement {
     @property({ type: Number }) activeIndex = 0;
 
@@ -74,8 +74,8 @@ class ProgressIndicator extends LitElement {
                         (index) => html`
                             <div
                                 class="dot ${index === this.activeIndex
-                                    ? "active"
-                                    : ""}"
+                                    ? 'active'
+                                    : ''}"
                             ></div>
                         `
                     )}

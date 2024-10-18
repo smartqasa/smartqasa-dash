@@ -6,15 +6,15 @@ import {
     PropertyValues,
     TemplateResult,
     unsafeCSS,
-} from "lit";
-import { customElement, property, state } from "lit/decorators.js";
-import { styleMap } from "lit/directives/style-map.js";
+} from 'lit';
+import { customElement, property, state } from 'lit/decorators.js';
+import { styleMap } from 'lit/directives/style-map.js';
 
-import { HassEntity } from "home-assistant-js-websocket";
-import { HomeAssistant, LovelaceCard, LovelaceCardConfig } from "../types";
-import { moreInfoDialog } from "../dialogs/more-info-dialog";
+import { HassEntity } from 'home-assistant-js-websocket';
+import { HomeAssistant, LovelaceCard, LovelaceCardConfig } from '../types';
+import { moreInfoDialog } from '../dialogs/more-info-dialog';
 
-import tileStyle from "../css/tile.css";
+import tileStyle from '../css/tile.css';
 
 interface Config extends LovelaceCardConfig {
     category?: string;
@@ -24,13 +24,13 @@ interface Config extends LovelaceCardConfig {
 }
 
 window.customCards.push({
-    type: "smartqasa-sensor-tile",
-    name: "SmartQasa Sensor Tile",
+    type: 'smartqasa-sensor-tile',
+    name: 'SmartQasa Sensor Tile',
     preview: true,
-    description: "A SmartQasa tile for observing a binary_sensor entity.",
+    description: 'A SmartQasa tile for observing a binary_sensor entity.',
 });
 
-@customElement("smartqasa-sensor-tile")
+@customElement('smartqasa-sensor-tile')
 export class SensorTile extends LitElement implements LovelaceCard {
     public getCardSize(): number | Promise<number> {
         return 1;
@@ -42,17 +42,17 @@ export class SensorTile extends LitElement implements LovelaceCard {
     private _stateObj?: HassEntity;
     private _iconStyles: Record<string, string> = {};
     private _iconTemplate?: TemplateResult;
-    private _name: string = "Unknown Sensor";
-    private _stateFmtd: string = "Unknown State";
+    private _name: string = 'Unknown Sensor';
+    private _stateFmtd: string = 'Unknown State';
 
     static get styles(): CSSResult {
         return unsafeCSS(tileStyle);
     }
 
     public setConfig(config: Config): void {
-        if (!config.entity?.startsWith("binary_sensor.")) {
+        if (!config.entity?.startsWith('binary_sensor.')) {
             console.error(
-                "Invalid binary_sensor entity provided in the config."
+                'Invalid binary_sensor entity provided in the config.'
             );
             this._entity = undefined;
         } else {
@@ -63,10 +63,10 @@ export class SensorTile extends LitElement implements LovelaceCard {
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
         return !!(
-            (changedProps.has("hass") &&
+            (changedProps.has('hass') &&
                 this._entity &&
                 this.hass?.states[this._entity] !== this._stateObj) ||
-            changedProps.has("_config")
+            changedProps.has('_config')
         );
     }
 
@@ -106,19 +106,19 @@ export class SensorTile extends LitElement implements LovelaceCard {
                 ></ha-icon>`;
             }
             iconColor =
-                this._stateObj.state === "on"
-                    ? "var(--sq-binary_sensor-on-rgb)"
-                    : "var(--sq-inactive-rgb)";
+                this._stateObj.state === 'on'
+                    ? 'var(--sq-binary_sensor-on-rgb)'
+                    : 'var(--sq-inactive-rgb)';
             name =
                 this._config!.name ||
                 this._stateObj.attributes.friendly_name ||
-                "Sensor";
+                'Sensor';
             stateFmtd = this.hass!.formatEntityState(this._stateObj);
         } else {
             iconTemplate = html`<ha-icon icon="hass:leak"></ha-icon>`;
-            iconColor = "var(--sq-unavailable-rgb)";
-            name = this._config!.name || "Unknown";
-            stateFmtd = "Unknown";
+            iconColor = 'var(--sq-unavailable-rgb)';
+            name = this._config!.name || 'Unknown';
+            stateFmtd = 'Unknown';
         }
 
         this._iconStyles = {

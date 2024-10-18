@@ -1,12 +1,12 @@
-import { CSSResultGroup, html, LitElement, TemplateResult } from "lit";
-import { customElement, state } from "lit/decorators.js";
-import { styleMap } from "lit/directives/style-map.js";
-import { HassEntity } from "home-assistant-js-websocket";
-import { HomeAssistant, LovelaceCardConfig } from "custom-card-helpers";
-import { moreInfoDialog } from "../utils/more-info-dialog";
-import { entityListDialog } from "../utils/entity-list-dialog";
+import { CSSResultGroup, html, LitElement, TemplateResult } from 'lit';
+import { customElement, state } from 'lit/decorators.js';
+import { styleMap } from 'lit/directives/style-map.js';
+import { HassEntity } from 'home-assistant-js-websocket';
+import { HomeAssistant, LovelaceCardConfig } from 'custom-card-helpers';
+import { moreInfoDialog } from '../utils/more-info-dialog';
+import { entityListDialog } from '../utils/entity-list-dialog';
 
-import { tileBaseStyle, tileStateStyle } from "../css/tile";
+import { tileBaseStyle, tileStateStyle } from '../css/tile';
 
 interface Config extends LovelaceCardConfig {
     entity: string;
@@ -14,24 +14,24 @@ interface Config extends LovelaceCardConfig {
     name?: string;
 }
 
-@customElement("smartqasa-light-tile")
+@customElement('smartqasa-light-tile')
 export class LightTile extends LitElement {
     @state() private _config?: Config;
     @state() private _stateObj?: HassEntity;
 
     private _entity?: string;
     private _hass: any;
-    private _icon: string = "hass:lightbulb";
-    private _iconAnimation: string = "none";
-    private _iconColor: string = "var(--sq-inactive-rgb)";
-    private _name: string = "Loading...";
-    private _stateFmtd: string = "Loading...";
+    private _icon: string = 'hass:lightbulb';
+    private _iconAnimation: string = 'none';
+    private _iconColor: string = 'var(--sq-inactive-rgb)';
+    private _name: string = 'Loading...';
+    private _stateFmtd: string = 'Loading...';
 
     static styles: CSSResultGroup = [tileBaseStyle, tileStateStyle];
 
     setConfig(config: Config): void {
         this._config = { ...config };
-        this._entity = this._config.entity?.startsWith("light.")
+        this._entity = this._config.entity?.startsWith('light.')
             ? this._config.entity
             : undefined;
         this.updateState();
@@ -53,35 +53,35 @@ export class LightTile extends LitElement {
 
     private updateState(): void {
         if (!this._entity || !this._stateObj) {
-            this._icon = this._config?.icon || "hass:lightbulb-alert";
-            this._iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            this._name = this._config?.name || "Unknown";
-            this._stateFmtd = "Invalid entity!";
+            this._icon = this._config?.icon || 'hass:lightbulb-alert';
+            this._iconColor = 'var(--sq-unavailable-rgb, 255, 0, 255)';
+            this._name = this._config?.name || 'Unknown';
+            this._stateFmtd = 'Invalid entity!';
             return;
         }
 
-        const state = this._stateObj.state || "unknown";
+        const state = this._stateObj.state || 'unknown';
         this._icon =
             this._config?.icon ||
             this._stateObj.attributes.icon ||
-            "hass:lightbulb";
+            'hass:lightbulb';
         this._iconColor =
-            state === "on"
-                ? "var(--sq-light-on-rgb)"
-                : "var(--sq-inactive-rgb)";
+            state === 'on'
+                ? 'var(--sq-light-on-rgb)'
+                : 'var(--sq-inactive-rgb)';
         this._name =
             this._config?.name ||
             this._stateObj.attributes.friendly_name ||
-            "Unknown";
+            'Unknown';
         this._stateFmtd =
             this._hass.formatEntityState(this._stateObj) +
-            (state === "on" && this._stateObj.attributes.brightness
-                ? " - " +
+            (state === 'on' && this._stateObj.attributes.brightness
+                ? ' - ' +
                   this._hass.formatEntityAttributeValue(
                       this._stateObj,
-                      "brightness"
+                      'brightness'
                   )
-                : "");
+                : '');
     }
 
     protected render(): TemplateResult {
@@ -114,7 +114,7 @@ export class LightTile extends LitElement {
         e.stopPropagation();
         if (!this._stateObj) return;
 
-        this._hass.callService("light", "toggle", { entity_id: this._entity });
+        this._hass.callService('light', 'toggle', { entity_id: this._entity });
     }
 
     private showMoreInfo(e: Event): void {
@@ -131,10 +131,10 @@ export class LightTile extends LitElement {
         )
             return;
         entityListDialog(
-            this._stateObj.attributes?.friendly_name || "Unknown",
-            "group",
+            this._stateObj.attributes?.friendly_name || 'Unknown',
+            'group',
             this._entity,
-            "light"
+            'light'
         );
     }
 
@@ -143,21 +143,21 @@ export class LightTile extends LitElement {
     }
 
     static getConfigElement() {
-        return document.createElement("smartqasa-light-tile-editor");
+        return document.createElement('smartqasa-light-tile-editor');
     }
 
     static getStubConfig() {
         return {
-            entity: "",
-            icon: "",
-            name: "",
+            entity: '',
+            icon: '',
+            name: '',
         };
     }
 }
 
 window.customCards.push({
-    type: "smartqasa-light-tile",
-    name: "SmartQasa Light Tile",
+    type: 'smartqasa-light-tile',
+    name: 'SmartQasa Light Tile',
     preview: true,
-    description: "A SmartQasa tile for controlling a light entity.",
+    description: 'A SmartQasa tile for controlling a light entity.',
 });

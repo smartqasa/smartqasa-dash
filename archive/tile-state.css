@@ -1,7 +1,7 @@
 .container {
     grid-template-areas:
-        "i n"
-        "i s";
+        'i n'
+        'i s';
     grid-row-gap: 0.3rem;
 }
 .name {

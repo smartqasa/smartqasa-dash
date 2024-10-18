@@ -29,7 +29,7 @@
 }
 
 .icon1::after {
-    content: "";
+    content: '';
     width: 1px;
     height: var(--sq-icon-size);
     background-color: rgb(128, 128, 128);

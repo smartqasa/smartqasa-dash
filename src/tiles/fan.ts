@@ -6,22 +6,22 @@ import {
     PropertyValues,
     TemplateResult,
     unsafeCSS,
-} from "lit";
-import { customElement, property, state } from "lit/decorators.js";
-import { styleMap } from "lit/directives/style-map.js";
+} from 'lit';
+import { customElement, property, state } from 'lit/decorators.js';
+import { styleMap } from 'lit/directives/style-map.js';
 
 import {
     HassEntity,
     HomeAssistant,
     LovelaceCard,
     LovelaceCardConfig,
-} from "../types";
-import { callService } from "../utilities/call-service";
-import { moreInfoDialog } from "../dialogs/more-info-dialog";
-import { entityListDialog } from "../dialogs/entity-list-dialog";
-import { formatState } from "../utilities/format-state";
+} from '../types';
+import { callService } from '../utilities/call-service';
+import { moreInfoDialog } from '../dialogs/more-info-dialog';
+import { entityListDialog } from '../dialogs/entity-list-dialog';
+import { formatState } from '../utilities/format-state';
 
-import tileStyle from "../css/tile.css";
+import tileStyle from '../css/tile.css';
 
 interface Config extends LovelaceCardConfig {
     entity: string;
@@ -30,13 +30,13 @@ interface Config extends LovelaceCardConfig {
 }
 
 window.customCards.push({
-    type: "smartqasa-fan-tile",
-    name: "SmartQasa Fan Tile",
+    type: 'smartqasa-fan-tile',
+    name: 'SmartQasa Fan Tile',
     preview: true,
-    description: "A SmartQasa tile for controlling a fan entity.",
+    description: 'A SmartQasa tile for controlling a fan entity.',
 });
 
-@customElement("smartqasa-fan-tile")
+@customElement('smartqasa-fan-tile')
 export class FanTile extends LitElement implements LovelaceCard {
     getCardSize(): number | Promise<number> {
         return 1;
@@ -47,18 +47,18 @@ export class FanTile extends LitElement implements LovelaceCard {
 
     private _entity?: string;
     private _stateObj?: HassEntity;
-    private _icon: string = "hass:fan-alert";
+    private _icon: string = 'hass:fan-alert';
     private _iconStyles: Record<string, string> = {};
-    private _name: string = "Unknown Fan";
-    private _stateFmtd: string = "Unknown State";
+    private _name: string = 'Unknown Fan';
+    private _stateFmtd: string = 'Unknown State';
 
     static get styles(): CSSResult {
         return unsafeCSS(tileStyle);
     }
 
     public setConfig(config: Config): void {
-        if (!config.entity?.startsWith("fan.")) {
-            console.error("Invalid fan entity provided in the config.");
+        if (!config.entity?.startsWith('fan.')) {
+            console.error('Invalid fan entity provided in the config.');
             this._entity = undefined;
         } else {
             this._entity = config.entity;
@@ -68,10 +68,10 @@ export class FanTile extends LitElement implements LovelaceCard {
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
         return !!(
-            (changedProps.has("hass") &&
+            (changedProps.has('hass') &&
                 this._entity &&
                 this.hass?.states[this._entity] !== this._stateObj) ||
-            changedProps.has("_config")
+            changedProps.has('_config')
         );
     }
 
@@ -110,41 +110,41 @@ export class FanTile extends LitElement implements LovelaceCard {
                 : undefined;
 
         if (this._stateObj) {
-            const state = this._stateObj.state || "unknown";
+            const state = this._stateObj.state || 'unknown';
             icon =
                 this._config!.icon ||
                 this._stateObj.attributes.icon ||
-                "hass:fan";
-            if (state == "on" && icon === "hass:fan") {
+                'hass:fan';
+            if (state == 'on' && icon === 'hass:fan') {
                 if (this._stateObj.attributes.percentage) {
                     const speed =
                         0.5 + (1 - this._stateObj.attributes.percentage / 100);
                     const direction =
-                        this._stateObj.attributes.direction == "reverse"
-                            ? "reverse"
-                            : "normal";
+                        this._stateObj.attributes.direction == 'reverse'
+                            ? 'reverse'
+                            : 'normal';
                     iconAnimation = `spin ${speed}s linear infinite ${direction}`;
                 } else {
                     iconAnimation = `spin 0.5s linear infinite normal`;
                 }
             } else {
-                iconAnimation = "none";
+                iconAnimation = 'none';
             }
             iconColor =
-                state === "on"
-                    ? "var(--sq-fan-on-rgb)"
-                    : "var(--sq-inactive-rgb)";
+                state === 'on'
+                    ? 'var(--sq-fan-on-rgb)'
+                    : 'var(--sq-inactive-rgb)';
             name =
                 this._config!.name ||
                 this._stateObj.attributes.friendly_name ||
-                "Fan";
+                'Fan';
             stateFmtd = formatState(this.hass!, this._entity!);
         } else {
-            icon = this._config!.icon || "hass:fan-alert";
-            iconAnimation = "none";
-            iconColor = "var(--sq-unavailable-rgb)";
-            name = this._config?.name || "Unknown";
-            stateFmtd = "Unknown";
+            icon = this._config!.icon || 'hass:fan-alert';
+            iconAnimation = 'none';
+            iconColor = 'var(--sq-unavailable-rgb)';
+            name = this._config?.name || 'Unknown';
+            stateFmtd = 'Unknown';
         }
 
         this._iconStyles = {
@@ -160,7 +160,7 @@ export class FanTile extends LitElement implements LovelaceCard {
     private _toggleEntity(e: Event): void {
         e.stopPropagation();
         if (!this._stateObj) return;
-        callService(this.hass, "fan", "toggle", { entity_id: this._entity });
+        callService(this.hass, 'fan', 'toggle', { entity_id: this._entity });
     }
 
     private _showMoreInfo(e: Event): void {
@@ -180,7 +180,7 @@ export class FanTile extends LitElement implements LovelaceCard {
         if (entityIds.length === 0) return;
 
         const friendlyName =
-            this._stateObj.attributes?.friendly_name || "Unknown";
-        entityListDialog(friendlyName, "group", group, "fan");
+            this._stateObj.attributes?.friendly_name || 'Unknown';
+        entityListDialog(friendlyName, 'group', group, 'fan');
     }
 }

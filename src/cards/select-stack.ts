@@ -5,24 +5,24 @@ import {
     nothing,
     PropertyValues,
     TemplateResult,
-} from "lit";
-import { customElement, property, state } from "lit/decorators.js";
-import { HomeAssistant, LovelaceCardConfig, LovelaceCard } from "../types";
-import { createElement } from "../utilities/create-element";
+} from 'lit';
+import { customElement, property, state } from 'lit/decorators.js';
+import { HomeAssistant, LovelaceCardConfig, LovelaceCard } from '../types';
+import { createElement } from '../utilities/create-element';
 
 interface Config extends LovelaceCardConfig {
     entity: string;
 }
 
 window.customCards.push({
-    type: "smartqasa-select-stack",
-    name: "SmartQasa Select Stack",
+    type: 'smartqasa-select-stack',
+    name: 'SmartQasa Select Stack',
     preview: false,
     description:
-        "A SmartQasa element that lists select entity options in a stack.",
+        'A SmartQasa element that lists select entity options in a stack.',
 });
 
-@customElement("smartqasa-select-stack")
+@customElement('smartqasa-select-stack')
 export class GroupStack extends LitElement implements LovelaceCard {
     public getCardSize(): number | Promise<number> {
         return 4;
@@ -31,7 +31,7 @@ export class GroupStack extends LitElement implements LovelaceCard {
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() protected _config?: Config;
     @state() private _tiles: LovelaceCard[] = [];
-    private _tileType: string = "";
+    private _tileType: string = '';
 
     static get styles() {
         return css`
@@ -51,7 +51,7 @@ export class GroupStack extends LitElement implements LovelaceCard {
     public setConfig(config: Config): void {
         if (!config.filter_type || !config.filter_value || !config.tile_type) {
             throw new Error(
-                "filter_type, filter_value, and card_type must be provided in the config."
+                'filter_type, filter_value, and card_type must be provided in the config.'
             );
         }
         this._config = config;
@@ -61,9 +61,9 @@ export class GroupStack extends LitElement implements LovelaceCard {
     protected willUpdate(changedProps: PropertyValues) {
         if (!this._config || !this.hass) return;
 
-        if (changedProps.has("_config")) {
+        if (changedProps.has('_config')) {
             this._createTiles();
-        } else if (changedProps.has("hass") && this._tiles.length > 0) {
+        } else if (changedProps.has('hass') && this._tiles.length > 0) {
             this._tiles.forEach((tile) => {
                 if (tile.hass !== this.hass) tile.hass = this.hass;
             });
@@ -83,7 +83,7 @@ export class GroupStack extends LitElement implements LovelaceCard {
     }
 
     protected updated(changedProps: PropertyValues) {
-        if (changedProps.has("hass") && this.hass) {
+        if (changedProps.has('hass') && this.hass) {
             this._tiles.forEach((tile) => {
                 if (this.hass !== tile.hass) tile.hass = this.hass!;
             });
@@ -94,12 +94,12 @@ export class GroupStack extends LitElement implements LovelaceCard {
         if (!this._config || !this.hass) return;
 
         let entityIds: string[] = [];
-        if (this._config.filter_type === "group") {
+        if (this._config.filter_type === 'group') {
             const groupEntity = this.hass.states[this._config.filter_value];
             if (groupEntity && groupEntity.attributes.entity_id) {
                 entityIds = groupEntity.attributes.entity_id as string[];
             }
-        } else if (this._config.filter_type === "domain") {
+        } else if (this._config.filter_type === 'domain') {
             const domain = this._config.filter_value;
             entityIds = Object.keys(this.hass.states).filter((entityId) => {
                 return entityId.startsWith(`${domain}.`);
@@ -110,7 +110,7 @@ export class GroupStack extends LitElement implements LovelaceCard {
             const entityNameMap = entityIds.map((entityId) => {
                 const entity = this.hass!.states[entityId];
                 const friendlyName =
-                    entity?.attributes.friendly_name?.toLowerCase() || "";
+                    entity?.attributes.friendly_name?.toLowerCase() || '';
                 return { entityId, friendlyName };
             });
 

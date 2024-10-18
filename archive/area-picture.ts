@@ -5,13 +5,13 @@ import {
     LitElement,
     PropertyValues,
     TemplateResult,
-} from "lit";
-import { customElement, property, state } from "lit/decorators.js";
+} from 'lit';
+import { customElement, property, state } from 'lit/decorators.js';
 
-import { HassArea, HomeAssistant, LovelaceCardConfig } from "../src/types";
-import { deviceType } from "../src/utils/device-info";
+import { HassArea, HomeAssistant, LovelaceCardConfig } from '../src/types';
+import { deviceType } from '../src/utils/device-info';
 
-import defaultImage from "../assets/images/default.png";
+import defaultImage from '../assets/images/default.png';
 
 interface Config extends LovelaceCardConfig {
     area: string;
@@ -19,13 +19,13 @@ interface Config extends LovelaceCardConfig {
 }
 
 window.customCards.push({
-    type: "smartqasa-area-picture",
-    name: "SmartQasa Area Picture",
+    type: 'smartqasa-area-picture',
+    name: 'SmartQasa Area Picture',
     preview: true,
-    description: "A SmartQasa card for rendering an area picture.",
+    description: 'A SmartQasa card for rendering an area picture.',
 });
 
-@customElement("smartqasa-area-picture")
+@customElement('smartqasa-area-picture')
 export class AreaPicture extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
     @state() private _config?: Config;
@@ -57,15 +57,15 @@ export class AreaPicture extends LitElement {
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
         return !!(
-            (changedProps.has("hass") &&
+            (changedProps.has('hass') &&
                 this._area &&
                 this.hass?.areas[this._area] !== this._areaObj) ||
-            (changedProps.has("_config") && this._config)
+            (changedProps.has('_config') && this._config)
         );
     }
 
     protected render(): TemplateResult {
-        const height = deviceType === "phone" ? "15vh" : "20vh";
+        const height = deviceType === 'phone' ? '15vh' : '20vh';
         const picture = this._config?.picture
             ? `/local/smartqasa/images/${this._config.picture}`
             : (this._areaObj?.picture ?? defaultImage);

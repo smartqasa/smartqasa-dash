@@ -6,35 +6,35 @@ import {
     PropertyValues,
     TemplateResult,
     unsafeCSS,
-} from "lit";
-import { customElement, property, state } from "lit/decorators.js";
+} from 'lit';
+import { customElement, property, state } from 'lit/decorators.js';
 
 import {
     HassEntity,
     HomeAssistant,
     LovelaceCard,
     LovelaceCardConfig,
-} from "../types";
-import { dialogTable } from "../dialogs/dialog-table";
-import { dialogPopup } from "../dialogs/dialog-popup";
-import { launchApp } from "../utilities/launch-app";
-import { formatState } from "../utilities/format-state";
+} from '../types';
+import { dialogTable } from '../dialogs/dialog-table';
+import { dialogPopup } from '../dialogs/dialog-popup';
+import { launchApp } from '../utilities/launch-app';
+import { formatState } from '../utilities/format-state';
 
-import tileStyle from "../css/tile.css";
-import musicBarsStyle from "../css/music-bars.css";
+import tileStyle from '../css/tile.css';
+import musicBarsStyle from '../css/music-bars.css';
 
 interface Config extends LovelaceCardConfig {
     entity?: string;
 }
 
 window.customCards.push({
-    type: "smartqasa-audio-tile",
-    name: "SmartQasa Audio Tile",
+    type: 'smartqasa-audio-tile',
+    name: 'SmartQasa Audio Tile',
     preview: true,
-    description: "A SmartQasa tile for displaying an audio dialog.",
+    description: 'A SmartQasa tile for displaying an audio dialog.',
 });
 
-@customElement("smartqasa-audio-tile")
+@customElement('smartqasa-audio-tile')
 export class AudioTile extends LitElement implements LovelaceCard {
     public getCardSize(): number | Promise<number> {
         return 1;
@@ -46,17 +46,17 @@ export class AudioTile extends LitElement implements LovelaceCard {
     private _entity?: string;
     private _stateObj?: HassEntity;
     private _iconHtml: TemplateResult = html``;
-    private _name: string = "Unknown Speaker";
-    private _stateFmtd: string = "Unknown State";
+    private _name: string = 'Unknown Speaker';
+    private _stateFmtd: string = 'Unknown State';
 
     static get styles(): CSSResultGroup[] {
         return [unsafeCSS(tileStyle), unsafeCSS(musicBarsStyle)];
     }
 
     public setConfig(config: Config): void {
-        if (!config.entity?.startsWith("media_player.")) {
+        if (!config.entity?.startsWith('media_player.')) {
             console.error(
-                "Invalid media_player entity provided in the config."
+                'Invalid media_player entity provided in the config.'
             );
             this._entity = undefined;
         } else {
@@ -68,10 +68,10 @@ export class AudioTile extends LitElement implements LovelaceCard {
     protected shouldUpdate(changedProps: PropertyValues): boolean {
         if (!this._config) return false;
         return !!(
-            (changedProps.has("hass") &&
+            (changedProps.has('hass') &&
                 this._entity &&
                 this.hass?.states[this._entity] !== this._stateObj) ||
-            changedProps.has("_config")
+            changedProps.has('_config')
         );
     }
 
@@ -98,8 +98,8 @@ export class AudioTile extends LitElement implements LovelaceCard {
 
         let iconHtml, name, stateFmtd;
         if (this._stateObj) {
-            const state = this._stateObj.state || "unknown";
-            if (state === "playing") {
+            const state = this._stateObj.state || 'unknown';
+            if (state === 'playing') {
                 iconHtml = html`
                     <div class="bars tile" @click=${this._launchApp}>
                         <div></div>
@@ -119,7 +119,7 @@ export class AudioTile extends LitElement implements LovelaceCard {
             name =
                 this._config!.name ||
                 this._stateObj.attributes.friendly_name ||
-                "Speaker";
+                'Speaker';
             stateFmtd = formatState(this.hass!, this._entity!);
         } else {
             iconHtml = html`
@@ -127,8 +127,8 @@ export class AudioTile extends LitElement implements LovelaceCard {
                     <ha-icon icon="hass:music"></ha-icon>
                 </div>
             `;
-            name = this._config?.name || "Unknown Speaker";
-            stateFmtd = "Unknown State";
+            name = this._config?.name || 'Unknown Speaker';
+            stateFmtd = 'Unknown State';
         }
 
         this._iconHtml = iconHtml;
@@ -138,7 +138,7 @@ export class AudioTile extends LitElement implements LovelaceCard {
 
     private _showDialog(e: Event): void {
         e.stopPropagation();
-        const dialogObj = dialogTable["sonos"];
+        const dialogObj = dialogTable['sonos'];
         if (!dialogObj) return;
 
         const dialogConfig = { ...dialogObj.data };
@@ -149,6 +149,6 @@ export class AudioTile extends LitElement implements LovelaceCard {
 
     private _launchApp(e: Event): void {
         e.stopPropagation();
-        launchApp("com.sonos.acr2");
+        launchApp('com.sonos.acr2');
     }
 }

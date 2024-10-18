@@ -1,12 +1,12 @@
-import { CSSResult, html, LitElement, TemplateResult, unsafeCSS } from "lit";
-import { customElement, state } from "lit/decorators.js";
-import { styleMap } from "lit/directives/style-map.js";
+import { CSSResult, html, LitElement, TemplateResult, unsafeCSS } from 'lit';
+import { customElement, state } from 'lit/decorators.js';
+import { styleMap } from 'lit/directives/style-map.js';
 
-import { LovelaceCard, LovelaceCardConfig } from "../types";
-import { dialogTable } from "../dialogs/dialog-table";
-import { dialogPopup } from "../dialogs/dialog-popup";
+import { LovelaceCard, LovelaceCardConfig } from '../types';
+import { dialogTable } from '../dialogs/dialog-table';
+import { dialogPopup } from '../dialogs/dialog-popup';
 
-import tileStyle from "../css/tile.css";
+import tileStyle from '../css/tile.css';
 
 interface Config extends LovelaceCardConfig {
     dialog: string;
@@ -15,13 +15,13 @@ interface Config extends LovelaceCardConfig {
 }
 
 window.customCards.push({
-    type: "smartqasa-dialog-tile",
-    name: "SmartQasa Dialog Tile",
+    type: 'smartqasa-dialog-tile',
+    name: 'SmartQasa Dialog Tile',
     preview: true,
-    description: "A SmartQasa card for displaying a browser_mod popup dialog.",
+    description: 'A SmartQasa card for displaying a browser_mod popup dialog.',
 });
 
-@customElement("smartqasa-dialog-tile")
+@customElement('smartqasa-dialog-tile')
 export class DialogTile extends LitElement implements LovelaceCard {
     public getCardSize(): number | Promise<number> {
         return 1;
@@ -30,9 +30,9 @@ export class DialogTile extends LitElement implements LovelaceCard {
     @state() private _config?: Config;
     @state() private _dialogObj?: any;
 
-    private _icon: string = "hass:help-rhombus";
+    private _icon: string = 'hass:help-rhombus';
     private _iconStyles: Record<string, string> = {};
-    private _name: string = "Unknown Dialog";
+    private _name: string = 'Unknown Dialog';
 
     static get styles(): CSSResult {
         return unsafeCSS(tileStyle);
@@ -65,12 +65,12 @@ export class DialogTile extends LitElement implements LovelaceCard {
 
         if (this._config && this._dialogObj) {
             icon = this._config.icon || this._dialogObj.icon;
-            iconColor = "var(--sq-inactive-rgb)";
+            iconColor = 'var(--sq-inactive-rgb)';
             name = this._config.name || this._dialogObj.name;
         } else {
-            icon = this._config?.icon || "hass:help-rhombus";
-            iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
-            name = this._config?.name || "Unknown";
+            icon = this._config?.icon || 'hass:help-rhombus';
+            iconColor = 'var(--sq-unavailable-rgb, 255, 0, 255)';
+            name = this._config?.name || 'Unknown';
         }
 
         this._iconStyles = {
