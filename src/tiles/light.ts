@@ -196,7 +196,7 @@ export class LightTile extends LitElement implements LovelaceCard {
             : [];
         if (entities.length === 0) return;
 
-        const columns = this._config.grid_columns ?? 3;
+        const columns = this._config.grid_columns ?? 2;
         const style = this._config.grid_style ?? 'circle';
 
         const dialogConfig = {
