@@ -1,15 +1,15 @@
-import { css, html, LitElement, TemplateResult } from 'lit';
-import { customElement } from 'lit/decorators.js';
-import image from '../assets/images/clean.png';
+import { css, html, LitElement, TemplateResult } from "lit";
+import { customElement } from "lit/decorators.js";
+import image from "../assets/images/clean.png";
 
 window.customCards.push({
-    type: 'smartqasa-clean-card',
-    name: 'SmartQasa Clean card',
+    type: "smartqasa-clean-card",
+    name: "SmartQasa Clean card",
     preview: true,
-    description: 'A SmartQasa card for displaying a clean screen image.',
+    description: "A SmartQasa card for displaying a clean screen image.",
 });
 
-@customElement('smartqasa-clean-card')
+@customElement("smartqasa-clean-card")
 export class CleanCard extends LitElement {
     public getCardSize(): number | Promise<number> {
         return 100;

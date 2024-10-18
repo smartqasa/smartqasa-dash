@@ -1,26 +1,26 @@
-declare module '*.css' {
+declare module "*.css" {
     const content: string;
     export default content;
 }
 
-declare module '*.jpg' {
+declare module "*.jpg" {
     const value: string;
     export default value;
 }
 
-declare module '*.png' {
+declare module "*.png" {
     const value: string;
     export default value;
 }
 
-declare module '*.webp' {
+declare module "*.webp" {
     const value: string;
     export default value;
 }
 
 declare interface DialogConfig {
     title: string;
-    size?: 'normal' | 'wide' | 'fullscreen';
+    size?: "normal" | "wide" | "fullscreen";
     timeout?: number;
     timeout_action?: object;
     dismissable?: boolean;

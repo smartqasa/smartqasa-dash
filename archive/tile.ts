@@ -1,4 +1,4 @@
-import { css } from 'lit';
+import { css } from "lit";
 
 export const tileBaseStyle = css`
     .container {
@@ -9,7 +9,7 @@ export const tileBaseStyle = css`
         box-sizing: border-box;
         border: var(--sq-card-border, none);
         border-radius: var(--sq-card-border-radius, 1.5rem);
-        grid-template-areas: 'i n';
+        grid-template-areas: "i n";
         grid-template-columns: auto 1fr;
         grid-column-gap: 1rem;
         grid-row-gap: 0.4rem;
@@ -61,7 +61,7 @@ export const tileBaseStyle = css`
 
 export const tileStateStyle = css`
     .container {
-        grid-template-areas: 'i n' 'i s';
+        grid-template-areas: "i n" "i s";
         grid-row-gap: 0.3rem;
     }
     .name {

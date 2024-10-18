@@ -6,19 +6,19 @@ import {
     PropertyValues,
     TemplateResult,
     unsafeCSS,
-} from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+} from "lit";
+import { customElement, property, state } from "lit/decorators.js";
 
 import {
     HassEntity,
     HomeAssistant,
     LovelaceCard,
     LovelaceCardConfig,
-} from '../types';
-import { selectOptionDialog } from '../dialogs/select-option-dialog';
-import { phaseIcons, modeIcons } from '../const';
+} from "../types";
+import { selectOptionDialog } from "../dialogs/select-option-dialog";
+import { phaseIcons, modeIcons } from "../const";
 
-import chipBaseStyle from '../css/chip-base.css';
+import chipBaseStyle from "../css/chip-base.css";
 
 interface Config extends LovelaceCardConfig {
     entity: string;
@@ -27,14 +27,14 @@ interface Config extends LovelaceCardConfig {
 }
 
 window.customCards.push({
-    type: 'smartqasa-select-chip',
-    name: 'SmartQasa Input Select Chip',
+    type: "smartqasa-select-chip",
+    name: "SmartQasa Input Select Chip",
     preview: true,
     description:
-        'A SmartQasa chip for selecting an option for a input_select entity.',
+        "A SmartQasa chip for selecting an option for a input_select entity.",
 });
 
-@customElement('smartqasa-select-chip')
+@customElement("smartqasa-select-chip")
 export class SelectChip extends LitElement implements LovelaceCard {
     public getCardSize(): number {
         return 1;
@@ -48,7 +48,7 @@ export class SelectChip extends LitElement implements LovelaceCard {
     static styles: CSSResult = unsafeCSS(chipBaseStyle);
 
     public setConfig(config: Config): void {
-        if (!config.entity || !config.entity.startsWith('input_select.')) {
+        if (!config.entity || !config.entity.startsWith("input_select.")) {
             throw new Error(
                 "entity must be provided in the config and start with 'input_select.'."
             );
@@ -61,10 +61,10 @@ export class SelectChip extends LitElement implements LovelaceCard {
     protected shouldUpdate(changedProps: PropertyValues): boolean {
         if (!this._config) return false;
         return !!(
-            (changedProps.has('hass') &&
+            (changedProps.has("hass") &&
                 this._entity &&
                 this.hass?.states[this._entity] !== this._stateObj) ||
-            changedProps.has('_config')
+            changedProps.has("_config")
         );
     }
 
@@ -77,16 +77,16 @@ export class SelectChip extends LitElement implements LovelaceCard {
             ? this.hass?.states[this._entity]
             : undefined;
 
-        const state = this._stateObj?.state || 'unknown';
-        if (this._entity === 'input_select.location_phase') {
+        const state = this._stateObj?.state || "unknown";
+        if (this._entity === "input_select.location_phase") {
             icon = phaseIcons[state] || phaseIcons.default;
-        } else if (this._entity === 'input_select.location_mode') {
+        } else if (this._entity === "input_select.location_mode") {
             icon = modeIcons[state] || modeIcons.default;
         } else {
             icon =
                 this._config?.icon ||
                 this._stateObj?.attributes?.icon ||
-                'hass:form-dropdown';
+                "hass:form-dropdown";
         }
 
         return html`

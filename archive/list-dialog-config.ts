@@ -1,6 +1,6 @@
 export const listDialogConfig: any = (
     dialogTitle: string,
-    filterType: 'domain' | 'group',
+    filterType: "domain" | "group",
     filterValue: string,
     tileType: string
 ) => {
@@ -8,17 +8,17 @@ export const listDialogConfig: any = (
         title: dialogTitle,
         timeout: 60000,
         content: {
-            type: 'custom:auto-entities',
+            type: "custom:auto-entities",
             card: {
-                type: 'custom:smartqasa-vertical-stack',
+                type: "custom:smartqasa-vertical-stack",
             },
-            card_param: 'cards',
+            card_param: "cards",
             filter: {
                 include: [
                     {
                         [filterType]: filterValue,
                         sort: {
-                            method: 'friendly_name',
+                            method: "friendly_name",
                             ignore_case: true,
                         },
                         options: {

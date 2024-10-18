@@ -6,20 +6,20 @@ import {
     PropertyValues,
     TemplateResult,
     unsafeCSS,
-} from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
-import { styleMap } from 'lit/directives/style-map.js';
+} from "lit";
+import { customElement, property, state } from "lit/decorators.js";
+import { styleMap } from "lit/directives/style-map.js";
 
 import {
     HassEntity,
     HomeAssistant,
     LovelaceCard,
     LovelaceCardConfig,
-} from '../types';
-import { callService } from '../utilities/call-service';
+} from "../types";
+import { callService } from "../utilities/call-service";
 
-import chipBaseStyle from '../css/chip-base.css';
-import chipTextStyle from '../css/chip-text.css';
+import chipBaseStyle from "../css/chip-base.css";
+import chipTextStyle from "../css/chip-text.css";
 
 interface Config extends LovelaceCardConfig {
     entity?: string;
@@ -27,14 +27,14 @@ interface Config extends LovelaceCardConfig {
 }
 
 window.customCards.push({
-    type: 'smartqasa-motion-chip',
-    name: 'SmartQasa Motion Sensor Chip',
+    type: "smartqasa-motion-chip",
+    name: "SmartQasa Motion Sensor Chip",
     preview: true,
     description:
-        'A SmartQasa chip for toggling a motion sensor automation entity.',
+        "A SmartQasa chip for toggling a motion sensor automation entity.",
 });
 
-@customElement('smartqasa-motion-chip')
+@customElement("smartqasa-motion-chip")
 export class MotionChip extends LitElement implements LovelaceCard {
     public getCardSize(): number | Promise<number> {
         return 1;
@@ -45,17 +45,17 @@ export class MotionChip extends LitElement implements LovelaceCard {
 
     private _entity?: string;
     private _stateObj?: HassEntity;
-    private _icon: string = 'hass:motion-sensor';
+    private _icon: string = "hass:motion-sensor";
     private _iconStyles: Record<string, string> = {};
-    private _name: string = '';
+    private _name: string = "";
 
     static get styles(): CSSResultGroup {
         return [unsafeCSS(chipBaseStyle), unsafeCSS(chipTextStyle)];
     }
 
     public setConfig(config: Config): void {
-        if (!config.entity?.startsWith('automation.')) {
-            console.error('Invalid automation entity provided in the config.');
+        if (!config.entity?.startsWith("automation.")) {
+            console.error("Invalid automation entity provided in the config.");
             this._entity = undefined;
         } else {
             this._entity = config.entity;
@@ -66,10 +66,10 @@ export class MotionChip extends LitElement implements LovelaceCard {
     protected shouldUpdate(changedProps: PropertyValues): boolean {
         if (!this._config) return false;
         return !!(
-            (changedProps.has('hass') &&
+            (changedProps.has("hass") &&
                 this._entity &&
                 this.hass?.states[this._entity] !== this._stateObj) ||
-            changedProps.has('_config')
+            changedProps.has("_config")
         );
     }
 
@@ -101,30 +101,30 @@ export class MotionChip extends LitElement implements LovelaceCard {
         if (this._stateObj) {
             const state = this._stateObj.state || undefined;
             switch (state) {
-                case 'on':
-                    icon = 'hass:motion-sensor';
-                    iconColor = 'var(--sq-primary-font-rgb)';
+                case "on":
+                    icon = "hass:motion-sensor";
+                    iconColor = "var(--sq-primary-font-rgb)";
                     break;
-                case 'off':
-                    icon = 'hass:motion-sensor-off';
-                    iconColor = 'var(--sq-red-rgb)';
+                case "off":
+                    icon = "hass:motion-sensor-off";
+                    iconColor = "var(--sq-red-rgb)";
                     break;
                 default:
-                    icon = 'hass:motion-sensor-off';
-                    iconColor = 'var(--sq-unavailable-rgb)';
+                    icon = "hass:motion-sensor-off";
+                    iconColor = "var(--sq-unavailable-rgb)";
                     break;
             }
         } else {
-            icon = this._config?.icon || 'hass:lightbulb-alert';
-            iconColor = 'var(--sq-unavailable-rgb)';
+            icon = this._config?.icon || "hass:lightbulb-alert";
+            iconColor = "var(--sq-unavailable-rgb)";
         }
 
-        name = this._config?.name || '';
+        name = this._config?.name || "";
         this._iconStyles = {
             color: `rgb(${iconColor})`,
             paddingRight: name
-                ? 'calc(var(--sq-chip-padding) / 2)'
-                : 'var(--sq-chip-padding)',
+                ? "calc(var(--sq-chip-padding) / 2)"
+                : "var(--sq-chip-padding)",
         };
         this._icon = icon;
         this._name = name;
@@ -132,7 +132,7 @@ export class MotionChip extends LitElement implements LovelaceCard {
 
     private _toggleEntity(e: Event): void {
         e.stopPropagation();
-        callService(this.hass, 'automation', 'toggle', {
+        callService(this.hass, "automation", "toggle", {
             entity_id: this._entity,
         });
     }

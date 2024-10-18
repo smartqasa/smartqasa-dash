@@ -6,19 +6,19 @@ import {
     PropertyValues,
     TemplateResult,
     unsafeCSS,
-} from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
-import { styleMap } from 'lit/directives/style-map.js';
+} from "lit";
+import { customElement, property, state } from "lit/decorators.js";
+import { styleMap } from "lit/directives/style-map.js";
 
 import {
     HassEntity,
     HomeAssistant,
     LovelaceCard,
     LovelaceCardConfig,
-} from '../types';
-import { selectOptionDialog } from '../dialogs/select-option-dialog';
+} from "../types";
+import { selectOptionDialog } from "../dialogs/select-option-dialog";
 
-import tileStyle from '../css/tile.css';
+import tileStyle from "../css/tile.css";
 
 interface Config extends LovelaceCardConfig {
     entity: string;
@@ -28,13 +28,13 @@ interface Config extends LovelaceCardConfig {
 }
 
 window.customCards.push({
-    type: 'smartqasa-select-tile',
-    name: 'SmartQasa Select Tile',
+    type: "smartqasa-select-tile",
+    name: "SmartQasa Select Tile",
     preview: true,
-    description: 'A SmartQasa tile for displaying an Input Select entity.',
+    description: "A SmartQasa tile for displaying an Input Select entity.",
 });
 
-@customElement('smartqasa-select-tile')
+@customElement("smartqasa-select-tile")
 export class SelectTile extends LitElement implements LovelaceCard {
     public getCardSize(): number | Promise<number> {
         return 1;
@@ -44,19 +44,19 @@ export class SelectTile extends LitElement implements LovelaceCard {
     @state() protected _config?: Config;
     private _entity?: string;
     private _stateObj?: HassEntity;
-    private _icon: string = 'hass:form-dropdown';
+    private _icon: string = "hass:form-dropdown";
     private _iconStyles: Record<string, string> = {};
-    private _name: string = 'Unknown Select';
-    private _stateFmtd: string = 'Unknown State';
+    private _name: string = "Unknown Select";
+    private _stateFmtd: string = "Unknown State";
 
     static get styles(): CSSResult {
         return unsafeCSS(tileStyle);
     }
 
     public setConfig(config: Config): void {
-        if (!config.entity?.startsWith('input_select.')) {
+        if (!config.entity?.startsWith("input_select.")) {
             console.error(
-                'Invalid input_select entity provided in the config.'
+                "Invalid input_select entity provided in the config."
             );
             this._entity = undefined;
         } else {
@@ -67,10 +67,10 @@ export class SelectTile extends LitElement implements LovelaceCard {
 
     protected shouldUpdate(changedProps: PropertyValues): boolean {
         return !!(
-            (changedProps.has('hass') &&
+            (changedProps.has("hass") &&
                 this._entity &&
                 this.hass?.states[this._entity] !== this._stateObj) ||
-            (changedProps.has('_config') && this._config)
+            (changedProps.has("_config") && this._config)
         );
     }
 
@@ -102,19 +102,19 @@ export class SelectTile extends LitElement implements LovelaceCard {
             icon =
                 this._config.icon ||
                 this._stateObj.attributes?.icon ||
-                'hass:form-dropdown';
-            iconColor = 'var(--sq-inactive-rgb)';
+                "hass:form-dropdown";
+            iconColor = "var(--sq-inactive-rgb)";
             name =
                 this._config.name ||
                 this._stateObj.attributes?.friendly_name ||
-                'Select List';
+                "Select List";
             stateFmtd =
-                this.hass.formatEntityState(this._stateObj) || 'Unknown';
+                this.hass.formatEntityState(this._stateObj) || "Unknown";
         } else {
-            icon = this._config?.icon || 'hass:form-dropdown';
-            iconColor = 'var(--sq-unavailable-rgb, 255, 0, 255)';
-            name = this._config?.name || 'Unknown';
-            stateFmtd = 'Unknown';
+            icon = this._config?.icon || "hass:form-dropdown";
+            iconColor = "var(--sq-unavailable-rgb, 255, 0, 255)";
+            name = this._config?.name || "Unknown";
+            stateFmtd = "Unknown";
         }
 
         this._iconStyles = {

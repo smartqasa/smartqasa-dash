@@ -1,9 +1,9 @@
 export const menuConfig = async (): Promise<any> => {
     const config = {
-        title: 'Menu',
+        title: "Menu",
         timeout: 120000,
         content: {
-            type: 'custom:smartqasa-menu-card',
+            type: "custom:smartqasa-menu-card",
         },
     };
 

@@ -1,7 +1,7 @@
-import { html, TemplateResult } from 'lit';
-import { navigateToArea } from '../utils/navigate-to-area';
-import { dialogTable } from '../tables/dialogs';
-import { dialogPopup } from '../dialogs/dialog-popup';
+import { html, TemplateResult } from "lit";
+import { navigateToArea } from "../utils/navigate-to-area";
+import { dialogTable } from "../tables/dialogs";
+import { dialogPopup } from "../dialogs/dialog-popup";
 
 export function renderFooter(): TemplateResult {
     function renderFooterButton(
@@ -24,47 +24,47 @@ export function renderFooter(): TemplateResult {
     }
 
     function handleHome(): void {
-        if (window.smartqasa.viewMode !== 'control') {
-            window.smartqasa.viewMode = 'control';
-            window.dispatchEvent(new Event('viewModeChanged'));
+        if (window.smartqasa.viewMode !== "control") {
+            window.smartqasa.viewMode = "control";
+            window.dispatchEvent(new Event("viewModeChanged"));
             return;
         }
 
         const startArea = window.smartqasa.startArea;
         if (!startArea) return;
 
-        const currentArea = new URL(location.href).pathname.split('/').pop();
+        const currentArea = new URL(location.href).pathname.split("/").pop();
         if (currentArea !== startArea) {
             navigateToArea(startArea);
         } else {
-            navigateToArea('home');
+            navigateToArea("home");
         }
     }
 
     function handleAreas(): void {
-        dialogPopup(dialogTable['areas'].data);
+        dialogPopup(dialogTable["areas"].data);
     }
 
     function handleEntertain(): void {
-        window.smartqasa.viewMode = 'entertain';
-        window.dispatchEvent(new Event('viewModeChanged'));
+        window.smartqasa.viewMode = "entertain";
+        window.dispatchEvent(new Event("viewModeChanged"));
     }
 
     function handleMenu(): void {
         window.smartqasa.menuTab = 0;
-        dialogPopup(dialogTable['menu'].data);
+        dialogPopup(dialogTable["menu"].data);
     }
 
     return html`
         <div class="footer-container">
-            ${renderFooterButton('hass:home', 'Home', handleHome)}
-            ${renderFooterButton('hass:view-dashboard', 'Areas', handleAreas)}
+            ${renderFooterButton("hass:home", "Home", handleHome)}
+            ${renderFooterButton("hass:view-dashboard", "Areas", handleAreas)}
             ${renderFooterButton(
-                'hass:music',
-                'Entertainment',
+                "hass:music",
+                "Entertainment",
                 handleEntertain
             )}
-            ${renderFooterButton('hass:menu', 'Menu', handleMenu)}
+            ${renderFooterButton("hass:menu", "Menu", handleMenu)}
         </div>
     `;
 }

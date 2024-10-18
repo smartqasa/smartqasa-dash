@@ -1,22 +1,22 @@
-import { css, html, LitElement, nothing, PropertyValues } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
+import { css, html, LitElement, nothing, PropertyValues } from "lit";
+import { customElement, property, state } from "lit/decorators.js";
 
-import { HomeAssistant, LovelaceCardConfig, LovelaceCard } from '../types';
-import { createElements } from '../utilities/create-elements';
+import { HomeAssistant, LovelaceCardConfig, LovelaceCard } from "../types";
+import { createElements } from "../utilities/create-elements";
 
 interface Config extends LovelaceCardConfig {
     cards: LovelaceCardConfig[];
 }
 
 window.customCards.push({
-    type: 'smartqasa-vertical-stack',
-    name: 'SmartQasa Vertical Stack',
+    type: "smartqasa-vertical-stack",
+    name: "SmartQasa Vertical Stack",
     preview: false,
     description:
-        'A SmartQasa element that displays other cards in a vertical stack.',
+        "A SmartQasa element that displays other cards in a vertical stack.",
 });
 
-@customElement('smartqasa-vertical-stack')
+@customElement("smartqasa-vertical-stack")
 export class VerticalStack extends LitElement implements LovelaceCard {
     public getCardSize(): number | Promise<number> {
         return 1;
@@ -42,10 +42,10 @@ export class VerticalStack extends LitElement implements LovelaceCard {
     }
 
     public setConfig(config: Config) {
-        if (!config) throw new Error('Invalid configuration object');
+        if (!config) throw new Error("Invalid configuration object");
 
         if (!Array.isArray(config.cards) || config.cards.length === 0) {
-            console.warn('No cards defined in configuration');
+            console.warn("No cards defined in configuration");
             return;
         }
 
@@ -55,9 +55,9 @@ export class VerticalStack extends LitElement implements LovelaceCard {
     protected willUpdate(changedProps: PropertyValues) {
         if (!this._config || !this.hass) return;
 
-        if (changedProps.has('_config')) {
+        if (changedProps.has("_config")) {
             this._createCards();
-        } else if (changedProps.has('hass') && this._cards.length > 0) {
+        } else if (changedProps.has("hass") && this._cards.length > 0) {
             this._cards.forEach((card) => {
                 if (card.hass !== this.hass) card.hass = this.hass;
             });
@@ -88,11 +88,11 @@ export class VerticalStack extends LitElement implements LovelaceCard {
                 );
             } catch (error) {
                 this._cards = [];
-                console.error('Error creating cards:', error);
+                console.error("Error creating cards:", error);
             }
         } else {
             this._cards = [];
-            console.warn('No cards defined in configuration');
+            console.warn("No cards defined in configuration");
         }
     }
 }

@@ -5,15 +5,15 @@ import {
     LitElement,
     PropertyValues,
     TemplateResult,
-} from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
-import { HomeAssistant } from '../src/types';
+} from "lit";
+import { customElement, property, state } from "lit/decorators.js";
+import { HomeAssistant } from "../src/types";
 
-@customElement('smartqasa-time-date')
+@customElement("smartqasa-time-date")
 export class TimeDate extends LitElement {
     @property({ attribute: false }) public hass?: HomeAssistant;
-    @state() private _time: string = 'Loading...';
-    @state() private _date: string = 'Loading...';
+    @state() private _time: string = "Loading...";
+    @state() private _date: string = "Loading...";
 
     static get styles(): CSSResultGroup {
         return css`
@@ -48,11 +48,11 @@ export class TimeDate extends LitElement {
 
     protected updated(changedProps: PropertyValues) {
         super.updated(changedProps);
-        if (changedProps.has('hass') && this.hass) {
+        if (changedProps.has("hass") && this.hass) {
             this._time =
-                this.hass.states['sensor.current_time']?.state || 'Loading...';
+                this.hass.states["sensor.current_time"]?.state || "Loading...";
             this._date =
-                this.hass.states['sensor.current_date']?.state || 'Loading...';
+                this.hass.states["sensor.current_date"]?.state || "Loading...";
         }
     }
 
@@ -67,12 +67,12 @@ export class TimeDate extends LitElement {
 
     private _handleTap(): void {
         if (
-            typeof window.fully !== 'undefined' &&
+            typeof window.fully !== "undefined" &&
             window.fully.startApplication
         ) {
-            window.fully.startApplication('com.google.android.deskclock');
+            window.fully.startApplication("com.google.android.deskclock");
         } else {
-            console.warn('fully.startApplication is not available.');
+            console.warn("fully.startApplication is not available.");
         }
     }
 }

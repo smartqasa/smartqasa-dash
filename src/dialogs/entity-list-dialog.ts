@@ -1,9 +1,9 @@
-import { listDialogConfig } from './list-dialog-config';
-import { dialogPopup } from './dialog-popup';
+import { listDialogConfig } from "./list-dialog-config";
+import { dialogPopup } from "./dialog-popup";
 
 export function entityListDialog(
     dialogTitle: string,
-    filterType: 'domain' | 'group',
+    filterType: "domain" | "group",
     filterValue: any,
     tileType: string
 ) {

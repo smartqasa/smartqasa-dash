@@ -1,5 +1,5 @@
-import { loadYamlAsJson } from '../src/utilities/load-yaml-as-json';
-import { deviceType } from '../src/utilities/device-info';
+import { loadYamlAsJson } from "../src/utilities/load-yaml-as-json";
+import { deviceType } from "../src/utilities/device-info";
 
 export async function entertainDialog(config: any, hass: any): Promise<void> {
     if (!config || !hass) return;
@@ -13,25 +13,25 @@ export async function entertainDialog(config: any, hass: any): Promise<void> {
         ? hass.states[config.audio_player]
         : undefined;
     const appListCards = await loadYamlAsJson(
-        '/local/smartqasa/config/entertain.yaml'
+        "/local/smartqasa/config/entertain.yaml"
     );
 
     const videoPlayerTitle = videoPlayerObj
         ? {
-              type: 'custom:smartqasa-title-card',
-              title: videoPlayerObj.attributes.friendly_name || 'TV',
+              type: "custom:smartqasa-title-card",
+              title: videoPlayerObj.attributes.friendly_name || "TV",
           }
         : undefined;
 
     const videoPlayerCard = videoPlayerObj
         ? {
-              type: 'custom:roku-card',
+              type: "custom:roku-card",
               entity: videoPlayerObj.entity_id,
               tv: true,
               volume_mute: {
                   tap_action: {
-                      action: 'call-service',
-                      service: 'script.system_toggle_volume_muted',
+                      action: "call-service",
+                      service: "script.system_toggle_volume_muted",
                       service_data: {
                           entity_id:
                               videoSoundObj.entity_id ||
@@ -41,8 +41,8 @@ export async function entertainDialog(config: any, hass: any): Promise<void> {
               },
               volume_down: {
                   tap_action: {
-                      action: 'call-service',
-                      service: 'media_player.volume_down',
+                      action: "call-service",
+                      service: "media_player.volume_down",
                       service_data: {
                           entity_id:
                               videoSoundObj.entity_id ||
@@ -52,8 +52,8 @@ export async function entertainDialog(config: any, hass: any): Promise<void> {
               },
               volume_up: {
                   tap_action: {
-                      action: 'call-service',
-                      service: 'media_player.volume_up',
+                      action: "call-service",
+                      service: "media_player.volume_up",
                       service_data: {
                           entity_id:
                               videoSoundObj.entity_id ||
@@ -66,25 +66,25 @@ export async function entertainDialog(config: any, hass: any): Promise<void> {
 
     const audioPlayerTitle = audioPlayerObj
         ? {
-              type: 'custom:smartqasa-title-card',
-              title: audioPlayerObj.attributes.friendly_name || 'Audio',
+              type: "custom:smartqasa-title-card",
+              title: audioPlayerObj.attributes.friendly_name || "Audio",
           }
         : undefined;
 
     const audioPlayerCard = audioPlayerObj
         ? {
-              type: 'custom:sonos-card',
+              type: "custom:sonos-card",
               entityId: audioPlayerObj.entity_id,
               heightPercentage: 86,
               mediaBrowserItemsPerRow: 3,
               mediaBrowserShowTitleForThumbnailIcons: true,
               showVolumeUpAndDownButtons: true,
               sections: [
-                  'player',
-                  'volumes',
-                  'groups',
-                  'grouping',
-                  'media browser',
+                  "player",
+                  "volumes",
+                  "groups",
+                  "grouping",
+                  "media browser",
               ],
           }
         : undefined;
@@ -92,30 +92,30 @@ export async function entertainDialog(config: any, hass: any): Promise<void> {
     const appListTitle =
         videoPlayerObj || audioPlayerObj
             ? {
-                  type: 'custom:smartqasa-title-card',
-                  title: 'Apps',
+                  type: "custom:smartqasa-title-card",
+                  title: "Apps",
               }
             : undefined;
 
     const appListCard =
         videoPlayerObj || audioPlayerObj
             ? {
-                  type: 'custom:layout-card',
-                  layout_type: 'custom:grid-layout',
+                  type: "custom:layout-card",
+                  layout_type: "custom:grid-layout",
                   layout: {
-                      height: '480px',
+                      height: "480px",
                       margin: 0,
-                      'grid-gap': 'var(--sq-dialog-grid-gap)',
+                      "grid-gap": "var(--sq-dialog-grid-gap)",
                   },
                   cards: appListCards,
               }
             : undefined;
 
-    let gridTemplateColumns = 'auto';
+    let gridTemplateColumns = "auto";
     let cards: any = [];
 
-    if (deviceType === 'phone') {
-        gridTemplateColumns = '95%';
+    if (deviceType === "phone") {
+        gridTemplateColumns = "95%";
         if (videoPlayerObj && audioPlayerObj) {
             cards = [
                 videoPlayerTitle,
@@ -142,7 +142,7 @@ export async function entertainDialog(config: any, hass: any): Promise<void> {
         }
     } else {
         if (videoPlayerObj && audioPlayerObj) {
-            gridTemplateColumns = '340px 420px 260px';
+            gridTemplateColumns = "340px 420px 260px";
             cards = [
                 videoPlayerTitle,
                 audioPlayerTitle,
@@ -152,7 +152,7 @@ export async function entertainDialog(config: any, hass: any): Promise<void> {
                 appListCard,
             ];
         } else if (!videoPlayerObj && audioPlayerObj) {
-            gridTemplateColumns = '420px 260px';
+            gridTemplateColumns = "420px 260px";
             cards = [
                 audioPlayerTitle,
                 appListTitle,
@@ -160,7 +160,7 @@ export async function entertainDialog(config: any, hass: any): Promise<void> {
                 appListCard,
             ];
         } else if (videoPlayerObj && !audioPlayerObj) {
-            gridTemplateColumns = '340px 260px';
+            gridTemplateColumns = "340px 260px";
             cards = [
                 videoPlayerTitle,
                 appListTitle,
@@ -171,23 +171,23 @@ export async function entertainDialog(config: any, hass: any): Promise<void> {
     }
 
     const dialogConfig = {
-        title: 'Entertainment',
-        size: 'fullscreen',
+        title: "Entertainment",
+        size: "fullscreen",
         timeout: 300000,
         content: {
-            type: 'custom:layout-card',
-            layout_type: 'custom:grid-layout',
+            type: "custom:layout-card",
+            layout_type: "custom:grid-layout",
             layout: {
                 margin: 0,
-                'place-content': 'center',
-                'grid-template-columns': gridTemplateColumns,
-                'grid-template-rows': 'max-content 480px',
-                'grid-gap': 'var(--sq-dialog-grid-gap)',
+                "place-content": "center",
+                "grid-template-columns": gridTemplateColumns,
+                "grid-template-rows": "max-content 480px",
+                "grid-gap": "var(--sq-dialog-grid-gap)",
             },
             cards: cards,
         },
     };
 
-    window.smartqasa.viewMode = 'entertain';
-    window.browser_mod?.service('popup', dialogConfig);
+    window.smartqasa.viewMode = "entertain";
+    window.browser_mod?.service("popup", dialogConfig);
 }

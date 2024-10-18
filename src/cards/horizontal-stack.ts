@@ -5,10 +5,10 @@ import {
     nothing,
     PropertyValues,
     TemplateResult,
-} from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
-import { HomeAssistant, LovelaceCardConfig, LovelaceCard } from '../types';
-import { createElements } from '../utilities/create-elements';
+} from "lit";
+import { customElement, property, state } from "lit/decorators.js";
+import { HomeAssistant, LovelaceCardConfig, LovelaceCard } from "../types";
+import { createElements } from "../utilities/create-elements";
 
 interface Config extends LovelaceCardConfig {
     cards: LovelaceCardConfig[];
@@ -16,14 +16,14 @@ interface Config extends LovelaceCardConfig {
 }
 
 window.customCards.push({
-    type: 'smartqasa-horizontal-stack',
-    name: 'SmartQasa Horizontal Stack',
+    type: "smartqasa-horizontal-stack",
+    name: "SmartQasa Horizontal Stack",
     preview: false,
     description:
-        'A SmartQasa element that displays other cards in a horizontal stack.',
+        "A SmartQasa element that displays other cards in a horizontal stack.",
 });
 
-@customElement('smartqasa-horizontal-stack')
+@customElement("smartqasa-horizontal-stack")
 export class HorizontalStack extends LitElement implements LovelaceCard {
     public getCardSize(): number | Promise<number> {
         return 1;
@@ -63,9 +63,9 @@ export class HorizontalStack extends LitElement implements LovelaceCard {
     protected willUpdate(changedProps: PropertyValues) {
         if (!this._config || !this.hass) return;
 
-        if (changedProps.has('_config')) {
+        if (changedProps.has("_config")) {
             this._createCards();
-        } else if (changedProps.has('hass') && this._cards.length > 0) {
+        } else if (changedProps.has("hass") && this._cards.length > 0) {
             this._cards.forEach((card) => {
                 if (card.hass !== this.hass) card.hass = this.hass;
             });
@@ -77,8 +77,8 @@ export class HorizontalStack extends LitElement implements LovelaceCard {
             return nothing;
 
         const containerClass = this._justifyRight
-            ? 'container justify-right'
-            : 'container';
+            ? "container justify-right"
+            : "container";
 
         return html`
             <div class="${containerClass}">

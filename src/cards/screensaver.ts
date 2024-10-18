@@ -5,34 +5,34 @@ import {
     LitElement,
     nothing,
     TemplateResult,
-} from 'lit';
-import { customElement, state } from 'lit/decorators.js';
-import { LovelaceCard, LovelaceCardConfig } from '../types';
-import { formattedDate, formattedTime } from '../utilities/format-date-time';
-import logoImage from '../assets/images/logo.png';
+} from "lit";
+import { customElement, state } from "lit/decorators.js";
+import { LovelaceCard, LovelaceCardConfig } from "../types";
+import { formattedDate, formattedTime } from "../utilities/format-date-time";
+import logoImage from "../assets/images/logo.png";
 
 interface Config extends LovelaceCardConfig {
     move_timer?: number;
-    display: 'time' | 'logo';
+    display: "time" | "logo";
     name?: string;
 }
 
 window.customCards.push({
-    type: 'smartqasa-screensaver-card',
-    name: 'SmartQasa Screen Saver Card',
+    type: "smartqasa-screensaver-card",
+    name: "SmartQasa Screen Saver Card",
     preview: true,
-    description: 'A SmartQasa card for displaying a screen saver.',
+    description: "A SmartQasa card for displaying a screen saver.",
 });
 
-@customElement('smartqasa-screensaver-card')
+@customElement("smartqasa-screensaver-card")
 export class ScreenSaver extends LitElement implements LovelaceCard {
     public getCardSize(): number | Promise<number> {
         return 100;
     }
 
     @state() protected _config?: Config;
-    @state() private _time: string = 'Loading...';
-    @state() private _date: string = 'Loading...';
+    @state() private _time: string = "Loading...";
+    @state() private _date: string = "Loading...";
 
     private _moveTimerId: number | undefined;
     private _timeIntervalId: number | undefined;
@@ -122,7 +122,7 @@ export class ScreenSaver extends LitElement implements LovelaceCard {
     }
 
     public setConfig(config: Config): void {
-        if (!config) throw new Error('Invalid configuration provided');
+        if (!config) throw new Error("Invalid configuration provided");
         this._config = config;
     }
 
@@ -138,7 +138,7 @@ export class ScreenSaver extends LitElement implements LovelaceCard {
         return html`
             <div class="container">
                 <div class="element">
-                    ${this._config?.display === 'logo'
+                    ${this._config?.display === "logo"
                         ? html`
                               <div class="logo">
                                   <img
@@ -152,7 +152,7 @@ export class ScreenSaver extends LitElement implements LovelaceCard {
                                                 ${this._config.name}
                                             </div>
                                         `
-                                      : ''}
+                                      : ""}
                               </div>
                           `
                         : html`
@@ -182,25 +182,25 @@ export class ScreenSaver extends LitElement implements LovelaceCard {
 
     private _cycleElement(): void {
         const element = this.shadowRoot?.querySelector(
-            '.element'
+            ".element"
         ) as HTMLElement;
         if (!element) {
-            console.error('Element not found in shadow DOM.');
+            console.error("Element not found in shadow DOM.");
             return;
         }
 
         const moveTimer = (this._config?.move_timer ?? 30) * 1000;
 
         if (element) {
-            element.style.animation = 'fade-in 1.5s forwards';
+            element.style.animation = "fade-in 1.5s forwards";
 
             setTimeout(() => {
-                element.style.animation = '';
+                element.style.animation = "";
                 setTimeout(() => {
-                    element.style.animation = 'fade-out 1.5s forwards';
+                    element.style.animation = "fade-out 1.5s forwards";
                     setTimeout(() => {
                         this._moveElement();
-                        element.style.animation = 'fade-in 1.5s forwards';
+                        element.style.animation = "fade-in 1.5s forwards";
                         this._cycleElement();
                     }, 1500);
                 }, moveTimer);
@@ -216,10 +216,10 @@ export class ScreenSaver extends LitElement implements LovelaceCard {
 
     private _moveElement(): void {
         const container = this.shadowRoot?.querySelector(
-            '.container'
+            ".container"
         ) as HTMLElement;
         const element = this.shadowRoot?.querySelector(
-            '.element'
+            ".element"
         ) as HTMLElement;
 
         if (container && element) {
@@ -235,6 +235,6 @@ export class ScreenSaver extends LitElement implements LovelaceCard {
     }
 
     private _handleImageError(): void {
-        console.error('Failed to load image.');
+        console.error("Failed to load image.");
     }
 }

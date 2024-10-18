@@ -7,12 +7,12 @@ import type {
     HassServices,
     HassServiceTarget,
     MessageBase,
-} from 'home-assistant-js-websocket';
+} from "home-assistant-js-websocket";
 
 declare global {
     // for fire event
     interface HASSDomEvents {
-        'value-changed': {
+        "value-changed": {
             value: unknown;
         };
         change: undefined;
@@ -31,7 +31,7 @@ export interface DialogTable {
     [key: string]: DialogEntry;
 }
 
-type EntityCategory = 'config' | 'diagnostic';
+type EntityCategory = "config" | "diagnostic";
 
 export interface EntityRegistryDisplayEntry {
     entity_id: string;
@@ -62,8 +62,8 @@ export interface DeviceRegistryEntry {
     via_device_id: string | null;
     area_id: string | null;
     name_by_user: string | null;
-    entry_type: 'service' | null;
-    disabled_by: 'user' | 'integration' | 'config_entry' | null;
+    entry_type: "service" | null;
+    disabled_by: "user" | "integration" | "config_entry" | null;
     configuration_url: string | null;
 }
 
@@ -137,18 +137,18 @@ export interface HomeAssistant {
     suspendWhenHidden: boolean;
     enableShortcuts: boolean;
     vibrate: boolean;
-    dockedSidebar: 'docked' | 'always_hidden' | 'auto';
+    dockedSidebar: "docked" | "always_hidden" | "auto";
     defaultPanel: string;
     moreInfoEntityId: string | null;
     user?: CurrentUser;
     callService(
-        domain: ServiceCallRequest['domain'],
-        service: ServiceCallRequest['service'],
-        serviceData?: ServiceCallRequest['serviceData'],
-        target?: ServiceCallRequest['target']
+        domain: ServiceCallRequest["domain"],
+        service: ServiceCallRequest["service"],
+        serviceData?: ServiceCallRequest["serviceData"],
+        target?: ServiceCallRequest["target"]
     ): Promise<ServiceCallResponse>;
     callApi<T>(
-        method: 'GET' | 'POST' | 'PUT' | 'DELETE',
+        method: "GET" | "POST" | "PUT" | "DELETE",
         path: string,
         parameters?: Record<string, any>,
         headers?: Record<string, string>
@@ -191,9 +191,9 @@ type LovelaceLayoutOptions = {
 
 export interface ThemeVars {
     // Incomplete
-    'primary-color': string;
-    'text-primary-color': string;
-    'accent-color': string;
+    "primary-color": string;
+    "text-primary-color": string;
+    "accent-color": string;
     [key: string]: string;
 }
 
