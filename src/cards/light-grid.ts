@@ -48,6 +48,7 @@ export class LightGridCard extends LitElement implements LovelaceCard {
                 justify-content: center;
                 align-items: center;
                 padding: 2rem;
+                box-sizing: border-box;
                 cursor: pointer;
             }
             .icon {
