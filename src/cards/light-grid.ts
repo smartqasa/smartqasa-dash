@@ -47,7 +47,7 @@ export class LightGridCard extends LitElement implements LovelaceCard {
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                padding: 2rem;
+                padding: 2.5rem;
                 box-sizing: border-box;
                 cursor: pointer;
             }
@@ -62,8 +62,8 @@ export class LightGridCard extends LitElement implements LovelaceCard {
                 border-radius: 1rem;
             }
             .blank {
-                width: calc(var(--sq-icon-size) + (2rem * 2));
-                height: calc(var(--sq-icon-size) + (2rem * 2));
+                width: calc(var(--sq-icon-size) + (2.5rem * 2));
+                height: calc(var(--sq-icon-size) + (2.5rem * 2));
                 background: transparent;
             }
         `;
