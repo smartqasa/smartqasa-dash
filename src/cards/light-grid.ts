@@ -42,6 +42,7 @@ export class LightGridCard extends LitElement implements LovelaceCard {
             .container {
                 display: grid;
                 gap: 3rem;
+                justify-content: center;
             }
             .button {
                 display: flex;
