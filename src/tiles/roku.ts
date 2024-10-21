@@ -81,12 +81,8 @@ export class RokuTile extends LitElement implements LovelaceCard {
 
     protected render(): TemplateResult | typeof nothing {
         return html`
-            <div class="container" @click=${this._toggleEntity}>
-                <div
-                    class="icon"
-                    @click=${this._showMoreInfo}
-                    style="${styleMap(this._iconStyles)}"
-                >
+            <div class="container" @click=${this._showMoreInfo}>
+                <div class="icon" style="${styleMap(this._iconStyles)}">
                     <ha-icon icon=${this._icon}></ha-icon>
                 </div>
                 <div class="text">
