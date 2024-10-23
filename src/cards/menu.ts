@@ -116,6 +116,7 @@ export class MenuCard extends LitElement implements LovelaceCard {
     }
 
     protected willUpdate(changedProps: PropertyValues): void {
+        super.willUpdate(changedProps);
         if (changedProps.has('hass') && this.hass) {
             const currentTiles = this._bodyTiles[this._menuTab] || [];
             currentTiles.forEach((tile) => {

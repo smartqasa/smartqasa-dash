@@ -166,6 +166,8 @@ export class TVRemoteCard extends LitElement implements LovelaceCard {
     }
 
     protected willUpdate(changedProps: PropertyValues): void {
+        super.willUpdate(changedProps);
+
         if (changedProps.has('_config')) {
             this._initializeEntities();
         }

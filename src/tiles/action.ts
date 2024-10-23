@@ -62,7 +62,8 @@ export class ActionTile extends LitElement implements LovelaceCard {
         return !!(changedProps.has('_config') || changedProps.has('_running'));
     }
 
-    protected willUpdate(): void {
+    protected willUpdate(changedProps: PropertyValues): void {
+        super.willUpdate(changedProps);
         this._updateState();
     }
 

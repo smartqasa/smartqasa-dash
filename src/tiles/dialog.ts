@@ -1,4 +1,11 @@
-import { CSSResult, html, LitElement, TemplateResult, unsafeCSS } from 'lit';
+import {
+    CSSResult,
+    html,
+    LitElement,
+    PropertyValues,
+    TemplateResult,
+    unsafeCSS,
+} from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
@@ -43,7 +50,8 @@ export class DialogTile extends LitElement implements LovelaceCard {
         this._dialogObj = dialogTable[config.dialog];
     }
 
-    protected willUpdate(): void {
+    protected willUpdate(changedProps: PropertyValues): void {
+        super.willUpdate(changedProps);
         this._updateState();
     }
 

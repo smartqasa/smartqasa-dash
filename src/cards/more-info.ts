@@ -71,6 +71,8 @@ export class MoreInfoCard extends LitElement implements LovelaceCard {
     }
 
     protected willUpdate(changedProps: PropertyValues): void {
+        super.willUpdate(changedProps);
+
         if (changedProps.has('hass') && this.hass && this._entity) {
             this._stateObj = this.hass.states[this._entity];
         }

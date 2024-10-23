@@ -100,6 +100,8 @@ export class PanelCard extends LitElement implements LovelaceCard {
     }
 
     protected willUpdate(changedProps: PropertyValues): void {
+        super.willUpdate(changedProps);
+
         if (changedProps.has('_config')) {
             this._loadContent();
         }
@@ -149,6 +151,8 @@ export class PanelCard extends LitElement implements LovelaceCard {
     }
 
     protected updated(changedProps: PropertyValues): void {
+        super.updated(changedProps);
+
         if (changedProps.has('hass') && this.hass) {
             this._updateContent();
         }

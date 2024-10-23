@@ -39,13 +39,6 @@ export class AdminChip extends LitElement implements LovelaceCard {
 
     public setConfig(): void {}
 
-    protected updated(changedProps: PropertyValues): void {
-        super.updated(changedProps);
-        if (this.hass && changedProps.has('hass')) {
-            this._stateObj = this.hass.states[this._entity];
-        }
-    }
-
     protected render(): TemplateResult | typeof nothing {
         if (!this._entity || this._stateObj?.state !== 'on') return nothing;
 
@@ -62,6 +55,13 @@ export class AdminChip extends LitElement implements LovelaceCard {
                 </div>
             </div>
         `;
+    }
+
+    protected updated(changedProps: PropertyValues): void {
+        super.updated(changedProps);
+        if (this.hass && changedProps.has('hass')) {
+            this._stateObj = this.hass.states[this._entity];
+        }
     }
 
     private _toggleEntity(e: Event): void {

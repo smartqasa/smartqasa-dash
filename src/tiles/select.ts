@@ -74,7 +74,8 @@ export class SelectTile extends LitElement implements LovelaceCard {
         );
     }
 
-    protected willUpdate(): void {
+    protected willUpdate(changedProps: PropertyValues): void {
+        super.willUpdate(changedProps);
         this._updateState();
     }
 

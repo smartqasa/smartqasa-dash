@@ -4,6 +4,7 @@ import {
     html,
     LitElement,
     nothing,
+    PropertyValues,
     TemplateResult,
 } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
@@ -126,7 +127,9 @@ export class ScreenSaver extends LitElement implements LovelaceCard {
         this._config = config;
     }
 
-    protected firstUpdated(): void {
+    protected firstUpdated(changedProps: PropertyValues): void {
+        super.firstUpdated(changedProps);
+
         this._updateElement();
         this._startClock();
         this._cycleElement();

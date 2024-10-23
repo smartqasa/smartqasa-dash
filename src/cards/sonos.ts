@@ -60,6 +60,8 @@ export class SonosPanelCard extends LitElement implements LovelaceCard {
     }
 
     protected willUpdate(changedProps: PropertyValues): void {
+        super.willUpdate(changedProps);
+
         if (changedProps.has('hass') && this.hass) {
             [this._speakersCard, this._playerCard, this._mediaCard].forEach(
                 (card) => {
@@ -86,7 +88,9 @@ export class SonosPanelCard extends LitElement implements LovelaceCard {
         `;
     }
 
-    protected firstUpdated(): void {
+    protected firstUpdated(changedProps: PropertyValues): void {
+        super.firstUpdated(changedProps);
+
         this._speakersCard = createElement(
             {
                 type: 'custom:sonos-card',
