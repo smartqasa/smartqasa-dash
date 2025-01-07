@@ -9,7 +9,7 @@ import {
 import { customElement, state } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 
-import { LovelaceCard, LovelaceCardConfig } from '../types';
+import { LovelaceCard, LovelaceCardConfig } from '../src/types';
 
 import tileStyle from '../css/tile.css';
 
