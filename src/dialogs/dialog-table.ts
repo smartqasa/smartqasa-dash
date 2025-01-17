@@ -1,5 +1,6 @@
 import { DialogTable } from '../types';
 import { listDialogConfig } from './list-dialog-config';
+import { mediaPlayerCardMod } from './media-player-style';
 
 export const dialogTable: DialogTable = {
     admin_mode: {
@@ -397,27 +398,7 @@ export const dialogTable: DialogTable = {
                 hideBrowseMediaButton: true,
                 mediaBrowserHideTitleForThumbnailIcons: false,
                 mediaBrowserItemsPerRow: 4,
-                card_mod: {
-                    style: {
-                        'mxmp-player$ mxmp-player-controls$': `
-                            .icons {
-                                gap: 1rem;
-                            }
-                            mxmp-ha-player, ha-icon-button {
-                                --mdc-icon-size: 2rem !important;
-                                --mdc-icon-button-size: 3rem !important;
-                                border-radius: 50%;
-                                background-color: rgba(var(--sq-inactive-rgb), var(--sq-icon-opacity));
-                            }
-                            .big-icon {
-                                --mdc-icon-size: 3rem !important;
-                                --mdc-icon-button-size: 4rem !important;
-                                border-radius: 50%;
-                                background-color: rgba(var(--sq-inactive-rgb), var(--sq-icon-opacity));
-                            }
-                      `,
-                    },
-                },
+                card_mod: mediaPlayerCardMod,
             },
         },
     },
