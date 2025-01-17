@@ -373,15 +373,15 @@ export const dialogTable: DialogTable = {
 
     sonos: {
         icon: 'hass:music',
-        name: 'Sonos',
+        name: 'Media Player',
         data: {
-            title: 'Sonos',
+            title: 'Media Player',
             timeout: 600000,
             style: {
                 '--control-button-padding': 0,
             },
             content: {
-                type: 'custom:sonos-card',
+                type: 'custom:maxi-media-player',
                 sections: [
                     'player',
                     'media browser',
@@ -389,6 +389,7 @@ export const dialogTable: DialogTable = {
                     'grouping',
                     'volumes',
                 ],
+                entityPlatform: 'sonos',
                 artworkAsBackground: false,
                 showVolumeUpAndDownButtons: true,
                 showSourceInPlayer: true,

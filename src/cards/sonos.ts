@@ -93,7 +93,7 @@ export class SonosPanelCard extends LitElement implements LovelaceCard {
 
         this._speakersCard = createElement(
             {
-                type: 'custom:sonos-card',
+                type: 'custom:maxi-media-player',
                 entityId: this._entity,
                 heightPercentage: '75',
                 showVolumeUpAndDownButtons: true,
@@ -104,7 +104,7 @@ export class SonosPanelCard extends LitElement implements LovelaceCard {
 
         this._playerCard = createElement(
             {
-                type: 'custom:sonos-card',
+                type: 'custom:maxi-media-player',
                 entityId: this._entity,
                 heightPercentage: '75',
                 showVolumeUpAndDownButtons: true,
@@ -115,7 +115,7 @@ export class SonosPanelCard extends LitElement implements LovelaceCard {
 
         this._mediaCard = createElement(
             {
-                type: 'custom:sonos-card',
+                type: 'custom:maxi-media-player',
                 heightPercentage: '75',
                 mediaBrowserItemsPerRow: 3,
                 mediaBrowserShowTitleForThumbnailIcons: true,
