@@ -22,9 +22,6 @@ import { renderArea } from './area';
 import { loadControlTiles, renderControls } from './control';
 import { renderFooter } from './footer';
 
-import lightModeImage from '../assets/backgrounds/background_light.jpg';
-import darkModeImage from '../assets/backgrounds/background_dark.jpg';
-
 import panelStyles from '../css/panel.css';
 
 interface Config extends LovelaceCardConfig {
@@ -203,8 +200,8 @@ export class PanelCard extends LitElement implements LovelaceCard {
 
         if (panel) {
             const image = this.hass?.themes?.darkMode
-                ? darkModeImage
-                : lightModeImage; // Use preloaded images
+                ? window.smartqasa.darkModeImage
+                : window.smartqasa.lightModeImage;
             panel.style.backgroundImage = `url(${image})`;
         }
     }

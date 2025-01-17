@@ -1,5 +1,7 @@
 // Initialize global variables
 window.smartqasa = window.smartqasa || {};
+window.smartqasa.lightModeImage = lightModeImage;
+window.smartqasa.darkModeImage = darkModeImage;
 window.smartqasa.startArea =
     window.smartqasa.startArea || location.pathname.split('/').pop();
 window.smartqasa.version = __BUILD_VERSION__; // Injected version
