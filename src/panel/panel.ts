@@ -43,8 +43,9 @@ window.customCards.push({
     type: 'smartqasa-panel-card',
     name: 'SmartQasa Panel Card',
     preview: true,
-    description: 'A SmartQasa card for rendering an panel.',
+    description: 'A SmartQasa card for rendering a panel.',
 });
+
 @customElement('smartqasa-panel-card')
 export class PanelCard extends LitElement implements LovelaceCard {
     public getCardSize(): number | Promise<number> {
@@ -60,6 +61,7 @@ export class PanelCard extends LitElement implements LovelaceCard {
         getDeviceOrientation() === 'portrait';
     @state() private _isLandscape: boolean =
         getDeviceOrientation() === 'landscape';
+    @state() private _isLoading = true; // Add loading state
 
     private _boundHandleDeviceChanges = () => this._handleDeviceChanges();
     private _boundStartResetTimer = () => this._startResetTimer();
@@ -114,14 +116,10 @@ export class PanelCard extends LitElement implements LovelaceCard {
             this._isAdminMode =
                 (this.hass.user?.is_admin ?? false) || isAdminMode;
 
-            if (
-                this._headerChips.length === 0 &&
-                window.smartqasa.chipsConfig.length > 0
-            ) {
-                this._headerChips = createElements(
-                    window.smartqasa.chipsConfig,
-                    this.hass
-                );
+            // Fallback if chipsConfig wasn't preloaded successfully
+            const chipsConfig = window.smartqasa.chipsConfig ?? [];
+            if (this._headerChips.length === 0 && chipsConfig.length > 0) {
+                this._headerChips = createElements(chipsConfig, this.hass);
             }
 
             this._areaObj = this._area
@@ -131,20 +129,33 @@ export class PanelCard extends LitElement implements LovelaceCard {
     }
 
     protected render(): TemplateResult | typeof nothing {
-        if (!this.hass || !this._config || !this._area) return nothing;
+        // Display a loading indicator if not ready
+        if (this._isLoading || !this.hass || !this._config || !this._area) {
+            return html`
+                <div class="loading-screen">
+                    <span>Loading...</span>
+                </div>
+            `;
+        }
 
         const name = this._config?.name ?? this._areaObj?.name ?? 'Area';
         const picture = this._config.picture ?? `${this._area}.png`;
 
-        // prettier-ignore
         return html`
-            <div
-                class="panel"
-                ?admin=${this._isAdminMode}
-            >
+            <div class="panel" ?admin=${this._isAdminMode}>
                 ${this._isTablet ? renderHeader(this._headerChips) : nothing}
-                ${renderArea(name, picture, this._areaChips, this._isPhone, this._isLandscape)}
-                ${renderControls(this._controlTiles, this._controlColumns, this._isPhone)}
+                ${renderArea(
+                    name,
+                    picture,
+                    this._areaChips,
+                    this._isPhone,
+                    this._isLandscape
+                )}
+                ${renderControls(
+                    this._controlTiles,
+                    this._controlColumns,
+                    this._isPhone
+                )}
                 ${this._isPhone && this._isLandscape ? nothing : renderFooter()}
             </div>
         `;
@@ -191,11 +202,10 @@ export class PanelCard extends LitElement implements LovelaceCard {
         const panel = this.shadowRoot?.querySelector('.panel') as HTMLElement;
 
         if (panel) {
-            if (this.hass?.themes?.darkMode) {
-                panel.style.backgroundImage = `url(${darkModeImage})`;
-            } else {
-                panel.style.backgroundImage = `url(${lightModeImage})`;
-            }
+            const image = this.hass?.themes?.darkMode
+                ? darkModeImage
+                : lightModeImage; // Use preloaded images
+            panel.style.backgroundImage = `url(${image})`;
         }
     }
 
@@ -229,13 +239,13 @@ export class PanelCard extends LitElement implements LovelaceCard {
         this._startResetTimer();
     }
 
-    private _loadContent(): void {
+    private async _loadContent(): Promise<void> {
         if (!this.hass || !this._config) return;
 
         const headerChipsConfig =
             (this._config.header_chips?.length ?? 0) > 0
                 ? this._config.header_chips
-                : window.smartqasa.chipsConfig;
+                : (window.smartqasa.chipsConfig ?? []);
         this._headerChips = createElements(headerChipsConfig, this.hass);
 
         this._areaObj = this._area ? this.hass.areas[this._area] : undefined;
@@ -251,23 +261,28 @@ export class PanelCard extends LitElement implements LovelaceCard {
         );
         this._controlTiles = controlTiles;
         this._controlColumns = controlColumns;
+
+        this._isLoading = false; // Mark as loaded
     }
 
     protected _updateContent(): void {
-        const updateHassForCards = (cards: LovelaceCard[]) => {
-            cards.forEach((card) => {
-                if (card.hass !== this.hass) card.hass = this.hass;
-            });
-        };
+        requestAnimationFrame(() => {
+            const updateHassForCards = (cards: LovelaceCard[]) => {
+                cards.forEach((card) => {
+                    if (card.hass !== this.hass) card.hass = this.hass;
+                });
+            };
 
-        if (this._headerChips.length > 0) updateHassForCards(this._headerChips);
+            if (this._headerChips.length > 0)
+                updateHassForCards(this._headerChips);
 
-        if (this._areaChips.length > 0) updateHassForCards(this._areaChips);
+            if (this._areaChips.length > 0) updateHassForCards(this._areaChips);
 
-        if (this._controlTiles.length > 0) {
-            this._controlTiles.forEach((page) => {
-                updateHassForCards(page);
-            });
-        }
+            if (this._controlTiles.length > 0) {
+                this._controlTiles.forEach((page) => {
+                    updateHassForCards(page);
+                });
+            }
+        });
     }
 }

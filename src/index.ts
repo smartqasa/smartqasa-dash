@@ -1,3 +1,4 @@
+// Initialize global variables
 window.smartqasa = window.smartqasa || {};
 window.smartqasa.startArea =
     window.smartqasa.startArea || location.pathname.split('/').pop();
@@ -9,6 +10,29 @@ window.customCards = window.customCards ?? [];
 // Utility Imports
 import { loadYamlAsJson } from './utilities/load-yaml-as-json';
 import { LovelaceCardConfig } from './types';
+
+// Preload assets
+// Preload background images
+import lightModeImage from './assets/backgrounds/background_light.jpg';
+import darkModeImage from './assets/backgrounds/background_dark.jpg';
+
+const preloadImages = [lightModeImage, darkModeImage];
+preloadImages.forEach((src) => {
+    const img = new Image();
+    img.src = src;
+});
+
+// Preload YAML configuration (e.g., chips.yaml)
+(async function preloadConfigs() {
+    const yamlFilePath = '/local/smartqasa/config/chips.yaml';
+    try {
+        const chipsConfig =
+            await loadYamlAsJson<LovelaceCardConfig[]>(yamlFilePath);
+        window.smartqasa.chipsConfig = chipsConfig;
+    } catch (error) {
+        console.error('Failed to preload chips config:', error);
+    }
+})();
 
 // Function to display a 'blue screen of death' style error
 function displayBSoD(errorMessage: string) {
@@ -46,17 +70,10 @@ function displayBSoD(errorMessage: string) {
     document.body.appendChild(bsodDiv);
 }
 
-// Async function to initialize everything in one stream
+// Initialize everything in one stream
 (async function initialize() {
     try {
-        // Preload chips config
-        window.smartqasa.chipsConfig = [];
-        const yamlFilePath = '/local/smartqasa/config/chips.yaml';
-        const chipsConfig =
-            await loadYamlAsJson<LovelaceCardConfig[]>(yamlFilePath);
-        window.smartqasa.chipsConfig = chipsConfig;
-
-        // Load all other required modules in sequence
+        // Load panel and cards
         await import('./panel/panel');
 
         // Cards
@@ -126,7 +143,6 @@ function displayBSoD(errorMessage: string) {
             'background-color: #0000ff; color: #ffffff; font-weight: 700;'
         );
     } catch (error) {
-        // On error, display a 'blue screen of death' with error details
         if (error instanceof Error) {
             displayBSoD(error.message);
         } else {
