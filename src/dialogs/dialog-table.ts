@@ -404,8 +404,10 @@ export const dialogTable: DialogTable = {
                                 margin-bottom: 1rem;
                             }
                             mxmp-ha-player, ha-icon-button {
-                                --mdc-icon-size: 3rem !important;
-                                --mdc-icon-button-size: 4rem !important;
+                                --mdc-icon-size: 2rem !important;
+                                --mdc-icon-button-size: 3rem !important;
+                                border-radius: 50%;
+                                background-color: rgba(var(--sq-inactive-rgb), var(--sq-icon-opacity));
                             }
                             .big-icon {
                                 border-radius: 50%;
