@@ -1,8 +1,8 @@
 const playerHeaderStyles = `
   .entity {
-    color: rgb(var(--sq-primary-font-rgb));
-    font-weight: var(--sq-primary-font-weight);
-    font-size: var(--sq-primary-font-size);
+    color: rgb(var(--sq-primary-font-rgb)) !important;
+    font-weight: var(--sq-primary-font-weight) !important;
+    font-size: var(--sq-primary-font-size) !important;
   }
 `;
 
