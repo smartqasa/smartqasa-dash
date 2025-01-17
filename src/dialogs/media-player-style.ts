@@ -1,6 +1,6 @@
 export const mediaPlayerCardMod = {
-    style: {
-        'mxmp-player$ mxmp-player-controls$': `
+    style: `
+        mxmp-player$ mxmp-player-controls$:
           .icons {
               margin-bottom: 1rem;
               gap: 1rem;
@@ -18,5 +18,4 @@ export const mediaPlayerCardMod = {
               background-color: rgba(var(--sq-inactive-rgb), var(--sq-icon-opacity));
           }
         `,
-    },
 };
