@@ -399,17 +399,19 @@ export const dialogTable: DialogTable = {
                 mediaBrowserItemsPerRow: 4,
                 card_mod: {
                     style: {
-                        '.icons': {
-                            marginBottom: '1rem',
-                        },
-                        'mxmp-ha-player, ha-icon-button': {
-                            '--mdc-icon-size': '3rem !important',
-                            '--mdc-icon-button-size': '4rem !important',
-                        },
-                        '.big-icon': {
-                            '--mdc-icon-size': '7rem !important',
-                            '--mdc-icon-button-size': '4rem !important',
-                        },
+                        'mxmp-player$ mxmp-player-controls$': `
+                            .icons {
+                                margin-bottom: 1rem;
+                            }
+                            mxmp-ha-player, ha-icon-button {
+                                --mdc-icon-size: 3rem !important;
+                                --mdc-icon-button-size: 4rem !important;
+                            }
+                            .big-icon {
+                                --mdc-icon-size: 7rem !important;
+                                --mdc-icon-button-size: 4rem !important;
+                            }
+                      `,
                     },
                 },
             },
