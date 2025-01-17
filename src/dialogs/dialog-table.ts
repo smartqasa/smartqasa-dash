@@ -371,7 +371,7 @@ export const dialogTable: DialogTable = {
         ),
     },
 
-    sonos: {
+    media_player: {
         icon: 'hass:music',
         name: 'Media Player',
         data: {

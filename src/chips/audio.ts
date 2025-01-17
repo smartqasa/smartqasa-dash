@@ -120,7 +120,7 @@ export class AudioChip extends LitElement implements LovelaceCard {
 
     private _showDialog(e: Event): void {
         e.stopPropagation();
-        const dialogObj = dialogTable['sonos'];
+        const dialogObj = dialogTable['media_player'];
         if (!dialogObj) return;
 
         const dialogConfig = { ...dialogObj.data };
