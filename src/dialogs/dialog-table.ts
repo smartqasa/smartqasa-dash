@@ -408,8 +408,8 @@ export const dialogTable: DialogTable = {
                                 --mdc-icon-button-size: 4rem !important;
                             }
                             .big-icon {
-                                --mdc-icon-size: 7rem !important;
-                                --mdc-icon-button-size: 4rem !important;
+                                border-radius: 50%;
+                                background-color: rgba(var(--sq-inactive-rgb), var(--sq-icon-opacity));
                             }
                       `,
                     },
