@@ -42,7 +42,7 @@
         "home-assistant-js-websocket": "^9.2.1",
         "js-yaml": "^4.1.0",
         "lit": "^3.2.1",
-        "swiper": "^11.1.14",
+        "swiper": "^11.1.15",
         "tslib": "^2.7.0"
     }
 }
