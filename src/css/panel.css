@@ -86,7 +86,6 @@
     align-items: center;
     justify-content: flex-start;
     margin-left: calc(var(--sq-chip-spacing) * -1);
-    margin-bottom: var(--sq-chip-spacing);
 }
 .area-picture {
     grid-area: image;
